@@ -1,0 +1,11 @@
+/build
+/common
+/eclipse/*
+/.gradle
+/bin/*
+.classpath
+.project
+.settings/*
+.checkstyle
+src/api/resources/*
+src/api/java/hacker/
