@@ -1,15 +1,19 @@
 package joshie.crafting.data.player;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.tech.ITechnology;
+import joshie.crafting.helpers.NBTHelper;
+import joshie.crafting.helpers.NBTHelper.ICollectionHelper;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 
-public class DataTechnology {
+public class DataTechnology implements ICollectionHelper {
 	public Set<ITechnology> technologies = new HashSet();
 	
 	public boolean hasUnlocked(ITechnology technology) {
@@ -28,25 +32,27 @@ public class DataTechnology {
 		return technologies.add(technology);
 	}
 	
+	@Override
+	public Collection getSet() {
+		return technologies;
+	}
+
+	@Override
+	public NBTBase write(Object s) {
+		return new NBTTagString(((ITechnology)s).getName());
+	}
+	
+	@Override
+	public Object read(NBTTagList list, int i) {
+		String name = list.getStringTagAt(i);
+		return CraftingAPI.tech.getTechnologyFromName(name);
+	}
+	
 	public void readFromNBT(NBTTagCompound nbt) {
-		NBTTagList techList = nbt.getTagList("TechList", 10);
-		for (int j = 0; j < techList.tagCount(); j++) {
-			String name = techList.getStringTagAt(j);
-			ITechnology tech = CraftingAPI.tech.getTechnologyFromName(name);
-			if (tech != null) {
-				technologies.add(tech);
-			}
-		}
+		NBTHelper.readCollection(nbt, "TechList", this);
 	}
 	
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		NBTTagList techList = new NBTTagList();
-		for (ITechnology tech: technologies) {
-			NBTTagString name = new NBTTagString(tech.getName());
-			techList.appendTag(name);
-		}
-			
-		nbt.setTag("TechList", techList);
-		return nbt;
+		return NBTHelper.writeCollection(nbt, "TechList", this);
 	}
 }

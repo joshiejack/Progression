@@ -1,5 +1,8 @@
 package joshie.crafting.network;
 
+import java.util.UUID;
+
+import joshie.crafting.helpers.PlayerHelper;
 import joshie.crafting.lib.CraftingInfo;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.Packet;
@@ -21,6 +24,13 @@ public class PacketHandler {
         INSTANCE.sendToAll(packet);
     }
 
+    public static void sendToClient(IMessage packet, UUID uuid) {
+    	EntityPlayerMP player = (EntityPlayerMP) PlayerHelper.getPlayerFromUUID(uuid);
+		if (player != null) {
+			sendToClient(packet, player);
+		}
+    }
+    
     public static void sendToClient(IMessage packet, EntityPlayerMP player) {
         INSTANCE.sendTo(packet, player);
     }

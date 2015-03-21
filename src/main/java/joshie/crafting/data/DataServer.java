@@ -5,6 +5,9 @@ import java.util.UUID;
 
 import joshie.crafting.CraftingMod;
 import joshie.crafting.api.tech.ITechnology;
+import joshie.crafting.network.PacketHandler;
+import joshie.crafting.network.PacketSyncKillings;
+import joshie.crafting.network.PacketSyncTechnology;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
@@ -33,6 +36,10 @@ public class DataServer extends DataCommon {
 	@Override
 	public boolean unlockResearch(UUID uuid, ITechnology tech) {
 		boolean ret = getPlayerData(uuid).getTechnologies().unlockResearch(tech);
+		if (ret) {
+			PacketHandler.sendToClient(new PacketSyncTechnology(tech), uuid);
+		}
+		
 		//TODO: Send Packet to client to update their tech
 		CraftingMod.saveData.markDirty();
 		return ret;
@@ -41,6 +48,13 @@ public class DataServer extends DataCommon {
 	@Override
 	public boolean hasKilled(UUID uuid, String entity, int count) {
 		return getPlayerData(uuid).getKillings().hasKilled(entity, count);
+	}
+	
+	@Override
+	public void setKilled(UUID uuid, String entity) {
+		int count = getPlayerData(uuid).getKillings().setKilled(entity);
+		PacketHandler.sendToClient(new PacketSyncKillings(entity, count), uuid);
+		CraftingMod.saveData.markDirty();
 	}
 
 	public void readFromNBT(NBTTagCompound nbt) {
