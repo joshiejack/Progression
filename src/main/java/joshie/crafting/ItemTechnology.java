@@ -3,7 +3,9 @@ package joshie.crafting;
 import java.util.List;
 
 import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.api.tech.ITechnology;
+import joshie.crafting.api.IResearch;
+import joshie.crafting.helpers.PlayerHelper;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -16,19 +18,18 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ItemTechnology extends Item {
 	@Override
 	public String getItemStackDisplayName(ItemStack stack) {
-		return stack.hasTagCompound()? stack.getTagCompound().getString("Technology"): "Corrupt";
+		return stack.hasTagCompound()? stack.getTagCompound().getString("Research"): "Corrupt";
     }
 	
 	@Override
-	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-		if (!player.capabilities.isCreativeMode && stack.hasTagCompound()) {
-			stack.stackSize--;
-		}
-		
+	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {		
 		if (stack.hasTagCompound()) {
-			ITechnology tech = CraftingAPI.tech.getTechnologyFromName(stack.getTagCompound().getString("Technology"));
-			System.out.println("Added Research for " + tech.getName());
-			CraftingAPI.tech.research(player, tech);
+			IResearch research = CraftingAPI.registry.getResearchFromName(stack.getTagCompound().getString("Research"));
+			if(research.complete(PlayerHelper.getUUIDForPlayer(player))) {
+				if (!player.capabilities.isCreativeMode) {
+					stack.stackSize--;
+				}
+			}
 		}
 		
 		return stack;
@@ -36,11 +37,15 @@ public class ItemTechnology extends Item {
 	
 	@Override
 	@SideOnly(Side.CLIENT)
+    public void registerIcons(IIconRegister register) {}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
     public void getSubItems(Item item, CreativeTabs tab, List list) {
-		for (ITechnology tech: CraftingAPI.tech.getTechnologies()) {
+		for (IResearch research: CraftingAPI.registry.getResearch()) {
 			ItemStack stack = new ItemStack(item);
 			stack.setTagCompound(new NBTTagCompound());
-			stack.getTagCompound().setString("Technology", tech.getName());
+			stack.getTagCompound().setString("Research", research.getName());
 			list.add(stack);
 		}
     }

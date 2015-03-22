@@ -5,7 +5,7 @@ import java.util.UUID;
 import java.util.concurrent.Callable;
 
 import joshie.crafting.api.crafting.ICrafter;
-import joshie.crafting.implementation.crafters.CrafterHuman;
+import joshie.crafting.crafting.CrafterHuman;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 

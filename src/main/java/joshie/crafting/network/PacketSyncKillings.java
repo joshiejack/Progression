@@ -1,7 +1,8 @@
 package joshie.crafting.network;
 
 import io.netty.buffer.ByteBuf;
-import joshie.crafting.data.DataClient;
+import joshie.crafting.api.CraftingAPI;
+import joshie.crafting.player.PlayerDataClient;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -31,7 +32,7 @@ public class PacketSyncKillings implements IMessage, IMessageHandler<PacketSyncK
 
 	@Override
 	public IMessage onMessage(PacketSyncKillings message, MessageContext ctx) {
-		DataClient.INSTANCE.setKillings(message.entity, message.killings);
+		CraftingAPI.players.getClientPlayer().setKillings(message.entity, message.killings);
 		return null;
 	}
 }

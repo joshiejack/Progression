@@ -9,7 +9,7 @@ import java.io.File;
 import java.util.Map;
 
 import joshie.crafting.asm.CraftingTransformer;
-import joshie.crafting.data.SaveData;
+import joshie.crafting.player.PlayerSavedData;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 
@@ -35,8 +35,9 @@ public class CraftingMod implements IFMLLoadingPlugin {
 	
 	@Instance(MODID)
     public static CraftingMod instance;
-	public static SaveData saveData;
 	public static File configDir;
+	
+	public static PlayerSavedData data;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -48,10 +49,10 @@ public class CraftingMod implements IFMLLoadingPlugin {
 	public void onServerStarted(FMLServerStartedEvent event) {
 	      if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) return;
 	      World world = MinecraftServer.getServer().worldServers[0];
-	      saveData = (SaveData) world.loadItemData(SaveData.class, MODNAME);
-	      if (saveData == null) {
-	    	  saveData = new SaveData(MODNAME);
-	    	  world.setItemData(MODNAME, saveData);
+	      data = (PlayerSavedData) world.loadItemData(PlayerSavedData.class, MODNAME + "2");
+	      if (data == null) {
+	    	  data = new PlayerSavedData(MODNAME + "2");
+	    	  world.setItemData(MODNAME + "2", data);
 	      }
 	   }
 	

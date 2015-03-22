@@ -1,33 +1,32 @@
 package joshie.crafting.api;
 
+import java.util.List;
 import java.util.UUID;
 
-import joshie.crafting.api.crafting.CraftingType;
-import net.minecraft.item.ItemStack;
+/** Conditions are the classes that are created by the users
+ *  In their config files. Conditions can have unlimited triggers
+ *  as well as unlimited rewards. The conditions are checked, everytime
+ *  that any trigger is fired */
+public interface ICondition extends IHasUniqueName {
+	/** Called by a trigger to update the state of a condition
+	 *  If all triggers were met, then the condition should reward
+	 *  Check and Reward is only ever called serverside
+	 *  @param 		the uuid of the player, that we are checking
+	 *  @return		returns true if the player was rewarded **/
+	public boolean checkAndReward(UUID uuid);
 
-public interface ICondition {
-	/** Creates a new instance of this condition
-	 * 
-	 * @param 			data loaded from json, as a string */
-	public ICondition newInstance(String data);
+	/** Returns all the triggers that this condition needs to be met **/
+	public List<ITrigger> getTriggers();
 
-	/** Called directly after newInstance **/
-	public ICondition setCraftingType(String craftType);
+	/** Adds triggers to this condition **/
+	public ICondition addTriggers(ITrigger... triggers);
+
+	/** Adds rewards to this condition **/
+	public ICondition addRewards(IReward... rewards);
+
+	/** Adds Prereqs to this condition **/
+	public ICondition addPrereqs(ICondition... prereqs);
 	
-	/** Returns whether this condition has been met
-	 * @param 			the uuid
-	 * @return			true if the condition is met, false if it is not */
-	public boolean isMet(UUID uuid);
-	
-	/** Returns true if the crafting type is correct **/
-	public boolean isCorrectCraftingType(CraftingType type);
-
-	/** This is called whenever a condition is added to an itemstack
-	 *  
-	 * @param 			the stack the condition was added to */
-	public void onAdded(ItemStack stack);
-
-	/** Returns the name of this condition
-	 *  This is what is used when adding a new one from json. */
-	public String getName();
+	/** Adds conflicts to this condition **/
+	public ICondition addConflicts(ICondition... prereqs);
 }

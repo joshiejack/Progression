@@ -32,7 +32,7 @@ public class ASMCrafting extends AbstractASM {
 					public void visitCode() {
 						mv.visitVarInsn(Opcodes.ALOAD, 1);
 				        mv.visitVarInsn(Opcodes.ALOAD, 2);
-				        mv.visitMethodInsn(Opcodes.INVOKESTATIC, CraftingInfo.ASMPATH + "implementation/RecipeMatcher", "findMatchingRecipe", "(Lnet/minecraft/inventory/InventoryCrafting;Lnet/minecraft/world/World;)Lnet/minecraft/item/ItemStack;", false);
+				        mv.visitMethodInsn(Opcodes.INVOKESTATIC, CraftingInfo.ASMPATH + "crafting/RecipeHandler", "findMatchingRecipe", "(Lnet/minecraft/inventory/InventoryCrafting;Lnet/minecraft/world/World;)Lnet/minecraft/item/ItemStack;", false);
 				        mv.visitInsn(Opcodes.ARETURN);
 				        mv.visitMaxs(2, 3);
 					}

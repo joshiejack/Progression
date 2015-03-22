@@ -1,8 +1,6 @@
 package joshie.crafting.asm;
 
-import joshie.crafting.implementation.OwnerTracker;
 import joshie.crafting.lib.CraftingInfo;
-import net.minecraft.nbt.NBTTagCompound;
 
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
@@ -36,7 +34,7 @@ public class ASMTileEntity extends AbstractASM {
 							super.visitCode();
 							mv.visitVarInsn(Opcodes.ALOAD, 0);
 							mv.visitVarInsn(Opcodes.ALOAD, 1);
-					        mv.visitMethodInsn(Opcodes.INVOKESTATIC, CraftingInfo.ASMPATH + "implementation/OwnerTracker", "readFromNBT", "(Lnet/minecraft/tileentity/TileEntity;Lnet/minecraft/nbt/NBTTagCompound;)V", false);
+					        mv.visitMethodInsn(Opcodes.INVOKESTATIC, CraftingInfo.ASMPATH + "player/PlayerTracker", "readFromNBT", "(Lnet/minecraft/tileentity/TileEntity;Lnet/minecraft/nbt/NBTTagCompound;)V", false);
 						}
 					};
 				} else if (name.equals("writeToNBT")) {
@@ -46,7 +44,7 @@ public class ASMTileEntity extends AbstractASM {
 							super.visitCode();
 							mv.visitVarInsn(Opcodes.ALOAD, 0);
 							mv.visitVarInsn(Opcodes.ALOAD, 1);
-					        mv.visitMethodInsn(Opcodes.INVOKESTATIC, CraftingInfo.ASMPATH + "implementation/OwnerTracker", "writeToNBT", "(Lnet/minecraft/tileentity/TileEntity;Lnet/minecraft/nbt/NBTTagCompound;)V", false);
+					        mv.visitMethodInsn(Opcodes.INVOKESTATIC, CraftingInfo.ASMPATH + "player/PlayerTracker", "writeToNBT", "(Lnet/minecraft/tileentity/TileEntity;Lnet/minecraft/nbt/NBTTagCompound;)V", false);
 						}
 					};
 				}

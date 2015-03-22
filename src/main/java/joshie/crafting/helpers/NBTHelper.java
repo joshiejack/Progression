@@ -8,8 +8,16 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
 public class NBTHelper {
-	public static void readCollection(NBTTagCompound nbt, String string, ICollectionHelper something) {
-		NBTTagList list = nbt.getTagList(string, 10);
+	public static void readTagCollection(NBTTagCompound nbt, String string, ICollectionHelper something) {
+		readCollection(nbt, string, something, 10);
+	}
+	
+	public static void readStringCollection(NBTTagCompound nbt, String string, ICollectionHelper something) {
+		readCollection(nbt, string, something, 8);
+	}
+	
+	private static void readCollection(NBTTagCompound nbt, String string, ICollectionHelper something, int num) {
+		NBTTagList list = nbt.getTagList(string, num);
 		for (int i = 0; i < list.tagCount(); i++) {
 			Object o = something.read(list, i);
 			if (o != null) {
