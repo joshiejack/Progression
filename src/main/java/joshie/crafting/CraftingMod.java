@@ -11,6 +11,8 @@ import java.util.Map;
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.asm.CraftingTransformer;
 import joshie.crafting.player.PlayerSavedData;
+import net.minecraft.command.ICommandManager;
+import net.minecraft.command.ServerCommandManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 
@@ -24,6 +26,7 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.Side;
 
@@ -52,12 +55,25 @@ public class CraftingMod implements IFMLLoadingPlugin {
 	      World world = MinecraftServer.getServer().worldServers[0];
 	      data = (PlayerSavedData) world.loadItemData(PlayerSavedData.class, MODNAME);
 	      if (data == null) {
-	    	  data = new PlayerSavedData(MODNAME);
-	    	  world.setItemData(MODNAME, data);
+	    	  createWorldData();
 	      }
 	      
 	    //Remap all relevant data
 		CraftingAPI.registry.serverRemap();
+	}
+	
+	 @EventHandler
+	 public void onServerStarting(FMLServerStartingEvent event) {
+	 	ICommandManager manager = event.getServer().getCommandManager();
+	    if (manager instanceof ServerCommandManager) {
+	    	((ServerCommandManager) manager).registerCommand(CraftingAPI.commands);
+	    }
+	  }
+	
+	public void createWorldData() {
+		World world = MinecraftServer.getServer().worldServers[0];
+		data = new PlayerSavedData(MODNAME);
+  	    world.setItemData(MODNAME, data);
 	}
 	
 	@Override

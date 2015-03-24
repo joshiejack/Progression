@@ -3,9 +3,8 @@ package joshie.crafting.rewards;
 import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.IHasUniqueName;
 import joshie.crafting.api.IReward;
-import joshie.crafting.api.IRewardType;
 
-public abstract class RewardBase implements IReward, IRewardType {
+public abstract class RewardBase implements IReward {
 	private String uniqueName;
 	private String typeName;
 	

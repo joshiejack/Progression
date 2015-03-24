@@ -1,16 +1,33 @@
 package joshie.crafting.trigger;
 
 import joshie.crafting.api.ITrigger;
+import joshie.crafting.minetweaker.Triggers;
+import minetweaker.MineTweakerAPI;
 import net.minecraft.nbt.NBTTagCompound;
+import stanhebben.zenscript.annotations.Optional;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenMethod;
 
 import com.google.gson.JsonObject;
 
+@ZenClass("mods.craftcontrol.triggers.Kill")
 public class TriggerKill extends TriggerBase {
 	private String entity;
 	private int amount = 1;
 	
 	public TriggerKill() {
 		super("kill");
+	}
+	
+	@ZenMethod
+	public void add(String unique, String entity, @Optional int amount) {
+		TriggerKill trigger = new TriggerKill();
+		trigger.entity = entity;
+		if (amount <= 1) {
+			trigger.amount = 1;
+		} else trigger.amount = amount;
+
+		MineTweakerAPI.apply(new Triggers(unique, trigger));
 	}
 	
 	@Override
@@ -34,32 +51,30 @@ public class TriggerKill extends TriggerBase {
 
 	@Override
 	public boolean isCompleted(Object[] existing) {
-		int killCount = (Integer) existing[0];
-		return killCount >= amount;
+		int count = (Integer) existing[0];
+		return count >= amount;
 	}
 
 	@Override
-	public Object[] onFired(Object[] existing, Object... data) {		
-		int killCount = 0;
-		if (existing != null) {
-			killCount = ((Integer)existing[0]);
+	public Object[] onFired(Object[] existing, Object... data) {	
+		int count = asInt(existing);
+		String name = asString(data);
+
+		if (name.equals(entity)) {
+			count++;
 		}
 		
-		if (((String)data[0]).equals(entity)) {
-			killCount++;
-		}
-		
-		return new Object[] { killCount };
+		return new Object[] { count };
 	}
 
 	@Override
 	public Object[] readFromNBT(NBTTagCompound tag) {
-		return new Object[] { tag.getInteger("KillCount") };
+		return new Object[] { tag.getInteger("Count") };
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound tag, Object[] existing) {
-		int killCount = (Integer) existing[0];
-		tag.setInteger("KillCount", killCount);
+		int count = asInt(existing);
+		tag.setInteger("Count", count);
 	}
 }

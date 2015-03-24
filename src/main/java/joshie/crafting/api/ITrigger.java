@@ -1,6 +1,6 @@
 package joshie.crafting.api;
 
-import net.minecraft.nbt.NBTTagCompound;
+import java.util.Collection;
 
 
 /** Triggers, are a type of 'condition' that needs to be met
@@ -19,4 +19,10 @@ public interface ITrigger extends IHasUniqueName, ITriggerType {
 	 * 	@param		additional data, passed by the event itself, e.g. "Pig", for onKill 
 	 * @return **/
 	public Object[] onFired(Object[] existing, Object... data);
+
+	/** Returns a list of all the conditions this trigger needs satisfied, before it can be fired **/
+	public Collection<ICondition> getConditions();
+
+	/** Adds conditions to this trigger **/
+	public ITrigger setConditions(ICondition[] conditions);
 }

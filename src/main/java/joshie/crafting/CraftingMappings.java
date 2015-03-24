@@ -8,11 +8,13 @@ import java.util.Set;
 import java.util.UUID;
 
 import joshie.crafting.api.CraftingAPI;
+import joshie.crafting.api.ICondition;
 import joshie.crafting.api.ICraftingMappings;
 import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.IReward;
 import joshie.crafting.api.ITrigger;
 import joshie.crafting.helpers.NBTHelper;
+import joshie.crafting.helpers.PlayerHelper;
 import joshie.crafting.network.PacketHandler;
 import joshie.crafting.network.PacketSyncConditions;
 import joshie.crafting.network.PacketSyncSpeed;
@@ -20,9 +22,12 @@ import joshie.crafting.network.PacketSyncTriggers;
 import joshie.crafting.player.PlayerDataServer;
 import joshie.crafting.player.nbt.ConditionNBT;
 import joshie.crafting.player.nbt.TriggerNBT;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.world.World;
+import net.minecraftforge.common.DimensionManager;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -125,17 +130,23 @@ public class CraftingMappings implements ICraftingMappings {
 	
 	/** Called to fire a trigger type, Triggers are only ever called on criteria that is activated **/
 	@Override
-	public boolean fireAllTriggers(String type, Object... data) {				
+	public boolean fireAllTriggers(String type, Object... data) {		
+		EntityPlayer player = PlayerHelper.getPlayerFromUUID(uuid);
+		World world = player == null? DimensionManager.getWorld(0): player.worldObj;
 		boolean completedAnyCriteria = false;
 		Collection<ITrigger> triggers = activeTriggers.get(type);		
 				
-		//The first we should do, is fire all of the triggers
 		for (ITrigger trigger: triggers) {
+			Collection<ICondition> conditions = trigger.getConditions();
+			for (ICondition condition: conditions) {
+				if (!condition.isSatisfied(world, player, uuid)) {
+					return false;
+				}
+			}
+			
 			Object[] existing = triggerData.get(trigger.getUniqueName()); //Grab the old data
 			Object[] newData = trigger.onFired(existing, data); //Fire the new data
-			if (existing != newData) {
-				triggerData.put(trigger.getUniqueName(), newData);
-			}
+			triggerData.put(trigger.getUniqueName(), newData);
 		}
 		
 		//Next step, now that the triggers have been fire, we need to go through them again
@@ -202,8 +213,7 @@ public class CraftingMappings implements ICraftingMappings {
 					//Remove the triggers from completed if they are repeatable as well
 					if (criteria.isRepeatable()) { //Removes all the triggers from completed
 						for (ITrigger triggerz: criteria.getTriggers()) {
-							String uniqueName = triggerz.getUniqueName();
-							completedTriggers.remove(uniqueName);
+							completedTriggers.remove(triggerz.getUniqueName());
 						}
 					}
 				}

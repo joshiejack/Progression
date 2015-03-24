@@ -4,9 +4,11 @@ package joshie.crafting.crafting;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import joshie.crafting.api.crafting.CraftingType;
 import joshie.crafting.api.crafting.ICrafter;
+import joshie.crafting.asm.ContainerPlayer;
 import joshie.crafting.helpers.ClientHelper;
 import joshie.crafting.helpers.PlayerHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,18 +36,31 @@ public class RecipeHandler {
 		} catch (Exception e) {}
 	}
 	
-	public static List getPlayers(InventoryCrafting crafting, boolean isClient) {
-		if (isClient && ClientHelper.getPlayer() != null) return Arrays.asList(new Object[] { ClientHelper.getPlayer() });
+	public static List<UUID> getPlayers(InventoryCrafting crafting, boolean isClient) {
+		if (isClient && ClientHelper.getPlayer() != null) return Arrays.asList(new Object[] { PlayerHelper.getUUIDForPlayer(ClientHelper.getPlayer()) });
 		try {
 			Container container = (Container) fContainer.get(crafting);
-			return (List) fCrafters.get(container);
+			List list = (List) fCrafters.get(container);
+			List<UUID> uuids = new ArrayList();
+			if (list.size() < 1) {
+				if (container instanceof ContainerPlayer) {
+					uuids.add(((ContainerPlayer)container).uuid);
+				}
+			}
+			
+			
+			for (EntityPlayer player: (ArrayList<EntityPlayer>)list) {
+				uuids.add(PlayerHelper.getUUIDForPlayer(player));
+			}
+			
+			return uuids;
 		} catch (Exception e) {}
 		
 		return new ArrayList(); //Return an empty list
 	}
 	
 	/** Called when trying to find a recipe **/
-	public static ItemStack findMatchingRecipe(InventoryCrafting crafting, World world) {		
+	public static ItemStack findMatchingRecipe(InventoryCrafting crafting, World world) {			
 		ItemStack itemstack = null, itemstack1 = null;
 		int slot = 0;
 		for (int j = 0; j < crafting.getSizeInventory(); j++) {
@@ -58,9 +73,9 @@ public class RecipeHandler {
 			}
 		}
 				
-		List<EntityPlayer> players = getPlayers(crafting, world.isRemote);
-		for (EntityPlayer player: players) {
-			ICrafter crafter = PlayerHelper.getCrafterForPlayer(player);
+		List<UUID> uuids = getPlayers(crafting, world.isRemote);
+		for (UUID uuid: uuids) {
+			ICrafter crafter = PlayerHelper.getCrafterForUUID(uuid);
 			if (!crafter.canCraftWithAnything()) { //If we can't craft with every item, let's validate them all
 				for (int i = 0; i < crafting.getSizeInventory(); i++) {
 					ItemStack stack = crafting.getStackInSlot(i);

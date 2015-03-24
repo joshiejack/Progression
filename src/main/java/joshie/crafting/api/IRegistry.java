@@ -8,15 +8,18 @@ import com.google.common.collect.Multimap;
 import com.google.gson.JsonObject;
 
 /** The registry is where you register new types of rewards, triggers and
- *  conditions. All triggers and rewards should be registered before any conditions */
+ *  conditions, and the criteria. All triggers and rewards should be registered before any criteria, and conditions before triggers */
 public interface IRegistry {
 	/** Fires all triggers, of the type specified, Triggers should only be fired
 	 *  On the server side.
 	 *  @return		returns true if just one of the triggers suceeded **/
 	public boolean fireTrigger(UUID uuid, String trigger, Object... data);
 	
-	/** Returns a condition based on the name **/
-	public ICriteria getConditionFromName(String name);
+	/** Returns a criteria based on the name **/
+	public ICriteria getCriteriaFromName(String name);
+
+	/** Creates a new condition **/
+	public ICondition getCondition(String type, String unique, JsonObject data);
 	
 	/** Returns a trigger with the settings, type and data can be null
 	 *  If you want to just pull from the unique name, but you'd have to
@@ -30,8 +33,16 @@ public interface IRegistry {
 	 *  @param		the data for the trigger **/
 	public IReward getReward(String type, String unique, JsonObject data);
 
-	/** Returns a new condition **/
-	public ICriteria newCondition(String string);
+	/** Returns a new criteria **/
+	public ICriteria newCriteria(String string);
+	
+	public void removeCondition(String unique);
+	public void removeTrigger(String unique);
+	public void removeReward(String unique);
+	public void removeCriteria(String unique);
+	
+	/** Register a condition with the registry **/
+	public IConditionType registerConditionType(IConditionType reward);
 	
 	/** Register a trigger with the registry **/
 	public ITriggerType registerTriggerType(ITriggerType trigger);
@@ -47,6 +58,14 @@ public interface IRegistry {
 	public Collection<ICriteria> getCriteriaUnlocks(ICriteria criteria);
 	
 	public void serverRemap();
+	
+	public void reloadJson();
+	
+	public void resetData();
+	
+	public void resyncPlayers();
 
 	public Collection<ICriteria> getCriteria();
+
+	public void loadMineTweaker3();
 }

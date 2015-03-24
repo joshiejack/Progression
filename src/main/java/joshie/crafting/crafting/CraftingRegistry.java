@@ -27,7 +27,7 @@ public class CraftingRegistry implements ICraftingRegistry {
 	}
 
 	@Override
-	public Collection<ICriteria> getConditions(CraftingType type, ItemStack stack) {
+	public Collection<ICriteria> getCriteria(CraftingType type, ItemStack stack) {
 		Collection<ICriteria> conditions = new HashSet();
 		SafeStack[] safe = SafeStack.allInstances(stack);
 		for (SafeStack s: safe) {

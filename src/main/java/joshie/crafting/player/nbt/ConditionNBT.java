@@ -9,6 +9,6 @@ public class ConditionNBT extends AbstractUniqueNBT {
 	@Override
 	public Object read(NBTTagList list, int i) {
 		String name = list.getStringTagAt(i);
-		return CraftingAPI.registry.getConditionFromName(name);
+		return CraftingAPI.registry.getCriteriaFromName(name);
 	}
 }

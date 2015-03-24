@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import joshie.crafting.api.CraftingAPI;
+import joshie.crafting.api.ICondition;
 import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.IReward;
 import joshie.crafting.api.ITrigger;
@@ -57,14 +58,25 @@ public class JSONLoader {
 		GsonBuilder builder = new GsonBuilder().setPrettyPrinting();
 		builder.registerTypeAdapter(DataTrigger.class, new AdapterTriggers());
 		builder.registerTypeAdapter(DataReward.class, new AdapterRewards());
+		builder.registerTypeAdapter(DataCondition.class, new AdapterConditions());
 		Gson gson = builder.create();
+		IJsonLoader conditions = getJson(gson, Conditions.class);
 		IJsonLoader triggers = getJson(gson, Triggers.class);
 		IJsonLoader rewards = getJson(gson, Rewards.class);
-		IJsonLoader criteria = getJson(gson, Criteria.class);
+		IJsonLoader criterian = getJson(gson, Criteria.class);
+		
+		/** Step 0, register all the conditions **/
+		for (DataCondition condition: (HashSet<DataCondition>) conditions.getSet()) {
+			CraftingAPI.registry.getCondition(condition.type, condition.name, condition.data);
+		}
 		
 		/** Step 1 we must go through and register all the triggers **/
 		for (DataTrigger trigger: (HashSet<DataTrigger>) triggers.getSet()) {
-			CraftingAPI.registry.getTrigger(trigger.type, trigger.name, trigger.data);
+			ITrigger theTrigger = CraftingAPI.registry.getTrigger(trigger.type, trigger.name, trigger.data);
+			ICondition[] theConditions = new ICondition[trigger.conditions.length];
+			for (int i = 0; i < theConditions.length; i++)
+				theConditions[i] = CraftingAPI.registry.getCondition(null, trigger.conditions[i], null);
+			theTrigger.setConditions(theConditions);
 		}
 		
 		/** Step 2, we go through and register all the rewards **/
@@ -72,32 +84,32 @@ public class JSONLoader {
 			CraftingAPI.registry.getReward(reward.type, reward.name, reward.data);
 		}
 		
-		/** Step 3, we create add all instances of conditions to the registry **/
-		for (DataCondition condition: (HashSet<DataCondition>) criteria.getSet()) {
-			CraftingAPI.registry.newCondition(condition.name);
+		/** Step 3, we create add all instances of criteria to the registry **/
+		for (DataCriteria criteria: (HashSet<DataCriteria>) criterian.getSet()) {
+			CraftingAPI.registry.newCriteria(criteria.name);
 		}
 		
-		/** Step 4, now that we have created all the conditions we can add the extra data for them **/
-		for (DataCondition condition: (HashSet<DataCondition>) criteria.getSet()) {
-			ICriteria theCondition = CraftingAPI.registry.getConditionFromName(condition.name);
-			if (theCondition == null) {
-				throw new ConditionNotFoundException(condition.name);
+		/** Step 4, now that we have created all the criteria we can add the extra data for them **/
+		for (DataCriteria criteria: (HashSet<DataCriteria>) criterian.getSet()) {
+			ICriteria theCriteria = CraftingAPI.registry.getCriteriaFromName(criteria.name);
+			if (theCriteria == null) {
+				throw new ConditionNotFoundException(criteria.name);
 			}
 			
-			ITrigger[] theTriggers = new ITrigger[condition.triggers.length];
-			IReward[] theRewards = new IReward[condition.rewards.length];
-			ICriteria[] thePrereqs = new ICriteria[condition.prereqs.length];
-			ICriteria[] theConflicts = new ICriteria[condition.conflicts.length];
+			ITrigger[] theTriggers = new ITrigger[criteria.triggers.length];
+			IReward[] theRewards = new IReward[criteria.rewards.length];
+			ICriteria[] thePrereqs = new ICriteria[criteria.prereqs.length];
+			ICriteria[] theConflicts = new ICriteria[criteria.conflicts.length];
 			for (int i = 0; i < theTriggers.length; i++)
-				theTriggers[i] = CraftingAPI.registry.getTrigger(null, condition.triggers[i], null);
+				theTriggers[i] = CraftingAPI.registry.getTrigger(null, criteria.triggers[i], null);
 			for (int i = 0; i < theRewards.length; i++)
-				theRewards[i] = CraftingAPI.registry.getReward(null, condition.rewards[i], null);
+				theRewards[i] = CraftingAPI.registry.getReward(null, criteria.rewards[i], null);
 			for (int i = 0; i < thePrereqs.length; i++)
-				thePrereqs[i] = CraftingAPI.registry.getConditionFromName(condition.prereqs[i]);
+				thePrereqs[i] = CraftingAPI.registry.getCriteriaFromName(criteria.prereqs[i]);
 			for (int i = 0; i < theConflicts.length; i++)
-				theConflicts[i] = CraftingAPI.registry.getConditionFromName(condition.conflicts[i]);
-			boolean repeatable = condition.repeatable;
-			theCondition.addTriggers(theTriggers).addRewards(theRewards).addRequirements(thePrereqs).addConflicts(theConflicts).setRepeatable(repeatable);
+				theConflicts[i] = CraftingAPI.registry.getCriteriaFromName(criteria.conflicts[i]);
+			boolean repeatable = criteria.repeatable;
+			theCriteria.addTriggers(theTriggers).addRewards(theRewards).addRequirements(thePrereqs).addConflicts(theConflicts).setRepeatable(repeatable);
 		}
 		
 		/** We are finished **/
@@ -106,7 +118,25 @@ public class JSONLoader {
 		gson = null;
 		triggers = null;
 		rewards = null;
-		criteria = null;
+		criterian = null;
+	}
+	
+	/** Setup default conditions **/
+	public static class Conditions implements IJsonLoader {
+		private Set<DataCondition> data = new HashSet();
+
+		@Override
+		public Set getSet() {
+			return data;
+		}
+		
+		@Override
+		public IJsonLoader setDefaults() {
+			JsonObject night = new JsonObject();
+			night.addProperty("Night", true);
+			data.add(new DataCondition("time", "TIME", night));
+			return this;
+		}
 	}
 	
 	/** Set up the default triggers **/
@@ -122,13 +152,13 @@ public class JSONLoader {
 		public IJsonLoader setDefaults() {
 			JsonObject iron = new JsonObject();
 			iron.addProperty("Research Name", "Iron Heights");
-			data.add(new DataTrigger("research", "IRON", iron));
+			data.add(new DataTrigger("research", "IRON", iron, new String[] {}));
 			JsonObject pig = new JsonObject();
 			pig.addProperty("Entity", "Pig");
-			data.add(new DataTrigger("kill", "GOLD", pig));
+			data.add(new DataTrigger("kill", "GOLD", pig, new String[] { "TIME" }));
 			JsonObject crafting = new JsonObject();
 			crafting.addProperty("Item", "minecraft:diamond_block");
-			data.add(new DataTrigger("crafting", "LAPIS", crafting));
+			data.add(new DataTrigger("crafting", "LAPIS", crafting, new String[] {}));
 			return this;
 		}
 	}
@@ -162,7 +192,7 @@ public class JSONLoader {
 	
 	/** Set up the default conditions **/
 	public static class Criteria implements IJsonLoader {
-		private Set<DataCondition> data = new HashSet();
+		private Set<DataCriteria> data = new HashSet();
 
 		@Override
 		public Set getSet() {
@@ -171,9 +201,9 @@ public class JSONLoader {
 		
 		@Override
 		public IJsonLoader setDefaults() {
-			data.add(new DataCondition("NamedCondition", new String[] { "IRON" }, new String[] { "SPEED", "CRAFTINGIRON" }, new String[] {}, new String[] {}));
-			data.add(new DataCondition("GoldenPig", new String[] { "GOLD" }, new String[] { "CRAFTINGGOLD" }, new String[] {}, new String[] {}));
-			data.add(new DataCondition("EnableLapis", new String[] { "LAPIS" }, new String[] { "CRAFTINGLAPIS" }, new String[] {}, new String[] {}));
+			data.add(new DataCriteria("NamedCondition", new String[] { "IRON" }, new String[] { "SPEED", "CRAFTINGIRON" }, new String[] {}, new String[] {}));
+			data.add(new DataCriteria("GoldenPig", new String[] { "GOLD" }, new String[] { "CRAFTINGGOLD" }, new String[] {}, new String[] {}));
+			data.add(new DataCriteria("EnableLapis", new String[] { "LAPIS" }, new String[] { "CRAFTINGLAPIS" }, new String[] {}, new String[] {}));
 			return this;
 		}
 	}

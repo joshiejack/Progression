@@ -22,12 +22,17 @@ public class CrafterHuman implements ICrafter {
 
 	@Override
 	public boolean canUseItemForCrafting(ItemStack stack) {
-		return true;
+		Collection<ICriteria> conditions = CraftingAPI.crafting.getCriteria(CraftingType.CRAFTING, stack);
+		if (conditions.size() < 1) return true;
+		Set<ICriteria> completed = CraftingAPI.players.getPlayerData(uuid).getMappings().getCompletedCriteria();
+		if (completed.containsAll(conditions)) {
+			return true;
+		} else return false;
 	}
 
 	@Override
 	public boolean canCraftItem(CraftingType type, ItemStack stack) {
-		Collection<ICriteria> conditions = CraftingAPI.crafting.getConditions(type, stack);
+		Collection<ICriteria> conditions = CraftingAPI.crafting.getCriteria(type, stack);
 		if (conditions.size() < 1) return true;
 		Set<ICriteria> completed = CraftingAPI.players.getPlayerData(uuid).getMappings().getCompletedCriteria();
 		if (completed.containsAll(conditions)) {
@@ -37,7 +42,7 @@ public class CrafterHuman implements ICrafter {
 
 	@Override
 	public boolean canCraftWithAnything() {
-		return true;
+		return false;
 	}
 
 	@Override

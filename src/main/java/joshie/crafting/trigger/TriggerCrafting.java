@@ -2,11 +2,20 @@ package joshie.crafting.trigger;
 
 import joshie.crafting.api.ITrigger;
 import joshie.crafting.helpers.StackHelper;
+import joshie.crafting.minetweaker.Triggers;
+import minetweaker.MineTweakerAPI;
+import minetweaker.api.item.IIngredient;
+import minetweaker.api.minecraft.MineTweakerMC;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.oredict.OreDictionary;
+import stanhebben.zenscript.annotations.Optional;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenMethod;
 
 import com.google.gson.JsonObject;
 
+@ZenClass("mods.craftcontrol.triggers.Crafting")
 public class TriggerCrafting extends TriggerBase {
 	private ItemStack stack;
 	private boolean matchDamage = true;
@@ -16,6 +25,26 @@ public class TriggerCrafting extends TriggerBase {
 	
 	public TriggerCrafting() {
 		super("crafting");
+	}
+	
+	@ZenMethod
+	public void add(String unique, IIngredient stack, @Optional boolean matchNBT, @Optional int craftTimes, @Optional int itemAmount) {
+		TriggerCrafting daytime = new TriggerCrafting();
+		daytime.stack = MineTweakerMC.getItemStack(stack); 
+		if (daytime.stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
+			daytime.matchDamage = false;
+		}
+		
+		daytime.matchNBT = matchNBT;
+		if (craftTimes <= 1) {
+			daytime.craftingTimes = 1;
+		} else daytime.craftingTimes = craftTimes;
+		
+		if (itemAmount <= 1) {
+			daytime.itemAmount = 1;
+		} else daytime.itemAmount = itemAmount;
+		
+		MineTweakerAPI.apply(new Triggers(unique, daytime));
 	}
 	
 	@Override
@@ -52,23 +81,16 @@ public class TriggerCrafting extends TriggerBase {
 
 	@Override
 	public boolean isCompleted(Object[] existing) {
-		int amountCrafted = (Integer) existing[0];
-		int timesCrafted = (Integer) existing[1];
+		int amountCrafted = asInt(existing);
+		int timesCrafted = asInt(existing, 1);
 		return amountCrafted >= itemAmount && timesCrafted >= craftingTimes;
 	}
 
 	@Override
 	public Object[] onFired(Object[] existing, Object... data) {
-		ItemStack crafted = (ItemStack) data[0];
-		int amountCrafted = 0;
-		int timesCrafted = 0;
-		if (existing != null) {
-			amountCrafted = (Integer) existing[0];
-			timesCrafted = (Integer) existing[1];
-		} else {
-			amountCrafted = 0;
-			timesCrafted = 0;
-		}
+		ItemStack crafted = asStack(data);
+		int amountCrafted = asInt(existing);
+		int timesCrafted = asInt(existing, 1);
 		
 		if (stack.getItem() == crafted.getItem()) {
 			if (matchDamage && stack.getItemDamage() != crafted.getItemDamage()) return new Object[] { amountCrafted, timesCrafted };

@@ -5,10 +5,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class SafeStack {
+	public ItemStack original;
 	public String item;
 	
 	protected SafeStack(ItemStack stack) {
 		this.item = Item.itemRegistry.getNameForObject(stack.getItem());
+		this.original = stack;
 	}
 
 	public static SafeStack[] allInstances(ItemStack stack) {

@@ -1,15 +1,27 @@
 package joshie.crafting.trigger;
 
 import joshie.crafting.api.ITrigger;
+import joshie.crafting.minetweaker.Triggers;
+import minetweaker.MineTweakerAPI;
 import net.minecraft.nbt.NBTTagCompound;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenMethod;
 
 import com.google.gson.JsonObject;
 
+@ZenClass("mods.craftcontrol.triggers.Research")
 public class TriggerResearch extends TriggerBase {
 	private String researchName;
 	
 	public TriggerResearch() {
 		super("research");
+	}
+	
+	@ZenMethod
+	public void add(String unique, String name) {
+		TriggerResearch trigger = new TriggerResearch();
+		trigger.researchName = name;
+		MineTweakerAPI.apply(new Triggers(unique, trigger));
 	}
 	
 	@Override
@@ -30,12 +42,12 @@ public class TriggerResearch extends TriggerBase {
 
 	@Override
 	public boolean isCompleted(Object[] existing) {
-		return ((Boolean)existing[0]) == true;
+		return asBoolean(existing) == true;
 	}
 
 	@Override
 	public Object[] onFired(Object[] existing, Object... data) {
-		if (((String)data[0]).equals(researchName)) {
+		if (asString(data).equals(researchName)) {
 			return new Object[] { true };
 		} else return new Object[] { false };
 	}
@@ -47,7 +59,7 @@ public class TriggerResearch extends TriggerBase {
 
 	@Override
 	public void writeToNBT(NBTTagCompound tag, Object[] existing) {
-		boolean completed = ((Boolean)existing[0]);
+		boolean completed = asBoolean(existing);
 		tag.setBoolean("HasResearch", completed);
 	}
 }

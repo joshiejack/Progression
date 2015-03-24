@@ -6,8 +6,14 @@ import java.util.List;
 import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.IReward;
 import joshie.crafting.api.ITrigger;
+import joshie.crafting.minetweaker.Criteria;
+import minetweaker.MineTweakerAPI;
 import scala.actors.threadpool.Arrays;
+import stanhebben.zenscript.annotations.Optional;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenMethod;
 
+@ZenClass("mods.craftcontrol.Criteria")
 public class CraftingCriteria implements ICriteria {
 	private List<ITrigger> triggers = new ArrayList();
 	private List<IReward> rewards = new ArrayList();
@@ -16,6 +22,11 @@ public class CraftingCriteria implements ICriteria {
 	private boolean isRepeatable;
 	
 	private String name;
+	
+	@ZenMethod
+	public void add(String unique, String[] triggers, @Optional String[] rewards, @Optional String[] prereqs, @Optional String[] conflicts, @Optional boolean isRepeatable) {	
+		MineTweakerAPI.apply(new Criteria(unique, triggers, rewards, prereqs, conflicts, isRepeatable));
+	}
 	
 	@Override
 	public String getUniqueName() {

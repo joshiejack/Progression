@@ -18,6 +18,7 @@ public class CraftingTransformer implements IClassTransformer {
 		asm.add(new ASMCrafting());
 		asm.add(new ASMTileEntity());
 		asm.add(new ASMFurnace());
+		asm.add(new ASMAE2());
 	}
 	
 	@Override

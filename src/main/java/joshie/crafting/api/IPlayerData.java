@@ -5,7 +5,7 @@ import java.util.UUID;
 
 /** All data pertaining to this player,
  *  includes sets of everything researched, and every
- *  condition that has been met, as well additional bonus data **/
+ *  criteria that has been met, as well additional bonus data **/
 public interface IPlayerData {
 	/** Gets the UUID **/
 	public UUID getUUID();
@@ -14,4 +14,6 @@ public interface IPlayerData {
 	public float getSpeed();
 
 	public ICraftingMappings getMappings();
+	
+	public void resetData();
 }

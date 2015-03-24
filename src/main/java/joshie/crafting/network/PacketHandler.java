@@ -15,6 +15,11 @@ import cpw.mods.fml.relauncher.Side;
 public class PacketHandler {
 	private static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(CraftingInfo.MODID);
     private static int id;
+    
+    public static void registerPacket(Class clazz) {
+    	registerPacket(clazz, Side.CLIENT);
+    	registerPacket(clazz, Side.SERVER);
+    }
 
     public static void registerPacket(Class clazz, Side side) {
         INSTANCE.registerMessage(clazz, clazz, id++, side);

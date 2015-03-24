@@ -4,14 +4,26 @@ import java.util.UUID;
 
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.IReward;
+import joshie.crafting.minetweaker.Rewards;
+import minetweaker.MineTweakerAPI;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenMethod;
 
 import com.google.gson.JsonObject;
 
+@ZenClass("mods.craftcontrol.rewards.Speed")
 public class RewardSpeed extends RewardBase {
 	private float speed;
 	
 	public RewardSpeed() {
 		super("speed");
+	}
+	
+	@ZenMethod
+	public void add(String unique, double speed) {
+		RewardSpeed reward = new RewardSpeed();
+		reward.speed = Float.parseFloat("" + speed);		
+		MineTweakerAPI.apply(new Rewards(unique, reward));
 	}
 	
 	@Override

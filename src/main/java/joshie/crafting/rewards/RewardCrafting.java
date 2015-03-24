@@ -2,15 +2,26 @@ package joshie.crafting.rewards;
 
 import java.util.UUID;
 
+import joshie.crafting.CraftingCommon;
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.IReward;
 import joshie.crafting.api.crafting.CraftingType;
 import joshie.crafting.helpers.StackHelper;
+import joshie.crafting.minetweaker.Rewards;
+import minetweaker.MineTweakerAPI;
+import minetweaker.api.item.IIngredient;
+import minetweaker.api.minecraft.MineTweakerMC;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
+import stanhebben.zenscript.annotations.Optional;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenMethod;
+import codechicken.nei.api.API;
 
 import com.google.gson.JsonObject;
 
+@ZenClass("mods.craftcontrol.rewards.Crafting")
 public class RewardCrafting extends RewardBase {
 	private ItemStack stack;
 	private CraftingType type = CraftingType.CRAFTING;
@@ -19,6 +30,25 @@ public class RewardCrafting extends RewardBase {
 	
 	public RewardCrafting() {
 		super("crafting");
+	}
+	
+	@ZenMethod
+	public void add(String unique, IIngredient stack, @Optional String type, @Optional boolean matchNBT) {
+		RewardCrafting reward = new RewardCrafting();
+		reward.stack = MineTweakerMC.getItemStack(stack); 
+		if (reward.stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
+			reward.matchDamage = false;
+		}
+		
+		reward.matchNBT = matchNBT;
+		for (CraftingType typeS: CraftingType.values()) {
+			if (typeS.name().equalsIgnoreCase(type)) {
+				reward.type = typeS;
+				break;
+			}
+		}
+		
+		MineTweakerAPI.apply(new Rewards(unique, reward));
 	}
 	
 	@Override
@@ -43,6 +73,15 @@ public class RewardCrafting extends RewardBase {
 			reward.matchNBT = data.get("Match NBT").getAsBoolean();
 		}
 		
+		if (CraftingCommon.NEI_LOADED) {
+			if (data.get("Hide from NEI") != null) {
+				if (data.get("Hide from NEI").getAsBoolean() == false) {
+					reward.isAdded = false;
+					API.hideItem(stack);
+				}
+			}
+		}
+		
 		return reward;
 	}
 
@@ -62,8 +101,15 @@ public class RewardCrafting extends RewardBase {
 		}
 	}
 	
+	private boolean isAdded = true;
+	
 	@Override
-	public void reward(UUID uuid) {}
+	public void reward(UUID uuid) {
+		if (CraftingCommon.NEI_LOADED && !isAdded) {
+			API.addItemListEntry(stack);
+			isAdded = true;
+		}
+	}
 	
 	@Override
 	public void onAdded(ICriteria criteria) {

@@ -3,6 +3,8 @@ package joshie.crafting.network;
 import io.netty.buffer.ByteBuf;
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ICriteria;
+import joshie.crafting.api.IReward;
+import joshie.crafting.rewards.RewardCrafting;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -33,13 +35,25 @@ public class PacketSyncConditions implements IMessage, IMessageHandler<PacketSyn
     	int size = buf.readInt();
     	conditions = new ICriteria[size];
     	for (int i = 0; i < size; i++) {
-    		conditions[i] = CraftingAPI.registry.getConditionFromName(ByteBufUtils.readUTF8String(buf));
+    		conditions[i] = CraftingAPI.registry.getCriteriaFromName(ByteBufUtils.readUTF8String(buf));
     	}
     }
     
     @Override
     public IMessage onMessage(PacketSyncConditions message, MessageContext ctx) {    
     	CraftingAPI.players.getClientPlayer().getMappings().markCriteriaAsCompleted(message.overwrite, message.conditions);
-        return null;
+        if (message.overwrite) {
+        	for (ICriteria condition: CraftingAPI.registry.getCriteria()) {
+        		for (ICriteria unlocked: message.conditions) {
+        			for (IReward reward: unlocked.getRewards()) {
+        				if (reward instanceof RewardCrafting) {
+        					reward.reward(CraftingAPI.players.getClientPlayer().getUUID());
+        				}
+        			}
+        		}
+        	}
+        }
+    	
+    	return null;
     }
 }

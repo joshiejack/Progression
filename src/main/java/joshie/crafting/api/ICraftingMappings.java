@@ -12,7 +12,7 @@ public interface ICraftingMappings {
 	/** Called whenever a server starts, or a player joins **/
 	public void remap();
 
-	public void markCriteriaAsCompleted(boolean overwrite, ICriteria... conditions);
+	public void markCriteriaAsCompleted(boolean overwrite, ICriteria... criteria);
 	public void markTriggerAsCompleted(boolean overwrite, ITrigger... researches);
 
 	public Set<ICriteria> getCompletedCriteria();
