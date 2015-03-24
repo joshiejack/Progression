@@ -22,6 +22,6 @@ public abstract class AbstractUniqueNBT implements ICollectionHelper {
 
 	@Override
 	public NBTBase write(Object s) {
-		return new NBTTagString(((IHasUniqueName)s).getName());
+		return new NBTTagString(((IHasUniqueName)s).getUniqueName());
 	}
 }

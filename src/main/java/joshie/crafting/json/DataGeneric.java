@@ -1,21 +1,16 @@
 package joshie.crafting.json;
 
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.JsonObject;
 
-public class DataGeneric {
+public abstract class DataGeneric {
 	public DataGeneric() {}
-	public DataGeneric(String type, String name, String data) {
+	public DataGeneric(String type, String name, JsonObject data) {
 		this.name = name;
 		this.type = type;
 		this.data = data;
 	}
 	
-	@SerializedName("Unique Name")
-	String name;
+	public JsonObject data;
 	
-	@SerializedName("Type")
-	String type;
-	
-	@SerializedName("Data")
-	String data;
+	public String name, type;
 }

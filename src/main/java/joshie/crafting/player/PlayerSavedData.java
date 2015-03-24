@@ -1,8 +1,10 @@
 package joshie.crafting.player;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 
+import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.IPlayerDataServer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -15,6 +17,10 @@ public class PlayerSavedData extends WorldSavedData {
 	
 	public PlayerSavedData(String data) {
 		super(data);
+	}
+	
+	public Collection<PlayerDataServer> getPlayerData() {
+		return data.values();
 	}
 
 	public IPlayerDataServer getServerPlayer(UUID uuid) {

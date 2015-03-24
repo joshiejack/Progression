@@ -3,8 +3,9 @@ package joshie.crafting;
 import java.util.List;
 
 import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.api.IResearch;
+import joshie.crafting.api.ITrigger;
 import joshie.crafting.helpers.PlayerHelper;
+import joshie.crafting.trigger.TriggerResearch;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,10 +25,12 @@ public class ItemTechnology extends Item {
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {		
 		if (stack.hasTagCompound()) {
-			IResearch research = CraftingAPI.registry.getResearchFromName(stack.getTagCompound().getString("Research"));
-			if(research.complete(PlayerHelper.getUUIDForPlayer(player))) {
-				if (!player.capabilities.isCreativeMode) {
-					stack.stackSize--;
+			ITrigger research = CraftingAPI.registry.getTrigger(null, stack.getTagCompound().getString("Research"), null);
+			if (!world.isRemote) {
+				if(CraftingAPI.players.getServerPlayer(PlayerHelper.getUUIDForPlayer(player)).getMappings().fireAllTriggers("research", stack.getTagCompound().getString("Research"))) {
+					if (!player.capabilities.isCreativeMode) {
+						stack.stackSize--;
+					}
 				}
 			}
 		}
@@ -42,11 +45,13 @@ public class ItemTechnology extends Item {
 	@Override
 	@SideOnly(Side.CLIENT)
     public void getSubItems(Item item, CreativeTabs tab, List list) {
-		for (IResearch research: CraftingAPI.registry.getResearch()) {
-			ItemStack stack = new ItemStack(item);
-			stack.setTagCompound(new NBTTagCompound());
-			stack.getTagCompound().setString("Research", research.getName());
-			list.add(stack);
+		for (ITrigger research: CraftingAPI.registry.getTechnology()) {
+			if (research instanceof TriggerResearch) {
+				ItemStack stack = new ItemStack(item);
+				stack.setTagCompound(new NBTTagCompound());
+				stack.getTagCompound().setString("Research", ((TriggerResearch)research).getResearchName());
+				list.add(stack);
+			}
 		}
     }
 }

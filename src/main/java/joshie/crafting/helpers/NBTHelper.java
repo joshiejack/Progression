@@ -52,8 +52,8 @@ public class NBTHelper {
 			Object key = o;
 			Object value = something.getMap().get(key);
 			NBTTagCompound tag = new NBTTagCompound();
-			something.writeKey(nbt, key);
-			something.writeValue(nbt, value);
+			something.writeKey(tag, key);
+			something.writeValue(tag, value);
 			list.appendTag(tag);
 		}
 		

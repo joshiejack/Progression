@@ -1,34 +1,53 @@
 package joshie.crafting.trigger;
 
-import java.util.UUID;
-
-import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.api.IResearch;
 import joshie.crafting.api.ITrigger;
-import joshie.crafting.tech.Research;
+import net.minecraft.nbt.NBTTagCompound;
 
-public class TriggerResearch implements ITrigger {
-	private IResearch research;
+import com.google.gson.JsonObject;
 
-	@Override
-	public ITrigger newInstance(String data) {
-		TriggerResearch trigger = new TriggerResearch();
-		IResearch existing = CraftingAPI.registry.getResearchFromName(data);
-		if (existing == null) { //If the research doesn't exist yet, create it
-			existing = CraftingAPI.registry.registerResearch(new Research(data));
-		}
-		
-		trigger.research = existing;
-		return trigger;
+public class TriggerResearch extends TriggerBase {
+	private String researchName;
+	
+	public TriggerResearch() {
+		super("research");
 	}
 	
 	@Override
-	public String getName() {
-		return "research";
+	public ITrigger deserialize(JsonObject data) {
+		TriggerResearch trigger = new TriggerResearch();
+		trigger.researchName = data.get("Research Name").getAsString();
+		return trigger;
 	}
 
 	@Override
-	public boolean isSatisfied(UUID uuid) {
-		return CraftingAPI.players.getPlayerData(uuid).getUnlockedResearch().contains(research);
+	public void serialize(JsonObject data) {
+		data.addProperty("Research Name", researchName);
+	}
+	
+	public String getResearchName() {
+		return researchName;
+	}
+
+	@Override
+	public boolean isCompleted(Object[] existing) {
+		return ((Boolean)existing[0]) == true;
+	}
+
+	@Override
+	public Object[] onFired(Object[] existing, Object... data) {
+		if (((String)data[0]).equals(researchName)) {
+			return new Object[] { true };
+		} else return new Object[] { false };
+	}
+
+	@Override
+	public Object[] readFromNBT(NBTTagCompound tag) {
+		return new Object[] { tag.getBoolean("HasResearch") };
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound tag, Object[] existing) {
+		boolean completed = ((Boolean)existing[0]);
+		tag.setBoolean("HasResearch", completed);
 	}
 }

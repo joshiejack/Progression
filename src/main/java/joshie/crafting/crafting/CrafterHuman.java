@@ -5,7 +5,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.api.ICondition;
+import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.crafting.CraftingType;
 import joshie.crafting.api.crafting.ICrafter;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,9 +27,9 @@ public class CrafterHuman implements ICrafter {
 
 	@Override
 	public boolean canCraftItem(CraftingType type, ItemStack stack) {
-		Collection<ICondition> conditions = CraftingAPI.crafting.getConditions(type, stack);
+		Collection<ICriteria> conditions = CraftingAPI.crafting.getConditions(type, stack);
 		if (conditions.size() < 1) return true;
-		Set<ICondition> completed = CraftingAPI.players.getPlayerData(uuid).getCompletedConditions();
+		Set<ICriteria> completed = CraftingAPI.players.getPlayerData(uuid).getMappings().getCompletedCriteria();
 		if (completed.containsAll(conditions)) {
 			return true;
 		} else return false;

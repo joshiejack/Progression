@@ -8,6 +8,7 @@ import static joshie.crafting.lib.CraftingInfo.VERSION;
 import java.io.File;
 import java.util.Map;
 
+import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.asm.CraftingTransformer;
 import joshie.crafting.player.PlayerSavedData;
 import net.minecraft.server.MinecraftServer;
@@ -49,12 +50,15 @@ public class CraftingMod implements IFMLLoadingPlugin {
 	public void onServerStarted(FMLServerStartedEvent event) {
 	      if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) return;
 	      World world = MinecraftServer.getServer().worldServers[0];
-	      data = (PlayerSavedData) world.loadItemData(PlayerSavedData.class, MODNAME + "2");
+	      data = (PlayerSavedData) world.loadItemData(PlayerSavedData.class, MODNAME);
 	      if (data == null) {
-	    	  data = new PlayerSavedData(MODNAME + "2");
-	    	  world.setItemData(MODNAME + "2", data);
+	    	  data = new PlayerSavedData(MODNAME);
+	    	  world.setItemData(MODNAME, data);
 	      }
-	   }
+	      
+	    //Remap all relevant data
+		CraftingAPI.registry.serverRemap();
+	}
 	
 	@Override
 	public String[] getASMTransformerClass() {

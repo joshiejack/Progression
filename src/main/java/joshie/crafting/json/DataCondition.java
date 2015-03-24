@@ -26,4 +26,7 @@ public class DataCondition {
 	
 	@SerializedName("Conflicts")
 	String[] conflicts;
+	
+	@SerializedName("Repeatable")
+	boolean repeatable;
 }
