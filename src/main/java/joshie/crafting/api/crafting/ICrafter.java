@@ -7,7 +7,7 @@ public interface ICrafter {
 	 *  If the item cannot be used in crafting, it should return false
 	 * @param 			the stack
 	 * @return			whether the item can be used to craft */
-	public boolean canUseItemForCrafting(ItemStack stack);
+	public boolean canUseItemForCrafting(CraftingType type, ItemStack stack);
 	
 	/** This is called to check whether the item is permitted to be crafted
 	 *  

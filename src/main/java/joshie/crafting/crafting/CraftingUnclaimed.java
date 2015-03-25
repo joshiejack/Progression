@@ -10,7 +10,7 @@ public class CraftingUnclaimed implements ICrafter {
 	public static final ICrafter INSTANCE = new CraftingUnclaimed();
 	
 	@Override
-	public boolean canUseItemForCrafting(ItemStack stack) {
+	public boolean canUseItemForCrafting(CraftingType type, ItemStack stack) {
 		return false;
 	}
 

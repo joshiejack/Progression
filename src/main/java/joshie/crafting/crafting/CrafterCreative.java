@@ -5,8 +5,11 @@ import joshie.crafting.api.crafting.ICrafter;
 import net.minecraft.item.ItemStack;
 
 public class CrafterCreative implements ICrafter {
+	public static CrafterCreative INSTANCE = new CrafterCreative();
+	private CrafterCreative() {}
+	
 	@Override
-	public boolean canUseItemForCrafting(ItemStack stack) {
+	public boolean canUseItemForCrafting(CraftingType type, ItemStack stack) {
 		return true;
 	}
 

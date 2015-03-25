@@ -22,7 +22,7 @@ public class PlayerHelper {
 		//If we are creative always jump to the creative profile, never cache it
 		EntityPlayer player = PlayerHelper.getPlayerFromUUID(uuid);
 		if (player != null && player.capabilities.isCreativeMode) {
-			return new CrafterCreative();
+			return CrafterCreative.INSTANCE;
 		}
 		
 		try {

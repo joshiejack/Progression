@@ -27,13 +27,29 @@ public class RewardCrafting extends RewardBase {
 	private CraftingType type = CraftingType.CRAFTING;
 	private boolean matchDamage = true;
 	private boolean matchNBT = false;
+	private boolean usage = true;
+	private boolean crafting = true;
 	
 	public RewardCrafting() {
 		super("crafting");
 	}
 	
 	@ZenMethod
-	public void add(String unique, IIngredient stack, @Optional String type, @Optional boolean matchNBT) {
+	public void addUsage(String unique, IIngredient stack, @Optional String type, @Optional boolean matchNBT) {
+		add(unique, stack, type, matchNBT, true, false);
+	}
+	
+	@ZenMethod
+	public void addCrafting(String unique, IIngredient stack, @Optional String type, @Optional boolean matchNBT) {
+		add(unique, stack, type, matchNBT, false, true);
+	}
+	
+	@ZenMethod
+	public void addRequirement(String unique, IIngredient stack, @Optional String type, @Optional boolean matchNBT) {
+		add(unique, stack, type, matchNBT, true, true);
+	}
+	
+	public void add(String unique, IIngredient stack, String type, boolean matchNBT, boolean usage, boolean crafting) {
 		RewardCrafting reward = new RewardCrafting();
 		reward.stack = MineTweakerMC.getItemStack(stack); 
 		if (reward.stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
@@ -47,6 +63,9 @@ public class RewardCrafting extends RewardBase {
 				break;
 			}
 		}
+		
+		reward.usage = usage;
+		reward.crafting = crafting;
 		
 		MineTweakerAPI.apply(new Rewards(unique, reward));
 	}
@@ -71,6 +90,14 @@ public class RewardCrafting extends RewardBase {
 		
 		if (data.get("Match NBT") != null) {
 			reward.matchNBT = data.get("Match NBT").getAsBoolean();
+		}
+		
+		if (data.get("Block Crafting") != null) {
+			reward.crafting = data.get("Block Crafting").getAsBoolean();
+		}
+		
+		if (data.get("Block Usage") != null) {
+			reward.crafting = data.get("Block Usage").getAsBoolean();
 		}
 		
 		if (CraftingCommon.NEI_LOADED) {
@@ -99,6 +126,14 @@ public class RewardCrafting extends RewardBase {
 		if (matchNBT != false) {
 			elements.addProperty("Match NBT", matchNBT);
 		}
+		
+		if (crafting != true) {
+			elements.addProperty("Block Crafting", false);
+		}
+		
+		if (usage != true) {
+			elements.addProperty("Block Usage", false);
+		}
 	}
 	
 	private boolean isAdded = true;
@@ -113,6 +148,6 @@ public class RewardCrafting extends RewardBase {
 	
 	@Override
 	public void onAdded(ICriteria criteria) {
-		CraftingAPI.crafting.addRequirement(type, stack, matchDamage, matchNBT, criteria);
+		CraftingAPI.crafting.addRequirement(type, stack, matchDamage, matchNBT, usage, crafting, criteria);
 	}
 }

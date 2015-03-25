@@ -79,7 +79,7 @@ public class RecipeHandler {
 			if (!crafter.canCraftWithAnything()) { //If we can't craft with every item, let's validate them all
 				for (int i = 0; i < crafting.getSizeInventory(); i++) {
 					ItemStack stack = crafting.getStackInSlot(i);
-					if (stack != null && !crafter.canUseItemForCrafting(stack)) return null; //If it can't be used, return null
+					if (stack != null && !crafter.canUseItemForCrafting(CraftingType.CRAFTING, stack)) return null; //If it can't be used, return null
 				}
 			}
 			
