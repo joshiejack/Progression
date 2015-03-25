@@ -23,11 +23,11 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 @ZenClass("mods.craftcontrol.triggers.BreakBlock")
 public class TriggerBreakBlock extends TriggerBaseCounter {
-	private String oreDictionary = "NONE";
-	private Block block;
-	private int meta = 0;
-	private boolean matchDamage = true;
-	private int amount = 1;
+	public String oreDictionary = "NONE";
+	public Block block;
+	public int meta = 0;
+	public boolean matchDamage = true;
+	public int amount = 1;
 	
 	public TriggerBreakBlock() {
 		super("breakBlock");
@@ -82,7 +82,7 @@ public class TriggerBreakBlock extends TriggerBaseCounter {
 			}
 		}
 		
-		if (data.get("amount") != null) {
+		if (data.get("Amount") != null) {
 			trigger.amount = data.get("Amount").getAsInt();
 		}
 		
@@ -108,7 +108,7 @@ public class TriggerBreakBlock extends TriggerBaseCounter {
 	}
 	
 	@Override
-	protected boolean canIncrease(Object... data) {
+	protected boolean canIncrease(Object... data) {		
 		Block theBlock = asBlock(data, 0);
 		int theMeta = asInt(data, 1);
 		boolean doesMatch = false;

@@ -124,7 +124,7 @@ public class CraftingMappings implements ICraftingMappings {
 	}
 	
 	private boolean containsAny(List<ICriteria> list) {
-		for (ICriteria criteria: completedCritera.keySet()) {
+		for (ICriteria criteria: list) {
 			if (completedCritera.keySet().contains(criteria)) return true;
 		}
 		
@@ -146,9 +146,7 @@ public class CraftingMappings implements ICraftingMappings {
 		EntityPlayer player = PlayerHelper.getPlayerFromUUID(uuid);
 		World world = player == null? DimensionManager.getWorld(0): player.worldObj;
 		boolean completedAnyCriteria = false;
-		Collection<ITrigger> triggers = activeTriggers.get(type);		
-				
-		
+		Collection<ITrigger> triggers = activeTriggers.get(type);				
 		HashSet<ITrigger> cantContinue = new HashSet();
 		for (ITrigger trigger: triggers) {
 			Collection<ICondition> conditions = trigger.getConditions();
@@ -190,6 +188,11 @@ public class CraftingMappings implements ICraftingMappings {
 				}
 				
 				if (allFired) {
+					//Complete this criteria
+					int amount = getCriteriaCount(criteria);
+					amount++;
+					completedCritera.put(criteria, amount);
+					
 					//Remove the triggers from the active map
 					for (ITrigger criteriaTrigger: allTriggers) {
 						activeTriggers.get(criteriaTrigger.getTypeName()).remove(criteriaTrigger);
@@ -199,7 +202,7 @@ public class CraftingMappings implements ICraftingMappings {
 					//We can now grab a list of all the Criteria, that gets unlocked by
 					//ths criteria being fulfilled, and adding them to the available criteria
 					//We should then update the mappings of triggerToCriteria, to include this new info
-					Collection<ICriteria> newCriteria = CraftingAPI.registry.getCriteriaUnlocks(criteria);
+					Collection<ICriteria> newCriteria = CraftingAPI.registry.getCriteriaUnlocks(criteria);					
 					for (ICriteria unlocked: newCriteria) {
 						//We know what we should unlock, but we don't know if we're the only thing
 						//Require to unlock this, so we need to check
@@ -209,16 +212,11 @@ public class CraftingMappings implements ICraftingMappings {
 								availableCriteria.add(unlocked);
 								for (ITrigger newTrigger: unlocked.getTriggers()) {
 									activeTriggers.put(newTrigger.getTypeName(), newTrigger);
-									triggerUnlocks.put(newTrigger, unlocked);
+									//triggerUnlocks.put(newTrigger, unlocked);
 								}
 							}
 						}
 					}
-					
-					//Finish off a criteria, and remove completed triggers for repeatable
-					int amount = getCriteriaCount(criteria);
-					amount++;
-					completedCritera.put(criteria, amount);
 					
 					//Mark this critera as completed
 					PacketHandler.sendToClient(new PacketSyncConditions(false, new Integer[] { amount }, new ICriteria[] { criteria }), uuid);

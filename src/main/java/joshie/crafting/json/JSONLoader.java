@@ -15,6 +15,8 @@ import joshie.crafting.api.ITrigger;
 import joshie.crafting.api.crafting.CraftingType;
 import joshie.crafting.lib.CraftingInfo;
 import joshie.crafting.lib.Exceptions.ConditionNotFoundException;
+import joshie.crafting.trigger.TriggerBreakBlock;
+import net.minecraft.init.Blocks;
 
 import org.apache.commons.io.FileUtils;
 
@@ -150,6 +152,13 @@ public class JSONLoader {
 		
 		@Override
 		public IJsonLoader setDefaults() {
+			TriggerBreakBlock breakBlock = new TriggerBreakBlock();
+			breakBlock.block = Blocks.bookshelf;
+			breakBlock.amount = 5;
+			JsonObject object = new JsonObject();
+			breakBlock.serialize(object);
+			data.add(new DataTrigger("breakBlock", "BREAKBOOK", object, new String[] { }));
+			
 			JsonObject iron = new JsonObject();
 			iron.addProperty("Research Name", "Iron Heights");
 			data.add(new DataTrigger("research", "IRON", iron, new String[] {}));
@@ -201,6 +210,7 @@ public class JSONLoader {
 		
 		@Override
 		public IJsonLoader setDefaults() {
+			data.add(new DataCriteria("NEW CONDITION", new String[] { "BREAKBOOK" }, new String[] { "SPEED", "CRAFTINGLAPIS" }, new String[] { "GoldenPig" }, new String[] {}));
 			data.add(new DataCriteria("NamedCondition", new String[] { "IRON" }, new String[] { "SPEED", "CRAFTINGIRON" }, new String[] {}, new String[] {}));
 			data.add(new DataCriteria("GoldenPig", new String[] { "GOLD" }, new String[] { "CRAFTINGGOLD" }, new String[] {}, new String[] {}));
 			data.add(new DataCriteria("EnableLapis", new String[] { "LAPIS" }, new String[] { "CRAFTINGLAPIS" }, new String[] {}, new String[] {}));
