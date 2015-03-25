@@ -1,5 +1,6 @@
-package joshie.crafting.minetweaker;
+package joshie.crafting.plugins.minetweaker;
 
+import joshie.crafting.CraftAPIRegistry;
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.IReward;
@@ -44,7 +45,7 @@ public class Criteria implements IUndoableAction {
 
 	@Override
 	public void undo() {
-		CraftingAPI.registry.removeCriteria(unique);
+		CraftAPIRegistry.removeCriteria(unique);
 	}
 
 	@Override

@@ -4,12 +4,14 @@ import com.google.gson.annotations.SerializedName;
 
 public class DataCriteria {
 	public DataCriteria() {}
-	public DataCriteria(String name, String[] triggers, String[] rewards, String[] requirements, String[] conflicts) {
+	public DataCriteria(String name, String[] triggers, String[] rewards, String[] requirements, String[] conflicts, int x, int y) {
 		this.name = name;
 		this.triggers = triggers;
 		this.rewards = rewards;
 		this.prereqs = requirements;
 		this.conflicts = conflicts;
+		this.x = x;
+		this.y = y;
 	}
 	
 	@SerializedName("Unique Name")
@@ -29,4 +31,10 @@ public class DataCriteria {
 	
 	@SerializedName("Repeatable Amount")
 	int repeatable;
+	
+	@SerializedName("X Coordinate")
+	int x;
+	
+	@SerializedName("Y Coordinate")
+	int y;
 }

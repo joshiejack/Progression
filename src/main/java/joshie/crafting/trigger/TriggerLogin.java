@@ -3,7 +3,7 @@ package joshie.crafting.trigger;
 import joshie.crafting.api.Bus;
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ITrigger;
-import joshie.crafting.minetweaker.Triggers;
+import joshie.crafting.plugins.minetweaker.Triggers;
 import minetweaker.MineTweakerAPI;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
@@ -19,7 +19,7 @@ public class TriggerLogin extends TriggerBaseCounter {
 	private int amount = 1;
 	
 	public TriggerLogin() {
-		super("login");
+		super("Login");
 	}
 	
 	@Override

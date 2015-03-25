@@ -7,8 +7,8 @@ import joshie.crafting.api.ICriteria;
 import joshie.crafting.helpers.NBTHelper.IMapHelper;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class ConditionNBT implements IMapHelper {
-	public static final ConditionNBT INSTANCE = new ConditionNBT();
+public class CriteriaNBT implements IMapHelper {
+	public static final CriteriaNBT INSTANCE = new CriteriaNBT();
 	
 	public Map map;
 	

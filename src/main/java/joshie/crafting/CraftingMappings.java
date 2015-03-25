@@ -18,10 +18,10 @@ import joshie.crafting.helpers.NBTHelper;
 import joshie.crafting.helpers.PlayerHelper;
 import joshie.crafting.network.PacketHandler;
 import joshie.crafting.network.PacketSyncConditions;
-import joshie.crafting.network.PacketSyncSpeed;
+import joshie.crafting.network.PacketSyncAbilities;
 import joshie.crafting.network.PacketSyncTriggers;
 import joshie.crafting.player.PlayerDataServer;
-import joshie.crafting.player.nbt.ConditionNBT;
+import joshie.crafting.player.nbt.CriteriaNBT;
 import joshie.crafting.player.nbt.TriggerNBT;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -55,7 +55,7 @@ public class CraftingMappings implements ICraftingMappings {
 	public void syncToClient(EntityPlayerMP player) {
 		remap(); //Remap the data, before the client gets sent the data
 		
-		PacketHandler.sendToClient(new PacketSyncSpeed(master.getSpeed()), player);
+		PacketHandler.sendToClient(new PacketSyncAbilities(master.getAbilities()), player);
 		PacketHandler.sendToClient(new PacketSyncTriggers(true, completedTriggers.toArray(new ITrigger[completedTriggers.size()])), player); //Sync all researches to the client
 		PacketHandler.sendToClient(new PacketSyncConditions(true, completedCritera.values().toArray(new Integer[completedCritera.size()]), completedCritera.keySet().toArray(new ICriteria[completedCritera.size()])), player); //Sync all conditions to the client
 	}
@@ -63,7 +63,7 @@ public class CraftingMappings implements ICraftingMappings {
 	//Reads the completed criteria
 	public void readFromNBT(NBTTagCompound nbt) {
 		NBTHelper.readStringCollection(nbt, "Completed Triggers", TriggerNBT.INSTANCE.setCollection(completedTriggers));
-		NBTHelper.readMap(nbt, "Completed Criteria", ConditionNBT.INSTANCE.setMap(completedCritera));
+		NBTHelper.readMap(nbt, "Completed Criteria", CriteriaNBT.INSTANCE.setMap(completedCritera));
 		NBTTagList data = nbt.getTagList("Active Trigger Data", 10);
 		for (int i = 0; i < data.tagCount(); i++) {
 			NBTTagCompound tag = data.getCompoundTagAt(i);
@@ -79,7 +79,7 @@ public class CraftingMappings implements ICraftingMappings {
 	
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		NBTHelper.writeCollection(nbt, "Completed Triggers", TriggerNBT.INSTANCE.setCollection(completedTriggers));
-		NBTHelper.writeMap(nbt, "Completed Criteria", ConditionNBT.INSTANCE.setMap(completedCritera));
+		NBTHelper.writeMap(nbt, "Completed Criteria", CriteriaNBT.INSTANCE.setMap(completedCritera));
 		//Save the extra data for the existing triggers
 		NBTTagList data = new NBTTagList();
 		for (String name: triggerData.keySet()) {
@@ -151,7 +151,7 @@ public class CraftingMappings implements ICraftingMappings {
 		for (ITrigger trigger: triggers) {
 			Collection<ICondition> conditions = trigger.getConditions();
 			for (ICondition condition: conditions) {
-				if (!condition.isSatisfied(world, player, uuid)) {
+				if (condition.isSatisfied(world, player, uuid) == condition.isInverted()) {
 					cantContinue.add(trigger);
 					break;
 				}
@@ -173,7 +173,7 @@ public class CraftingMappings implements ICraftingMappings {
 			}
 		}
 		
-		Multimap<ITrigger, ICriteria> triggerUnlocks = CraftingAPI.registry.getTriggerToCriteria();
+		Multimap<ITrigger, ICriteria> triggerUnlocks = CraftingRemapper.triggerToCriteria;
 		//Next step, now that we have fired the trigger, we need to go through all the active criteria
 		//We should check if all triggers have been fulfilled
 		for (ITrigger trigger: triggers) {
@@ -202,7 +202,7 @@ public class CraftingMappings implements ICraftingMappings {
 					//We can now grab a list of all the Criteria, that gets unlocked by
 					//ths criteria being fulfilled, and adding them to the available criteria
 					//We should then update the mappings of triggerToCriteria, to include this new info
-					Collection<ICriteria> newCriteria = CraftingAPI.registry.getCriteriaUnlocks(criteria);					
+					Collection<ICriteria> newCriteria = CraftingRemapper.criteriaToUnlocks.get(criteria);					
 					for (ICriteria unlocked: newCriteria) {
 						//We know what we should unlock, but we don't know if we're the only thing
 						//Require to unlock this, so we need to check
@@ -261,7 +261,7 @@ public class CraftingMappings implements ICraftingMappings {
 
 	@Override
 	public void remap() {
-		Collection<ICriteria> allCriteria = CraftingAPI.registry.getCriteria();
+		Collection<ICriteria> allCriteria = CraftAPIRegistry.criteria.values();
 		for (ICriteria criteria: allCriteria) {
 			//We are now looping though all criteria, we now need to check to see if this
 			//First step is to validate to see if this criteria, is available right now

@@ -1,12 +1,10 @@
 package joshie.crafting.api;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
 import net.minecraft.entity.player.EntityPlayer;
 
-import com.google.common.collect.Multimap;
 import com.google.gson.JsonObject;
 
 /** The registry is where you register new types of rewards, triggers and
@@ -41,11 +39,6 @@ public interface IRegistry {
 	/** Returns a new criteria **/
 	public ICriteria newCriteria(String string);
 	
-	public void removeCondition(String unique);
-	public void removeTrigger(String unique);
-	public void removeReward(String unique);
-	public void removeCriteria(String unique);
-	
 	/** Register a condition with the registry **/
 	public IConditionType registerConditionType(IConditionType reward);
 	
@@ -55,26 +48,6 @@ public interface IRegistry {
 	/** Register a reward with the registry **/
 	public IRewardType registerRewardType(IRewardType reward);
 
-	/** Returns a list of all research that is added **/
-	public List<ITrigger> getTechnology();
-	
-	public Multimap<ITrigger, ICriteria> getTriggerToCriteria();
-
-	public Collection<ICriteria> getCriteriaUnlocks(ICriteria criteria);
-	
-	public void serverRemap();
-	
-	public void reloadJson();
-	
-	public void resetData();
-	
-	public void resyncPlayers();
-
-	public Collection<ICriteria> getCriteria();
-
-	public void loadMineTweaker3();
-	
-	public Collection<ITriggerType> getTriggerTypes();
-
-	public Collection<IRewardType> getRewardTypes();
+	/** Returns a list of all the research technologies **/
+	public List<IResearch> getTechnology();
 }

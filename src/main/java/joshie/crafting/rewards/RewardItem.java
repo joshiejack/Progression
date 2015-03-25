@@ -6,10 +6,10 @@ import joshie.crafting.api.IReward;
 import joshie.crafting.helpers.PlayerHelper;
 import joshie.crafting.helpers.SpawnItemHelper;
 import joshie.crafting.helpers.StackHelper;
-import joshie.crafting.minetweaker.Rewards;
+import joshie.crafting.plugins.minetweaker.MTHelper;
+import joshie.crafting.plugins.minetweaker.Rewards;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.item.IItemStack;
-import minetweaker.api.minecraft.MineTweakerMC;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import stanhebben.zenscript.annotations.ZenClass;
@@ -22,13 +22,13 @@ public class RewardItem extends RewardBase {
 	private ItemStack stack;
 	
 	public RewardItem() {
-		super("item");
+		super("Item");
 	}
 	
 	@ZenMethod
 	public void add(String unique, IItemStack stack) {
 		RewardItem reward = new RewardItem();
-		reward.stack = MineTweakerMC.getItemStack(stack); 				
+		reward.stack = MTHelper.getItemStack(stack);			
 		MineTweakerAPI.apply(new Rewards(unique, reward));
 	}
 	

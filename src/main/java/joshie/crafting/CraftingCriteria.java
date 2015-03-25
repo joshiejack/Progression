@@ -6,7 +6,7 @@ import java.util.List;
 import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.IReward;
 import joshie.crafting.api.ITrigger;
-import joshie.crafting.minetweaker.Criteria;
+import joshie.crafting.plugins.minetweaker.Criteria;
 import minetweaker.MineTweakerAPI;
 import scala.actors.threadpool.Arrays;
 import stanhebben.zenscript.annotations.Optional;
@@ -20,6 +20,8 @@ public class CraftingCriteria implements ICriteria {
 	private List<ICriteria> prereqs = new ArrayList();
 	private List<ICriteria> conflicts = new ArrayList();
 	private int isRepeatable;
+	private int x;
+	private int y;
 	
 	private String name;
 	
@@ -97,4 +99,20 @@ public class CraftingCriteria implements ICriteria {
 	public int getRepeatAmount() {
 		return isRepeatable;
 	}
+	
+	@Override
+	public void setCoordinates(int x, int y) {
+	    this.x = x;
+	    this.y = y;
+	}
+
+    @Override
+    public int getX() {
+        return x;
+    }
+
+    @Override
+    public int getY() {
+        return y;
+    }
 }

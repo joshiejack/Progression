@@ -6,7 +6,7 @@ import joshie.crafting.api.Bus;
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.IReward;
 import joshie.crafting.helpers.ClientHelper;
-import joshie.crafting.minetweaker.Rewards;
+import joshie.crafting.plugins.minetweaker.Rewards;
 import minetweaker.MineTweakerAPI;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
@@ -22,7 +22,7 @@ public class RewardSpeed extends RewardBase {
 	private float speed;
 	
 	public RewardSpeed() {
-		super("speed");
+		super("Speed");
 	}
 	
 	@Override

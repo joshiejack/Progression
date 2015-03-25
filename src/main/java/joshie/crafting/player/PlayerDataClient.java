@@ -26,8 +26,8 @@ public class PlayerDataClient extends PlayerDataCommon implements IPlayerDataCli
 	}
 
 	@Override
-	public void setSpeed(float speed) {
-		this.abilities.setSpeed(speed);
+	public void setAbilities(DataAbilities abilities) {
+		this.abilities = abilities;
 	}
 
 	@Override

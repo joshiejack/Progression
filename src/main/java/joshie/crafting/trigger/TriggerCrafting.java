@@ -5,11 +5,11 @@ import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ITrigger;
 import joshie.crafting.api.ITriggerData;
 import joshie.crafting.helpers.StackHelper;
-import joshie.crafting.minetweaker.Triggers;
+import joshie.crafting.plugins.minetweaker.MTHelper;
+import joshie.crafting.plugins.minetweaker.Triggers;
 import joshie.crafting.trigger.data.DataCrafting;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.item.IIngredient;
-import minetweaker.api.minecraft.MineTweakerMC;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import stanhebben.zenscript.annotations.Optional;
@@ -30,7 +30,7 @@ public class TriggerCrafting extends TriggerBase {
 	private int itemAmount = 1;
 	
 	public TriggerCrafting() {
-		super("crafting");
+		super("Crafting");
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class TriggerCrafting extends TriggerBase {
 	@ZenMethod
 	public void add(String unique, IIngredient stack, @Optional boolean matchNBT, @Optional int craftTimes, @Optional int itemAmount) {
 		TriggerCrafting daytime = new TriggerCrafting();
-		daytime.stack = MineTweakerMC.getItemStack(stack); 
+		daytime.stack = MTHelper.getItemStack(stack);
 		if (daytime.stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
 			daytime.matchDamage = false;
 		}

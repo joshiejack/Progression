@@ -12,4 +12,10 @@ public interface ICondition extends IConditionType, IHasUniqueName {
 	 *  the OVERWORLD.
 	 *  This is also only called serverside.**/
 	public boolean isSatisfied(World world, EntityPlayer player, UUID uuid);
+
+	/** Sets the check to be inverted **/
+	public ICondition setInversion(boolean inverted);
+	
+	/** Whether or not the result should be inverted **/
+	public boolean isInverted();
 }

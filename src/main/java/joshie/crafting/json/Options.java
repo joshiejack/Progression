@@ -1,5 +1,8 @@
 package joshie.crafting.json;
 
-public class Options {
+import com.google.gson.annotations.SerializedName;
 
+public class Options {
+	@SerializedName("Enable Editor")
+	public boolean editor = true;
 }

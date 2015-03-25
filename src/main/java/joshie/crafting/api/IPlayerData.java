@@ -12,6 +12,9 @@ public interface IPlayerData {
 	/** Returns the players speed **/
 	public float getSpeed();
 
+	/** Returns how much fall damage is prevented **/
+	public int getFallDamagePrevention();
+
 	public ICraftingMappings getMappings();
 	
 	public void resetData();

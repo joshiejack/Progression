@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import joshie.crafting.api.IReward;
 import joshie.crafting.helpers.PlayerHelper;
-import joshie.crafting.minetweaker.Rewards;
+import joshie.crafting.plugins.minetweaker.Rewards;
 import minetweaker.MineTweakerAPI;
 import net.minecraft.entity.player.EntityPlayer;
 import stanhebben.zenscript.annotations.ZenClass;
@@ -17,7 +17,7 @@ public class RewardExperience extends RewardBase {
 	private int amount;
 	
 	public RewardExperience() {
-		super("experience");
+		super("Experience");
 	}
 	
 	@ZenMethod

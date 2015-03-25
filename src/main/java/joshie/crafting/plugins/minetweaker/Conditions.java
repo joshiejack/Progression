@@ -1,5 +1,6 @@
-package joshie.crafting.minetweaker;
+package joshie.crafting.plugins.minetweaker;
 
+import joshie.crafting.CraftAPIRegistry;
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ICondition;
 import minetweaker.IUndoableAction;
@@ -31,7 +32,7 @@ public class Conditions implements IUndoableAction {
 
 	@Override
 	public void undo() {
-		CraftingAPI.registry.removeCondition(unique);
+		CraftAPIRegistry.removeCondition(unique);
 	}
 
 	@Override

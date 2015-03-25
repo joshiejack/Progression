@@ -6,4 +6,7 @@ public interface IPlayerDataServer extends IPlayerData {
 	 *  with the client
 	 * @param 		the speed boost  */
 	public void addSpeed(float speed);
+
+	/** Adds fall damage prevention **/
+	public void addFallDamagePrevention(int maxAbsorbed);
 }

@@ -1,5 +1,6 @@
 package joshie.crafting.network;
 
+import joshie.crafting.CraftingRemapper;
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.helpers.PlayerHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,7 +15,7 @@ public class PacketReload extends PacketAction implements IMessageHandler<Packet
 	public IMessage onMessage(PacketReload message, MessageContext ctx) {
 		//Load JSON Server Side, Then Send packet to client to load it all again
 		//We now have up to date data on what is in the mappings
-		CraftingAPI.registry.reloadJson();
+		CraftingRemapper.reloadJson();
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
 			PacketHandler.sendToEveryone(new PacketReload());
 			for (EntityPlayer player: PlayerHelper.getAllPlayers()) {

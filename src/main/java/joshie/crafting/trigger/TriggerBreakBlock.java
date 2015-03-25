@@ -3,10 +3,10 @@ package joshie.crafting.trigger;
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ITrigger;
 import joshie.crafting.helpers.StackHelper;
-import joshie.crafting.minetweaker.Triggers;
+import joshie.crafting.plugins.minetweaker.MTHelper;
+import joshie.crafting.plugins.minetweaker.Triggers;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.item.IItemStack;
-import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.api.oredict.IOreDictEntry;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
@@ -23,14 +23,14 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 @ZenClass("mods.craftcontrol.triggers.BreakBlock")
 public class TriggerBreakBlock extends TriggerBaseCounter {
-	public String oreDictionary = "NONE";
-	public Block block;
-	public int meta = 0;
-	public boolean matchDamage = true;
-	public int amount = 1;
+	private String oreDictionary = "NONE";
+	private Block block;
+	private int meta = 0;
+	private boolean matchDamage = true;
+	private int amount = 1;
 	
 	public TriggerBreakBlock() {
-		super("breakBlock");
+		super("Break Block");
 	}
 	
 	@SubscribeEvent(priority = EventPriority.LOWEST)
@@ -41,7 +41,7 @@ public class TriggerBreakBlock extends TriggerBaseCounter {
 	@ZenMethod
 	public void add(String unique, IItemStack item, @Optional int amount, @Optional boolean ignoreDamage) {
 		TriggerBreakBlock trigger = new TriggerBreakBlock();
-		ItemStack iStack = MineTweakerMC.getItemStack(item);
+		ItemStack iStack = MTHelper.getItemStack(item);
 		Block block = Block.getBlockFromItem(iStack.getItem());
 		trigger.block = block;
 		trigger.meta = Math.max(15, iStack.getItemDamage());

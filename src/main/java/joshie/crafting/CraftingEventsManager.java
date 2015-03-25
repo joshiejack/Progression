@@ -3,7 +3,6 @@ package joshie.crafting;
 import java.util.HashSet;
 
 import joshie.crafting.api.Bus;
-import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.IReward;
 import joshie.crafting.api.IRewardType;
 import joshie.crafting.api.ITrigger;
@@ -22,7 +21,7 @@ public class CraftingEventsManager {
 			activeTriggerTypes.add(existing.getTypeName());
 		}
 		
-		for (ITriggerType type: CraftingAPI.registry.getTriggerTypes()) { //Loop through all trigger types
+		for (ITriggerType type: CraftAPIRegistry.triggerTypes.values()) { //Loop through all trigger types
 			if (activeTriggerTypes.contains(type.getTypeName())) { //If we haven't added this type to active triggers yet add it
 				Bus bus = type.getBusType();
 				if (bus == Bus.FML) {
@@ -45,7 +44,7 @@ public class CraftingEventsManager {
 			activeTriggerTypes.add(existing.getTypeName());
 		}
 		
-		for (ITriggerType type: CraftingAPI.registry.getTriggerTypes()) { //Loop through all trigger types
+		for (ITriggerType type: CraftAPIRegistry.triggerTypes.values()) { //Loop through all trigger types
 			if (!activeTriggerTypes.contains(type.getTypeName())) { //If this trigger type is no longer in the active ones, unregister it
 				Bus bus = type.getBusType();
 				if (bus == Bus.FML) {
@@ -68,7 +67,7 @@ public class CraftingEventsManager {
 			activeRewardTypes.add(existing.getTypeName());
 		}
 		
-		for (IRewardType type: CraftingAPI.registry.getRewardTypes()) { //Loop through all reward types
+		for (IRewardType type: CraftAPIRegistry.rewardTypes.values()) { //Loop through all reward types
 			if (!activeRewardTypes.contains(type.getTypeName())) { //If we haven't added this type to active rewards yet add it
 				Bus bus = type.getBusType();
 				if (bus == Bus.FML) {
@@ -91,7 +90,7 @@ public class CraftingEventsManager {
 			activeRewardTypes.add(existing.getTypeName());
 		}
 		
-		for (IRewardType type: CraftingAPI.registry.getRewardTypes()) { //Loop through all reward types
+		for (IRewardType type: CraftAPIRegistry.rewardTypes.values()) { //Loop through all reward types
 			if (!activeRewardTypes.contains(type.getTypeName())) { //If this reward type is no longer in the active ones, unregister it
 				Bus bus = type.getBusType();
 				if (bus == Bus.FML) {

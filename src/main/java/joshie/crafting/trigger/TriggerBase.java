@@ -1,20 +1,17 @@
 package joshie.crafting.trigger;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import joshie.crafting.api.Bus;
 import joshie.crafting.api.ICondition;
 import joshie.crafting.api.IHasUniqueName;
 import joshie.crafting.api.ITrigger;
-import joshie.crafting.api.ITriggerData;
-import joshie.crafting.trigger.data.DataBoolean;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
 public abstract class TriggerBase implements ITrigger {
-	private Set<ICondition> conditions = new HashSet();
+	private List<ICondition> conditions = new ArrayList();
 	private String uniqueName;
 	private String typeName;
 	protected int amount = 1;
@@ -54,7 +51,7 @@ public abstract class TriggerBase implements ITrigger {
 	}
 
 	@Override
-	public Collection<ICondition> getConditions() {
+	public List<ICondition> getConditions() {
 		return conditions;
 	}
 	

@@ -8,10 +8,10 @@ import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.IReward;
 import joshie.crafting.api.crafting.CraftingType;
 import joshie.crafting.helpers.StackHelper;
-import joshie.crafting.minetweaker.Rewards;
+import joshie.crafting.plugins.minetweaker.MTHelper;
+import joshie.crafting.plugins.minetweaker.Rewards;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.item.IIngredient;
-import minetweaker.api.minecraft.MineTweakerMC;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import stanhebben.zenscript.annotations.Optional;
@@ -31,7 +31,7 @@ public class RewardCrafting extends RewardBase {
 	private boolean crafting = true;
 	
 	public RewardCrafting() {
-		super("crafting");
+		super("Crafting");
 	}
 	
 	@ZenMethod
@@ -51,7 +51,7 @@ public class RewardCrafting extends RewardBase {
 	
 	public void add(String unique, IIngredient stack, String type, boolean matchNBT, boolean usage, boolean crafting) {
 		RewardCrafting reward = new RewardCrafting();
-		reward.stack = MineTweakerMC.getItemStack(stack); 
+		reward.stack = MTHelper.getItemStack(stack);
 		if (reward.stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
 			reward.matchDamage = false;
 		}

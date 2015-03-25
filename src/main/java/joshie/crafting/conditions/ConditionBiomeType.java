@@ -3,7 +3,7 @@ package joshie.crafting.conditions;
 import java.util.UUID;
 
 import joshie.crafting.api.ICondition;
-import joshie.crafting.minetweaker.Conditions;
+import joshie.crafting.plugins.minetweaker.Conditions;
 import minetweaker.MineTweakerAPI;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;

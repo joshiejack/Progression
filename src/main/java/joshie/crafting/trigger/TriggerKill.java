@@ -2,7 +2,7 @@ package joshie.crafting.trigger;
 
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ITrigger;
-import joshie.crafting.minetweaker.Triggers;
+import joshie.crafting.plugins.minetweaker.Triggers;
 import minetweaker.MineTweakerAPI;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -21,7 +21,7 @@ public class TriggerKill extends TriggerBaseCounter {
 	private String entity;
 	
 	public TriggerKill() {
-		super("kill");
+		super("Kill");
 	}
 	
 	@SubscribeEvent

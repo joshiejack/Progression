@@ -1,8 +1,9 @@
 package joshie.crafting.trigger;
 
 import joshie.crafting.api.Bus;
+import joshie.crafting.api.IResearch;
 import joshie.crafting.api.ITrigger;
-import joshie.crafting.minetweaker.Triggers;
+import joshie.crafting.plugins.minetweaker.Triggers;
 import minetweaker.MineTweakerAPI;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -10,11 +11,11 @@ import stanhebben.zenscript.annotations.ZenMethod;
 import com.google.gson.JsonObject;
 
 @ZenClass("mods.craftcontrol.triggers.Research")
-public class TriggerResearch extends TriggerBaseBoolean {
+public class TriggerResearch extends TriggerBaseBoolean implements IResearch {
 	private String researchName;
 	
 	public TriggerResearch() {
-		super("research");
+		super("Research");
 	}
 	
 	@Override
@@ -41,6 +42,7 @@ public class TriggerResearch extends TriggerBaseBoolean {
 		data.addProperty("Research Name", researchName);
 	}
 	
+	@Override	
 	public String getResearchName() {
 		return researchName;
 	}

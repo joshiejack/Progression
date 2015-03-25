@@ -35,4 +35,12 @@ public interface ICriteria extends IHasUniqueName {
 	
 	/** Returns if the criteria is repeatable **/
 	public int getRepeatAmount();
+	
+	/** Returns x position on tree **/
+	public int getX();
+	
+	/** Returns y position on tree **/
+	public int getY();
+
+    public void setCoordinates(int x, int y);
 }

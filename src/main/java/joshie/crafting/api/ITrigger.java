@@ -1,6 +1,6 @@
 package joshie.crafting.api;
 
-import java.util.Collection;
+import java.util.List;
 
 
 /** Triggers, are a type of 'condition' that needs to be met
@@ -21,7 +21,7 @@ public interface ITrigger extends IHasUniqueName, ITriggerType {
 	public void onFired(ITriggerData triggerData, Object... data);
 
 	/** Returns a list of all the conditions this trigger needs satisfied, before it can be fired **/
-	public Collection<ICondition> getConditions();
+	public List<ICondition> getConditions();
 
 	/** Adds conditions to this trigger **/
 	public ITrigger setConditions(ICondition[] conditions);

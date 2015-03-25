@@ -1,6 +1,7 @@
 package joshie.crafting.api;
 
+import joshie.crafting.player.DataAbilities;
+
 public interface IPlayerDataClient extends IPlayerData {
-	/** Set the speed on the client **/
-	public void setSpeed(float speed);
+	public void setAbilities(DataAbilities abilities);
 }

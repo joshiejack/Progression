@@ -1,27 +1,28 @@
-package joshie.crafting.minetweaker;
+package joshie.crafting.plugins.minetweaker;
 
+import joshie.crafting.CraftAPIRegistry;
 import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.api.IReward;
+import joshie.crafting.api.ITrigger;
 import minetweaker.IUndoableAction;
 
 import com.google.gson.JsonObject;
 
-public class Rewards implements IUndoableAction {
+public class Triggers implements IUndoableAction {
 	public String type;
 	public String unique;
 	public JsonObject data;
 
-	public Rewards(String unique, IReward reward) {
+	public Triggers(String unique, ITrigger trigger) {
 		JsonObject object = new JsonObject();
-		reward.serialize(object);
-		this.type = reward.getTypeName();
+		trigger.serialize(object);
+		this.type = trigger.getTypeName();
 		this.unique = unique;
 		this.data = object;
 	}
 
 	@Override
 	public void apply() {
-		CraftingAPI.registry.getReward(type, unique, data);
+		CraftingAPI.registry.getTrigger(type, unique, data);
 	}
 
 	@Override
@@ -31,17 +32,17 @@ public class Rewards implements IUndoableAction {
 
 	@Override
 	public void undo() {
-		CraftingAPI.registry.removeReward(unique);
+		CraftAPIRegistry.removeTrigger(unique);
 	}
 
 	@Override
 	public String describe() {
-		return "Adding the reward with the unique name of " + unique;
+		return "Adding the trigger with the unique name of " + unique;
 	}
 
 	@Override
 	public String describeUndo() {
-		return "Removing the reward with the unique name of " + unique;
+		return "Removing the trigger with the unique name of " + unique;
 	}
 
 	@Override

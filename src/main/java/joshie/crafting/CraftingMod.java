@@ -19,16 +19,19 @@ import joshie.crafting.conditions.ConditionCoordinates;
 import joshie.crafting.conditions.ConditionDaytime;
 import joshie.crafting.crafting.CraftingRegistry;
 import joshie.crafting.json.JSONLoader;
+import joshie.crafting.json.Options;
 import joshie.crafting.network.PacketHandler;
 import joshie.crafting.network.PacketReload;
 import joshie.crafting.network.PacketReset;
+import joshie.crafting.network.PacketSyncAbilities;
 import joshie.crafting.network.PacketSyncConditions;
-import joshie.crafting.network.PacketSyncSpeed;
 import joshie.crafting.network.PacketSyncTriggers;
 import joshie.crafting.player.PlayerSavedData;
 import joshie.crafting.player.PlayerTracker;
+import joshie.crafting.plugins.CraftingModSupport;
 import joshie.crafting.rewards.RewardCrafting;
 import joshie.crafting.rewards.RewardExperience;
+import joshie.crafting.rewards.RewardFallDamage;
 import joshie.crafting.rewards.RewardItem;
 import joshie.crafting.rewards.RewardSpeed;
 import joshie.crafting.trigger.TriggerBreakBlock;
@@ -56,6 +59,7 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.Side;
@@ -74,6 +78,8 @@ public class CraftingMod implements IFMLLoadingPlugin {
 	public static PlayerSavedData data;
 	public static boolean NEI_LOADED = false;	
 	public static Item tech;
+
+	public static Options options;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -92,6 +98,7 @@ public class CraftingMod implements IFMLLoadingPlugin {
 		CraftingAPI.registry.registerConditionType(new ConditionDaytime());
 		CraftingAPI.registry.registerRewardType(new RewardCrafting());
 		CraftingAPI.registry.registerRewardType(new RewardExperience());
+		CraftingAPI.registry.registerRewardType(new RewardFallDamage());
 		CraftingAPI.registry.registerRewardType(new RewardItem());
 		CraftingAPI.registry.registerRewardType(new RewardSpeed());
 		CraftingAPI.registry.registerTriggerType(new TriggerBreakBlock());
@@ -109,14 +116,15 @@ public class CraftingMod implements IFMLLoadingPlugin {
 		
 		PacketHandler.registerPacket(PacketSyncTriggers.class, Side.CLIENT);
 		PacketHandler.registerPacket(PacketSyncConditions.class, Side.CLIENT);
-		PacketHandler.registerPacket(PacketSyncSpeed.class, Side.CLIENT);
+		PacketHandler.registerPacket(PacketSyncAbilities.class, Side.CLIENT);
 		PacketHandler.registerPacket(PacketReload.class);
 		PacketHandler.registerPacket(PacketReset.class);
+		NetworkRegistry.INSTANCE.registerGuiHandler(instance, new CraftingGUIHandler());
 		
 		JSONLoader.loadJSON();
 		
 		if (Loader.isModLoaded("MineTweaker3")) {
-			CraftingAPI.registry.loadMineTweaker3();
+			CraftingModSupport.loadMineTweaker3();
 		}
 	}
 	
@@ -131,7 +139,7 @@ public class CraftingMod implements IFMLLoadingPlugin {
 	      }
 	      
 	    //Remap all relevant data
-		CraftingAPI.registry.serverRemap();
+	      CraftingRemapper.serverRemap();
 	}
 	
 	 @EventHandler

@@ -5,11 +5,11 @@ import java.util.UUID;
 
 import joshie.crafting.CraftingMappings;
 import joshie.crafting.CraftingMod;
-import joshie.crafting.api.CraftingAPI;
+import joshie.crafting.CraftingRemapper;
 import joshie.crafting.api.IPlayerDataServer;
 import joshie.crafting.helpers.NBTHelper;
 import joshie.crafting.network.PacketHandler;
-import joshie.crafting.network.PacketSyncSpeed;
+import joshie.crafting.network.PacketSyncAbilities;
 import joshie.crafting.player.nbt.CraftingNBT;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -32,14 +32,22 @@ public class PlayerDataServer extends PlayerDataCommon implements IPlayerDataSer
 		mappings = new CraftingMappings();
 		crafts = new HashMap();
 		CraftingMod.instance.createWorldData();
-		CraftingAPI.registry.serverRemap();
+		CraftingRemapper.serverRemap();
 	}
 
 	@Override
 	public void addSpeed(float speed) {
-		float newSpeed = abilities.getSpeed() + speed;
-		abilities.setSpeed(newSpeed);
-		PacketHandler.sendToClient(new PacketSyncSpeed(newSpeed), uuid);
+		float newStat = abilities.getSpeed() + speed;
+		abilities.setSpeed(newStat);
+		PacketHandler.sendToClient(new PacketSyncAbilities(abilities), uuid);
+		markDirty();
+	}
+
+	@Override
+	public void addFallDamagePrevention(int maxAbsorbed) {
+		int newStat = abilities.getFallDamagePrevention() + maxAbsorbed;
+		abilities.setFallDamagePrevention(newStat);
+		PacketHandler.sendToClient(new PacketSyncAbilities(abilities), uuid);
 		markDirty();
 	}
 	

@@ -6,6 +6,7 @@ import joshie.crafting.api.IHasUniqueName;
 public abstract class ConditionBase implements ICondition {
 	private String uniqueName;
 	private String typeName;
+	private boolean inverted = false;
 	
 	public ConditionBase(String typeName) {
 		this.typeName = typeName;
@@ -25,5 +26,16 @@ public abstract class ConditionBase implements ICondition {
 	public IHasUniqueName setUniqueName(String unique) {
 		this.uniqueName = unique;
 		return this;
+	}
+
+	@Override
+	public ICondition setInversion(boolean inverted) {
+		this.inverted = inverted;
+		return this;
+	}
+
+	@Override
+	public boolean isInverted() {
+		return inverted;
 	}
 }

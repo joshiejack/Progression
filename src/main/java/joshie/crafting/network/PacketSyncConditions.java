@@ -1,6 +1,7 @@
 package joshie.crafting.network;
 
 import io.netty.buffer.ByteBuf;
+import joshie.crafting.CraftAPIRegistry;
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.IReward;
@@ -54,7 +55,7 @@ public class PacketSyncConditions implements IMessage, IMessageHandler<PacketSyn
     public IMessage onMessage(PacketSyncConditions message, MessageContext ctx) {    
     	CraftingAPI.players.getClientPlayer().getMappings().markCriteriaAsCompleted(message.overwrite, message.integers, message.criteria);
         if (message.overwrite) {
-        	for (ICriteria condition: CraftingAPI.registry.getCriteria()) {
+        	for (ICriteria condition: CraftAPIRegistry.criteria.values()) {
         		for (ICriteria unlocked: message.criteria) {
         			for (IReward reward: unlocked.getRewards()) {
         				if (reward instanceof RewardCrafting) {

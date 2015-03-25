@@ -8,6 +8,7 @@ import joshie.crafting.api.crafting.ICrafter;
 import joshie.crafting.helpers.PlayerHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -41,8 +42,24 @@ public class CraftingEventsHandler {
 		checkAndCancelEvent(event);
 	}
 	
+	private boolean isHoldingBook(EntityPlayer player) {
+		if (CraftingMod.options.editor) {
+			if (player.getCurrentEquippedItem() != null) {
+				if (player.getCurrentEquippedItem().getItem() == Items.book) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public void onPlayerInteract(PlayerInteractEvent event) {
+		if (isHoldingBook(event.entityPlayer)) {
+			event.entityPlayer.openGui(CraftingMod.instance, 0, null, 0, 0, 0);
+		}
+
 		checkAndCancelEvent(event);
 	}
 	
@@ -57,6 +74,11 @@ public class CraftingEventsHandler {
 		if (!crafter.canCraftItem(CraftingType.CRAFTING, event.itemStack)) {
 			event.toolTip.clear();
 			event.toolTip.add("LOCKED");
+		}
+		
+		if (isHoldingBook(event.entityPlayer)) {
+			event.toolTip.add("Right click me to access");
+			event.toolTip.add("\"Craft Control\" editor.");
 		}
 	}
 }

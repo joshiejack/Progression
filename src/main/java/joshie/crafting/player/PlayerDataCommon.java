@@ -23,6 +23,15 @@ public abstract class PlayerDataCommon implements IPlayerData {
 		return abilities.getSpeed();
 	}
 	
+	public DataAbilities getAbilities() {
+		return abilities;
+	}
+
+	@Override
+	public int getFallDamagePrevention() {
+		return abilities.getFallDamagePrevention();
+	}
+	
 	protected void markDirty() {
 		CraftingMod.data.markDirty();
 	}
