@@ -19,7 +19,7 @@ public class CraftingCriteria implements ICriteria {
 	private List<IReward> rewards = new ArrayList();
 	private List<ICriteria> prereqs = new ArrayList();
 	private List<ICriteria> conflicts = new ArrayList();
-	private boolean isRepeatable;
+	private int isRepeatable;
 	
 	private String name;
 	
@@ -68,8 +68,8 @@ public class CraftingCriteria implements ICriteria {
 	}
 	
 	@Override
-	public ICriteria setRepeatable(boolean repeatable) {
-		this.isRepeatable = repeatable;
+	public ICriteria setRepeatAmount(int amount) {
+		this.isRepeatable = amount;
 		return this;
 	}
 
@@ -94,7 +94,7 @@ public class CraftingCriteria implements ICriteria {
 	}
 
 	@Override
-	public boolean isRepeatable() {
+	public int getRepeatAmount() {
 		return isRepeatable;
 	}
 }

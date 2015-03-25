@@ -41,7 +41,7 @@ public abstract class TriggerBase implements ITrigger {
 	}
 	
 	@Override
-	public ITrigger setConditions(ICondition... conditions) {
+	public ITrigger setConditions(ICondition[] conditions) {
 		for (ICondition condition: conditions) {
 			this.conditions.add(condition);
 		}

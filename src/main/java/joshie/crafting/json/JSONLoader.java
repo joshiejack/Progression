@@ -108,8 +108,8 @@ public class JSONLoader {
 				thePrereqs[i] = CraftingAPI.registry.getCriteriaFromName(criteria.prereqs[i]);
 			for (int i = 0; i < theConflicts.length; i++)
 				theConflicts[i] = CraftingAPI.registry.getCriteriaFromName(criteria.conflicts[i]);
-			boolean repeatable = criteria.repeatable;
-			theCriteria.addTriggers(theTriggers).addRewards(theRewards).addRequirements(thePrereqs).addConflicts(theConflicts).setRepeatable(repeatable);
+			int repeatable = criteria.repeatable;
+			theCriteria.addTriggers(theTriggers).addRewards(theRewards).addRequirements(thePrereqs).addConflicts(theConflicts).setRepeatAmount(repeatable);
 		}
 		
 		/** We are finished **/

@@ -24,7 +24,7 @@ public class CrafterHuman implements ICrafter {
 	public boolean canUseItemForCrafting(CraftingType type, ItemStack stack) {
 		Collection<ICriteria> conditions = CraftingAPI.crafting.getCraftUsageCriteria(type, stack);
 		if (conditions.size() < 1) return true;
-		Set<ICriteria> completed = CraftingAPI.players.getPlayerData(uuid).getMappings().getCompletedCriteria();
+		Set<ICriteria> completed = CraftingAPI.players.getPlayerData(uuid).getMappings().getCompletedCriteria().keySet();
 		if (completed.containsAll(conditions)) {
 			return true;
 		} else return false;
@@ -34,7 +34,7 @@ public class CrafterHuman implements ICrafter {
 	public boolean canCraftItem(CraftingType type, ItemStack stack) {
 		Collection<ICriteria> conditions = CraftingAPI.crafting.getCraftingCriteria(type, stack);
 		if (conditions.size() < 1) return true;
-		Set<ICriteria> completed = CraftingAPI.players.getPlayerData(uuid).getMappings().getCompletedCriteria();
+		Set<ICriteria> completed = CraftingAPI.players.getPlayerData(uuid).getMappings().getCompletedCriteria().keySet();
 		if (completed.containsAll(conditions)) {
 			return true;
 		} else return false;

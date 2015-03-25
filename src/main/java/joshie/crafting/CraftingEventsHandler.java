@@ -29,7 +29,7 @@ public class CraftingEventsHandler {
 	public static boolean checkAndCancelEvent(PlayerEvent event) {
 		if (event.entityPlayer.getCurrentEquippedItem() == null) return true;
 		EntityPlayer player = event.entityPlayer;
-		ICrafter crafter = PlayerHelper.getCrafterForUUID(PlayerHelper.getUUIDForPlayer(player));
+		ICrafter crafter = CraftingAPI.crafting.getCrafterFromPlayer(player);
 		if (!crafter.canCraftItem(CraftingType.CRAFTING, player.getCurrentEquippedItem())) {
 			event.setCanceled(true);
 			return false;
@@ -53,7 +53,7 @@ public class CraftingEventsHandler {
 	
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onItemTooltipEvent(ItemTooltipEvent event) {
-		ICrafter crafter = PlayerHelper.getCrafterForUUID(PlayerHelper.getUUIDForPlayer(event.entityPlayer));
+		ICrafter crafter = CraftingAPI.crafting.getCrafterFromPlayer(event.entityPlayer);
 		if (!crafter.canCraftItem(CraftingType.CRAFTING, event.itemStack)) {
 			event.toolTip.clear();
 			event.toolTip.add("LOCKED");

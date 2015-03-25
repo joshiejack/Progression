@@ -27,6 +27,6 @@ public class DataCriteria {
 	@SerializedName("Conflicts")
 	String[] conflicts;
 	
-	@SerializedName("Repeatable")
-	boolean repeatable;
+	@SerializedName("Repeatable Amount")
+	int repeatable;
 }

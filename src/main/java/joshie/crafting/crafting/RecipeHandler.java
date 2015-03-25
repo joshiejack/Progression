@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.crafting.CraftingType;
 import joshie.crafting.api.crafting.ICrafter;
 import joshie.crafting.asm.ContainerPlayer;
@@ -72,10 +73,10 @@ public class RecipeHandler {
 				slot++;
 			}
 		}
-				
+						
 		List<UUID> uuids = getPlayers(crafting, world.isRemote);
 		for (UUID uuid: uuids) {
-			ICrafter crafter = PlayerHelper.getCrafterForUUID(uuid);
+			ICrafter crafter = CraftingAPI.crafting.getCrafterFromUUID(uuid);
 			if (!crafter.canCraftWithAnything()) { //If we can't craft with every item, let's validate them all
 				for (int i = 0; i < crafting.getSizeInventory(); i++) {
 					ItemStack stack = crafting.getStackInSlot(i);

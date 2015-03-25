@@ -20,7 +20,7 @@ public interface ICriteria extends IHasUniqueName {
 	public ICriteria addConflicts(ICriteria... prereqs);
 
 	/** Marks the condition as repeatable **/
-	public ICriteria setRepeatable(boolean repeatable);
+	public ICriteria setRepeatAmount(int amount);
 
 	/** Returns all the triggers that this condition needs to be met **/
 	public List<ITrigger> getTriggers();
@@ -34,5 +34,5 @@ public interface ICriteria extends IHasUniqueName {
 	public List<ICriteria> getConflicts();
 	
 	/** Returns if the criteria is repeatable **/
-	public boolean isRepeatable();
+	public int getRepeatAmount();
 }

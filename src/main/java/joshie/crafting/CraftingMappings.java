@@ -36,7 +36,7 @@ public class CraftingMappings implements ICraftingMappings {
 	private PlayerDataServer master;
 	private UUID uuid;
 	
-	protected Set<ICriteria> completedCritera = new HashSet(); //All the completed conditions, Persistent
+	protected HashMap<ICriteria, Integer> completedCritera = new HashMap(); //All the completed criteria, with a number for how many times repeated
 	protected Set<ITrigger> completedTriggers = new HashSet(); //All the completed trigger, With their unique name as their identifier, Persistent
 	protected HashMap<String, Object[]> triggerData = new HashMap(); //Unique String > Data mappings for this trigger
 	
@@ -56,13 +56,13 @@ public class CraftingMappings implements ICraftingMappings {
 		
 		PacketHandler.sendToClient(new PacketSyncSpeed(master.getSpeed()), player);
 		PacketHandler.sendToClient(new PacketSyncTriggers(true, completedTriggers.toArray(new ITrigger[completedTriggers.size()])), player); //Sync all researches to the client
-		PacketHandler.sendToClient(new PacketSyncConditions(true, completedCritera.toArray(new ICriteria[completedCritera.size()])), player); //Sync all conditions to the client
+		PacketHandler.sendToClient(new PacketSyncConditions(true, completedCritera.keySet().toArray(new Integer[completedCritera.size()]), completedCritera.values().toArray(new ICriteria[completedCritera.size()])), player); //Sync all conditions to the client
 	}
 	
 	//Reads the completed criteria
 	public void readFromNBT(NBTTagCompound nbt) {
 		NBTHelper.readStringCollection(nbt, "Triggers", TriggerNBT.INSTANCE.setCollection(completedTriggers));
-		NBTHelper.readStringCollection(nbt, "Criteria", ConditionNBT.INSTANCE.setCollection(completedCritera));
+		NBTHelper.readMap(nbt, "Criteria", ConditionNBT.INSTANCE.setMap(completedCritera));
 		NBTTagList data = nbt.getTagList("TriggerData", 10);
 		for (int i = 0; i < data.tagCount(); i++) {
 			NBTTagCompound tag = data.getCompoundTagAt(i);
@@ -77,7 +77,7 @@ public class CraftingMappings implements ICraftingMappings {
 	
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		NBTHelper.writeCollection(nbt, "Triggers", TriggerNBT.INSTANCE.setCollection(completedTriggers));
-		NBTHelper.writeCollection(nbt, "Criteria", ConditionNBT.INSTANCE.setCollection(completedCritera));
+		NBTHelper.writeMap(nbt, "Criteria", ConditionNBT.INSTANCE.setMap(completedCritera));
 		//Save the extra data for the existing triggers
 		NBTTagList data = new NBTTagList();
 		for (String name: triggerData.keySet()) {
@@ -95,7 +95,7 @@ public class CraftingMappings implements ICraftingMappings {
 	}
 
 	@Override
-	public Set<ICriteria> getCompletedCriteria() {
+	public HashMap<ICriteria, Integer> getCompletedCriteria() {
 		return completedCritera;
 	}
 
@@ -105,24 +105,24 @@ public class CraftingMappings implements ICraftingMappings {
 	}
 
 	@Override
-	public void markCriteriaAsCompleted(boolean overwrite, ICriteria... conditions) {
-		if (overwrite) completedCritera = new HashSet();
-		for (ICriteria critera: conditions) {
-			completedCritera.add(critera);
+	public void markCriteriaAsCompleted(boolean overwrite, Integer[] values, ICriteria... conditions) {
+		if (overwrite) completedCritera = new HashMap();
+		for (int i = 0; i < values.length; i++) {
+			completedCritera.put(conditions[i], values[i]);
 		}
 	}
 
 	@Override
 	public void markTriggerAsCompleted(boolean overwrite, ITrigger... researches) {
-		if (overwrite) completedCritera = new HashSet();
+		if (overwrite) completedTriggers = new HashSet();
 		for (ITrigger trigger: researches) {
 			completedTriggers.add(trigger);
 		}
 	}
 	
 	private boolean containsAny(List<ICriteria> list) {
-		for (ICriteria criteria: completedCritera) {
-			if (completedCritera.contains(criteria)) return true;
+		for (ICriteria criteria: completedCritera.keySet()) {
+			if (completedCritera.keySet().contains(criteria)) return true;
 		}
 		
 		return false;
@@ -172,6 +172,11 @@ public class CraftingMappings implements ICraftingMappings {
 				}
 				
 				if (allFired) {
+					//Remove the triggers from the active map
+					for (ITrigger criteriaTrigger: allTriggers) {
+						activeTriggers.get(criteriaTrigger.getTypeName()).remove(criteriaTrigger);
+					}
+					
 					//We have discovered, that every single condition has been fulfilled
 					//We can now grab a list of all the Criteria, that gets unlocked by
 					//ths criteria being fulfilled, and adding them to the available criteria
@@ -180,7 +185,7 @@ public class CraftingMappings implements ICraftingMappings {
 					for (ICriteria unlocked: newCriteria) {
 						//We know what we should unlock, but we don't know if we're the only thing
 						//Require to unlock this, so we need to check
-						if (completedCritera.containsAll(unlocked.getRequirements())) {
+						if (completedCritera.keySet().containsAll(unlocked.getRequirements())) {
 							//We also need to check it's not blacklisted
 							if (!containsAny(unlocked.getConflicts())) {
 								availableCriteria.add(unlocked);
@@ -193,10 +198,12 @@ public class CraftingMappings implements ICraftingMappings {
 					}
 					
 					//Finish off a criteria, and remove completed triggers for repeatable
-					completedCritera.add(criteria); //Mark it as completed
+					int amount = getCriteriaCount(criteria);
+					amount++;
+					completedCritera.put(criteria, amount);
 					
 					//Mark this critera as completed
-					PacketHandler.sendToClient(new PacketSyncConditions(false, criteria), uuid);
+					PacketHandler.sendToClient(new PacketSyncConditions(false, new Integer[] { amount }, new ICriteria[] { criteria }), uuid);
 					//We have updated the mappings, after firing a trigger
 					//Now that we have updated the mappings, we should
 					for (IReward reward: criteria.getRewards()) {
@@ -211,7 +218,8 @@ public class CraftingMappings implements ICraftingMappings {
 					}
 					
 					//Remove the triggers from completed if they are repeatable as well
-					if (criteria.isRepeatable()) { //Removes all the triggers from completed
+					int max = criteria.getRepeatAmount();
+					if (amount < max) { //Removes all the triggers from completed
 						for (ITrigger triggerz: criteria.getTriggers()) {
 							completedTriggers.remove(triggerz.getUniqueName());
 						}
@@ -225,15 +233,14 @@ public class CraftingMappings implements ICraftingMappings {
 		return completedAnyCriteria;
 	}
 	
-	/** Upon completing a criteria we should do stuff **/
-	public void completeCriteria(ICriteria criteria) {
-		completedCritera.add(criteria); //Mark it as completed
-		if (criteria.isRepeatable()) { //Removes all the triggers from completed
-			for (ITrigger trigger: criteria.getTriggers()) {
-				String uniqueName = trigger.getUniqueName();
-				completedTriggers.remove(uniqueName);
-			}
+	public int getCriteriaCount(ICriteria criteria) {
+		int amount = 0;
+		Integer last = completedCritera.get(criteria);
+		if (last != null) {
+			amount = last;
 		}
+		
+		return amount;
 	}
 
 	@Override
@@ -243,8 +250,10 @@ public class CraftingMappings implements ICraftingMappings {
 			//We are now looping though all criteria, we now need to check to see if this
 			//First step is to validate to see if this criteria, is available right now
 			//If the criteria is repeatable, or is not completed continue
-			if (criteria.isRepeatable() || !completedCritera.contains(criteria)) {
-				if (completedCritera.containsAll(criteria.getRequirements())) {
+			int max = criteria.getRepeatAmount();
+			int last = getCriteriaCount(criteria);
+			if (last < max || !completedCritera.keySet().contains(criteria)) {
+				if (completedCritera.keySet().containsAll(criteria.getRequirements())) {
 					//If we have all the requirements, continue
 					//Now that we know that we have all the requirements, we should check for conflicts
 					//If it doesn't contain any of the conflicts, continue forwards

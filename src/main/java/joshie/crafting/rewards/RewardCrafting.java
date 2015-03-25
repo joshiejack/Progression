@@ -2,7 +2,7 @@ package joshie.crafting.rewards;
 
 import java.util.UUID;
 
-import joshie.crafting.CraftingCommon;
+import joshie.crafting.CraftingMod;
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.IReward;
@@ -100,7 +100,7 @@ public class RewardCrafting extends RewardBase {
 			reward.crafting = data.get("Block Usage").getAsBoolean();
 		}
 		
-		if (CraftingCommon.NEI_LOADED) {
+		if (CraftingMod.NEI_LOADED) {
 			if (data.get("Hide from NEI") != null) {
 				if (data.get("Hide from NEI").getAsBoolean() == false) {
 					reward.isAdded = false;
@@ -140,7 +140,7 @@ public class RewardCrafting extends RewardBase {
 	
 	@Override
 	public void reward(UUID uuid) {
-		if (CraftingCommon.NEI_LOADED && !isAdded) {
+		if (CraftingMod.NEI_LOADED && !isAdded) {
 			API.addItemListEntry(stack);
 			isAdded = true;
 		}
