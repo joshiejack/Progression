@@ -2,6 +2,7 @@ package joshie.crafting.gui;
 
 import joshie.crafting.CraftAPIRegistry;
 import joshie.crafting.api.ICriteria;
+import joshie.crafting.json.JSONLoader;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 
@@ -31,6 +32,7 @@ public class GuiEditor extends GuiScreen {
     @Override
     public void onGuiClosed() {
         Keyboard.enableRepeatEvents(false);
+        JSONLoader.saveJSON();
     }
 
     @Override

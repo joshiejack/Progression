@@ -143,7 +143,6 @@ public class JSONLoader {
 		/** We are finished **/
 		//Wipe out everything we don't need from memory
 		dir = null;
-		gson = null;
 		triggers = null;
 		rewards = null;
 		criterian = null;
@@ -185,7 +184,7 @@ public class JSONLoader {
             Writer writer = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
             writer.write(gson.toJson(toSave));
             writer.close();
-        } catch (Exception e) {}
+        } catch (Exception e) { e.printStackTrace(); }
 	}
 	
 	public static void saveCriteria() {
