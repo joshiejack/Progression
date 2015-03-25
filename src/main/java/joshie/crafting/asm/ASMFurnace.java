@@ -56,10 +56,7 @@ public class ASMFurnace extends AbstractASM {
 							super.visitInsn(Opcodes.IRETURN);
 							super.visitLabel(l4);
 							canVisit = false;
-							return;
-						}
-						
-						super.visitMethodInsn(opcode, owner, name, desc, itf);
+						} else super.visitMethodInsn(opcode, owner, name, desc, itf);
 					}
 				};
 			}

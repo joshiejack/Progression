@@ -101,6 +101,13 @@ public class CraftAPIRegistry implements IRegistry {
 	public boolean fireTrigger(UUID uuid, String string, Object... data) {
 		return CraftingAPI.players.getServerPlayer(uuid).getMappings().fireAllTriggers(string, data);
 	}
+	
+	@Override //Fired Server Side only
+	public boolean fireTrigger(EntityPlayer player, String string, Object... data) {
+		if (!player.worldObj.isRemote) {
+			return fireTrigger(PlayerHelper.getUUIDForPlayer(player), string, data);
+		} else return false;
+	}
 
 	@Override
 	public IConditionType registerConditionType(IConditionType type) {
@@ -134,6 +141,8 @@ public class CraftAPIRegistry implements IRegistry {
 
 	@Override
 	public void removeTrigger(String unique) {
+		ITrigger trigger = triggers.get(unique);
+		CraftingEventsManager.onTriggerRemoved(trigger);
 		triggers.remove(unique);
 	}
 
@@ -162,7 +171,9 @@ public class CraftAPIRegistry implements IRegistry {
 	public ITrigger getTrigger(String name, String unique, JsonObject data) {
 		ITrigger trigger = triggers.get(unique);
 		if (trigger == null && name != null && data != null) {
+			//New trigger created
 			trigger = (ITrigger) triggerTypes.get(name).deserialize(data).setUniqueName(unique);
+			CraftingEventsManager.onTriggerAdded(trigger);
 			triggers.put(unique, trigger);
 		}
 		
@@ -248,5 +259,10 @@ public class CraftAPIRegistry implements IRegistry {
 				}
 			}
 		}
+	}
+
+	@Override
+	public Collection<ITriggerType> getTriggerTypes() {
+		return triggerTypes.values();
 	}
 }

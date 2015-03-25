@@ -7,6 +7,7 @@ import java.util.Set;
 import joshie.crafting.api.ICondition;
 import joshie.crafting.api.IHasUniqueName;
 import joshie.crafting.api.ITrigger;
+import joshie.crafting.api.ITriggerType.Bus;
 import net.minecraft.item.ItemStack;
 
 public abstract class TriggerBase implements ITrigger {
@@ -16,6 +17,11 @@ public abstract class TriggerBase implements ITrigger {
 	
 	public TriggerBase(String typeName) {
 		this.typeName = typeName;
+	}
+
+	@Override
+	public Bus getBusType() {
+		return Bus.FORGE;
 	}
 
 	@Override

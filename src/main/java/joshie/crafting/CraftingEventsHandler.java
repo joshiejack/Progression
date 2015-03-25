@@ -7,11 +7,8 @@ import joshie.crafting.api.crafting.CraftingType;
 import joshie.crafting.api.crafting.ICrafter;
 import joshie.crafting.helpers.ClientHelper;
 import joshie.crafting.helpers.PlayerHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
@@ -20,29 +17,14 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 
-public class CraftingEventsHandler {	
-	@SubscribeEvent
-	public void onCraft(ItemCraftedEvent event) {
-		CraftingAPI.registry.fireTrigger(PlayerHelper.getUUIDForPlayer(event.player), CraftingCommon.triggerCrafting.getTypeName(), event.crafting.copy());
-	}
-	
+public class CraftingEventsHandler {		
 	@SubscribeEvent
 	public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
 		UUID uuid = PlayerHelper.getUUIDForPlayer(event.player);
 		EntityPlayerMP player = (EntityPlayerMP)event.player;
 		CraftingAPI.players.getServerPlayer(uuid).getMappings().syncToClient(player);
-		CraftingAPI.registry.fireTrigger(uuid, CraftingCommon.triggerLogin.getTypeName());
-	}
-	
-	@SubscribeEvent
-	public void onDeath(LivingDeathEvent event) {
-		Entity source = event.source.getSourceOfDamage();
-		if (source != null && source instanceof EntityPlayer) {
-			CraftingAPI.registry.fireTrigger(PlayerHelper.getUUIDForPlayer((EntityPlayer)event.source.getSourceOfDamage()), CraftingCommon.triggerKill.getTypeName(), EntityList.getEntityString(event.entity));
-		}
 	}
 	
 	@SubscribeEvent

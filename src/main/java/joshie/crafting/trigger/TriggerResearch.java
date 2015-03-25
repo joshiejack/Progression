@@ -17,6 +17,11 @@ public class TriggerResearch extends TriggerBase {
 		super("research");
 	}
 	
+	@Override
+	public Bus getBusType() {
+		return Bus.NONE;
+	}
+	
 	@ZenMethod
 	public void add(String unique, String name) {
 		TriggerResearch trigger = new TriggerResearch();

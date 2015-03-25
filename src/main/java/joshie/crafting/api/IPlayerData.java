@@ -1,6 +1,5 @@
 package joshie.crafting.api;
 
-import java.util.Set;
 import java.util.UUID;
 
 /** All data pertaining to this player,

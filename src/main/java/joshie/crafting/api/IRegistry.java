@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+import net.minecraft.entity.player.EntityPlayer;
+
 import com.google.common.collect.Multimap;
 import com.google.gson.JsonObject;
 
@@ -14,6 +16,9 @@ public interface IRegistry {
 	 *  On the server side.
 	 *  @return		returns true if just one of the triggers suceeded **/
 	public boolean fireTrigger(UUID uuid, String trigger, Object... data);
+	
+	/** Convenience method **/
+	public boolean fireTrigger(EntityPlayer player, String trigger, Object... data);
 	
 	/** Returns a criteria based on the name **/
 	public ICriteria getCriteriaFromName(String name);
@@ -68,4 +73,6 @@ public interface IRegistry {
 	public Collection<ICriteria> getCriteria();
 
 	public void loadMineTweaker3();
+	
+	public Collection<ITriggerType> getTriggerTypes();
 }

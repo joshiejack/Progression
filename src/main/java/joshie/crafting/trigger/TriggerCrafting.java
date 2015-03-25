@@ -1,5 +1,6 @@
 package joshie.crafting.trigger;
 
+import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ITrigger;
 import joshie.crafting.helpers.StackHelper;
 import joshie.crafting.minetweaker.Triggers;
@@ -15,6 +16,9 @@ import stanhebben.zenscript.annotations.ZenMethod;
 
 import com.google.gson.JsonObject;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
+
 @ZenClass("mods.craftcontrol.triggers.Crafting")
 public class TriggerCrafting extends TriggerBase {
 	private ItemStack stack;
@@ -25,6 +29,16 @@ public class TriggerCrafting extends TriggerBase {
 	
 	public TriggerCrafting() {
 		super("crafting");
+	}
+
+	@Override
+	public Bus getBusType() {
+		return Bus.FML;
+	}
+	
+	@SubscribeEvent
+	public void onEvent(ItemCraftedEvent event) {
+		CraftingAPI.registry.fireTrigger(event.player, getTypeName(), event.crafting.copy());
 	}
 	
 	@ZenMethod

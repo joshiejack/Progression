@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 
-import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.IPlayerDataServer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;

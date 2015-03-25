@@ -1,14 +1,21 @@
 package joshie.crafting.trigger;
 
+import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ITrigger;
 import joshie.crafting.minetweaker.Triggers;
 import minetweaker.MineTweakerAPI;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 import com.google.gson.JsonObject;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 @ZenClass("mods.craftcontrol.triggers.Kill")
 public class TriggerKill extends TriggerBase {
@@ -17,6 +24,16 @@ public class TriggerKill extends TriggerBase {
 	
 	public TriggerKill() {
 		super("kill");
+	}
+	
+	
+	@SubscribeEvent
+	public void onEvent(LivingDeathEvent event) {
+		Entity source = event.source.getSourceOfDamage();
+		if (source instanceof EntityPlayer) {
+			String entity = EntityList.getEntityString(event.entity);
+			CraftingAPI.registry.fireTrigger((EntityPlayer)source, getTypeName(), entity);
+		}
 	}
 	
 	@ZenMethod
