@@ -1,7 +1,6 @@
 package joshie.crafting;
 
 import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.api.ITriggerType;
 import joshie.crafting.commands.CommandHelp;
 import joshie.crafting.commands.CommandManager;
 import joshie.crafting.commands.CommandReload;
@@ -21,6 +20,7 @@ import joshie.crafting.rewards.RewardCrafting;
 import joshie.crafting.rewards.RewardExperience;
 import joshie.crafting.rewards.RewardItem;
 import joshie.crafting.rewards.RewardSpeed;
+import joshie.crafting.trigger.TriggerBreakBlock;
 import joshie.crafting.trigger.TriggerCrafting;
 import joshie.crafting.trigger.TriggerKill;
 import joshie.crafting.trigger.TriggerLogin;
@@ -34,13 +34,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 
 public class CraftingCommon {
-	public static boolean NEI_LOADED = false;
-	
-	public static ITriggerType triggerCrafting;
-	public static ITriggerType triggerKill;
-	public static ITriggerType triggerLogin;
-	public static ITriggerType triggerResearch;
-	
+	public static boolean NEI_LOADED = false;	
 	public static Item tech;
 	
 	public void preInit() {
@@ -60,10 +54,11 @@ public class CraftingCommon {
 		CraftingAPI.registry.registerRewardType(new RewardExperience());
 		CraftingAPI.registry.registerRewardType(new RewardItem());
 		CraftingAPI.registry.registerRewardType(new RewardSpeed());
-		triggerCrafting = CraftingAPI.registry.registerTriggerType(new TriggerCrafting());
-		triggerKill = CraftingAPI.registry.registerTriggerType(new TriggerKill());
-		triggerLogin = CraftingAPI.registry.registerTriggerType(new TriggerLogin());
-		triggerResearch = CraftingAPI.registry.registerTriggerType(new TriggerResearch());
+		CraftingAPI.registry.registerTriggerType(new TriggerBreakBlock());
+		CraftingAPI.registry.registerTriggerType(new TriggerCrafting());
+		CraftingAPI.registry.registerTriggerType(new TriggerKill());
+		CraftingAPI.registry.registerTriggerType(new TriggerLogin());
+		CraftingAPI.registry.registerTriggerType(new TriggerResearch());
 		
 		tech = new ItemTechnology().setUnlocalizedName("technology").setCreativeTab(CreativeTabs.tabRedstone);
 		GameRegistry.registerItem(tech, "technology");
@@ -81,7 +76,7 @@ public class CraftingCommon {
 		JSONLoader.loadJSON();
 		
 		if (Loader.isModLoaded("MineTweaker3")) {
-			//CraftingAPI.registry.loadMineTweaker3();
+			CraftingAPI.registry.loadMineTweaker3();
 		}
 	}
 }
