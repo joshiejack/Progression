@@ -11,18 +11,21 @@ import java.util.Collection;
 public interface ITrigger extends IHasUniqueName, ITriggerType {		
 	/** Whether this trigger has been satisfied yet 
 	 * @param 		additional data stored by the trigger itself **/
-	public boolean isCompleted(Object[] objects);
+	public boolean isCompleted(ITriggerData triggerData);
 
 	/** Called when this trigger is fired, SERVERSIDE 
 	 *  @param		uuid The UUID of the player, this trigger is being fired for
 	 *  @param		additional data, that this trigger has stored
 	 * 	@param		additional data, passed by the event itself, e.g. "Pig", for onKill 
 	 * @return **/
-	public Object[] onFired(Object[] existing, Object... data);
+	public void onFired(ITriggerData triggerData, Object... data);
 
 	/** Returns a list of all the conditions this trigger needs satisfied, before it can be fired **/
 	public Collection<ICondition> getConditions();
 
 	/** Adds conditions to this trigger **/
 	public ITrigger setConditions(ICondition[] conditions);
+
+	/** Creates a new instance of the data for this trigger **/
+	public ITriggerData newData();
 }

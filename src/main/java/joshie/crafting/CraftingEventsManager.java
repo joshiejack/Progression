@@ -23,7 +23,7 @@ public class CraftingEventsManager {
 		}
 		
 		for (ITriggerType type: CraftingAPI.registry.getTriggerTypes()) { //Loop through all trigger types
-			if (!activeTriggerTypes.contains(type.getTypeName())) { //If we haven't added this type to active triggers yet add it
+			if (activeTriggerTypes.contains(type.getTypeName())) { //If we haven't added this type to active triggers yet add it
 				Bus bus = type.getBusType();
 				if (bus == Bus.FML) {
 					FMLCommonHandler.instance().bus().register(type);

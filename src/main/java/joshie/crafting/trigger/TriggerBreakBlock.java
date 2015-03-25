@@ -10,7 +10,6 @@ import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.api.oredict.IOreDictEntry;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import stanhebben.zenscript.annotations.Optional;
@@ -23,7 +22,7 @@ import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 @ZenClass("mods.craftcontrol.triggers.BreakBlock")
-public class TriggerBreakBlock extends TriggerBase {
+public class TriggerBreakBlock extends TriggerBaseCounter {
 	private String oreDictionary = "NONE";
 	private Block block;
 	private int meta = 0;
@@ -107,21 +106,12 @@ public class TriggerBreakBlock extends TriggerBase {
 			data.addProperty("Amount", amount);
 		}
 	}
-
+	
 	@Override
-	public boolean isCompleted(Object[] existing) {
-		int count = (Integer) existing[0];
-		return count >= amount;
-	}
-
-	@Override
-	public Object[] onFired(Object[] existing, Object... data) {	
-		int count = asInt(existing);
-		String name = asString(data);
-		
+	protected boolean canIncrease(Object... data) {
+		Block theBlock = asBlock(data, 0);
+		int theMeta = asInt(data, 1);
 		boolean doesMatch = false;
-		Block theBlock = (Block) data[0];
-		int theMeta = (Integer) data[1];
 		if (!oreDictionary.equals("NONE")) {
 			ItemStack stack = new ItemStack(theBlock, 1, theMeta);
 			int[] ids = OreDictionary.getOreIDs(stack);
@@ -139,22 +129,7 @@ public class TriggerBreakBlock extends TriggerBase {
 				}
 			}
 		}
-
-		if (doesMatch) {
-			count++;
-		}
 		
-		return new Object[] { count };
-	}
-
-	@Override
-	public Object[] readFromNBT(NBTTagCompound tag) {
-		return new Object[] { tag.getInteger("Count") };
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound tag, Object[] existing) {
-		int count = asInt(existing);
-		tag.setInteger("Count", count);
+		return doesMatch;
 	}
 }

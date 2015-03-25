@@ -52,6 +52,7 @@ public class NBTHelper {
 			Object key = o;
 			Object value = something.getMap().get(key);
 			NBTTagCompound tag = new NBTTagCompound();
+			if (key == null || value == null) continue;
 			something.writeKey(tag, key);
 			something.writeValue(tag, value);
 			list.appendTag(tag);

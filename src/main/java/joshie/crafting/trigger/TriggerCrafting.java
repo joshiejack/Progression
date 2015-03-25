@@ -3,13 +3,14 @@ package joshie.crafting.trigger;
 import joshie.crafting.api.Bus;
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ITrigger;
+import joshie.crafting.api.ITriggerData;
 import joshie.crafting.helpers.StackHelper;
 import joshie.crafting.minetweaker.Triggers;
+import joshie.crafting.trigger.data.DataCrafting;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.minecraft.MineTweakerMC;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
@@ -93,44 +94,28 @@ public class TriggerCrafting extends TriggerBase {
 		if (matchNBT != false)
 			data.addProperty("Match NBT", matchNBT);
 	}
-
+	
 	@Override
-	public boolean isCompleted(Object[] existing) {
-		int amountCrafted = asInt(existing);
-		int timesCrafted = asInt(existing, 1);
-		return amountCrafted >= itemAmount && timesCrafted >= craftingTimes;
+	public ITriggerData newData() {
+		return new DataCrafting();
 	}
 
 	@Override
-	public Object[] onFired(Object[] existing, Object... data) {
-		ItemStack crafted = asStack(data);
-		int amountCrafted = asInt(existing);
-		int timesCrafted = asInt(existing, 1);
+	public boolean isCompleted(ITriggerData existing) {
+		DataCrafting data = (DataCrafting) existing;
+		return data.amountCrafted >= itemAmount && data.timesCrafted >= craftingTimes;
+	}
+
+	@Override
+	public void onFired(ITriggerData existing, Object... additional) {
+		DataCrafting data = (DataCrafting) existing;
+		ItemStack crafted = asStack(additional);
 		
 		if (stack.getItem() == crafted.getItem()) {
-			if (matchDamage && stack.getItemDamage() != crafted.getItemDamage()) return new Object[] { amountCrafted, timesCrafted };
-			if (matchNBT && stack.getTagCompound() != crafted.getTagCompound()) return new Object[] { amountCrafted, timesCrafted };
-			amountCrafted += stack.stackSize;
-			timesCrafted++;
+			if (matchDamage && stack.getItemDamage() != crafted.getItemDamage()) return;
+			if (matchNBT && stack.getTagCompound() != crafted.getTagCompound()) return;
+			data.amountCrafted += stack.stackSize;
+			data.timesCrafted++;
 		}
-		
-		
-		return new Object[] { amountCrafted, timesCrafted };
-	}
-
-	@Override
-	public Object[] readFromNBT(NBTTagCompound tag) {
-		Object[] data = new Object[2];
-		data[0] = tag.getInteger("AmountCrafted");
-		data[1] = tag.getInteger("TimesCrafted");
-		return data;
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound tag, Object[] existing) {
-		int amountCrafted = (Integer) existing[0];
-		int timesCrafted = (Integer) existing[1];
-		tag.setInteger("AmountCrafted", amountCrafted);
-		tag.setInteger("TimesCrafted", timesCrafted);
 	}
 }

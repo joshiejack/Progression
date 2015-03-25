@@ -7,7 +7,6 @@ import minetweaker.MineTweakerAPI;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
@@ -18,9 +17,8 @@ import com.google.gson.JsonObject;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 @ZenClass("mods.craftcontrol.triggers.Kill")
-public class TriggerKill extends TriggerBase {
+public class TriggerKill extends TriggerBaseCounter {
 	private String entity;
-	private int amount = 1;
 	
 	public TriggerKill() {
 		super("kill");
@@ -66,31 +64,7 @@ public class TriggerKill extends TriggerBase {
 	}
 
 	@Override
-	public boolean isCompleted(Object[] existing) {
-		int count = (Integer) existing[0];
-		return count >= amount;
-	}
-
-	@Override
-	public Object[] onFired(Object[] existing, Object... data) {	
-		int count = asInt(existing);
-		String name = asString(data);
-
-		if (name.equals(entity)) {
-			count++;
-		}
-		
-		return new Object[] { count };
-	}
-
-	@Override
-	public Object[] readFromNBT(NBTTagCompound tag) {
-		return new Object[] { tag.getInteger("Count") };
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound tag, Object[] existing) {
-		int count = asInt(existing);
-		tag.setInteger("Count", count);
+	protected boolean canIncrease(Object... data) {
+		return asString(data).equals(entity);
 	}
 }

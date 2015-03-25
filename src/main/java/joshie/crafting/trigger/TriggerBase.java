@@ -8,12 +8,16 @@ import joshie.crafting.api.Bus;
 import joshie.crafting.api.ICondition;
 import joshie.crafting.api.IHasUniqueName;
 import joshie.crafting.api.ITrigger;
+import joshie.crafting.api.ITriggerData;
+import joshie.crafting.trigger.data.DataBoolean;
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
 public abstract class TriggerBase implements ITrigger {
 	private Set<ICondition> conditions = new HashSet();
 	private String uniqueName;
 	private String typeName;
+	protected int amount = 1;
 	
 	public TriggerBase(String typeName) {
 		this.typeName = typeName;
@@ -53,6 +57,18 @@ public abstract class TriggerBase implements ITrigger {
 	public Collection<ICondition> getConditions() {
 		return conditions;
 	}
+	
+	/** A whole bunch of convenience methods **/
+	
+	//Shorthand
+	protected Block asBlock(Object[] object) {
+		return asBlock(object, 0);
+	}
+		
+	//Normalhand
+	protected Block asBlock(Object[] object, int index) {
+		return (Block) object[index];
+	}	
 	
 	//Shorthand
 	protected String asString(Object[] object) {

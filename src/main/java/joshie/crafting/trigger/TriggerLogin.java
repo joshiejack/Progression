@@ -5,7 +5,6 @@ import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ITrigger;
 import joshie.crafting.minetweaker.Triggers;
 import minetweaker.MineTweakerAPI;
-import net.minecraft.nbt.NBTTagCompound;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -16,7 +15,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 
 @ZenClass("mods.craftcontrol.triggers.Login")
-public class TriggerLogin extends TriggerBase {
+public class TriggerLogin extends TriggerBaseCounter {
 	private int amount = 1;
 	
 	public TriggerLogin() {
@@ -59,30 +58,9 @@ public class TriggerLogin extends TriggerBase {
 			data.addProperty("Amount", amount);
 		}
 	}
-
+	
 	@Override
-	public boolean isCompleted(Object[] existing) {
-		int count = (Integer) existing[0];
-		return count >= amount;
-	}
-
-	@Override
-	public Object[] onFired(Object[] existing, Object... data) {	
-		int count = asInt(existing);
-		String name = asString(data);
-		count++;
-		
-		return new Object[] { count };
-	}
-
-	@Override
-	public Object[] readFromNBT(NBTTagCompound tag) {
-		return new Object[] { tag.getInteger("Count") };
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound tag, Object[] existing) {
-		int count = asInt(existing);
-		tag.setInteger("Count", count);
+	protected boolean canIncrease(Object... data) {
+		return true;
 	}
 }
