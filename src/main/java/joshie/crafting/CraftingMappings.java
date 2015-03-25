@@ -57,17 +57,17 @@ public class CraftingMappings implements ICraftingMappings {
 		
 		PacketHandler.sendToClient(new PacketSyncSpeed(master.getSpeed()), player);
 		PacketHandler.sendToClient(new PacketSyncTriggers(true, completedTriggers.toArray(new ITrigger[completedTriggers.size()])), player); //Sync all researches to the client
-		PacketHandler.sendToClient(new PacketSyncConditions(true, completedCritera.keySet().toArray(new Integer[completedCritera.size()]), completedCritera.values().toArray(new ICriteria[completedCritera.size()])), player); //Sync all conditions to the client
+		PacketHandler.sendToClient(new PacketSyncConditions(true, completedCritera.values().toArray(new Integer[completedCritera.size()]), completedCritera.keySet().toArray(new ICriteria[completedCritera.size()])), player); //Sync all conditions to the client
 	}
 	
 	//Reads the completed criteria
 	public void readFromNBT(NBTTagCompound nbt) {
-		NBTHelper.readStringCollection(nbt, "Triggers", TriggerNBT.INSTANCE.setCollection(completedTriggers));
-		NBTHelper.readMap(nbt, "Criteria", ConditionNBT.INSTANCE.setMap(completedCritera));
-		NBTTagList data = nbt.getTagList("TriggerData", 10);
+		NBTHelper.readStringCollection(nbt, "Completed Triggers", TriggerNBT.INSTANCE.setCollection(completedTriggers));
+		NBTHelper.readMap(nbt, "Completed Criteria", ConditionNBT.INSTANCE.setMap(completedCritera));
+		NBTTagList data = nbt.getTagList("Active Trigger Data", 10);
 		for (int i = 0; i < data.tagCount(); i++) {
 			NBTTagCompound tag = data.getCompoundTagAt(i);
-			String name = tag.getString("TriggerName");
+			String name = tag.getString("Name");
 			ITrigger trigger = CraftingAPI.registry.getTrigger(null, name, null);
 			if (trigger != null) {
 				ITriggerData iTriggerData = trigger.newData();
@@ -78,22 +78,22 @@ public class CraftingMappings implements ICraftingMappings {
 	}
 	
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		NBTHelper.writeCollection(nbt, "Triggers", TriggerNBT.INSTANCE.setCollection(completedTriggers));
-		NBTHelper.writeMap(nbt, "Criteria", ConditionNBT.INSTANCE.setMap(completedCritera));
+		NBTHelper.writeCollection(nbt, "Completed Triggers", TriggerNBT.INSTANCE.setCollection(completedTriggers));
+		NBTHelper.writeMap(nbt, "Completed Criteria", ConditionNBT.INSTANCE.setMap(completedCritera));
 		//Save the extra data for the existing triggers
 		NBTTagList data = new NBTTagList();
 		for (String name: triggerData.keySet()) {
 			ITrigger trigger = CraftingAPI.registry.getTrigger(null, name, null);
 			if (trigger != null) {
 				NBTTagCompound tag = new NBTTagCompound();
-				tag.setString("TriggerName", name);
+				tag.setString("Name", name);
 				ITriggerData iTriggerData = triggerData.get(name);
 				iTriggerData.writeToNBT(tag);
 				data.appendTag(tag);
 			}
 		}
 		
-		nbt.setTag("TriggerData", data);
+		nbt.setTag("Active Trigger Data", data);
 		return nbt;
 	}
 

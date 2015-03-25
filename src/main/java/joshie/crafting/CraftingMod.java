@@ -15,6 +15,7 @@ import joshie.crafting.commands.CommandManager;
 import joshie.crafting.commands.CommandReload;
 import joshie.crafting.commands.CommandReset;
 import joshie.crafting.conditions.ConditionBiomeType;
+import joshie.crafting.conditions.ConditionCoordinates;
 import joshie.crafting.conditions.ConditionDaytime;
 import joshie.crafting.crafting.CraftingRegistry;
 import joshie.crafting.json.JSONLoader;
@@ -87,6 +88,7 @@ public class CraftingMod implements IFMLLoadingPlugin {
 		FMLCommonHandler.instance().bus().register(new CraftingEventsHandler());
 		
 		CraftingAPI.registry.registerConditionType(new ConditionBiomeType());
+		CraftingAPI.registry.registerConditionType(new ConditionCoordinates());
 		CraftingAPI.registry.registerConditionType(new ConditionDaytime());
 		CraftingAPI.registry.registerRewardType(new RewardCrafting());
 		CraftingAPI.registry.registerRewardType(new RewardExperience());
