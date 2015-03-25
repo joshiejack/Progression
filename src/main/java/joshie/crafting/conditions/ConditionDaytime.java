@@ -22,10 +22,9 @@ public class ConditionDaytime extends ConditionBase {
 	
 	@ZenMethod
 	public void add(String unique, boolean isDaytime) {
-		ConditionDaytime daytime = new ConditionDaytime();
-		JsonObject object = new JsonObject();
-		daytime.serialize(object);
-		MineTweakerAPI.apply(new Conditions(unique, daytime));
+		ConditionDaytime condition = new ConditionDaytime();
+		condition.isDaytime = isDaytime;
+		MineTweakerAPI.apply(new Conditions(unique, condition));
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package joshie.crafting.rewards;
 
+import joshie.crafting.api.Bus;
 import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.IHasUniqueName;
 import joshie.crafting.api.IReward;
@@ -10,6 +11,11 @@ public abstract class RewardBase implements IReward {
 	
 	public RewardBase(String typeName) {
 		this.typeName = typeName;
+	}
+	
+	@Override
+	public Bus getBusType() {
+		return Bus.NONE;
 	}
 
 	@Override

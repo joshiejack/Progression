@@ -1,5 +1,6 @@
 package joshie.crafting.trigger;
 
+import joshie.crafting.api.Bus;
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ITrigger;
 import joshie.crafting.minetweaker.Triggers;

@@ -11,4 +11,6 @@ public interface IRewardType {
 	
 	/** Converts an IReward to JSON **/
 	public void serialize(JsonObject elements);
+
+	public Bus getBusType();
 }

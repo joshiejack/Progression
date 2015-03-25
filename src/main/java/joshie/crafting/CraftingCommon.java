@@ -6,6 +6,7 @@ import joshie.crafting.commands.CommandHelp;
 import joshie.crafting.commands.CommandManager;
 import joshie.crafting.commands.CommandReload;
 import joshie.crafting.commands.CommandReset;
+import joshie.crafting.conditions.ConditionBiomeType;
 import joshie.crafting.conditions.ConditionDaytime;
 import joshie.crafting.crafting.CraftingRegistry;
 import joshie.crafting.json.JSONLoader;
@@ -17,6 +18,8 @@ import joshie.crafting.network.PacketSyncSpeed;
 import joshie.crafting.network.PacketSyncTriggers;
 import joshie.crafting.player.PlayerTracker;
 import joshie.crafting.rewards.RewardCrafting;
+import joshie.crafting.rewards.RewardExperience;
+import joshie.crafting.rewards.RewardItem;
 import joshie.crafting.rewards.RewardSpeed;
 import joshie.crafting.trigger.TriggerCrafting;
 import joshie.crafting.trigger.TriggerKill;
@@ -51,8 +54,11 @@ public class CraftingCommon {
 		MinecraftForge.EVENT_BUS.register(new CraftingEventsHandler());
 		FMLCommonHandler.instance().bus().register(new CraftingEventsHandler());
 		
+		CraftingAPI.registry.registerConditionType(new ConditionBiomeType());
 		CraftingAPI.registry.registerConditionType(new ConditionDaytime());
 		CraftingAPI.registry.registerRewardType(new RewardCrafting());
+		CraftingAPI.registry.registerRewardType(new RewardExperience());
+		CraftingAPI.registry.registerRewardType(new RewardItem());
 		CraftingAPI.registry.registerRewardType(new RewardSpeed());
 		triggerCrafting = CraftingAPI.registry.registerTriggerType(new TriggerCrafting());
 		triggerKill = CraftingAPI.registry.registerTriggerType(new TriggerKill());

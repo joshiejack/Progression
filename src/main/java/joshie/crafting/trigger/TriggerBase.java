@@ -4,10 +4,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import joshie.crafting.api.Bus;
 import joshie.crafting.api.ICondition;
 import joshie.crafting.api.IHasUniqueName;
 import joshie.crafting.api.ITrigger;
-import joshie.crafting.api.ITriggerType.Bus;
 import net.minecraft.item.ItemStack;
 
 public abstract class TriggerBase implements ITrigger {

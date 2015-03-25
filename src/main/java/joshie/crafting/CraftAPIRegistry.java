@@ -148,6 +148,8 @@ public class CraftAPIRegistry implements IRegistry {
 
 	@Override
 	public void removeReward(String unique) {
+		IReward reward = rewards.get(unique);
+		CraftingEventsManager.onRewardRemoved(reward);
 		rewards.remove(unique);
 	}
 
@@ -185,6 +187,7 @@ public class CraftAPIRegistry implements IRegistry {
 		IReward reward = rewards.get(unique);
 		if (reward == null && name != null && data != null) {
 			reward = (IReward) rewardTypes.get(name).deserialize(data).setUniqueName(unique);
+			CraftingEventsManager.onRewardAdded(reward);
 			rewards.put(unique, reward);
 		}
 		
@@ -264,5 +267,10 @@ public class CraftAPIRegistry implements IRegistry {
 	@Override
 	public Collection<ITriggerType> getTriggerTypes() {
 		return triggerTypes.values();
+	}
+
+	@Override
+	public Collection<IRewardType> getRewardTypes() {
+		return rewardTypes.values();
 	}
 }

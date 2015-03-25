@@ -26,7 +26,6 @@ public class TriggerKill extends TriggerBase {
 		super("kill");
 	}
 	
-	
 	@SubscribeEvent
 	public void onEvent(LivingDeathEvent event) {
 		Entity source = event.source.getSourceOfDamage();

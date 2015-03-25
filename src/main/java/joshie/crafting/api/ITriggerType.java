@@ -22,8 +22,4 @@ public interface ITriggerType {
 	
 	/** Writes extra data to nbt **/
 	public void writeToNBT(NBTTagCompound tag, Object[] existing);
-	
-	public static enum Bus {
-		FML, FORGE, TERRAIN, ORE, NONE;
-	}
 }

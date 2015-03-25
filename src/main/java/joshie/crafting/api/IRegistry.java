@@ -75,4 +75,6 @@ public interface IRegistry {
 	public void loadMineTweaker3();
 	
 	public Collection<ITriggerType> getTriggerTypes();
+
+	public Collection<IRewardType> getRewardTypes();
 }
