@@ -136,14 +136,17 @@ public class CraftingMappings implements ICraftingMappings {
 		boolean completedAnyCriteria = false;
 		Collection<ITrigger> triggers = activeTriggers.get(type);		
 				
+		
+		HashSet<ITrigger> cantContinue = new HashSet();
 		for (ITrigger trigger: triggers) {
 			Collection<ICondition> conditions = trigger.getConditions();
 			for (ICondition condition: conditions) {
 				if (!condition.isSatisfied(world, player, uuid)) {
-					return false;
+					cantContinue.add(trigger);
 				}
 			}
 			
+			if (cantContinue.contains(trigger)) continue;
 			Object[] existing = triggerData.get(trigger.getUniqueName()); //Grab the old data
 			Object[] newData = trigger.onFired(existing, data); //Fire the new data
 			triggerData.put(trigger.getUniqueName(), newData);
@@ -152,6 +155,7 @@ public class CraftingMappings implements ICraftingMappings {
 		//Next step, now that the triggers have been fire, we need to go through them again
 		//Check if they have been satisfied, and if so, mark them as completed triggers
 		for (ITrigger trigger: triggers) {
+			if (cantContinue.contains(trigger)) continue;
 			if (trigger.isCompleted(triggerData.get(trigger.getUniqueName()))) {
 				completedTriggers.add(trigger);
 				PacketHandler.sendToClient(new PacketSyncTriggers(false, trigger), uuid);
@@ -162,6 +166,7 @@ public class CraftingMappings implements ICraftingMappings {
 		//Next step, now that we have fired the trigger, we need to go through all the active criteria
 		//We should check if all triggers have been fulfilled
 		for (ITrigger trigger: triggers) {
+			if (cantContinue.contains(trigger)) continue;
 			Collection<ICriteria> criterian = triggerUnlocks.get(trigger);
 			for (ICriteria criteria: criterian) {
 				//Check that all triggers are in the completed set
