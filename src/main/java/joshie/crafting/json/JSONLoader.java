@@ -148,36 +148,6 @@ public class JSONLoader {
 		criterian = null;
 	}
 	
-	public static DataCriteria getDataForCriteria(ICriteria criteria) {
-	    DataCriteria data = new DataCriteria();
-	    data.x = criteria.getX();
-	    data.y = criteria.getY();
-	    data.repeatable = criteria.getRepeatAmount();
-	    data.name = criteria.getUniqueName();
-	    List<ITrigger> triggers = criteria.getTriggers();
-	    List<IReward> rewards = criteria.getRewards();
-	    List<ICriteria> prereqs = criteria.getRequirements();
-	    List<ICriteria> conflicts = criteria.getConflicts();
-	    
-	    String[] theTriggers = new String[triggers.size()];
-	    String[] theRewards = new String[rewards.size()];
-	    String[] thePrereqs = new String[prereqs.size()];
-	    String[] theConflicts = new String[conflicts.size()];
-        for (int i = 0; i < theTriggers.length; i++)
-            theTriggers[i] = triggers.get(i).getUniqueName();
-        for (int i = 0; i < theRewards.length; i++)
-            theRewards[i] = rewards.get(i).getUniqueName();
-        for (int i = 0; i < thePrereqs.length; i++)
-            thePrereqs[i] = prereqs.get(i).getUniqueName();
-        for (int i = 0; i < theConflicts.length; i++)
-            theConflicts[i] = conflicts.get(i).getUniqueName();
-	    data.triggers = theTriggers;
-	    data.rewards = theRewards;
-	    data.prereqs = thePrereqs;
-	    data.conflicts = theConflicts;
-	    return data;
-	}
-	
 	public static void saveJSON(Object toSave) {
 	    File file = new File("config" + File.separator + CraftingInfo.MODPATH + File.separator + toSave.getClass().getSimpleName().toLowerCase() + ".json");
         try {
@@ -191,7 +161,33 @@ public class JSONLoader {
         Collection<ICriteria> criteria = CraftAPIRegistry.criteria.values();
         Criteria forJSONCriteria = new Criteria();
         for (ICriteria c: criteria) {
-            forJSONCriteria.data.add(getDataForCriteria(c));
+            DataCriteria data = new DataCriteria();
+            data.x = c.getX();
+            data.y = c.getY();
+            data.repeatable = c.getRepeatAmount();
+            data.name = c.getUniqueName();
+            List<ITrigger> triggers = c.getTriggers();
+            List<IReward> rewards = c.getRewards();
+            List<ICriteria> prereqs = c.getRequirements();
+            List<ICriteria> conflicts = c.getConflicts();
+            
+            String[] theTriggers = new String[triggers.size()];
+            String[] theRewards = new String[rewards.size()];
+            String[] thePrereqs = new String[prereqs.size()];
+            String[] theConflicts = new String[conflicts.size()];
+            for (int i = 0; i < theTriggers.length; i++)
+                theTriggers[i] = triggers.get(i).getUniqueName();
+            for (int i = 0; i < theRewards.length; i++)
+                theRewards[i] = rewards.get(i).getUniqueName();
+            for (int i = 0; i < thePrereqs.length; i++)
+                thePrereqs[i] = prereqs.get(i).getUniqueName();
+            for (int i = 0; i < theConflicts.length; i++)
+                theConflicts[i] = conflicts.get(i).getUniqueName();
+            data.triggers = theTriggers;
+            data.rewards = theRewards;
+            data.prereqs = thePrereqs;
+            data.conflicts = theConflicts;
+            forJSONCriteria.data.add(data);
         }
         
         saveJSON(forJSONCriteria);

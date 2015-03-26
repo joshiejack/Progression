@@ -9,6 +9,8 @@ import joshie.crafting.helpers.ClientHelper;
 import joshie.crafting.plugins.minetweaker.Rewards;
 import minetweaker.MineTweakerAPI;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -66,4 +68,11 @@ public class RewardSpeed extends RewardBase {
 	public void reward(UUID uuid) {
 		CraftingAPI.players.getServerPlayer(uuid).addSpeed(speed);
 	}
+	
+	private static final ItemStack speedStack = new ItemStack(Items.potionitem, 1, 8194);
+
+    @Override
+    public ItemStack getIcon() {
+        return speedStack;
+    }
 }

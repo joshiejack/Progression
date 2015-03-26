@@ -12,6 +12,7 @@ import joshie.crafting.plugins.minetweaker.MTHelper;
 import joshie.crafting.plugins.minetweaker.Rewards;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.item.IIngredient;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import stanhebben.zenscript.annotations.Optional;
@@ -150,4 +151,12 @@ public class RewardCrafting extends RewardBase {
 	public void onAdded(ICriteria criteria) {
 		CraftingAPI.crafting.addRequirement(type, stack, matchDamage, matchNBT, usage, crafting, criteria);
 	}
+
+
+	//TODO: Replace this with an item which overlay the item
+	//With some of crafting representation
+    @Override
+    public ItemStack getIcon() {
+        return stack;
+    }
 }

@@ -1,6 +1,5 @@
 package joshie.crafting.gui;
 
-import joshie.crafting.CraftAPIRegistry;
 import joshie.crafting.api.ICriteria;
 import joshie.crafting.json.JSONLoader;
 import net.minecraft.client.gui.GuiButton;
@@ -9,8 +8,7 @@ import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-public class GuiEditor extends GuiScreen {
-    public static final GuiEditor INSTANCE = new GuiEditor();
+public class GuiBase extends GuiScreen {
     public int mouseX = 0;
     public int mouseY = 0;
 
@@ -18,7 +16,7 @@ public class GuiEditor extends GuiScreen {
     protected int rightX = 218;
     protected int xSize = 430;
     protected int ySize = 217;
-    private ICriteria criteria = null; //The criteria we are currently editing, if this is null, then we're in the 'create/organise' criteria view'
+    public ICriteria selected = null;
 
     @Override
     public void initGui() {
@@ -35,11 +33,6 @@ public class GuiEditor extends GuiScreen {
         JSONLoader.saveJSON();
     }
 
-    @Override
-    protected void keyTyped(char character, int key) {
-        super.keyTyped(character, key);
-    }
-
     public void drawScreen(int i, int j, float f) {
         int x = (width - 430) / 2;
         int y = (height - ySize) / 2;
@@ -49,34 +42,15 @@ public class GuiEditor extends GuiScreen {
         drawRect(x, y + ySize - 1, x + leftX + rightX, y + ySize, 0xFF000000);
         drawRect(x, y, x + 1, y + ySize, 0xFF000000);
         drawRect(x + leftX + rightX - 1, y, x + leftX + rightX, y + ySize, 0xFF000000);
-        if (criteria == null) {
-            drawCriteria(x, y);
-        }
-        
         super.drawScreen(i, j, f);
     }
-    
-    private void drawRectWithBorder(int x, int y, int width, int height, int color, int border) {
-        x += 5;
-        y += 5;
-        
-        drawRect(x, y, x + width, y + height, color);
-        drawRect(x, y, x + 1, y + height, border);
-        drawRect(x + width - 1, y, x + width, y + height, border);
-        drawRect(x, y, x + width, y + 1, border);
-        drawRect(x, y + height - 1, x + width, y + height, border);
-    }
 
-    private void drawCriteria(int x, int y) {
-        for (ICriteria criteria: CraftAPIRegistry.criteria.values()) {            
-            drawRectWithBorder(x + criteria.getX(), y + criteria.getY(), 50, 25, 0xFFFFFFFF, 0xFF000000);
-            mc.fontRenderer.drawString(criteria.getUniqueName(), x + 7 + criteria.getX(), y + 7 + criteria.getY(), 0xFF000000);
-        }
-    }
-
-    @Override
-    protected void mouseClicked(int par1, int par2, int par3) {
-        super.mouseClicked(par1, par2, par3);
+    public void drawRectWithBorder(int x, int y, int x2, int y2, int color, int border) {
+        drawRect(x, y, x2, y2, color);
+        drawRect(x, y, x + 1, y2, border);
+        drawRect(x2 - 1, y, x2, y2, border);
+        drawRect(x, y, x2, y + 1, border);
+        drawRect(x, y2 - 1, x2, y2, border);
     }
 
     @Override
@@ -86,7 +60,6 @@ public class GuiEditor extends GuiScreen {
 
         mouseX = x - (width - xSize) / 2;
         mouseY = y - (height - ySize) / 2;
-
         super.handleMouseInput();
     }
 }

@@ -8,6 +8,8 @@ import joshie.crafting.api.IReward;
 import joshie.crafting.plugins.minetweaker.Rewards;
 import minetweaker.MineTweakerAPI;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -66,4 +68,12 @@ public class RewardFallDamage extends RewardBase {
 	public void reward(UUID uuid) {
 		CraftingAPI.players.getServerPlayer(uuid).addFallDamagePrevention(maxAbsorbed);
 	}
+
+	private static final ItemStack feather = new ItemStack(Items.feather);
+	
+	//TODO: Replace with more appropriate icon
+    @Override
+    public ItemStack getIcon() {
+        return feather;
+    }
 }

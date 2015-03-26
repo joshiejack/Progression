@@ -7,6 +7,8 @@ import joshie.crafting.helpers.PlayerHelper;
 import joshie.crafting.plugins.minetweaker.Rewards;
 import minetweaker.MineTweakerAPI;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -46,4 +48,11 @@ public class RewardExperience extends RewardBase {
 			player.addExperience(amount);
 		}
 	}
+	
+	private static final ItemStack experience = new ItemStack(Items.experience_bottle);
+
+    @Override
+    public ItemStack getIcon() {
+        return experience;
+    }
 }

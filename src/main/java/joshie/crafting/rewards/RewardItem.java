@@ -51,4 +51,9 @@ public class RewardItem extends RewardBase {
 			SpawnItemHelper.addToPlayerInventory(player, stack);
 		}
 	}
+
+    @Override
+    public ItemStack getIcon() {
+        return stack;
+    }
 }

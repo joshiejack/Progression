@@ -43,4 +43,16 @@ public interface ICriteria extends IHasUniqueName {
 	public int getY();
 
     public void setCoordinates(int x, int y);
+
+    public void click(int mouseX, int mouseY);
+
+    public void release(int mouseX, int mouseY);
+
+    public void follow(int mouseX, int mouseY);
+
+    public void scroll(boolean b);
+
+    public void keyTyped(char character, int key);
+
+    public void draw(int x, int y);
 }
