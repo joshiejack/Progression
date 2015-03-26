@@ -1,5 +1,7 @@
 package joshie.crafting.gui;
 
+import joshie.crafting.CraftingMod;
+import joshie.crafting.helpers.ClientHelper;
 import net.minecraft.client.gui.GuiButton;
 
 public class GuiCriteriaEditor extends GuiBase {
@@ -21,6 +23,10 @@ public class GuiCriteriaEditor extends GuiBase {
 
     @Override
     protected void mouseClicked(int par1, int par2, int par3) {
+        if (par3 == 1) {
+            ClientHelper.getPlayer().openGui(CraftingMod.instance, 0, null, 0, 0, 0);
+        }
+        
         super.mouseClicked(par1, par2, par3);
     }
 }

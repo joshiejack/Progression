@@ -6,8 +6,10 @@ import java.util.List;
 import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.IReward;
 import joshie.crafting.api.ITrigger;
+import joshie.crafting.gui.GuiCriteriaEditor;
 import joshie.crafting.gui.GuiTreeEditorEdit;
 import joshie.crafting.gui.TextEditable;
+import joshie.crafting.helpers.ClientHelper;
 import joshie.crafting.helpers.StackHelper;
 import joshie.crafting.plugins.minetweaker.Criteria;
 import minetweaker.MineTweakerAPI;
@@ -131,16 +133,18 @@ public class CraftingCriteria extends TextEditable implements ICriteria {
     protected int bottom;
     protected int width = 100;
     protected int height = 25;
+    protected int offsetX = 0;
 
-    public void recalculate(int x, int y) {
-        left = this.x;
-        right = (int) (this.x + width);
+    public void recalculate(int x) {
+        left = this.x + x;
+        right = (int) (this.x + width) + x;
         top = this.y;
         bottom = (int) (this.y + height);
+        offsetX = x;
     }
 
-    public void draw(int x, int y) {
-        recalculate(x, y);
+    public void draw(int x, int y, int offsetX) {
+        recalculate(offsetX);
         //If We are in edit mode draw the boxes around the feature
         if (isSelected) {
             GuiTreeEditorEdit.INSTANCE.drawRectWithBorder(x + left, y + top, x + right, y + bottom, 0xFFFFFFFF, 0xFF00BFFF);
@@ -173,8 +177,14 @@ public class CraftingCriteria extends TextEditable implements ICriteria {
         return x >= left && x <= right && y >= top && y <= bottom;
     }
 
-    public void click(int x, int y) {
+    public void click(int x, int y, boolean isDouble) {
         if (isOver(x, y) && noOtherSelected()) {
+            if (isDouble) {
+                GuiCriteriaEditor.INSTANCE.selected = this;
+                ClientHelper.getPlayer().openGui(CraftingMod.instance, 1, null, 0, 0, 0);
+                return;
+            }
+            
             isHeld = true;
             isSelected = true;
             prevX = x;

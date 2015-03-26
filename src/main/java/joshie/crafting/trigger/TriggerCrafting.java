@@ -66,7 +66,7 @@ public class TriggerCrafting extends TriggerBase {
 	@Override
 	public ITrigger deserialize(JsonObject data) {
 		TriggerCrafting trigger = new TriggerCrafting();
-		trigger.stack = StackHelper.getStackFromString(data.get("Item").getAsString());
+		trigger.stack = StackHelper.getStackFromString(data.get("item").getAsString());
 		if (data.get("matchDamage") != null) {
 			trigger.matchDamage = data.get("matchDamage").getAsBoolean();
 		}
@@ -88,7 +88,7 @@ public class TriggerCrafting extends TriggerBase {
 
 	@Override
 	public void serialize(JsonObject data) {
-		data.addProperty("Item", StackHelper.getStringFromStack(stack));
+		data.addProperty("item", StackHelper.getStringFromStack(stack));
 		if (matchDamage != true)
 			data.addProperty("matchDamage", matchDamage);
 		if (matchNBT != false)

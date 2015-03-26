@@ -34,14 +34,9 @@ public class GuiBase extends GuiScreen {
     }
 
     public void drawScreen(int i, int j, float f) {
-        int x = (width - 430) / 2;
+        int x = 0;
         int y = (height - ySize) / 2;
-        drawRect(x, y, x + leftX + rightX, y + ySize, 0xFFCCCCCC);
-        //Top Border
-        drawRect(x, y, x + leftX + rightX, y + 1, 0xFF000000);
-        drawRect(x, y + ySize - 1, x + leftX + rightX, y + ySize, 0xFF000000);
-        drawRect(x, y, x + 1, y + ySize, 0xFF000000);
-        drawRect(x + leftX + rightX - 1, y, x + leftX + rightX, y + ySize, 0xFF000000);
+        drawRectWithBorder(-1, y, mc.displayWidth + 1, y + ySize, 0xFFCCCCCC, 0xCC000000);
         super.drawScreen(i, j, f);
     }
 
@@ -58,7 +53,7 @@ public class GuiBase extends GuiScreen {
         int x = Mouse.getEventX() * width / mc.displayWidth;
         int y = height - Mouse.getEventY() * height / mc.displayHeight - 1;
 
-        mouseX = x - (width - xSize) / 2;
+        mouseX = x;
         mouseY = y - (height - ySize) / 2;
         super.handleMouseInput();
     }

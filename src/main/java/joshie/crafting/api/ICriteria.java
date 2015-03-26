@@ -44,7 +44,7 @@ public interface ICriteria extends IHasUniqueName {
 
     public void setCoordinates(int x, int y);
 
-    public void click(int mouseX, int mouseY);
+    public void click(int mouseX, int mouseY, boolean isDoubleClick);
 
     public void release(int mouseX, int mouseY);
 
@@ -54,5 +54,5 @@ public interface ICriteria extends IHasUniqueName {
 
     public void keyTyped(char character, int key);
 
-    public void draw(int x, int y);
+    public void draw(int x, int y, int offsetX);
 }

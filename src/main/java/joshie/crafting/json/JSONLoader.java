@@ -265,7 +265,7 @@ public class JSONLoader {
 		@Override
 		public IJsonLoader setDefaults() {
 			JsonObject night = new JsonObject();
-			data.add(new DataCondition("time", "TIME", night));
+			data.add(new DataCondition("daytime", "TIME", night));
 			return this;
 		}
 	}
@@ -316,13 +316,13 @@ public class JSONLoader {
 			data.add(new DataReward("speed", "SPEED", speed));
 			JsonObject iron = new JsonObject();
 			iron.addProperty("item", "minecraft:iron_block");
-			data.add(new DataReward("Crafting", "CRAFTINGIRON", iron));
+			data.add(new DataReward("crafting", "CRAFTINGIRON", iron));
 			JsonObject gold = new JsonObject();
 			gold.addProperty("item", "minecraft:gold_block");
-			data.add(new DataReward("Crafting", "CRAFTINGGOLD", gold));
+			data.add(new DataReward("crafting", "CRAFTINGGOLD", gold));
 			JsonObject lapis = new JsonObject();
 			lapis.addProperty("item", "minecraft:lapis_block");
-			data.add(new DataReward("Crafting", "CRAFTINGLAPIS", lapis));
+			data.add(new DataReward("crafting", "CRAFTINGLAPIS", lapis));
 			return this;
 		}
 	}

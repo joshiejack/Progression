@@ -86,7 +86,6 @@ public class CraftAPIRegistry implements IRegistry {
 		ITrigger trigger = triggers.get(unique);
 		if (trigger == null && name != null && data != null) {
 			//New trigger created
-			System.out.println(name);
 			trigger = (ITrigger) triggerTypes.get(name).deserialize(data).setUniqueName(unique);
 			CraftingEventsManager.onTriggerAdded(trigger);
 			triggers.put(unique, trigger);
