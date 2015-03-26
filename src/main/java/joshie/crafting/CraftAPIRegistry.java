@@ -73,7 +73,7 @@ public class CraftAPIRegistry implements IRegistry {
 	public ICondition getCondition(String name, String unique, JsonObject data) {
 		ICondition condition = conditions.get(unique);
 		if (condition == null && name != null && data != null) {
-			boolean inverted = data.get("Inverted") != null? data.get("Inverted").getAsBoolean(): false;
+			boolean inverted = data.get("inverted") != null? data.get("inverted").getAsBoolean(): false;
 			condition = (ICondition) conditionTypes.get(name).deserialize(data).setInversion(inverted).setUniqueName(unique);
 			conditions.put(unique, condition);
 		}

@@ -53,11 +53,11 @@ public class PlayerDataServer extends PlayerDataCommon implements IPlayerDataSer
 	}
 	
 	@Override
-    public void addResearchPoints(int amount) {
-        int newStat = abilities.getResearchPoints() + amount;
-        abilities.setResearchPoints(newStat);
+    public void addPoints(String name, int amount) {
+        int newStat = abilities.getPoints(name) + amount;
+        abilities.setResearchPoints(name, newStat);
         PacketHandler.sendToClient(new PacketSyncAbilities(abilities), uuid);
-        CraftingAPI.registry.fireTrigger(uuid, "Research Points", newStat);
+        CraftingAPI.registry.fireTrigger(uuid, "points", name, newStat);
         markDirty();
     }
 	

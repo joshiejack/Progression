@@ -265,7 +265,6 @@ public class JSONLoader {
 		@Override
 		public IJsonLoader setDefaults() {
 			JsonObject night = new JsonObject();
-			night.addProperty("Night", true);
 			data.add(new DataCondition("time", "TIME", night));
 			return this;
 		}
@@ -285,18 +284,18 @@ public class JSONLoader {
 			JsonObject object = new JsonObject();
 			ItemStack stack = new ItemStack(Blocks.bookshelf);			
 			String serial = StackHelper.getStringFromStack(stack);
-			object.addProperty("Item", serial);
-			object.addProperty("Amount", 5);
-			data.add(new DataTrigger("Break Block", "BREAKBOOK", object, new String[] { }));
+			object.addProperty("item", serial);
+			object.addProperty("amount", 5);
+			data.add(new DataTrigger("breakBlock", "BREAKBOOK", object, new String[] { }));
 			JsonObject iron = new JsonObject();
-			iron.addProperty("Research Name", "Iron Heights");
-			data.add(new DataTrigger("Research", "IRON", iron, new String[] {}));
+			iron.addProperty("researchName", "Iron Heights");
+			data.add(new DataTrigger("research", "IRON", iron, new String[] {}));
 			JsonObject pig = new JsonObject();
-			pig.addProperty("Entity", "Pig");
-			data.add(new DataTrigger("Kill", "GOLD", pig, new String[] { "TIME" }));
+			pig.addProperty("entity", "Pig");
+			data.add(new DataTrigger("kill", "GOLD", pig, new String[] { "TIME" }));
 			JsonObject crafting = new JsonObject();
-			crafting.addProperty("Item", "minecraft:diamond_block");
-			data.add(new DataTrigger("Crafting", "LAPIS", crafting, new String[] {}));
+			crafting.addProperty("item", "minecraft:diamond_block");
+			data.add(new DataTrigger("crafting", "LAPIS", crafting, new String[] {}));
 			return this;
 		}
 	}
@@ -313,16 +312,16 @@ public class JSONLoader {
 		@Override
 		public IJsonLoader setDefaults() {
 			JsonObject speed = new JsonObject();
-			speed.addProperty("Speed", 0.1F);
-			data.add(new DataReward("Speed", "SPEED", speed));
+			speed.addProperty("speed", 0.1F);
+			data.add(new DataReward("speed", "SPEED", speed));
 			JsonObject iron = new JsonObject();
-			iron.addProperty("Item", "minecraft:iron_block");
+			iron.addProperty("item", "minecraft:iron_block");
 			data.add(new DataReward("Crafting", "CRAFTINGIRON", iron));
 			JsonObject gold = new JsonObject();
-			gold.addProperty("Item", "minecraft:gold_block");
+			gold.addProperty("item", "minecraft:gold_block");
 			data.add(new DataReward("Crafting", "CRAFTINGGOLD", gold));
 			JsonObject lapis = new JsonObject();
-			lapis.addProperty("Item", "minecraft:lapis_block");
+			lapis.addProperty("item", "minecraft:lapis_block");
 			data.add(new DataReward("Crafting", "CRAFTINGLAPIS", lapis));
 			return this;
 		}

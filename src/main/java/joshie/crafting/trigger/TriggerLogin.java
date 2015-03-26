@@ -15,9 +15,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 
 @ZenClass("mods.craftcontrol.triggers.Login")
-public class TriggerLogin extends TriggerBaseCounter {
-	private int amount = 1;
-	
+public class TriggerLogin extends TriggerBaseCounter {	
 	public TriggerLogin() {
 		super("login");
 	}
