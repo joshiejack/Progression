@@ -14,27 +14,12 @@ public class DataCriteria {
 		this.y = y;
 	}
 	
-	@SerializedName("Unique Name")
 	String name;
-	
-	@SerializedName("Triggers")
 	String[] triggers;
-	
-	@SerializedName("Rewards")
 	String[] rewards;
-	
-	@SerializedName("Requirements")
 	String[] prereqs;
-	
-	@SerializedName("Conflicts")
 	String[] conflicts;
-	
-	@SerializedName("Repeatable Amount")
 	int repeatable;
-	
-	@SerializedName("X Coordinate")
 	int x;
-	
-	@SerializedName("Y Coordinate")
 	int y;
 }

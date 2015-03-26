@@ -19,4 +19,7 @@ public interface IReward extends IHasUniqueName, IRewardType {
 	 *  the research item, will have the icons, it's about
 	 *  getting one with the right NBT data, or another **/
     public ItemStack getIcon();
+
+    /** Draw the reward in the editor **/
+    public void draw(int xPos);
 }

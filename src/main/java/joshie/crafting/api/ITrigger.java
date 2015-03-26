@@ -30,4 +30,7 @@ public interface ITrigger extends IHasUniqueName, ITriggerType {
 
 	/** Creates a new instance of the data for this trigger **/
 	public ITriggerData newData();
+
+	/** Draw this trigger in the editor **/
+    public void draw(int xPos);
 }

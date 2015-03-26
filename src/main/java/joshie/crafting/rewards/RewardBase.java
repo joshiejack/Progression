@@ -4,6 +4,7 @@ import joshie.crafting.api.Bus;
 import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.IHasUniqueName;
 import joshie.crafting.api.IReward;
+import joshie.crafting.gui.GuiCriteriaEditor;
 
 public abstract class RewardBase implements IReward {
 	private String uniqueName;
@@ -36,4 +37,16 @@ public abstract class RewardBase implements IReward {
 	
 	@Override
 	public void onAdded(ICriteria criteria) {}
+	
+	protected void drawText(String text, int x, int y, int color) {
+        GuiCriteriaEditor.INSTANCE.selected.getCriteriaEditor().drawText(text, x, y, color);
+    }
+
+    @Override
+    public void draw(int xPos) {
+        String tName = getUniqueName();
+        String tType = getTypeName();
+        drawText("Name: " + tName, 9 + xPos, 139, 0xFFFFFFFF);
+        drawText("Type: " + tType, 9 + xPos, 149, 0xFFFFFFFF);
+    }
 }

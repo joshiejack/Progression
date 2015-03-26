@@ -13,7 +13,7 @@ public class GuiTreeEditorDisplay extends GuiBase {
         int y = (height - ySize) / 2;
         super.drawScreen(i, j, f);
         for (ICriteria criteria : CraftAPIRegistry.criteria.values()) {
-            criteria.draw(x, y, offsetX);
+            criteria.getTreeEditor().draw(x, y, offsetX);
         }
     }
 }

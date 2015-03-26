@@ -27,14 +27,14 @@ public class GuiTreeEditorEdit extends GuiTreeEditorDisplay {
         
         super.keyTyped(character, key);
         for (ICriteria criteria : CraftAPIRegistry.criteria.values()) {
-            criteria.keyTyped(character, key);
+            criteria.getTreeEditor().keyTyped(character, key);
         }
     }
 
     @Override
     public void mouseMovedOrUp(int x, int y, int button) {
         for (ICriteria criteria : CraftAPIRegistry.criteria.values()) {
-            criteria.release(mouseX, mouseY);
+            criteria.getTreeEditor().release(mouseX, mouseY);
         }
     }
     
@@ -49,7 +49,7 @@ public class GuiTreeEditorEdit extends GuiTreeEditorDisplay {
         
         super.mouseClicked(par1, par2, par3);
         for (ICriteria criteria : CraftAPIRegistry.criteria.values()) {
-            criteria.click(mouseX, mouseY, isDoubleClick);
+            criteria.getTreeEditor().click(mouseX, mouseY, isDoubleClick);
         }
     }
 
@@ -57,10 +57,10 @@ public class GuiTreeEditorEdit extends GuiTreeEditorDisplay {
     public void handleMouseInput() {
         super.handleMouseInput();
         for (ICriteria criteria : CraftAPIRegistry.criteria.values()) {
-            criteria.follow(mouseX, mouseY);
+            criteria.getTreeEditor().follow(mouseX, mouseY);
             int wheel = Mouse.getDWheel();
             if (wheel != 0) {
-                criteria.scroll(wheel < 0);
+                criteria.getTreeEditor().scroll(wheel < 0);
             }
         }
     }

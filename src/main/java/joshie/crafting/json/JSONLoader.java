@@ -137,7 +137,11 @@ public class JSONLoader {
 			int repeatable = criteria.repeatable;
 			int x = criteria.x;
 			int y = criteria.y;
-			theCriteria.addTriggers(theTriggers).addRewards(theRewards).addRequirements(thePrereqs).addConflicts(theConflicts).setRepeatAmount(repeatable).setCoordinates(x, y);
+			if (repeatable <= 1) {
+			    repeatable = 1;
+			}
+			
+			theCriteria.addTriggers(theTriggers).addRewards(theRewards).addRequirements(thePrereqs).addConflicts(theConflicts).setRepeatAmount(repeatable).getTreeEditor().setCoordinates(x, y);
 		}
 		
 		/** We are finished **/
@@ -162,8 +166,8 @@ public class JSONLoader {
         Criteria forJSONCriteria = new Criteria();
         for (ICriteria c: criteria) {
             DataCriteria data = new DataCriteria();
-            data.x = c.getX();
-            data.y = c.getY();
+            data.x = c.getTreeEditor().getX();
+            data.y = c.getTreeEditor().getY();
             data.repeatable = c.getRepeatAmount();
             data.name = c.getUniqueName();
             List<ITrigger> triggers = c.getTriggers();

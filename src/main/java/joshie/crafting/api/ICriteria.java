@@ -35,24 +35,10 @@ public interface ICriteria extends IHasUniqueName {
 	
 	/** Returns if the criteria is repeatable **/
 	public int getRepeatAmount();
-	
-	/** Returns x position on tree **/
-	public int getX();
-	
-	/** Returns y position on tree **/
-	public int getY();
+	    
+    /** Return the instance of the editor for this criteria, when in tree edit mode **/
+    public ITreeEditor getTreeEditor();
 
-    public void setCoordinates(int x, int y);
-
-    public void click(int mouseX, int mouseY, boolean isDoubleClick);
-
-    public void release(int mouseX, int mouseY);
-
-    public void follow(int mouseX, int mouseY);
-
-    public void scroll(boolean b);
-
-    public void keyTyped(char character, int key);
-
-    public void draw(int x, int y, int offsetX);
+    /** Reuturn the instance of the editor for this criteria, when in criteria edit mode **/
+    public ICriteriaEditor getCriteriaEditor();
 }
