@@ -19,7 +19,7 @@ public class TriggerLogin extends TriggerBaseCounter {
 	private int amount = 1;
 	
 	public TriggerLogin() {
-		super("Login");
+		super("login");
 	}
 	
 	@Override
@@ -46,7 +46,7 @@ public class TriggerLogin extends TriggerBaseCounter {
 	public ITrigger deserialize(JsonObject data) {
 		TriggerLogin trigger = new TriggerLogin();
 		if (data.get("amount") != null) {
-			trigger.amount = data.get("Amount").getAsInt();
+			trigger.amount = data.get("amount").getAsInt();
 		}
 		
 		return trigger;
@@ -55,7 +55,7 @@ public class TriggerLogin extends TriggerBaseCounter {
 	@Override
 	public void serialize(JsonObject data) {
 		if (amount != 1) {
-			data.addProperty("Amount", amount);
+			data.addProperty("amount", amount);
 		}
 	}
 	

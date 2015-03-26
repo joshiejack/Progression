@@ -22,7 +22,7 @@ public class RewardItem extends RewardBase {
 	private ItemStack stack;
 	
 	public RewardItem() {
-		super("Item");
+		super("item");
 	}
 	
 	@ZenMethod
@@ -35,13 +35,13 @@ public class RewardItem extends RewardBase {
 	@Override
 	public IReward deserialize(JsonObject data) {
 		RewardItem reward = new RewardItem();
-		reward.stack = StackHelper.getStackFromString(data.get("Item").getAsString());		
+		reward.stack = StackHelper.getStackFromString(data.get("item").getAsString());		
 		return reward;
 	}
 
 	@Override
 	public void serialize(JsonObject elements) {
-		elements.addProperty("Item", StackHelper.getStringFromStack(stack));
+		elements.addProperty("item", StackHelper.getStringFromStack(stack));
 	}
 	
 	@Override

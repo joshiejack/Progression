@@ -9,7 +9,7 @@ import joshie.crafting.api.IPlayerData;
 import joshie.crafting.lib.SafeStack;
 
 public abstract class PlayerDataCommon implements IPlayerData {
-	protected DataAbilities abilities = new DataAbilities();
+	protected DataStats abilities = new DataStats();
 	protected CraftingMappings mappings = new CraftingMappings();
 	protected HashMap<SafeStack, Integer> crafts = new HashMap();
 	
@@ -19,17 +19,8 @@ public abstract class PlayerDataCommon implements IPlayerData {
 	}
 	
 	@Override
-	public float getSpeed() {
-		return abilities.getSpeed();
-	}
-	
-	public DataAbilities getAbilities() {
+	public DataStats getAbilities() {
 		return abilities;
-	}
-
-	@Override
-	public int getFallDamagePrevention() {
-		return abilities.getFallDamagePrevention();
 	}
 	
 	protected void markDirty() {

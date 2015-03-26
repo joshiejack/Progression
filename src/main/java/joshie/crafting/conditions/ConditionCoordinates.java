@@ -149,36 +149,36 @@ public class ConditionCoordinates extends ConditionBase {
 	@Override
 	public ICondition deserialize(JsonObject data) {
 		ConditionCoordinates condition = new ConditionCoordinates();
-		if (data.get("Dimension") != null) {
+		if (data.get("dimension") != null) {
 			condition.checkDimension = true;
-			condition.dimension = data.get("Dimension").getAsInt();
+			condition.dimension = data.get("dimension").getAsInt();
 		}
 		
-		if (data.get("X") != null) {
+		if (data.get("x") != null) {
 			condition.checkX = true;
-			condition.x = data.get("X").getAsInt();
+			condition.x = data.get("x").getAsInt();
 		}
 		
-		if (data.get("Y") != null) {
+		if (data.get("y") != null) {
 			condition.checkY = true;
-			condition.y = data.get("Y").getAsInt();
+			condition.y = data.get("y").getAsInt();
 		}
 		
-		if (data.get("Z") != null) {
+		if (data.get("z") != null) {
 			condition.checkZ = true;
-			condition.z = data.get("Z").getAsInt();
+			condition.z = data.get("z").getAsInt();
 		}
 		
-		if (data.get("Radius") != null) {
-			condition.radius = data.get("Radius").getAsInt();
+		if (data.get("radius") != null) {
+			condition.radius = data.get("radius").getAsInt();
 		}
 		
-		if (data.get("Greater Than") != null) {
-			condition.greaterThan = data.get("Greater Than").getAsBoolean();
+		if (data.get("greaterThan") != null) {
+			condition.greaterThan = data.get("greaterThan").getAsBoolean();
 		}
 		
-		if (data.get("Less Than") != null) {
-			condition.lessThan = data.get("Less Than").getAsBoolean();
+		if (data.get("lessThan") != null) {
+			condition.lessThan = data.get("lessThan").getAsBoolean();
 		}
 		
 		return condition;
@@ -187,18 +187,18 @@ public class ConditionCoordinates extends ConditionBase {
 	@Override
 	public void serialize(JsonObject elements) {
 		if (checkDimension) 
-			elements.addProperty("Dimension", dimension);
+			elements.addProperty("dimension", dimension);
 		if (checkX)
-			elements.addProperty("X", x);
+			elements.addProperty("x", x);
 		if (checkY)
-			elements.addProperty("Y", y);
+			elements.addProperty("y", y);
 		if (checkZ)
-			elements.addProperty("Z", z);
+			elements.addProperty("z", z);
 		if (radius > 0)
-			elements.addProperty("Radius", radius);
+			elements.addProperty("radius", radius);
 		if (greaterThan != false)
-			elements.addProperty("Greater Than", greaterThan);
+			elements.addProperty("greaterThan", greaterThan);
 		if (lessThan != false)
-			elements.addProperty("Less Than", lessThan);
+			elements.addProperty("lessThan", lessThan);
 	}
 }

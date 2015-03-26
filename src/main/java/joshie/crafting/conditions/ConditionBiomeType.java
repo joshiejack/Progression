@@ -60,7 +60,7 @@ public class ConditionBiomeType extends ConditionBase {
 	@Override
 	public ICondition deserialize(JsonObject data) {
 		ConditionBiomeType condition = new ConditionBiomeType();
-		JsonArray array = data.get("Types").getAsJsonArray();
+		JsonArray array = data.get("types").getAsJsonArray();
 		Type[] types = new Type[array.size()];
 		for (int i = 0; i < types.length; i++) {
 			types[i] = getBiomeType(array.get(i).getAsString());
@@ -77,6 +77,6 @@ public class ConditionBiomeType extends ConditionBase {
 			array.add(new JsonPrimitive(t.name().toLowerCase()));
 		}
 			
-		elements.add("Types", array);
+		elements.add("types", array);
 	}
 }

@@ -15,7 +15,7 @@ public class TriggerResearch extends TriggerBaseBoolean implements IResearch {
 	private String researchName;
 	
 	public TriggerResearch() {
-		super("Research");
+		super("research");
 	}
 	
 	@Override
@@ -33,13 +33,13 @@ public class TriggerResearch extends TriggerBaseBoolean implements IResearch {
 	@Override
 	public ITrigger deserialize(JsonObject data) {
 		TriggerResearch trigger = new TriggerResearch();
-		trigger.researchName = data.get("Research Name").getAsString();
+		trigger.researchName = data.get("researchName").getAsString();
 		return trigger;
 	}
 
 	@Override
 	public void serialize(JsonObject data) {
-		data.addProperty("Research Name", researchName);
+		data.addProperty("researchName", researchName);
 	}
 	
 	@Override	

@@ -6,6 +6,7 @@ import java.util.UUID;
 import joshie.crafting.CraftingMappings;
 import joshie.crafting.CraftingMod;
 import joshie.crafting.CraftingRemapper;
+import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.IPlayerDataServer;
 import joshie.crafting.helpers.NBTHelper;
 import joshie.crafting.network.PacketHandler;
@@ -28,7 +29,7 @@ public class PlayerDataServer extends PlayerDataCommon implements IPlayerDataSer
 
 	@Override
 	public void resetData() {
-		abilities = new DataAbilities();
+		abilities = new DataStats();
 		mappings = new CraftingMappings();
 		crafts = new HashMap();
 		CraftingMod.instance.createWorldData();
@@ -50,6 +51,15 @@ public class PlayerDataServer extends PlayerDataCommon implements IPlayerDataSer
 		PacketHandler.sendToClient(new PacketSyncAbilities(abilities), uuid);
 		markDirty();
 	}
+	
+	@Override
+    public void addResearchPoints(int amount) {
+        int newStat = abilities.getResearchPoints() + amount;
+        abilities.setResearchPoints(newStat);
+        PacketHandler.sendToClient(new PacketSyncAbilities(abilities), uuid);
+        CraftingAPI.registry.fireTrigger(uuid, "Research Points", newStat);
+        markDirty();
+    }
 	
 	public void readFromNBT(NBTTagCompound tag) {
 		abilities.readFromNBT(tag.getCompoundTag("Abilities"));

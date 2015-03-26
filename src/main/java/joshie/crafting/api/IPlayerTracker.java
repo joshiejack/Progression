@@ -2,6 +2,7 @@ package joshie.crafting.api;
 
 import java.util.UUID;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 
 public interface IPlayerTracker {
@@ -19,4 +20,7 @@ public interface IPlayerTracker {
 	
 	/** Sets the owner of this tile entity **/
 	public void setTileOwner(TileEntity tile, UUID owner);
+
+	/** Convenience method **/
+    public IPlayerData getPlayerData(EntityPlayer player);
 }

@@ -1,6 +1,7 @@
 package joshie.crafting.api;
 
 import java.util.List;
+import java.util.UUID;
 
 
 /** Triggers, are a type of 'condition' that needs to be met
@@ -14,11 +15,12 @@ public interface ITrigger extends IHasUniqueName, ITriggerType {
 	public boolean isCompleted(ITriggerData triggerData);
 
 	/** Called when this trigger is fired, SERVERSIDE 
+	 * @param uuid 
 	 *  @param		uuid The UUID of the player, this trigger is being fired for
 	 *  @param		additional data, that this trigger has stored
 	 * 	@param		additional data, passed by the event itself, e.g. "Pig", for onKill 
 	 * @return **/
-	public void onFired(ITriggerData triggerData, Object... data);
+	public void onFired(UUID uuid, ITriggerData triggerData, Object... data);
 
 	/** Returns a list of all the conditions this trigger needs satisfied, before it can be fired **/
 	public List<ICondition> getConditions();

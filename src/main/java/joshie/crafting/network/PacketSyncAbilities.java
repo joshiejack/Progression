@@ -2,16 +2,16 @@ package joshie.crafting.network;
 
 import io.netty.buffer.ByteBuf;
 import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.player.DataAbilities;
+import joshie.crafting.player.DataStats;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class PacketSyncAbilities implements IMessage, IMessageHandler<PacketSyncAbilities, IMessage> {
-	private DataAbilities abilities;
+	private DataStats abilities;
     
     public PacketSyncAbilities() {}
-    public PacketSyncAbilities(DataAbilities abilities) {
+    public PacketSyncAbilities(DataStats abilities) {
         this.abilities = abilities;
     }
 
@@ -22,7 +22,7 @@ public class PacketSyncAbilities implements IMessage, IMessageHandler<PacketSync
 
     @Override
     public void fromBytes(ByteBuf buf) {
-    	abilities = new DataAbilities();
+    	abilities = new DataStats();
     	abilities.fromBytes(buf);
     }
     

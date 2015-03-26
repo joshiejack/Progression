@@ -1,7 +1,7 @@
 package joshie.crafting.api;
 
-import joshie.crafting.player.DataAbilities;
+import joshie.crafting.player.DataStats;
 
 public interface IPlayerDataClient extends IPlayerData {
-	public void setAbilities(DataAbilities abilities);
+	public void setAbilities(DataStats abilities);
 }

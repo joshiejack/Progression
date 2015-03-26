@@ -21,7 +21,7 @@ public class TriggerKill extends TriggerBaseCounter {
 	private String entity;
 	
 	public TriggerKill() {
-		super("Kill");
+		super("kill");
 	}
 	
 	@SubscribeEvent
@@ -47,9 +47,9 @@ public class TriggerKill extends TriggerBaseCounter {
 	@Override
 	public ITrigger deserialize(JsonObject data) {
 		TriggerKill trigger = new TriggerKill();
-		trigger.entity = data.get("Entity").getAsString();
+		trigger.entity = data.get("entity").getAsString();
 		if (data.get("amount") != null) {
-			trigger.amount = data.get("Amount").getAsInt();
+			trigger.amount = data.get("amount").getAsInt();
 		}
 		
 		return trigger;
@@ -57,9 +57,9 @@ public class TriggerKill extends TriggerBaseCounter {
 	
 	@Override
 	public void serialize(JsonObject data) {
-		data.addProperty("Entity", entity);
+		data.addProperty("entity", entity);
 		if (amount != 1) {
-			data.addProperty("Amount", amount);
+			data.addProperty("amount", amount);
 		}
 	}
 

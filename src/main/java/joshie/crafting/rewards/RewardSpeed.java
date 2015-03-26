@@ -24,7 +24,7 @@ public class RewardSpeed extends RewardBase {
 	private float speed;
 	
 	public RewardSpeed() {
-		super("Speed");
+		super("speed");
 	}
 	
 	@Override
@@ -37,7 +37,7 @@ public class RewardSpeed extends RewardBase {
 		if (event.entityLiving instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) event.entity;
             if (player.worldObj.isRemote) {
-    			float speed = CraftingAPI.players.getPlayerData(null).getSpeed();
+    			float speed = CraftingAPI.players.getPlayerData(player).getAbilities().getSpeed();
     			if (speed > 0 && player.onGround && !player.isInWater() && player.isSprinting() && ClientHelper.isForwardPressed()) {
     				player.moveFlying(0F, 1.0F, speed);
     			}
@@ -55,13 +55,13 @@ public class RewardSpeed extends RewardBase {
 	@Override
 	public IReward deserialize(JsonObject data) {
 		RewardSpeed reward = new RewardSpeed();
-		reward.speed = data.get("Speed").getAsFloat();
+		reward.speed = data.get("speed").getAsFloat();
 		return reward;
 	}
 
 	@Override
 	public void serialize(JsonObject elements) {
-		elements.addProperty("Speed", speed);
+		elements.addProperty("speed", speed);
 	}
 	
 	@Override

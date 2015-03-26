@@ -159,7 +159,7 @@ public class CraftingMappings implements ICraftingMappings {
 			
 			
 			if (cantContinue.contains(trigger)) continue; //Grab the old data
-			trigger.onFired(getTriggerData(trigger), data); //Fire the new data
+			trigger.onFired(uuid, getTriggerData(trigger), data); //Fire the new data
 			//triggerData.put(trigger.getUniqueName(), newData);
 		}
 		

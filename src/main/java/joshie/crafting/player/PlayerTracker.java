@@ -10,6 +10,7 @@ import joshie.crafting.api.IPlayerDataClient;
 import joshie.crafting.api.IPlayerDataServer;
 import joshie.crafting.api.IPlayerTracker;
 import joshie.crafting.helpers.PlayerHelper;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
@@ -28,6 +29,11 @@ public class PlayerTracker implements IPlayerTracker {
 	public IPlayerData getPlayerData(UUID uuid) {
 		return FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT? PlayerDataClient.getInstance(): CraftingMod.data.getServerPlayer(uuid);
 	}
+	
+    @Override
+    public IPlayerData getPlayerData(EntityPlayer player) {
+        return getPlayerData(PlayerHelper.getUUIDForPlayer(player));
+    }
 
 	@Override
 	public IPlayerDataClient getClientPlayer() {

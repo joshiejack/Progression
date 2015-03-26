@@ -30,7 +30,7 @@ public class TriggerCrafting extends TriggerBase {
 	private int itemAmount = 1;
 	
 	public TriggerCrafting() {
-		super("Crafting");
+		super("crafting");
 	}
 
 	@Override
@@ -67,20 +67,20 @@ public class TriggerCrafting extends TriggerBase {
 	public ITrigger deserialize(JsonObject data) {
 		TriggerCrafting trigger = new TriggerCrafting();
 		trigger.stack = StackHelper.getStackFromString(data.get("Item").getAsString());
-		if (data.get("Match Damage") != null) {
-			trigger.matchDamage = data.get("Match Damage").getAsBoolean();
+		if (data.get("matchDamage") != null) {
+			trigger.matchDamage = data.get("matchDamage").getAsBoolean();
 		}
 		
-		if (data.get("Match NBT") != null) {
-			trigger.matchNBT = data.get("Match NBT").getAsBoolean();
+		if (data.get("matchNBT") != null) {
+			trigger.matchNBT = data.get("matchNBT").getAsBoolean();
 		}
 		
-		if (data.get("Crafting Times") != null) {
-			trigger.craftingTimes = data.get("Crafting Times").getAsInt();
+		if (data.get("craftingTimes") != null) {
+			trigger.craftingTimes = data.get("craftingTimes").getAsInt();
 		}
 		
-		if (data.get("Item Amount") != null) {
-			trigger.itemAmount = data.get("Item Amount").getAsInt();
+		if (data.get("itemAmount") != null) {
+			trigger.itemAmount = data.get("itemAmount").getAsInt();
 		}
 		
 		return trigger;
@@ -90,9 +90,9 @@ public class TriggerCrafting extends TriggerBase {
 	public void serialize(JsonObject data) {
 		data.addProperty("Item", StackHelper.getStringFromStack(stack));
 		if (matchDamage != true)
-			data.addProperty("Match Damage", matchDamage);
+			data.addProperty("matchDamage", matchDamage);
 		if (matchNBT != false)
-			data.addProperty("Match NBT", matchNBT);
+			data.addProperty("matchNBT", matchNBT);
 	}
 	
 	@Override

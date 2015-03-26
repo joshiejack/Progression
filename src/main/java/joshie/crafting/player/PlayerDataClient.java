@@ -26,13 +26,13 @@ public class PlayerDataClient extends PlayerDataCommon implements IPlayerDataCli
 	}
 
 	@Override
-	public void setAbilities(DataAbilities abilities) {
+	public void setAbilities(DataStats abilities) {
 		this.abilities = abilities;
 	}
 
 	@Override
 	public void resetData() {
-		abilities = new DataAbilities();
+		abilities = new DataStats();
 		mappings = new CraftingMappings();
 		crafts = new HashMap();
 	}

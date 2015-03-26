@@ -2,11 +2,13 @@ package joshie.crafting.trigger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import joshie.crafting.api.Bus;
 import joshie.crafting.api.ICondition;
 import joshie.crafting.api.IHasUniqueName;
 import joshie.crafting.api.ITrigger;
+import joshie.crafting.api.ITriggerData;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
@@ -55,7 +57,14 @@ public abstract class TriggerBase implements ITrigger {
 		return conditions;
 	}
 	
-	/** A whole bunch of convenience methods **/
+	@Override
+	public void onFired(UUID uuid, ITriggerData triggerData, Object... data) {
+	    onFired(triggerData, data);
+	}
+	
+	public void onFired(ITriggerData triggerData, Object... data) {}
+
+    /** A whole bunch of convenience methods **/
 	
 	//Shorthand
 	protected Block asBlock(Object[] object) {

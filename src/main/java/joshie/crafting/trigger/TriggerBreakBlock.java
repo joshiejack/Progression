@@ -30,7 +30,7 @@ public class TriggerBreakBlock extends TriggerBaseCounter {
 	private int amount = 1;
 	
 	public TriggerBreakBlock() {
-		super("Break Block");
+		super("breakBlock");
 	}
 	
 	@SubscribeEvent(priority = EventPriority.LOWEST)
@@ -70,20 +70,20 @@ public class TriggerBreakBlock extends TriggerBaseCounter {
 	@Override
 	public ITrigger deserialize(JsonObject data) {
 		TriggerBreakBlock trigger = new TriggerBreakBlock();
-		if (data.get("Ore") != null) {
-			trigger.oreDictionary = data.get("Ore").getAsString();
+		if (data.get("ore") != null) {
+			trigger.oreDictionary = data.get("ore").getAsString();
 		} else {
-			String stack = data.get("Item").getAsString();
+			String stack = data.get("item").getAsString();
 			ItemStack iStack = StackHelper.getStackFromString(stack);
 			trigger.block = Block.getBlockFromItem(iStack.getItem());
 			trigger.meta = iStack.getItemDamage();
-			if (data.get("Match Damage") != null) {
-				trigger.matchDamage = data.get("Match Damage").getAsBoolean();
+			if (data.get("matchDamage") != null) {
+				trigger.matchDamage = data.get("matchDamage").getAsBoolean();
 			}
 		}
 		
-		if (data.get("Amount") != null) {
-			trigger.amount = data.get("Amount").getAsInt();
+		if (data.get("amount") != null) {
+			trigger.amount = data.get("amount").getAsInt();
 		}
 		
 		return trigger;
@@ -92,18 +92,18 @@ public class TriggerBreakBlock extends TriggerBaseCounter {
 	@Override
 	public void serialize(JsonObject data) {
 		if (!oreDictionary.equals("NONE")) {
-			data.addProperty("Ore", oreDictionary);
+			data.addProperty("ore", oreDictionary);
 		} else {
 			ItemStack stack = new ItemStack(block, 1, meta);			
 			String serial = StackHelper.getStringFromStack(stack);
-			data.addProperty("Item", serial);
+			data.addProperty("item", serial);
 			if (matchDamage != true) {
-				data.addProperty("Match Damage", false);
+				data.addProperty("matchDamage", false);
 			}
 		}
 		
 		if (amount != 1) {
-			data.addProperty("Amount", amount);
+			data.addProperty("amount", amount);
 		}
 	}
 	

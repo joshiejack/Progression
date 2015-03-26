@@ -9,4 +9,7 @@ public interface IPlayerDataServer extends IPlayerData {
 
 	/** Adds fall damage prevention **/
 	public void addFallDamagePrevention(int maxAbsorbed);
+
+	/** Adds research points to a player **/
+    public void addResearchPoints(int amount);
 }

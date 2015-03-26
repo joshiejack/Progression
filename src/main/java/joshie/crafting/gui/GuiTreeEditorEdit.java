@@ -5,24 +5,14 @@ import joshie.crafting.api.ICriteria;
 
 import org.lwjgl.input.Mouse;
 
-public class GuiTreeEditor extends GuiBase {
-    public static final GuiTreeEditor INSTANCE = new GuiTreeEditor();
+public class GuiTreeEditorEdit extends GuiTreeEditorDisplay {
+    public static final GuiTreeEditorEdit INSTANCE = new GuiTreeEditorEdit();
 
     @Override
     protected void keyTyped(char character, int key) {
         super.keyTyped(character, key);
         for (ICriteria criteria : CraftAPIRegistry.criteria.values()) {
             criteria.keyTyped(character, key);
-        }
-    }
-
-    @Override
-    public void drawScreen(int i, int j, float f) {
-        int x = (width - 430) / 2;
-        int y = (height - ySize) / 2;
-        super.drawScreen(i, j, f);
-        for (ICriteria criteria : CraftAPIRegistry.criteria.values()) {
-            criteria.draw(x, y);
         }
     }
 

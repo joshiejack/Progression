@@ -23,7 +23,7 @@ public class RewardFallDamage extends RewardBase {
 	private int maxAbsorbed;
 	
 	public RewardFallDamage() {
-		super("Fall Damage");
+		super("fallDamage");
 	}
 	
 	@Override
@@ -36,7 +36,7 @@ public class RewardFallDamage extends RewardBase {
 		if (event.entityLiving instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) event.entity;
             int damage = (int) (event.distance - 3);
-            int maxAbsorbed = CraftingAPI.players.getPlayerData(null).getFallDamagePrevention();
+            int maxAbsorbed = CraftingAPI.players.getPlayerData(player).getAbilities().getFallDamagePrevention();
             if (damage < maxAbsorbed) {
             	event.setCanceled(true);
             } else {
@@ -55,13 +55,13 @@ public class RewardFallDamage extends RewardBase {
 	@Override
 	public IReward deserialize(JsonObject data) {
 		RewardFallDamage reward = new RewardFallDamage();
-		reward.maxAbsorbed = data.get("Max Absorption").getAsInt();
+		reward.maxAbsorbed = data.get("maxAbsorption").getAsInt();
 		return reward;
 	}
 
 	@Override
 	public void serialize(JsonObject elements) {
-		elements.addProperty("Max Absorption", maxAbsorbed);
+		elements.addProperty("maxAbsorption", maxAbsorbed);
 	}
 	
 	@Override

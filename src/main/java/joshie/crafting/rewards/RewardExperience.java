@@ -19,7 +19,7 @@ public class RewardExperience extends RewardBase {
 	private int amount;
 	
 	public RewardExperience() {
-		super("Experience");
+		super("experience");
 	}
 	
 	@ZenMethod
@@ -32,13 +32,13 @@ public class RewardExperience extends RewardBase {
 	@Override
 	public IReward deserialize(JsonObject data) {
 		RewardExperience reward = new RewardExperience();
-		reward.amount = data.get("Amount").getAsInt();
+		reward.amount = data.get("amount").getAsInt();
 		return reward;
 	}
 
 	@Override
 	public void serialize(JsonObject elements) {
-		elements.addProperty("Amount", amount);
+		elements.addProperty("amount", amount);
 	}
 	
 	@Override

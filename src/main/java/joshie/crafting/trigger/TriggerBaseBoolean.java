@@ -23,5 +23,7 @@ public abstract class TriggerBaseBoolean extends TriggerBase {
 		((DataBoolean)iTriggerData).completed = isTrue(data);
 	}
 
-	protected abstract boolean isTrue(Object... data);
+	protected boolean isTrue(Object... data) {
+	    return false;
+	}
 }

@@ -17,14 +17,12 @@ public class ConditionDaytime extends ConditionBase {
 	private boolean isDaytime = true;
 	
 	public ConditionDaytime() {
-		super("time");
+		super("daytime");
 	}
 	
 	@ZenMethod
-	public void add(String unique, boolean isDaytime) {
-		ConditionDaytime condition = new ConditionDaytime();
-		condition.isDaytime = isDaytime;
-		MineTweakerAPI.apply(new Conditions(unique, condition));
+	public void add(String unique) {
+		MineTweakerAPI.apply(new Conditions(unique, new ConditionDaytime()));
 	}
 
 	@Override
@@ -34,18 +32,9 @@ public class ConditionDaytime extends ConditionBase {
 
 	@Override
 	public ICondition deserialize(JsonObject data) {
-		ConditionDaytime time = new ConditionDaytime();
-		if (data.get("Night") != null) {
-			time.isDaytime = Boolean.parseBoolean("Night");
-		}
-		
-		return time;
+		return new ConditionDaytime();
 	}
 
 	@Override
-	public void serialize(JsonObject elements) {
-		if (!isDaytime) {
-			elements.addProperty("Night", true);
-		}
-	}
+	public void serialize(JsonObject elements) {}
 }

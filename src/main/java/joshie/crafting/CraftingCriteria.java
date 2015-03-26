@@ -6,7 +6,7 @@ import java.util.List;
 import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.IReward;
 import joshie.crafting.api.ITrigger;
-import joshie.crafting.gui.GuiTreeEditor;
+import joshie.crafting.gui.GuiTreeEditorEdit;
 import joshie.crafting.gui.TextEditable;
 import joshie.crafting.helpers.StackHelper;
 import joshie.crafting.plugins.minetweaker.Criteria;
@@ -132,10 +132,6 @@ public class CraftingCriteria extends TextEditable implements ICriteria {
     protected int width = 100;
     protected int height = 25;
 
-    public String getName() {
-        return this.getClass().getSimpleName();
-    }
-
     public void recalculate(int x, int y) {
         left = this.x;
         right = (int) (this.x + width);
@@ -145,13 +141,12 @@ public class CraftingCriteria extends TextEditable implements ICriteria {
 
     public void draw(int x, int y) {
         recalculate(x, y);
-        drawFeature();
         //If We are in edit mode draw the boxes around the feature
         if (isSelected) {
-            GuiTreeEditor.INSTANCE.drawRectWithBorder(x + left, y + top, x + right, y + bottom, 0xFFFFFFFF, 0xFF00BFFF);
-        } else GuiTreeEditor.INSTANCE.drawRectWithBorder(x + left, y + top, x + right, y + bottom, 0xFFFFFFFF, 0xFF000000);
+            GuiTreeEditorEdit.INSTANCE.drawRectWithBorder(x + left, y + top, x + right, y + bottom, 0xFFFFFFFF, 0xFF00BFFF);
+        } else GuiTreeEditorEdit.INSTANCE.drawRectWithBorder(x + left, y + top, x + right, y + bottom, 0xFFFFFFFF, 0xFF000000);
         
-        GuiTreeEditor.INSTANCE.mc.fontRenderer.drawString(getText(), x + left + 3, y + top + 3, 0xFF000000);
+        GuiTreeEditorEdit.INSTANCE.mc.fontRenderer.drawString(getText(), x + left + 3, y + top + 3, 0xFF000000);
         
         //Draw in the rewards
         int xOffset = 0;
@@ -163,37 +158,23 @@ public class CraftingCriteria extends TextEditable implements ICriteria {
     }
 
     private boolean noOtherSelected() {
-        return GuiTreeEditor.INSTANCE.selected == null;
+        return GuiTreeEditorEdit.INSTANCE.selected == null;
     }
 
     public void clearSelected() {
-        GuiTreeEditor.INSTANCE.selected = null;
+        GuiTreeEditorEdit.INSTANCE.selected = null;
     }
 
     public void setSelected() {
-        GuiTreeEditor.INSTANCE.selected = this;
+        GuiTreeEditorEdit.INSTANCE.selected = this;
     }
 
-    public void drawFeature() {}
-
-    public boolean isOverFeature(int x, int y) {
+    public boolean isOver(int x, int y) {
         return x >= left && x <= right && y >= top && y <= bottom;
     }
 
-    public boolean isOverCorner(int x, int y) {
-        if ((x >= left - 4 && x <= left) || (x >= right && x <= right + 4)) {
-            if ((y >= top - 4 && y <= top) || (y >= bottom && y <= bottom + 4)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     public void click(int x, int y) {
-        //If it is editmode let's select or deselect this item whenever we click on it
-        //If you click inside the box, then we will set the held to true
-        if (isOverFeature(x, y) && noOtherSelected()) {
+        if (isOver(x, y) && noOtherSelected()) {
             isHeld = true;
             isSelected = true;
             prevX = x;
@@ -212,17 +193,6 @@ public class CraftingCriteria extends TextEditable implements ICriteria {
             isHeld = false;
             clearSelected();
         }
-    }
-
-    public void updateWidth(int change) {
-        width += change;
-        if (width <= 16) {
-            width = 16;
-        }
-    }
-
-    public void updateHeight(int change) {
-        height += change;
     }
 
     public void follow(int x, int y) {

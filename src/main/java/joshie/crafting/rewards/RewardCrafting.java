@@ -12,7 +12,6 @@ import joshie.crafting.plugins.minetweaker.MTHelper;
 import joshie.crafting.plugins.minetweaker.Rewards;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.item.IIngredient;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import stanhebben.zenscript.annotations.Optional;
@@ -32,7 +31,7 @@ public class RewardCrafting extends RewardBase {
 	private boolean crafting = true;
 	
 	public RewardCrafting() {
-		super("Crafting");
+		super("crafting");
 	}
 	
 	@ZenMethod
@@ -74,9 +73,9 @@ public class RewardCrafting extends RewardBase {
 	@Override
 	public IReward deserialize(JsonObject data) {
 		RewardCrafting reward = new RewardCrafting();
-		reward.stack = StackHelper.getStackFromString(data.get("Item").getAsString());
-		if (data.get("Crafting Type") != null) {
-			String craftingtype = data.get("Crafting Type").getAsString();
+		reward.stack = StackHelper.getStackFromString(data.get("item").getAsString());
+		if (data.get("craftingType") != null) {
+			String craftingtype = data.get("craftingType").getAsString();
 			for (CraftingType type: CraftingType.values()) {
 				if (type.name().equalsIgnoreCase(craftingtype)) {
 					reward.type = type;
@@ -85,25 +84,25 @@ public class RewardCrafting extends RewardBase {
 			}
 		}
 		
-		if (data.get("Match Damage") != null) {
-			reward.matchDamage = data.get("MatchDamage").getAsBoolean();
+		if (data.get("matchDamage") != null) {
+			reward.matchDamage = data.get("matchDamage").getAsBoolean();
 		}
 		
-		if (data.get("Match NBT") != null) {
-			reward.matchNBT = data.get("Match NBT").getAsBoolean();
+		if (data.get("matchNBT") != null) {
+			reward.matchNBT = data.get("matchNBT").getAsBoolean();
 		}
 		
-		if (data.get("Block Crafting") != null) {
-			reward.crafting = data.get("Block Crafting").getAsBoolean();
+		if (data.get("disableCrafting") != null) {
+			reward.crafting = data.get("disableCrafting").getAsBoolean();
 		}
 		
-		if (data.get("Block Usage") != null) {
-			reward.crafting = data.get("Block Usage").getAsBoolean();
+		if (data.get("disableUsage") != null) {
+			reward.usage = data.get("disableUsage").getAsBoolean();
 		}
 		
 		if (CraftingMod.NEI_LOADED) {
-			if (data.get("Hide from NEI") != null) {
-				if (data.get("Hide from NEI").getAsBoolean() == false) {
+			if (data.get("hideFromNEI") != null) {
+				if (data.get("hideFromNEI").getAsBoolean() == false) {
 					reward.isAdded = false;
 					API.hideItem(stack);
 				}
@@ -115,25 +114,25 @@ public class RewardCrafting extends RewardBase {
 
 	@Override
 	public void serialize(JsonObject elements) {
-		elements.addProperty("Item", StackHelper.getStringFromStack(stack));
+		elements.addProperty("item", StackHelper.getStringFromStack(stack));
 		if (type != CraftingType.CRAFTING) {
-			elements.addProperty("Crafting Type", type.name().toLowerCase());
+			elements.addProperty("craftingType", type.name().toLowerCase());
 		}
 		
 		if (matchDamage != true) {
-			elements.addProperty("Match Damage", matchDamage);
+			elements.addProperty("matchDamage", matchDamage);
 		}
 		
 		if (matchNBT != false) {
-			elements.addProperty("Match NBT", matchNBT);
+			elements.addProperty("matchNBT", matchNBT);
 		}
 		
 		if (crafting != true) {
-			elements.addProperty("Block Crafting", false);
+			elements.addProperty("disableCrafting", false);
 		}
 		
 		if (usage != true) {
-			elements.addProperty("Block Usage", false);
+			elements.addProperty("disableUsage", false);
 		}
 	}
 	
