@@ -1,14 +1,15 @@
 package joshie.crafting.asm;
 
-import joshie.crafting.api.CraftingAPI;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
 
-public class ContainerTile extends ContainerPlayer {	
+public class ContainerTile extends Container {	
+    public TileEntity tile;
+    
 	public ContainerTile() {}
-	public ContainerTile(Object tile) {
-		TileEntity tileEntity = (TileEntity)tile;
-		uuid = CraftingAPI.players.getTileOwner(tileEntity).getUUID();
+	public ContainerTile(TileEntity tile) {
+		this.tile = tile;
 	}
 	
 	@Override

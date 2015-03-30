@@ -3,11 +3,8 @@ package joshie.crafting.gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ChatAllowedCharacters;
 
-public abstract class TextEditable {
-    public boolean isSelected;
-    protected int position;
-    private int tick;
-    private boolean white;
+public abstract class TextEditable extends OverlayBase {
+    protected static int position;
 
     public void setSelected() {
         position = getTextField().length();
@@ -18,22 +15,7 @@ public abstract class TextEditable {
     public abstract void setTextField(String str);
 
     public String getText(String field) {
-        if (isSelected) {
-            tick++;
-            if (tick % 60 == 0) {
-                if (white) {
-                    white = false;
-                } else {
-                    white = true;
-                }
-            }
-
-            if (white) {
-                return new StringBuilder(field).insert(Math.min(position, field.length()), "_").toString();
-            } else {
-                return new StringBuilder(field).insert(Math.min(position, field.length()), "_").toString();
-            }
-        } else return getTextField();
+        return new StringBuilder(field).insert(Math.min(position, field.length()), "_").toString();
     }
 
     public String getText() {
@@ -74,8 +56,8 @@ public abstract class TextEditable {
         }
     }
 
-    public void keyTyped(char character, int key) {
-        if (getTextField() != null && isSelected) {
+    public boolean keyTyped(char character, int key) {
+        if (getTextField() != null) {
             if (key == 203) {
                 cursorLeft(1);
             } else if (key == 205) {
@@ -92,5 +74,7 @@ public abstract class TextEditable {
                 add(Character.toString(character));
             }
         }
+
+        return false;
     }
 }

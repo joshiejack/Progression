@@ -1,11 +1,12 @@
 package joshie.crafting.trigger;
 
 import joshie.crafting.api.ITriggerData;
+import joshie.crafting.gui.TextFieldHelper.IntegerFieldHelper;
 import joshie.crafting.trigger.data.DataBoolean;
 
 public abstract class TriggerBaseBoolean extends TriggerBase {
-	public TriggerBaseBoolean(String name) {
-		super(name);
+	public TriggerBaseBoolean(String localised, int color, String name) {
+		super(localised, color, name);
 	}
 	
 	@Override

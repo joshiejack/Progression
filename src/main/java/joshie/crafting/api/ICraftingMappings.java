@@ -3,6 +3,7 @@ package joshie.crafting.api;
 import java.util.HashMap;
 import java.util.Set;
 
+import joshie.crafting.network.PacketSyncTriggers.SyncPair;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 
@@ -14,7 +15,7 @@ public interface ICraftingMappings {
 	public void remap();
 
 	public void markCriteriaAsCompleted(boolean overwrite, Integer[] values, ICriteria... criteria);
-	public void markTriggerAsCompleted(boolean overwrite, ITrigger... researches);
+	public void markTriggerAsCompleted(boolean overwrite, SyncPair[] pair);
 
 	public HashMap<ICriteria, Integer> getCompletedCriteria();
 	public Set<ITrigger> getCompletedTriggers();

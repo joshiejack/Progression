@@ -10,14 +10,8 @@ import joshie.crafting.api.ITreeEditor;
 import joshie.crafting.api.ITrigger;
 import joshie.crafting.gui.EditorCriteria;
 import joshie.crafting.gui.EditorTree;
-import joshie.crafting.plugins.minetweaker.Criteria;
-import minetweaker.MineTweakerAPI;
 import scala.actors.threadpool.Arrays;
-import stanhebben.zenscript.annotations.Optional;
-import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenMethod;
 
-@ZenClass("mods.craftcontrol.Criteria")
 public class CraftingCriteria implements ICriteria {
     /** All the data for this **/
     private List<ITrigger> triggers = new ArrayList();
@@ -33,11 +27,6 @@ public class CraftingCriteria implements ICriteria {
     public CraftingCriteria() {
         this.treeEditor = new EditorTree(this);
         this.criteriaEditor = new EditorCriteria(this);
-    }
-
-    @ZenMethod
-    public void add(String unique, String[] triggers, @Optional String[] rewards, @Optional String[] prereqs, @Optional String[] conflicts, @Optional boolean isRepeatable) {
-        MineTweakerAPI.apply(new Criteria(unique, triggers, rewards, prereqs, conflicts, isRepeatable));
     }
 
     @Override
@@ -61,7 +50,7 @@ public class CraftingCriteria implements ICriteria {
     public ICriteria addRewards(IReward... rewards) {
         this.rewards.addAll(Arrays.asList((IReward[]) rewards));
         for (IReward reward : rewards) {
-            reward.onAdded(this);
+            reward.onAdded();
         }
 
         return this;
@@ -118,5 +107,25 @@ public class CraftingCriteria implements ICriteria {
     @Override
     public ICriteriaEditor getCriteriaEditor() {
         return criteriaEditor;
+    }
+    
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        CraftingCriteria other = (CraftingCriteria) obj;
+        if (name == null) {
+            if (other.name != null) return false;
+        } else if (!name.equals(other.name)) return false;
+        return true;
     }
 }

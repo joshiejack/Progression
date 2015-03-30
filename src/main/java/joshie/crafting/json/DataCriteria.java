@@ -1,10 +1,10 @@
 package joshie.crafting.json;
 
-import com.google.gson.annotations.SerializedName;
+import java.util.List;
 
 public class DataCriteria {
 	public DataCriteria() {}
-	public DataCriteria(String name, String[] triggers, String[] rewards, String[] requirements, String[] conflicts, int x, int y) {
+	public DataCriteria(String name, List<DataTrigger> triggers, List<DataGeneric> rewards, String[] requirements, String[] conflicts, int x, int y) {
 		this.name = name;
 		this.triggers = triggers;
 		this.rewards = rewards;
@@ -15,8 +15,10 @@ public class DataCriteria {
 	}
 	
 	String name;
-	String[] triggers;
-	String[] rewards;
+	List<DataTrigger> triggers;
+	List<DataGeneric> rewards;
+	///String[] triggers;
+	///String[] rewards;
 	String[] prereqs;
 	String[] conflicts;
 	int repeatable;

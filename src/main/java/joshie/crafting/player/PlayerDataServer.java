@@ -28,15 +28,6 @@ public class PlayerDataServer extends PlayerDataCommon implements IPlayerDataSer
 	}
 
 	@Override
-	public void resetData() {
-		abilities = new DataStats();
-		mappings = new CraftingMappings();
-		crafts = new HashMap();
-		CraftingMod.instance.createWorldData();
-		CraftingRemapper.serverRemap();
-	}
-
-	@Override
 	public void addSpeed(float speed) {
 		float newStat = abilities.getSpeed() + speed;
 		abilities.setSpeed(newStat);

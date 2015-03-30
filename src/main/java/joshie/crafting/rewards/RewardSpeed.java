@@ -5,74 +5,115 @@ import java.util.UUID;
 import joshie.crafting.api.Bus;
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.IReward;
+import joshie.crafting.gui.SelectTextEdit;
+import joshie.crafting.gui.SelectTextEdit.ITextEditable;
 import joshie.crafting.helpers.ClientHelper;
-import joshie.crafting.plugins.minetweaker.Rewards;
-import minetweaker.MineTweakerAPI;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
-import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenMethod;
 
 import com.google.gson.JsonObject;
 
+import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
-@ZenClass("mods.craftcontrol.rewards.Speed")
-public class RewardSpeed extends RewardBase {
-	private float speed;
-	
-	public RewardSpeed() {
-		super("speed");
-	}
-	
-	@Override
-	public Bus getBusType() {
-		return Bus.FORGE;
-	}
-	
-	@SubscribeEvent
-	public void onLivingUpdate(LivingUpdateEvent event) {
-		if (event.entityLiving instanceof EntityPlayer) {
+public class RewardSpeed extends RewardBase implements ITextEditable {
+    private float speed = 0.1F;
+
+    public RewardSpeed() {
+        super("Speed", 0xFFFFBF00, "speed");
+    }
+
+    @Override
+    public IReward newInstance() {
+        return new RewardSpeed();
+    }
+
+    @Override
+    public Bus getBusType() {
+        return Bus.FORGE;
+    }
+
+    @SubscribeEvent
+    public void onLivingUpdate(LivingUpdateEvent event) {
+        if (event.entityLiving instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) event.entity;
             if (player.worldObj.isRemote) {
-    			float speed = CraftingAPI.players.getPlayerData(player).getAbilities().getSpeed();
-    			if (speed > 0 && player.onGround && !player.isInWater() && player.isSprinting() && ClientHelper.isForwardPressed()) {
-    				player.moveFlying(0F, 1.0F, speed);
-    			}
-    		}
-		}
-	}
-	
-	@ZenMethod
-	public void add(String unique, double speed) {
-		RewardSpeed reward = new RewardSpeed();
-		reward.speed = Float.parseFloat("" + speed);		
-		MineTweakerAPI.apply(new Rewards(unique, reward));
-	}
-	
-	@Override
-	public IReward deserialize(JsonObject data) {
-		RewardSpeed reward = new RewardSpeed();
-		reward.speed = data.get("speed").getAsFloat();
-		return reward;
-	}
+                float speed = CraftingAPI.players.getPlayerData(player).getAbilities().getSpeed();
+                if (speed > 0 && player.onGround && !player.isInWater() && player.isSprinting() && ClientHelper.isForwardPressed()) {
+                    player.moveFlying(0F, 1.0F, speed);
+                }
+            }
+        }
+    }
 
-	@Override
-	public void serialize(JsonObject elements) {
-		elements.addProperty("speed", speed);
-	}
-	
-	@Override
-	public void reward(UUID uuid) {
-		CraftingAPI.players.getServerPlayer(uuid).addSpeed(speed);
-	}
-	
-	private static final ItemStack speedStack = new ItemStack(Items.potionitem, 1, 8194);
+    @Override
+    public IReward deserialize(JsonObject data) {
+        RewardSpeed reward = new RewardSpeed();
+        reward.speed = data.get("speed").getAsFloat();
+        return reward;
+    }
+
+    @Override
+    public void serialize(JsonObject elements) {
+        elements.addProperty("speed", speed);
+    }
+
+    @Override
+    public void reward(UUID uuid) {
+        CraftingAPI.players.getServerPlayer(uuid).addSpeed(speed);
+    }
+
+    private static final ItemStack speedStack = new ItemStack(Items.potionitem, 1, 8194);
 
     @Override
     public ItemStack getIcon() {
         return speedStack;
+    }
+
+    @Override
+    public Result clicked() {
+        if (mouseX <= 84 && mouseX >= 1) {
+            if (mouseY >= 17 && mouseY <= 25) {
+                SelectTextEdit.INSTANCE.select(this);
+                return Result.ALLOW;
+            }
+        }
+        
+        return Result.DEFAULT;
+    }
+
+    @Override
+    public void draw() {
+        int speedColor = 0xFF000000;
+        if (mouseX <= 84 && mouseX >= 1) {
+            if (mouseY >= 17 && mouseY <= 25) speedColor = 0xFFBBBBBB;
+        }
+
+        if (SelectTextEdit.INSTANCE.getEditable() == this) {
+            drawText("speed: " + SelectTextEdit.INSTANCE.getText(), 4, 18, speedColor);
+        } else drawText("speed: " + getTextField(), 4, 18, speedColor);
+    }
+    
+    private String textField;
+
+    @Override
+    public String getTextField() {
+        if (textField == null) {
+            textField = "" + speed;
+        }
+        
+        return textField;
+    }
+
+    @Override
+    public void setTextField(String text) {
+        String fixed = text.replaceAll("[^0-9.]", "");
+        this.textField = fixed;
+        
+        try {
+            this.speed = Float.parseFloat(textField);
+        } catch (Exception e) { this.speed = 0F; }
     }
 }

@@ -50,7 +50,7 @@ public class ASMAE2 extends AbstractASM {
 						if (name.equals("<init>") && owner.contains("ContainerNull")) {
 							super.visitVarInsn(Opcodes.ALOAD, 0);
 							super.visitFieldInsn(Opcodes.GETFIELD, "appeng/container/implementations/ContainerCraftingTerm", "thePlayer", "Lnet/minecraft/entity/player/EntityPlayer;");
-							super.visitMethodInsn(opcode, "joshie/crafting/asm/ContainerPlayer", name, "(Ljava/lang/Object;)V", itf);
+							super.visitMethodInsn(opcode, "joshie/crafting/asm/ContainerPlayer", name, "(Lnet/minecraft/entity/player/EntityPlayer;)V", itf);
 						} else super.visitMethodInsn(opcode, owner, name, desc, itf);
 					}
 					

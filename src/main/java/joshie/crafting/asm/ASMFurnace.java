@@ -38,23 +38,32 @@ public class ASMFurnace extends AbstractASM {
 					@Override
 					   public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
 						if (name.equals("getSmeltingResult")) {
-							super.visitMethodInsn(opcode, owner, name, desc, itf);
-							super.visitVarInsn(Opcodes.ASTORE, 1);
+							mv.visitMethodInsn(opcode, owner, name, desc, itf);
+							mv.visitVarInsn(Opcodes.ASTORE, 1);
 							Label l3 = new Label();
-							super.visitLabel(l3);
-							super.visitVarInsn(Opcodes.ALOAD, 1);
+							mv.visitLabel(l3);
+							mv.visitFieldInsn(Opcodes.GETSTATIC, "joshie/crafting/api/crafting/CraftingEvent$CraftingType", "FURNACE", "Ljoshie/crafting/api/crafting/CraftingEvent$CraftingType;");
+							mv.visitVarInsn(Opcodes.ALOAD, 0);
+							mv.visitVarInsn(Opcodes.ALOAD, 0);
+							mv.visitFieldInsn(Opcodes.GETFIELD, "net/minecraft/tileentity/TileEntityFurnace", "furnaceItemStacks", "[Lnet/minecraft/item/ItemStack;");
+							mv.visitInsn(Opcodes.ICONST_0);
+							mv.visitInsn(Opcodes.AALOAD);
+							mv.visitMethodInsn(Opcodes.INVOKESTATIC, "joshie/crafting/helpers/CraftingHelper", "canUseItemForCrafting", "(Ljoshie/crafting/api/crafting/CraftingEvent$CraftingType;Lnet/minecraft/tileentity/TileEntity;Lnet/minecraft/item/ItemStack;)Z", false);
 							Label l4 = new Label();
-							super.visitJumpInsn(Opcodes.IFNULL, l4);
-							super.visitFieldInsn(Opcodes.GETSTATIC, "joshie/crafting/api/CraftingAPI", "players", "Ljoshie/crafting/api/IPlayerTracker;");
-							super.visitVarInsn(Opcodes.ALOAD, 0);
-							super.visitMethodInsn(Opcodes.INVOKEINTERFACE, "joshie/crafting/api/IPlayerTracker", "getTileOwner", "(Lnet/minecraft/tileentity/TileEntity;)Ljoshie/crafting/api/crafting/ICrafter;", true);
-							super.visitFieldInsn(Opcodes.GETSTATIC, "joshie/crafting/api/crafting/CraftingType", "FURNACE", "Ljoshie/crafting/api/crafting/CraftingType;");
-							super.visitVarInsn(Opcodes.ALOAD, 1);
-							super.visitMethodInsn(Opcodes.INVOKEINTERFACE, "joshie/crafting/api/crafting/ICrafter", "canCraftItem", "(Ljoshie/crafting/api/crafting/CraftingType;Lnet/minecraft/item/ItemStack;)Z", true);
-							super.visitJumpInsn(Opcodes.IFNE, l4);
-							super.visitInsn(Opcodes.ICONST_0);
-							super.visitInsn(Opcodes.IRETURN);
-							super.visitLabel(l4);
+							mv.visitJumpInsn(Opcodes.IFNE, l4);
+							mv.visitInsn(Opcodes.ICONST_0);
+							mv.visitInsn(Opcodes.IRETURN);
+							mv.visitLabel(l4);
+							mv.visitFrame(Opcodes.F_APPEND,1, new Object[] {"net/minecraft/item/ItemStack"}, 0, null);
+							mv.visitFieldInsn(Opcodes.GETSTATIC, "joshie/crafting/api/crafting/CraftingEvent$CraftingType", "FURNACE", "Ljoshie/crafting/api/crafting/CraftingEvent$CraftingType;");
+							mv.visitVarInsn(Opcodes.ALOAD, 0);
+							mv.visitVarInsn(Opcodes.ALOAD, 1);
+							mv.visitMethodInsn(Opcodes.INVOKESTATIC, "joshie/crafting/helpers/CraftingHelper", "canCraftItem", "(Ljoshie/crafting/api/crafting/CraftingEvent$CraftingType;Lnet/minecraft/tileentity/TileEntity;Lnet/minecraft/item/ItemStack;)Z", false);
+							Label l5 = new Label();
+							mv.visitJumpInsn(Opcodes.IFNE, l5);
+							mv.visitInsn(Opcodes.ICONST_0);
+							mv.visitInsn(Opcodes.IRETURN);
+							mv.visitLabel(l5);
 							canVisit = false;
 						} else super.visitMethodInsn(opcode, owner, name, desc, itf);
 					}

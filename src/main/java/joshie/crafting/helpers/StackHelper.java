@@ -21,22 +21,24 @@ public class StackHelper {
     private final static RenderItem itemRenderer = new RenderItem();
 
     public static void drawStack(ItemStack stack, int left, int top, float size) {
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
-        GL11.glPushMatrix();
-        GL11.glScalef(size, size, size);
-        GL11.glDisable(GL11.GL_LIGHTING);
-        GL11.glColor3f(1F, 1F, 1F); //Forge: Reset color in case Items change it.
-        GL11.glEnable(GL11.GL_BLEND); //Forge: Make sure blend is enabled else tabs show a white border.
-        GL11.glEnable(GL11.GL_LIGHTING);
-        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-        RenderHelper.enableGUIStandardItemLighting();
-        Minecraft mc = ClientHelper.getMinecraft();
-        itemRenderer.renderItemAndEffectIntoGUI(mc.fontRenderer, mc.getTextureManager(), stack, (int) (left / size), (int) (top / size));
-        itemRenderer.renderItemOverlayIntoGUI(mc.fontRenderer, mc.getTextureManager(), stack, (int) (left / size), (int) (top / size));
-        RenderHelper.disableStandardItemLighting();
-        GL11.glDisable(GL11.GL_LIGHTING);
-        GL11.glPopMatrix();
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        try {
+            GL11.glDisable(GL11.GL_ALPHA_TEST);
+            GL11.glPushMatrix();
+            GL11.glScalef(size, size, size);
+            GL11.glDisable(GL11.GL_LIGHTING);
+            GL11.glColor3f(1F, 1F, 1F); //Forge: Reset color in case Items change it.
+            GL11.glEnable(GL11.GL_BLEND); //Forge: Make sure blend is enabled else tabs show a white border.
+            GL11.glEnable(GL11.GL_LIGHTING);
+            GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+            RenderHelper.enableGUIStandardItemLighting();
+            Minecraft mc = ClientHelper.getMinecraft();
+            itemRenderer.renderItemAndEffectIntoGUI(mc.fontRenderer, mc.getTextureManager(), stack, (int) (left / size), (int) (top / size));
+            itemRenderer.renderItemOverlayIntoGUI(mc.fontRenderer, mc.getTextureManager(), stack, (int) (left / size), (int) (top / size));
+            RenderHelper.disableStandardItemLighting();
+            GL11.glDisable(GL11.GL_LIGHTING);
+            GL11.glPopMatrix();
+            GL11.glEnable(GL11.GL_ALPHA_TEST);
+        } catch (Exception e) {}
     }
 
     public static ItemStack getStackFromString(String str) {
@@ -52,6 +54,8 @@ public class StackHelper {
         if (stack.hasTagCompound()) {
             str = str + " " + stack.stackTagCompound.toString();
         }
+
+        str = str + " *" + stack.stackSize;
 
         return str;
     }
@@ -74,25 +78,47 @@ public class StackHelper {
         return getStringFromStack(stack).equals(str);
     }
 
+    private static NBTTagCompound getTag(String[] str, int pos) {
+        String s = formatNBT(str, pos).getUnformattedText();
+        try {
+            NBTBase nbtbase = JsonToNBT.func_150315_a(s);
+            if (!(nbtbase instanceof NBTTagCompound)) return null;
+            return (NBTTagCompound) nbtbase;
+        } catch (Exception nbtexception) {
+            return null;
+        }
+    }
+
+    public static boolean isAmount(String str) {
+        return str.startsWith(str);
+    }
+
     private static ItemStack getStackFromArray(String[] str) {
         Item item = getItemByText(str[0]);
         int meta = 0;
+        int amount = 1;
+        ItemStack stack = new ItemStack(item, 1, meta);
+        NBTTagCompound tag = null;
         if (str.length > 1) {
-            meta = parseInt(str[1]);
+            if (isAmount(str[1])) amount = parseAmount(str[1]);
+            else meta = parseMeta(str[1]);
         }
 
-        ItemStack stack = new ItemStack(item, 1, meta);
         if (str.length > 2) {
-            String s = formatNBT(str, 2).getUnformattedText();
-            try {
-                NBTBase nbtbase = JsonToNBT.func_150315_a(s);
+            tag = getTag(str, 2);
+            if (tag == null) amount = parseAmount(str[2]);
+        }
 
-                if (!(nbtbase instanceof NBTTagCompound)) return null;
+        if (str.length > 3) {
+            amount = parseAmount(str[3]);
+        }
 
-                stack.setTagCompound((NBTTagCompound) nbtbase);
-            } catch (Exception nbtexception) {
-                return null;
-            }
+        if (tag != null) {
+            stack.setTagCompound(tag);
+        }
+
+        if (amount >= 1) {
+            stack.stackSize = amount;
         }
 
         return stack;
@@ -127,9 +153,17 @@ public class StackHelper {
         return chatcomponenttext;
     }
 
-    private static int parseInt(String str) {
+    private static int parseMeta(String str) {
         try {
             return Integer.parseInt(str);
+        } catch (NumberFormatException numberformatexception) {
+            return 0;
+        }
+    }
+
+    private static int parseAmount(String str) {
+        try {
+            return Integer.parseInt(str.substring(1, str.length()));
         } catch (NumberFormatException numberformatexception) {
             return 0;
         }

@@ -1,6 +1,8 @@
 package joshie.crafting.gui;
 
 import joshie.crafting.CraftAPIRegistry;
+import joshie.crafting.CraftingRemapper;
+import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ICriteria;
 
 import org.lwjgl.input.Keyboard;
@@ -11,24 +13,19 @@ public class GuiTreeEditorEdit extends GuiTreeEditorDisplay {
 
     @Override
     protected void keyTyped(char character, int key) {
-        int jump = 1;
-        if (Keyboard.isKeyDown(54) || Keyboard.isKeyDown(42)) {
-            jump = 50;
-        }
-        
-        if (key == 203) {
-            offsetX += jump;
-            if (offsetX >= 0) {
-                offsetX = 0;
-            }
-        } else if (key == 205) {
-            offsetX -= jump;
-        }
-        
-        super.keyTyped(character, key);
+        ICriteria toRemove = null;
         for (ICriteria criteria : CraftAPIRegistry.criteria.values()) {
-            criteria.getTreeEditor().keyTyped(character, key);
+            if (criteria.getTreeEditor().keyTyped(character, key)) {
+                toRemove = criteria;
+                break;
+            }
         }
+
+        if (toRemove != null) {
+            CraftAPIRegistry.removeCriteria(toRemove.getUniqueName());
+        }
+
+        super.keyTyped(character, key);
     }
 
     @Override
@@ -37,19 +34,34 @@ public class GuiTreeEditorEdit extends GuiTreeEditorDisplay {
             criteria.getTreeEditor().release(mouseX, mouseY);
         }
     }
-    
+
     private long lastClick;
+    private int lastType;
+    private ICriteria lastClicked = null;
 
     @Override
     protected void mouseClicked(int par1, int par2, int par3) {
         long thisClick = System.currentTimeMillis();
         long difference = thisClick - lastClick;
-        boolean isDoubleClick = difference <= 350;
+        boolean isDoubleClick = par3 == 0 && lastType == 0 && lastClicked == previous && difference <= 500;
         lastClick = System.currentTimeMillis();
-        
+        lastType = par3;
+
         super.mouseClicked(par1, par2, par3);
+        boolean clicked = false;
         for (ICriteria criteria : CraftAPIRegistry.criteria.values()) {
-            criteria.getTreeEditor().click(mouseX, mouseY, isDoubleClick);
+            if (criteria.getTreeEditor().click(mouseX, mouseY, isDoubleClick)) {
+                if (!clicked) {
+                    lastClicked = criteria;
+                }
+                
+                clicked = true;
+            }
+        }
+
+        if (!clicked && isDoubleClick) {
+            previous = null;
+            CraftingAPI.registry.newCriteria("NEW CRITERIA").getTreeEditor().setCoordinates(mouseX, mouseY);
         }
     }
 

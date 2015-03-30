@@ -3,17 +3,11 @@ package joshie.crafting.conditions;
 import java.util.UUID;
 
 import joshie.crafting.api.ICondition;
-import joshie.crafting.plugins.minetweaker.Conditions;
-import minetweaker.MineTweakerAPI;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
-import stanhebben.zenscript.annotations.Optional;
-import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenMethod;
 
 import com.google.gson.JsonObject;
 
-@ZenClass("mods.craftcontrol.conditions.Coordinates")
 public class ConditionCoordinates extends ConditionBase {
 	private boolean checkDimension = false; //Whether we check the dimension
 	private boolean checkX = true; //Whether we check the x coordinate
@@ -26,69 +20,6 @@ public class ConditionCoordinates extends ConditionBase {
 	
 	public ConditionCoordinates() {
 		super("coordinates");
-	}
-	
-	@ZenMethod
-	public void add(String unique, int dimension, int x, int y, int z, boolean checkDimension, boolean checkX, boolean checkY, boolean checkZ, int radius, boolean greaterThan, boolean lessThan) {
-		ConditionCoordinates condition = new ConditionCoordinates();
-		condition.dimension = dimension;
-		condition.x = x;
-		condition.y = y;
-		condition.z = z;
-		condition.checkDimension = checkDimension;
-		condition.checkX = checkX;
-		condition.checkY = checkY;
-		condition.checkZ = checkZ;
-		condition.radius = radius;
-		condition.greaterThan = true;
-		condition.lessThan = lessThan;
-		MineTweakerAPI.apply(new Conditions(unique, condition));
-	}
-	
-	@ZenMethod
-	public void addGreater(String unique, int x, int y, int z, boolean checkX, boolean checkY, boolean checkZ) {
-		ConditionCoordinates condition = new ConditionCoordinates();
-		condition.x = x;
-		condition.y = y;
-		condition.z = z;
-		condition.checkX = checkX;
-		condition.checkY = checkY;
-		condition.checkZ = checkZ;
-		condition.greaterThan = true;
-		MineTweakerAPI.apply(new Conditions(unique, condition));
-	}
-	
-	@ZenMethod
-	public void addLess(String unique, int x, int y, int z, boolean checkX, boolean checkY, boolean checkZ) {
-		ConditionCoordinates condition = new ConditionCoordinates();
-		condition.x = x;
-		condition.y = y;
-		condition.z = z;
-		condition.checkX = checkX;
-		condition.checkY = checkY;
-		condition.checkZ = checkZ;
-		condition.lessThan = true;
-		MineTweakerAPI.apply(new Conditions(unique, condition));
-	}
-	
-	@ZenMethod
-	public void addExact(String unique, int x, int y, int z, @Optional int radius) {
-		ConditionCoordinates condition = new ConditionCoordinates();
-		condition.x = x;
-		condition.y = y;
-		condition.z = z;
-		MineTweakerAPI.apply(new Conditions(unique, condition));
-	}
-	
-	@ZenMethod
-	public void addDimension(String unique, int dimension) {
-		ConditionCoordinates condition = new ConditionCoordinates();
-		condition.checkDimension = true;
-		condition.checkX = false;
-		condition.checkY = false;
-		condition.checkZ = false;
-		condition.dimension = 0;
-		MineTweakerAPI.apply(new Conditions(unique, condition));
 	}
 
 	@Override

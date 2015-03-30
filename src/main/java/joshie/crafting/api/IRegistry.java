@@ -22,19 +22,26 @@ public interface IRegistry {
 	public ICriteria getCriteriaFromName(String name);
 
 	/** Creates a new condition **/
-	public ICondition getCondition(String type, String unique, JsonObject data);
+	public ICondition newCondition(ICriteria criteria, String type, JsonObject data);
 	
 	/** Returns a trigger with the settings, type and data can be null
 	 *  If you want to just pull from the unique name, but you'd have to
 	 *  make sure to call this first.
+	 *  @param      the criteria 
 	 *  @param		the trigger type
 	 *  @param		the data for the trigger **/
-	public ITrigger getTrigger(String type, String unique, JsonObject data);
+	public ITrigger newTrigger(ICriteria criteria, String type, JsonObject data);
 	
+	/** Creates a fresh trigger **/
+    public ITrigger cloneTrigger(ICriteria criteria, ITriggerType trigger);
+		
 	/** Returns a new reward
 	 *  @param		the reward type
 	 *  @param		the data for the trigger **/
-	public IReward getReward(String type, String unique, JsonObject data);
+	public IReward newReward(ICriteria criteria, String type, JsonObject data);
+	
+	/** Creates a fresh reward **/
+	public IReward cloneReward(ICriteria criteria, IRewardType reward);
 
 	/** Returns a new criteria **/
 	public ICriteria newCriteria(String string);

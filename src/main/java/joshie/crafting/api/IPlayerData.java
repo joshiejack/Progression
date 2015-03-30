@@ -12,8 +12,6 @@ public interface IPlayerData {
 	public UUID getUUID();
 
 	public ICraftingMappings getMappings();
-	
-	public void resetData();
 
     public DataStats getAbilities();
 }

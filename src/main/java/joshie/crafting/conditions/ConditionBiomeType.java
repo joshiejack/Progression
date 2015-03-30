@@ -3,20 +3,15 @@ package joshie.crafting.conditions;
 import java.util.UUID;
 
 import joshie.crafting.api.ICondition;
-import joshie.crafting.plugins.minetweaker.Conditions;
-import minetweaker.MineTweakerAPI;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
-import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenMethod;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-@ZenClass("mods.craftcontrol.conditions.BiomeType")
 public class ConditionBiomeType extends ConditionBase {
 	private Type[] biomeTypes;
 	
@@ -24,18 +19,6 @@ public class ConditionBiomeType extends ConditionBase {
 		super("biomeType");
 	}
 	
-	@ZenMethod
-	public void add(String unique, String[] biomeTypes) {
-		ConditionBiomeType condition = new ConditionBiomeType();
-		Type[] types = new Type[biomeTypes.length];
-		for (int i = 0; i < biomeTypes.length; i++) {
-			types[i] = getBiomeType(biomeTypes[i]);
-		}
-
-		condition.biomeTypes = types;
-		MineTweakerAPI.apply(new Conditions(unique, condition));
-	}
-
 	private Type getBiomeType(String string) {
 		for (Type t: Type.values()) {
 			if (t.name().equalsIgnoreCase(string)) return t;

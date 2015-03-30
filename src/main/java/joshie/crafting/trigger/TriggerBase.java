@@ -6,21 +6,38 @@ import java.util.UUID;
 
 import joshie.crafting.api.Bus;
 import joshie.crafting.api.ICondition;
-import joshie.crafting.api.IHasUniqueName;
+import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.ITrigger;
 import joshie.crafting.api.ITriggerData;
 import joshie.crafting.gui.GuiCriteriaEditor;
+import joshie.crafting.gui.SelectTextEdit;
+import joshie.crafting.gui.SelectTextEdit.ITextEditable;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
+import cpw.mods.fml.common.eventhandler.Event.Result;
 
 public abstract class TriggerBase implements ITrigger {
     private List<ICondition> conditions = new ArrayList();
-    private String uniqueName;
     private String typeName;
-    protected int amount = 1;
+    private String localised;
+    private int color;
+    private ICriteria criteria;
 
-    public TriggerBase(String typeName) {
+    public TriggerBase(String localised, int color, String typeName) {
+        this.localised = localised;
+        this.color = color;
         this.typeName = typeName;
+    }
+
+    @Override
+    public ITrigger setCriteria(ICriteria criteria) {
+        this.criteria = criteria;
+        return this;
+    }
+
+    @Override
+    public ICriteria getCriteria() {
+        return this.criteria;
     }
 
     @Override
@@ -34,14 +51,22 @@ public abstract class TriggerBase implements ITrigger {
     }
 
     @Override
-    public String getUniqueName() {
-        return uniqueName;
+    public String getLocalisedName() {
+        return localised;
+    }
+
+    public int getColor() {
+        return color;
     }
 
     @Override
-    public IHasUniqueName setUniqueName(String unique) {
-        this.uniqueName = unique;
-        return this;
+    public int getInternalID() {
+        for (int id = 0; id < getCriteria().getTriggers().size(); id++) {
+            ITrigger aTrigger = getCriteria().getTriggers().get(id);
+            if (aTrigger.equals(this)) return id;
+        }
+
+        return 0;
     }
 
     @Override
@@ -64,17 +89,59 @@ public abstract class TriggerBase implements ITrigger {
     }
 
     public void onFired(ITriggerData triggerData, Object... data) {}
-    
+
+    protected int xPosition;
+    protected int mouseX;
+    protected int mouseY;
+
     protected void drawText(String text, int x, int y, int color) {
-        GuiCriteriaEditor.INSTANCE.selected.getCriteriaEditor().drawText(text, x, y, color);
+        GuiCriteriaEditor.INSTANCE.selected.getCriteriaEditor().drawText(text, xPosition + x, y + 40, color);
+    }
+
+    protected void drawBox(int x, int y, int width, int height, int color, int border) {
+        GuiCriteriaEditor.INSTANCE.selected.getCriteriaEditor().drawBox(xPosition + x, y + 40, width, height, color, border);
+    }
+
+    protected void drawStack(ItemStack stack, int x, int y, float scale) {
+        GuiCriteriaEditor.INSTANCE.selected.getCriteriaEditor().drawStack(stack, xPosition + x, y + 40, scale);
+    }
+    
+    protected String getText(ITextEditable editable) {
+        return SelectTextEdit.INSTANCE.getText(editable);
     }
 
     @Override
-    public void draw(int xPos) {
-        String tName = getUniqueName();
-        String tType = getTypeName();
-        drawText("Name: " + tName, 9 + xPos, 44, 0xFFFFFFFF);
-        drawText("Type: " + tType, 9 + xPos, 54, 0xFFFFFFFF);
+    public Result onClicked() {
+        if (this.mouseX >= 88 && this.mouseX <= 95 && this.mouseY >= 4 && this.mouseY <= 14) {
+            return Result.DENY; //Delete this trigger
+        }
+
+        return clicked();
+    }
+
+    public Result clicked() {
+        return Result.DEFAULT;
+    }
+
+    protected void draw() {}
+
+    @Override
+    public void draw(int mouseX, int mouseY, int xPos) {
+        this.mouseX = mouseX - xPosition;
+        this.mouseY = mouseY - 40;
+        this.xPosition = xPos + 6;
+
+        drawBox(1, 2, 99, 69, 0xFFFFFFFF, 0xFF000000);
+        drawBox(1, 2, 99, 15, getColor(), 0xFF000000);
+        drawText(getLocalisedName(), 6, 6, 0xFFFFFFFF);
+        int color = 0xFFB20000;
+        if (this.mouseX >= 88 && this.mouseX <= 95 && this.mouseY >= 4 && this.mouseY <= 14) {
+            color = 0xFFFFFFFF;
+        }
+
+        drawText("X", 90, 6, color);
+
+        draw();
     }
 
     /** A whole bunch of convenience methods **/

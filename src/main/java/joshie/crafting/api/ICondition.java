@@ -5,7 +5,7 @@ import java.util.UUID;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
-public interface ICondition extends IConditionType, IHasUniqueName {
+public interface ICondition extends IConditionType {
 	/** Whether this condition is satisfied for this player
 	 *  Please keep in mind that the player can be offline,
 	 *  IF they are offline, the world that is passed is ALWAYS
@@ -18,4 +18,10 @@ public interface ICondition extends IConditionType, IHasUniqueName {
 	
 	/** Whether or not the result should be inverted **/
 	public boolean isInverted();
+	
+	/** Gets the criteria associated with this reward **/
+    public ICriteria getCriteria();
+    
+    /** Sets the criteria associated with this reward **/
+    public ICondition setCriteria(ICriteria criteria);
 }

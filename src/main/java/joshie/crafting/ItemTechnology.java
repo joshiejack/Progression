@@ -25,7 +25,6 @@ public class ItemTechnology extends Item {
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {		
 		if (stack.hasTagCompound()) {
-			ITrigger research = CraftingAPI.registry.getTrigger(null, stack.getTagCompound().getString("Research"), null);
 			if (!world.isRemote) {
 				if(CraftingAPI.players.getServerPlayer(PlayerHelper.getUUIDForPlayer(player)).getMappings().fireAllTriggers("research", stack.getTagCompound().getString("Research"))) {
 					if (!player.capabilities.isCreativeMode) {

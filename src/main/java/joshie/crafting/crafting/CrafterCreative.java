@@ -1,7 +1,7 @@
 package joshie.crafting.crafting;
 
-import joshie.crafting.api.crafting.CraftingType;
 import joshie.crafting.api.crafting.ICrafter;
+import joshie.crafting.api.crafting.CraftingEvent.CraftingType;
 import net.minecraft.item.ItemStack;
 
 public class CrafterCreative implements ICrafter {

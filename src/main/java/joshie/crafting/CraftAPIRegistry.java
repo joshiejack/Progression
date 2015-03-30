@@ -2,7 +2,10 @@ package joshie.crafting;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import joshie.crafting.api.CraftingAPI;
@@ -21,132 +24,180 @@ import net.minecraft.entity.player.EntityPlayer;
 import com.google.gson.JsonObject;
 
 public class CraftAPIRegistry implements IRegistry {
-	//This is the registry for trigger type and reward type creation
-	public static final HashMap<String, ITriggerType> triggerTypes = new HashMap();
-	public static final HashMap<String, IRewardType> rewardTypes = new HashMap();
-	public static final HashMap<String, IConditionType> conditionTypes = new HashMap();
-	
-	//These four maps are registries for fetching the various types
-	public static HashMap<String, ITrigger> triggers = new HashMap();
-	public static HashMap<String, IReward> rewards = new HashMap();
-	public static HashMap<String, ICriteria> criteria = new HashMap();
-	public static HashMap<String, ICondition> conditions = new HashMap();
+    //This is the registry for trigger type and reward type creation
+    public static final HashMap<String, ITriggerType> triggerTypes = new HashMap();
+    public static final HashMap<String, IRewardType> rewardTypes = new HashMap();
+    public static final HashMap<String, IConditionType> conditionTypes = new HashMap();
 
-	@Override //Fired Server Side only
-	public boolean fireTrigger(UUID uuid, String string, Object... data) {
-		return CraftingAPI.players.getServerPlayer(uuid).getMappings().fireAllTriggers(string, data);
-	}
-	
-	@Override //Fired Server Side only
-	public boolean fireTrigger(EntityPlayer player, String string, Object... data) {
-		if (!player.worldObj.isRemote) {
-			return fireTrigger(PlayerHelper.getUUIDForPlayer(player), string, data);
-		} else return false;
-	}
+    //These four maps are registries for fetching the various types
+    public static HashMap<String, ICriteria> criteria;
+    public static Set<ITrigger> triggers;
+    public static Set<IReward> rewards;
+    public static Set<ICondition> conditions;
 
-	@Override
-	public IConditionType registerConditionType(IConditionType type) {
-		conditionTypes.put(type.getTypeName(), type);
-		return type;
-	}
-	
-	@Override
-	public ITriggerType registerTriggerType(ITriggerType type) {
-		triggerTypes.put(type.getTypeName(), type);
-		return type;
-	}
-	
-	@Override
-	public IRewardType registerRewardType(IRewardType type) {
-		rewardTypes.put(type.getTypeName(), type);
-		return type;
-	}
+    @Override
+    //Fired Server Side only
+    public boolean fireTrigger(UUID uuid, String string, Object... data) {
+        return CraftingAPI.players.getServerPlayer(uuid).getMappings().fireAllTriggers(string, data);
+    }
 
-	@Override
-	public ICriteria newCriteria(String name) {
-		ICriteria condition = new CraftingCriteria().setUniqueName(name);
-		criteria.put(name, condition);
-		return condition;
-	}
+    @Override
+    //Fired Server Side only
+    public boolean fireTrigger(EntityPlayer player, String string, Object... data) {
+        if (!player.worldObj.isRemote) {
+            return fireTrigger(PlayerHelper.getUUIDForPlayer(player), string, data);
+        } else return false;
+    }
 
-	@Override
-	public ICondition getCondition(String name, String unique, JsonObject data) {
-		ICondition condition = conditions.get(unique);
-		if (condition == null && name != null && data != null) {
-			boolean inverted = data.get("inverted") != null? data.get("inverted").getAsBoolean(): false;
-			condition = (ICondition) conditionTypes.get(name).deserialize(data).setInversion(inverted).setUniqueName(unique);
-			conditions.put(unique, condition);
-		}
-		
-		return condition;
-	}
-	
-	@Override
-	public ITrigger getTrigger(String name, String unique, JsonObject data) {
-		ITrigger trigger = triggers.get(unique);
-		if (trigger == null && name != null && data != null) {
-			//New trigger created
-			trigger = (ITrigger) triggerTypes.get(name).deserialize(data).setUniqueName(unique);
-			CraftingEventsManager.onTriggerAdded(trigger);
-			triggers.put(unique, trigger);
-		}
-		
-		return trigger;
-	}
-	
-	@Override
-	public IReward getReward(String name, String unique, JsonObject data) {
-		IReward reward = rewards.get(unique);
-		if (reward == null && name != null && data != null) {
-			reward = (IReward) rewardTypes.get(name).deserialize(data).setUniqueName(unique);
-			CraftingEventsManager.onRewardAdded(reward);
-			rewards.put(unique, reward);
-		}
-		
-		return reward;
-	}
+    @Override
+    public IConditionType registerConditionType(IConditionType type) {
+        conditionTypes.put(type.getTypeName(), type);
+        return type;
+    }
 
-	@Override
-	public ICriteria getCriteriaFromName(String name) {
-		return criteria.get(name);
-	}
-	
-	private static List<IResearch> technologies;
+    @Override
+    public ITriggerType registerTriggerType(ITriggerType type) {
+        triggerTypes.put(type.getTypeName(), type);
+        return type;
+    }
 
-	@Override
-	public List<IResearch> getTechnology() {
-		if (technologies != null) return technologies;
-		else {
-			technologies = new ArrayList();
-			for (String name: triggers.keySet()) {
-				ITrigger research = triggers.get(name);
-				if (research instanceof IResearch) {
-					technologies.add((IResearch)research);
-				}
-			}
-			
-			return technologies;
-		}
-	}
-	
-	/** Convenience methods for removals **/
-	public static void removeCondition(String unique) {
-		conditions.remove(unique);
-	}
+    @Override
+    public IRewardType registerRewardType(IRewardType type) {
+        rewardTypes.put(type.getTypeName(), type);
+        return type;
+    }
 
-	public static void removeTrigger(String unique) {
-		ITrigger trigger = triggers.get(unique);
-		CraftingEventsManager.onTriggerRemoved(trigger);
-		triggers.remove(unique);
-	}
+    @Override
+    public ICriteria newCriteria(String name) {
+        ICriteria condition = new CraftingCriteria().setUniqueName(name);
+        criteria.put(name, condition);
+        return condition;
+    }
 
-	public static void removeReward(String unique) {
-		IReward reward = rewards.get(unique);
-		CraftingEventsManager.onRewardRemoved(reward);
-		rewards.remove(unique);
-	}
+    @Override
+    public ICondition newCondition(ICriteria criteria, String type, JsonObject data) {
+        boolean inverted = data.get("inverted") != null ? data.get("inverted").getAsBoolean() : false;
+        ICondition condition = conditionTypes.get(type).deserialize(data).setInversion(inverted).setCriteria(criteria);
+        conditions.add(condition);
+        return condition;
+    }
 
-	public static void removeCriteria(String unique) {
-		criteria.remove(unique);
-	}
+    @Override
+    public ITrigger newTrigger(ICriteria criteria, String type, JsonObject data) {
+        ITrigger trigger = triggerTypes.get(type).deserialize(data).setCriteria(criteria);
+        CraftingEventsManager.onTriggerAdded(trigger);
+        triggers.add(trigger);
+        return trigger;
+    }
+
+    @Override
+    public IReward newReward(ICriteria criteria, String type, JsonObject data) {
+        IReward reward = rewardTypes.get(type).deserialize(data).setCriteria(criteria);
+        CraftingEventsManager.onRewardAdded(reward);
+        rewards.add(reward);
+        return reward;
+    }
+
+    @Override
+    public ITrigger cloneTrigger(ICriteria criteria, ITriggerType trigger) {
+        ITrigger newTrigger = trigger.newInstance().setCriteria(criteria);
+        CraftingEventsManager.onTriggerAdded(newTrigger);
+        triggers.add(newTrigger);
+        criteria.addTriggers(newTrigger);
+        return newTrigger;
+    }
+
+    @Override
+    public IReward cloneReward(ICriteria criteria, IRewardType reward) {
+        IReward newReward = reward.newInstance().setCriteria(criteria);
+        CraftingEventsManager.onRewardAdded(newReward);
+        rewards.add(newReward);
+        criteria.addRewards(newReward);
+        return newReward;
+    }
+
+    @Override
+    public ICriteria getCriteriaFromName(String name) {
+        return criteria.get(name);
+    }
+
+    private static List<IResearch> technologies;
+
+    @Override
+    public List<IResearch> getTechnology() {
+        technologies = new ArrayList();
+        for (ITrigger research : triggers) {
+            if (research instanceof IResearch) {
+                String name = ((IResearch) research).getResearchName();
+                boolean canAdd = true;
+                for (IResearch r : technologies) {
+                    String compare = r.getResearchName();
+                    if (compare.equals(name)) {
+                        canAdd = false;
+                        break;
+                    }
+                }
+
+                if (canAdd) {
+                    technologies.add((IResearch) research);
+                }
+            }
+        }
+
+        return technologies;
+    }
+
+    /** Convenience methods for removals **/
+    public static void removeCondition(ICondition condition) {
+        conditions.remove(condition);
+    }
+
+    public static void removeTrigger(ITrigger trigger) {
+        CraftingEventsManager.onTriggerRemoved(trigger);
+        triggers.remove(trigger);
+    }
+
+    public static void removeReward(IReward reward) {
+        CraftingEventsManager.onRewardRemoved(reward);
+        reward.onRemoved();
+        rewards.remove(reward);
+    }
+
+    public static void removeCriteria(String unique) {
+        ICriteria c = criteria.get(unique);
+        //Remove this from all the conflict lists
+        for (ICriteria conflict : c.getConflicts()) {
+            Iterator<ICriteria> it = conflict.getConflicts().iterator();
+            while (it.hasNext()) {
+                ICriteria ct = it.next();
+                if (ct.equals(c)) {
+                    it.remove();
+                }
+            }
+        }
+
+        //Remove this from all the requirement lists
+        for (ICriteria require : criteria.values()) {
+            Iterator<ICriteria> it = require.getRequirements().iterator();
+            while (it.hasNext()) {
+                ICriteria ct = it.next();
+                if (ct.equals(c)) {
+                    it.remove();
+                }
+            }
+        }
+
+        //Remove all rewards associated with this criteria
+        for (IReward reward : c.getRewards()) {
+            removeReward(reward);
+        }
+
+        //Remove all triggers associated with this criteria
+        for (ITrigger trigger : c.getTriggers()) {
+            removeTrigger(trigger);
+        }
+
+        //Remove it in general
+        criteria.remove(unique);
+    }
 }

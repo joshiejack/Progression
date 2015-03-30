@@ -1,12 +1,12 @@
 package joshie.crafting.conditions;
 
 import joshie.crafting.api.ICondition;
-import joshie.crafting.api.IHasUniqueName;
+import joshie.crafting.api.ICriteria;
 
 public abstract class ConditionBase implements ICondition {
-	private String uniqueName;
 	private String typeName;
 	private boolean inverted = false;
+	private ICriteria criteria;
 	
 	public ConditionBase(String typeName) {
 		this.typeName = typeName;
@@ -18,15 +18,15 @@ public abstract class ConditionBase implements ICondition {
 	}
 	
 	@Override
-	public String getUniqueName() {
-		return uniqueName;
-	}
+    public ICondition setCriteria(ICriteria criteria) {
+        this.criteria = criteria;
+        return this;
+    }
 
-	@Override
-	public IHasUniqueName setUniqueName(String unique) {
-		this.uniqueName = unique;
-		return this;
-	}
+    @Override
+    public ICriteria getCriteria() {
+        return this.criteria;
+    }
 
 	@Override
 	public ICondition setInversion(boolean inverted) {
