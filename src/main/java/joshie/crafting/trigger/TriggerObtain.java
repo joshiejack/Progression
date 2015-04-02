@@ -1,5 +1,7 @@
 package joshie.crafting.trigger;
 
+import java.util.List;
+
 import joshie.crafting.api.Bus;
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ITrigger;
@@ -163,5 +165,10 @@ public class TriggerObtain extends TriggerBase implements IItemSelectable, IText
     @Override
     public void setItemStack(ItemStack stack) {
         this.stack = stack;
+    }
+    
+    @Override
+    public void addTooltip(List<String> toolTip) {
+        toolTip.add("Obtain " + itemAmount + " " + stack.getDisplayName());
     }
 }

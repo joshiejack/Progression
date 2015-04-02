@@ -90,7 +90,7 @@ public class SelectItemOverlay extends TextEditable implements IRenderOverlay {
 
         mouseY -= type.yOffset;
 
-        ScaledResolution res = new ScaledResolution(GuiTreeEditor.INSTANCE.mc, GuiTreeEditor.INSTANCE.mc.displayWidth, GuiTreeEditor.INSTANCE.mc.displayHeight);
+        ScaledResolution res = GuiCriteriaEditor.INSTANCE.res;
         int fullWidth = res.getScaledWidth() - 10;
         int width = (int) ((double) fullWidth / 16.633333334D);
         int j = 0;
@@ -131,7 +131,7 @@ public class SelectItemOverlay extends TextEditable implements IRenderOverlay {
             drawGradient(-1, 25 + type.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 15, 0xFF222222, 0xFF000000, 0xFF000000);
             drawBox(-1, 40 + type.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 73, 0xFF000000, 0xFFFFFFFF);
 
-            ScaledResolution res = new ScaledResolution(GuiTreeEditor.INSTANCE.mc, GuiTreeEditor.INSTANCE.mc.displayWidth, GuiTreeEditor.INSTANCE.mc.displayHeight);
+            ScaledResolution res = GuiCriteriaEditor.INSTANCE.res;
             int fullWidth = res.getScaledWidth() - 10;
             drawText("Select Item - Click elsewhere to close", 5 - offsetX, 29 + type.yOffset, 0xFFFFFFFF);
             drawBox(285 - offsetX, 27 + type.yOffset, 200, 12, 0xFF000000, 0xFFFFFFFF);

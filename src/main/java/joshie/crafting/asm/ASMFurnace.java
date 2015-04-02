@@ -9,7 +9,7 @@ import org.objectweb.asm.Opcodes;
 public class ASMFurnace extends AbstractASM {	
 	@Override
 	public boolean isClass(String name) {
-		return name.equals("net.minecraft.tileentity.TileEntityFurnace");
+		return name.equals("net.minecraft.tileentity.TileEntityFurnace") || name.equals("apg");
 	}
 
 	@Override
@@ -25,7 +25,7 @@ public class ASMFurnace extends AbstractASM {
 		@Override
 		public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
 			MethodVisitor visitor = super.visitMethod(access, name, desc, signature, exceptions);
-			if (desc.equals("()Z") && name.equals("canSmelt")) {
+			if (desc.equals("()Z") && (name.equals("canSmelt") || name.equals("func_145948_k"))) {
 				return new MethodVisitor(Opcodes.ASM4, visitor) {
 					boolean canVisit = true;
 					@Override
@@ -37,7 +37,7 @@ public class ASMFurnace extends AbstractASM {
 					
 					@Override
 					   public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
-						if (name.equals("getSmeltingResult")) {
+						if (name.equals("getSmeltingResult") || name.equals("func_151395_a")) {
 							mv.visitMethodInsn(opcode, owner, name, desc, itf);
 							mv.visitVarInsn(Opcodes.ASTORE, 1);
 							Label l3 = new Label();

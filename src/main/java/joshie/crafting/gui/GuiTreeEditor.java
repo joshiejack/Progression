@@ -1,15 +1,17 @@
 package joshie.crafting.gui;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import joshie.crafting.CraftAPIRegistry;
-import joshie.crafting.CraftingMod;
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.ITab;
 import joshie.crafting.api.ITreeEditor;
 import joshie.crafting.helpers.ClientHelper;
+import joshie.crafting.json.Options;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -21,24 +23,54 @@ public class GuiTreeEditor extends GuiBase {
     public ITab currentTab;
     public ClickMode mode;
 
+    private static class SortIndex implements Comparator {
+        @Override
+        public int compare(Object o1, Object o2) {
+            ITab tab1 = ((ITab) o1);
+            ITab tab2 = ((ITab) o2);
+            if (tab1.getSortIndex() == tab2.getSortIndex()) {
+                return tab1.getDisplayName().compareTo(tab2.getDisplayName());
+            }
+
+            return tab1.getSortIndex() < tab2.getSortIndex() ? 1 : -1;
+        }
+    }
+
     @Override
     public void initGui() {
         super.initGui();
 
         buttonList = new ArrayList(); //Recreate the button list, in order to reposition it
+        int number = 0;
         int pos = y - 5;
         if (ClientHelper.canEdit()) {
             buttonList.add(new ButtonNewCriteria(pos));
             pos += 28;
+            number++;
         }
 
-        for (ITab tab : CraftAPIRegistry.tabs.values()) {
-            buttonList.add(new ButtonTab(tab, pos));
-            pos += 28;
+        //Sort tabs alphabetically or by sort index
+        ArrayList<ITab> tabs = new ArrayList(CraftAPIRegistry.tabs.values());
+        Collections.sort(tabs, new SortIndex());
+
+        for (ITab tab : tabs) {
+            if (tab.isVisible() || ClientHelper.canEdit()) {
+                if (number <= 8) {
+                    buttonList.add(new ButtonTab(tab, 0, pos));
+                } else buttonList.add(new ButtonTab(tab, res.getScaledWidth() - 25, pos));
+
+                pos += 28;
+
+                if (number == 8) {
+                    pos = y - 5;
+                }
+
+                number++;
+            }
         }
 
         if (currentTabName == null) {
-            currentTabName = CraftingMod.options.defaultTab;
+            currentTabName = Options.defaultTab;
         }
 
         currentTab = CraftingAPI.registry.getTabFromName(currentTabName);
@@ -47,37 +79,43 @@ public class GuiTreeEditor extends GuiBase {
     @Override
     public void drawForeground() {
         for (ICriteria criteria : currentTab.getCriteria()) {
-            ITreeEditor editor = criteria.getTreeEditor();
-            List<ICriteria> prereqs = criteria.getRequirements();
-            for (ICriteria p : prereqs) {
-                int y1 = p.getTreeEditor().getY();
-                int y2 = editor.getY();
-                int x1 = p.getTreeEditor().getX();
-                int x2 = editor.getX();
-                drawLine(offsetX + 95 + x1, y + 12 + y1 - 1, offsetX + 5 + x2, y + 12 + y2 - 1, 1, 0xDDB9B9AD);
-                drawLine(offsetX + 95 + x1, y + 12 + y1 + 1, offsetX + 5 + x2, y + 12 + y2 + 1, 1, 0xFF636C69); //#636C69
-                drawLine(offsetX + 95 + x1, y + 12 + y1, offsetX + 5 + x2, y + 12 + y2, 1, 0xFFE8EFE7);
+            if (criteria.getTreeEditor().isCriteriaVisible() || ClientHelper.canEdit()) {
+                ITreeEditor editor = criteria.getTreeEditor();
+                List<ICriteria> prereqs = criteria.getRequirements();
+                for (ICriteria p : prereqs) {
+                    int y1 = p.getTreeEditor().getY();
+                    int y2 = editor.getY();
+                    int x1 = p.getTreeEditor().getX();
+                    int x2 = editor.getX();
+                    drawLine(offsetX + 95 + x1, y + 12 + y1 - 1, offsetX + 5 + x2, y + 12 + y2 - 1, 1, 0xDDB9B9AD);
+                    drawLine(offsetX + 95 + x1, y + 12 + y1 + 1, offsetX + 5 + x2, y + 12 + y2 + 1, 1, 0xFF636C69); //#636C69
+                    drawLine(offsetX + 95 + x1, y + 12 + y1, offsetX + 5 + x2, y + 12 + y2, 1, 0xFFE8EFE7);
+                }
             }
         }
 
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
         for (ICriteria criteria : currentTab.getCriteria()) {
-            ITreeEditor editor = criteria.getTreeEditor();
-            editor.draw(0, y, offsetX);
+            if (criteria.getTreeEditor().isCriteriaVisible() || ClientHelper.canEdit()) {
+                ITreeEditor editor = criteria.getTreeEditor();
+                editor.draw(0, y, offsetX);
+            }
         }
 
         TreeItemSelect.INSTANCE.draw();
     }
-    
+
     public ITab previousTab = null;
 
     @Override
     protected void keyTyped(char character, int key) {
         ICriteria toRemove = null;
         for (ICriteria criteria : currentTab.getCriteria()) {
-            if (criteria.getTreeEditor().keyTyped(character, key)) {
-                toRemove = criteria;
-                break;
+            if (criteria.getTreeEditor().isCriteriaVisible() || ClientHelper.canEdit()) {
+                if (criteria.getTreeEditor().keyTyped(character, key)) {
+                    toRemove = criteria;
+                    break;
+                }
             }
         }
 
@@ -91,6 +129,14 @@ public class GuiTreeEditor extends GuiBase {
             if (SelectItemOverlay.INSTANCE.getEditable() != null) {
                 TreeItemSelect.INSTANCE.keyTyped(character, key);
             }
+        }
+
+        if (key == Keyboard.KEY_UP) {
+            currentTab.setSortIndex(currentTab.getSortIndex() + 1);
+            this.initGui();
+        } else if (key == Keyboard.KEY_DOWN) {
+            currentTab.setSortIndex(currentTab.getSortIndex() - 1);
+            this.initGui();
         }
 
         super.keyTyped(character, key);
@@ -123,9 +169,11 @@ public class GuiTreeEditor extends GuiBase {
         super.mouseClicked(par1, par2, par3);
         boolean clicked = false;
         for (ICriteria criteria : currentTab.getCriteria()) {
-            if (criteria.getTreeEditor().click(mouseX, mouseY, isDoubleClick)) {
-                if (!clicked) {
-                    lastClicked = criteria;
+            if (criteria.getTreeEditor().isCriteriaVisible() || ClientHelper.canEdit()) {
+                if (criteria.getTreeEditor().click(mouseX, mouseY, isDoubleClick)) {
+                    if (!clicked) {
+                        lastClicked = criteria;
+                    }
                 }
             }
         }

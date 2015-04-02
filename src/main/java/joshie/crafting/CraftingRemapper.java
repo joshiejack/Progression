@@ -12,6 +12,7 @@ import joshie.crafting.api.crafting.CraftingEvent.CraftingType;
 import joshie.crafting.crafting.CraftingRegistry;
 import joshie.crafting.helpers.PlayerHelper;
 import joshie.crafting.json.JSONLoader;
+import joshie.crafting.json.Options;
 import joshie.crafting.lib.SafeStack;
 import joshie.crafting.network.PacketHandler;
 import joshie.crafting.network.PacketSyncJSON;
@@ -30,7 +31,7 @@ public class CraftingRemapper {
         //Remap the player data, for this player, before doing anything else, as the data may not existing yet
         CraftingAPI.players.getPlayerData(player).getMappings().remap();
         
-        if (CraftingMod.options.sync) {
+        if (Options.sync) {
             PacketHandler.sendToClient(new PacketSyncJSON(JSONLoader.serverTabJsonData.length), player);
         } else {
             UUID uuid = PlayerHelper.getUUIDForPlayer(player);

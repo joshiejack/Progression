@@ -1,5 +1,6 @@
 package joshie.crafting.gui;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import joshie.crafting.api.ICriteria;
 import joshie.crafting.json.JSONLoader;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
@@ -20,6 +22,9 @@ public abstract class GuiBase extends GuiScreen {
     public int mouseX = 0;
     public int mouseY = 0;
 
+    protected ScaledResolution res;
+    protected ArrayList<String> tooltip;
+    protected boolean blockTooltips;
     protected int leftX = 212;
     protected int rightX = 218;
     protected int xSize = 430;
@@ -34,6 +39,7 @@ public abstract class GuiBase extends GuiScreen {
         y = (height - ySize) / 2;
         Keyboard.enableRepeatEvents(true);
         EditorTicker.LAST_TICK = 1000;
+        res = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
     }
 
     @Override
@@ -45,18 +51,21 @@ public abstract class GuiBase extends GuiScreen {
         JSONLoader.saveData();
     }
 
-    public void drawScreen(int i, int j, float f) {
+    public void drawScreen(int x, int y, float f) {
+        tooltip = new ArrayList();
         drawBackground();
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
         drawForeground();
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-        super.drawScreen(i, j, f);
+        super.drawScreen(x, y, f);
+        GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+        drawTooltip(tooltip, x, y);
     }
-    
+
     public void drawBackground() {
         drawRectWithBorder(-1, y, mc.displayWidth + 1, y + ySize, 0xEE121212, 0xFFFFFFFF);
     }
-    
+
     public abstract void drawForeground();
 
     public void drawRectWithBorder(int x, int y, int x2, int y2, int color, int border) {
@@ -127,7 +136,11 @@ public abstract class GuiBase extends GuiScreen {
         GL11.glColor4f(f, f1, f2, f3);
     }
 
-    public void drawTooltip(List list, int x, int y) {
+    public void addTooltip(List list) {
+        tooltip.addAll(list);
+    }
+
+    private void drawTooltip(List list, int x, int y) {
         if (!list.isEmpty()) {
             GL11.glDisable(GL12.GL_RESCALE_NORMAL);
             RenderHelper.disableStandardItemLighting();

@@ -33,4 +33,10 @@ public abstract class ButtonBase extends GuiButton {
             super(0, 0, y, 25, 25, "");
         }
     }
+    
+    public static abstract class ButtonRight extends ButtonBase {
+        public ButtonRight(int y) {
+            super(0, GuiTreeEditor.INSTANCE.res.getScaledWidth() - 25, y, 25, 25, "");
+        }
+    }
 }

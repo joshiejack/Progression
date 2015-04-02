@@ -82,22 +82,24 @@ public class RewardSpeed extends RewardBase implements ITextEditable {
                 return Result.ALLOW;
             }
         }
-        
+
         return Result.DEFAULT;
     }
 
     @Override
     public void draw() {
         int speedColor = 0xFFFFFFFF;
-        if (mouseX <= 84 && mouseX >= 1) {
-            if (mouseY >= 17 && mouseY <= 25) speedColor = 0xFFBBBBBB;
+        if (ClientHelper.canEdit()) {
+            if (mouseX <= 84 && mouseX >= 1) {
+                if (mouseY >= 17 && mouseY <= 25) speedColor = 0xFFBBBBBB;
+            }
         }
 
         if (SelectTextEdit.INSTANCE.getEditable() == this) {
             drawText("speed: " + SelectTextEdit.INSTANCE.getText(), 4, 18, speedColor);
         } else drawText("speed: " + getTextField(), 4, 18, speedColor);
     }
-    
+
     private String textField;
 
     @Override
@@ -105,7 +107,7 @@ public class RewardSpeed extends RewardBase implements ITextEditable {
         if (textField == null) {
             textField = "" + speed;
         }
-        
+
         return textField;
     }
 
@@ -113,12 +115,14 @@ public class RewardSpeed extends RewardBase implements ITextEditable {
     public void setTextField(String text) {
         String fixed = text.replaceAll("[^0-9.]", "");
         this.textField = fixed;
-        
+
         try {
             this.speed = Float.parseFloat(textField);
-        } catch (Exception e) { this.speed = 0F; }
+        } catch (Exception e) {
+            this.speed = 0F;
+        }
     }
-    
+
     @Override
     public void addTooltip(List list) {
         list.add(EnumChatFormatting.WHITE + "Ability Gain");

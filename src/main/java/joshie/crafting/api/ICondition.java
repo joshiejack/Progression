@@ -1,5 +1,6 @@
 package joshie.crafting.api;
 
+import java.util.List;
 import java.util.UUID;
 
 import cpw.mods.fml.common.eventhandler.Event.Result;
@@ -31,4 +32,6 @@ public interface ICondition extends IConditionType {
     public Result onClicked();
 
     public ICondition setTrigger(ITrigger trigger);
+
+    public void addToolTip(List<String> toolTip);
 }

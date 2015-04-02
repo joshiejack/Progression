@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import joshie.crafting.CraftAPIRegistry;
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ITab;
-import joshie.crafting.gui.ButtonBase.ButtonLeft;
 import joshie.crafting.gui.SelectItemOverlay.Type;
 import joshie.crafting.gui.SelectTextEdit.ITextEditable;
 import joshie.crafting.helpers.ClientHelper;
@@ -20,11 +19,15 @@ import net.minecraft.util.EnumChatFormatting;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-public class ButtonTab extends ButtonLeft implements ITextEditable, IItemSelectable {
+public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelectable {
+    public static enum Side {
+        LEFT, RIGHT;
+    }
+
     private ITab tab;
 
-    public ButtonTab(ITab tab, int y) {
-        super(y);
+    public ButtonTab(ITab tab, int x, int y) {
+        super(0, x, y, 25, 25, "");
         this.tab = tab;
     }
 
@@ -36,8 +39,12 @@ public class ButtonTab extends ButtonLeft implements ITextEditable, IItemSelecta
         mc.getTextureManager().bindTexture(textures);
         int yTexture = GuiTreeEditor.INSTANCE.currentTab == tab ? 24 : 0;
         RenderHelper.disableStandardItemLighting();
-        drawTexturedModalRect(xPosition, yPosition, 231, yTexture, 25, 25);
-        StackHelper.drawStack(tab.getStack(), xPosition + 2, yPosition + 5, 1F);
+        int xTexture = 206;
+        if (xPosition == 0) xTexture = 231;
+        drawTexturedModalRect(xPosition, yPosition, xTexture, yTexture, 25, 25);
+        if (xPosition == 0) {
+            StackHelper.drawStack(tab.getStack(), xPosition + 2, yPosition + 5, 1F);
+        } else StackHelper.drawStack(tab.getStack(), xPosition + 7, yPosition + 5, 1F);
 
         boolean displayTooltip = false;
         if (ClientHelper.canEdit()) {
@@ -46,16 +53,20 @@ public class ButtonTab extends ButtonLeft implements ITextEditable, IItemSelecta
 
         if (k == 2 || displayTooltip) {
             ArrayList<String> name = new ArrayList();
-            name.add(SelectTextEdit.INSTANCE.getText(this));
+            String hidden = tab.isVisible() ? "" : "(Hidden)";
+            name.add(SelectTextEdit.INSTANCE.getText(this) + hidden);
             if (ClientHelper.canEdit()) {
-                name.add(EnumChatFormatting.GRAY + "Shift + Click to Rename");
-                name.add(EnumChatFormatting.GRAY + "Ctrl + Click to Select Item Icon");
-                name.add(EnumChatFormatting.GRAY + "I + Click to Hide/Unhide");
-                name.add(EnumChatFormatting.GRAY + "Delete + Click to Delete");
+                name.add(EnumChatFormatting.GRAY + "(Sort Index) " + tab.getSortIndex());
+                name.add(EnumChatFormatting.GRAY + "Shift + Click to rename");
+                name.add(EnumChatFormatting.GRAY + "Ctrl + Click to select item icon");
+                name.add(EnumChatFormatting.GRAY + "I + Click to hide/unhide");
+                name.add(EnumChatFormatting.GRAY + "Arrow keys to move up/down");
+                name.add(EnumChatFormatting.GRAY + "Delete + Click to delete");
                 name.add(EnumChatFormatting.RED + "  Deleting a tab, deletes all criteria in it");
             }
 
-            GuiTreeEditor.INSTANCE.drawTooltip(name, x, y);
+            GuiTreeEditor.INSTANCE.tooltip.clear();
+            GuiTreeEditor.INSTANCE.addTooltip(name);
         }
     }
 
@@ -82,6 +93,9 @@ public class ButtonTab extends ButtonLeft implements ITextEditable, IItemSelecta
                     newTab = CraftingAPI.registry.newTab(CraftAPIRegistry.getNextUnique()).setDisplayName("New Tab").setStack(new ItemStack(Items.book));
                 }
 
+                GuiTreeEditor.INSTANCE.selected = null;
+                GuiTreeEditor.INSTANCE.previous = null;
+                GuiTreeEditor.INSTANCE.lastClicked = null;
                 GuiTreeEditor.INSTANCE.currentTab = newTab;
                 GuiTreeEditor.INSTANCE.currentTabName = newTab.getUniqueName();
                 CraftAPIRegistry.removeTab(tab);

@@ -1,5 +1,7 @@
 package joshie.crafting.trigger;
 
+import java.util.List;
+
 import joshie.crafting.api.Bus;
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ITrigger;
@@ -146,6 +148,17 @@ public class TriggerCrafting extends TriggerBase implements IItemSelectable {
         drawText("matchNBT: " + matchNBT, 4, 26, matchColor);
         drawText("craftingTimes: " + SelectTextEdit.INSTANCE.getText(editCraftAmount), 4, 34, match2Color);
         drawText("itemAmount: " + SelectTextEdit.INSTANCE.getText(editItemAmount), 4, 42, usageColor);
+    }
+    
+    @Override
+    public void addTooltip(List<String> toolTip) {
+        if (craftingTimes == 1 && itemAmount == 1) {
+            toolTip.add("  Craft a " + stack.getDisplayName());
+        } else if (craftingTimes == 1 && itemAmount != 1) {
+            toolTip.add("  Craft " + itemAmount + " " + stack.getDisplayName());
+        } else if (craftingTimes != 1 && itemAmount == 1) {
+            toolTip.add("  Perform " + itemAmount + " Crafts of " + stack.getDisplayName());
+        } else toolTip.add("  Perform " + itemAmount + " Crafts of " + stack.getDisplayName() + " and have " + itemAmount + " of them");
     }
 
     private class CraftAmount implements ITextEditable {

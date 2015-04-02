@@ -6,6 +6,7 @@ import java.util.UUID;
 import joshie.crafting.api.IReward;
 import joshie.crafting.gui.SelectTextEdit;
 import joshie.crafting.gui.SelectTextEdit.ITextEditable;
+import joshie.crafting.helpers.ClientHelper;
 import joshie.crafting.helpers.PlayerHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -63,17 +64,19 @@ public class RewardExperience extends RewardBase implements ITextEditable {
                 return Result.ALLOW;
             }
         }
-        
+
         return Result.DEFAULT;
     }
 
     @Override
     public void draw() {
         int color = 0xFFFFFFFF;
-        if (mouseX <= 84 && mouseX >= 1) {
-            if (mouseY >= 17 && mouseY <= 25) color = 0xFFBBBBBB;
+        if (ClientHelper.canEdit()) {
+            if (mouseX <= 84 && mouseX >= 1) {
+                if (mouseY >= 17 && mouseY <= 25) color = 0xFFBBBBBB;
+            }
         }
-
+        
         if (SelectTextEdit.INSTANCE.getEditable() == this) {
             drawText("amount: " + SelectTextEdit.INSTANCE.getText(), 4, 18, color);
         } else drawText("amount: " + getTextField(), 4, 18, color);

@@ -1,5 +1,6 @@
 package joshie.crafting.trigger;
 
+import java.util.List;
 import java.util.UUID;
 
 import joshie.crafting.api.Bus;
@@ -104,5 +105,10 @@ public class TriggerPoints extends TriggerBaseBoolean {
         drawText("name: " + nameEdit, 4, 18, color);
         drawText("amount: " + amountEdit, 4, 26, amountColor);
         drawText("consume: " + consume, 4, 34, consumeColor);
+    }
+    
+    @Override
+    public void addTooltip(List<String> toolTip) {
+        toolTip.add("Have " + amount + " " + name);
     }
 }

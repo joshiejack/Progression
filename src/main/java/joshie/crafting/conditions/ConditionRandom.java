@@ -1,5 +1,6 @@
 package joshie.crafting.conditions;
 
+import java.util.List;
 import java.util.UUID;
 
 import joshie.crafting.api.ICondition;
@@ -65,5 +66,12 @@ public class ConditionRandom extends ConditionBase {
         }
 
         drawText("chance: " + chanceEdit, 4, 25, chanceColor);
+    }
+    
+    @Override
+    public void addToolTip(List<String> toolTip) {
+        if (!inverted) {
+            toolTip.add("    With a chance of " + chance + "%");
+        } toolTip.add("    With a chance of " + (100 - chance) + "%");
     }
 }

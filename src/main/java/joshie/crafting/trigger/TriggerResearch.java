@@ -1,5 +1,7 @@
 package joshie.crafting.trigger;
 
+import java.util.List;
+
 import joshie.crafting.api.Bus;
 import joshie.crafting.api.IResearch;
 import joshie.crafting.api.ITrigger;
@@ -73,5 +75,10 @@ public class TriggerResearch extends TriggerBaseBoolean implements IResearch {
 
         drawText("researchName: ", 4, 18, color);
         drawText("" + nameEdit, 4, 26, color);
+    }
+    
+    @Override
+    public void addTooltip(List<String> toolTip) {
+        toolTip.add("Have " + researchName + " research");
     }
 }

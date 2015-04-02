@@ -1,5 +1,6 @@
 package joshie.crafting;
 
+import joshie.crafting.json.Options;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -15,7 +16,7 @@ public class CraftingEventsHandler {
     }
 
     private boolean isBook(ItemStack stack) {
-        if (CraftingMod.options.editor) {
+        if (Options.editor) {
             if (stack != null) {
                 if (stack.getItem() == Items.book) {
                     return true;

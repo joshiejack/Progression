@@ -15,7 +15,7 @@ import cpw.mods.fml.common.eventhandler.Event.Result;
 public abstract class ConditionBase implements ICondition {
     private static final ResourceLocation textures = new ResourceLocation("crafting", "textures/gui/textures.png");
     private String typeName;
-    private boolean inverted = false;
+    protected boolean inverted = false;
     private ICriteria criteria;
     private ITrigger trigger;
     private String displayName;

@@ -1,5 +1,6 @@
 package joshie.crafting.conditions;
 
+import java.util.List;
 import java.util.UUID;
 
 import joshie.crafting.api.ICondition;
@@ -29,5 +30,12 @@ public class ConditionDaytime extends ConditionBase {
     @Override
     public ICondition newInstance() {
         return new ConditionDaytime();
+    }
+
+    @Override
+    public void addToolTip(List<String> toolTip) {
+        if (inverted) {
+            toolTip.add("    At Night");
+        } toolTip.add("    In the Day");
     }
 }

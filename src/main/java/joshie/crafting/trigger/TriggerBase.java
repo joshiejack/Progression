@@ -148,12 +148,15 @@ public abstract class TriggerBase implements ITrigger {
                 return Result.DENY; //Delete this trigger
             }
         }
+        
+        if (ClientHelper.canEdit() || this.getConditions().size() > 0) {
+            if (this.mouseX >= 2 && this.mouseX <= 87) {
+                if (this.mouseY >= 66 && this.mouseY <= 77) {
 
-        if (this.mouseX >= 2 && this.mouseX <= 87) {
-            if (this.mouseY >= 66 && this.mouseY <= 77) {
-                GuiTriggerEditor.INSTANCE.trigger = this;
-                ClientHelper.getPlayer().openGui(CraftingMod.instance, 2, null, 0, 0, 0);
-                return Result.ALLOW;
+                    GuiTriggerEditor.INSTANCE.trigger = this;
+                    ClientHelper.getPlayer().openGui(CraftingMod.instance, 2, null, 0, 0, 0);
+                    return Result.ALLOW;
+                }
             }
         }
 
@@ -194,11 +197,13 @@ public abstract class TriggerBase implements ITrigger {
             }
         }
 
-        drawGradient(2, 66, 85, 11, color, 0xFF222222, 0xFF000000);
-
         if (ClientHelper.canEdit()) {
+            drawGradient(2, 66, 85, 11, color, 0xFF222222, 0xFF000000);
             drawText("Condition Editor", 6, 67, 0xFFFFFFFF);
-        } else drawText("Condition Viewer", 6, 67, 0xFFFFFFFF);
+        } else if (this.getConditions().size() > 0) {
+            drawGradient(2, 66, 85, 11, color, 0xFF222222, 0xFF000000);
+            drawText("Condition Viewer", 6, 67, 0xFFFFFFFF);
+        }
 
     }
 

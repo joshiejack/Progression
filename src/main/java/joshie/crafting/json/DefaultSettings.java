@@ -68,6 +68,9 @@ public class DefaultSettings {
         JsonObject lapis2 = new JsonObject();
         lapis2.addProperty("item", "minecraft:lapis_block");
         rewardsLapis.add(new DataGeneric("crafting", lapis2));
+        JsonObject lapis3 = new JsonObject();
+        lapis3.addProperty("researchName", "Iron Heights");
+        rewardsLapis.add(new DataGeneric("research", lapis3));
 
         List<DataCriteria> data = new ArrayList();
         //Criteria
@@ -75,7 +78,7 @@ public class DefaultSettings {
         data.add(new DataCriteria("NamedCondition", "A Named Condition", triggersNamedCondition, rewardsNamedCondition, new String[] {}, new String[] {}, 0, 55, true));
         data.add(new DataCriteria("GoldenPig", "Golden Pig", triggersGoldenPig, rewardsGoldenPig, new String[] {}, new String[] {}, 0, 0, true));
         data.add(new DataCriteria("EnableLapis", "Enable Lapis", triggersLapis, rewardsLapis, new String[] {}, new String[] {}, 0, 110, true));
-        DataTab defaultTab = new DataTab("DEFAULT", "Default", data, true, new ItemStack(Items.book));
+        DataTab defaultTab = new DataTab("DEFAULT", "Default", 0, data, true, new ItemStack(Items.book));
         tabs.add(defaultTab);
         return this;
     }

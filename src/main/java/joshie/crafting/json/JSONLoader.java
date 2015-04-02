@@ -39,22 +39,7 @@ public class JSONLoader {
         GsonBuilder builder = new GsonBuilder().setPrettyPrinting();
         gson = builder.create();
     }
-
-    /** Load in the json **/
-    public static Options getOptions(Class clazz) {
-        try {
-            File file = new File("config" + File.separator + CraftingInfo.MODPATH + File.separator + clazz.getSimpleName().toLowerCase() + ".json");
-            if (!file.exists()) { //If the json file doesn't exist, let make one with default values
-                Writer writer = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
-                writer.write(gson.toJson(clazz.newInstance()));
-                writer.close();
-            }
-
-            return gson.fromJson(FileUtils.readFileToString(file), clazz);
-        } catch (Exception e) { e.printStackTrace(); }
-        return null; //Return it whether it's null or not
-    }
-    
+   
     private static String[] splitStringEvery(String s, int interval) {
         int arrayLength = (int) Math.ceil(((s.length() / (double)interval)));
         String[] result = new String[arrayLength];
@@ -74,7 +59,7 @@ public class JSONLoader {
     public static String[] clientTabJsonData;
     public static String[] serverTabJsonData;
     
-    public static DefaultSettings getTabs(Class clazz) {     
+    public static DefaultSettings getTabs() {     
         final int MAX_LENGTH = 10000;
         DefaultSettings loader = null;
         try {
@@ -90,7 +75,7 @@ public class JSONLoader {
             } else {
                 String json = FileUtils.readFileToString(file);
                 serverTabJsonData = splitStringEvery(json, MAX_LENGTH);
-                return gson.fromJson(json, clazz);
+                return gson.fromJson(json, DefaultSettings.class);
             }
         } catch (Exception e) { e.printStackTrace(); } 
         return loader; //Return it whether it's null or not
@@ -114,14 +99,14 @@ public class JSONLoader {
     }
     
     public static void loadServerJSON() {
-        loadJSON(JSONLoader.getTabs(DefaultSettings.class)); //Repackage the tabs
+        loadJSON(JSONLoader.getTabs()); //Repackage the tabs
     }
     
     private static void loadJSON(DefaultSettings tab) {
         for (DataTab data: tab.tabs) {
             ItemStack stack = StackHelper.getStackFromString(data.stack);
             ITab iTab = CraftingAPI.registry.newTab(data.uniqueName);
-            iTab.setDisplayName(data.displayName).setVisibility(data.isVisible).setStack(stack);
+            iTab.setDisplayName(data.displayName).setVisibility(data.isVisible).setStack(stack).setSortIndex(data.sortIndex);
             
             /** Step 1: we create add all instances of criteria to the registry **/
             for (DataCriteria criteria : data.criteria) {
@@ -212,6 +197,7 @@ public class JSONLoader {
             DataTab tabData = new DataTab();
             tabData.uniqueName = tab.getUniqueName();
             tabData.displayName = tab.getDisplayName();
+            tabData.sortIndex = tab.getSortIndex();
             tabData.isVisible = tab.isVisible();
             tabData.stack = StackHelper.getStringFromStack(tab.getStack());
             for (ICriteria c: tab.getCriteria()) {

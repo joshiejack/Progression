@@ -11,13 +11,13 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
-public class PacketSyncConditions implements IMessage, IMessageHandler<PacketSyncConditions, IMessage> {
+public class PacketSyncCriteria implements IMessage, IMessageHandler<PacketSyncCriteria, IMessage> {
 	private ICriteria[] criteria;
 	private Integer[] integers;
 	private boolean overwrite;
     
-    public PacketSyncConditions() {}
-    public PacketSyncConditions(boolean overwrite, Integer[] values, ICriteria[] criteria) {
+    public PacketSyncCriteria() {}
+    public PacketSyncCriteria(boolean overwrite, Integer[] values, ICriteria[] criteria) {
     	this.criteria = criteria;
     	this.integers = values;
     	this.overwrite = overwrite;
@@ -52,7 +52,7 @@ public class PacketSyncConditions implements IMessage, IMessageHandler<PacketSyn
     }
     
     @Override
-    public IMessage onMessage(PacketSyncConditions message, MessageContext ctx) {    
+    public IMessage onMessage(PacketSyncCriteria message, MessageContext ctx) {    
     	CraftingAPI.players.getClientPlayer().getMappings().markCriteriaAsCompleted(message.overwrite, message.integers, message.criteria);
         if (message.overwrite) {
         	for (ICriteria condition: CraftAPIRegistry.criteria.values()) {

@@ -54,4 +54,6 @@ public interface ITrigger extends ITriggerType {
 
     /** Adds new conditions **/
     public void addCondition(ICondition condition);
+
+    public void addTooltip(List<String> toolTip);
 }

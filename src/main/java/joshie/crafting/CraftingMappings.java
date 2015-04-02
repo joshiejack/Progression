@@ -18,7 +18,7 @@ import joshie.crafting.helpers.NBTHelper;
 import joshie.crafting.helpers.PlayerHelper;
 import joshie.crafting.network.PacketHandler;
 import joshie.crafting.network.PacketSyncAbilities;
-import joshie.crafting.network.PacketSyncConditions;
+import joshie.crafting.network.PacketSyncCriteria;
 import joshie.crafting.network.PacketSyncTriggers;
 import joshie.crafting.network.PacketSyncTriggers.SyncPair;
 import joshie.crafting.player.PlayerDataServer;
@@ -70,7 +70,7 @@ public class CraftingMappings implements ICraftingMappings {
         }
 
         PacketHandler.sendToClient(new PacketSyncTriggers(values), player); //Sync all researches to the client
-        PacketHandler.sendToClient(new PacketSyncConditions(true, completedCritera.values().toArray(new Integer[completedCritera.size()]), completedCritera.keySet().toArray(new ICriteria[completedCritera.size()])), player); //Sync all conditions to the client
+        PacketHandler.sendToClient(new PacketSyncCriteria(true, completedCritera.values().toArray(new Integer[completedCritera.size()]), completedCritera.keySet().toArray(new ICriteria[completedCritera.size()])), player); //Sync all conditions to the client
     }
 
     //Reads the completed criteria
@@ -254,7 +254,7 @@ public class CraftingMappings implements ICraftingMappings {
                     toRemap.addAll(CraftingRemapper.criteriaToUnlocks.get(criteria));
                 }
                 
-                PacketHandler.sendToClient(new PacketSyncConditions(false, new Integer[] { completedTimes }, new ICriteria[] { criteria }), uuid);
+                PacketHandler.sendToClient(new PacketSyncCriteria(false, new Integer[] { completedTimes }, new ICriteria[] { criteria }), uuid);
             }
         }
 

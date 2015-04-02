@@ -26,7 +26,7 @@ import joshie.crafting.network.PacketHandler;
 import joshie.crafting.network.PacketReload;
 import joshie.crafting.network.PacketReset;
 import joshie.crafting.network.PacketSyncAbilities;
-import joshie.crafting.network.PacketSyncConditions;
+import joshie.crafting.network.PacketSyncCriteria;
 import joshie.crafting.network.PacketSyncJSON;
 import joshie.crafting.network.PacketSyncTriggers;
 import joshie.crafting.player.PlayerSavedData;
@@ -47,11 +47,11 @@ import joshie.crafting.trigger.TriggerPoints;
 import joshie.crafting.trigger.TriggerResearch;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -65,7 +65,6 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.Side;
 
@@ -84,8 +83,6 @@ public class CraftingMod implements IFMLLoadingPlugin {
     public static boolean NEI_LOADED = false;
     public static Item tech;
 
-    public static Options options;
-
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         //Initialise the CraftingEvent
@@ -100,8 +97,9 @@ public class CraftingMod implements IFMLLoadingPlugin {
         if (!dir.exists()) {
             dir.mkdir();
         }
+        
+        Options.init(new Configuration(new File(dir, "options.cfg")));
 
-        CraftingMod.options = JSONLoader.getOptions(Options.class);
         CraftingRemapper.resetRegistries();
         NEI_LOADED = Loader.isModLoaded("NotEnoughItems");
         CraftingAPI.registry = new CraftAPIRegistry();
@@ -134,15 +132,12 @@ public class CraftingMod implements IFMLLoadingPlugin {
         CraftingAPI.registry.registerTriggerType(new TriggerResearch());
         CraftingAPI.registry.registerTriggerType(new TriggerPoints());
 
-        tech = new ItemTechnology().setUnlocalizedName("technology").setCreativeTab(CreativeTabs.tabRedstone);
-        GameRegistry.registerItem(tech, "technology");
-
         CraftingAPI.commands.registerCommand(new CommandHelp());
         CraftingAPI.commands.registerCommand(new CommandReload());
         CraftingAPI.commands.registerCommand(new CommandReset());
 
         PacketHandler.registerPacket(PacketSyncTriggers.class, Side.CLIENT);
-        PacketHandler.registerPacket(PacketSyncConditions.class, Side.CLIENT);
+        PacketHandler.registerPacket(PacketSyncCriteria.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketSyncAbilities.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketSyncJSON.class);
         PacketHandler.registerPacket(PacketReload.class);

@@ -1,5 +1,6 @@
 package joshie.crafting.rewards;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -7,6 +8,7 @@ import java.util.UUID;
 import joshie.crafting.CraftingMod;
 import joshie.crafting.api.Bus;
 import joshie.crafting.api.CraftingAPI;
+import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.IReward;
 import joshie.crafting.api.crafting.CraftingEvent.CanCraftItemEvent;
 import joshie.crafting.api.crafting.CraftingEvent.CanRepairItemEvent;
@@ -14,9 +16,11 @@ import joshie.crafting.api.crafting.CraftingEvent.CanUseItemCraftingEvent;
 import joshie.crafting.api.crafting.CraftingEvent.CraftingType;
 import joshie.crafting.api.crafting.ICrafter;
 import joshie.crafting.crafting.CraftingRegistry;
+import joshie.crafting.gui.GuiCriteriaEditor;
 import joshie.crafting.gui.IItemSelectable;
 import joshie.crafting.gui.SelectItemOverlay;
 import joshie.crafting.gui.SelectItemOverlay.Type;
+import joshie.crafting.helpers.ClientHelper;
 import joshie.crafting.helpers.CraftingHelper;
 import joshie.crafting.helpers.StackHelper;
 import net.minecraft.entity.Entity;
@@ -76,7 +80,15 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        checkAndCancelEvent(event);
+        if (!checkAndCancelEvent(event)) {
+            Collection<ICriteria> requirements = CraftingAPI.crafting.getCraftingCriteria(type, event.entityPlayer.getCurrentEquippedItem());
+            for (ICriteria c : requirements) {
+                GuiCriteriaEditor.INSTANCE.selected = c;
+                break;
+            }
+
+            event.entityPlayer.openGui(CraftingMod.instance, 1, null, 0, 0, 0);
+        }
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -84,7 +96,19 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
         ICrafter crafter = CraftingAPI.crafting.getCrafterFromPlayer(event.entityPlayer);
         if (!crafter.canCraftItem(CraftingType.CRAFTING, event.itemStack)) {
             event.toolTip.clear();
-            event.toolTip.add("LOCKED");
+            event.toolTip.add(EnumChatFormatting.RED + event.itemStack.getDisplayName());
+            event.toolTip.add("Currently Locked");
+            for (CraftingType type : CraftingType.craftingTypes) {
+                Collection<ICriteria> requirements = CraftingAPI.crafting.getCraftingCriteria(type, event.itemStack);
+                if (requirements.size() > 0) {
+                    event.toolTip.add(EnumChatFormatting.WHITE + type.getDisplayName());
+                    for (ICriteria c : requirements) {
+                        c.addTooltip(event.toolTip);
+                    }
+                }
+            }
+
+            event.toolTip.add(EnumChatFormatting.AQUA + "Click for more info");
         }
     }
 
@@ -315,12 +339,15 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
         int match2Color = 0xFFFFFFFF;
         int usageColor = 0xFFFFFFFF;
         int craftColor = 0xFFFFFFFF;
-        if (mouseX <= 84 && mouseX >= 1) {
-            if (mouseY >= 17 && mouseY <= 25) typeColor = 0xFFBBBBBB;
-            if (mouseY > 25 && mouseY <= 33) matchColor = 0xFFBBBBBB;
-            if (mouseY > 34 && mouseY <= 41) match2Color = 0xFFBBBBBB;
-            if (mouseY > 42 && mouseY <= 50) usageColor = 0xFFBBBBBB;
-            if (mouseY > 50 && mouseY <= 57) craftColor = 0xFFBBBBBB;
+
+        if (ClientHelper.canEdit()) {
+            if (mouseX <= 84 && mouseX >= 1) {
+                if (mouseY >= 17 && mouseY <= 25) typeColor = 0xFFBBBBBB;
+                if (mouseY > 25 && mouseY <= 33) matchColor = 0xFFBBBBBB;
+                if (mouseY > 34 && mouseY <= 41) match2Color = 0xFFBBBBBB;
+                if (mouseY > 42 && mouseY <= 50) usageColor = 0xFFBBBBBB;
+                if (mouseY > 50 && mouseY <= 57) craftColor = 0xFFBBBBBB;
+            }
         }
 
         drawText("type: " + type.name.toLowerCase(), 4, 18, typeColor);

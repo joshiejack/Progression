@@ -10,7 +10,7 @@ import org.objectweb.asm.Opcodes;
 public class ASMCrafting extends AbstractASM {
 	@Override
 	public boolean isClass(String name) {
-		return name.equals("net.minecraft.item.crafting.CraftingManager");
+		return name.equals("net.minecraft.item.crafting.CraftingManager") || name.equals("aff");
 	}
 
 	@Override
@@ -26,7 +26,7 @@ public class ASMCrafting extends AbstractASM {
 		@Override
 		public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
 			MethodVisitor visitor = super.visitMethod(access, name, desc, signature, exceptions);
-			if (desc.equals("(Lnet/minecraft/inventory/InventoryCrafting;Lnet/minecraft/world/World;)Lnet/minecraft/item/ItemStack;") && name.equals("findMatchingRecipe")) {
+			if (desc.equals("(Lnet/minecraft/inventory/InventoryCrafting;Lnet/minecraft/world/World;)Lnet/minecraft/item/ItemStack;") && (name.equals("findMatchingRecipe") || name.equals("func_82787_a"))) {
 				return new MethodVisitor(Opcodes.ASM4, visitor) {
 					@Override
 					public void visitCode() {

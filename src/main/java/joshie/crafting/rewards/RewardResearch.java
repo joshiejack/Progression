@@ -7,6 +7,7 @@ import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.IReward;
 import joshie.crafting.gui.SelectTextEdit;
 import joshie.crafting.gui.SelectTextEdit.ITextEditable;
+import joshie.crafting.helpers.ClientHelper;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
@@ -21,7 +22,7 @@ public class RewardResearch extends RewardBase implements ITextEditable {
     public RewardResearch() {
         super("Give Research", 0xFF99B3FF, "research");
     }
-    
+
     @Override
     public IReward newInstance() {
         return new RewardResearch();
@@ -49,7 +50,7 @@ public class RewardResearch extends RewardBase implements ITextEditable {
     public ItemStack getIcon() {
         return new ItemStack(Items.potionitem);
     }
-    
+
     @Override
     public Result clicked() {
         if (mouseX <= 84 && mouseX >= 1) {
@@ -58,20 +59,22 @@ public class RewardResearch extends RewardBase implements ITextEditable {
                 return Result.ALLOW;
             }
         }
-        
+
         return Result.DEFAULT;
     }
 
     @Override
     public void draw() {
         int researchColor = 0xFFFFFFFF;
-        if (mouseX <= 84 && mouseX >= 1) {
-            if (mouseY >= 17 && mouseY <= 33) researchColor = 0xFFBBBBBB;
+        if (ClientHelper.canEdit()) {
+            if (mouseX <= 84 && mouseX >= 1) {
+                if (mouseY >= 17 && mouseY <= 33) researchColor = 0xFFBBBBBB;
+            }
         }
 
         if (SelectTextEdit.INSTANCE.getEditable() == this) {
             drawText("research: ", 4, 18, researchColor);
-            drawText(SelectTextEdit.INSTANCE.getText(), 4,  26, researchColor);
+            drawText(SelectTextEdit.INSTANCE.getText(), 4, 26, researchColor);
         } else {
             drawText("research: ", 4, 18, researchColor);
             drawText(getTextField(), 4, 26, researchColor);
@@ -87,7 +90,7 @@ public class RewardResearch extends RewardBase implements ITextEditable {
     public void setTextField(String text) {
         this.research = text;
     }
-    
+
     @Override
     public void addTooltip(List list) {
         list.add(EnumChatFormatting.WHITE + "Free Research:");

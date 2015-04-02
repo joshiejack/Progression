@@ -1,5 +1,7 @@
 package joshie.crafting.trigger;
 
+import java.util.List;
+
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ITrigger;
 import joshie.crafting.gui.GuiCriteriaEditor;
@@ -114,5 +116,10 @@ public class TriggerKill extends TriggerBaseCounter implements IEntitySelectable
     @Override
     public int getAmountRequired() {
         return amount;
+    }
+    
+    @Override
+    public void addTooltip(List<String> toolTip) {
+        toolTip.add("Kill " + amount + " " + EntityList.createEntityByName(this.entity, ClientHelper.getPlayer().worldObj).getCommandSenderName());
     }
 }

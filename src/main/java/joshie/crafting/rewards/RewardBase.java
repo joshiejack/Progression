@@ -77,7 +77,7 @@ public abstract class RewardBase implements IReward {
     protected void drawStack(ItemStack stack, int x, int y, float scale) {
         GuiCriteriaEditor.INSTANCE.selected.getCriteriaEditor().drawStack(stack, xPosition + x, y + 140, scale);
     }
-    
+
     protected void drawTexture(int x, int y, int u, int v, int width, int height) {
         GuiCriteriaEditor.INSTANCE.selected.getCriteriaEditor().drawTexture(xPosition + x, y + 140, u, v, width, height);
     }
@@ -107,13 +107,17 @@ public abstract class RewardBase implements IReward {
 
         drawGradient(1, 2, 99, 15, getColor(), 0xFF222222, 0xFF000000);
         drawText(getLocalisedName(), 6, 6, 0xFFFFFFFF);
-        int xXcoord = 0;
-        if (this.mouseX >= 87 && this.mouseX <= 97 && this.mouseY >= 4 && this.mouseY <= 14) {
-            xXcoord = 11;
-        }
 
-        ClientHelper.getMinecraft().getTextureManager().bindTexture(textures);
-        drawTexture(87, 4, xXcoord, 195, 11, 11);
+        if (ClientHelper.canEdit()) {
+            int xXcoord = 0;
+            if (this.mouseX >= 87 && this.mouseX <= 97 && this.mouseY >= 4 && this.mouseY <= 14) {
+                xXcoord = 11;
+            }
+
+            ClientHelper.getMinecraft().getTextureManager().bindTexture(textures);
+            drawTexture(87, 4, xXcoord, 195, 11, 11);
+        }
+        
         draw();
     }
 }

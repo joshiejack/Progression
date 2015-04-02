@@ -1,5 +1,7 @@
 package joshie.crafting.trigger;
 
+import java.util.List;
+
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ITrigger;
 import joshie.crafting.gui.IItemSelectable;
@@ -54,11 +56,14 @@ public class TriggerBreakBlock extends TriggerBaseCounter implements IItemSelect
         TriggerBreakBlock trigger = new TriggerBreakBlock();
         if (data.get("ore") != null) {
             trigger.oreDictionary = data.get("ore").getAsString();
+            if (OreDictionary.getOres(trigger.oreDictionary).size() > 0) {
+                trigger.stack = OreDictionary.getOres(trigger.oreDictionary).get(0);
+            }
         } else {
             String stack = data.get("item").getAsString();
-            ItemStack iStack = StackHelper.getStackFromString(stack);
-            trigger.block = Block.getBlockFromItem(iStack.getItem());
-            trigger.meta = iStack.getItemDamage();
+            trigger.stack = StackHelper.getStackFromString(stack);
+            trigger.block = Block.getBlockFromItem(trigger.stack.getItem());
+            trigger.meta = trigger.stack.getItemDamage();
             if (data.get("matchDamage") != null) {
                 trigger.matchDamage = data.get("matchDamage").getAsBoolean();
             }
@@ -67,8 +72,6 @@ public class TriggerBreakBlock extends TriggerBaseCounter implements IItemSelect
         if (data.get("amount") != null) {
             trigger.amount = data.get("amount").getAsInt();
         }
-
-        trigger.stack = new ItemStack(block, amount, meta);
 
         return trigger;
     }
@@ -170,11 +173,18 @@ public class TriggerBreakBlock extends TriggerBaseCounter implements IItemSelect
 
     @Override
     public ItemStack getItemStack() {
-        return new ItemStack(block, amount, meta);
+        return stack;
     }
 
     @Override
     public int getAmountRequired() {
         return amount;
+    }
+
+    @Override
+    public void addTooltip(List<String> toolTip) {
+        if (oreDictionary.equals("IGNORE")) {
+            toolTip.add("  Break " + amount + " " + stack.getDisplayName());
+        } else toolTip.add("  Break " + amount + " " + oreDictionary);
     }
 }

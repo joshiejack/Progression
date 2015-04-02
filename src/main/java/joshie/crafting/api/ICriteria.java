@@ -59,4 +59,6 @@ public interface ICriteria extends IHasUniqueName {
 
     /** Returns the master tab associated with this criteria **/
     public ITab getTabID();
+
+    public void addTooltip(List<String> toolTip);
 }

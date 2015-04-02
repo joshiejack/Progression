@@ -13,6 +13,7 @@ public class CraftingTab implements ITab {
     private String displayName;
     private boolean isVisible;
     private ItemStack stack;
+    private int sortIndex;
     
     private List<ICriteria> criteria = new ArrayList();
     @Override
@@ -47,6 +48,12 @@ public class CraftingTab implements ITab {
         this.stack = stack;
         return this;
     }
+    
+    @Override
+    public ITab setSortIndex(int index) {
+        this.sortIndex = index;
+        return this;
+    }
 
     @Override
     public String getUniqueName() {
@@ -71,5 +78,10 @@ public class CraftingTab implements ITab {
     @Override
     public ItemStack getStack() {
         return stack;
+    }
+    
+    @Override
+    public int getSortIndex() {
+        return sortIndex;
     }
 }

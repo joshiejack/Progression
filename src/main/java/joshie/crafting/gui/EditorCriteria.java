@@ -36,22 +36,22 @@ public class EditorCriteria extends TextEditable implements ICriteriaEditor {
 
     @Override
     public void drawSplitText(String text, int x, int y, int color, int width) {
-        GuiTreeEditor.INSTANCE.mc.fontRenderer.drawSplitString(text, xCoord + x, yCoord + y, width, color);
+        GuiCriteriaEditor.INSTANCE.mc.fontRenderer.drawSplitString(text, xCoord + x, yCoord + y, width, color);
     }
 
     @Override
     public void drawText(String text, int x, int y, int color) {
-        GuiTreeEditor.INSTANCE.mc.fontRenderer.drawString(text, xCoord + x, yCoord + y, color);
+        GuiCriteriaEditor.INSTANCE.mc.fontRenderer.drawString(text, xCoord + x, yCoord + y, color);
     }
 
     @Override
     public void drawBox(int x, int y, int width, int height, int color, int border) {
-        GuiTreeEditor.INSTANCE.drawRectWithBorder(xCoord + x, yCoord + y, xCoord + x + width, yCoord + y + height, color, border);
+        GuiCriteriaEditor.INSTANCE.drawRectWithBorder(xCoord + x, yCoord + y, xCoord + x + width, yCoord + y + height, color, border);
     }
 
     @Override
     public void drawGradient(int x, int y, int width, int height, int color, int color2, int border) {
-        GuiTreeEditor.INSTANCE.drawGradientRectWithBorder(xCoord + x, yCoord + y, xCoord + x + width, yCoord + y + height, color, color2, border);
+        GuiCriteriaEditor.INSTANCE.drawGradientRectWithBorder(xCoord + x, yCoord + y, xCoord + x + width, yCoord + y + height, color, color2, border);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class EditorCriteria extends TextEditable implements ICriteriaEditor {
 
     @Override
     public void drawTexture(int x, int y, int u, int v, int width, int height) {
-        GuiTreeEditor.INSTANCE.drawTexturedModalRect(xCoord + x, yCoord + y, u, v, width, height);
+        GuiCriteriaEditor.INSTANCE.drawTexturedModalRect(xCoord + x, yCoord + y, u, v, width, height);
     }
 
     private int offsetX = 0;
@@ -72,7 +72,7 @@ public class EditorCriteria extends TextEditable implements ICriteriaEditor {
         this.xCoord = x + offsetX;
         this.yCoord = y;
 
-        ScaledResolution res = new ScaledResolution(GuiTreeEditor.INSTANCE.mc, GuiTreeEditor.INSTANCE.mc.displayWidth, GuiTreeEditor.INSTANCE.mc.displayHeight);
+        ScaledResolution res = GuiCriteriaEditor.INSTANCE.res;
         int fullWidth = (res.getScaledWidth()) - offsetX + 5;
         //Title and Repeatability Box
         drawText("Unique Name: " + SelectTextEdit.INSTANCE.getText(editName), 9 - offsetX, 9, 0xFFFFFFFF);
@@ -153,7 +153,7 @@ public class EditorCriteria extends TextEditable implements ICriteriaEditor {
     public boolean click(int mouseX, int mouseY, boolean isDoubleClick) {
         boolean hasClicked = false;
         //Name and repeat
-        ScaledResolution res = new ScaledResolution(GuiTreeEditor.INSTANCE.mc, GuiTreeEditor.INSTANCE.mc.displayWidth, GuiTreeEditor.INSTANCE.mc.displayHeight);
+        ScaledResolution res = GuiCriteriaEditor.INSTANCE.res;
         int fullWidth = (res.getScaledWidth()) - offsetX + 5;
         if (ClientHelper.canEdit()) {
             if (mouseY >= 6 && mouseY <= 19) {

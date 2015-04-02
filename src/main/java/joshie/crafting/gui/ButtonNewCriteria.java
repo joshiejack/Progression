@@ -34,14 +34,14 @@ public class ButtonNewCriteria extends ButtonLeft {
             name.add(EnumChatFormatting.WHITE + "New");
             name.add(EnumChatFormatting.GRAY + "Click and Drag for Criteria");
             name.add(EnumChatFormatting.GRAY + "Shift Click for a Tab");
-            GuiTreeEditor.INSTANCE.drawTooltip(name, x, y);
+            GuiTreeEditor.INSTANCE.addTooltip(name);
         }
     }
 
     @Override
     public void onClicked() {
         if (GuiScreen.isShiftKeyDown()) {
-            CraftingAPI.registry.newTab(CraftAPIRegistry.getNextUnique()).setDisplayName("New Tab").setStack(new ItemStack(Items.book));
+            CraftingAPI.registry.newTab(CraftAPIRegistry.getNextUnique()).setDisplayName("New Tab").setStack(new ItemStack(Items.book)).setVisibility(true);
             GuiTreeEditor.INSTANCE.initGui();
         } else {
             GuiTreeEditor.INSTANCE.previous = null;

@@ -3,6 +3,7 @@ package joshie.crafting;
 import java.util.ArrayList;
 import java.util.List;
 
+import joshie.crafting.api.ICondition;
 import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.ICriteriaEditor;
 import joshie.crafting.api.IReward;
@@ -163,5 +164,10 @@ public class CraftingCriteria implements ICriteria {
             if (other.uniqueName != null) return false;
         } else if (!uniqueName.equals(other.uniqueName)) return false;
         return true;
+    }
+
+    @Override
+    public void addTooltip(List<String> toolTip) {
+        toolTip.add("Requires: " + getDisplayName());
     }
 }

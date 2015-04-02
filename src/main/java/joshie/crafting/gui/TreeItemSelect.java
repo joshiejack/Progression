@@ -13,7 +13,7 @@ public class TreeItemSelect extends TextEditable {
             SelectItemOverlay.INSTANCE.updateSearch();
         }
 
-        ScaledResolution res = new ScaledResolution(GuiTreeEditor.INSTANCE.mc, GuiTreeEditor.INSTANCE.mc.displayWidth, GuiTreeEditor.INSTANCE.mc.displayHeight);
+        ScaledResolution res = GuiTreeEditor.INSTANCE.res;
         int fullWidth = res.getScaledWidth() - 10;
         int width = (int) ((double) fullWidth / 18.633333334D);
         int j = 0;
@@ -49,7 +49,7 @@ public class TreeItemSelect extends TextEditable {
             int y = GuiTreeEditor.INSTANCE.y;
 
             int offsetX = GuiCriteriaEditor.INSTANCE.offsetX;
-            ScaledResolution res = new ScaledResolution(GuiTreeEditor.INSTANCE.mc, GuiTreeEditor.INSTANCE.mc.displayWidth, GuiTreeEditor.INSTANCE.mc.displayHeight);
+            ScaledResolution res = GuiTreeEditor.INSTANCE.res;
             int fullWidth = res.getScaledWidth() - 10;
 
             GuiTreeEditor.INSTANCE.drawGradientRectWithBorder(30, y + 20, res.getScaledWidth() - 30, y + 40, 0xFF222222, 0xFF000000, 0xFF000000);

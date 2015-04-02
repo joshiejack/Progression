@@ -1,5 +1,6 @@
 package joshie.crafting.conditions;
 
+import java.util.List;
 import java.util.UUID;
 
 import joshie.crafting.api.ICondition;
@@ -217,5 +218,10 @@ public class ConditionCoordinates extends ConditionBase {
         drawText("z: " + zEdit, 4, 83, zColor);
         drawText("greaterThan: " + greaterThan, 4, 90, gColor);
         drawText("lessThan: " + lessThan, 4, 97, lColor);
+    }
+    
+    @Override
+    public void addToolTip(List<String> toolTip) {
+
     }
 }

@@ -25,7 +25,7 @@ public class EditorCondition implements IConditionEditor {
     public EditorCondition(ITrigger criteria) {
         this.trigger = criteria;
     }
-    
+
     @Override
     public void drawSplitText(String text, int x, int y, int color, int width) {
         GuiTreeEditor.INSTANCE.mc.fontRenderer.drawSplitString(text, xCoord + x, yCoord + y, width, color);
@@ -64,7 +64,7 @@ public class EditorCondition implements IConditionEditor {
         this.xCoord = x + offsetX;
         this.yCoord = y;
 
-        ScaledResolution res = new ScaledResolution(GuiTreeEditor.INSTANCE.mc, GuiTreeEditor.INSTANCE.mc.displayWidth, GuiTreeEditor.INSTANCE.mc.displayHeight);
+        ScaledResolution res = GuiTriggerEditor.INSTANCE.res;
         int fullWidth = (res.getScaledWidth()) - offsetX + 5;
         //Title and Repeatability Box
         drawText("Editing Trigger conditions for the Criteria: " + trigger.getCriteria().getDisplayName() + " - " + trigger.getLocalisedName(), 9 - offsetX, 9, 0xFFFFFFFF);
@@ -87,18 +87,20 @@ public class EditorCondition implements IConditionEditor {
             xCoord++;
         }
 
-        int crossX = 55;
-        if (!NewCondition.INSTANCE.isVisible()) {
-            if (mouseX >= 15 + 100 * xCoord && mouseX <= 15 + 100 * xCoord + 55) {
-                if (mouseY >= 49 && mouseY <= 49 + 55) {
-                    crossX = 165;
+        if (ClientHelper.canEdit()) {
+            int crossX = 55;
+            if (!NewCondition.INSTANCE.isVisible()) {
+                if (mouseX >= 15 + 100 * xCoord && mouseX <= 15 + 100 * xCoord + 55) {
+                    if (mouseY >= 49 && mouseY <= 49 + 55) {
+                        crossX = 165;
+                    }
                 }
             }
-        }
 
-        GL11.glColor4f(1F, 1F, 1F, 1F);
-        ClientHelper.getMinecraft().getTextureManager().bindTexture(textures);
-        drawTexture(15 + 100 * xCoord, 49, crossX, 180, 55, 55);
+            GL11.glColor4f(1F, 1F, 1F, 1F);
+            ClientHelper.getMinecraft().getTextureManager().bindTexture(textures);
+            drawTexture(15 + 100 * xCoord, 49, crossX, 180, 55, 55);
+        }
     }
 
     private void remove(List list, Object object) {
@@ -113,12 +115,16 @@ public class EditorCondition implements IConditionEditor {
     }
 
     @Override
-    public boolean click(int mouseX, int mouseY, boolean isDoubleClick) {        
+    public boolean click(int mouseX, int mouseY, boolean isDoubleClick) {
+        if (!ClientHelper.canEdit()) {
+            return false;
+        }
+
         boolean hasClicked = false;
         //Name and repeat
-        ScaledResolution res = new ScaledResolution(GuiTreeEditor.INSTANCE.mc, GuiTreeEditor.INSTANCE.mc.displayWidth, GuiTreeEditor.INSTANCE.mc.displayHeight);
+        ScaledResolution res = GuiTreeEditor.INSTANCE.res;
         int fullWidth = (res.getScaledWidth()) - offsetX + 5;
-        
+
         //Triggers
         xCoord = 0;
         List<ICondition> conditions = trigger.getConditions();
@@ -137,7 +143,7 @@ public class EditorCondition implements IConditionEditor {
         }
 
         mouseX = GuiTriggerEditor.INSTANCE.mouseX - offsetX;
-        mouseY = GuiTriggerEditor.INSTANCE.mouseY;        
+        mouseY = GuiTriggerEditor.INSTANCE.mouseY;
         int color = 0xFF0080FF;
         if (mouseX >= 15 + 100 * xCoord && mouseX <= 15 + 100 * xCoord + 55) {
             if (mouseY >= 49 && mouseY <= 49 + 55) {

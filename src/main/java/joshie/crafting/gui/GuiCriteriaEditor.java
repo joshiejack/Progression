@@ -66,6 +66,8 @@ public class GuiCriteriaEditor extends GuiBase {
         //If we are trying to go back
         if (visible <= 1 && !clicked) {
             if (par3 == 1) {
+                GuiTreeEditor.INSTANCE.currentTab = GuiCriteriaEditor.INSTANCE.selected.getTabID();
+                GuiTreeEditor.INSTANCE.currentTabName = GuiTreeEditor.INSTANCE.currentTab.getUniqueName();
                 SelectTextEdit.INSTANCE.reset();
                 GuiTreeEditor.INSTANCE.selected = null;
                 GuiTreeEditor.INSTANCE.previous = null;

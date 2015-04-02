@@ -74,7 +74,7 @@ public class RewardItem extends RewardBase implements IItemSelectable, ITextEdit
                 return Result.ALLOW;
             }
         }
-        
+
         return Result.DEFAULT;
     }
 
@@ -82,8 +82,10 @@ public class RewardItem extends RewardBase implements IItemSelectable, ITextEdit
     public void draw() {
         drawStack(getIcon(), 27, 27, 2.5F);
         int typeColor = 0xFFFFFFFF;
-        if (mouseX <= 84 && mouseX >= 1) {
-            if (mouseY >= 17 && mouseY <= 25) typeColor = 0xFFBBBBBB;
+        if (ClientHelper.canEdit()) {
+            if (mouseX <= 84 && mouseX >= 1) {
+                if (mouseY >= 17 && mouseY <= 25) typeColor = 0xFFBBBBBB;
+            }
         }
 
         if (SelectTextEdit.INSTANCE.getEditable() == this) {

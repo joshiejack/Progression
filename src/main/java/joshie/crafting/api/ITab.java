@@ -12,6 +12,8 @@ public interface ITab extends IHasUniqueName {
     public ITab setVisibility(boolean visibility);
     
     public ITab setStack(ItemStack stack);
+    
+    public ITab setSortIndex(int index);
 
     public List<ICriteria> getCriteria();
 
@@ -20,4 +22,6 @@ public interface ITab extends IHasUniqueName {
     public boolean isVisible();
 
     public ItemStack getStack();
+    
+    public int getSortIndex();
 }

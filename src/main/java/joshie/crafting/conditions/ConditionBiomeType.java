@@ -1,5 +1,6 @@
 package joshie.crafting.conditions;
 
+import java.util.List;
 import java.util.UUID;
 
 import joshie.crafting.api.ICondition;
@@ -136,7 +137,27 @@ public class ConditionBiomeType extends ConditionBase implements ITextEditable {
 
             biomeTypes = types;
         } catch (Exception e) {}
-        
+
         textField = str;
+    }
+
+    @Override
+    public void addToolTip(List<String> toolTip) {
+        if (textField == null) {
+            StringBuilder builder = new StringBuilder();
+            boolean first = false;
+            for (Type t : biomeTypes) {
+                if (!first) {
+                    first = true;
+                } else builder.append(", ");
+
+                builder.append(t.name().toLowerCase());
+            }
+
+            textField = builder.toString();
+        }
+
+        String prefix = inverted ? "    Not in" : "    In";
+        toolTip.add(prefix + " " + textField);
     }
 }

@@ -1,5 +1,7 @@
 package joshie.crafting.trigger;
 
+import java.util.List;
+
 import joshie.crafting.api.Bus;
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ITrigger;
@@ -86,5 +88,10 @@ public class TriggerLogin extends TriggerBaseCounter {
     @Override
     public int getAmountRequired() {
         return amount;
+    }
+    
+    @Override
+    public void addTooltip(List<String> toolTip) {
+        toolTip.add("Login " + amount + " times");
     }
 }

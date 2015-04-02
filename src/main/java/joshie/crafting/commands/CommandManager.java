@@ -41,7 +41,7 @@ public class CommandManager extends CommandBase implements ICraftingCommandHandl
 
     @Override
     public String getCommandName() {
-        return "craftcontrol";
+        return "progression";
     }
 
     @SubscribeEvent
@@ -73,7 +73,7 @@ public class CommandManager extends CommandBase implements ICraftingCommandHandl
     }
     
     static String getUsage(ICraftingCommand command) {
-        return "/" + "craftcontrol" + " " + command.getCommandName() + " " + command.getUsage();
+        return "/" + "progression" + " " + command.getCommandName() + " " + command.getUsage();
     }
 
     @Override

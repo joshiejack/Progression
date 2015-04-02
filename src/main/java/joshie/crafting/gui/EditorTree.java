@@ -70,6 +70,28 @@ public class EditorTree implements ITreeEditor {
     public void draw(int x, int y, int offsetX) {
         draw(x, y, offsetX, 0);
     }
+    
+    @Override
+    public boolean isCriteriaVisible() {
+        if (criteria.isVisible()) return true;
+        else return CraftingAPI.players.getClientPlayer().getMappings().getCompletedCriteria().keySet().containsAll(criteria.getRequirements());
+    }
+    
+    public boolean isCriteriaCompleteable(ICriteria criteria) {
+        HashMap<ICriteria, Integer> completedMap = CraftingAPI.players.getClientPlayer().getMappings().getCompletedCriteria();
+        boolean completeable = true;
+        //Check the conflicts of this criteria
+        for (ICriteria conflicts: criteria.getConflicts()) {
+            if (completedMap.containsKey(conflicts)) return false;
+        }
+        
+        //Check the requirements, if they aren't completable return false
+        for (ICriteria requirements: criteria.getRequirements()) {
+            if (!isCriteriaCompleteable(requirements)) return false;
+        }
+        
+        return true;
+    }
 
     @Override
     public void draw(int x, int y, int offsetX, int highlight) {
@@ -124,12 +146,8 @@ public class EditorTree implements ITreeEditor {
             if (isSelected) textureY = 100;
             ICriteria selected = GuiTreeEditor.INSTANCE.lastClicked;
             if (!isCompleted) {
-                Set<ICriteria> completedCriteria = CraftingAPI.players.getClientPlayer().getMappings().getCompletedCriteria().keySet();
-                for (ICriteria c : completedCriteria) {
-                    if (criteria.getConflicts().contains(c)) {
-                        textureY = 75;
-                        break;
-                    }
+                if (!isCriteriaCompleteable(criteria)) {
+                    textureY = 75;
                 }
             }
 
@@ -167,7 +185,7 @@ public class EditorTree implements ITreeEditor {
                 if (isOver(mouseX, mouseY, x1, x2, y1, y2)) {
                     List list = new ArrayList();
                     reward.addTooltip(list);
-                    GuiTreeEditor.INSTANCE.drawTooltip(list, mouseX, mouseY + GuiTreeEditor.INSTANCE.y);
+                    GuiTreeEditor.INSTANCE.addTooltip(list);
                     hoveredReward = true;
                 }
 
@@ -186,7 +204,7 @@ public class EditorTree implements ITreeEditor {
                         list.add("I + Click to Hide/Unhide");
                     }
 
-                    GuiTreeEditor.INSTANCE.drawTooltip(list, mouseX, mouseY);
+                    GuiTreeEditor.INSTANCE.addTooltip(list);
                     RenderHelper.disableStandardItemLighting();
                 }
             }
