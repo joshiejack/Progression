@@ -6,10 +6,8 @@ import static joshie.crafting.lib.CraftingInfo.MODNAME;
 import static joshie.crafting.lib.CraftingInfo.VERSION;
 
 import java.io.File;
-import java.util.Map;
 
 import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.asm.CraftingTransformer;
 import joshie.crafting.commands.CommandHelp;
 import joshie.crafting.commands.CommandManager;
 import joshie.crafting.commands.CommandReload;
@@ -19,7 +17,6 @@ import joshie.crafting.conditions.ConditionCoordinates;
 import joshie.crafting.conditions.ConditionDaytime;
 import joshie.crafting.conditions.ConditionRandom;
 import joshie.crafting.crafting.CraftingRegistry;
-import joshie.crafting.json.JSONLoader;
 import joshie.crafting.json.Options;
 import joshie.crafting.lib.CraftingInfo;
 import joshie.crafting.network.PacketHandler;
@@ -64,12 +61,12 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.Side;
 
 @Mod(modid = MODID, name = MODNAME, version = VERSION)
-public class CraftingMod implements IFMLLoadingPlugin {
+public class CraftingMod {
     public static final Logger logger = LogManager.getLogger(MODNAME);
 
     @SidedProxy(clientSide = JAVAPATH + "CraftingClient", serverSide = JAVAPATH + "CraftingCommon")
@@ -154,42 +151,25 @@ public class CraftingMod implements IFMLLoadingPlugin {
         }
 
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) return;
+
+        //Remap all relevant data
+        CraftingRemapper.reloadServerData();
+        
         World world = MinecraftServer.getServer().worldServers[0];
         data = (PlayerSavedData) world.loadItemData(PlayerSavedData.class, MODNAME);
         if (data == null) {
             createWorldData();
         }
-
-        //Remap all relevant data
-        CraftingRemapper.reloadServerData();
+    }
+    
+    @EventHandler
+    public void onServerStarting(FMLServerStoppedEvent event) {
+        CraftingRemapper.resetRegistries();
     }
 
     public void createWorldData() {
         World world = MinecraftServer.getServer().worldServers[0];
         data = new PlayerSavedData(MODNAME);
         world.setItemData(MODNAME, data);
-    }
-
-    @Override
-    public String[] getASMTransformerClass() {
-        return new String[] { CraftingTransformer.class.getName() };
-    }
-
-    @Override
-    public String getModContainerClass() {
-        return null;
-    }
-
-    @Override
-    public String getSetupClass() {
-        return null;
-    }
-
-    @Override
-    public void injectData(Map<String, Object> data) {}
-
-    @Override
-    public String getAccessTransformerClass() {
-        return "";
     }
 }

@@ -16,7 +16,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 public class CraftingRegistry implements ICraftingRegistry {
@@ -27,23 +26,23 @@ public class CraftingRegistry implements ICraftingRegistry {
         SafeStack safe = SafeStack.newInstance(stack, matchDamage, matchNBT);
         if (crafting) {
             Multimap<SafeStack, ICriteria> conditions = CraftingRegistry.conditions.get(type);
-            conditions.remove(safe, criteria);
+            conditions.get(safe).remove(criteria);
         }
 
         if (usage) {
             Multimap<SafeStack, ICriteria> usageMap = CraftingRegistry.usage.get(type);
-            usageMap.remove(safe, criteria);
+            usageMap.get(safe).remove(criteria);
         }
     }
 
     @Override
-    public Collection<ICriteria> getCraftingCriteria(CraftingType type, ItemStack stack) {                
+    public Collection<ICriteria> getCraftingCriteria(CraftingType type, ItemStack stack) {
         Collection<ICriteria> conditions = new HashSet();
         SafeStack[] safe = SafeStack.allInstances(stack);
         for (SafeStack s : safe) {
             conditions.addAll(this.conditions.get(type).get(s));
         }
-        
+
         return conditions;
     }
 
@@ -62,12 +61,12 @@ public class CraftingRegistry implements ICraftingRegistry {
     public void addRequirement(CraftingType type, ItemStack stack, boolean matchDamage, boolean matchNBT, boolean usage, boolean crafting, ICriteria c) {
         if (crafting) {
             Multimap<SafeStack, ICriteria> conditions = this.conditions.get(type);
-            conditions.put(SafeStack.newInstance(stack, matchDamage, matchNBT), c);
+            conditions.get(SafeStack.newInstance(stack, matchDamage, matchNBT)).add(c);
         }
 
         if (usage) {
             Multimap<SafeStack, ICriteria> usageMap = this.usage.get(type);
-            usageMap.put(SafeStack.newInstance(stack, matchDamage, matchNBT), c);
+            usageMap.get(SafeStack.newInstance(stack, matchDamage, matchNBT)).add(c);
         }
     }
 

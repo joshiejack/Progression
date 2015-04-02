@@ -8,7 +8,6 @@ import io.netty.buffer.ByteBuf;
 
 import java.util.UUID;
 
-import joshie.crafting.CraftingRemapper;
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.helpers.PlayerHelper;
 import joshie.crafting.json.JSONLoader;
@@ -71,7 +70,6 @@ public class PacketSyncJSON implements IMessage, IMessageHandler<PacketSyncJSON,
     @Override
     public IMessage onMessage(PacketSyncJSON message, MessageContext ctx) {        
         if (message.section == SEND_LENGTH) { //Clientside set the data for receival of this packet
-            CraftingRemapper.resetRegistries(); //Reset all the registry data
             JSONLoader.clientTabJsonData = new String[message.length];
             PacketHandler.sendToServer(new PacketSyncJSON(RECEIVED_LENGTH));
         } else if (message.section == RECEIVED_LENGTH) {

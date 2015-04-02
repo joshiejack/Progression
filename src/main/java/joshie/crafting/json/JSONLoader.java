@@ -84,7 +84,6 @@ public class JSONLoader {
     public static boolean setTabsAndCriteriaFromString(String json) {
         try {
             DefaultSettings tab = gson.fromJson(json, DefaultSettings.class);
-            CraftingRemapper.resetRegistries();
             loadJSON(tab);
             return true;
         } catch (Exception e) { return false; }

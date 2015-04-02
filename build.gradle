@@ -24,7 +24,7 @@ if (System.getenv().BUILD_NUMBER) {
 
 version = "${minecraft_version}-${mod_version}${buildnumber}"
 group= "uk.joshiejack.crafting"
-archivesBaseName = "Crafting"
+archivesBaseName = "Progression"
 
 minecraft {
     version = "${minecraft_version}-${forge_version}"
@@ -65,7 +65,7 @@ processResources
 
 jar {
     manifest {
-        attributes 'FMLCorePlugin': 'joshie.crafting.CraftingMod'
+        attributes 'FMLCorePlugin': 'joshie.crafting.asm.CraftingTransformer'
         attributes 'FMLCorePluginContainsFMLMod': 'true'
     }
 }
@@ -77,7 +77,7 @@ task sourceJar(type: Jar) {
 
 task deobfJar(type: Jar) {
     manifest {
-        attributes 'FMLCorePlugin': 'joshie.crafting.CraftingMod'
+        attributes 'FMLCorePlugin': 'joshie.crafting.asm.CraftingTransformer'
         attributes 'FMLCorePluginContainsFMLMod': 'true'
     }
     from sourceSets.main.output

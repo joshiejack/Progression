@@ -2,6 +2,7 @@ package joshie.crafting.crafting;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import joshie.crafting.api.crafting.CraftingEvent.CraftingType;
@@ -16,7 +17,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
-import scala.actors.threadpool.Arrays;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 
 public class RecipeHandler {

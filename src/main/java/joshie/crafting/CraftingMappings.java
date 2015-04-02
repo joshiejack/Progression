@@ -53,7 +53,7 @@ public class CraftingMappings implements ICraftingMappings {
 
     @Override
     public void syncToClient(EntityPlayerMP player) {
-        remap(); //Remap the data, before the client gets sent the data
+        //remap(); //Remap the data, before the client gets sent the data
 
         PacketHandler.sendToClient(new PacketSyncAbilities(master.getAbilities()), player);
         SyncPair[] values = new SyncPair[CraftAPIRegistry.criteria.size()];
@@ -162,7 +162,7 @@ public class CraftingMappings implements ICraftingMappings {
     @Override
     public boolean fireAllTriggers(String type, Object... data) {
         if (activeTriggers == null) return false; //If the remapping hasn't occured yet, say goodbye!
-        
+
         EntityPlayer player = PlayerHelper.getPlayerFromUUID(uuid);
         World world = player == null ? DimensionManager.getWorld(0) : player.worldObj;
         boolean completedAnyCriteria = false;
@@ -179,7 +179,6 @@ public class CraftingMappings implements ICraftingMappings {
 
             if (cantContinue.contains(trigger)) continue; //Grab the old data
             trigger.onFired(uuid, getTriggerData(trigger), data); //Fire the new data
-            //triggerData.put(trigger.getUniqueName(), newData);
         }
 
         //Next step, now that the triggers have been fire, we need to go through them again
@@ -201,13 +200,13 @@ public class CraftingMappings implements ICraftingMappings {
 
         //Create a list of new triggers to add to the active trigger map
         HashSet<ITrigger> forRemovalFromActive = new HashSet();
-        HashSet<ITrigger> toAddToActive = new HashSet();
+        HashSet<ITrigger> forRemovalFromCompleted = new HashSet();
         HashSet<ICriteria> toRemap = new HashSet();
 
         //Next step, now that we have fired the trigger, we need to go through all the active criteria
         //We should check if all triggers have been fulfilled
         for (ITrigger trigger : triggers) {
-            if (cantContinue.contains(trigger)) continue;
+            if (cantContinue.contains(trigger) || trigger.getCriteria() == null) continue;
             ICriteria criteria = trigger.getCriteria();
             //Check that all triggers are in the completed set
             List<ITrigger> allTriggers = criteria.getTriggers();
@@ -228,10 +227,10 @@ public class CraftingMappings implements ICraftingMappings {
                 for (ITrigger criteriaTrigger : allTriggers) {
                     forRemovalFromActive.add(criteriaTrigger);
                     //Remove all the conflicts triggers
-                    for (ICriteria conflict: criteria.getConflicts()) {
+                    for (ICriteria conflict : criteria.getConflicts()) {
                         forRemovalFromActive.addAll(conflict.getTriggers());
                     }
-                    
+
                     triggerData.remove(criteriaTrigger);
                 }
 
@@ -240,37 +239,26 @@ public class CraftingMappings implements ICraftingMappings {
                     reward.reward(uuid);
                 }
 
-                //Now that we have completed all important actions, such as removing from active triggers/
-                //Increaseing the times we counted, and giving out the rewards, we should rebuild our map
-                //First step if are available to perform this trigger again we should readdd it's triggers to the map
-                if (completedTimes < criteria.getRepeatAmount()) {
-                    toAddToActive.addAll(allTriggers); //Readd all the triggers we removed, if we are eable to repeat.
-                }
-
                 //The next step in the process is to update the active trigger maps for everything
                 //That we unlock with this criteria have been completed
-
-                if (completedTimes == 1) { //Only do shit if this is the first time it was completed
+                toRemap.add(criteria);
+                
+                if (completedTimes == 1) { //Only do shit if this is the first time it was completed                    
                     toRemap.addAll(CraftingRemapper.criteriaToUnlocks.get(criteria));
                 }
-                
+
                 PacketHandler.sendToClient(new PacketSyncCriteria(false, new Integer[] { completedTimes }, new ICriteria[] { criteria }), uuid);
             }
         }
 
-        //Remove from active
+        //Removes all the triggers from the active map
         for (ITrigger trigger : forRemovalFromActive) {
             activeTriggers.get(trigger.getTypeName()).remove(trigger);
         }
 
-        //Add to active
-        for (ITrigger trigger : toAddToActive) {
-            activeTriggers.put(trigger.getTypeName(), trigger);
-        }
-
         //Remap the criteria
         for (ICriteria criteria : toRemap) {
-            remapCriteria(criteria);
+            remapCriteriaOnCompletion(criteria);
         }
 
         //Mark data as dirty, whether it changed or not
@@ -288,7 +276,7 @@ public class CraftingMappings implements ICraftingMappings {
         return amount;
     }
 
-    private void remapCriteria(ICriteria criteria) {
+    private void remapCriteriaOnCompletion(ICriteria criteria) {
         ICriteria available = null;
         //We are now looping though all criteria, we now need to check to see if this
         //First step is to validate to see if this criteria, is available right now
@@ -305,6 +293,9 @@ public class CraftingMappings implements ICraftingMappings {
                     available = criteria;
                 }
             }
+
+            //If we are allowed to redo triggers, remove from completed
+            completedTriggers.removeAll(criteria.getTriggers());
         }
 
         if (available != null) {
@@ -312,7 +303,7 @@ public class CraftingMappings implements ICraftingMappings {
             for (ITrigger trigger : triggers) {
                 //If we don't have the trigger in the completed map, mark it as available in the active triggers
                 if (!completedTriggers.contains(trigger)) {
-                    activeTriggers.put(trigger.getTypeName(), (ITrigger) trigger);
+                    activeTriggers.get(trigger.getTypeName()).add((ITrigger) trigger);
                 }
             }
         }
@@ -349,7 +340,7 @@ public class CraftingMappings implements ICraftingMappings {
             for (ITrigger trigger : triggers) {
                 //If we don't have the trigger in the completed map, mark it as available in the active triggers
                 if (!completedTriggers.contains(trigger)) {
-                    activeTriggers.put(trigger.getTypeName(), (ITrigger) trigger);
+                    activeTriggers.get(trigger.getTypeName()).add((ITrigger) trigger);
                 }
             }
         }

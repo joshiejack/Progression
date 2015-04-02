@@ -1,9 +1,9 @@
 package joshie.crafting;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import joshie.crafting.api.ICondition;
 import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.ICriteriaEditor;
 import joshie.crafting.api.IReward;
@@ -12,7 +12,6 @@ import joshie.crafting.api.ITreeEditor;
 import joshie.crafting.api.ITrigger;
 import joshie.crafting.gui.EditorCriteria;
 import joshie.crafting.gui.EditorTree;
-import scala.actors.threadpool.Arrays;
 
 public class CraftingCriteria implements ICriteria {
     /** All the data for this **/

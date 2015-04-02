@@ -1,0 +1,16 @@
+[
+{
+  "modid": "Progression",
+  "name": "Progression",
+  "description": "A mod that allows you to control the progression of individual players.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "http://progression.joshiejack.co.uk",
+  "updateUrl": "",
+  "authors": ["joshie"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

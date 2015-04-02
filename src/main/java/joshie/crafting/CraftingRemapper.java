@@ -16,8 +16,6 @@ import joshie.crafting.json.Options;
 import joshie.crafting.lib.SafeStack;
 import joshie.crafting.network.PacketHandler;
 import joshie.crafting.network.PacketSyncJSON;
-import joshie.crafting.player.PlayerDataServer;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 import com.google.common.collect.HashMultimap;
@@ -43,23 +41,11 @@ public class CraftingRemapper {
     public static void reloadServerData() {
         //Reset the data
         resetRegistries();
-        
-        //Now that we have reset all the data, let's reset all the players data but don't affect their completed
-        Collection<PlayerDataServer> data = CraftingMod.data.getPlayerData();
-        for (PlayerDataServer player: data) {
-            player.getMappings().remap(); //Remapping player data, means removing everything except the completed
-        }
-        
+               
         //All data has officially been wiped SERVERSIDE
         //Reload in all the data from json
         /** Grab yourself some gson, load it in from the file serverside **/        
         JSONLoader.loadServerJSON(); //This fills out all the data once again
-        //Now we need to sync the new data up with all the clients
-        //Grab all the online players and send them an update
-        //Sends a packet to all the clients, informing them about their new data
-        for (EntityPlayer player : PlayerHelper.getAllPlayers()) {
-            PacketHandler.sendToClient(new PacketSyncJSON(JSONLoader.serverTabJsonData.length), (EntityPlayerMP) player); //Resend all the data to a client from when they connect
-        }
         
         //Now that mappings have been synced to the client reload the unlocks list
         Collection<ICriteria> allCriteria = CraftAPIRegistry.criteria.values();
@@ -68,7 +54,7 @@ public class CraftingRemapper {
             //The unlocking of criteria should happen no matter what
             List<ICriteria> requirements = criteria.getRequirements();
             for (ICriteria require : requirements) {
-                criteriaToUnlocks.put(require, criteria);
+                criteriaToUnlocks.get(require).add(criteria);
             }
         }
     }

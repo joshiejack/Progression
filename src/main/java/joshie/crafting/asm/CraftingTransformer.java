@@ -2,6 +2,7 @@ package joshie.crafting.asm;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.launchwrapper.IClassTransformer;
 
@@ -9,8 +10,10 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 
+import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 
-public class CraftingTransformer implements IClassTransformer {
+
+public class CraftingTransformer implements IFMLLoadingPlugin, IClassTransformer {
 	public static boolean isObfuscated = false;
 	public static List<AbstractASM> asm = new ArrayList();
 	
@@ -36,4 +39,27 @@ public class CraftingTransformer implements IClassTransformer {
 		
 		return modified;
 	}
+	
+    @Override
+    public String[] getASMTransformerClass() {
+        return new String[] { CraftingTransformer.class.getName() };
+    }
+
+    @Override
+    public String getModContainerClass() {
+        return null;
+    }
+
+    @Override
+    public String getSetupClass() {
+        return null;
+    }
+
+    @Override
+    public void injectData(Map<String, Object> data) {}
+
+    @Override
+    public String getAccessTransformerClass() {
+        return null;
+    }
 }
