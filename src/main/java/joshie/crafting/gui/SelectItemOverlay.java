@@ -2,26 +2,30 @@ package joshie.crafting.gui;
 
 import java.util.ArrayList;
 
-import org.lwjgl.opengl.GL11;
-
 import joshie.crafting.helpers.ItemHelper;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.item.ItemStack;
 
+import org.lwjgl.opengl.GL11;
+
 public class SelectItemOverlay extends TextEditable implements IRenderOverlay {
     public static SelectItemOverlay INSTANCE = new SelectItemOverlay();
-    private static IItemSelectable selectable = null;
-    private static ArrayList<ItemStack> sorted;
-    private static String search = "";
-    private static int position;
-    private static Type type;
+    static IItemSelectable selectable = null;
+    static ArrayList<ItemStack> sorted;
+    static String search = "";
+    static int position;
+    static Type type;
 
     public SelectItemOverlay() {
         ItemHelper.addInventory();
     }
+    
+    public IItemSelectable getEditable() {
+        return selectable;
+    }
 
     public static enum Type {
-        REWARD(0), TRIGGER(95);
+        REWARD(0), TRIGGER(95), TREE(0);
 
         public int yOffset;
 
@@ -86,7 +90,7 @@ public class SelectItemOverlay extends TextEditable implements IRenderOverlay {
 
         mouseY -= type.yOffset;
 
-        ScaledResolution res = new ScaledResolution(GuiTreeEditorEdit.INSTANCE.mc, GuiTreeEditorEdit.INSTANCE.mc.displayWidth, GuiTreeEditorEdit.INSTANCE.mc.displayHeight);
+        ScaledResolution res = new ScaledResolution(GuiTreeEditor.INSTANCE.mc, GuiTreeEditor.INSTANCE.mc.displayWidth, GuiTreeEditor.INSTANCE.mc.displayHeight);
         int fullWidth = res.getScaledWidth() - 10;
         int width = (int) ((double) fullWidth / 16.633333334D);
         int j = 0;
@@ -116,24 +120,29 @@ public class SelectItemOverlay extends TextEditable implements IRenderOverlay {
     @Override
     public void draw(int x, int y) {
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-        
+
         if (selectable != null) {
             if (sorted == null) {
                 updateSearch();
             }
-            
-            drawBox(0, 40 + type.yOffset, GuiTreeEditorEdit.INSTANCE.mc.displayWidth, 73, 0xFFFFFFFF, 0xFFFFFFFF);
 
-            ScaledResolution res = new ScaledResolution(GuiTreeEditorEdit.INSTANCE.mc, GuiTreeEditorEdit.INSTANCE.mc.displayWidth, GuiTreeEditorEdit.INSTANCE.mc.displayHeight);
+            int offsetX = GuiCriteriaEditor.INSTANCE.offsetX;
+
+            drawGradient(-1, 25 + type.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 15, 0xFF222222, 0xFF000000, 0xFF000000);
+            drawBox(-1, 40 + type.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 73, 0xFF000000, 0xFFFFFFFF);
+
+            ScaledResolution res = new ScaledResolution(GuiTreeEditor.INSTANCE.mc, GuiTreeEditor.INSTANCE.mc.displayWidth, GuiTreeEditor.INSTANCE.mc.displayHeight);
             int fullWidth = res.getScaledWidth() - 10;
-            drawText(getText(), 190, 29 + type.yOffset, 0xFF000000);
+            drawText("Select Item - Click elsewhere to close", 5 - offsetX, 29 + type.yOffset, 0xFFFFFFFF);
+            drawBox(285 - offsetX, 27 + type.yOffset, 200, 12, 0xFF000000, 0xFFFFFFFF);
+            drawText(getText(), 290 - offsetX, 29 + type.yOffset, 0xFFFFFFFF);
 
             int width = (int) ((double) fullWidth / 16.633333334D);
             int j = 0;
             int k = 0;
             for (int i = position; i < position + (width * 4); i++) {
                 if (i >= 0 && i < sorted.size()) {
-                    drawStack(sorted.get(i), -GuiCriteriaEditor.INSTANCE.offsetX + 8 + (j * 16), type.yOffset + 45 + (k * 16), 1F);
+                    drawStack(sorted.get(i), -offsetX + 8 + (j * 16), type.yOffset + 45 + (k * 16), 1F);
 
                     j++;
 

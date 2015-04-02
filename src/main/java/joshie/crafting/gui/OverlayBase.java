@@ -5,10 +5,15 @@ import net.minecraft.item.ItemStack;
 public class OverlayBase implements IRenderOverlay {
     public OverlayBase() {
         GuiCriteriaEditor.registerOverlay(this);
+        GuiTriggerEditor.registerOverlay(this);
     }
     
     public void drawBox(int x, int y, int width, int height, int color, int border) {
         GuiCriteriaEditor.INSTANCE.selected.getCriteriaEditor().drawBox(x, y, width, height, color, border);
+    }
+    
+    public void drawGradient(int x, int y, int width, int height, int color, int color2, int border) {
+        GuiCriteriaEditor.INSTANCE.selected.getCriteriaEditor().drawGradient(x, y, width, height, color, color2, border);
     }
     
     public void drawText(String text, int x, int y, int color) {
@@ -21,14 +26,10 @@ public class OverlayBase implements IRenderOverlay {
     
     //Resets
     public boolean reset() {
-        if (InvalidName.INSTANCE.isDisplayed()) {
-            return false;
-        }
-        
-        InvalidName.INSTANCE.clear();
         SelectItemOverlay.INSTANCE.clear();
         SelectTextEdit.INSTANCE.clear();
         SelectEntity.INSTANCE.clear();
+        NewCondition.INSTANCE.clear();
         NewTrigger.INSTANCE.clear();
         NewReward.INSTANCE.clear();
         return true;

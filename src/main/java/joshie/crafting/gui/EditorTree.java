@@ -1,7 +1,10 @@
 package joshie.crafting.gui;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import joshie.crafting.CraftingMod;
 import joshie.crafting.api.CraftingAPI;
@@ -10,11 +13,17 @@ import joshie.crafting.api.IReward;
 import joshie.crafting.api.ITreeEditor;
 import joshie.crafting.helpers.ClientHelper;
 import joshie.crafting.helpers.StackHelper;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
 
 public class EditorTree implements ITreeEditor {
+    private static final ResourceLocation textures = new ResourceLocation("crafting", "textures/gui/textures.png");
+    private static final GuiTreeEditor gui = GuiTreeEditor.INSTANCE;
     private final ICriteria criteria;
     private boolean isSelected;
     private boolean isHeld;
@@ -66,50 +75,143 @@ public class EditorTree implements ITreeEditor {
     public void draw(int x, int y, int offsetX, int highlight) {
         recalculate(offsetX);
         if (highlight != 0) {
-            GuiTreeEditorEdit.INSTANCE.drawRectWithBorder(x + left, y + top, x + right, y + bottom, 0x00FFFFFF, highlight);
+            GuiTreeEditor.INSTANCE.drawRectWithBorder(x + left, y + top, x + right, y + bottom, 0x00FFFFFF, highlight);
         } else {
-            int uncompleted = 0xFFFFFFFF;
+            int uncompleted = 0xFF577170;
             int completed = 0xFF99FF99;
             int outofbounds = 0xFFB973FF;
-            boolean isCompleted = CraftingAPI.players.getClientPlayer().getMappings().getCompletedCriteria().containsKey(criteria);
-            int color = isCompleted? completed: uncompleted;
-            if (criteria.getTreeEditor().getY() < 0) {
-                color = outofbounds;
+            HashMap<ICriteria, Integer> completedMap = CraftingAPI.players.getClientPlayer().getMappings().getCompletedCriteria();
+            boolean isCompleted = completedMap.containsKey(criteria);
+            boolean anyConflicts = false;
+            boolean allRequires = false;
+            int requires = 0;
+            for (ICriteria c : criteria.getConflicts()) {
+                if (completedMap.containsKey(c)) {
+                    anyConflicts = true;
+                    break;
+                }
             }
-                        
-            //If We are in edit mode draw the boxes around the feature
-            if (isSelected) {
-                GuiTreeEditorEdit.INSTANCE.drawRectWithBorder(x + left, y + top, x + right, y + bottom, color, 0xFF00BFFF);
-            } else GuiTreeEditorEdit.INSTANCE.drawRectWithBorder(x + left, y + top, x + right, y + bottom, color, 0xFF000000);
 
-            GuiTreeEditorEdit.INSTANCE.mc.fontRenderer.drawString(criteria.getUniqueName(), x + left + 3, y + top + 3, 0xFF000000);
+            if (!anyConflicts) {
+                for (ICriteria c : criteria.getRequirements()) {
+                    if (completedMap.containsKey(c)) {
+                        requires++;
+                    }
+                }
 
+                allRequires = criteria.getRequirements().size() == requires;
+            }
+
+            boolean available = allRequires && !anyConflicts;
+
+            int textureY = 0;
+            int textureX = 0;
+            if (isCompleted) textureY = 25;
+            else if (available) textureY = 50;
+
+            GL11.glEnable(GL11.GL_BLEND);
+            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            if (!criteria.isVisible()) {
+                if (ClientHelper.canEdit()) {
+                    textureX = 100;
+                } else {
+                    if (available || isCompleted) {
+                        textureX = 0;
+                    } else return; //If it's not completed, or available then hide it entirely
+                }
+            }
+
+            if (isSelected) textureY = 100;
+            ICriteria selected = GuiTreeEditor.INSTANCE.lastClicked;
+            if (!isCompleted) {
+                Set<ICriteria> completedCriteria = CraftingAPI.players.getClientPlayer().getMappings().getCompletedCriteria().keySet();
+                for (ICriteria c : completedCriteria) {
+                    if (criteria.getConflicts().contains(c)) {
+                        textureY = 75;
+                        break;
+                    }
+                }
+            }
+
+            if (selected != null) {
+                if (selected.getConflicts().contains(criteria)) {
+                    textureY = 75;
+                }
+            }
+
+            GL11.glColor4f(1F, 1F, 1F, 1F);
+            gui.mc.getTextureManager().bindTexture(textures);
+            gui.drawTexturedModalRect(x + left, y + top, textureX, textureY, 100, 25);
+            gui.mc.fontRenderer.drawString(criteria.getDisplayName(), x + left + 4, y + top + 3, 0xFFFFFFFF);
+
+            GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
             //Draw in the rewards
             int xOffset = 0;
             for (IReward reward : criteria.getRewards()) {
                 ItemStack icon = reward.getIcon();
                 if (icon == null || icon.getItem() == null) continue; //Protection against null icons
-                StackHelper.drawStack(icon, x + 2 + left + (xOffset * 12), y + top + 12, 0.75F);
+                StackHelper.drawStack(icon, x + 4 + left + (xOffset * 12), y + top + 12, 0.75F);
                 xOffset++;
+            }
+
+            int mouseX = GuiTreeEditor.INSTANCE.mouseX;
+            int mouseY = GuiTreeEditor.INSTANCE.mouseY;
+            GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+            xOffset = 0;
+            boolean hoveredReward = false;
+            for (IReward reward : criteria.getRewards()) {
+                int x1 = 3 + left + (xOffset * 12);
+                int x2 = x1 + 11;
+                int y1 = bottom - 13;
+                int y2 = y1 + 12;
+                if (isOver(mouseX, mouseY, x1, x2, y1, y2)) {
+                    List list = new ArrayList();
+                    reward.addTooltip(list);
+                    GuiTreeEditor.INSTANCE.drawTooltip(list, mouseX, mouseY + GuiTreeEditor.INSTANCE.y);
+                    hoveredReward = true;
+                }
+
+                xOffset++;
+            }
+
+            RenderHelper.disableStandardItemLighting();
+
+            if (!hoveredReward) { //If we weren't hovering over the reward, display the requirements
+                if (isOver(mouseX, mouseY)) {
+                    List list = new ArrayList();
+                    if (ClientHelper.canEdit()) {
+                        list.add("Double Click to edit");
+                        list.add("Shift + Click to make something a requirement");
+                        list.add("Ctrl + Click to make something conflict");
+                        list.add("I + Click to Hide/Unhide");
+                    }
+
+                    GuiTreeEditor.INSTANCE.drawTooltip(list, mouseX, mouseY);
+                    RenderHelper.disableStandardItemLighting();
+                }
             }
         }
     }
 
+    private boolean isOver(int mouseX, int mouseY, int x1, int x2, int y1, int y2) {
+        return mouseX >= x1 && mouseX <= x2 && mouseY >= y1 && mouseY <= y2;
+    }
+
     private boolean noOtherSelected() {
-        return GuiTreeEditorEdit.INSTANCE.selected == null;
+        return GuiTreeEditor.INSTANCE.selected == null;
     }
 
     private void clearSelected() {
-        GuiTreeEditorEdit.INSTANCE.selected = null;
+        GuiTreeEditor.INSTANCE.selected = null;
     }
 
     private void setSelected() {
-        GuiTreeEditorEdit.INSTANCE.selected = criteria;
-        GuiTreeEditorEdit.INSTANCE.previous = criteria;
+        GuiTreeEditor.INSTANCE.selected = criteria;
+        GuiTreeEditor.INSTANCE.previous = criteria;
     }
 
     private ICriteria getPrevious() {
-        return GuiTreeEditorEdit.INSTANCE.previous;
+        return GuiTreeEditor.INSTANCE.previous;
     }
 
     private boolean isOver(int x, int y) {
@@ -126,31 +228,30 @@ public class EditorTree implements ITreeEditor {
             }
         }
     }
-    
 
     @Override
     public boolean keyTyped(char character, int key) {
-        if (isSelected) {
+        if (isSelected && ClientHelper.canEdit()) {
             return key == 211 || key == 14;
         }
-        
+
         return false;
     }
 
     @Override
-    public boolean click(int x, int y, boolean isDouble) {
+    public boolean click(int x, int y, boolean isDouble) {       
         if (isOver(x, y)) {
             if (noOtherSelected()) {
                 ICriteria previous = getPrevious();
-                if (previous != null) {
+                if (previous != null && ClientHelper.canEdit()) {
                     List<ICriteria> list = null;
                     boolean isConflict = false;
-                    if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+                    if (GuiScreen.isShiftKeyDown()) {
                         list = previous.getRequirements();
                         if (previous.getConflicts().contains(criteria)) {
                             list = null;
                         }
-                    } else if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
+                    } else if (GuiScreen.isCtrlKeyDown()) {
                         list = previous.getConflicts();
                         isConflict = true;
                     }
@@ -173,16 +274,25 @@ public class EditorTree implements ITreeEditor {
                     }
                 }
 
-                if (isDouble) {
+                if (ClientHelper.canEdit()) {
+                    if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
+                        boolean invisible = criteria.isVisible();
+                        criteria.setVisibility(!invisible);
+                        return true;
+                    }
+                }
+
+                if (isDouble && GuiTreeEditor.INSTANCE.previous == criteria) {
+                    isHeld = false;
+                    isSelected = false;
                     GuiCriteriaEditor.INSTANCE.selected = criteria;
-                    GuiCriteriaEditor.INSTANCE.originalName = criteria.getUniqueName();
-                    GuiCriteriaEditor.INSTANCE.added = false;
                     ClientHelper.getPlayer().openGui(CraftingMod.instance, 1, null, 0, 0, 0);
                     return true;
                 }
 
                 isHeld = true;
                 isSelected = true;
+
                 prevX = x;
                 prevY = y;
                 setSelected();
@@ -210,7 +320,7 @@ public class EditorTree implements ITreeEditor {
 
     @Override
     public void follow(int x, int y) {
-        if (isHeld) {
+        if (isHeld && ClientHelper.canEdit()) {
             this.x += x - prevX;
             this.y += y - prevY;
             prevX = x;

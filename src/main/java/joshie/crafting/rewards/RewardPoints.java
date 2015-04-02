@@ -1,5 +1,6 @@
 package joshie.crafting.rewards;
 
+import java.util.List;
 import java.util.UUID;
 
 import joshie.crafting.api.CraftingAPI;
@@ -8,6 +9,7 @@ import joshie.crafting.gui.TextFieldHelper;
 import joshie.crafting.gui.TextFieldHelper.IntegerFieldHelper;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 
 import com.google.gson.JsonObject;
 
@@ -20,7 +22,7 @@ public class RewardPoints extends RewardBase {
     private int amount = 1;
 
     public RewardPoints() {
-        super("Points", 0xFF002DB2, "points");
+        super("Give Points", 0xFF002DB2, "points");
         nameEdit = new TextFieldHelper("name", this);
         amountEdit = new IntegerFieldHelper("amount", this);
     }
@@ -73,8 +75,8 @@ public class RewardPoints extends RewardBase {
 
     @Override
     public void draw() {
-        int color = 0xFF000000;
-        int amountColor = 0xFF000000;
+        int color = 0xFFFFFFFF;
+        int amountColor = 0xFFFFFFFF;
         if (mouseX <= 84 && mouseX >= 1) {
             if (mouseY >= 17 && mouseY <= 25) color = 0xFFBBBBBB;
             if (mouseY > 25 && mouseY <= 33) amountColor = 0xFFBBBBBB;
@@ -82,5 +84,10 @@ public class RewardPoints extends RewardBase {
 
         drawText("name: " + nameEdit, 4, 18, color);
         drawText("amount: " + amountEdit, 4, 26, amountColor);
+    }
+    
+    @Override
+    public void addTooltip(List list) {
+        list.add("" + EnumChatFormatting.WHITE  + amount + " " + name + " Points");
     }
 }

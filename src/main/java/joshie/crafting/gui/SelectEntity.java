@@ -78,7 +78,7 @@ public class SelectEntity extends TextEditable implements IRenderOverlay {
 
         mouseY -= type.yOffset;
 
-        ScaledResolution res = new ScaledResolution(GuiTreeEditorEdit.INSTANCE.mc, GuiTreeEditorEdit.INSTANCE.mc.displayWidth, GuiTreeEditorEdit.INSTANCE.mc.displayHeight);
+        ScaledResolution res = new ScaledResolution(GuiTreeEditor.INSTANCE.mc, GuiTreeEditor.INSTANCE.mc.displayWidth, GuiTreeEditor.INSTANCE.mc.displayHeight);
         int fullWidth = res.getScaledWidth() - 10;
         int j = 0;
         int k = 0;
@@ -116,11 +116,15 @@ public class SelectEntity extends TextEditable implements IRenderOverlay {
 
             int yPos = GuiCriteriaEditor.INSTANCE.y;
             int offX = GuiCriteriaEditor.INSTANCE.offsetX;
-            drawBox(0, 40 + type.yOffset, GuiTreeEditorEdit.INSTANCE.mc.displayWidth, 73, 0xFFFFFFFF, 0xFFFFFFFF);
 
-            ScaledResolution res = new ScaledResolution(GuiTreeEditorEdit.INSTANCE.mc, GuiTreeEditorEdit.INSTANCE.mc.displayWidth, GuiTreeEditorEdit.INSTANCE.mc.displayHeight);
+            drawGradient(-1, 25 + type.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 15, 0xFF222222, 0xFF000000, 0xFF000000);
+            drawBox(-1, 40 + type.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 73, 0xFF000000, 0xFFFFFFFF);
+
+            ScaledResolution res = new ScaledResolution(GuiTreeEditor.INSTANCE.mc, GuiTreeEditor.INSTANCE.mc.displayWidth, GuiTreeEditor.INSTANCE.mc.displayHeight);
             int fullWidth = res.getScaledWidth() - 10;
-            drawText(getText(), 190, 29 + type.yOffset, 0xFF000000);
+            drawText("Select Entity - Click elsewhere to close", 5 - offX, 29 + type.yOffset, 0xFFFFFFFF);
+            drawBox(285 - offX, 27 + type.yOffset, 200, 12, 0xFF000000, 0xFFFFFFFF);
+            drawText(getText(), 290 - offX, 29 + type.yOffset, 0xFFFFFFFF);
 
             int j = 0;
             int k = 0;

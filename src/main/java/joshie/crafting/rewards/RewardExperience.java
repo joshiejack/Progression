@@ -1,5 +1,6 @@
 package joshie.crafting.rewards;
 
+import java.util.List;
 import java.util.UUID;
 
 import joshie.crafting.api.IReward;
@@ -9,6 +10,7 @@ import joshie.crafting.helpers.PlayerHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 
 import com.google.gson.JsonObject;
 
@@ -18,7 +20,7 @@ public class RewardExperience extends RewardBase implements ITextEditable {
     private int amount = 1;
 
     public RewardExperience() {
-        super("Experience", 0xFF00B200, "experience");
+        super("Give Experience", 0xFF00B200, "experience");
     }
 
     @Override
@@ -67,7 +69,7 @@ public class RewardExperience extends RewardBase implements ITextEditable {
 
     @Override
     public void draw() {
-        int color = 0xFF000000;
+        int color = 0xFFFFFFFF;
         if (mouseX <= 84 && mouseX >= 1) {
             if (mouseY >= 17 && mouseY <= 25) color = 0xFFBBBBBB;
         }
@@ -98,5 +100,10 @@ public class RewardExperience extends RewardBase implements ITextEditable {
         } catch (Exception e) {
             this.amount = 1;
         }
+    }
+
+    @Override
+    public void addTooltip(List list) {
+        list.add("" + EnumChatFormatting.WHITE + amount + " Experience Points");
     }
 }

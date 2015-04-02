@@ -16,17 +16,17 @@ public class EntityHelper {
         scalings.put("WitherBoss", 10);
         scalings.put("Ghast", 10);
     }
-    
+
     public static int getSizeForString(String name) {
         if (scalings.containsKey(name)) {
             return scalings.get(name);
         } else return 15;
     }
-    
+
     public static int getSizeForEntity(Entity entity) {
         return getSizeForString(EntityList.getEntityString(entity));
     }
-    
+
     private static final ArrayList<EntityLivingBase> entities = new ArrayList();
 
     static {

@@ -11,4 +11,8 @@ public interface IConditionType {
 	
 	/** Converts an IReward to JSON **/
 	public void serialize(JsonObject elements);
+
+    public String getLocalisedName();
+
+    public ICondition newInstance();
 }

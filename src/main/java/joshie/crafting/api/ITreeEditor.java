@@ -8,4 +8,5 @@ public interface ITreeEditor extends IEditor {
     public void release(int mouseX, int mouseY);
     public void follow(int mouseX, int mouseY);
     public void scroll(boolean b);
+    public boolean keyTyped(char character, int key);
 }

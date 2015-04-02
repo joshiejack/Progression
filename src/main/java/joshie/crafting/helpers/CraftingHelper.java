@@ -10,6 +10,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 
 public class CraftingHelper {
+    public static boolean canCraftItem(CraftingType crafting, EntityPlayer player, ItemStack stack) {
+        return !MinecraftForge.EVENT_BUS.post(new CanCraftItemEvent(crafting, player, stack));
+    }
+    
     public static boolean canCraftItem(CraftingType crafting, TileEntity tile, ItemStack stack) {
         return !MinecraftForge.EVENT_BUS.post(new CanCraftItemEvent(crafting, tile, stack));
     }
@@ -19,7 +23,7 @@ public class CraftingHelper {
         
         EntityPlayer player = object instanceof EntityPlayer ? (EntityPlayer) object: null;
         if (player != null) {
-            return !MinecraftForge.EVENT_BUS.post(new CanCraftItemEvent(crafting, player, stack));
+            return canCraftItem(crafting, player, stack);
         }
         
         TileEntity tile = object instanceof TileEntity? (TileEntity) object: null;
@@ -30,6 +34,10 @@ public class CraftingHelper {
         return false;
     }
     
+    public static boolean canUseItemForCrafting(CraftingType crafting, EntityPlayer player, ItemStack stack) {
+        return !MinecraftForge.EVENT_BUS.post(new CanUseItemCraftingEvent(crafting, player, stack));
+    }
+    
     public static boolean canUseItemForCrafting(CraftingType crafting, TileEntity tile, ItemStack stack) {
         return !MinecraftForge.EVENT_BUS.post(new CanUseItemCraftingEvent(crafting, tile, stack));
     }
@@ -37,7 +45,7 @@ public class CraftingHelper {
     public static boolean canUseItemForCrafting(CraftingType crafting, Object object, ItemStack stack) {        
         EntityPlayer player = object instanceof EntityPlayer ? (EntityPlayer) object: null;
         if (player != null) {
-            return !MinecraftForge.EVENT_BUS.post(new CanUseItemCraftingEvent(crafting, player, stack));
+            return canUseItemForCrafting(crafting, player, stack);
         }
                 
         TileEntity tile = object instanceof TileEntity? (TileEntity) object: null;

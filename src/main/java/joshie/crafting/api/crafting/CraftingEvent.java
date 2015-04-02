@@ -1,12 +1,12 @@
 package joshie.crafting.api.crafting;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumChatFormatting;
 import cpw.mods.fml.common.eventhandler.Cancelable;
 import cpw.mods.fml.common.eventhandler.Event;
 
@@ -73,14 +73,25 @@ public class CraftingEvent extends Event {
     }
     
     public static class CraftingType {
-        public static final Set<CraftingType> craftingTypes = new HashSet();
-        public static final CraftingType CRAFTING = new CraftingType("crafting");
-        public static final CraftingType FURNACE = new CraftingType("furnace");
+        public static final List<CraftingType> craftingTypes = new ArrayList();
+        public static final CraftingType CRAFTING = new CraftingType("Crafting", "crafting");
+        public static final CraftingType FURNACE = new CraftingType("Furnace", "furnace");
+        public static final CraftingType BREAKBLOCK = new CraftingType("Break Block", "breakblock");
+        public static final CraftingType HARVEST = new CraftingType("Harvest Drop", "harvestdrop");
+        public static final CraftingType ENTITY = new CraftingType("Entity Drop", "entitydrop");
+        public int id;
         public String name;
+        public String display;
         
-        public CraftingType(String name) {
+        public CraftingType(String display, String name) {
+            this.display = display;
             this.name = name;
+            this.id = craftingTypes.size();
             craftingTypes.add(this);
+        }
+
+        public String getDisplayName() {
+            return display;
         }
     }
 }

@@ -23,15 +23,17 @@ public class CraftingEventsManager {
 
         for (ITriggerType type : CraftAPIRegistry.triggerTypes.values()) { //Loop through all trigger types
             if (activeTriggerTypes.contains(type.getTypeName())) { //If we haven't added this type to active triggers yet add it
-                Bus bus = type.getBusType();
-                if (bus == Bus.FML) {
-                    FMLCommonHandler.instance().bus().register(type);
-                } else if (bus == Bus.FORGE) {
-                    MinecraftForge.EVENT_BUS.register(type);
-                } else if (bus == Bus.ORE) {
-                    MinecraftForge.ORE_GEN_BUS.register(type);
-                } else if (bus == Bus.TERRAIN) {
-                    MinecraftForge.TERRAIN_GEN_BUS.register(type);
+                Bus[] buses = type.getEventBuses();
+                for (Bus bus : buses) {
+                    if (bus == Bus.FML) {
+                        FMLCommonHandler.instance().bus().register(type);
+                    } else if (bus == Bus.FORGE) {
+                        MinecraftForge.EVENT_BUS.register(type);
+                    } else if (bus == Bus.ORE) {
+                        MinecraftForge.ORE_GEN_BUS.register(type);
+                    } else if (bus == Bus.TERRAIN) {
+                        MinecraftForge.TERRAIN_GEN_BUS.register(type);
+                    }
                 }
             }
         }
@@ -47,15 +49,17 @@ public class CraftingEventsManager {
         for (ITriggerType type : CraftAPIRegistry.triggerTypes.values()) { //Loop through all trigger types
             if (!activeTriggerTypes.contains(type.getTypeName())) { //If this trigger type is no longer in the active ones, unregister it
                 try {
-                    Bus bus = type.getBusType();
-                    if (bus == Bus.FML) {
-                        FMLCommonHandler.instance().bus().unregister(type);
-                    } else if (bus == Bus.FORGE) {
-                        MinecraftForge.EVENT_BUS.unregister(type);
-                    } else if (bus == Bus.ORE) {
-                        MinecraftForge.ORE_GEN_BUS.unregister(type);
-                    } else if (bus == Bus.TERRAIN) {
-                        MinecraftForge.TERRAIN_GEN_BUS.unregister(type);
+                    Bus[] buses = type.getEventBuses();
+                    for (Bus bus : buses) {
+                        if (bus == Bus.FML) {
+                            FMLCommonHandler.instance().bus().unregister(type);
+                        } else if (bus == Bus.FORGE) {
+                            MinecraftForge.EVENT_BUS.unregister(type);
+                        } else if (bus == Bus.ORE) {
+                            MinecraftForge.ORE_GEN_BUS.unregister(type);
+                        } else if (bus == Bus.TERRAIN) {
+                            MinecraftForge.TERRAIN_GEN_BUS.unregister(type);
+                        }
                     }
                 } catch (Exception e) {}
             }

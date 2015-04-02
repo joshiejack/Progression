@@ -17,6 +17,7 @@ import joshie.crafting.commands.CommandReset;
 import joshie.crafting.conditions.ConditionBiomeType;
 import joshie.crafting.conditions.ConditionCoordinates;
 import joshie.crafting.conditions.ConditionDaytime;
+import joshie.crafting.conditions.ConditionRandom;
 import joshie.crafting.crafting.CraftingRegistry;
 import joshie.crafting.json.JSONLoader;
 import joshie.crafting.json.Options;
@@ -41,6 +42,7 @@ import joshie.crafting.trigger.TriggerBreakBlock;
 import joshie.crafting.trigger.TriggerCrafting;
 import joshie.crafting.trigger.TriggerKill;
 import joshie.crafting.trigger.TriggerLogin;
+import joshie.crafting.trigger.TriggerObtain;
 import joshie.crafting.trigger.TriggerPoints;
 import joshie.crafting.trigger.TriggerResearch;
 import net.minecraft.command.ICommandManager;
@@ -113,6 +115,7 @@ public class CraftingMod implements IFMLLoadingPlugin {
         FMLCommonHandler.instance().bus().register(new CraftingEventsHandler());
 
         CraftingAPI.registry.registerConditionType(new ConditionBiomeType());
+        CraftingAPI.registry.registerConditionType(new ConditionRandom());
         CraftingAPI.registry.registerConditionType(new ConditionCoordinates());
         CraftingAPI.registry.registerConditionType(new ConditionDaytime());
         CraftingAPI.registry.registerRewardType(new RewardCrafting());
@@ -122,10 +125,12 @@ public class CraftingMod implements IFMLLoadingPlugin {
         CraftingAPI.registry.registerRewardType(new RewardResearch());
         CraftingAPI.registry.registerRewardType(new RewardPoints());
         CraftingAPI.registry.registerRewardType(new RewardSpeed());
+
         CraftingAPI.registry.registerTriggerType(new TriggerBreakBlock());
         CraftingAPI.registry.registerTriggerType(new TriggerCrafting());
         CraftingAPI.registry.registerTriggerType(new TriggerKill());
         CraftingAPI.registry.registerTriggerType(new TriggerLogin());
+        CraftingAPI.registry.registerTriggerType(new TriggerObtain());
         CraftingAPI.registry.registerTriggerType(new TriggerResearch());
         CraftingAPI.registry.registerTriggerType(new TriggerPoints());
 
@@ -152,7 +157,7 @@ public class CraftingMod implements IFMLLoadingPlugin {
         if (manager instanceof ServerCommandManager) {
             ((ServerCommandManager) manager).registerCommand(CraftingAPI.commands);
         }
-        
+
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) return;
         World world = MinecraftServer.getServer().worldServers[0];
         data = (PlayerSavedData) world.loadItemData(PlayerSavedData.class, MODNAME);

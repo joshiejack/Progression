@@ -20,6 +20,9 @@ public interface IRegistry {
 	
 	/** Returns a criteria based on the name **/
 	public ICriteria getCriteriaFromName(String name);
+	
+	/** Returns a tab based on the name **/
+	public ITab getTabFromName(String name);
 
 	/** Creates a new condition **/
 	public ICondition newCondition(ICriteria criteria, String type, JsonObject data);
@@ -43,8 +46,15 @@ public interface IRegistry {
 	/** Creates a fresh reward **/
 	public IReward cloneReward(ICriteria criteria, IRewardType reward);
 
-	/** Returns a new criteria **/
-	public ICriteria newCriteria(String string);
+	/** Creates a clone of this condition, and attaches it to the trigger **/
+    public ICondition cloneCondition(ITrigger trigger, IConditionType condition);
+
+	/** Returns a new criteria 
+	 * @param tab **/
+	public ICriteria newCriteria(ITab tab, String string);
+	
+	/** Returns a new tab **/
+    public ITab newTab(String uniqueName);
 	
 	/** Register a condition with the registry **/
 	public IConditionType registerConditionType(IConditionType reward);

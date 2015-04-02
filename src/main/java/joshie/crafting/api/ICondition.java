@@ -2,6 +2,7 @@ package joshie.crafting.api;
 
 import java.util.UUID;
 
+import cpw.mods.fml.common.eventhandler.Event.Result;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
@@ -24,4 +25,10 @@ public interface ICondition extends IConditionType {
     
     /** Sets the criteria associated with this reward **/
     public ICondition setCriteria(ICriteria criteria);
+
+    public void draw(int mouseX, int mouseY, int xPos);
+
+    public Result onClicked();
+
+    public ICondition setTrigger(ITrigger trigger);
 }

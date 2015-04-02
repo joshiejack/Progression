@@ -4,6 +4,7 @@ import joshie.crafting.api.Bus;
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ITrigger;
 import joshie.crafting.gui.TextFieldHelper.IntegerFieldHelper;
+import joshie.crafting.helpers.ClientHelper;
 
 import com.google.gson.JsonObject;
 
@@ -72,14 +73,16 @@ public class TriggerLogin extends TriggerBaseCounter {
 
     @Override
     public void draw() {
-        int color = 0xFF000000;
-        if (mouseX <= 84 && mouseX >= 1) {
-            if (mouseY >= 17 && mouseY <= 25) color = 0xFFBBBBBB;
+        int color = 0xFFFFFFFF;
+        if (ClientHelper.canEdit()) {
+            if (mouseX <= 84 && mouseX >= 1) {
+                if (mouseY >= 17 && mouseY <= 25) color = 0xFFBBBBBB;
+            }
         }
 
         drawText("times: " + amountEdit, 4, 18, color);
     }
-    
+
     @Override
     public int getAmountRequired() {
         return amount;

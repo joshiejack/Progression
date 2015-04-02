@@ -49,4 +49,9 @@ public interface ITrigger extends ITriggerType {
 
     /** Returns the internal id for this trigger **/
     public int getInternalID();
+
+    public IConditionEditor getConditionEditor();
+
+    /** Adds new conditions **/
+    public void addCondition(ICondition condition);
 }

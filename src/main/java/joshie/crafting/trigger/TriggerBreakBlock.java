@@ -9,6 +9,7 @@ import joshie.crafting.gui.SelectTextEdit;
 import joshie.crafting.gui.TextFieldHelper;
 import joshie.crafting.gui.TextFieldHelper.IItemGettable;
 import joshie.crafting.gui.TextFieldHelper.ItemAmountHelper;
+import joshie.crafting.helpers.ClientHelper;
 import joshie.crafting.helpers.StackHelper;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -133,13 +134,15 @@ public class TriggerBreakBlock extends TriggerBaseCounter implements IItemSelect
     public void draw() {
         drawStack(stack, 35, 43, 1.7F);
 
-        int color = 0xFF000000;
-        int amountColor = 0xFF000000;
-        int match2Color = 0xFF000000;
-        if (mouseX <= 94 && mouseX >= 1) {
-            if (mouseY >= 17 && mouseY <= 25) color = 0xFFBBBBBB;
-            if (mouseY > 25 && mouseY <= 33) amountColor = 0xFFBBBBBB;
-            if (mouseY > 34 && mouseY <= 41) match2Color = 0xFFBBBBBB;
+        int color = 0xFFFFFFFF;
+        int amountColor = 0xFFFFFFFF;
+        int match2Color = 0xFFFFFFFF;
+        if (ClientHelper.canEdit()) {
+            if (mouseX <= 94 && mouseX >= 1) {
+                if (mouseY >= 17 && mouseY <= 25) color = 0xFFBBBBBB;
+                if (mouseY > 25 && mouseY <= 33) amountColor = 0xFFBBBBBB;
+                if (mouseY > 34 && mouseY <= 41) match2Color = 0xFFBBBBBB;
+            }
         }
 
         drawText("name: " + oreEdit, 4, 18, color);

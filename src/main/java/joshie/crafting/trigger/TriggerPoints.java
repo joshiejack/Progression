@@ -8,6 +8,7 @@ import joshie.crafting.api.ITrigger;
 import joshie.crafting.api.ITriggerData;
 import joshie.crafting.gui.TextFieldHelper;
 import joshie.crafting.gui.TextFieldHelper.IntegerFieldHelper;
+import joshie.crafting.helpers.ClientHelper;
 import joshie.crafting.trigger.data.DataBoolean;
 
 import com.google.gson.JsonObject;
@@ -89,13 +90,15 @@ public class TriggerPoints extends TriggerBaseBoolean {
 
     @Override
     public void draw() {
-        int color = 0xFF000000;
-        int amountColor = 0xFF000000;
-        int consumeColor = 0xFF000000;
-        if (mouseX <= 84 && mouseX >= 1) {
-            if (mouseY >= 17 && mouseY <= 25) color = 0xFFBBBBBB;
-            if (mouseY > 25 && mouseY <= 33) amountColor = 0xFFBBBBBB;
-            if (mouseY > 34 && mouseY <= 41) consumeColor = 0xFFBBBBBB;
+        int color = 0xFFFFFFFF;
+        int amountColor = 0xFFFFFFFF;
+        int consumeColor = 0xFFFFFFFF;
+        if (ClientHelper.canEdit()) {
+            if (mouseX <= 84 && mouseX >= 1) {
+                if (mouseY >= 17 && mouseY <= 25) color = 0xFFBBBBBB;
+                if (mouseY > 25 && mouseY <= 33) amountColor = 0xFFBBBBBB;
+                if (mouseY > 34 && mouseY <= 41) consumeColor = 0xFFBBBBBB;
+            }
         }
 
         drawText("name: " + nameEdit, 4, 18, color);

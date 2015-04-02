@@ -77,7 +77,7 @@ public class TriggerKill extends TriggerBaseCounter implements IEntitySelectable
             if (mouseY >= 17 && mouseY <= 25) {
                 amountEdit.select();
                 return Result.ALLOW;
-            } else if (mouseY >= 27 && mouseY <= 100) {
+            } else if (mouseY >= 27 && mouseY < 66) {
                 SelectEntity.INSTANCE.select(this, Type.TRIGGER);
                 return Result.ALLOW;
             }
@@ -88,9 +88,11 @@ public class TriggerKill extends TriggerBaseCounter implements IEntitySelectable
 
     @Override
     public void draw() {
-        int color = 0xFF000000;
-        if (mouseX <= 84 && mouseX >= 1) {
-            if (mouseY >= 17 && mouseY <= 25) color = 0xFFBBBBBB;
+        int color = 0xFFFFFFFF;
+        if (ClientHelper.canEdit()) {
+            if (mouseX <= 84 && mouseX >= 1) {
+                if (mouseY >= 17 && mouseY <= 25) color = 0xFFBBBBBB;
+            }
         }
 
         drawText("times: " + amountEdit, 4, 18, color);
@@ -108,7 +110,7 @@ public class TriggerKill extends TriggerBaseCounter implements IEntitySelectable
             this.entity = EntityList.getEntityString(entity);
         } catch (Exception e) {}
     }
-    
+
     @Override
     public int getAmountRequired() {
         return amount;

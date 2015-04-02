@@ -31,7 +31,7 @@ public class CraftingRemapper {
         CraftingAPI.players.getPlayerData(player).getMappings().remap();
         
         if (CraftingMod.options.sync) {
-            PacketHandler.sendToClient(new PacketSyncJSON(JSONLoader.serverJsonData.length), player);
+            PacketHandler.sendToClient(new PacketSyncJSON(JSONLoader.serverTabJsonData.length), player);
         } else {
             UUID uuid = PlayerHelper.getUUIDForPlayer(player);
             //Sends all the data to do with this player to the client, so it's up to date
@@ -57,7 +57,7 @@ public class CraftingRemapper {
         //Grab all the online players and send them an update
         //Sends a packet to all the clients, informing them about their new data
         for (EntityPlayer player : PlayerHelper.getAllPlayers()) {
-            PacketHandler.sendToClient(new PacketSyncJSON(JSONLoader.serverJsonData.length), (EntityPlayerMP) player); //Resend all the data to a client from when they connect
+            PacketHandler.sendToClient(new PacketSyncJSON(JSONLoader.serverTabJsonData.length), (EntityPlayerMP) player); //Resend all the data to a client from when they connect
         }
         
         //Now that mappings have been synced to the client reload the unlocks list
@@ -76,6 +76,7 @@ public class CraftingRemapper {
         //Resets all of the registries to default empty data
         //Create a a new unlocker
         criteriaToUnlocks = HashMultimap.create(); //Reset all data
+        CraftAPIRegistry.tabs = new HashMap(); //Reset all data
         CraftAPIRegistry.criteria = new HashMap(); //Reset all data
         CraftAPIRegistry.conditions = new HashSet(); //Reset all data
         CraftAPIRegistry.triggers = new HashSet(); //Reset all data

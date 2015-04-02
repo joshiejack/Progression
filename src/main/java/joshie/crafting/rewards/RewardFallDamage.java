@@ -1,5 +1,6 @@
 package joshie.crafting.rewards;
 
+import java.util.List;
 import java.util.UUID;
 
 import joshie.crafting.api.Bus;
@@ -10,6 +11,7 @@ import joshie.crafting.gui.SelectTextEdit.ITextEditable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 
 import com.google.gson.JsonObject;
@@ -21,7 +23,7 @@ public class RewardFallDamage extends RewardBase implements ITextEditable {
 	private int maxAbsorbed = 1;
 	
 	public RewardFallDamage() {
-		super("Fall Damage", 0xFF661A00, "fallDamage");
+		super("Ability: Fall Resistance", 0xFF661A00, "fallDamage");
 	}
 	
 	@Override
@@ -87,7 +89,7 @@ public class RewardFallDamage extends RewardBase implements ITextEditable {
 
     @Override
     public void draw() {
-        int color = 0xFF000000;
+        int color = 0xFFFFFFFF;
         if (mouseX <= 84 && mouseX >= 1) {
             if (mouseY >= 17 && mouseY <= 25) color = 0xFFBBBBBB;
         }
@@ -116,5 +118,11 @@ public class RewardFallDamage extends RewardBase implements ITextEditable {
         try {
             this.maxAbsorbed = Integer.parseInt(textField);
         } catch (Exception e) { this.maxAbsorbed = 1; }
+    }
+
+    @Override
+    public void addTooltip(List list) {
+        list.add(EnumChatFormatting.WHITE + "Ability Gain");
+        list.add("Fall Resistance: " + maxAbsorbed);
     }
 }

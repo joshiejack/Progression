@@ -21,4 +21,8 @@ public class ClientHelper {
     public static World getWorld() {
         return getPlayer().worldObj;
     }
+    
+    public static boolean canEdit() {
+        return getPlayer().capabilities.isCreativeMode;
+    }
 }

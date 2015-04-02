@@ -1,5 +1,6 @@
 package joshie.crafting.api;
 
+import java.util.List;
 import java.util.UUID;
 
 import cpw.mods.fml.common.eventhandler.Event.Result;
@@ -35,4 +36,6 @@ public interface IReward extends IRewardType {
     
     /** Sets the criteria associated with this reward **/
     public IReward setCriteria(ICriteria criteria);
+
+    public void addTooltip(List list);
 }

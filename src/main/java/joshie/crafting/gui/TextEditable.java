@@ -31,6 +31,7 @@ public abstract class TextEditable extends OverlayBase {
 
     private void cursorRight(int count) {
         String text = getTextField();
+        if (text == null) return;
         int right = position + count;
         if (right > text.length()) {
             position = text.length();
@@ -39,6 +40,7 @@ public abstract class TextEditable extends OverlayBase {
 
     private void add(String string) {
         String text = getTextField();
+        if (text == null) return;
         StringBuilder builder = new StringBuilder(text);
         text = builder.insert(position, string).toString();
         setTextField(text);
@@ -46,7 +48,8 @@ public abstract class TextEditable extends OverlayBase {
     }
 
     private void delete(int count) {
-        String text = getTextField();
+        String text = getTextField(); 
+        if (text == null) return;
         if ((count < 0 && position > 0) || (count >= 0 && position < text.length())) {
             StringBuilder builder = new StringBuilder(text);
             text = builder.deleteCharAt(position + count).toString();

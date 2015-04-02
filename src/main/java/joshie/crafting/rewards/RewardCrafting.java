@@ -1,23 +1,46 @@
 package joshie.crafting.rewards;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
 import joshie.crafting.CraftingMod;
+import joshie.crafting.api.Bus;
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.IReward;
+import joshie.crafting.api.crafting.CraftingEvent.CanCraftItemEvent;
+import joshie.crafting.api.crafting.CraftingEvent.CanRepairItemEvent;
+import joshie.crafting.api.crafting.CraftingEvent.CanUseItemCraftingEvent;
 import joshie.crafting.api.crafting.CraftingEvent.CraftingType;
+import joshie.crafting.api.crafting.ICrafter;
 import joshie.crafting.crafting.CraftingRegistry;
 import joshie.crafting.gui.IItemSelectable;
 import joshie.crafting.gui.SelectItemOverlay;
 import joshie.crafting.gui.SelectItemOverlay.Type;
+import joshie.crafting.helpers.CraftingHelper;
 import joshie.crafting.helpers.StackHelper;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.entity.player.EntityInteractEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.world.BlockEvent.BreakEvent;
+import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 import codechicken.nei.api.API;
 
 import com.google.gson.JsonObject;
 
 import cpw.mods.fml.common.eventhandler.Event.Result;
+import cpw.mods.fml.common.eventhandler.EventPriority;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class RewardCrafting extends RewardBase implements IItemSelectable {
     private ItemStack stack = new ItemStack(Blocks.furnace);
@@ -28,12 +51,137 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
     private boolean crafting = true;
 
     public RewardCrafting() {
-        super("Crafting", 0xFF0085B2, "crafting");
+        super("Allow Action", 0xFF0085B2, "crafting");
     }
 
     @Override
     public IReward newInstance() {
         return new RewardCrafting();
+    }
+
+    @Override
+    public Bus getBusType() {
+        return Bus.FORGE;
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onPlayerAttack(AttackEntityEvent event) {
+        checkAndCancelEvent(event);
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onPlayerInteract(EntityInteractEvent event) {
+        checkAndCancelEvent(event);
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        checkAndCancelEvent(event);
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onItemTooltipEvent(ItemTooltipEvent event) {
+        ICrafter crafter = CraftingAPI.crafting.getCrafterFromPlayer(event.entityPlayer);
+        if (!crafter.canCraftItem(CraftingType.CRAFTING, event.itemStack)) {
+            event.toolTip.clear();
+            event.toolTip.add("LOCKED");
+        }
+    }
+
+    @SubscribeEvent
+    public void onLivingDrop(LivingDropsEvent event) {
+        Entity source = event.source.getSourceOfDamage();
+        if (source instanceof EntityPlayer) {
+            Iterator<EntityItem> it = event.drops.iterator();
+            while (it.hasNext()) {
+                EntityItem item = it.next();
+                ItemStack stack = item.getEntityItem();
+                EntityPlayer player = (EntityPlayer) source;
+                if (isEventCancelled(player, CraftingType.ENTITY, player.getCurrentEquippedItem(), stack)) {
+                    it.remove();
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onBreakSpeed(BreakSpeed event) {
+        if (isEventCancelled(event.entityPlayer, CraftingType.BREAKBLOCK, event.entityPlayer.getCurrentEquippedItem(), new ItemStack(event.block, 1, event.metadata))) {
+            event.newSpeed = 0F;
+        }
+    }
+
+    @SubscribeEvent
+    public void onBreakBlock(BreakEvent event) {
+        EntityPlayer player = event.getPlayer();
+        if (player != null) {
+            if (isEventCancelled(player, CraftingType.BREAKBLOCK, player.getCurrentEquippedItem(), new ItemStack(event.block, 1, event.blockMetadata))) {
+                event.setCanceled(true);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onHarvestDrop(HarvestDropsEvent event) {
+        EntityPlayer player = event.harvester;
+        if (player != null) {
+            Iterator<ItemStack> it = event.drops.iterator();
+            while (it.hasNext()) {
+                ItemStack stack = it.next();
+                if (isEventCancelled(player, CraftingType.HARVEST, player.getCurrentEquippedItem(), stack)) {
+                    it.remove();
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onAttemptToUseItemForCrafting(CanUseItemCraftingEvent event) {
+        if (event.stack == null) return;
+        ICrafter crafter = event.player != null ? CraftingAPI.crafting.getCrafterFromPlayer(event.player) : CraftingAPI.crafting.getCrafterFromTile(event.tile);
+        if (crafter.canCraftWithAnything()) return;
+        if (!crafter.canUseItemForCrafting(event.type, event.stack)) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public void onAttemptToRepairItem(CanRepairItemEvent event) {
+        ICrafter crafter = event.player != null ? CraftingAPI.crafting.getCrafterFromPlayer(event.player) : CraftingAPI.crafting.getCrafterFromTile(event.tile);
+        if (!crafter.canRepairItem(event.stack)) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public void onAttemptToCraftItem(CanCraftItemEvent event) {
+        if (event.stack == null) return;
+        ICrafter crafter = event.player != null ? CraftingAPI.crafting.getCrafterFromPlayer(event.player) : CraftingAPI.crafting.getCrafterFromTile(event.tile);
+        if (!crafter.canCraftItem(event.type, event.stack)) {
+            event.setCanceled(true);
+        }
+    }
+
+    private boolean isEventCancelled(EntityPlayer player, CraftingType type, ItemStack usageStack, ItemStack craftingStack) {
+        if (!CraftingHelper.canUseItemForCrafting(type, player, usageStack)) {
+            return true;
+        } else {
+            if (!CraftingHelper.canCraftItem(type, player, craftingStack)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean checkAndCancelEvent(PlayerEvent event) {
+        if (event.entityPlayer.getCurrentEquippedItem() == null) return true;
+        EntityPlayer player = event.entityPlayer;
+        ICrafter crafter = CraftingAPI.crafting.getCrafterFromPlayer(player);
+        if (!crafter.canCraftItem(CraftingType.CRAFTING, player.getCurrentEquippedItem())) {
+            event.setCanceled(true);
+            return false;
+        } else return true;
     }
 
     @Override
@@ -129,6 +277,15 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
         return stack;
     }
 
+    public CraftingType next() {
+        int id = type.id + 1;
+        if (id < CraftingType.craftingTypes.size()) {
+            return CraftingType.craftingTypes.get(id);
+        }
+
+        return CraftingType.craftingTypes.get(0);
+    }
+
     @Override
     public Result clicked() {
         if (mouseX >= 77 && mouseX <= 100) {
@@ -139,7 +296,7 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
         }
 
         if (mouseX <= 84 && mouseX >= 1) {
-            if (mouseY >= 17 && mouseY <= 25) type = type == CraftingType.FURNACE ? CraftingType.CRAFTING : CraftingType.FURNACE;
+            if (mouseY >= 17 && mouseY <= 25) type = next();
             if (mouseY > 25 && mouseY <= 33) matchDamage = !matchDamage;
             if (mouseY > 34 && mouseY <= 41) matchNBT = !matchNBT;
             if (mouseY > 42 && mouseY <= 50) usage = !usage;
@@ -153,11 +310,11 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
     @Override
     public void draw() {
         drawStack(getIcon(), 76, 44, 1.4F);
-        int typeColor = 0xFF000000;
-        int matchColor = 0xFF000000;
-        int match2Color = 0xFF000000;
-        int usageColor = 0xFF000000;
-        int craftColor = 0xFF000000;
+        int typeColor = 0xFFFFFFFF;
+        int matchColor = 0xFFFFFFFF;
+        int match2Color = 0xFFFFFFFF;
+        int usageColor = 0xFFFFFFFF;
+        int craftColor = 0xFFFFFFFF;
         if (mouseX <= 84 && mouseX >= 1) {
             if (mouseY >= 17 && mouseY <= 25) typeColor = 0xFFBBBBBB;
             if (mouseY > 25 && mouseY <= 33) matchColor = 0xFFBBBBBB;
@@ -178,5 +335,11 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
         onRemoved();
         this.stack = stack;
         onAdded();
+    }
+
+    @Override
+    public void addTooltip(List list) {
+        list.add(EnumChatFormatting.WHITE + "Allow " + type.getDisplayName());
+        list.add(stack.getDisplayName());
     }
 }

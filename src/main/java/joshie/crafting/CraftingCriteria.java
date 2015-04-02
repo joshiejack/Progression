@@ -6,6 +6,7 @@ import java.util.List;
 import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.ICriteriaEditor;
 import joshie.crafting.api.IReward;
+import joshie.crafting.api.ITab;
 import joshie.crafting.api.ITreeEditor;
 import joshie.crafting.api.ITrigger;
 import joshie.crafting.gui.EditorCriteria;
@@ -20,9 +21,11 @@ public class CraftingCriteria implements ICriteria {
     private List<ICriteria> conflicts = new ArrayList();
     private ITreeEditor treeEditor;
     private ICriteriaEditor criteriaEditor;
-    private int isRepeatable;
-
-    private String name;
+    private int isRepeatable = 1;
+    private String uniqueName;
+    private String displayName;
+    private boolean isVisible;
+    private ITab tab;
     
     public CraftingCriteria() {
         this.treeEditor = new EditorTree(this);
@@ -31,12 +34,23 @@ public class CraftingCriteria implements ICriteria {
 
     @Override
     public String getUniqueName() {
-        return name;
+        return uniqueName;
     }
 
     @Override
     public ICriteria setUniqueName(String unique) {
-        this.name = unique;
+        this.uniqueName = unique;
+        return this;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    @Override
+    public ICriteria setDisplayName(String display) {
+        this.displayName = display;
         return this;
     }
 
@@ -75,6 +89,18 @@ public class CraftingCriteria implements ICriteria {
     }
 
     @Override
+    public ICriteria setVisibility(boolean isVisible) {
+        this.isVisible = isVisible;
+        return this;
+    }
+
+    @Override
+    public ICriteria setTab(ITab tab) {
+        this.tab = tab;
+        return this;
+    }
+
+    @Override
     public List<ITrigger> getTriggers() {
         return triggers;
     }
@@ -100,6 +126,16 @@ public class CraftingCriteria implements ICriteria {
     }
 
     @Override
+    public boolean isVisible() {
+        return isVisible;
+    }
+
+    @Override
+    public ITab getTabID() {
+        return tab;
+    }
+
+    @Override
     public ITreeEditor getTreeEditor() {
         return treeEditor;
     }
@@ -113,7 +149,7 @@ public class CraftingCriteria implements ICriteria {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        result = prime * result + ((uniqueName == null) ? 0 : uniqueName.hashCode());
         return result;
     }
 
@@ -123,9 +159,9 @@ public class CraftingCriteria implements ICriteria {
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
         CraftingCriteria other = (CraftingCriteria) obj;
-        if (name == null) {
-            if (other.name != null) return false;
-        } else if (!name.equals(other.name)) return false;
+        if (uniqueName == null) {
+            if (other.uniqueName != null) return false;
+        } else if (!uniqueName.equals(other.uniqueName)) return false;
         return true;
     }
 }

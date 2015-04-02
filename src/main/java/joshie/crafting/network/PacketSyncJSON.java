@@ -72,26 +72,26 @@ public class PacketSyncJSON implements IMessage, IMessageHandler<PacketSyncJSON,
     public IMessage onMessage(PacketSyncJSON message, MessageContext ctx) {        
         if (message.section == SEND_LENGTH) { //Clientside set the data for receival of this packet
             CraftingRemapper.resetRegistries(); //Reset all the registry data
-            JSONLoader.clientJsonData = new String[message.length];
+            JSONLoader.clientTabJsonData = new String[message.length];
             PacketHandler.sendToServer(new PacketSyncJSON(RECEIVED_LENGTH));
         } else if (message.section == RECEIVED_LENGTH) {
-            for (int i = 0; i < JSONLoader.serverJsonData.length; i++) {
-                PacketHandler.sendToClient(new PacketSyncJSON(i, JSONLoader.serverJsonData[i]), ctx.getServerHandler().playerEntity);
+            for (int i = 0; i < JSONLoader.serverTabJsonData.length; i++) {
+                PacketHandler.sendToClient(new PacketSyncJSON(i, JSONLoader.serverTabJsonData[i]), ctx.getServerHandler().playerEntity);
             } //Now that we have received the data, send more
         } else if (message.section == SEND_STRING) { //Client has now been sent the string
-            JSONLoader.clientJsonData [message.position] = message.data;
-            for (String s : JSONLoader.clientJsonData) {
+            JSONLoader.clientTabJsonData [message.position] = message.data;
+            for (String s : JSONLoader.clientTabJsonData) {
                 if (s == null) return null;
             }
 
             //All data has arrived, on the client
             StringBuffer result = new StringBuffer();
-            for (int i = 0; i < JSONLoader.clientJsonData.length; i++) {
-                result.append(JSONLoader.clientJsonData[i]);
+            for (int i = 0; i < JSONLoader.clientTabJsonData.length; i++) {
+                result.append(JSONLoader.clientTabJsonData[i]);
             }
 
             //If we set the json correctly
-            if (JSONLoader.setCriteriaFromString(result.toString())) {
+            if (JSONLoader.setTabsAndCriteriaFromString(result.toString())) {
                 PacketHandler.sendToServer(new PacketSyncJSON(COMPLETE));
             }
         } else if (message.section == Section.COMPLETE) {

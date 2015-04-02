@@ -2,7 +2,6 @@ package joshie.crafting;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -16,6 +15,7 @@ import joshie.crafting.api.IRegistry;
 import joshie.crafting.api.IResearch;
 import joshie.crafting.api.IReward;
 import joshie.crafting.api.IRewardType;
+import joshie.crafting.api.ITab;
 import joshie.crafting.api.ITrigger;
 import joshie.crafting.api.ITriggerType;
 import joshie.crafting.helpers.PlayerHelper;
@@ -30,10 +30,11 @@ public class CraftAPIRegistry implements IRegistry {
     public static final HashMap<String, IConditionType> conditionTypes = new HashMap();
 
     //These four maps are registries for fetching the various types
+    public static HashMap<String, ITab> tabs;
     public static HashMap<String, ICriteria> criteria;
     public static Set<ITrigger> triggers;
-    public static Set<IReward> rewards;
     public static Set<ICondition> conditions;
+    public static Set<IReward> rewards;
 
     @Override
     //Fired Server Side only
@@ -68,10 +69,18 @@ public class CraftAPIRegistry implements IRegistry {
     }
 
     @Override
-    public ICriteria newCriteria(String name) {
-        ICriteria condition = new CraftingCriteria().setUniqueName(name);
+    public ICriteria newCriteria(ITab tab, String name) {
+        ICriteria condition = new CraftingCriteria().setUniqueName(name).setTab(tab);
+        tab.addCriteria(condition);
         criteria.put(name, condition);
         return condition;
+    }
+
+    @Override
+    public ITab newTab(String name) {
+        ITab iTab = new CraftingTab().setUniqueName(name);
+        tabs.put(name, iTab);
+        return iTab;
     }
 
     @Override
@@ -117,8 +126,21 @@ public class CraftAPIRegistry implements IRegistry {
     }
 
     @Override
+    public ICondition cloneCondition(ITrigger trigger, IConditionType condition) {
+        ICondition newCondition = condition.newInstance().setTrigger(trigger);
+        conditions.add(newCondition);
+        trigger.addCondition(newCondition);
+        return newCondition;
+    }
+
+    @Override
     public ICriteria getCriteriaFromName(String name) {
         return criteria.get(name);
+    }
+
+    @Override
+    public ITab getTabFromName(String name) {
+        return tabs.get(name);
     }
 
     private static List<IResearch> technologies;
@@ -163,8 +185,31 @@ public class CraftAPIRegistry implements IRegistry {
         rewards.remove(reward);
     }
 
+    public static void removeTab(ITab tab) {
+        for (ICriteria c: tab.getCriteria()) {
+            removeCriteria(c.getUniqueName(), true);
+        }
+        
+        tabs.remove(tab.getUniqueName());
+    }
+    
     public static void removeCriteria(String unique) {
+        removeCriteria(unique, false);
+    }
+
+    public static void removeCriteria(String unique, boolean skipTab) {
         ICriteria c = criteria.get(unique);
+        //Remove the criteria from the tab
+        if (!skipTab) {
+            Iterator<ICriteria> itC = c.getTabID().getCriteria().iterator();
+            while (itC.hasNext()) {
+                ICriteria ic = itC.next();
+                if (ic.equals(c)) {
+                    itC.remove();
+                }
+            }
+        }
+
         //Remove this from all the conflict lists
         for (ICriteria conflict : c.getConflicts()) {
             Iterator<ICriteria> it = conflict.getConflicts().iterator();
@@ -199,5 +244,10 @@ public class CraftAPIRegistry implements IRegistry {
 
         //Remove it in general
         criteria.remove(unique);
+    }
+
+    //Returns the next unique string for this crafting api
+    public static String getNextUnique() {
+        return "" + System.currentTimeMillis();
     }
 }

@@ -1,5 +1,6 @@
 package joshie.crafting.rewards;
 
+import java.util.List;
 import java.util.UUID;
 
 import joshie.crafting.api.Bus;
@@ -11,6 +12,7 @@ import joshie.crafting.helpers.ClientHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 
 import com.google.gson.JsonObject;
@@ -22,7 +24,7 @@ public class RewardSpeed extends RewardBase implements ITextEditable {
     private float speed = 0.1F;
 
     public RewardSpeed() {
-        super("Speed", 0xFFFFBF00, "speed");
+        super("Ability: Speed", 0xFFFFBF00, "speed");
     }
 
     @Override
@@ -86,7 +88,7 @@ public class RewardSpeed extends RewardBase implements ITextEditable {
 
     @Override
     public void draw() {
-        int speedColor = 0xFF000000;
+        int speedColor = 0xFFFFFFFF;
         if (mouseX <= 84 && mouseX >= 1) {
             if (mouseY >= 17 && mouseY <= 25) speedColor = 0xFFBBBBBB;
         }
@@ -115,5 +117,11 @@ public class RewardSpeed extends RewardBase implements ITextEditable {
         try {
             this.speed = Float.parseFloat(textField);
         } catch (Exception e) { this.speed = 0F; }
+    }
+    
+    @Override
+    public void addTooltip(List list) {
+        list.add(EnumChatFormatting.WHITE + "Ability Gain");
+        list.add("Speed: " + speed);
     }
 }

@@ -9,4 +9,6 @@ public class Options {
     public boolean display = true;
 	@SerializedName("Server Sync Quests")
 	public boolean sync = true;
+	@SerializedName("Default Tab")
+	public String defaultTab = "DEFAULT";
 }

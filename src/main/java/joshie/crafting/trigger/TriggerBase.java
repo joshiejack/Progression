@@ -4,29 +4,48 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import joshie.crafting.CraftingMod;
 import joshie.crafting.api.Bus;
 import joshie.crafting.api.ICondition;
+import joshie.crafting.api.IConditionEditor;
 import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.ITrigger;
 import joshie.crafting.api.ITriggerData;
+import joshie.crafting.gui.EditorCondition;
 import joshie.crafting.gui.GuiCriteriaEditor;
+import joshie.crafting.gui.GuiTriggerEditor;
 import joshie.crafting.gui.SelectTextEdit;
 import joshie.crafting.gui.SelectTextEdit.ITextEditable;
+import joshie.crafting.helpers.ClientHelper;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 
 public abstract class TriggerBase implements ITrigger {
+    private static final ResourceLocation textures = new ResourceLocation("crafting", "textures/gui/textures.png");
     private List<ICondition> conditions = new ArrayList();
     private String typeName;
     private String localised;
     private int color;
     private ICriteria criteria;
+    private IConditionEditor editor;
 
     public TriggerBase(String localised, int color, String typeName) {
         this.localised = localised;
         this.color = color;
         this.typeName = typeName;
+        this.editor = new EditorCondition(this);
+    }
+
+    @Override
+    public void addCondition(ICondition condition) {
+        conditions.add(condition);
+    }
+
+    @Override
+    public IConditionEditor getConditionEditor() {
+        return editor;
     }
 
     @Override
@@ -41,6 +60,10 @@ public abstract class TriggerBase implements ITrigger {
     }
 
     @Override
+    public Bus[] getEventBuses() {
+        return new Bus[] { getBusType() };
+    }
+
     public Bus getBusType() {
         return Bus.FORGE;
     }
@@ -95,28 +118,46 @@ public abstract class TriggerBase implements ITrigger {
     protected int mouseY;
 
     protected void drawText(String text, int x, int y, int color) {
-        GuiCriteriaEditor.INSTANCE.selected.getCriteriaEditor().drawText(text, xPosition + x, y + 40, color);
+        GuiCriteriaEditor.INSTANCE.selected.getCriteriaEditor().drawText(text, xPosition + x, y + 45, color);
+    }
+
+    protected void drawGradient(int x, int y, int width, int height, int color, int color2, int border) {
+        GuiCriteriaEditor.INSTANCE.selected.getCriteriaEditor().drawGradient(xPosition + x, y + 45, width, height, color, color2, border);
     }
 
     protected void drawBox(int x, int y, int width, int height, int color, int border) {
-        GuiCriteriaEditor.INSTANCE.selected.getCriteriaEditor().drawBox(xPosition + x, y + 40, width, height, color, border);
+        GuiCriteriaEditor.INSTANCE.selected.getCriteriaEditor().drawBox(xPosition + x, y + 45, width, height, color, border);
     }
 
     protected void drawStack(ItemStack stack, int x, int y, float scale) {
-        GuiCriteriaEditor.INSTANCE.selected.getCriteriaEditor().drawStack(stack, xPosition + x, y + 40, scale);
+        GuiCriteriaEditor.INSTANCE.selected.getCriteriaEditor().drawStack(stack, xPosition + x, y + 45, scale);
     }
-    
+
+    protected void drawTexture(int x, int y, int u, int v, int width, int height) {
+        GuiCriteriaEditor.INSTANCE.selected.getCriteriaEditor().drawTexture(xPosition + x, y + 45, u, v, width, height);
+    }
+
     protected String getText(ITextEditable editable) {
         return SelectTextEdit.INSTANCE.getText(editable);
     }
 
     @Override
     public Result onClicked() {
-        if (this.mouseX >= 88 && this.mouseX <= 95 && this.mouseY >= 4 && this.mouseY <= 14) {
-            return Result.DENY; //Delete this trigger
+        if (ClientHelper.canEdit()) {
+            if (this.mouseX >= 88 && this.mouseX <= 95 && this.mouseY >= 4 && this.mouseY <= 14) {
+                return Result.DENY; //Delete this trigger
+            }
         }
 
-        return clicked();
+        if (this.mouseX >= 2 && this.mouseX <= 87) {
+            if (this.mouseY >= 66 && this.mouseY <= 77) {
+                GuiTriggerEditor.INSTANCE.trigger = this;
+                ClientHelper.getPlayer().openGui(CraftingMod.instance, 2, null, 0, 0, 0);
+                return Result.ALLOW;
+            }
+        }
+
+        return ClientHelper.canEdit() ? clicked() : Result.DEFAULT;
     }
 
     public Result clicked() {
@@ -128,20 +169,37 @@ public abstract class TriggerBase implements ITrigger {
     @Override
     public void draw(int mouseX, int mouseY, int xPos) {
         this.mouseX = mouseX - xPosition;
-        this.mouseY = mouseY - 40;
+        this.mouseY = mouseY - 45;
         this.xPosition = xPos + 6;
 
-        drawBox(1, 2, 99, 69, 0xFFFFFFFF, 0xFF000000);
-        drawBox(1, 2, 99, 15, getColor(), 0xFF000000);
+        drawGradient(1, 2, 99, 15, getColor(), 0xFF222222, 0xFF000000);
         drawText(getLocalisedName(), 6, 6, 0xFFFFFFFF);
-        int color = 0xFFB20000;
-        if (this.mouseX >= 88 && this.mouseX <= 95 && this.mouseY >= 4 && this.mouseY <= 14) {
-            color = 0xFFFFFFFF;
+
+        if (ClientHelper.canEdit()) {
+            int xXcoord = 0;
+            if (this.mouseX >= 87 && this.mouseX <= 97 && this.mouseY >= 4 && this.mouseY <= 14) {
+                xXcoord = 11;
+            }
+
+            ClientHelper.getMinecraft().getTextureManager().bindTexture(textures);
+            drawTexture(87, 4, xXcoord, 195, 11, 11);
         }
 
-        drawText("X", 90, 6, color);
-
         draw();
+
+        int color = 0xFF000000;
+        if (this.mouseX >= 2 && this.mouseX <= 87) {
+            if (this.mouseY >= 66 && this.mouseY <= 77) {
+                color = 0xFFFFFFFF;
+            }
+        }
+
+        drawGradient(2, 66, 85, 11, color, 0xFF222222, 0xFF000000);
+
+        if (ClientHelper.canEdit()) {
+            drawText("Condition Editor", 6, 67, 0xFFFFFFFF);
+        } else drawText("Condition Viewer", 6, 67, 0xFFFFFFFF);
+
     }
 
     /** A whole bunch of convenience methods **/

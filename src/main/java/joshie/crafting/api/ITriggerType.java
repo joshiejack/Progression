@@ -10,7 +10,7 @@ public interface ITriggerType {
 	/** Returns the localised name **/
     public String getLocalisedName();
 	
-	public Bus getBusType();
+	public Bus[] getEventBuses();
 	
 	/** Creates an ITrigger from JSON **/
 	public ITrigger deserialize(JsonObject data);

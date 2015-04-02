@@ -4,6 +4,7 @@ import joshie.crafting.api.Bus;
 import joshie.crafting.api.IResearch;
 import joshie.crafting.api.ITrigger;
 import joshie.crafting.gui.TextFieldHelper;
+import joshie.crafting.helpers.ClientHelper;
 
 import com.google.gson.JsonObject;
 
@@ -63,9 +64,11 @@ public class TriggerResearch extends TriggerBaseBoolean implements IResearch {
 
     @Override
     public void draw() {
-        int color = 0xFF000000;
-        if (mouseX <= 84 && mouseX >= 1) {
-            if (mouseY >= 17 && mouseY <= 33) color = 0xFFBBBBBB;
+        int color = 0xFFFFFFFF;
+        if (ClientHelper.canEdit()) {
+            if (mouseX <= 84 && mouseX >= 1) {
+                if (mouseY >= 17 && mouseY <= 33) color = 0xFFBBBBBB;
+            }
         }
 
         drawText("researchName: ", 4, 18, color);

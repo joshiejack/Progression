@@ -8,16 +8,14 @@ import net.minecraft.world.World;
 
 import com.google.gson.JsonObject;
 
-public class ConditionDaytime extends ConditionBase {
-	private boolean isDaytime = true;
-	
+public class ConditionDaytime extends ConditionBase {	
 	public ConditionDaytime() {
-		super("daytime");
+		super("Is daytime", 0xFFFFFF00, "daytime");
 	}
 	
 	@Override
 	public boolean isSatisfied(World world, EntityPlayer player, UUID uuid) {
-		return world.isDaytime() == isDaytime;
+		return world.isDaytime() == !isInverted();
 	}
 
 	@Override
@@ -27,4 +25,9 @@ public class ConditionDaytime extends ConditionBase {
 
 	@Override
 	public void serialize(JsonObject elements) {}
+
+    @Override
+    public ICondition newInstance() {
+        return new ConditionDaytime();
+    }
 }

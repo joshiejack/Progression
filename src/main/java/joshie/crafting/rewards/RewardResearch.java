@@ -1,5 +1,6 @@
 package joshie.crafting.rewards;
 
+import java.util.List;
 import java.util.UUID;
 
 import joshie.crafting.api.CraftingAPI;
@@ -8,6 +9,7 @@ import joshie.crafting.gui.SelectTextEdit;
 import joshie.crafting.gui.SelectTextEdit.ITextEditable;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 
 import com.google.gson.JsonObject;
 
@@ -17,7 +19,7 @@ public class RewardResearch extends RewardBase implements ITextEditable {
     private String research = "dummy";
 
     public RewardResearch() {
-        super("Research", 0xFF99B3FF, "research");
+        super("Give Research", 0xFF99B3FF, "research");
     }
     
     @Override
@@ -62,7 +64,7 @@ public class RewardResearch extends RewardBase implements ITextEditable {
 
     @Override
     public void draw() {
-        int researchColor = 0xFF000000;
+        int researchColor = 0xFFFFFFFF;
         if (mouseX <= 84 && mouseX >= 1) {
             if (mouseY >= 17 && mouseY <= 33) researchColor = 0xFFBBBBBB;
         }
@@ -84,5 +86,11 @@ public class RewardResearch extends RewardBase implements ITextEditable {
     @Override
     public void setTextField(String text) {
         this.research = text;
+    }
+    
+    @Override
+    public void addTooltip(List list) {
+        list.add(EnumChatFormatting.WHITE + "Free Research:");
+        list.add(research);
     }
 }

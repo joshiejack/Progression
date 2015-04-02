@@ -21,6 +21,15 @@ public interface ICriteria extends IHasUniqueName {
 
 	/** Marks the condition as repeatable **/
 	public ICriteria setRepeatAmount(int amount);
+    
+    /** Sets the display name **/
+    public ICriteria setDisplayName(String name);
+    
+    /** Set the visibility **/
+    public ICriteria setVisibility(boolean isVisible);
+    
+    /** Assigns the master tab for this critera **/
+    public ICriteria setTab(ITab tab);
 
 	/** Returns all the triggers that this condition needs to be met **/
 	public List<ITrigger> getTriggers();
@@ -35,10 +44,19 @@ public interface ICriteria extends IHasUniqueName {
 	
 	/** Returns if the criteria is repeatable **/
 	public int getRepeatAmount();
+	   
+    /** Returns the display name **/
+    public String getDisplayName();
 	    
     /** Return the instance of the editor for this criteria, when in tree edit mode **/
     public ITreeEditor getTreeEditor();
 
     /** Reuturn the instance of the editor for this criteria, when in criteria edit mode **/
     public ICriteriaEditor getCriteriaEditor();
+
+    /** Whether this criteria is visible before it unlocks ***/
+    public boolean isVisible();
+
+    /** Returns the master tab associated with this criteria **/
+    public ITab getTabID();
 }

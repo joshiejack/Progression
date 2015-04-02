@@ -23,7 +23,9 @@ public class TextFieldHelper implements ITextEditable {
     public int getInteger() {
         try {
             return (Integer) f.get(o);
-        } catch (Exception e) { e.printStackTrace();}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return 0;
     }
@@ -58,7 +60,7 @@ public class TextFieldHelper implements ITextEditable {
     }
 
     public static class IntegerFieldHelper extends TextFieldHelper {
-        private String textField = null;
+        protected String textField = null;
 
         public IntegerFieldHelper(String f, Object o) {
             super(f, o);
@@ -76,6 +78,10 @@ public class TextFieldHelper implements ITextEditable {
         @Override
         public void setTextField(String str) {
             String fixed = str.replaceAll("[^0-9]", "");
+            if (str.startsWith("-")) {
+                fixed = "-" + fixed;
+            }
+
             this.textField = fixed;
 
             try {
@@ -85,6 +91,26 @@ public class TextFieldHelper implements ITextEditable {
 
         public void setNumber(int parseInt) {
             set(parseInt);
+        }
+    }
+
+    public static class DoubleFieldHelper extends IntegerFieldHelper {
+        public DoubleFieldHelper(String f, Object o) {
+            super(f, o);
+        }
+
+        @Override
+        public void setTextField(String str) {
+            String fixed = str.replaceAll("[^0-9.]", "");
+            if (str.startsWith("-")) {
+                fixed = "-" + fixed;
+            }
+
+            this.textField = fixed;
+
+            try {
+                set(Double.parseDouble(str));
+            } catch (Exception e) {}
         }
     }
 

@@ -9,6 +9,7 @@ import joshie.crafting.gui.SelectItemOverlay;
 import joshie.crafting.gui.SelectItemOverlay.Type;
 import joshie.crafting.gui.SelectTextEdit;
 import joshie.crafting.gui.SelectTextEdit.ITextEditable;
+import joshie.crafting.helpers.ClientHelper;
 import joshie.crafting.helpers.StackHelper;
 import joshie.crafting.trigger.data.DataCrafting;
 import net.minecraft.init.Blocks;
@@ -78,6 +79,8 @@ public class TriggerCrafting extends TriggerBase implements IItemSelectable {
         data.addProperty("item", StackHelper.getStringFromStack(stack));
         if (matchDamage != true) data.addProperty("matchDamage", matchDamage);
         if (matchNBT != false) data.addProperty("matchNBT", matchNBT);
+        if (craftingTimes != 1) data.addProperty("craftingTimes", craftingTimes);
+        if (itemAmount != 1) data.addProperty("itemAmount", itemAmount);
     }
 
     @Override
@@ -98,7 +101,7 @@ public class TriggerCrafting extends TriggerBase implements IItemSelectable {
         if (stack.getItem() == crafted.getItem()) {
             if (matchDamage && stack.getItemDamage() != crafted.getItemDamage()) return;
             if (matchNBT && stack.getTagCompound() != crafted.getTagCompound()) return;
-            data.amountCrafted += stack.stackSize;
+            data.amountCrafted += crafted.stackSize;
             data.timesCrafted++;
         }
     }
@@ -126,21 +129,23 @@ public class TriggerCrafting extends TriggerBase implements IItemSelectable {
     @Override
     public void draw() {
         drawStack(stack, 76, 44, 1.4F);
-        int typeColor = 0xFF000000;
-        int matchColor = 0xFF000000;
-        int match2Color = 0xFF000000;
-        int usageColor = 0xFF000000;
-        if (mouseX <= 84 && mouseX >= 1) {
-            if (mouseY >= 17 && mouseY <= 25) typeColor = 0xFFBBBBBB;
-            if (mouseY > 25 && mouseY <= 33) matchColor = 0xFFBBBBBB;
-            if (mouseY > 34 && mouseY <= 41) match2Color = 0xFFBBBBBB;
-            if (mouseY > 42 && mouseY <= 50) usageColor = 0xFFBBBBBB;
+        int typeColor = 0xFFFFFFFF;
+        int matchColor = 0xFFFFFFFF;
+        int match2Color = 0xFFFFFFFF;
+        int usageColor = 0xFFFFFFFF;
+        if (ClientHelper.canEdit()) {
+            if (mouseX <= 84 && mouseX >= 1) {
+                if (mouseY >= 17 && mouseY <= 25) typeColor = 0xFFBBBBBB;
+                if (mouseY > 25 && mouseY <= 33) matchColor = 0xFFBBBBBB;
+                if (mouseY > 34 && mouseY <= 41) match2Color = 0xFFBBBBBB;
+                if (mouseY > 42 && mouseY <= 50) usageColor = 0xFFBBBBBB;
+            }
         }
 
         drawText("matchDamage: " + matchDamage, 4, 18, typeColor);
         drawText("matchNBT: " + matchNBT, 4, 26, matchColor);
-        drawText("craftingTimes: " + craftingTimes, 4, 34, match2Color);
-        drawText("itemAmount: " + itemAmount, 4, 42, usageColor);
+        drawText("craftingTimes: " + SelectTextEdit.INSTANCE.getText(editCraftAmount), 4, 34, match2Color);
+        drawText("itemAmount: " + SelectTextEdit.INSTANCE.getText(editItemAmount), 4, 42, usageColor);
     }
 
     private class CraftAmount implements ITextEditable {

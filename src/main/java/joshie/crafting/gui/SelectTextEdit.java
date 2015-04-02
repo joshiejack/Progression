@@ -31,12 +31,14 @@ public class SelectTextEdit extends TextEditable {
 
     @Override
     public String getTextField() {
-        return text.getTextField();
+        return text != null? text.getTextField(): null;
     }
 
     @Override
     public void setTextField(String str) {
-        text.setTextField(str);
+        if (text != null) {
+            text.setTextField(str);
+        }
     }
 
     public static interface ITextEditable {
