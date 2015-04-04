@@ -43,7 +43,7 @@ public class NewReward extends OverlayBase {
 
             yPos++;
 
-            if (yPos > 6) {
+            if (yPos > 7) {
                 xPos++;
                 yPos = 0;
             }
@@ -57,7 +57,7 @@ public class NewReward extends OverlayBase {
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
         int mouseX = GuiCriteriaEditor.INSTANCE.mouseX;
         int mouseY = GuiCriteriaEditor.INSTANCE.mouseY;
-        drawBox(-GuiCriteriaEditor.INSTANCE.offsetX + 150, 30, 200, 100, 0xDD000000, 0xFF000000);
+        drawBox(-GuiCriteriaEditor.INSTANCE.offsetX + 150, 30, 200, 120, 0xDD000000, 0xFF000000);
         drawGradient(-GuiCriteriaEditor.INSTANCE.offsetX + 150, 30, 200, 15, 0xFFFF0000, 0xFF660000, 0xFF000000);
         drawText("Select a Type of Reward", -GuiCriteriaEditor.INSTANCE.offsetX + 155, 34, 0xFFFFFFFF);
         int yPos = 0;
@@ -74,7 +74,7 @@ public class NewReward extends OverlayBase {
 
             yPos++;
 
-            if (yPos > 6) {
+            if (yPos > 7) {
                 xPos++;
                 yPos = 0;
             }

@@ -1,0 +1,3 @@
+Progression 0.2
+• Criteria Boxes adjust their width based on name and items displayed
+• If the default tab that is set in the config doesn't actually exist, then use the first tab we can find

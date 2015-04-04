@@ -70,7 +70,10 @@ public class CraftingMappings implements ICraftingMappings {
         }
 
         PacketHandler.sendToClient(new PacketSyncTriggers(values), player); //Sync all researches to the client
-        PacketHandler.sendToClient(new PacketSyncCriteria(true, completedCritera.values().toArray(new Integer[completedCritera.size()]), completedCritera.keySet().toArray(new ICriteria[completedCritera.size()])), player); //Sync all conditions to the client
+
+        if (completedCritera.size() > 0) {
+            PacketHandler.sendToClient(new PacketSyncCriteria(true, completedCritera.values().toArray(new Integer[completedCritera.size()]), completedCritera.keySet().toArray(new ICriteria[completedCritera.size()])), player); //Sync all conditions to the client
+        }
     }
 
     //Reads the completed criteria
@@ -242,7 +245,7 @@ public class CraftingMappings implements ICraftingMappings {
                 //The next step in the process is to update the active trigger maps for everything
                 //That we unlock with this criteria have been completed
                 toRemap.add(criteria);
-                
+
                 if (completedTimes == 1) { //Only do shit if this is the first time it was completed                    
                     toRemap.addAll(CraftingRemapper.criteriaToUnlocks.get(criteria));
                 }

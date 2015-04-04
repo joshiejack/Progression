@@ -29,6 +29,7 @@ public class NBTHelper {
 	public static NBTTagCompound writeCollection(NBTTagCompound nbt, String name, ICollectionHelper something) {
 		NBTTagList list = new NBTTagList();
 		for (Object s: something.getSet()) {
+		    if (s == null) continue;
 			list.appendTag(something.write(s));
 		}
 		
@@ -42,6 +43,7 @@ public class NBTHelper {
 			NBTTagCompound tag = list.getCompoundTagAt(i);
 			Object key = something.readKey(tag);
 			Object data = something.readValue(tag);
+			if (key == null || data == null) continue;
 			something.getMap().put(key, data);
 		}
 	}
@@ -51,8 +53,8 @@ public class NBTHelper {
 		for (Object o: something.getMap().keySet()) {
 			Object key = o;
 			Object value = something.getMap().get(key);
+	         if (key == null || value == null) continue;
 			NBTTagCompound tag = new NBTTagCompound();
-			if (key == null || value == null) continue;
 			something.writeKey(tag, key);
 			something.writeValue(tag, value);
 			list.appendTag(tag);

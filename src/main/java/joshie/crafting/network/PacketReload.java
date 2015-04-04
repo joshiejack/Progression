@@ -2,7 +2,10 @@ package joshie.crafting.network;
 
 import joshie.crafting.CraftingRemapper;
 import joshie.crafting.helpers.ClientHelper;
+import joshie.crafting.helpers.PlayerHelper;
 import joshie.crafting.json.Options;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChatComponentText;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -19,6 +22,9 @@ public class PacketReload extends PacketAction implements IMessageHandler<Packet
             if (Options.editor) {
                 //Perform a reset of all the data serverside
                 CraftingRemapper.reloadServerData();
+                for (EntityPlayer player: PlayerHelper.getAllPlayers()) {
+                    CraftingRemapper.onPlayerConnect((EntityPlayerMP) player);
+                }
             }
         }
 

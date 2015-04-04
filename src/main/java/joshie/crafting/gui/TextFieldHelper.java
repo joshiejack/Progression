@@ -19,6 +19,16 @@ public class TextFieldHelper implements ITextEditable {
     public void select() {
         SelectTextEdit.INSTANCE.select(this);
     }
+    
+    public double getDouble() {
+        try {
+            return (Double) f.get(o);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return 0D;
+    }
 
     public int getInteger() {
         try {
@@ -97,6 +107,15 @@ public class TextFieldHelper implements ITextEditable {
     public static class DoubleFieldHelper extends IntegerFieldHelper {
         public DoubleFieldHelper(String f, Object o) {
             super(f, o);
+        }
+        
+        @Override
+        public String getTextField() {
+            if (textField == null) {
+                textField = "" + getDouble();
+            }
+
+            return textField;
         }
 
         @Override

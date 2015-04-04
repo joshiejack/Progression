@@ -88,7 +88,7 @@ public class StackHelper {
     }
 
     public static boolean isAmount(String str) {
-        return str.startsWith(str);
+        return str.startsWith("*");
     }
 
     private static ItemStack getStackFromArray(String[] str) {
@@ -97,7 +97,7 @@ public class StackHelper {
         int amount = 1;
         ItemStack stack = new ItemStack(item, 1, meta);
         NBTTagCompound tag = null;
-        if (str.length > 1) {
+        if (str.length > 1) {            
             if (isAmount(str[1])) amount = parseAmount(str[1]);
             else meta = parseMeta(str[1]);
         }
@@ -110,6 +110,8 @@ public class StackHelper {
         if (str.length > 3) {
             amount = parseAmount(str[3]);
         }
+                
+        stack.setItemDamage(meta);
 
         if (tag != null) {
             stack.setTagCompound(tag);

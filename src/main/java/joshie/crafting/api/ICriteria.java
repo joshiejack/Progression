@@ -61,4 +61,6 @@ public interface ICriteria extends IHasUniqueName {
     public ITab getTabID();
 
     public void addTooltip(List<String> toolTip);
+
+    public ICriteriaViewer getCriteriaViewer();
 }

@@ -82,12 +82,14 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (!checkAndCancelEvent(event)) {
             Collection<ICriteria> requirements = CraftingAPI.crafting.getCraftingCriteria(type, event.entityPlayer.getCurrentEquippedItem());
-            for (ICriteria c : requirements) {
-                GuiCriteriaEditor.INSTANCE.selected = c;
-                break;
-            }
+            if (requirements.size() > 0) {
+                for (ICriteria c : requirements) {
+                    GuiCriteriaEditor.INSTANCE.selected = c;
+                    break;
+                }
 
-            event.entityPlayer.openGui(CraftingMod.instance, 1, null, 0, 0, 0);
+                event.entityPlayer.openGui(CraftingMod.instance, 1, null, 0, 0, 0);
+            }
         }
     }
 
@@ -95,12 +97,17 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
     public void onItemTooltipEvent(ItemTooltipEvent event) {
         ICrafter crafter = CraftingAPI.crafting.getCrafterFromPlayer(event.entityPlayer);
         if (!crafter.canCraftItem(CraftingType.CRAFTING, event.itemStack)) {
-            event.toolTip.clear();
-            event.toolTip.add(EnumChatFormatting.RED + event.itemStack.getDisplayName());
-            event.toolTip.add("Currently Locked");
+            boolean hasStuff = false;
             for (CraftingType type : CraftingType.craftingTypes) {
                 Collection<ICriteria> requirements = CraftingAPI.crafting.getCraftingCriteria(type, event.itemStack);
                 if (requirements.size() > 0) {
+                    if (!hasStuff) {
+                        event.toolTip.clear();
+                        event.toolTip.add(EnumChatFormatting.RED + event.itemStack.getDisplayName());
+                        event.toolTip.add("Currently Locked");
+                        hasStuff = true;
+                    }
+
                     event.toolTip.add(EnumChatFormatting.WHITE + type.getDisplayName());
                     for (ICriteria c : requirements) {
                         c.addTooltip(event.toolTip);
@@ -108,7 +115,9 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
                 }
             }
 
-            event.toolTip.add(EnumChatFormatting.AQUA + "Click for more info");
+            if (hasStuff) {
+                event.toolTip.add(EnumChatFormatting.AQUA + "Click for more info");
+            }
         }
     }
 

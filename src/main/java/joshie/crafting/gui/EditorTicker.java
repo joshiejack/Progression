@@ -23,7 +23,7 @@ public class EditorTicker {
         
         if (LAST_TICK > 0) {
             LAST_TICK--;
-
+            
             if (LAST_TICK == 0) {
                 PacketHandler.sendToServer(new PacketReload());
             }

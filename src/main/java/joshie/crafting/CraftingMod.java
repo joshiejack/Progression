@@ -22,6 +22,7 @@ import joshie.crafting.lib.CraftingInfo;
 import joshie.crafting.network.PacketHandler;
 import joshie.crafting.network.PacketReload;
 import joshie.crafting.network.PacketReset;
+import joshie.crafting.network.PacketRewardItem;
 import joshie.crafting.network.PacketSyncAbilities;
 import joshie.crafting.network.PacketSyncCriteria;
 import joshie.crafting.network.PacketSyncJSON;
@@ -35,6 +36,7 @@ import joshie.crafting.rewards.RewardItem;
 import joshie.crafting.rewards.RewardPoints;
 import joshie.crafting.rewards.RewardResearch;
 import joshie.crafting.rewards.RewardSpeed;
+import joshie.crafting.rewards.RewardTime;
 import joshie.crafting.trigger.TriggerBreakBlock;
 import joshie.crafting.trigger.TriggerCrafting;
 import joshie.crafting.trigger.TriggerKill;
@@ -120,6 +122,7 @@ public class CraftingMod {
         CraftingAPI.registry.registerRewardType(new RewardResearch());
         CraftingAPI.registry.registerRewardType(new RewardPoints());
         CraftingAPI.registry.registerRewardType(new RewardSpeed());
+        CraftingAPI.registry.registerRewardType(new RewardTime());
 
         CraftingAPI.registry.registerTriggerType(new TriggerBreakBlock());
         CraftingAPI.registry.registerTriggerType(new TriggerCrafting());
@@ -136,6 +139,7 @@ public class CraftingMod {
         PacketHandler.registerPacket(PacketSyncTriggers.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketSyncCriteria.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketSyncAbilities.class, Side.CLIENT);
+        PacketHandler.registerPacket(PacketRewardItem.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketSyncJSON.class);
         PacketHandler.registerPacket(PacketReload.class);
         PacketHandler.registerPacket(PacketReset.class);

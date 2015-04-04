@@ -13,7 +13,10 @@ import joshie.crafting.helpers.ClientHelper;
 import joshie.crafting.helpers.PlayerHelper;
 import joshie.crafting.helpers.SpawnItemHelper;
 import joshie.crafting.helpers.StackHelper;
+import joshie.crafting.network.PacketHandler;
+import joshie.crafting.network.PacketRewardItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
@@ -50,6 +53,7 @@ public class RewardItem extends RewardBase implements IItemSelectable, ITextEdit
     public void reward(UUID uuid) {
         EntityPlayer player = PlayerHelper.getPlayerFromUUID(uuid);
         if (player != null) {
+            PacketHandler.sendToClient(new PacketRewardItem(stack.copy()), (EntityPlayerMP)player);
             SpawnItemHelper.addToPlayerInventory(player, stack.copy());
         }
     }

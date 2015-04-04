@@ -19,16 +19,18 @@ public class NEIOverrideHandler extends TemplateRecipeHandler {
     }
 
     @Override
-    public void loadCraftingRecipes(ItemStack result) {        
+    public void loadCraftingRecipes(ItemStack result) {
         ICrafter crafter = CraftingAPI.crafting.getCrafterFromPlayer(ClientHelper.getPlayer());
         if (!crafter.canCraftItem(CraftingType.CRAFTING, result)) {
             Collection<ICriteria> requirements = CraftingAPI.crafting.getCraftingCriteria(CraftingType.CRAFTING, result);
-            for (ICriteria c: requirements) {
-                GuiCriteriaEditor.INSTANCE.selected = c;
-                break;
+            if (requirements.size() > 0) {
+                for (ICriteria c : requirements) {
+                    GuiCriteriaEditor.INSTANCE.selected = c;
+                    break;
+                }
+
+                EditorTicker.OVERRIDE_TICK = 1;
             }
-            
-            EditorTicker.OVERRIDE_TICK = 1;
         }
     }
 

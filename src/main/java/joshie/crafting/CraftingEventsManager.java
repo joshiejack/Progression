@@ -74,7 +74,7 @@ public class CraftingEventsManager {
         }
 
         for (IRewardType type : CraftAPIRegistry.rewardTypes.values()) { //Loop through all reward types
-            if (!activeRewardTypes.contains(type.getTypeName())) { //If we haven't added this type to active rewards yet add it
+            if (activeRewardTypes.contains(type.getTypeName())) { //If we haven't added this type to active rewards yet add it
                 Bus bus = type.getBusType();
                 if (bus == Bus.FML) {
                     FMLCommonHandler.instance().bus().register(type);

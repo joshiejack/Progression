@@ -6,12 +6,14 @@ import java.util.List;
 
 import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.ICriteriaEditor;
+import joshie.crafting.api.ICriteriaViewer;
 import joshie.crafting.api.IReward;
 import joshie.crafting.api.ITab;
 import joshie.crafting.api.ITreeEditor;
 import joshie.crafting.api.ITrigger;
 import joshie.crafting.gui.EditorCriteria;
 import joshie.crafting.gui.EditorTree;
+import joshie.crafting.gui.ViewerCriteria;
 
 public class CraftingCriteria implements ICriteria {
     /** All the data for this **/
@@ -21,6 +23,7 @@ public class CraftingCriteria implements ICriteria {
     private List<ICriteria> conflicts = new ArrayList();
     private ITreeEditor treeEditor;
     private ICriteriaEditor criteriaEditor;
+    private ICriteriaViewer criteriaViewer;
     private int isRepeatable = 1;
     private String uniqueName;
     private String displayName;
@@ -30,6 +33,7 @@ public class CraftingCriteria implements ICriteria {
     public CraftingCriteria() {
         this.treeEditor = new EditorTree(this);
         this.criteriaEditor = new EditorCriteria(this);
+        this.criteriaViewer = new ViewerCriteria(this);
     }
 
     @Override
@@ -143,6 +147,11 @@ public class CraftingCriteria implements ICriteria {
     @Override
     public ICriteriaEditor getCriteriaEditor() {
         return criteriaEditor;
+    }
+    
+    @Override
+    public ICriteriaViewer getCriteriaViewer() {
+        return criteriaViewer;
     }
     
     @Override

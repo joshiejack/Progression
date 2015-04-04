@@ -74,6 +74,14 @@ public class GuiTreeEditor extends GuiBase {
         }
 
         currentTab = CraftingAPI.registry.getTabFromName(currentTabName);
+        if (currentTab == null) {
+            for (ITab tab : CraftAPIRegistry.tabs.values()) {
+                currentTab = tab;
+                break;
+            }
+
+            currentTabName = currentTab.getUniqueName();
+        }
     }
 
     @Override
@@ -155,6 +163,7 @@ public class GuiTreeEditor extends GuiBase {
 
     @Override
     protected void mouseClicked(int par1, int par2, int par3) {
+        if (currentTab == null) return;
         long thisClick = System.currentTimeMillis();
         long difference = thisClick - lastClick;
         boolean isDoubleClick = par3 == 0 && lastType == 0 && difference <= 500;

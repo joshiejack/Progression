@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import joshie.crafting.CraftingMod;
 import joshie.crafting.api.CraftingAPI;
@@ -33,7 +32,7 @@ public class EditorTree implements ITreeEditor {
     protected int right;
     protected int top;
     protected int bottom;
-    protected int width = 100;
+    protected int width = 200;
     protected int height = 25;
     protected int offsetX = 0;
     private int x;
@@ -59,7 +58,28 @@ public class EditorTree implements ITreeEditor {
         this.y = y;
     }
 
+    private int getWidthFromRewards() {
+        int size = criteria.getRewards().size();
+        if (size == 1) {
+            return 21; //12 Bigger 1 * 12 + 9
+        } else if (size == 2) {
+            return 33; // 12 Bigger 2 * 12
+        } else if (size == 3) {
+            return 45; //12 Bigger
+        } else if (size == 4) {
+            return 57; //12 Bigger
+        }
+
+        return 0;
+    }
+
     private void recalculate(int x) {
+        int textWidth = gui.mc.fontRenderer.getStringWidth(criteria.getDisplayName());
+        int iconWidth = 9 + (criteria.getRewards().size() * 12);
+        if (textWidth >= iconWidth) {
+            width = textWidth + 9;
+        } else width = iconWidth;
+
         left = this.x + x;
         right = (int) (this.x + width) + x;
         top = this.y;
@@ -70,26 +90,26 @@ public class EditorTree implements ITreeEditor {
     public void draw(int x, int y, int offsetX) {
         draw(x, y, offsetX, 0);
     }
-    
+
     @Override
     public boolean isCriteriaVisible() {
         if (criteria.isVisible()) return true;
         else return CraftingAPI.players.getClientPlayer().getMappings().getCompletedCriteria().keySet().containsAll(criteria.getRequirements());
     }
-    
+
     public boolean isCriteriaCompleteable(ICriteria criteria) {
         HashMap<ICriteria, Integer> completedMap = CraftingAPI.players.getClientPlayer().getMappings().getCompletedCriteria();
         boolean completeable = true;
         //Check the conflicts of this criteria
-        for (ICriteria conflicts: criteria.getConflicts()) {
+        for (ICriteria conflicts : criteria.getConflicts()) {
             if (completedMap.containsKey(conflicts)) return false;
         }
-        
+
         //Check the requirements, if they aren't completable return false
-        for (ICriteria requirements: criteria.getRequirements()) {
+        for (ICriteria requirements : criteria.getRequirements()) {
             if (!isCriteriaCompleteable(requirements)) return false;
         }
-        
+
         return true;
     }
 
@@ -159,7 +179,14 @@ public class EditorTree implements ITreeEditor {
 
             GL11.glColor4f(1F, 1F, 1F, 1F);
             gui.mc.getTextureManager().bindTexture(textures);
-            gui.drawTexturedModalRect(x + left, y + top, textureX, textureY, 100, 25);
+            gui.drawTexturedModalRect(x + left, y + top, textureX, textureY, 10, 25);
+            for (int i = 0; i < width - 20; i++) {
+                gui.drawTexturedModalRect(x + left + 10 + i, y + top, textureX + 10, textureY, 1, 25);
+            }
+
+            gui.drawTexturedModalRect(x + right - 10, y + top, textureX + 90, textureY, 10, 25);
+
+            //gui.drawTexturedModalRect(x + left, y + top, textureX, textureY, 100, 25);
             gui.mc.fontRenderer.drawString(criteria.getDisplayName(), x + left + 4, y + top + 3, 0xFFFFFFFF);
 
             GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
@@ -198,7 +225,7 @@ public class EditorTree implements ITreeEditor {
                 if (isOver(mouseX, mouseY)) {
                     List list = new ArrayList();
                     if (ClientHelper.canEdit()) {
-                        list.add("Double Click to edit");
+                        list.add("Double Click to edit (Hold shift for display mode)");
                         list.add("Shift + Click to make something a requirement");
                         list.add("Ctrl + Click to make something conflict");
                         list.add("I + Click to Hide/Unhide");
@@ -257,7 +284,7 @@ public class EditorTree implements ITreeEditor {
     }
 
     @Override
-    public boolean click(int x, int y, boolean isDouble) {       
+    public boolean click(int x, int y, boolean isDouble) {
         if (isOver(x, y)) {
             if (noOtherSelected()) {
                 ICriteria previous = getPrevious();
@@ -272,6 +299,10 @@ public class EditorTree implements ITreeEditor {
                     } else if (GuiScreen.isCtrlKeyDown()) {
                         list = previous.getConflicts();
                         isConflict = true;
+                    }
+
+                    if (previous == criteria) {
+                        list = null;
                     }
 
                     if (list != null) {
@@ -303,8 +334,14 @@ public class EditorTree implements ITreeEditor {
                 if (isDouble && GuiTreeEditor.INSTANCE.previous == criteria) {
                     isHeld = false;
                     isSelected = false;
-                    GuiCriteriaEditor.INSTANCE.selected = criteria;
-                    ClientHelper.getPlayer().openGui(CraftingMod.instance, 1, null, 0, 0, 0);
+
+                    if (GuiScreen.isShiftKeyDown()) {
+                        GuiCriteriaViewer.INSTANCE.selected = criteria;
+                        ClientHelper.getPlayer().openGui(CraftingMod.instance, 3, null, 0, 0, 0);
+                    } else {
+                        GuiCriteriaEditor.INSTANCE.selected = criteria;
+                        ClientHelper.getPlayer().openGui(CraftingMod.instance, 1, null, 0, 0, 0);
+                    }
                     return true;
                 }
 

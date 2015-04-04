@@ -12,6 +12,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -19,6 +20,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 public abstract class GuiBase extends GuiScreen {
+    protected static final ResourceLocation textures = new ResourceLocation("crafting", "textures/gui/textures.png");
     public int mouseX = 0;
     public int mouseY = 0;
 
@@ -38,7 +40,6 @@ public abstract class GuiBase extends GuiScreen {
         super.initGui();
         y = (height - ySize) / 2;
         Keyboard.enableRepeatEvents(true);
-        EditorTicker.LAST_TICK = 1000;
         res = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
     }
 
@@ -49,6 +50,7 @@ public abstract class GuiBase extends GuiScreen {
     public void onGuiClosed() {
         Keyboard.enableRepeatEvents(false);
         JSONLoader.saveData();
+        EditorTicker.LAST_TICK = 60;
     }
 
     public void drawScreen(int x, int y, float f) {
@@ -82,6 +84,10 @@ public abstract class GuiBase extends GuiScreen {
         drawRect(x2 - 1, y, x2, y2, border);
         drawRect(x, y, x2, y + 1, border);
         drawRect(x, y2 - 1, x2, y2, border);
+    }
+    
+    public void drawText(String text, int x, int y, int color) {
+        mc.fontRenderer.drawString(text, x, y, color);
     }
 
     public void drawLine(int x, int y, int x2, int y2, int thickness, int color) {

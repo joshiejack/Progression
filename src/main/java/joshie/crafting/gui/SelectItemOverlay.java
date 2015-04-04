@@ -2,6 +2,7 @@ package joshie.crafting.gui;
 
 import java.util.ArrayList;
 
+import joshie.crafting.helpers.ClientHelper;
 import joshie.crafting.helpers.ItemHelper;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.item.ItemStack;
@@ -137,12 +138,21 @@ public class SelectItemOverlay extends TextEditable implements IRenderOverlay {
             drawBox(285 - offsetX, 27 + type.yOffset, 200, 12, 0xFF000000, 0xFFFFFFFF);
             drawText(getText(), 290 - offsetX, 29 + type.yOffset, 0xFFFFFFFF);
 
+            int mouseX = GuiCriteriaEditor.INSTANCE.mouseX;
+            int mouseY = GuiCriteriaEditor.INSTANCE.mouseY;
             int width = (int) ((double) fullWidth / 16.633333334D);
             int j = 0;
             int k = 0;
             for (int i = position; i < position + (width * 4); i++) {
                 if (i >= 0 && i < sorted.size()) {
-                    drawStack(sorted.get(i), -offsetX + 8 + (j * 16), type.yOffset + 45 + (k * 16), 1F);
+                    ItemStack stack = sorted.get(i);
+                    drawStack(stack, -offsetX + 8 + (j * 16), type.yOffset + 45 + (k * 16), 1F);
+                    if (mouseX >= 8 + (j * 16) && mouseX <= 8 + (j * 16) + 16) {
+                        if (mouseY >= 45 + (k * 16) && mouseY <= 45 + (k * 16) + 16) {
+                            GuiCriteriaEditor.INSTANCE.addTooltip(stack.getTooltip(ClientHelper.getPlayer(), false));
+                        }
+                    }
+                    
 
                     j++;
 
