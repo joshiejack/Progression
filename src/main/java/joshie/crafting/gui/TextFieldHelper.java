@@ -13,9 +13,9 @@ public class TextFieldHelper implements ITextEditable {
 
     public TextFieldHelper(String f, Object o) {
         try {
-            this.f = o.getClass().getDeclaredField(f);
+            this.f = o.getClass().getField(f);
             this.o = o;
-        } catch (Exception e) {}
+        } catch (Exception e) { e.printStackTrace(); }
     }
 
     public void select() {

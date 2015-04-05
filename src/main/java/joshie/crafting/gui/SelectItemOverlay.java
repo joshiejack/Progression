@@ -139,7 +139,7 @@ public class SelectItemOverlay extends TextEditable implements IRenderOverlay {
             drawText(getText(), 290 - offsetX, 29 + type.yOffset, 0xFFFFFFFF);
 
             int mouseX = GuiCriteriaEditor.INSTANCE.mouseX;
-            int mouseY = GuiCriteriaEditor.INSTANCE.mouseY;
+            int mouseY = GuiCriteriaEditor.INSTANCE.mouseY - type.yOffset;
             int width = (int) ((double) fullWidth / 16.633333334D);
             int j = 0;
             int k = 0;
@@ -147,8 +147,8 @@ public class SelectItemOverlay extends TextEditable implements IRenderOverlay {
                 if (i >= 0 && i < sorted.size()) {
                     ItemStack stack = sorted.get(i);
                     drawStack(stack, -offsetX + 8 + (j * 16), type.yOffset + 45 + (k * 16), 1F);
-                    if (mouseX >= 8 + (j * 16) && mouseX <= 8 + (j * 16) + 16) {
-                        if (mouseY >= 45 + (k * 16) && mouseY <= 45 + (k * 16) + 16) {
+                    if (mouseX >= 8 + (j * 16) && mouseX < 8 + (j * 16) + 16) {
+                        if (mouseY >= 45 + (k * 16) && mouseY < 45 + (k * 16) + 16) {
                             GuiCriteriaEditor.INSTANCE.addTooltip(stack.getTooltip(ClientHelper.getPlayer(), false));
                         }
                     }

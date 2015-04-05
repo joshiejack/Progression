@@ -46,6 +46,7 @@ import joshie.crafting.trigger.TriggerLogin;
 import joshie.crafting.trigger.TriggerObtain;
 import joshie.crafting.trigger.TriggerPoints;
 import joshie.crafting.trigger.TriggerResearch;
+import joshie.crafting.trigger.TriggerClickBlock;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.item.Item;
@@ -134,6 +135,7 @@ public class CraftingMod {
         CraftingAPI.registry.registerTriggerType(new TriggerLogin());
         CraftingAPI.registry.registerTriggerType(new TriggerObtain());
         CraftingAPI.registry.registerTriggerType(new TriggerResearch());
+        CraftingAPI.registry.registerTriggerType(new TriggerClickBlock());
         CraftingAPI.registry.registerTriggerType(new TriggerPoints());
 
         CraftingAPI.commands.registerCommand(new CommandHelp());

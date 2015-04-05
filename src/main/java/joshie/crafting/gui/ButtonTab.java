@@ -90,7 +90,7 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
                 }
 
                 if (newTab == null) {
-                    newTab = CraftingAPI.registry.newTab(CraftAPIRegistry.getNextUnique()).setDisplayName("New Tab").setStack(new ItemStack(Items.book));
+                    newTab = CraftingAPI.registry.newTab(CraftAPIRegistry.getNextUnique()).setDisplayName("New Tab").setStack(new ItemStack(Items.book)).setVisibility(true);
                 }
 
                 GuiTreeEditor.INSTANCE.selected = null;
