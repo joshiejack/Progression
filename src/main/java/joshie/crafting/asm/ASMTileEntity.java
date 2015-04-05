@@ -25,9 +25,9 @@ public class ASMTileEntity extends AbstractASM {
 		
 		@Override
 		public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-			MethodVisitor visitor = super.visitMethod(access, name, desc, signature, exceptions);
-			if (desc.equals("(Lnet/minecraft/nbt/NBTTagCompound;)V")) {
-				if (name.equals("readFromNBT") || name.equals("func_145839_a")) {
+			MethodVisitor visitor = super.visitMethod(access, name, desc, signature, exceptions);			
+			if (desc.equals("(Lnet/minecraft/nbt/NBTTagCompound;)V") || desc.equals("(Ldh;)V")) {
+				if (name.equals("readFromNBT") || name.equals("a")) {
 					return new MethodVisitor(Opcodes.ASM4, visitor) {
 						@Override
 						public void visitCode() {
@@ -37,7 +37,7 @@ public class ASMTileEntity extends AbstractASM {
 					        mv.visitMethodInsn(Opcodes.INVOKESTATIC, CraftingInfo.ASMPATH + "player/PlayerTracker", "readFromNBT", "(Lnet/minecraft/tileentity/TileEntity;Lnet/minecraft/nbt/NBTTagCompound;)V", false);
 						}
 					};
-				} else if (name.equals("writeToNBT") || name.equals("func_145841_b")) {
+				} else if (name.equals("writeToNBT") || name.equals("b")) {
 					return new MethodVisitor(Opcodes.ASM4, visitor) {
 						@Override
 						public void visitCode() {

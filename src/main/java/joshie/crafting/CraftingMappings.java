@@ -70,10 +70,7 @@ public class CraftingMappings implements ICraftingMappings {
         }
 
         PacketHandler.sendToClient(new PacketSyncTriggers(values), player); //Sync all researches to the client
-
-        if (completedCritera.size() > 0) {
-            PacketHandler.sendToClient(new PacketSyncCriteria(true, completedCritera.values().toArray(new Integer[completedCritera.size()]), completedCritera.keySet().toArray(new ICriteria[completedCritera.size()])), player); //Sync all conditions to the client
-        }
+        PacketHandler.sendToClient(new PacketSyncCriteria(true, completedCritera.values().toArray(new Integer[completedCritera.size()]), completedCritera.keySet().toArray(new ICriteria[completedCritera.size()])), player); //Sync all conditions to the client
     }
 
     //Reads the completed criteria
@@ -128,7 +125,9 @@ public class CraftingMappings implements ICraftingMappings {
     public void markCriteriaAsCompleted(boolean overwrite, Integer[] values, ICriteria... conditions) {
         if (overwrite) completedCritera = new HashMap();
         for (int i = 0; i < values.length; i++) {
-            completedCritera.put(conditions[i], values[i]);
+            if (values[i] == 0) {
+                completedCritera.remove(conditions[i]);
+            } else completedCritera.put(conditions[i], values[i]);
         }
     }
 
@@ -161,10 +160,31 @@ public class CraftingMappings implements ICraftingMappings {
         } else return data;
     }
 
+    HashSet<ITrigger> forRemovalFromActive = new HashSet();
+    HashSet<ITrigger> forRemovalFromCompleted = new HashSet();
+    HashSet<ICriteria> toRemap = new HashSet();
+
     /** Called to fire a trigger type, Triggers are only ever called on criteria that is activated **/
     @Override
     public boolean fireAllTriggers(String type, Object... data) {
         if (activeTriggers == null) return false; //If the remapping hasn't occured yet, say goodbye!
+
+        //If the trigger is a forced completion, then force complete it
+        if (type.equals("forced-complete")) {
+            ICriteria criteria = (ICriteria) data[0];
+            if (criteria == null) return false;
+            else completeCriteria(criteria);
+            remapStuff();
+            CraftingMod.data.markDirty();
+            return true;
+        } else if (type.equals("forced-remove")) {
+            ICriteria criteria = (ICriteria) data[0];
+            if (criteria == null) return false;
+            else removeCriteria(criteria);
+            remap(); //Remap everything
+            CraftingMod.data.markDirty();
+            return true;
+        }
 
         EntityPlayer player = PlayerHelper.getPlayerFromUUID(uuid);
         World world = player == null ? DimensionManager.getWorld(0) : player.worldObj;
@@ -202,9 +222,9 @@ public class CraftingMappings implements ICraftingMappings {
         }
 
         //Create a list of new triggers to add to the active trigger map
-        HashSet<ITrigger> forRemovalFromActive = new HashSet();
-        HashSet<ITrigger> forRemovalFromCompleted = new HashSet();
-        HashSet<ICriteria> toRemap = new HashSet();
+        forRemovalFromActive = new HashSet(); //Reset them
+        forRemovalFromCompleted = new HashSet(); //Reset them
+        toRemap = new HashSet(); //Reset them
 
         //Next step, now that we have fired the trigger, we need to go through all the active criteria
         //We should check if all triggers have been fulfilled
@@ -219,41 +239,57 @@ public class CraftingMappings implements ICraftingMappings {
             }
 
             if (allFired) {
-                //We have completed this criteria we now to remap everything
-                //First step, Complete the criteria
+                completeCriteria(criteria);
                 completedAnyCriteria = true;
-                int completedTimes = getCriteriaCount(criteria);
-                completedTimes++;
-                completedCritera.put(criteria, completedTimes);
-                //Now that we have updated how times we have completed this quest
-                //We should mark all the triggers for removal from activetriggers, as well as actually remove their stored data
-                for (ITrigger criteriaTrigger : allTriggers) {
-                    forRemovalFromActive.add(criteriaTrigger);
-                    //Remove all the conflicts triggers
-                    for (ICriteria conflict : criteria.getConflicts()) {
-                        forRemovalFromActive.addAll(conflict.getTriggers());
-                    }
-
-                    triggerData.remove(criteriaTrigger);
-                }
-
-                //Now that we have removed all the triggers, and marked this as completed, we should give out the rewards
-                for (IReward reward : criteria.getRewards()) {
-                    reward.reward(uuid);
-                }
-
-                //The next step in the process is to update the active trigger maps for everything
-                //That we unlock with this criteria have been completed
-                toRemap.add(criteria);
-
-                if (completedTimes == 1) { //Only do shit if this is the first time it was completed                    
-                    toRemap.addAll(CraftingRemapper.criteriaToUnlocks.get(criteria));
-                }
-
-                PacketHandler.sendToClient(new PacketSyncCriteria(false, new Integer[] { completedTimes }, new ICriteria[] { criteria }), uuid);
             }
         }
 
+        remapStuff();
+
+        //Mark data as dirty, whether it changed or not
+        CraftingMod.data.markDirty();
+        return completedAnyCriteria;
+    }
+
+    public void removeCriteria(ICriteria criteria) {
+        completedCritera.remove(criteria);
+        PacketHandler.sendToClient(new PacketSyncCriteria(false, new Integer[] { 0 }, new ICriteria[] { criteria }), uuid);
+    }
+
+    private void completeCriteria(ICriteria criteria) {
+        List<ITrigger> allTriggers = criteria.getTriggers();
+        int completedTimes = getCriteriaCount(criteria);
+        completedTimes++;
+        completedCritera.put(criteria, completedTimes);
+        //Now that we have updated how times we have completed this quest
+        //We should mark all the triggers for removal from activetriggers, as well as actually remove their stored data
+        for (ITrigger criteriaTrigger : allTriggers) {
+            forRemovalFromActive.add(criteriaTrigger);
+            //Remove all the conflicts triggers
+            for (ICriteria conflict : criteria.getConflicts()) {
+                forRemovalFromActive.addAll(conflict.getTriggers());
+            }
+
+            triggerData.remove(criteriaTrigger);
+        }
+
+        //Now that we have removed all the triggers, and marked this as completed, we should give out the rewards
+        for (IReward reward : criteria.getRewards()) {
+            reward.reward(uuid);
+        }
+
+        //The next step in the process is to update the active trigger maps for everything
+        //That we unlock with this criteria have been completed
+        toRemap.add(criteria);
+
+        if (completedTimes == 1) { //Only do shit if this is the first time it was completed                    
+            toRemap.addAll(CraftingRemapper.criteriaToUnlocks.get(criteria));
+        }
+
+        PacketHandler.sendToClient(new PacketSyncCriteria(false, new Integer[] { completedTimes }, new ICriteria[] { criteria }), uuid);
+    }
+
+    private void remapStuff() {
         //Removes all the triggers from the active map
         for (ITrigger trigger : forRemovalFromActive) {
             activeTriggers.get(trigger.getTypeName()).remove(trigger);
@@ -263,10 +299,6 @@ public class CraftingMappings implements ICraftingMappings {
         for (ICriteria criteria : toRemap) {
             remapCriteriaOnCompletion(criteria);
         }
-
-        //Mark data as dirty, whether it changed or not
-        CraftingMod.data.markDirty();
-        return completedAnyCriteria;
     }
 
     public int getCriteriaCount(ICriteria criteria) {

@@ -57,6 +57,7 @@ public class PacketSyncCriteria implements IMessage, IMessageHandler<PacketSyncC
         if (message.overwrite) {
         	for (ICriteria condition: CraftAPIRegistry.criteria.values()) {
         		for (ICriteria unlocked: message.criteria) {
+        		    if (unlocked == null) continue;
         			for (IReward reward: unlocked.getRewards()) {
         				if (reward instanceof RewardCrafting) {
         					reward.reward(CraftingAPI.players.getClientPlayer().getUUID());

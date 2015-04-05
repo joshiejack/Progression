@@ -1,3 +1,15 @@
-Progression 0.2
-• Criteria Boxes adjust their width based on name and items displayed
-• If the default tab that is set in the config doesn't actually exist, then use the first tab we can find
+Progression 0.2.0
+  Fixed crafting locking, and other stuff not working outside of dev
+  Added 'Criteria' reward. Complete/Uncomplete criteria at will
+  Added 'Command' reward. Executes command. Use @u wherever you would want a username e.g. /xp 100 @u
+  Added 'In Inventory' condition. Checks for certain number of items in inventory.
+  Added option to specify mod name for craft locks, this will check the prefix of items in the registry
+     Which will stop all crafts for that specific mod
+  Added an option for consume, on the obtain trigger. (Will delete the amount as soon as in inventory).
+  Criteria Boxes adjust their width based on name and items displayed
+  If the default tab that is set in the config doesn't actually exist, then use the first tab we can find
+  Crafting trigger works on shift click in certain crafting tables atm (Support has to be added for each container)
+  So far:
+     Player Inventory
+     Vanilla Crafting Table
+     Tinkers Crafting Station

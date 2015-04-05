@@ -21,7 +21,6 @@ public class GuiTreeEditor extends GuiBase {
     public static final GuiTreeEditor INSTANCE = new GuiTreeEditor();
     public String currentTabName;
     public ITab currentTab;
-    public ClickMode mode;
 
     private static class SortIndex implements Comparator {
         @Override
@@ -95,9 +94,19 @@ public class GuiTreeEditor extends GuiBase {
                     int y2 = editor.getY();
                     int x1 = p.getTreeEditor().getX();
                     int x2 = editor.getX();
-                    drawLine(offsetX + 95 + x1, y + 12 + y1 - 1, offsetX + 5 + x2, y + 12 + y2 - 1, 1, 0xDDB9B9AD);
-                    drawLine(offsetX + 95 + x1, y + 12 + y1 + 1, offsetX + 5 + x2, y + 12 + y2 + 1, 1, 0xFF636C69); //#636C69
-                    drawLine(offsetX + 95 + x1, y + 12 + y1, offsetX + 5 + x2, y + 12 + y2, 1, 0xFFE8EFE7);
+                    
+                    int width = 0;
+                    int textWidth = mc.fontRenderer.getStringWidth(p.getDisplayName());
+                    int iconWidth = 9 + (p.getRewards().size() * 12);
+                    if (textWidth >= iconWidth) {
+                        width = textWidth + 9;
+                    } else width = iconWidth;     
+                    
+                    width -= 3;
+                    
+                    drawLine(offsetX + width + x1, y + 12 + y1 - 1, offsetX + 5 + x2, y + 12 + y2 - 1, 1, 0xDDB9B9AD);
+                    drawLine(offsetX + width + x1, y + 12 + y1 + 1, offsetX + 5 + x2, y + 12 + y2 + 1, 1, 0xFF636C69); //#636C69
+                    drawLine(offsetX + width + x1, y + 12 + y1, offsetX + 5 + x2, y + 12 + y2, 1, 0xFFE8EFE7);
                 }
             }
         }
@@ -198,9 +207,5 @@ public class GuiTreeEditor extends GuiBase {
                 criteria.getTreeEditor().scroll(wheel < 0);
             }
         }
-    }
-
-    public static enum ClickMode {
-        DEFAULT;
     }
 }

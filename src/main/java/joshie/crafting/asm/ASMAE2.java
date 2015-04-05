@@ -34,9 +34,9 @@ public class ASMAE2 extends AbstractASM {
 		}
 		
 		@Override
-		public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+		public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {		    
 			MethodVisitor visitor = super.visitMethod(access, name, desc, signature, exceptions);
-			if (desc.equals("(Lnet/minecraft/inventory/IInventory;)V") && name.equals("onCraftMatrixChanged")) {
+			if (desc.equals("(Lnet/minecraft/inventory/IInventory;)V") && (name.equals("onCraftMatrixChanged") || name.equals("func_75130_a"))) {
 				return new MethodVisitor(Opcodes.ASM4, visitor) {
 					@Override
 					public void visitTypeInsn(int opcode, String name) {
@@ -65,9 +65,10 @@ public class ASMAE2 extends AbstractASM {
 				return new MethodVisitor(Opcodes.ASM4, visitor) {
 					@Override
 					public void visitCode() {
+					    String player = CraftingTransformer.isObfuscated? "field_70458_d" : "player";
 						super.visitVarInsn(Opcodes.ALOAD, 0);
 						super.visitVarInsn(Opcodes.ALOAD, 1);
-						super.visitFieldInsn(Opcodes.GETFIELD, "net/minecraft/entity/player/InventoryPlayer", "player", "Lnet/minecraft/entity/player/EntityPlayer;");
+						super.visitFieldInsn(Opcodes.GETFIELD, "net/minecraft/entity/player/InventoryPlayer", player, "Lnet/minecraft/entity/player/EntityPlayer;");
 						super.visitFieldInsn(Opcodes.PUTFIELD, "appeng/container/implementations/ContainerCraftingTerm", "thePlayer", "Lnet/minecraft/entity/player/EntityPlayer;");
 						super.visitCode();
 					}

@@ -20,7 +20,7 @@ public interface ICraftingRegistry {
 
 	/** Adds a criteria to this item stack
 	 *  The name is the unique name you gave to your criteria */
-	public void addRequirement(CraftingType type, ItemStack stack, boolean matchDamage, boolean matchNBT, boolean usage, boolean crafting, ICriteria criteria);
+	public void addRequirement(CraftingType type, String mod, ItemStack stack, boolean matchDamage, boolean matchNBT, boolean usage, boolean crafting, ICriteria criteria);
 	
 	/** Follow the above criteria but defaults to matching damage, and not matching nbt **/
 	public void addRequirement(CraftingType type, ItemStack stack, ICriteria criteria);

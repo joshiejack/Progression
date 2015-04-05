@@ -20,6 +20,7 @@ import joshie.crafting.gui.GuiCriteriaEditor;
 import joshie.crafting.gui.IItemSelectable;
 import joshie.crafting.gui.SelectItemOverlay;
 import joshie.crafting.gui.SelectItemOverlay.Type;
+import joshie.crafting.gui.TextFieldHelper;
 import joshie.crafting.helpers.ClientHelper;
 import joshie.crafting.helpers.CraftingHelper;
 import joshie.crafting.helpers.StackHelper;
@@ -47,15 +48,18 @@ import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class RewardCrafting extends RewardBase implements IItemSelectable {
+    private TextFieldHelper editMod;
     private ItemStack stack = new ItemStack(Blocks.furnace);
     private CraftingType type = CraftingType.CRAFTING;
     private boolean matchDamage = true;
     private boolean matchNBT = false;
     private boolean usage = true;
     private boolean crafting = true;
+    public String modid = "IGNORE";
 
     public RewardCrafting() {
         super("Allow Action", 0xFF0085B2, "crafting");
+        editMod = new TextFieldHelper("modid", this);
     }
 
     @Override
@@ -187,7 +191,7 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
     }
 
     @SubscribeEvent
-    public void onAttemptToCraftItem(CanCraftItemEvent event) {
+    public void onAttemptToCraftItem(CanCraftItemEvent event) {        
         if (event.stack == null) return;
         ICrafter crafter = event.player != null ? CraftingAPI.crafting.getCrafterFromPlayer(event.player) : CraftingAPI.crafting.getCrafterFromTile(event.tile);
         if (!crafter.canCraftItem(event.type, event.stack)) {
@@ -247,6 +251,10 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
             reward.usage = data.get("disableUsage").getAsBoolean();
         }
 
+        if (data.get("modid") != null) {
+            reward.modid = data.get("modid").getAsString();
+        }
+
         if (CraftingMod.NEI_LOADED) {
             if (data.get("hideFromNEI") != null) {
                 if (data.get("hideFromNEI").getAsBoolean() == false) {
@@ -281,6 +289,10 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
         if (usage != true) {
             elements.addProperty("disableUsage", false);
         }
+
+        if (!modid.equals("IGNORE")) {
+            elements.addProperty("modid", modid);
+        }
     }
 
     private boolean isAdded = true;
@@ -295,12 +307,12 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
 
     @Override
     public void onAdded() {
-        CraftingAPI.crafting.addRequirement(type, stack, matchDamage, matchNBT, usage, crafting, criteria);
+        CraftingAPI.crafting.addRequirement(type, modid, stack, matchDamage, matchNBT, usage, crafting, criteria);
     }
 
     @Override
     public void onRemoved() {
-        CraftingRegistry.remove(type, stack, matchDamage, matchNBT, usage, crafting, criteria);
+        CraftingRegistry.remove(type, modid, stack, matchDamage, matchNBT, usage, crafting, criteria);
     }
 
     //TODO: Replace this with an item which overlay the item
@@ -333,8 +345,9 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
             if (mouseY > 25 && mouseY <= 33) matchDamage = !matchDamage;
             if (mouseY > 34 && mouseY <= 41) matchNBT = !matchNBT;
             if (mouseY > 42 && mouseY <= 50) usage = !usage;
-            if (mouseY > 50 && mouseY <= 57) crafting = !crafting;
-            if (mouseY >= 17 && mouseY <= 57) return Result.ALLOW;
+            if (mouseY > 50 && mouseY <= 58) crafting = !crafting;
+            if (mouseY > 58 && mouseY <= 66) editMod.select();
+            if (mouseY >= 17 && mouseY <= 66) return Result.ALLOW;
         }
 
         return Result.DEFAULT;
@@ -348,6 +361,7 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
         int match2Color = 0xFFFFFFFF;
         int usageColor = 0xFFFFFFFF;
         int craftColor = 0xFFFFFFFF;
+        int modColor = 0xFFFFFFFF;
 
         if (ClientHelper.canEdit()) {
             if (mouseX <= 84 && mouseX >= 1) {
@@ -355,15 +369,17 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
                 if (mouseY > 25 && mouseY <= 33) matchColor = 0xFFBBBBBB;
                 if (mouseY > 34 && mouseY <= 41) match2Color = 0xFFBBBBBB;
                 if (mouseY > 42 && mouseY <= 50) usageColor = 0xFFBBBBBB;
-                if (mouseY > 50 && mouseY <= 57) craftColor = 0xFFBBBBBB;
+                if (mouseY > 50 && mouseY <= 58) craftColor = 0xFFBBBBBB;
+                if (mouseY > 58 && mouseY <= 66) modColor = 0xFFBBBBBB;
             }
         }
-
+        
         drawText("type: " + type.name.toLowerCase(), 4, 18, typeColor);
         drawText("matchDamage: " + matchDamage, 4, 26, matchColor);
         drawText("matchNBT: " + matchNBT, 4, 34, match2Color);
         drawText("usage: " + usage, 4, 42, usageColor);
         drawText("crafting: " + crafting, 4, 50, craftColor);
+        drawText("modid: " + editMod.getText(), 4, 58, modColor);
     }
 
     @Override

@@ -26,8 +26,8 @@ public class RecipeHandler {
     //Initialise all the fields
     static {
         try {
-            fContainer = ReflectionHelper.findField(InventoryCrafting.class, "eventHandler");
-            fCrafters = ReflectionHelper.findField(Container.class, "crafters");
+            fContainer = ReflectionHelper.findField(InventoryCrafting.class, "eventHandler", "field_70465_c", "c");
+            fCrafters = ReflectionHelper.findField(Container.class, "crafters", "field_75149_d", "e");
         } catch (Exception e) {}
     }
 
@@ -53,7 +53,7 @@ public class RecipeHandler {
     }
 
     /** Called when trying to find a recipe **/
-    public static ItemStack findMatchingRecipe(InventoryCrafting crafting, World world) {
+    public static ItemStack findMatchingRecipe(InventoryCrafting crafting, World world) {        
         ItemStack itemstack = null, itemstack1 = null;
         int slot = 0;
         for (int j = 0; j < crafting.getSizeInventory(); j++) {

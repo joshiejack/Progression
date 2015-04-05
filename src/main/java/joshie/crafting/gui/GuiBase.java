@@ -1,8 +1,10 @@
 package joshie.crafting.gui;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import joshie.crafting.api.ICriteria;
 import joshie.crafting.json.JSONLoader;
@@ -21,6 +23,7 @@ import org.lwjgl.opengl.GL12;
 
 public abstract class GuiBase extends GuiScreen {
     protected static final ResourceLocation textures = new ResourceLocation("crafting", "textures/gui/textures.png");
+    protected Set<IRenderOverlay> overlays = new HashSet();
     public int mouseX = 0;
     public int mouseY = 0;
 
@@ -86,7 +89,7 @@ public abstract class GuiBase extends GuiScreen {
         drawRect(x, y2 - 1, x2, y2, border);
     }
     
-    public void drawText(String text, int x, int y, int color) {
+    public void drawString(String text, int x, int y, int color) {
         mc.fontRenderer.drawString(text, x, y, color);
     }
 

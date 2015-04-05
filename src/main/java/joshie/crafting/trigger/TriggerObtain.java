@@ -14,6 +14,7 @@ import joshie.crafting.gui.SelectTextEdit.ITextEditable;
 import joshie.crafting.helpers.ClientHelper;
 import joshie.crafting.helpers.StackHelper;
 import joshie.crafting.trigger.data.DataCrafting;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
@@ -28,6 +29,7 @@ public class TriggerObtain extends TriggerBase implements IItemSelectable, IText
     public boolean matchDamage = true;
     public boolean matchNBT = false;
     public int itemAmount = 1;
+    public boolean consume = false;
 
     public TriggerObtain() {
         super("Obtain", 0xFFFFFF00, "obtain");
@@ -45,9 +47,10 @@ public class TriggerObtain extends TriggerBase implements IItemSelectable, IText
 
     @SubscribeEvent
     public void onEvent(PlayerOpenContainerEvent event) {
-        for (ItemStack stack : event.entityPlayer.inventory.mainInventory) {
+        for (int i = 0; i < event.entityPlayer.inventory.mainInventory.length; i++) {
+            ItemStack stack = event.entityPlayer.inventory.mainInventory[i];
             if (stack == null && event.canInteractWith) continue;
-            CraftingAPI.registry.fireTrigger(event.entityPlayer, getTypeName(), stack);
+            CraftingAPI.registry.fireTrigger(event.entityPlayer, getTypeName(), stack, event.entityPlayer, i);
         }
     }
 
@@ -67,6 +70,10 @@ public class TriggerObtain extends TriggerBase implements IItemSelectable, IText
             trigger.itemAmount = data.get("itemAmount").getAsInt();
         }
 
+        if (data.get("consume") != null) {
+            trigger.consume = data.get("consume").getAsBoolean();
+        }
+
         return trigger;
     }
 
@@ -76,6 +83,7 @@ public class TriggerObtain extends TriggerBase implements IItemSelectable, IText
         if (matchDamage != true) data.addProperty("matchDamage", matchDamage);
         if (matchNBT != false) data.addProperty("matchNBT", matchNBT);
         if (itemAmount != 1) data.addProperty("itemAmount", itemAmount);
+        if (consume != false) data.addProperty("consume", consume);
     }
 
     @Override
@@ -98,6 +106,12 @@ public class TriggerObtain extends TriggerBase implements IItemSelectable, IText
             if (matchNBT && stack.getTagCompound() != crafted.getTagCompound()) return;
             data.amountCrafted += crafted.stackSize;
             data.timesCrafted++;
+
+            if (consume) {
+                EntityPlayer player = (EntityPlayer) additional[1];
+                int slot = asInt(additional, 2);
+                player.inventory.decrStackSize(slot, stack.stackSize);
+            }
         }
     }
 
@@ -114,7 +128,8 @@ public class TriggerObtain extends TriggerBase implements IItemSelectable, IText
             if (mouseY >= 17 && mouseY <= 25) matchDamage = !matchDamage;
             if (mouseY > 25 && mouseY <= 33) matchNBT = !matchNBT;
             if (mouseY > 34 && mouseY <= 41) SelectTextEdit.INSTANCE.select(this);
-            if (mouseY >= 17 && mouseY <= 41) return Result.ALLOW;
+            if (mouseY > 42 && mouseY <= 50) consume = !consume;
+            if (mouseY >= 17 && mouseY <= 50) return Result.ALLOW;
         }
 
         return Result.DEFAULT;
@@ -126,17 +141,20 @@ public class TriggerObtain extends TriggerBase implements IItemSelectable, IText
         int typeColor = 0xFFFFFFFF;
         int matchColor = 0xFFFFFFFF;
         int match2Color = 0xFFFFFFFF;
+        int consumeColor = 0xFFFFFFFF;
         if (ClientHelper.canEdit()) {
             if (mouseX <= 84 && mouseX >= 1) {
                 if (mouseY >= 17 && mouseY <= 25) typeColor = 0xFFBBBBBB;
                 if (mouseY > 25 && mouseY <= 33) matchColor = 0xFFBBBBBB;
                 if (mouseY > 34 && mouseY <= 41) match2Color = 0xFFBBBBBB;
+                if (mouseY > 42 && mouseY <= 50) consumeColor = 0xFFBBBBBB;
             }
         }
 
         drawText("matchDamage: " + matchDamage, 4, 18, typeColor);
         drawText("matchNBT: " + matchNBT, 4, 26, matchColor);
         drawText("itemAmount: " + SelectTextEdit.INSTANCE.getText(this), 4, 34, match2Color);
+        drawText("consume: " + consume, 4, 42, consumeColor);
     }
 
     private String textField;
@@ -166,7 +184,7 @@ public class TriggerObtain extends TriggerBase implements IItemSelectable, IText
     public void setItemStack(ItemStack stack) {
         this.stack = stack;
     }
-    
+
     @Override
     public void addTooltip(List<String> toolTip) {
         toolTip.add("Obtain " + itemAmount + " " + stack.getDisplayName());

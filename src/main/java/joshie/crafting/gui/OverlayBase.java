@@ -7,23 +7,23 @@ public class OverlayBase implements IRenderOverlay {
         GuiCriteriaEditor.registerOverlay(this);
         GuiTriggerEditor.registerOverlay(this);
     }
-    
+
     public void drawBox(int x, int y, int width, int height, int color, int border) {
-        GuiCriteriaEditor.INSTANCE.selected.getCriteriaEditor().drawBox(x, y, width, height, color, border);
+        GuiCriteriaEditor.INSTANCE.drawBox(x, y, width, height, color, border);
     }
-    
+
     public void drawGradient(int x, int y, int width, int height, int color, int color2, int border) {
-        GuiCriteriaEditor.INSTANCE.selected.getCriteriaEditor().drawGradient(x, y, width, height, color, color2, border);
+        GuiCriteriaEditor.INSTANCE.drawGradient(x, y, width, height, color, color2, border);
     }
-    
+
     public void drawText(String text, int x, int y, int color) {
-        GuiCriteriaEditor.INSTANCE.selected.getCriteriaEditor().drawText(text, x, y, color);
+        GuiCriteriaEditor.INSTANCE.drawText(text, x, y, color);
     }
-    
+
     public void drawStack(ItemStack stack, int x, int y, float size) {
-        GuiCriteriaEditor.INSTANCE.selected.getCriteriaEditor().drawStack(stack, x, y, size);
+        GuiCriteriaEditor.INSTANCE.drawStack(stack, x, y, size);
     }
-    
+
     //Resets
     public boolean reset() {
         SelectItemOverlay.INSTANCE.clear();
@@ -34,9 +34,9 @@ public class OverlayBase implements IRenderOverlay {
         NewReward.INSTANCE.clear();
         return true;
     }
-    
+
     void clear() {}
-    
+
     @Override
     public boolean isVisible() {
         return false;
@@ -53,5 +53,5 @@ public class OverlayBase implements IRenderOverlay {
     }
 
     @Override
-    public void draw(int x, int y) { }
+    public void draw(int x, int y) {}
 }

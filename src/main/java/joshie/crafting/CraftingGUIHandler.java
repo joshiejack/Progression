@@ -20,7 +20,7 @@ public class CraftingGUIHandler implements IGuiHandler {
         if (ID == 1) {
             GuiCriteriaEditor.INSTANCE.offsetX = 0;
             return GuiCriteriaEditor.INSTANCE;
-        } else if (ID == 3) return GuiCriteriaViewer.INSTANCE;
+        } //else if (ID == 3) return GuiCriteriaViewer.INSTANCE;
         else if (ID == 2) return GuiTriggerEditor.INSTANCE;
         return GuiTreeEditor.INSTANCE;
     }

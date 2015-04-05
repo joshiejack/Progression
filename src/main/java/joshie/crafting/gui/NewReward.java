@@ -34,7 +34,7 @@ public class NewReward extends OverlayBase {
         for (IRewardType reward : CraftAPIRegistry.rewardTypes.values()) {
             int color = 0xFF000000;
             if (mouseX >= (xPos * 100) + 155 && mouseX <= (xPos * 100) + 255) {
-                if (mouseY >= 46 + (yPos * 12) && mouseY <= 46 + (yPos * 12) + 12) {
+                if (mouseY >= 46 + (yPos * 12) && mouseY < 46 + (yPos * 12) + 12) {
                     CraftingAPI.registry.cloneReward(criteria, reward);
                     clear();
                     return true;
@@ -43,7 +43,7 @@ public class NewReward extends OverlayBase {
 
             yPos++;
 
-            if (yPos > 7) {
+            if (yPos > 8) {
                 xPos++;
                 yPos = 0;
             }
@@ -57,7 +57,7 @@ public class NewReward extends OverlayBase {
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
         int mouseX = GuiCriteriaEditor.INSTANCE.mouseX;
         int mouseY = GuiCriteriaEditor.INSTANCE.mouseY;
-        drawBox(-GuiCriteriaEditor.INSTANCE.offsetX + 150, 30, 200, 120, 0xDD000000, 0xFF000000);
+        drawBox(-GuiCriteriaEditor.INSTANCE.offsetX + 150, 30, 200, 125, 0xDD000000, 0xFF000000);
         drawGradient(-GuiCriteriaEditor.INSTANCE.offsetX + 150, 30, 200, 15, 0xFFFF0000, 0xFF660000, 0xFF000000);
         drawText("Select a Type of Reward", -GuiCriteriaEditor.INSTANCE.offsetX + 155, 34, 0xFFFFFFFF);
         int yPos = 0;
@@ -65,7 +65,7 @@ public class NewReward extends OverlayBase {
         for (IRewardType reward : CraftAPIRegistry.rewardTypes.values()) {
             int color = 0xFFFFFFFF;
             if (mouseX >= (xPos * 100) + 155 && mouseX <= (xPos * 100) + 255) {
-                if (mouseY >= 46 + (yPos * 12) && mouseY <= 46 + (yPos * 12) + 12) {
+                if (mouseY >= 46 + (yPos * 12) && mouseY < 46 + (yPos * 12) + 12) {
                     color = 0xFFFF0000;
                 }
             }
@@ -74,7 +74,7 @@ public class NewReward extends OverlayBase {
 
             yPos++;
 
-            if (yPos > 7) {
+            if (yPos > 8) {
                 xPos++;
                 yPos = 0;
             }

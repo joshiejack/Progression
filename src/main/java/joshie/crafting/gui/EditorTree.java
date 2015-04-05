@@ -225,7 +225,7 @@ public class EditorTree implements ITreeEditor {
                 if (isOver(mouseX, mouseY)) {
                     List list = new ArrayList();
                     if (ClientHelper.canEdit()) {
-                        list.add("Double Click to edit (Hold shift for display mode)");
+                        list.add("Double Click to edit "/* + (Hold shift for display mode) */);
                         list.add("Shift + Click to make something a requirement");
                         list.add("Ctrl + Click to make something conflict");
                         list.add("I + Click to Hide/Unhide");
@@ -335,13 +335,13 @@ public class EditorTree implements ITreeEditor {
                     isHeld = false;
                     isSelected = false;
 
-                    if (GuiScreen.isShiftKeyDown()) {
-                        GuiCriteriaViewer.INSTANCE.selected = criteria;
-                        ClientHelper.getPlayer().openGui(CraftingMod.instance, 3, null, 0, 0, 0);
-                    } else {
+                   // if (GuiScreen.isShiftKeyDown()) {
+                       // GuiCriteriaViewer.INSTANCE.selected = criteria;
+                       // ClientHelper.getPlayer().openGui(CraftingMod.instance, 3, null, 0, 0, 0);
+                    //} else {
                         GuiCriteriaEditor.INSTANCE.selected = criteria;
                         ClientHelper.getPlayer().openGui(CraftingMod.instance, 1, null, 0, 0, 0);
-                    }
+                   // }
                     return true;
                 }
 

@@ -118,23 +118,23 @@ public abstract class TriggerBase implements ITrigger {
     protected int mouseY;
 
     protected void drawText(String text, int x, int y, int color) {
-        GuiCriteriaEditor.INSTANCE.selected.getCriteriaEditor().drawText(text, xPosition + x, y + 45, color);
+        GuiCriteriaEditor.INSTANCE.drawText(text, xPosition + x, y + 45, color);
     }
 
     protected void drawGradient(int x, int y, int width, int height, int color, int color2, int border) {
-        GuiCriteriaEditor.INSTANCE.selected.getCriteriaEditor().drawGradient(xPosition + x, y + 45, width, height, color, color2, border);
+        GuiCriteriaEditor.INSTANCE.drawGradient(xPosition + x, y + 45, width, height, color, color2, border);
     }
 
     protected void drawBox(int x, int y, int width, int height, int color, int border) {
-        GuiCriteriaEditor.INSTANCE.selected.getCriteriaEditor().drawBox(xPosition + x, y + 45, width, height, color, border);
+        GuiCriteriaEditor.INSTANCE.drawBox(xPosition + x, y + 45, width, height, color, border);
     }
 
     protected void drawStack(ItemStack stack, int x, int y, float scale) {
-        GuiCriteriaEditor.INSTANCE.selected.getCriteriaEditor().drawStack(stack, xPosition + x, y + 45, scale);
+        GuiCriteriaEditor.INSTANCE.drawStack(stack, xPosition + x, y + 45, scale);
     }
 
     protected void drawTexture(int x, int y, int u, int v, int width, int height) {
-        GuiCriteriaEditor.INSTANCE.selected.getCriteriaEditor().drawTexture(xPosition + x, y + 45, u, v, width, height);
+        GuiCriteriaEditor.INSTANCE.drawTexture(xPosition + x, y + 45, u, v, width, height);
     }
 
     protected String getText(ITextEditable editable) {
@@ -148,7 +148,7 @@ public abstract class TriggerBase implements ITrigger {
                 return Result.DENY; //Delete this trigger
             }
         }
-        
+
         if (ClientHelper.canEdit() || this.getConditions().size() > 0) {
             if (this.mouseX >= 2 && this.mouseX <= 87) {
                 if (this.mouseY >= 66 && this.mouseY <= 77) {

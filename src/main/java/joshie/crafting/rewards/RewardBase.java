@@ -63,23 +63,27 @@ public abstract class RewardBase implements IReward {
     protected int mouseY;
 
     protected void drawText(String text, int x, int y, int color) {
-        GuiCriteriaEditor.INSTANCE.selected.getCriteriaEditor().drawText(text, xPosition + x, y + 140, color);
+        GuiCriteriaEditor.INSTANCE.drawText(text, xPosition + x, y + 140, color);
+    }
+    
+    protected void drawSplitText(String text, int x, int y, int width, int color) {
+        GuiCriteriaEditor.INSTANCE.drawSplitText(text, xPosition + x, y + 140, width, color);
     }
 
     protected void drawGradient(int x, int y, int width, int height, int color, int color2, int border) {
-        GuiCriteriaEditor.INSTANCE.selected.getCriteriaEditor().drawGradient(xPosition + x, y + 140, width, height, color, color2, border);
+        GuiCriteriaEditor.INSTANCE.drawGradient(xPosition + x, y + 140, width, height, color, color2, border);
     }
 
     protected void drawBox(int x, int y, int width, int height, int color, int border) {
-        GuiCriteriaEditor.INSTANCE.selected.getCriteriaEditor().drawBox(xPosition + x, y + 140, width, height, color, border);
+        GuiCriteriaEditor.INSTANCE.drawBox(xPosition + x, y + 140, width, height, color, border);
     }
 
     protected void drawStack(ItemStack stack, int x, int y, float scale) {
-        GuiCriteriaEditor.INSTANCE.selected.getCriteriaEditor().drawStack(stack, xPosition + x, y + 140, scale);
+        GuiCriteriaEditor.INSTANCE.drawStack(stack, xPosition + x, y + 140, scale);
     }
 
     protected void drawTexture(int x, int y, int u, int v, int width, int height) {
-        GuiCriteriaEditor.INSTANCE.selected.getCriteriaEditor().drawTexture(xPosition + x, y + 140, u, v, width, height);
+        GuiCriteriaEditor.INSTANCE.drawTexture(xPosition + x, y + 140, u, v, width, height);
     }
 
     protected void draw() {
@@ -117,7 +121,7 @@ public abstract class RewardBase implements IReward {
             ClientHelper.getMinecraft().getTextureManager().bindTexture(textures);
             drawTexture(87, 4, xXcoord, 195, 11, 11);
         }
-        
+
         draw();
     }
 }

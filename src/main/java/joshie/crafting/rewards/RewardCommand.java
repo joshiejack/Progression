@@ -8,58 +8,59 @@ import joshie.crafting.gui.SelectTextEdit;
 import joshie.crafting.gui.SelectTextEdit.ITextEditable;
 import joshie.crafting.helpers.ClientHelper;
 import joshie.crafting.helpers.PlayerHelper;
+import joshie.crafting.lib.FakeOp;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumChatFormatting;
 
 import com.google.gson.JsonObject;
 
 import cpw.mods.fml.common.eventhandler.Event.Result;
 
-public class RewardExperience extends RewardBase implements ITextEditable {
-    private int amount = 1;
+public class RewardCommand extends RewardBase implements ITextEditable {
+    private String command = "dummy";
 
-    public RewardExperience() {
-        super("Give Experience", 0xFF00B200, "experience");
+    public RewardCommand() {
+        super("Execute Command", 0xFF2626FF, "command");
     }
 
     @Override
     public IReward newInstance() {
-        return new RewardExperience();
+        return new RewardCommand();
     }
 
     @Override
     public IReward deserialize(JsonObject data) {
-        RewardExperience reward = new RewardExperience();
-        reward.amount = data.get("amount").getAsInt();
+        RewardCommand reward = new RewardCommand();
+        reward.command = data.get("command").getAsString();
         return reward;
     }
 
     @Override
     public void serialize(JsonObject elements) {
-        elements.addProperty("amount", amount);
+        elements.addProperty("command", command);
     }
 
     @Override
     public void reward(UUID uuid) {
         EntityPlayer player = PlayerHelper.getPlayerFromUUID(uuid);
         if (player != null) {
-            player.addExperience(amount);
+            String newCommand = command.replace("@u", player.getCommandSenderName());
+            MinecraftServer.getServer().getCommandManager().executeCommand(FakeOp.getInstance(), newCommand);
         }
     }
 
-    private static final ItemStack experience = new ItemStack(Items.experience_bottle);
-
     @Override
     public ItemStack getIcon() {
-        return experience;
+        return new ItemStack(Blocks.command_block);
     }
 
     @Override
     public Result clicked() {
         if (mouseX <= 84 && mouseX >= 1) {
-            if (mouseY >= 17 && mouseY <= 25) {
+            if (mouseY >= 17 && mouseY <= 100) {
                 SelectTextEdit.INSTANCE.select(this);
                 return Result.ALLOW;
             }
@@ -70,43 +71,30 @@ public class RewardExperience extends RewardBase implements ITextEditable {
 
     @Override
     public void draw() {
-        int color = 0xFFFFFFFF;
+        int commandColor = 0xFFFFFFFF;
         if (ClientHelper.canEdit()) {
             if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 25) color = 0xFFBBBBBB;
+                if (mouseY >= 17 && mouseY <= 100) commandColor = 0xFFBBBBBB;
             }
         }
-        
-        if (SelectTextEdit.INSTANCE.getEditable() == this) {
-            drawText("amount: " + SelectTextEdit.INSTANCE.getText(), 4, 18, color);
-        } else drawText("amount: " + getTextField(), 4, 18, color);
-    }
 
-    private String textField;
+        drawText("command: ", 4, 18, commandColor);
+        drawSplitText(SelectTextEdit.INSTANCE.getText(this), 4, 26, 200, commandColor);
+    }
 
     @Override
     public String getTextField() {
-        if (textField == null) {
-            textField = "" + amount;
-        }
-
-        return textField;
+        return command;
     }
 
     @Override
     public void setTextField(String text) {
-        String fixed = text.replaceAll("[^0-9]", "");
-        this.textField = fixed;
-
-        try {
-            this.amount = Integer.parseInt(textField);
-        } catch (Exception e) {
-            this.amount = 1;
-        }
+        this.command = text;
     }
 
     @Override
     public void addTooltip(List list) {
-        list.add("" + EnumChatFormatting.WHITE + amount + " Experience Points");
+        list.add(EnumChatFormatting.WHITE + "Execute Command");
+        list.add(command);
     }
 }

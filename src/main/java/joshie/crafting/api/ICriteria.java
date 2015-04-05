@@ -51,9 +51,6 @@ public interface ICriteria extends IHasUniqueName {
     /** Return the instance of the editor for this criteria, when in tree edit mode **/
     public ITreeEditor getTreeEditor();
 
-    /** Reuturn the instance of the editor for this criteria, when in criteria edit mode **/
-    public ICriteriaEditor getCriteriaEditor();
-
     /** Whether this criteria is visible before it unlocks ***/
     public boolean isVisible();
 

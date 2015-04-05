@@ -9,6 +9,8 @@ public class TextFieldHelper implements ITextEditable {
     public Object o;
     public Field f;
 
+    public TextFieldHelper() {}
+
     public TextFieldHelper(String f, Object o) {
         try {
             this.f = o.getClass().getDeclaredField(f);
@@ -19,14 +21,18 @@ public class TextFieldHelper implements ITextEditable {
     public void select() {
         SelectTextEdit.INSTANCE.select(this);
     }
-    
+
+    public String getText() {
+        return SelectTextEdit.INSTANCE.getText(this);
+    }
+
     public double getDouble() {
         try {
             return (Double) f.get(o);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         return 0D;
     }
 
@@ -72,6 +78,8 @@ public class TextFieldHelper implements ITextEditable {
     public static class IntegerFieldHelper extends TextFieldHelper {
         protected String textField = null;
 
+        public IntegerFieldHelper() {}
+
         public IntegerFieldHelper(String f, Object o) {
             super(f, o);
         }
@@ -108,7 +116,7 @@ public class TextFieldHelper implements ITextEditable {
         public DoubleFieldHelper(String f, Object o) {
             super(f, o);
         }
-        
+
         @Override
         public String getTextField() {
             if (textField == null) {
