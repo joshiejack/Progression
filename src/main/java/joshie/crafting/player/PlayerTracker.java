@@ -71,11 +71,14 @@ public class PlayerTracker implements IPlayerTracker {
 		}
 		
 		//Place the owner of this tile entity in the map
-		CraftingAPI.players.setTileOwner(tile, uuid);
+		if (uuid != null) {
+			CraftingAPI.players.setTileOwner(tile, uuid);
+		}
 	}
 	
 	//Called VIA ASM to SAVE Additional TileData
 	public static void writeToNBT(TileEntity tile, NBTTagCompound nbt) {		
+		if (tile.getWorldObj() == null) return; //Don't continue if the world is null
 		UUID uuid = CraftingAPI.players.getTileOwner(tile).getUUID();
 		if (uuid != null) {
 			nbt.setLong(MOST, uuid.getMostSignificantBits());
