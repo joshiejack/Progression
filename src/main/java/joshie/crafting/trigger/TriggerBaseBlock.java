@@ -9,6 +9,7 @@ import joshie.crafting.gui.TextFieldHelper;
 import joshie.crafting.gui.TextFieldHelper.IItemGettable;
 import joshie.crafting.gui.TextFieldHelper.ItemAmountHelper;
 import joshie.crafting.helpers.ClientHelper;
+import joshie.crafting.helpers.ItemHelper;
 import joshie.crafting.helpers.StackHelper;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -27,7 +28,7 @@ public abstract class TriggerBaseBlock extends TriggerBaseCounter implements IIt
     public int meta = 0;
     public boolean matchDamage = true;
     public int amount = 1;
-    public ItemStack stack = new ItemStack(block, amount, meta);
+    public ItemStack stack = new ItemStack(Blocks.stone, 1, 0);
 
     public TriggerBaseBlock(String localised, int color, String unlocalised) {
         super(localised, color, unlocalised);
@@ -84,7 +85,7 @@ public abstract class TriggerBaseBlock extends TriggerBaseCounter implements IIt
         int theMeta = asInt(data, 1);
         boolean doesMatch = false;
         if (!oreDictionary.equals("IGNORE")) {
-            ItemStack stack = new ItemStack(theBlock, 1, theMeta);
+        	ItemStack stack = ItemHelper.getStackFromBlockData(theBlock, theMeta);
             int[] ids = OreDictionary.getOreIDs(stack);
             for (int i : ids) {
                 String oreName = OreDictionary.getOreName(i);

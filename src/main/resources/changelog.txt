@@ -1,3 +1,7 @@
+Progression 0.2.2
+  Fix crash on startup with steves addons
+  Fix crash when breaking blocks with null items
+
 Progression 0.2.1
   Added 'Click Block' trigger.
   Fix location of tooltip for triggers

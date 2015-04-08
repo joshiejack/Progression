@@ -19,8 +19,8 @@ import cpw.mods.fml.common.eventhandler.Event.Result;
 public class RewardPoints extends RewardBase {
     private TextFieldHelper nameEdit;
     private IntegerFieldHelper amountEdit;
-    private String name = "research";
-    private int amount = 1;
+    public String name = "research";
+    public int amount = 1;
 
     public RewardPoints() {
         super("Give Points", 0xFF002DB2, "points");
