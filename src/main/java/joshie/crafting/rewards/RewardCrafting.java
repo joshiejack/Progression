@@ -21,9 +21,9 @@ import joshie.crafting.gui.IItemSelectable;
 import joshie.crafting.gui.SelectItemOverlay;
 import joshie.crafting.gui.SelectItemOverlay.Type;
 import joshie.crafting.gui.TextFieldHelper;
+import joshie.crafting.helpers.BlockActionHelper;
 import joshie.crafting.helpers.ClientHelper;
 import joshie.crafting.helpers.CraftingHelper;
-import joshie.crafting.helpers.ItemHelper;
 import joshie.crafting.helpers.StackHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -144,7 +144,7 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
 
     @SubscribeEvent
     public void onBreakSpeed(BreakSpeed event) {
-        if (isEventCancelled(event.entityPlayer, CraftingType.BREAKBLOCK, event.entityPlayer.getCurrentEquippedItem(), ItemHelper.getStackFromBlockData(event.block, event.metadata))) {
+        if (isEventCancelled(event.entityPlayer, CraftingType.BREAKBLOCK, event.entityPlayer.getCurrentEquippedItem(), BlockActionHelper.getStackFromBlockData(event.block, event.metadata))) {
             event.newSpeed = 0F;
         }
     }
@@ -153,7 +153,7 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
     public void onBreakBlock(BreakEvent event) {
         EntityPlayer player = event.getPlayer();
         if (player != null) {
-            if (isEventCancelled(player, CraftingType.BREAKBLOCK, player.getCurrentEquippedItem(), ItemHelper.getStackFromBlockData(event.block, event.blockMetadata))) {
+            if (isEventCancelled(player, CraftingType.BREAKBLOCK, player.getCurrentEquippedItem(), BlockActionHelper.getStackFromBlockData(event.block, event.blockMetadata))) {
                 event.setCanceled(true);
             }
         }

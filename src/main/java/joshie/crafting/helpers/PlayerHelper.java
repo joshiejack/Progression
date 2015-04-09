@@ -14,6 +14,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
 
 public class PlayerHelper {
 	private static Cache<UUID, ICrafter> crafters = CacheBuilder.newBuilder().maximumSize(64).build();
@@ -40,6 +41,7 @@ public class PlayerHelper {
 	}
 
 	public static EntityPlayer getPlayerFromUUID(UUID uuid) {
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) return ClientHelper.getPlayer();
 		for (EntityPlayer player : (List<EntityPlayer>) FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList) {
             if (getUUIDForPlayer(player).equals(uuid)) {
                 return (EntityPlayerMP) player;

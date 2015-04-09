@@ -8,8 +8,8 @@ import joshie.crafting.gui.SelectTextEdit;
 import joshie.crafting.gui.TextFieldHelper;
 import joshie.crafting.gui.TextFieldHelper.IItemGettable;
 import joshie.crafting.gui.TextFieldHelper.ItemAmountHelper;
+import joshie.crafting.helpers.BlockActionHelper;
 import joshie.crafting.helpers.ClientHelper;
-import joshie.crafting.helpers.ItemHelper;
 import joshie.crafting.helpers.StackHelper;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -85,7 +85,7 @@ public abstract class TriggerBaseBlock extends TriggerBaseCounter implements IIt
         int theMeta = asInt(data, 1);
         boolean doesMatch = false;
         if (!oreDictionary.equals("IGNORE")) {
-        	ItemStack stack = ItemHelper.getStackFromBlockData(theBlock, theMeta);
+        	ItemStack stack = BlockActionHelper.getStackFromBlockData(theBlock, theMeta);
             int[] ids = OreDictionary.getOreIDs(stack);
             for (int i : ids) {
                 String oreName = OreDictionary.getOreName(i);

@@ -7,7 +7,7 @@ import joshie.crafting.api.ICondition;
 import joshie.crafting.api.IConditionEditor;
 import joshie.crafting.api.ITrigger;
 import joshie.crafting.helpers.ClientHelper;
-import joshie.crafting.helpers.StackHelper;
+import joshie.crafting.helpers.RenderItemHelper;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -48,7 +48,7 @@ public class EditorCondition implements IConditionEditor {
 
     @Override
     public void drawStack(ItemStack stack, int x, int y, float scale) {
-        StackHelper.drawStack(stack, xCoord + x, yCoord + y, scale);
+    	RenderItemHelper.drawStack(stack, xCoord + x, yCoord + y, scale);
     }
 
     @Override

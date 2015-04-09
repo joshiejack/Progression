@@ -11,7 +11,7 @@ import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.IReward;
 import joshie.crafting.api.ITreeEditor;
 import joshie.crafting.helpers.ClientHelper;
-import joshie.crafting.helpers.StackHelper;
+import joshie.crafting.helpers.RenderItemHelper;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
@@ -195,7 +195,7 @@ public class EditorTree implements ITreeEditor {
             for (IReward reward : criteria.getRewards()) {
                 ItemStack icon = reward.getIcon();
                 if (icon == null || icon.getItem() == null) continue; //Protection against null icons
-                StackHelper.drawStack(icon, x + 4 + left + (xOffset * 12), y + top + 12, 0.75F);
+                RenderItemHelper.drawStack(icon, x + 4 + left + (xOffset * 12), y + top + 12, 0.75F);
                 xOffset++;
             }
 

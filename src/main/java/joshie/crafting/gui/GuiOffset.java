@@ -1,6 +1,6 @@
 package joshie.crafting.gui;
 
-import joshie.crafting.helpers.StackHelper;
+import joshie.crafting.helpers.RenderItemHelper;
 import net.minecraft.item.ItemStack;
 
 public abstract class GuiOffset extends GuiBase {    
@@ -21,7 +21,7 @@ public abstract class GuiOffset extends GuiBase {
     }
 
     public void drawStack(ItemStack stack, int xCoord, int yCoord, float scale) {
-        StackHelper.drawStack(stack, offsetX + xCoord, y + yCoord, scale);
+    	RenderItemHelper.drawStack(stack, offsetX + xCoord, y + yCoord, scale);
     }
 
     public void drawTexture(int xCoord, int yCoord, int u, int v, int width, int height) {

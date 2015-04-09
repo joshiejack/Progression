@@ -8,7 +8,7 @@ import joshie.crafting.api.ITab;
 import joshie.crafting.gui.SelectItemOverlay.Type;
 import joshie.crafting.gui.SelectTextEdit.ITextEditable;
 import joshie.crafting.helpers.ClientHelper;
-import joshie.crafting.helpers.StackHelper;
+import joshie.crafting.helpers.RenderItemHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
@@ -43,8 +43,8 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
         if (xPosition == 0) xTexture = 231;
         drawTexturedModalRect(xPosition, yPosition, xTexture, yTexture, 25, 25);
         if (xPosition == 0) {
-            StackHelper.drawStack(tab.getStack(), xPosition + 2, yPosition + 5, 1F);
-        } else StackHelper.drawStack(tab.getStack(), xPosition + 7, yPosition + 5, 1F);
+            RenderItemHelper.drawStack(tab.getStack(), xPosition + 2, yPosition + 5, 1F);
+        } else RenderItemHelper.drawStack(tab.getStack(), xPosition + 7, yPosition + 5, 1F);
 
         boolean displayTooltip = false;
         if (ClientHelper.canEdit()) {

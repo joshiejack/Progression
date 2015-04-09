@@ -11,7 +11,6 @@ import java.util.List;
 
 import joshie.crafting.CraftAPIRegistry;
 import joshie.crafting.CraftingMod;
-import joshie.crafting.CraftingRemapper;
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ICondition;
 import joshie.crafting.api.ICriteria;
@@ -30,6 +29,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -102,6 +102,7 @@ public class JSONLoader {
     }
     
     private static void loadJSON(DefaultSettings tab) {
+    	boolean isClient = FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT;
         for (DataTab data: tab.tabs) {
             ItemStack stack = StackHelper.getStackFromString(data.stack);
             ITab iTab = CraftingAPI.registry.newTab(data.uniqueName);
@@ -150,7 +151,7 @@ public class JSONLoader {
                     CraftingMod.logger.log(org.apache.logging.log4j.Level.WARN, "Criteria was not found, do not report this.");
                     throw new ConditionNotFoundException(criteria.uniqueName);
                 }
-
+                
                 ICriteria[] thePrereqs = new ICriteria[criteria.prereqs.length];
                 ICriteria[] theConflicts = new ICriteria[criteria.conflicts.length];
                 for (int i = 0; i < thePrereqs.length; i++)
@@ -165,8 +166,12 @@ public class JSONLoader {
                 if (repeatable <= 1) {
                     repeatable = 1;
                 }
-
-                theCriteria.addRequirements(thePrereqs).addConflicts(theConflicts).setDisplayName(display).setVisibility(isVisible).setRepeatAmount(repeatable).getTreeEditor().setCoordinates(x, y);
+                
+                theCriteria.addRequirements(thePrereqs).addConflicts(theConflicts).setDisplayName(display).setVisibility(isVisible).setRepeatAmount(repeatable);
+                
+                if (isClient) {
+                	theCriteria.getTreeEditor().setCoordinates(x, y);
+                }
             }
         }
 

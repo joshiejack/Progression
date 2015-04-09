@@ -1,6 +1,6 @@
 package joshie.crafting.gui;
 
-import joshie.crafting.helpers.StackHelper;
+import joshie.crafting.helpers.RenderItemHelper;
 import net.minecraft.client.gui.ScaledResolution;
 
 import org.lwjgl.opengl.GL11;
@@ -68,7 +68,7 @@ public class TreeItemSelect extends TextEditable {
             //width * 4 to width *10
             for (int i = SelectItemOverlay.INSTANCE.position; i < SelectItemOverlay.INSTANCE.position + (width * 10); i++) {
                 if (i >= 0 && i < SelectItemOverlay.INSTANCE.sorted.size()) {
-                    StackHelper.drawStack(SelectItemOverlay.INSTANCE.sorted.get(i), -offsetX + 32 + (j * 16), y + 45 + (k * 16), 1F);
+                	RenderItemHelper.drawStack(SelectItemOverlay.INSTANCE.sorted.get(i), -offsetX + 32 + (j * 16), y + 45 + (k * 16), 1F);
 
                     j++;
 

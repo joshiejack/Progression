@@ -23,6 +23,9 @@ import net.minecraft.entity.player.EntityPlayer;
 
 import com.google.gson.JsonObject;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
+
 public class CraftAPIRegistry implements IRegistry {
     //This is the registry for trigger type and reward type creation
     public static final HashMap<String, ITriggerType> triggerTypes = new HashMap();

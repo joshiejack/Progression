@@ -20,263 +20,286 @@ import joshie.crafting.helpers.ClientHelper;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.Event.Result;
+import cpw.mods.fml.relauncher.Side;
 
 public abstract class TriggerBase implements ITrigger {
-    private static final ResourceLocation textures = new ResourceLocation("crafting", "textures/gui/textures.png");
-    private List<ICondition> conditions = new ArrayList();
-    private String typeName;
-    private String localised;
-    private int color;
-    private ICriteria criteria;
-    private IConditionEditor editor;
+	private static final ResourceLocation textures = new ResourceLocation(
+			"crafting", "textures/gui/textures.png");
+	private List<ICondition> conditions = new ArrayList();
+	private String typeName;
+	private String localised;
+	private int color;
+	private ICriteria criteria;
+	private IConditionEditor editor;
 
-    public TriggerBase(String localised, int color, String typeName) {
-        this.localised = localised;
-        this.color = color;
-        this.typeName = typeName;
-        this.editor = new EditorCondition(this);
-    }
+	public TriggerBase(String localised, int color, String typeName) {
+		this.localised = localised;
+		this.color = color;
+		this.typeName = typeName;
 
-    @Override
-    public void addCondition(ICondition condition) {
-        conditions.add(condition);
-    }
+		//Don't load the editor server side
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+			this.editor = new EditorCondition(this);
+		}
+	}
 
-    @Override
-    public IConditionEditor getConditionEditor() {
-        return editor;
-    }
+	@Override
+	public void addCondition(ICondition condition) {
+		conditions.add(condition);
+	}
 
-    @Override
-    public ITrigger setCriteria(ICriteria criteria) {
-        this.criteria = criteria;
-        return this;
-    }
+	@Override
+	public IConditionEditor getConditionEditor() {
+		return editor;
+	}
 
-    @Override
-    public ICriteria getCriteria() {
-        return this.criteria;
-    }
+	@Override
+	public ITrigger setCriteria(ICriteria criteria) {
+		this.criteria = criteria;
+		return this;
+	}
 
-    @Override
-    public Bus[] getEventBuses() {
-        return new Bus[] { getBusType() };
-    }
+	@Override
+	public ICriteria getCriteria() {
+		return this.criteria;
+	}
 
-    public Bus getBusType() {
-        return Bus.FORGE;
-    }
+	@Override
+	public Bus[] getEventBuses() {
+		return new Bus[] { getBusType() };
+	}
 
-    @Override
-    public String getTypeName() {
-        return typeName;
-    }
+	public Bus getBusType() {
+		return Bus.FORGE;
+	}
 
-    @Override
-    public String getLocalisedName() {
-        return localised;
-    }
+	@Override
+	public String getTypeName() {
+		return typeName;
+	}
 
-    public int getColor() {
-        return color;
-    }
+	@Override
+	public String getLocalisedName() {
+		return localised;
+	}
 
-    @Override
-    public int getInternalID() {
-        for (int id = 0; id < getCriteria().getTriggers().size(); id++) {
-            ITrigger aTrigger = getCriteria().getTriggers().get(id);
-            if (aTrigger.equals(this)) return id;
-        }
+	public int getColor() {
+		return color;
+	}
 
-        return 0;
-    }
+	@Override
+	public int getInternalID() {
+		for (int id = 0; id < getCriteria().getTriggers().size(); id++) {
+			ITrigger aTrigger = getCriteria().getTriggers().get(id);
+			if (aTrigger.equals(this))
+				return id;
+		}
 
-    @Override
-    public ITrigger setConditions(ICondition[] conditions) {
-        for (ICondition condition : conditions) {
-            this.conditions.add(condition);
-        }
+		return 0;
+	}
 
-        return this;
-    }
+	@Override
+	public ITrigger setConditions(ICondition[] conditions) {
+		for (ICondition condition : conditions) {
+			this.conditions.add(condition);
+		}
 
-    @Override
-    public List<ICondition> getConditions() {
-        return conditions;
-    }
+		return this;
+	}
 
-    @Override
-    public void onFired(UUID uuid, ITriggerData triggerData, Object... data) {
-        onFired(triggerData, data);
-    }
+	@Override
+	public List<ICondition> getConditions() {
+		return conditions;
+	}
 
-    public void onFired(ITriggerData triggerData, Object... data) {}
+	@Override
+	public void onFired(UUID uuid, ITriggerData triggerData, Object... data) {
+		onFired(triggerData, data);
+	}
 
-    protected int xPosition;
-    protected int mouseX;
-    protected int mouseY;
+	public void onFired(ITriggerData triggerData, Object... data) {
+	}
 
-    protected void drawText(String text, int x, int y, int color) {
-        GuiCriteriaEditor.INSTANCE.drawText(text, xPosition + x, y + 45, color);
-    }
+	protected int xPosition;
+	protected int mouseX;
+	protected int mouseY;
 
-    protected void drawGradient(int x, int y, int width, int height, int color, int color2, int border) {
-        GuiCriteriaEditor.INSTANCE.drawGradient(xPosition + x, y + 45, width, height, color, color2, border);
-    }
+	protected void drawText(String text, int x, int y, int color) {
+		GuiCriteriaEditor.INSTANCE.drawText(text, xPosition + x, y + 45, color);
+	}
 
-    protected void drawBox(int x, int y, int width, int height, int color, int border) {
-        GuiCriteriaEditor.INSTANCE.drawBox(xPosition + x, y + 45, width, height, color, border);
-    }
+	protected void drawGradient(int x, int y, int width, int height, int color,
+			int color2, int border) {
+		GuiCriteriaEditor.INSTANCE.drawGradient(xPosition + x, y + 45, width,
+				height, color, color2, border);
+	}
 
-    protected void drawStack(ItemStack stack, int x, int y, float scale) {
-        GuiCriteriaEditor.INSTANCE.drawStack(stack, xPosition + x, y + 45, scale);
-    }
+	protected void drawBox(int x, int y, int width, int height, int color,
+			int border) {
+		GuiCriteriaEditor.INSTANCE.drawBox(xPosition + x, y + 45, width,
+				height, color, border);
+	}
 
-    protected void drawTexture(int x, int y, int u, int v, int width, int height) {
-        GuiCriteriaEditor.INSTANCE.drawTexture(xPosition + x, y + 45, u, v, width, height);
-    }
+	protected void drawStack(ItemStack stack, int x, int y, float scale) {
+		GuiCriteriaEditor.INSTANCE.drawStack(stack, xPosition + x, y + 45,
+				scale);
+	}
 
-    protected String getText(ITextEditable editable) {
-        return SelectTextEdit.INSTANCE.getText(editable);
-    }
+	protected void drawTexture(int x, int y, int u, int v, int width, int height) {
+		GuiCriteriaEditor.INSTANCE.drawTexture(xPosition + x, y + 45, u, v,
+				width, height);
+	}
 
-    @Override
-    public Result onClicked() {
-        if (ClientHelper.canEdit()) {
-            if (this.mouseX >= 88 && this.mouseX <= 95 && this.mouseY >= 4 && this.mouseY <= 14) {
-                return Result.DENY; //Delete this trigger
-            }
-        }
+	protected String getText(ITextEditable editable) {
+		return SelectTextEdit.INSTANCE.getText(editable);
+	}
 
-        if (ClientHelper.canEdit() || this.getConditions().size() > 0) {
-            if (this.mouseX >= 2 && this.mouseX <= 87) {
-                if (this.mouseY >= 66 && this.mouseY <= 77) {
+	@Override
+	public Result onClicked() {
+		if (ClientHelper.canEdit()) {
+			if (this.mouseX >= 88 && this.mouseX <= 95 && this.mouseY >= 4
+					&& this.mouseY <= 14) {
+				return Result.DENY; // Delete this trigger
+			}
+		}
 
-                    GuiTriggerEditor.INSTANCE.trigger = this;
-                    ClientHelper.getPlayer().openGui(CraftingMod.instance, 2, null, 0, 0, 0);
-                    return Result.ALLOW;
-                }
-            }
-        }
+		if (ClientHelper.canEdit() || this.getConditions().size() > 0) {
+			if (this.mouseX >= 2 && this.mouseX <= 87) {
+				if (this.mouseY >= 66 && this.mouseY <= 77) {
 
-        return ClientHelper.canEdit() ? clicked() : Result.DEFAULT;
-    }
+					GuiTriggerEditor.INSTANCE.trigger = this;
+					ClientHelper.getPlayer().openGui(CraftingMod.instance, 2,
+							null, 0, 0, 0);
+					return Result.ALLOW;
+				}
+			}
+		}
 
-    public Result clicked() {
-        return Result.DEFAULT;
-    }
+		return ClientHelper.canEdit() ? clicked() : Result.DEFAULT;
+	}
 
-    protected void draw() {}
+	public Result clicked() {
+		return Result.DEFAULT;
+	}
 
-    @Override
-    public void draw(int mouseX, int mouseY, int xPos) {
-        this.mouseX = mouseX - xPosition;
-        this.mouseY = mouseY - 45;
-        this.xPosition = xPos + 6;
+	protected void draw() {
+	}
 
-        drawGradient(1, 2, 99, 15, getColor(), 0xFF222222, 0xFF000000);
-        drawText(getLocalisedName(), 6, 6, 0xFFFFFFFF);
+	@Override
+	public void draw(int mouseX, int mouseY, int xPos) {
+		this.mouseX = mouseX - xPosition;
+		this.mouseY = mouseY - 45;
+		this.xPosition = xPos + 6;
 
-        if (ClientHelper.canEdit()) {
-            int xXcoord = 0;
-            if (this.mouseX >= 87 && this.mouseX <= 97 && this.mouseY >= 4 && this.mouseY <= 14) {
-                xXcoord = 11;
-            }
+		drawGradient(1, 2, 99, 15, getColor(), 0xFF222222, 0xFF000000);
+		drawText(getLocalisedName(), 6, 6, 0xFFFFFFFF);
 
-            ClientHelper.getMinecraft().getTextureManager().bindTexture(textures);
-            drawTexture(87, 4, xXcoord, 195, 11, 11);
-        }
+		if (ClientHelper.canEdit()) {
+			int xXcoord = 0;
+			if (this.mouseX >= 87 && this.mouseX <= 97 && this.mouseY >= 4
+					&& this.mouseY <= 14) {
+				xXcoord = 11;
+			}
 
-        draw();
+			ClientHelper.getMinecraft().getTextureManager()
+					.bindTexture(textures);
+			drawTexture(87, 4, xXcoord, 195, 11, 11);
+		}
 
-        int color = 0xFF000000;
-        if (this.mouseX >= 2 && this.mouseX <= 87) {
-            if (this.mouseY >= 66 && this.mouseY <= 77) {
-                color = 0xFFFFFFFF;
-            }
-        }
+		draw();
 
-        if (ClientHelper.canEdit()) {
-            drawGradient(2, 66, 85, 11, color, 0xFF222222, 0xFF000000);
-            drawText("Condition Editor", 6, 67, 0xFFFFFFFF);
-        } else if (this.getConditions().size() > 0) {
-            drawGradient(2, 66, 85, 11, color, 0xFF222222, 0xFF000000);
-            drawText("Condition Viewer", 6, 67, 0xFFFFFFFF);
-        }
+		int color = 0xFF000000;
+		if (this.mouseX >= 2 && this.mouseX <= 87) {
+			if (this.mouseY >= 66 && this.mouseY <= 77) {
+				color = 0xFFFFFFFF;
+			}
+		}
 
-    }
+		if (ClientHelper.canEdit()) {
+			drawGradient(2, 66, 85, 11, color, 0xFF222222, 0xFF000000);
+			drawText("Condition Editor", 6, 67, 0xFFFFFFFF);
+		} else if (this.getConditions().size() > 0) {
+			drawGradient(2, 66, 85, 11, color, 0xFF222222, 0xFF000000);
+			drawText("Condition Viewer", 6, 67, 0xFFFFFFFF);
+		}
 
-    /** A whole bunch of convenience methods **/
+	}
 
-    //Shorthand
-    protected Block asBlock(Object[] object) {
-        return asBlock(object, 0);
-    }
+	/** A whole bunch of convenience methods **/
 
-    //Normalhand
-    protected Block asBlock(Object[] object, int index) {
-        return (Block) object[index];
-    }
+	// Shorthand
+	protected Block asBlock(Object[] object) {
+		return asBlock(object, 0);
+	}
 
-    //Shorthand
-    protected String asString(Object[] object) {
-        return asString(object, 0);
-    }
+	// Normalhand
+	protected Block asBlock(Object[] object, int index) {
+		return (Block) object[index];
+	}
 
-    //Normalhand
-    protected String asString(Object[] object, int index) {
-        return asString(object, 0, "");
-    }
+	// Shorthand
+	protected String asString(Object[] object) {
+		return asString(object, 0);
+	}
 
-    //Longhand
-    protected String asString(Object[] object, int index, String theDefault) {
-        if (object != null) {
-            return (String) object[index];
-        } else return theDefault;
-    }
+	// Normalhand
+	protected String asString(Object[] object, int index) {
+		return asString(object, 0, "");
+	}
 
-    //Shorthand
-    protected int asInt(Object[] object) {
-        return asInt(object, 0);
-    }
+	// Longhand
+	protected String asString(Object[] object, int index, String theDefault) {
+		if (object != null) {
+			return (String) object[index];
+		} else
+			return theDefault;
+	}
 
-    //Normalhand
-    protected int asInt(Object[] object, int index) {
-        return asInt(object, index, 0);
-    }
+	// Shorthand
+	protected int asInt(Object[] object) {
+		return asInt(object, 0);
+	}
 
-    //Longhand
-    protected int asInt(Object[] object, int index, int theDefault) {
-        if (object != null) {
-            return (Integer) object[index];
-        } else return theDefault;
-    }
+	// Normalhand
+	protected int asInt(Object[] object, int index) {
+		return asInt(object, index, 0);
+	}
 
-    //Shorthand
-    protected boolean asBoolean(Object[] object) {
-        return asBoolean(object, 0);
-    }
+	// Longhand
+	protected int asInt(Object[] object, int index, int theDefault) {
+		if (object != null) {
+			return (Integer) object[index];
+		} else
+			return theDefault;
+	}
 
-    //Normalhand
-    protected boolean asBoolean(Object[] object, int index) {
-        return asBoolean(object, index, true);
-    }
+	// Shorthand
+	protected boolean asBoolean(Object[] object) {
+		return asBoolean(object, 0);
+	}
 
-    //Longhand
-    protected boolean asBoolean(Object[] object, int index, boolean theDefault) {
-        if (object != null) {
-            return (Boolean) object[index];
-        } else return theDefault;
-    }
+	// Normalhand
+	protected boolean asBoolean(Object[] object, int index) {
+		return asBoolean(object, index, true);
+	}
 
-    //Shorthand
-    protected ItemStack asStack(Object[] object) {
-        return asStack(object, 0);
-    }
+	// Longhand
+	protected boolean asBoolean(Object[] object, int index, boolean theDefault) {
+		if (object != null) {
+			return (Boolean) object[index];
+		} else
+			return theDefault;
+	}
 
-    //Normalhand
-    protected ItemStack asStack(Object[] object, int index) {
-        return (ItemStack) object[index];
-    }
+	// Shorthand
+	protected ItemStack asStack(Object[] object) {
+		return asStack(object, 0);
+	}
+
+	// Normalhand
+	protected ItemStack asStack(Object[] object, int index) {
+		return (ItemStack) object[index];
+	}
 }
