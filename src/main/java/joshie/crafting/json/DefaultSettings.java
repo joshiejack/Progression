@@ -2,21 +2,17 @@ package joshie.crafting.json;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import joshie.crafting.helpers.StackHelper;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-
-import com.google.gson.JsonObject;
 
 public class DefaultSettings {
     public Set<DataTab> tabs = new HashSet();
 
     public DefaultSettings setDefaults() {
-        return this; 
+        tabs.add(new DataTab("DEFAULT", "Default", 0, new ArrayList(), true, new ItemStack(Items.book)));
+        return this;
         /*
         ArrayList<DataGeneric> rewardsNewCondition = new ArrayList();
         ArrayList<DataTrigger> triggersNewCondition = new ArrayList();
