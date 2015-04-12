@@ -21,6 +21,11 @@ public class ItemCriteria extends Item {
         public Item getTabIconItem() {
             return Items.book;
         }
+
+        @Override
+        public boolean hasSearchBar() {
+            return true;
+        }
     };
 
     public ItemCriteria() {
