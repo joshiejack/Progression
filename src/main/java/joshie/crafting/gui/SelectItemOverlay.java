@@ -20,7 +20,7 @@ public class SelectItemOverlay extends TextEditable implements IRenderOverlay {
     public SelectItemOverlay() {
         ItemHelper.addInventory();
     }
-    
+
     public IItemSelectable getEditable() {
         return selectable;
     }
@@ -41,6 +41,16 @@ public class SelectItemOverlay extends TextEditable implements IRenderOverlay {
             SelectItemOverlay.type = type;
             SelectItemOverlay.selectable = selectable;
             super.position = search.length();
+        }
+    }
+
+    public void scroll(boolean scrolledDown) {
+        if (selectable != null) {
+            if (scrolledDown) {
+                position = Math.min(sorted.size() - 200, position + 8);
+            } else {
+                position = Math.max(0, position - 8);
+            }
         }
     }
 
@@ -152,7 +162,6 @@ public class SelectItemOverlay extends TextEditable implements IRenderOverlay {
                             GuiCriteriaEditor.INSTANCE.addTooltip(stack.getTooltip(ClientHelper.getPlayer(), false));
                         }
                     }
-                    
 
                     j++;
 

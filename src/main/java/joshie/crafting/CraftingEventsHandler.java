@@ -38,8 +38,8 @@ public class CraftingEventsHandler {
     @SubscribeEvent
     public void onItemTooltipEvent(ItemTooltipEvent event) {
         if (isBook(event.itemStack) && event.entityPlayer.capabilities.isCreativeMode) {
-            event.toolTip.add("Right click me to ");
-            event.toolTip.add("open Progression editor");
+            event.toolTip.add("Right click me to open");
+            event.toolTip.add("'Progression editor'");
         }
     }
 }

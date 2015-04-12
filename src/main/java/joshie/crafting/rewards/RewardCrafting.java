@@ -107,8 +107,6 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
                 Collection<ICriteria> requirements = CraftingAPI.crafting.getCraftingCriteria(type, event.itemStack);
                 if (requirements.size() > 0) {
                     if (!hasStuff) {
-                        event.toolTip.clear();
-                        event.toolTip.add(EnumChatFormatting.RED + event.itemStack.getDisplayName());
                         event.toolTip.add("Currently Locked");
                         hasStuff = true;
                     }

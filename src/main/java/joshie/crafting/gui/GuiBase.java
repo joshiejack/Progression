@@ -88,7 +88,7 @@ public abstract class GuiBase extends GuiScreen {
         drawRect(x, y, x2, y + 1, border);
         drawRect(x, y2 - 1, x2, y2, border);
     }
-    
+
     public void drawString(String text, int x, int y, int color) {
         mc.fontRenderer.drawString(text, x, y, color);
     }
@@ -252,15 +252,17 @@ public abstract class GuiBase extends GuiScreen {
 
         mouseX = x;
         mouseY = y - (height - ySize) / 2;
-
-        if (!SelectItemOverlay.INSTANCE.isVisible()) {
-            int wheel = Mouse.getDWheel();
-            if (wheel != 0) {
-                if (wheel > 0) {
+        int wheel = Mouse.getDWheel();
+        boolean down = wheel < 0;
+        if (wheel != 0) {
+            if (!SelectItemOverlay.INSTANCE.isVisible()) {
+                if (!down) {
                     scroll(20);
                 } else {
                     scroll(-20);
                 }
+            } else {
+                SelectItemOverlay.INSTANCE.scroll(down);
             }
         }
 

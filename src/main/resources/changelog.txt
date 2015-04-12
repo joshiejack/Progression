@@ -1,6 +1,10 @@
 Progression 0.2.2
+  Add 'Criteria Item'. When right clicked, completes a criteria.
   Fix crash on startup with steves addons
   Fix crash when breaking blocks with null items
+  Enable scroll wheel when selecting items. 
+  Readd tooltip to book item in creative
+  Add /progression edit to open the editor as on option
 
 Progression 0.2.1
   Added 'Click Block' trigger.
