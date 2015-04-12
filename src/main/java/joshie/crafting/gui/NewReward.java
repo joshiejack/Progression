@@ -32,7 +32,6 @@ public class NewReward extends OverlayBase {
         int yPos = 0;
         int xPos = 0;
         for (IRewardType reward : CraftAPIRegistry.rewardTypes.values()) {
-            int color = 0xFF000000;
             if (mouseX >= (xPos * 100) + 155 && mouseX <= (xPos * 100) + 255) {
                 if (mouseY >= 46 + (yPos * 12) && mouseY < 46 + (yPos * 12) + 12) {
                     CraftingAPI.registry.cloneReward(criteria, reward);
@@ -57,16 +56,16 @@ public class NewReward extends OverlayBase {
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
         int mouseX = GuiCriteriaEditor.INSTANCE.mouseX;
         int mouseY = GuiCriteriaEditor.INSTANCE.mouseY;
-        drawBox(-GuiCriteriaEditor.INSTANCE.offsetX + 150, 30, 200, 125, 0xDD000000, 0xFF000000);
-        drawGradient(-GuiCriteriaEditor.INSTANCE.offsetX + 150, 30, 200, 15, 0xFFFF0000, 0xFF660000, 0xFF000000);
-        drawText("Select a Type of Reward", -GuiCriteriaEditor.INSTANCE.offsetX + 155, 34, 0xFFFFFFFF);
+        drawBox(-GuiCriteriaEditor.INSTANCE.offsetX + 150, 30, 200, 125, theme.newBox1, theme.newBox2);
+        drawGradient(-GuiCriteriaEditor.INSTANCE.offsetX + 150, 30, 200, 15, theme.newRewardGradient1, theme.newRewardGradient2, theme.newRewardBorder);
+        drawText("Select a Type of Reward", -GuiCriteriaEditor.INSTANCE.offsetX + 155, 34, theme.newRewardFont);
         int yPos = 0;
         int xPos = 0;
         for (IRewardType reward : CraftAPIRegistry.rewardTypes.values()) {
-            int color = 0xFFFFFFFF;
+            int color = theme.newRewardFont;
             if (mouseX >= (xPos * 100) + 155 && mouseX <= (xPos * 100) + 255) {
                 if (mouseY >= 46 + (yPos * 12) && mouseY < 46 + (yPos * 12) + 12) {
-                    color = 0xFFFF0000;
+                    color = theme.newRewardFontHover;
                 }
             }
 

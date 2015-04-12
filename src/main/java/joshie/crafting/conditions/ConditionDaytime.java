@@ -11,7 +11,7 @@ import com.google.gson.JsonObject;
 
 public class ConditionDaytime extends ConditionBase {	
 	public ConditionDaytime() {
-		super("Is daytime", 0xFFFFFF00, "daytime");
+		super("Is daytime", theme.conditionDaytime, "daytime");
 	}
 	
 	@Override

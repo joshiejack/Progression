@@ -24,7 +24,7 @@ public class RewardCriteria extends RewardBase implements ITextEditable {
     private ICriteria criteria = null;
 
     public RewardCriteria() {
-        super("Give Criteria", 0xFF99B3FF, "criteria");
+        super("Give Criteria", theme.rewardCriteria, "criteria");
     }
 
     @Override
@@ -84,12 +84,12 @@ public class RewardCriteria extends RewardBase implements ITextEditable {
 
     @Override
     public void draw() {
-        int researchColor = 0xFFFFFFFF;
-        int booleanColor = 0xFFFFFFFF;
+        int researchColor = theme.optionsFontColor;
+        int booleanColor = theme.optionsFontColor;
         if (ClientHelper.canEdit()) {
             if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 33) researchColor = 0xFFBBBBBB;
-                if (mouseY > 33 && mouseY <= 41) booleanColor = 0xFFBBBBBB;
+                if (mouseY >= 17 && mouseY <= 33) researchColor = theme.optionsFontColorHover;
+                if (mouseY > 33 && mouseY <= 41) booleanColor = theme.optionsFontColorHover;
             }
         }
 

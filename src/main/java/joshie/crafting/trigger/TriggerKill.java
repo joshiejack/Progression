@@ -31,7 +31,7 @@ public class TriggerKill extends TriggerBaseCounter implements IEntitySelectable
     public int amount = 1;
 
     public TriggerKill() {
-        super("Kill", 0xFF000000, "kill");
+        super("Kill", theme.triggerKill, "kill");
         amountEdit = new IntegerFieldHelper("amount", this);
     }
 
@@ -90,10 +90,10 @@ public class TriggerKill extends TriggerBaseCounter implements IEntitySelectable
 
     @Override
     public void draw() {
-        int color = 0xFFFFFFFF;
+        int color = theme.optionsFontColor;
         if (ClientHelper.canEdit()) {
             if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 25) color = 0xFFBBBBBB;
+                if (mouseY >= 17 && mouseY <= 25) color = theme.optionsFontColorHover;
             }
         }
 

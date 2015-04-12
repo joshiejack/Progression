@@ -52,12 +52,12 @@ public class TreeItemSelect extends TextEditable {
             ScaledResolution res = GuiTreeEditor.INSTANCE.res;
             int fullWidth = res.getScaledWidth() - 10;
 
-            GuiTreeEditor.INSTANCE.drawGradientRectWithBorder(30, y + 20, res.getScaledWidth() - 30, y + 40, 0xFF222222, 0xFF000000, 0xFF000000);
-            GuiTreeEditor.INSTANCE.drawRectWithBorder(30, y + 40, res.getScaledWidth() - 30, y + 210, 0xFF000000, 0xFFFFFFFF);
+            GuiTreeEditor.INSTANCE.drawGradientRectWithBorder(30, y + 20, res.getScaledWidth() - 30, y + 40, theme.blackBarGradient1, theme.blackBarGradient2, theme.blackBarBorder);
+            GuiTreeEditor.INSTANCE.drawRectWithBorder(30, y + 40, res.getScaledWidth() - 30, y + 210, theme.blackBarUnderLine, theme.blackBarUnderLineBorder);
 
-            GuiTreeEditor.INSTANCE.mc.fontRenderer.drawString("Select Item - Click elsewhere to close", 35 - offsetX, y + 27, 0xFFFFFFFF);
-            GuiTreeEditor.INSTANCE.drawRectWithBorder(res.getScaledWidth() - 180, y + 23, res.getScaledWidth() - 35, y + 38, 0xFF000000, 0xFFFFFFFF);
-            GuiTreeEditor.INSTANCE.mc.fontRenderer.drawString(SelectItemOverlay.INSTANCE.getText(), res.getScaledWidth() - 175, y + 29, 0xFFFFFFFF);
+            GuiTreeEditor.INSTANCE.mc.fontRenderer.drawString("Select Item - Click elsewhere to close", 35 - offsetX, y + 27, theme.blackBarFontColor);
+            GuiTreeEditor.INSTANCE.drawRectWithBorder(res.getScaledWidth() - 180, y + 23, res.getScaledWidth() - 35, y + 38, theme.blackBarUnderLine, theme.blackBarUnderLineBorder);
+            GuiTreeEditor.INSTANCE.mc.fontRenderer.drawString(SelectItemOverlay.INSTANCE.getText(), res.getScaledWidth() - 175, y + 29, theme.blackBarFontColor);
 
             int width = (int) ((double) fullWidth / 18.633333334D);
             int j = 0;

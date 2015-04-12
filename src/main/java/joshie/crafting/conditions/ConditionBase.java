@@ -8,12 +8,14 @@ import joshie.crafting.gui.GuiCriteriaEditor;
 import joshie.crafting.gui.SelectTextEdit;
 import joshie.crafting.gui.SelectTextEdit.ITextEditable;
 import joshie.crafting.helpers.ClientHelper;
+import joshie.crafting.json.Theme;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 
 public abstract class ConditionBase implements ICondition {
     private static final ResourceLocation textures = new ResourceLocation("crafting", "textures/gui/textures.png");
+    protected static final Theme theme = Theme.INSTANCE;
     private String typeName;
     protected boolean inverted = false;
     private ICriteria criteria;
@@ -123,16 +125,16 @@ public abstract class ConditionBase implements ICondition {
         this.mouseY = mouseY - 45;
         this.xPosition = xPos + 6;
 
-        drawGradient(1, 2, 99, 15, getColor(), 0xFF222222, 0xFF000000);
-        drawText(getLocalisedName(), 6, 6, 0xFFFFFFFF);
+        drawGradient(1, 2, 99, 15, getColor(), theme.conditionGradient1, theme.conditionGradient2);
+        drawText(getLocalisedName(), 6, 6, theme.conditionFontColor);
         int xXcoord = 0;
         if (this.mouseX >= 87 && this.mouseX <= 97 && this.mouseY >= 4 && this.mouseY <= 14) {
             xXcoord = 11;
         }
 
-        int color = 0xFFFFFFFF;
+        int color = theme.optionsFontColor;
         if (this.mouseY >= 17 && this.mouseY <= 25 && this.mouseX >= 0 && this.mouseX <= 100) {
-            color = 0xFFBBBBBB;
+            color = theme.optionsFontColorHover;
         }
 
         drawText("invert: " + inverted, 4, 18, color);

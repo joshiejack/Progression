@@ -11,7 +11,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class TriggerClickBlock extends TriggerBaseBlock {
     public TriggerClickBlock() {
-        super("Click Block", 0xFF69008C, "clickBlock");
+        super("Click Block", theme.triggerClickBlock, "clickBlock");
     }
 
     @Override

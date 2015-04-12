@@ -12,6 +12,7 @@ import joshie.crafting.api.IReward;
 import joshie.crafting.api.ITreeEditor;
 import joshie.crafting.helpers.ClientHelper;
 import joshie.crafting.helpers.RenderItemHelper;
+import joshie.crafting.json.Theme;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
@@ -117,11 +118,8 @@ public class EditorTree implements ITreeEditor {
     public void draw(int x, int y, int offsetX, int highlight) {
         recalculate(offsetX);
         if (highlight != 0) {
-            GuiTreeEditor.INSTANCE.drawRectWithBorder(x + left, y + top, x + right, y + bottom, 0x00FFFFFF, highlight);
+            GuiTreeEditor.INSTANCE.drawRectWithBorder(x + left, y + top, x + right, y + bottom, Theme.INSTANCE.invisible, highlight);
         } else {
-            int uncompleted = 0xFF577170;
-            int completed = 0xFF99FF99;
-            int outofbounds = 0xFFB973FF;
             HashMap<ICriteria, Integer> completedMap = CraftingAPI.players.getClientPlayer().getMappings().getCompletedCriteria();
             boolean isCompleted = completedMap.containsKey(criteria);
             boolean anyConflicts = false;
@@ -187,7 +185,7 @@ public class EditorTree implements ITreeEditor {
             gui.drawTexturedModalRect(x + right - 10, y + top, textureX + 90, textureY, 10, 25);
 
             //gui.drawTexturedModalRect(x + left, y + top, textureX, textureY, 100, 25);
-            gui.mc.fontRenderer.drawString(criteria.getDisplayName(), x + left + 4, y + top + 3, 0xFFFFFFFF);
+            gui.mc.fontRenderer.drawString(criteria.getDisplayName(), x + left + 4, y + top + 3, Theme.INSTANCE.criteriaDisplayNameColor);
 
             GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
             //Draw in the rewards

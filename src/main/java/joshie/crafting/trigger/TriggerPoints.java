@@ -24,7 +24,7 @@ public class TriggerPoints extends TriggerBaseBoolean {
     public String name = "Research";
 
     public TriggerPoints() {
-        super("Points", 0xFFB2B200, "points");
+        super("Points", theme.triggerPoints, "points");
         nameEdit = new TextFieldHelper("name", this);
         amountEdit = new IntegerFieldHelper("amount", this);
     }
@@ -91,14 +91,14 @@ public class TriggerPoints extends TriggerBaseBoolean {
 
     @Override
     public void draw() {
-        int color = 0xFFFFFFFF;
-        int amountColor = 0xFFFFFFFF;
-        int consumeColor = 0xFFFFFFFF;
+        int color = theme.optionsFontColor;
+        int amountColor = theme.optionsFontColor;
+        int consumeColor = theme.optionsFontColor;
         if (ClientHelper.canEdit()) {
             if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 25) color = 0xFFBBBBBB;
-                if (mouseY > 25 && mouseY <= 33) amountColor = 0xFFBBBBBB;
-                if (mouseY > 34 && mouseY <= 41) consumeColor = 0xFFBBBBBB;
+                if (mouseY >= 17 && mouseY <= 25) color = theme.optionsFontColorHover;
+                if (mouseY > 25 && mouseY <= 33) amountColor = theme.optionsFontColorHover;
+                if (mouseY > 34 && mouseY <= 41) consumeColor = theme.optionsFontColorHover;
             }
         }
 

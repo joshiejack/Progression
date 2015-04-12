@@ -41,6 +41,7 @@ import joshie.crafting.rewards.RewardResearch;
 import joshie.crafting.rewards.RewardSpeed;
 import joshie.crafting.rewards.RewardTime;
 import joshie.crafting.trigger.TriggerBreakBlock;
+import joshie.crafting.trigger.TriggerChangeDimension;
 import joshie.crafting.trigger.TriggerClickBlock;
 import joshie.crafting.trigger.TriggerCrafting;
 import joshie.crafting.trigger.TriggerKill;
@@ -142,9 +143,10 @@ public class CraftingMod {
         CraftingAPI.registry.registerTriggerType(new TriggerResearch());
         CraftingAPI.registry.registerTriggerType(new TriggerClickBlock());
         CraftingAPI.registry.registerTriggerType(new TriggerPoints());
+        CraftingAPI.registry.registerTriggerType(new TriggerChangeDimension());
 
-        CraftingAPI.commands.registerCommand(new CommandEdit());
         CraftingAPI.commands.registerCommand(new CommandHelp());
+        CraftingAPI.commands.registerCommand(new CommandEdit());
         CraftingAPI.commands.registerCommand(new CommandReload());
         CraftingAPI.commands.registerCommand(new CommandReset());
 

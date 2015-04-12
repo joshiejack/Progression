@@ -17,6 +17,7 @@ import joshie.crafting.gui.GuiTriggerEditor;
 import joshie.crafting.gui.SelectTextEdit;
 import joshie.crafting.gui.SelectTextEdit.ITextEditable;
 import joshie.crafting.helpers.ClientHelper;
+import joshie.crafting.json.Theme;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -25,8 +26,8 @@ import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.relauncher.Side;
 
 public abstract class TriggerBase implements ITrigger {
-	private static final ResourceLocation textures = new ResourceLocation(
-			"crafting", "textures/gui/textures.png");
+	private static final ResourceLocation textures = new ResourceLocation("crafting", "textures/gui/textures.png");
+	protected static final Theme theme = Theme.INSTANCE;
 	private List<ICondition> conditions = new ArrayList();
 	private String typeName;
 	private String localised;
@@ -193,8 +194,8 @@ public abstract class TriggerBase implements ITrigger {
 		this.mouseY = mouseY - 45;
 		this.xPosition = xPos + 6;
 
-		drawGradient(1, 2, 99, 15, getColor(), 0xFF222222, 0xFF000000);
-		drawText(getLocalisedName(), 6, 6, 0xFFFFFFFF);
+		drawGradient(1, 2, 99, 15, getColor(), theme.triggerGradient1, theme.triggerGradient2);
+		drawText(getLocalisedName(), 6, 6, theme.triggerFontColor);
 
 		if (ClientHelper.canEdit()) {
 			int xXcoord = 0;
@@ -210,19 +211,19 @@ public abstract class TriggerBase implements ITrigger {
 
 		draw();
 
-		int color = 0xFF000000;
+		int color = theme.blackBarBorder;
 		if (this.mouseX >= 2 && this.mouseX <= 87) {
 			if (this.mouseY >= 66 && this.mouseY <= 77) {
-				color = 0xFFFFFFFF;
+				color = theme.blackBarFontColor;
 			}
 		}
 
 		if (ClientHelper.canEdit()) {
-			drawGradient(2, 66, 85, 11, color, 0xFF222222, 0xFF000000);
-			drawText("Condition Editor", 6, 67, 0xFFFFFFFF);
+			drawGradient(2, 66, 85, 11, color, theme.blackBarGradient1, theme.blackBarGradient2);
+			drawText("Condition Editor", 6, 67, theme.blackBarFontColor);
 		} else if (this.getConditions().size() > 0) {
-			drawGradient(2, 66, 85, 11, color, 0xFF222222, 0xFF000000);
-			drawText("Condition Viewer", 6, 67, 0xFFFFFFFF);
+			drawGradient(2, 66, 85, 11, color, theme.blackBarGradient1, theme.blackBarGradient2);
+			drawText("Condition Viewer", 6, 67, theme.blackBarFontColor);
 		}
 
 	}

@@ -8,6 +8,7 @@ import java.util.Set;
 
 import joshie.crafting.api.ICriteria;
 import joshie.crafting.json.JSONLoader;
+import joshie.crafting.json.Theme;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
@@ -34,6 +35,7 @@ public abstract class GuiBase extends GuiScreen {
     protected int rightX = 218;
     protected int xSize = 430;
     protected int ySize = 240;
+    public Theme theme = null;
     public ICriteria selected = null;
     public ICriteria previous = null;
     public int y;
@@ -44,6 +46,7 @@ public abstract class GuiBase extends GuiScreen {
         y = (height - ySize) / 2;
         Keyboard.enableRepeatEvents(true);
         res = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+        theme = Theme.INSTANCE;
     }
 
     @Override
@@ -67,8 +70,8 @@ public abstract class GuiBase extends GuiScreen {
         drawTooltip(tooltip, x, y);
     }
 
-    public void drawBackground() {
-        drawRectWithBorder(-1, y, mc.displayWidth + 1, y + ySize, 0xEE121212, 0xFFFFFFFF);
+    public void drawBackground() {       
+        drawRectWithBorder(-1, y, mc.displayWidth + 1, y + ySize, theme.backgroundColor, theme.backgroundBorder);
     }
 
     public abstract void drawForeground();
@@ -126,7 +129,7 @@ public abstract class GuiBase extends GuiScreen {
         tessellator.draw();
 
         tessellator.startDrawing(7);
-        colorize(0xFFBF00FF);
+        colorize(theme.connectLineColorize);
         tessellator.addVertex((double) x, (double) y, 0.0D);
         tessellator.addVertex((double) x + 5, (double) y, 0.0D);
         tessellator.addVertex((double) x + 5, (double) y + 5, 0.0D);
@@ -191,7 +194,7 @@ public abstract class GuiBase extends GuiScreen {
             this.drawGradientRect(j2 - 3, k2 - 3, j2 + k + 3, k2 + i1 + 3, j1, j1);
             this.drawGradientRect(j2 - 4, k2 - 3, j2 - 3, k2 + i1 + 3, j1, j1);
             this.drawGradientRect(j2 + k + 3, k2 - 3, j2 + k + 4, k2 + i1 + 3, j1, j1);
-            int k1 = 0xFFFFFFFF;
+            int k1 = theme.toolTipWhite;
             int l1 = (k1 & 16711422) >> 1 | k1 & -16777216;
             this.drawGradientRect(j2 - 3, k2 - 3 + 1, j2 - 3 + 1, k2 + i1 + 3 - 1, k1, l1);
             this.drawGradientRect(j2 + k + 2, k2 - 3 + 1, j2 + k + 3, k2 + i1 + 3 - 1, k1, l1);

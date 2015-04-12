@@ -33,7 +33,7 @@ public class ConditionInInventory extends ConditionBase implements IItemSelectab
     private CheckSlots slotType = CheckSlots.INVENTORY;
 
     public ConditionInInventory() {
-        super("In Inventory", 0xFF660000, "ininventory");
+        super("In Inventory", theme.conditionInInventory, "ininventory");
         editAmount = new ItemAmountHelper("itemAmount", this);
     }
 
@@ -170,16 +170,16 @@ public class ConditionInInventory extends ConditionBase implements IItemSelectab
     @Override
     public void draw() {
         drawStack(stack, 25, 60, 3F);
-        int typeColor = 0xFFFFFFFF;
-        int matchColor = 0xFFFFFFFF;
-        int usageColor = 0xFFFFFFFF;
-        int typezColor = 0xFFFFFFFF;
+        int typeColor = theme.optionsFontColor;
+        int matchColor = theme.optionsFontColor;
+        int usageColor = theme.optionsFontColor;
+        int typezColor = theme.optionsFontColor;
         if (ClientHelper.canEdit()) {
             if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 25 && mouseY <= 33) typeColor = 0xFFBBBBBB;
-                if (mouseY > 33 && mouseY <= 42) matchColor = 0xFFBBBBBB;
-                if (mouseY > 42 && mouseY <= 51) usageColor = 0xFFBBBBBB;
-                if (mouseY > 51 && mouseY <= 60) typezColor = 0xFFBBBBBB;
+                if (mouseY >= 25 && mouseY <= 33) typeColor = theme.optionsFontColorHover;
+                if (mouseY > 33 && mouseY <= 42) matchColor = theme.optionsFontColorHover;
+                if (mouseY > 42 && mouseY <= 51) usageColor = theme.optionsFontColorHover;
+                if (mouseY > 51 && mouseY <= 60) typezColor = theme.optionsFontColorHover;
             }
         }
 

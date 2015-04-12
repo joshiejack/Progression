@@ -7,6 +7,7 @@ import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.ITab;
 import joshie.crafting.gui.ButtonBase.ButtonLeft;
+import joshie.crafting.json.Theme;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.init.Blocks;
@@ -29,7 +30,7 @@ public class ButtonNewCriteria extends ButtonLeft {
         mc.getTextureManager().bindTexture(textures);
         int yTexture = k == 2 ? 24 : 0;
         drawTexturedModalRect(xPosition, yPosition, 231, yTexture, 25, 25);
-        mc.fontRenderer.drawString("New", xPosition + 2, yPosition + 9, 0xFFFFFFFF);
+        mc.fontRenderer.drawString("New", xPosition + 2, yPosition + 9, Theme.INSTANCE.newButtonFontColor);
         if (k == 2) {
             ArrayList<String> name = new ArrayList();
             name.add(EnumChatFormatting.WHITE + "New");

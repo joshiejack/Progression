@@ -33,7 +33,7 @@ public class TriggerCrafting extends TriggerBase implements IItemSelectable {
     public int itemAmount = 1;
 
     public TriggerCrafting() {
-        super("Crafting", 0xFF663300, "crafting");
+        super("Crafting", theme.triggerCrafting, "crafting");
         editCraftAmount = new CraftAmount(this);
         editItemAmount = new ItemAmount(this);
     }
@@ -131,16 +131,16 @@ public class TriggerCrafting extends TriggerBase implements IItemSelectable {
     @Override
     public void draw() {
         drawStack(stack, 76, 44, 1.4F);
-        int typeColor = 0xFFFFFFFF;
-        int matchColor = 0xFFFFFFFF;
-        int match2Color = 0xFFFFFFFF;
-        int usageColor = 0xFFFFFFFF;
+        int typeColor = theme.optionsFontColor;
+        int matchColor = theme.optionsFontColor;
+        int match2Color = theme.optionsFontColor;
+        int usageColor = theme.optionsFontColor;
         if (ClientHelper.canEdit()) {
             if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 25) typeColor = 0xFFBBBBBB;
-                if (mouseY > 25 && mouseY <= 33) matchColor = 0xFFBBBBBB;
-                if (mouseY > 34 && mouseY <= 41) match2Color = 0xFFBBBBBB;
-                if (mouseY > 42 && mouseY <= 50) usageColor = 0xFFBBBBBB;
+                if (mouseY >= 17 && mouseY <= 25) typeColor = theme.optionsFontColorHover;
+                if (mouseY > 25 && mouseY <= 33) matchColor = theme.optionsFontColorHover;
+                if (mouseY > 34 && mouseY <= 41) match2Color = theme.optionsFontColorHover;
+                if (mouseY > 42 && mouseY <= 50) usageColor = theme.optionsFontColorHover;
             }
         }
 

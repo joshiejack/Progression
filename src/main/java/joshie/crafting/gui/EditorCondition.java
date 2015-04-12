@@ -8,6 +8,7 @@ import joshie.crafting.api.IConditionEditor;
 import joshie.crafting.api.ITrigger;
 import joshie.crafting.helpers.ClientHelper;
 import joshie.crafting.helpers.RenderItemHelper;
+import joshie.crafting.json.Theme;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -18,6 +19,7 @@ import cpw.mods.fml.common.eventhandler.Event.Result;
 
 public class EditorCondition implements IConditionEditor {
     private static final ResourceLocation textures = new ResourceLocation("crafting", "textures/gui/textures.png");
+    protected static Theme theme = Theme.INSTANCE;
     private final ITrigger trigger;
     private int xCoord;
     private int yCoord;
@@ -67,15 +69,15 @@ public class EditorCondition implements IConditionEditor {
         ScaledResolution res = GuiTriggerEditor.INSTANCE.res;
         int fullWidth = (res.getScaledWidth()) - offsetX + 5;
         //Title and Repeatability Box
-        drawText("Editing Trigger conditions for the Criteria: " + trigger.getCriteria().getDisplayName() + " - " + trigger.getLocalisedName(), 9 - offsetX, 9, 0xFFFFFFFF);
-        drawBox(-1, 210, fullWidth, 1, 0xFFFFFFFF, 0xFFFFFFFF);
-        drawText("Use arrow keys to scroll sideways, or use the scroll wheel. (Down to go right)", 9 - offsetX, 215, 0xFFFFFFFF);
-        drawText("Hold shift with arrow keys to scroll faster.", 9 - offsetX, 225, 0xFFFFFFFF);
+        drawText("Editing Trigger conditions for the Criteria: " + trigger.getCriteria().getDisplayName() + " - " + trigger.getLocalisedName(), 9 - offsetX, 9, theme.conditionEditorFont);
+        drawBox(-1, 210, fullWidth, 1, theme.conditionEditorUnderline2, theme.conditionEditorUnderline2);
+        drawText("Use arrow keys to scroll sideways, or use the scroll wheel. (Down to go right)", 9 - offsetX, 215, theme.scrollTextFontColor);
+        drawText("Hold shift with arrow keys to scroll faster.", 9 - offsetX, 225, theme.scrollTextFontColor);
 
-        //Triggers
-        drawGradient(-1, 25, fullWidth, 15, 0xFFFF8000, 0xFFB25900, 0xFF8C4600);
-        drawBox(-1, 40, fullWidth, 1, 0xFF8C4600, 0x00000000);
-        drawText("Conditions", 9 - offsetX, 29, 0xFFFFFFFF);
+        //Conditions
+        drawGradient(-1, 25, fullWidth, 15, theme.conditionEditorGradient1, theme.conditionEditorGradient2, theme.conditionEditorBorder);
+        drawBox(-1, 40, fullWidth, 1, theme.conditionEditorUnderline, theme.invisible);
+        drawText("Conditions", 9 - offsetX, 29, theme.conditionEditorFont);
         int xCoord = 0;
         List<ICondition> conditions = trigger.getConditions();
         int mouseX = GuiTriggerEditor.INSTANCE.mouseX - offsetX;
@@ -144,7 +146,6 @@ public class EditorCondition implements IConditionEditor {
 
         mouseX = GuiTriggerEditor.INSTANCE.mouseX - offsetX;
         mouseY = GuiTriggerEditor.INSTANCE.mouseY;
-        int color = 0xFF0080FF;
         if (mouseX >= 15 + 100 * xCoord && mouseX <= 15 + 100 * xCoord + 55) {
             if (mouseY >= 49 && mouseY <= 49 + 55) {
                 NewCondition.INSTANCE.select(trigger);

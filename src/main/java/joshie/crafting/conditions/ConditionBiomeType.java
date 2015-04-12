@@ -21,7 +21,7 @@ public class ConditionBiomeType extends ConditionBase implements ITextEditable {
     private Type[] biomeTypes = new Type[] { Type.FOREST };
 
     public ConditionBiomeType() {
-        super("Biome Type", 0xFF00B200, "biomeType");
+        super("Biome Type", theme.conditionBiomeType, "biomeType");
     }
 
     private Type getBiomeType(String string) {
@@ -85,10 +85,9 @@ public class ConditionBiomeType extends ConditionBase implements ITextEditable {
 
     @Override
     public void draw() {
-        int typeColor = 0xFFFFFFFF;
-        int matchColor = 0xFFFFFFFF;
+        int matchColor = theme.optionsFontColor;
         if (mouseX <= 84 && mouseX >= 1) {
-            if (mouseY > 25 && mouseY <= 200) matchColor = 0xFFBBBBBB;
+            if (mouseY > 25 && mouseY <= 200) matchColor = theme.optionsFontColorHover;
         }
 
         drawSplitText("biomeTypes: " + SelectTextEdit.INSTANCE.getText(this), 4, 26, matchColor, 100);

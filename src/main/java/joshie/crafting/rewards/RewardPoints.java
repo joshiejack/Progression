@@ -23,7 +23,7 @@ public class RewardPoints extends RewardBase {
     public int amount = 1;
 
     public RewardPoints() {
-        super("Give Points", 0xFF002DB2, "points");
+        super("Give Points", theme.rewardPoints, "points");
         nameEdit = new TextFieldHelper("name", this);
         amountEdit = new IntegerFieldHelper("amount", this);
     }
@@ -76,12 +76,12 @@ public class RewardPoints extends RewardBase {
 
     @Override
     public void draw() {
-        int color = 0xFFFFFFFF;
-        int amountColor = 0xFFFFFFFF;
+        int color = theme.optionsFontColor;
+        int amountColor = theme.optionsFontColor;
         if (ClientHelper.canEdit()) {
             if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 25) color = 0xFFBBBBBB;
-                if (mouseY > 25 && mouseY <= 33) amountColor = 0xFFBBBBBB;
+                if (mouseY >= 17 && mouseY <= 25) color = theme.optionsFontColorHover;
+                if (mouseY > 25 && mouseY <= 33) amountColor = theme.optionsFontColorHover;
             }
         }
 

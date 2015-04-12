@@ -1,8 +1,6 @@
 package joshie.crafting;
 
-import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.gui.GuiCriteriaEditor;
-import joshie.crafting.gui.GuiCriteriaViewer;
 import joshie.crafting.gui.GuiTreeEditor;
 import joshie.crafting.gui.GuiTriggerEditor;
 import net.minecraft.entity.player.EntityPlayer;

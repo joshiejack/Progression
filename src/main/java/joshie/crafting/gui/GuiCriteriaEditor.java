@@ -31,16 +31,16 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
         int fullWidth = (res.getScaledWidth()) - offsetX + 5;
         //Title and Repeatability Box
         drawStack(selected.getIcon(), 1, 4, 1F);
-        drawText("Display Name: " + nameEdit.getText(), 21 - offsetX, 9, 0xFFFFFFFF);
-        drawText("Repeatability: " + repeatEdit.getText() + "x", fullWidth - 130, 9, 0xFFFFFFFF);
-        drawBox(-1, 210, fullWidth, 1, 0xFFFFFFFF, 0xFFFFFFFF);
-        drawText("Use arrow keys to scroll sideways, or use the scroll wheel. (Down to go right)", 9 - offsetX, 215, 0xFFFFFFFF);
-        drawText("Hold shift with arrow keys to scroll faster.", 9 - offsetX, 225, 0xFFFFFFFF);
+        drawText("Display Name: " + nameEdit.getText(), 21 - offsetX, 9, theme.criteriaDisplayNameColor);
+        drawText("Repeatability: " + repeatEdit.getText() + "x", fullWidth - 130, 9, theme.criteriaDisplayNameColor);
+        drawBox(-1, 210, fullWidth, 1, theme.blackBarUnderLineBorder, theme.blackBarUnderLineBorder);
+        drawText("Use arrow keys to scroll sideways, or use the scroll wheel. (Down to go right)", 9 - offsetX, 215, theme.scrollTextFontColor);
+        drawText("Hold shift with arrow keys to scroll faster.", 9 - offsetX, 225, theme.scrollTextFontColor);
 
         //Triggers
-        drawGradient(-1, 25, fullWidth, 15, 0xFF0080FF, 0xFF00468C, 0xFF00468C);
-        drawBox(-1, 40, fullWidth, 1, 0xFF003366, 0x00000000);
-        drawText("Requirements", 9 - offsetX, 29, 0xFFFFFFFF);
+        drawGradient(-1, 25, fullWidth, 15, theme.triggerBoxGradient1, theme.triggerBoxGradient2, theme.triggerBoxBorder);
+        drawBox(-1, 40, fullWidth, 1, theme.triggerBoxUnderline1, theme.invisible);
+        drawText("Requirements", 9 - offsetX, 29, theme.triggerBoxFont);
         int xCoord = 0;
         List<ITrigger> triggers = selected.getTriggers();
         int mouseX = GuiCriteriaEditor.INSTANCE.mouseX - offsetX;
@@ -68,8 +68,8 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
         }
 
         //Rewards
-        drawGradient(-1, 120, fullWidth, 15, 0xFFB20000, 0xFF660000, 0xFF660000);
-        drawText("Result", 9 - offsetX, 124, 0xFFFFFFFF);
+        drawGradient(-1, 120, fullWidth, 15, theme.rewardBoxGradient1, theme.rewardBoxGradient2, theme.rewardBoxBorder);
+        drawText("Result", 9 - offsetX, 124, theme.rewardBoxFont);
         xCoord = 0;
         List<IReward> rewards = selected.getRewards();
         for (int i = 0; i < rewards.size(); i++) {
@@ -81,7 +81,6 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
 
         if (ClientHelper.canEdit()) {
             int crossX = 55;
-            int color2 = 0xFF400000;
             if (mouseX >= 15 + 100 * xCoord && mouseX <= 15 + 100 * xCoord + 55) {
                 if (mouseY >= 144 && mouseY <= 144 + 55) {
                     crossX = 165;
@@ -198,7 +197,6 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
         if (ClientHelper.canEdit()) {
             mouseX = GuiCriteriaEditor.INSTANCE.mouseX - offsetX;
             mouseY = GuiCriteriaEditor.INSTANCE.mouseY;
-            int color = 0xFF0080FF;
             if (mouseX >= 15 + 100 * xCoord && mouseX <= 15 + 100 * xCoord + 55) {
                 if (mouseY >= 49 && mouseY <= 49 + 55) {
                     NewTrigger.INSTANCE.select(selected);

@@ -117,14 +117,14 @@ public class SelectEntity extends TextEditable implements IRenderOverlay {
             int yPos = GuiCriteriaEditor.INSTANCE.y;
             int offX = GuiCriteriaEditor.INSTANCE.offsetX;
 
-            drawGradient(-1, 25 + type.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 15, 0xFF222222, 0xFF000000, 0xFF000000);
-            drawBox(-1, 40 + type.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 73, 0xFF000000, 0xFFFFFFFF);
+            drawGradient(-1, 25 + type.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 15, theme.blackBarGradient1, theme.blackBarGradient2, theme.blackBarBorder);
+            drawBox(-1, 40 + type.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 73, theme.blackBarUnderLine, theme.blackBarUnderLineBorder);
 
             ScaledResolution res = GuiCriteriaEditor.INSTANCE.res;
             int fullWidth = res.getScaledWidth() - 10;
-            drawText("Select Entity - Click elsewhere to close", 5 - offX, 29 + type.yOffset, 0xFFFFFFFF);
-            drawBox(285 - offX, 27 + type.yOffset, 200, 12, 0xFF000000, 0xFFFFFFFF);
-            drawText(getText(), 290 - offX, 29 + type.yOffset, 0xFFFFFFFF);
+            drawText("Select Entity - Click elsewhere to close", 5 - offX, 29 + type.yOffset, theme.blackBarFontColor);
+            drawBox(285 - offX, 27 + type.yOffset, 200, 12, theme.blackBarUnderLine, theme.blackBarUnderLineBorder);
+            drawText(getText(), 290 - offX, 29 + type.yOffset, theme.blackBarFontColor);
 
             int j = 0;
             int k = 0;

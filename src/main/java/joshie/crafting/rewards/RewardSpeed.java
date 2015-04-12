@@ -24,7 +24,7 @@ public class RewardSpeed extends RewardBase implements ITextEditable {
     private float speed = 0.1F;
 
     public RewardSpeed() {
-        super("Ability: Speed", 0xFFFFBF00, "speed");
+        super("Ability: Speed", theme.rewardSpeed, "speed");
     }
 
     @Override
@@ -88,10 +88,10 @@ public class RewardSpeed extends RewardBase implements ITextEditable {
 
     @Override
     public void draw() {
-        int speedColor = 0xFFFFFFFF;
+        int speedColor = theme.optionsFontColor;
         if (ClientHelper.canEdit()) {
             if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 25) speedColor = 0xFFBBBBBB;
+                if (mouseY >= 17 && mouseY <= 25) speedColor = theme.optionsFontColorHover;
             }
         }
 

@@ -24,7 +24,7 @@ public class RewardFallDamage extends RewardBase implements ITextEditable {
     private int maxAbsorbed = 1;
 
     public RewardFallDamage() {
-        super("Ability: Fall Resistance", 0xFF661A00, "fallDamage");
+        super("Ability: Fall Resistance", theme.rewardFallDamage, "fallDamage");
     }
 
     @Override
@@ -90,11 +90,11 @@ public class RewardFallDamage extends RewardBase implements ITextEditable {
 
     @Override
     public void draw() {
-        int color = 0xFFFFFFFF;
+        int color = theme.optionsFontColor;
         
         if (ClientHelper.canEdit()) {
             if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 25) color = 0xFFBBBBBB;
+                if (mouseY >= 17 && mouseY <= 25) color = theme.optionsFontColorHover;
             }
         }
 

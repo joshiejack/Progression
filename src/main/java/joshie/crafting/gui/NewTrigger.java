@@ -32,7 +32,6 @@ public class NewTrigger extends OverlayBase {
         int yPos = 0;
         int xPos = 0;
         for (ITriggerType trigger : CraftAPIRegistry.triggerTypes.values()) {
-            int color = 0xFF000000;
             if (mouseX >= (xPos * 100) + 155 && mouseX <= (xPos * 100) + 255) {
                 if (mouseY >= 46 + (yPos * 12) && mouseY <= 46 + (yPos * 12) + 12) {
                     CraftingAPI.registry.cloneTrigger(criteria, trigger);
@@ -57,16 +56,16 @@ public class NewTrigger extends OverlayBase {
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
         int mouseX = GuiCriteriaEditor.INSTANCE.mouseX;
         int mouseY = GuiCriteriaEditor.INSTANCE.mouseY;
-        drawBox(-GuiCriteriaEditor.INSTANCE.offsetX + 150, 30, 200, 100, 0xDD000000, 0xFF000000);
-        drawGradient(-GuiCriteriaEditor.INSTANCE.offsetX + 150, 30, 200, 15, 0xFF0000D2, 0xFF000066, 0xFF000000);
-        drawText("Select a Type of Trigger", -GuiCriteriaEditor.INSTANCE.offsetX + 155, 34, 0xFFFFFFFF);
+        drawBox(-GuiCriteriaEditor.INSTANCE.offsetX + 150, 30, 200, 100, theme.newBox1, theme.newBox2);
+        drawGradient(-GuiCriteriaEditor.INSTANCE.offsetX + 150, 30, 200, 15, theme.newTriggerGradient1, theme.newTriggerGradient2, theme.newTriggerBorder);
+        drawText("Select a Type of Trigger", -GuiCriteriaEditor.INSTANCE.offsetX + 155, 34, theme.newTriggerFont);
         int yPos = 0;
         int xPos = 0;
         for (ITriggerType trigger : CraftAPIRegistry.triggerTypes.values()) {
-            int color = 0xFFFFFFFF;
+            int color = theme.newTriggerFont;
             if (mouseX >= (xPos * 100) + 155 && mouseX <= (xPos * 100) + 255) {
                 if (mouseY >= 46 + (yPos * 12) && mouseY <= 46 + (yPos * 12) + 12) {
-                    color = 0xFF2693FF;
+                    color = theme.newTriggerFontHover;
                 }
             }
 

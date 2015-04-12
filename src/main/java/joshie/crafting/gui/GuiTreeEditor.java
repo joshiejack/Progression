@@ -112,9 +112,9 @@ public class GuiTreeEditor extends GuiBase {
                     
                     width -= 3;
                     
-                    drawLine(offsetX + width + x1, y + 12 + y1 - 1, offsetX + 5 + x2, y + 12 + y2 - 1, 1, 0xDDB9B9AD);
-                    drawLine(offsetX + width + x1, y + 12 + y1 + 1, offsetX + 5 + x2, y + 12 + y2 + 1, 1, 0xFF636C69); //#636C69
-                    drawLine(offsetX + width + x1, y + 12 + y1, offsetX + 5 + x2, y + 12 + y2, 1, 0xFFE8EFE7);
+                    drawLine(offsetX + width + x1, y + 12 + y1 - 1, offsetX + 5 + x2, y + 12 + y2 - 1, 1, theme.connectLineColor1);
+                    drawLine(offsetX + width + x1, y + 12 + y1 + 1, offsetX + 5 + x2, y + 12 + y2 + 1, 1, theme.connectLineColor2); //#636C69
+                    drawLine(offsetX + width + x1, y + 12 + y1, offsetX + 5 + x2, y + 12 + y2, 1, theme.connectLineColor3);
                 }
             }
         }

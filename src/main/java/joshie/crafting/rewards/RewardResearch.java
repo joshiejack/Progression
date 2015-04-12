@@ -20,7 +20,7 @@ public class RewardResearch extends RewardBase implements ITextEditable {
     private String research = "dummy";
 
     public RewardResearch() {
-        super("Give Research", 0xFF99B3FF, "research");
+        super("Give Research", theme.rewardResearch, "research");
     }
 
     @Override
@@ -65,10 +65,10 @@ public class RewardResearch extends RewardBase implements ITextEditable {
 
     @Override
     public void draw() {
-        int researchColor = 0xFFFFFFFF;
+        int researchColor = theme.optionsFontColor;
         if (ClientHelper.canEdit()) {
             if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 33) researchColor = 0xFFBBBBBB;
+                if (mouseY >= 17 && mouseY <= 33) researchColor = theme.optionsFontColorHover;
             }
         }
 

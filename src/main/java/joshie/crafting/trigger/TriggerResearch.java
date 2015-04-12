@@ -18,7 +18,7 @@ public class TriggerResearch extends TriggerBaseBoolean implements IResearch {
     public String researchName = "dummy";
 
     public TriggerResearch() {
-        super("Research", 0xFF26C9FF, "research");
+        super("Research", theme.triggerResearch, "research");
         nameEdit = new TextFieldHelper("researchName", this);
     }
 
@@ -66,10 +66,10 @@ public class TriggerResearch extends TriggerBaseBoolean implements IResearch {
 
     @Override
     public void draw() {
-        int color = 0xFFFFFFFF;
+        int color = theme.optionsFontColor;
         if (ClientHelper.canEdit()) {
             if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 33) color = 0xFFBBBBBB;
+                if (mouseY >= 17 && mouseY <= 33) color = theme.optionsFontColorHover;
             }
         }
 

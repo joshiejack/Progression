@@ -139,14 +139,14 @@ public class SelectItemOverlay extends TextEditable implements IRenderOverlay {
 
             int offsetX = GuiCriteriaEditor.INSTANCE.offsetX;
 
-            drawGradient(-1, 25 + type.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 15, 0xFF222222, 0xFF000000, 0xFF000000);
-            drawBox(-1, 40 + type.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 73, 0xFF000000, 0xFFFFFFFF);
+            drawGradient(-1, 25 + type.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 15, theme.blackBarGradient1, theme.blackBarGradient2, theme.blackBarBorder);
+            drawBox(-1, 40 + type.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 73, theme.blackBarUnderLine, theme.blackBarUnderLineBorder);
 
             ScaledResolution res = GuiCriteriaEditor.INSTANCE.res;
             int fullWidth = res.getScaledWidth() - 10;
-            drawText("Select Item - Click elsewhere to close", 5 - offsetX, 29 + type.yOffset, 0xFFFFFFFF);
-            drawBox(285 - offsetX, 27 + type.yOffset, 200, 12, 0xFF000000, 0xFFFFFFFF);
-            drawText(getText(), 290 - offsetX, 29 + type.yOffset, 0xFFFFFFFF);
+            drawText("Select Item - Click elsewhere to close", 5 - offsetX, 29 + type.yOffset, theme.blackBarFontColor);
+            drawBox(285 - offsetX, 27 + type.yOffset, 200, 12, theme.blackBarUnderLine, theme.blackBarUnderLineBorder);
+            drawText(getText(), 290 - offsetX, 29 + type.yOffset, theme.blackBarFontColor);
 
             int mouseX = GuiCriteriaEditor.INSTANCE.mouseX;
             int mouseY = GuiCriteriaEditor.INSTANCE.mouseY - type.yOffset;

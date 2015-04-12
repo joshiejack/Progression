@@ -23,7 +23,7 @@ public class RewardCommand extends RewardBase implements ITextEditable {
     private String command = "dummy";
 
     public RewardCommand() {
-        super("Execute Command", 0xFF2626FF, "command");
+        super("Execute Command", theme.rewardCommand, "command");
     }
 
     @Override
@@ -71,10 +71,10 @@ public class RewardCommand extends RewardBase implements ITextEditable {
 
     @Override
     public void draw() {
-        int commandColor = 0xFFFFFFFF;
+        int commandColor = theme.optionsFontColor;
         if (ClientHelper.canEdit()) {
             if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 100) commandColor = 0xFFBBBBBB;
+                if (mouseY >= 17 && mouseY <= 100) commandColor = theme.optionsFontColorHover;
             }
         }
 

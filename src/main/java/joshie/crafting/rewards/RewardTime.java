@@ -21,7 +21,7 @@ public class RewardTime extends RewardBase {
     public int time = 0;
 
     public RewardTime() {
-        super("Adjust Time", 0xFF26C9FF, "time");
+        super("Adjust Time", theme.rewardTime, "time");
         timeEdit = new IntegerFieldHelper("time", this);
     }
 
@@ -83,12 +83,12 @@ public class RewardTime extends RewardBase {
 
     @Override
     public void draw() {
-        int color = 0xFFFFFFFF;
-        int amountColor = 0xFFFFFFFF;
+        int color = theme.optionsFontColor;
+        int amountColor = theme.optionsFontColor;
         if (ClientHelper.canEdit()) {
             if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 25) color = 0xFFBBBBBB;
-                if (mouseY > 25 && mouseY <= 33) amountColor = 0xFFBBBBBB;
+                if (mouseY >= 17 && mouseY <= 25) color = theme.optionsFontColorHover;
+                if (mouseY > 25 && mouseY <= 33) amountColor = theme.optionsFontColorHover;
             }
         }
 

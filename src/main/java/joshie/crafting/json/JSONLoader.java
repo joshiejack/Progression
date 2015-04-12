@@ -185,8 +185,8 @@ public class JSONLoader {
         tab = null; //Clear out this object
     }
 
-    public static void saveJSON(Object toSave) {
-        File file = new File("config" + File.separator + CraftingInfo.MODPATH + File.separator + "criteria.json");
+    public static void saveJSON(Object toSave, String name) {
+        File file = new File("config" + File.separator + CraftingInfo.MODPATH + File.separator + name + ".json");
         try {
             Writer writer = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
             writer.write(gson.toJson(toSave));
@@ -270,6 +270,6 @@ public class JSONLoader {
             forJSONTabs.tabs.add(tabData);
         }
         
-        saveJSON(forJSONTabs);
+        saveJSON(forJSONTabs, "criteria");
     }
 }

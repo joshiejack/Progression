@@ -1,8 +1,11 @@
 package joshie.crafting.gui;
 
+import joshie.crafting.json.Theme;
 import net.minecraft.item.ItemStack;
 
 public class OverlayBase implements IRenderOverlay {
+    protected static Theme theme = Theme.INSTANCE;
+    
     public OverlayBase() {
         GuiCriteriaEditor.registerOverlay(this);
         GuiTriggerEditor.registerOverlay(this);

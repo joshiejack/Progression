@@ -5,12 +5,14 @@ import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.IReward;
 import joshie.crafting.gui.GuiCriteriaEditor;
 import joshie.crafting.helpers.ClientHelper;
+import joshie.crafting.json.Theme;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 
 public abstract class RewardBase implements IReward {
     private static final ResourceLocation textures = new ResourceLocation("crafting", "textures/gui/textures.png");
+    protected static final Theme theme = Theme.INSTANCE;
     private String localised;
     private String typeName;
     private int color;
@@ -109,8 +111,8 @@ public abstract class RewardBase implements IReward {
         this.mouseY = mouseY - 140;
         this.xPosition = xPos + 6;
 
-        drawGradient(1, 2, 99, 15, getColor(), 0xFF222222, 0xFF000000);
-        drawText(getLocalisedName(), 6, 6, 0xFFFFFFFF);
+        drawGradient(1, 2, 99, 15, getColor(), theme.blackBarGradient1, theme.blackBarGradient2);
+        drawText(getLocalisedName(), 6, 6, theme.blackBarFontColor);
 
         if (ClientHelper.canEdit()) {
             int xXcoord = 0;

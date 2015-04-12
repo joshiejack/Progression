@@ -29,7 +29,7 @@ public class ConditionCoordinates extends ConditionBase {
 	public boolean lessThan = false; //If we are checking less than
 	
 	public ConditionCoordinates() {
-		super("Coordinates", 0xFF000000, "coordinates");
+		super("Coordinates", theme.conditionCoordinates, "coordinates");
 		radiusEdit = new IntegerFieldHelper("radius", this);
 		dimensionEdit = new IntegerFieldHelper("dimension", this);
 		xEdit = new IntegerFieldHelper("x", this);
@@ -179,32 +179,30 @@ public class ConditionCoordinates extends ConditionBase {
 
     @Override
     public void draw() {
-        int checkDColor = 0xFFFFFFFF;
-        int checkXColor = 0xFFFFFFFF;
-        int checkYColor = 0xFFFFFFFF;
-        int checkZColor = 0xFFFFFFFF;
-        int radiusColor = 0xFFFFFFFF;
-        int dimColor = 0xFFFFFFFF;
-        int xColor = 0xFFFFFFFF;
-        int yColor = 0xFFFFFFFF;
-        int zColor = 0xFFFFFFFF;
-        int gColor = 0xFFFFFFFF;
-        int lColor = 0xFFFFFFFF;
-        
-        int amountColor = 0xFF000000;
-        int match2Color = 0xFF000000;
+        int checkDColor = theme.optionsFontColor;
+        int checkXColor = theme.optionsFontColor;
+        int checkYColor = theme.optionsFontColor;
+        int checkZColor = theme.optionsFontColor;
+        int radiusColor = theme.optionsFontColor;
+        int dimColor = theme.optionsFontColor;
+        int xColor = theme.optionsFontColor;
+        int yColor = theme.optionsFontColor;
+        int zColor = theme.optionsFontColor;
+        int gColor = theme.optionsFontColor;
+        int lColor = theme.optionsFontColor;
+
         if (mouseX <= 94 && mouseX >= 1) {
-            if (mouseY > 25 && mouseY <= 33) checkDColor = 0xFFBBBBBB;
-            if (mouseY > 34 && mouseY <= 41) checkXColor = 0xFFBBBBBB;
-            if (mouseY > 41 && mouseY <= 48) checkYColor = 0xFFBBBBBB;
-            if (mouseY > 48 && mouseY <= 55) checkZColor = 0xFFBBBBBB;
-            if (mouseY > 55 && mouseY <= 62) radiusColor = 0xFFBBBBBB;
-            if (mouseY > 62 && mouseY <= 69) dimColor = 0xFFBBBBBB;
-            if (mouseY > 69 && mouseY <= 76) xColor = 0xFFBBBBBB;
-            if (mouseY > 76 && mouseY <= 83) yColor = 0xFFBBBBBB;
-            if (mouseY > 83 && mouseY <= 90) zColor = 0xFFBBBBBB;
-            if (mouseY > 90 && mouseY <= 97) gColor = 0xFFBBBBBB;
-            if (mouseY > 97 && mouseY <= 104) lColor = 0xFFBBBBBB;
+            if (mouseY > 25 && mouseY <= 33) checkDColor = theme.optionsFontColorHover;
+            if (mouseY > 34 && mouseY <= 41) checkXColor = theme.optionsFontColorHover;
+            if (mouseY > 41 && mouseY <= 48) checkYColor = theme.optionsFontColorHover;
+            if (mouseY > 48 && mouseY <= 55) checkZColor = theme.optionsFontColorHover;
+            if (mouseY > 55 && mouseY <= 62) radiusColor = theme.optionsFontColorHover;
+            if (mouseY > 62 && mouseY <= 69) dimColor = theme.optionsFontColorHover;
+            if (mouseY > 69 && mouseY <= 76) xColor = theme.optionsFontColorHover;
+            if (mouseY > 76 && mouseY <= 83) yColor = theme.optionsFontColorHover;
+            if (mouseY > 83 && mouseY <= 90) zColor = theme.optionsFontColorHover;
+            if (mouseY > 90 && mouseY <= 97) gColor = theme.optionsFontColorHover;
+            if (mouseY > 97 && mouseY <= 104) lColor = theme.optionsFontColorHover;
         }
 
         drawText("checkDim: " + checkDimension , 4, 25, checkDColor);

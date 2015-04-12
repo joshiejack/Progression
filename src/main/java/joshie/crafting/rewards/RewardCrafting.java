@@ -59,7 +59,7 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
     public String modid = "IGNORE";
 
     public RewardCrafting() {
-        super("Allow Action", 0xFF0085B2, "crafting");
+        super("Allow Action", theme.rewardCrafting, "crafting");
         editMod = new TextFieldHelper("modid", this);
     }
 
@@ -355,21 +355,21 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
     @Override
     public void draw() {
         drawStack(getIcon(), 76, 44, 1.4F);
-        int typeColor = 0xFFFFFFFF;
-        int matchColor = 0xFFFFFFFF;
-        int match2Color = 0xFFFFFFFF;
-        int usageColor = 0xFFFFFFFF;
-        int craftColor = 0xFFFFFFFF;
-        int modColor = 0xFFFFFFFF;
+        int typeColor = theme.optionsFontColor;
+        int matchColor = theme.optionsFontColor;
+        int match2Color = theme.optionsFontColor;
+        int usageColor = theme.optionsFontColor;
+        int craftColor = theme.optionsFontColor;
+        int modColor = theme.optionsFontColor;
 
         if (ClientHelper.canEdit()) {
             if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 25) typeColor = 0xFFBBBBBB;
-                if (mouseY > 25 && mouseY <= 33) matchColor = 0xFFBBBBBB;
-                if (mouseY > 34 && mouseY <= 41) match2Color = 0xFFBBBBBB;
-                if (mouseY > 42 && mouseY <= 50) usageColor = 0xFFBBBBBB;
-                if (mouseY > 50 && mouseY <= 58) craftColor = 0xFFBBBBBB;
-                if (mouseY > 58 && mouseY <= 66) modColor = 0xFFBBBBBB;
+                if (mouseY >= 17 && mouseY <= 25) typeColor = theme.optionsFontColorHover;
+                if (mouseY > 25 && mouseY <= 33) matchColor = theme.optionsFontColorHover;
+                if (mouseY > 34 && mouseY <= 41) match2Color = theme.optionsFontColorHover;
+                if (mouseY > 42 && mouseY <= 50) usageColor = theme.optionsFontColorHover;
+                if (mouseY > 50 && mouseY <= 58) craftColor = theme.optionsFontColorHover;
+                if (mouseY > 58 && mouseY <= 66) modColor = theme.optionsFontColorHover;
             }
         }
         

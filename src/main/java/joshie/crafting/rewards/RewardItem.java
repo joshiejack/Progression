@@ -29,7 +29,7 @@ public class RewardItem extends RewardBase implements IItemSelectable, ITextEdit
     private ItemStack stack = new ItemStack(Items.diamond);
 
     public RewardItem() {
-        super("Give Item", 0xFFE599FF, "item");
+        super("Give Item", theme.rewardItem, "item");
     }
 
     @Override
@@ -85,10 +85,10 @@ public class RewardItem extends RewardBase implements IItemSelectable, ITextEdit
     @Override
     public void draw() {
         drawStack(getIcon(), 27, 27, 2.5F);
-        int typeColor = 0xFFFFFFFF;
+        int typeColor = theme.optionsFontColor;
         if (ClientHelper.canEdit()) {
             if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 25) typeColor = 0xFFBBBBBB;
+                if (mouseY >= 17 && mouseY <= 25) typeColor = theme.optionsFontColorHover;
             }
         }
 

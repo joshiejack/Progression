@@ -14,7 +14,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class TriggerBreakBlock extends TriggerBaseBlock implements IItemSelectable, IItemGettable {
     public TriggerBreakBlock() {
-        super("Break Block", 0xFFCCCCCC, "breakBlock");
+        super("Break Block", theme.triggerBreakBlock, "breakBlock");
         oreEdit = new TextFieldHelper("oreDictionary", this);
         amountEdit = new ItemAmountHelper("amount", this);
     }

@@ -122,14 +122,14 @@ public abstract class TriggerBaseBlock extends TriggerBaseCounter implements IIt
     public void draw() {
         drawStack(stack, 35, 43, 1.7F);
 
-        int color = 0xFFFFFFFF;
-        int amountColor = 0xFFFFFFFF;
-        int match2Color = 0xFFFFFFFF;
+        int color = theme.optionsFontColor;
+        int amountColor = theme.optionsFontColor;
+        int match2Color = theme.optionsFontColor;
         if (ClientHelper.canEdit()) {
             if (mouseX <= 94 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 25) color = 0xFFBBBBBB;
-                if (mouseY > 25 && mouseY <= 33) amountColor = 0xFFBBBBBB;
-                if (mouseY > 34 && mouseY <= 41) match2Color = 0xFFBBBBBB;
+                if (mouseY >= 17 && mouseY <= 25) color = theme.optionsFontColorHover;
+                if (mouseY > 25 && mouseY <= 33) amountColor = theme.optionsFontColorHover;
+                if (mouseY > 34 && mouseY <= 41) match2Color = theme.optionsFontColorHover;
             }
         }
 

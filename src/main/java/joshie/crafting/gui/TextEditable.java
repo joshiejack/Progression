@@ -1,10 +1,12 @@
 package joshie.crafting.gui;
 
+import joshie.crafting.json.Theme;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ChatAllowedCharacters;
 
 public abstract class TextEditable extends OverlayBase {
     protected static int position;
+    protected static Theme theme = Theme.INSTANCE;
 
     public void setSelected() {
         position = getTextField().length();

@@ -20,7 +20,7 @@ public class TriggerLogin extends TriggerBaseCounter {
     public int amount = 1;
 
     public TriggerLogin() {
-        super("Login", 0xFF8000FF, "login");
+        super("Login", theme.triggerLogin, "login");
         amountEdit = new IntegerFieldHelper("amount", this);
     }
 
@@ -75,10 +75,10 @@ public class TriggerLogin extends TriggerBaseCounter {
 
     @Override
     public void draw() {
-        int color = 0xFFFFFFFF;
+        int color = theme.optionsFontColor;
         if (ClientHelper.canEdit()) {
             if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 25) color = 0xFFBBBBBB;
+                if (mouseY >= 17 && mouseY <= 25) color = theme.optionsFontColorHover;
             }
         }
 

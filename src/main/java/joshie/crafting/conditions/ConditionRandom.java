@@ -17,7 +17,7 @@ public class ConditionRandom extends ConditionBase {
     public double chance = 50D;
 
     public ConditionRandom() {
-        super("Random Chance", 0xFF00FFBF, "chance");
+        super("Random Chance", theme.conditionRandom, "chance");
         chanceEdit = new DoubleFieldHelper("chance", this);
     }
 
@@ -60,9 +60,9 @@ public class ConditionRandom extends ConditionBase {
 
     @Override
     public void draw() {
-        int chanceColor = 0xFFFFFFFF;
+        int chanceColor = theme.optionsFontColor;
         if (mouseX <= 94 && mouseX >= 1) {
-            if (mouseY > 25 && mouseY <= 33) chanceColor = 0xFFBBBBBB;
+            if (mouseY > 25 && mouseY <= 33) chanceColor = theme.optionsFontColorHover;
         }
 
         drawText("chance: " + chanceEdit, 4, 25, chanceColor);

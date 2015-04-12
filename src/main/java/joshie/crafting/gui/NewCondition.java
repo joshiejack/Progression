@@ -50,7 +50,6 @@ public class NewCondition extends OverlayBase {
         int yPos = 0;
         int xPos = 0;
         for (IConditionType condition : CraftAPIRegistry.conditionTypes.values()) {
-            int color = 0xFF000000;
             if (mouseX >= (xPos * 100) + 155 && mouseX <= (xPos * 100) + 255) {
                 if (mouseY >= 46 + (yPos * 12) && mouseY <= 46 + (yPos * 12) + 12) {
                     CraftingAPI.registry.cloneCondition(trigger, condition);
@@ -75,16 +74,16 @@ public class NewCondition extends OverlayBase {
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
         int mouseX = GuiTriggerEditor.INSTANCE.mouseX;
         int mouseY = GuiTriggerEditor.INSTANCE.mouseY;
-        drawBox(-GuiTriggerEditor.INSTANCE.offsetX + 150, 30, 200, 100, 0xDD000000, 0xFF000000);
-        drawGradient(-GuiTriggerEditor.INSTANCE.offsetX + 150, 30, 200, 15, 0xFFFF8000, 0xFF8C4600, 0xFF000000);
-        drawText("Select a Type of Condition", -GuiTriggerEditor.INSTANCE.offsetX + 155, 34, 0xFFFFFFFF);
+        drawBox(-GuiTriggerEditor.INSTANCE.offsetX + 150, 30, 200, 100, theme.newBox1, theme.newBox2);
+        drawGradient(-GuiTriggerEditor.INSTANCE.offsetX + 150, 30, 200, 15, theme.newConditionGradient1, theme.newConditionGradient2, theme.newConditionBorder);
+        drawText("Select a Type of Condition", -GuiTriggerEditor.INSTANCE.offsetX + 155, 34, theme.newConditionFont);
         int yPos = 0;
         int xPos = 0;
         for (IConditionType condition : CraftAPIRegistry.conditionTypes.values()) {
-            int color = 0xFFFFFFFF;
+            int color = theme.newConditionFont;
             if (mouseX >= (xPos * 100) + 155 && mouseX <= (xPos * 100) + 255) {
                 if (mouseY >= 46 + (yPos * 12) && mouseY <= 46 + (yPos * 12) + 12) {
-                    color = 0xFF2693FF;
+                    color = theme.newConditionFontHover;
                 }
             }
 
