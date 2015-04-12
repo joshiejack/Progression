@@ -16,6 +16,8 @@ public class DefaultSettings {
     public Set<DataTab> tabs = new HashSet();
 
     public DefaultSettings setDefaults() {
+        return this; 
+        /*
         ArrayList<DataGeneric> rewardsNewCondition = new ArrayList();
         ArrayList<DataTrigger> triggersNewCondition = new ArrayList();
         ArrayList<DataGeneric> rewardsNamedCondition = new ArrayList();
@@ -80,6 +82,6 @@ public class DefaultSettings {
         data.add(new DataCriteria("EnableLapis", "Enable Lapis", triggersLapis, rewardsLapis, new String[] {}, new String[] {}, 0, 110, true));
         DataTab defaultTab = new DataTab("DEFAULT", "Default", 0, data, true, new ItemStack(Items.book));
         tabs.add(defaultTab);
-        return this;
+        return this; */
     }
 }
