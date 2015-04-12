@@ -12,6 +12,8 @@ import joshie.crafting.api.ITab;
 import joshie.crafting.api.ITreeEditor;
 import joshie.crafting.helpers.ClientHelper;
 import joshie.crafting.json.Options;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -78,9 +80,15 @@ public class GuiTreeEditor extends GuiBase {
                 currentTab = tab;
                 break;
             }
-
-            currentTabName = currentTab.getUniqueName();
+            
+            if (currentTab == null) {
+            	currentTab = CraftingAPI.registry.newTab(CraftAPIRegistry.getNextUnique()).setDisplayName("New Tab").setStack(new ItemStack(Items.book)).setVisibility(true);
+            	currentTabName = currentTab.getUniqueName();
+            	initGui();
+            }
         }
+        
+        currentTabName = currentTab.getUniqueName();
     }
 
     @Override

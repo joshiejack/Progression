@@ -21,6 +21,7 @@ import joshie.crafting.api.crafting.CraftingEvent.CraftingType;
 import joshie.crafting.helpers.StackHelper;
 import joshie.crafting.lib.CraftingInfo;
 import joshie.crafting.lib.Exceptions.ConditionNotFoundException;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
 import org.apache.commons.io.FileUtils;
@@ -162,12 +163,17 @@ public class JSONLoader {
                 int repeatable = criteria.repeatable;
                 int x = criteria.x;
                 int y = criteria.y;
+                ItemStack icon = StackHelper.getStackFromString(criteria.displayStack);
+                if (icon == null) {
+                    icon = new ItemStack(Blocks.stone);
+                }
+                
                 String display = criteria.displayName;
                 if (repeatable <= 1) {
                     repeatable = 1;
                 }
                 
-                theCriteria.addRequirements(thePrereqs).addConflicts(theConflicts).setDisplayName(display).setVisibility(isVisible).setRepeatAmount(repeatable);
+                theCriteria.addRequirements(thePrereqs).addConflicts(theConflicts).setDisplayName(display).setVisibility(isVisible).setRepeatAmount(repeatable).setIcon(icon);
                 
                 if (isClient) {
                 	theCriteria.getTreeEditor().setCoordinates(x, y);
@@ -213,6 +219,7 @@ public class JSONLoader {
                 data.repeatable = c.getRepeatAmount();
                 data.displayName = c.getDisplayName();
                 data.uniqueName = c.getUniqueName();
+                data.displayStack = StackHelper.getStringFromStack(c.getIcon());
                 List<ITrigger> triggers = c.getTriggers();
                 List<IReward> rewards = c.getRewards();
                 List<ICriteria> prereqs = c.getRequirements();

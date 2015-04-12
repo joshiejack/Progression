@@ -3,7 +3,6 @@ package joshie.crafting.gui;
 import java.util.ArrayList;
 
 import joshie.crafting.CraftAPIRegistry;
-import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ITab;
 import joshie.crafting.gui.SelectItemOverlay.Type;
 import joshie.crafting.gui.SelectTextEdit.ITextEditable;
@@ -12,7 +11,6 @@ import joshie.crafting.helpers.RenderItemHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
@@ -37,7 +35,7 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
         int k = getHoverState(hovering);
         GL11.glColor4f(1F, 1F, 1F, 1F);
         mc.getTextureManager().bindTexture(textures);
-        int yTexture = GuiTreeEditor.INSTANCE.currentTab == tab ? 24 : 0;
+        int yTexture = GuiTreeEditor.INSTANCE.currentTab == tab ? 25 : 0;
         RenderHelper.disableStandardItemLighting();
         int xTexture = 206;
         if (xPosition == 0) xTexture = 231;
@@ -89,15 +87,10 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
                     }
                 }
 
-                if (newTab == null) {
-                    newTab = CraftingAPI.registry.newTab(CraftAPIRegistry.getNextUnique()).setDisplayName("New Tab").setStack(new ItemStack(Items.book)).setVisibility(true);
-                }
-
                 GuiTreeEditor.INSTANCE.selected = null;
                 GuiTreeEditor.INSTANCE.previous = null;
                 GuiTreeEditor.INSTANCE.lastClicked = null;
                 GuiTreeEditor.INSTANCE.currentTab = newTab;
-                GuiTreeEditor.INSTANCE.currentTabName = newTab.getUniqueName();
                 CraftAPIRegistry.removeTab(tab);
                 GuiTreeEditor.INSTANCE.initGui();
                 return;

@@ -8,6 +8,7 @@ import static joshie.crafting.lib.CraftingInfo.VERSION;
 import java.io.File;
 
 import joshie.crafting.api.CraftingAPI;
+import joshie.crafting.commands.CommandEdit;
 import joshie.crafting.commands.CommandHelp;
 import joshie.crafting.commands.CommandManager;
 import joshie.crafting.commands.CommandReload;
@@ -40,13 +41,13 @@ import joshie.crafting.rewards.RewardResearch;
 import joshie.crafting.rewards.RewardSpeed;
 import joshie.crafting.rewards.RewardTime;
 import joshie.crafting.trigger.TriggerBreakBlock;
+import joshie.crafting.trigger.TriggerClickBlock;
 import joshie.crafting.trigger.TriggerCrafting;
 import joshie.crafting.trigger.TriggerKill;
 import joshie.crafting.trigger.TriggerLogin;
 import joshie.crafting.trigger.TriggerObtain;
 import joshie.crafting.trigger.TriggerPoints;
 import joshie.crafting.trigger.TriggerResearch;
-import joshie.crafting.trigger.TriggerClickBlock;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.item.Item;
@@ -68,6 +69,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 
 @Mod(modid = MODID, name = MODNAME, version = VERSION)
@@ -83,7 +85,7 @@ public class CraftingMod {
 
     public static PlayerSavedData data;
     public static boolean NEI_LOADED = false;
-    public static Item tech;
+    public static Item item;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -113,6 +115,9 @@ public class CraftingMod {
         MinecraftForge.EVENT_BUS.register(CraftingAPI.commands);
         MinecraftForge.EVENT_BUS.register(new CraftingEventsHandler());
         FMLCommonHandler.instance().bus().register(new CraftingEventsHandler());
+        
+        item = new ItemCriteria().setUnlocalizedName("item");
+        GameRegistry.registerItem(item, "item");
 
         CraftingAPI.registry.registerConditionType(new ConditionBiomeType());
         CraftingAPI.registry.registerConditionType(new ConditionRandom());
@@ -138,6 +143,7 @@ public class CraftingMod {
         CraftingAPI.registry.registerTriggerType(new TriggerClickBlock());
         CraftingAPI.registry.registerTriggerType(new TriggerPoints());
 
+        CraftingAPI.commands.registerCommand(new CommandEdit());
         CraftingAPI.commands.registerCommand(new CommandHelp());
         CraftingAPI.commands.registerCommand(new CommandReload());
         CraftingAPI.commands.registerCommand(new CommandReset());

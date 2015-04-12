@@ -1,6 +1,6 @@
 package joshie.crafting.api;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.UUID;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -65,6 +65,6 @@ public interface IRegistry {
 	/** Register a reward with the registry **/
 	public IRewardType registerRewardType(IRewardType reward);
 
-	/** Returns a list of all the research technologies **/
-	public List<IResearch> getTechnology();
+	/** Returns a list of all the criteria **/
+	public Collection<ICriteria> getCriteria();
 }

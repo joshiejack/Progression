@@ -12,6 +12,7 @@ import joshie.crafting.api.ITreeEditor;
 import joshie.crafting.api.ITrigger;
 import joshie.crafting.gui.EditorTree;
 import joshie.crafting.gui.ViewerCriteria;
+import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
@@ -28,6 +29,7 @@ public class CraftingCriteria implements ICriteria {
 	private String displayName;
 	private boolean isVisible;
 	private ITab tab;
+	private ItemStack stack;
 
 	public CraftingCriteria() {
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
@@ -103,6 +105,12 @@ public class CraftingCriteria implements ICriteria {
 		this.tab = tab;
 		return this;
 	}
+	
+	@Override
+	public ICriteria setIcon(ItemStack stack) {
+	    this.stack = stack;
+	    return this;
+	}
 
 	@Override
 	public List<ITrigger> getTriggers() {
@@ -137,6 +145,11 @@ public class CraftingCriteria implements ICriteria {
 	@Override
 	public ITab getTabID() {
 		return tab;
+	}
+	
+	@Override
+	public ItemStack getIcon() {
+	    return stack;
 	}
 
 	@Override

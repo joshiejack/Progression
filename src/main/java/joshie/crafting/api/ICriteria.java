@@ -2,6 +2,8 @@ package joshie.crafting.api;
 
 import java.util.List;
 
+import net.minecraft.item.ItemStack;
+
 /** Conditions are the classes that are created by the users
  *  In their config files. Conditions can have unlimited triggers
  *  as well as unlimited rewards. The conditions are checked, everytime
@@ -31,6 +33,9 @@ public interface ICriteria extends IHasUniqueName {
     /** Assigns the master tab for this critera **/
     public ICriteria setTab(ITab tab);
 
+    /** Sets the icon **/
+    public ICriteria setIcon(ItemStack stack);
+
 	/** Returns all the triggers that this condition needs to be met **/
 	public List<ITrigger> getTriggers();
 
@@ -56,6 +61,9 @@ public interface ICriteria extends IHasUniqueName {
 
     /** Returns the master tab associated with this criteria **/
     public ITab getTabID();
+    
+    /** Gets the icon **/
+    public ItemStack getIcon();
 
     public void addTooltip(List<String> toolTip);
 

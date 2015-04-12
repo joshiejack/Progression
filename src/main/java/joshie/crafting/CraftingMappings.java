@@ -172,14 +172,14 @@ public class CraftingMappings implements ICraftingMappings {
         //If the trigger is a forced completion, then force complete it
         if (type.equals("forced-complete")) {
             ICriteria criteria = (ICriteria) data[0];
-            if (criteria == null) return false;
+            if (criteria == null || completedCritera.keySet().contains(criteria)) return false; //If null or we completed already return false
             else completeCriteria(criteria);
             remapStuff();
             CraftingMod.data.markDirty();
             return true;
         } else if (type.equals("forced-remove")) {
             ICriteria criteria = (ICriteria) data[0];
-            if (criteria == null) return false;
+            if (criteria == null || !completedCritera.keySet().contains(criteria)) return false;
             else removeCriteria(criteria);
             remap(); //Remap everything
             CraftingMod.data.markDirty();

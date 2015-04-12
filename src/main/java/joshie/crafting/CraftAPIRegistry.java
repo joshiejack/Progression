@@ -1,6 +1,6 @@
 package joshie.crafting;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -22,9 +22,6 @@ import joshie.crafting.helpers.PlayerHelper;
 import net.minecraft.entity.player.EntityPlayer;
 
 import com.google.gson.JsonObject;
-
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
 
 public class CraftAPIRegistry implements IRegistry {
     //This is the registry for trigger type and reward type creation
@@ -149,27 +146,8 @@ public class CraftAPIRegistry implements IRegistry {
     private static List<IResearch> technologies;
 
     @Override
-    public List<IResearch> getTechnology() {
-        technologies = new ArrayList();
-        for (ITrigger research : triggers) {
-            if (research instanceof IResearch) {
-                String name = ((IResearch) research).getResearchName();
-                boolean canAdd = true;
-                for (IResearch r : technologies) {
-                    String compare = r.getResearchName();
-                    if (compare.equals(name)) {
-                        canAdd = false;
-                        break;
-                    }
-                }
-
-                if (canAdd) {
-                    technologies.add((IResearch) research);
-                }
-            }
-        }
-
-        return technologies;
+    public Collection<ICriteria> getCriteria() {
+        return criteria.values();
     }
 
     /** Convenience methods for removals **/

@@ -18,6 +18,7 @@ public class DataCriteria {
 	
 	String uniqueName;
 	String displayName;
+    String displayStack;
 	List<DataTrigger> triggers;
 	List<DataGeneric> rewards;
 	String[] prereqs;
