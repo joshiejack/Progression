@@ -17,7 +17,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.ReflectionHelper;
+import cpw.mods.fml.relauncher.Side;
 
 public class RecipeHandler {
     public static Field fContainer;
@@ -53,9 +55,8 @@ public class RecipeHandler {
     }
 
     /** Called when trying to find a recipe **/
-    public static ItemStack findMatchingRecipe(InventoryCrafting crafting, World world) {   
-        if (world == null) return null; //Return null if the world is null
-        
+    public static ItemStack findMatchingRecipe(InventoryCrafting crafting, World world) {  
+        boolean isRemote = world != null? world.isRemote: FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT;        
         ItemStack itemstack = null, itemstack1 = null;
         int slot = 0;
         for (int j = 0; j < crafting.getSizeInventory(); j++) {
@@ -68,7 +69,7 @@ public class RecipeHandler {
             }
         }
 
-        List<Object> objects = getPlayers(crafting, world.isRemote);
+        List<Object> objects = getPlayers(crafting, isRemote);
         for (Object object : objects) {
             for (int i = 0; i < crafting.getSizeInventory(); i++) {
                 ItemStack stack = crafting.getStackInSlot(i);
