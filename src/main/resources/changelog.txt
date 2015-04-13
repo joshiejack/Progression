@@ -1,5 +1,11 @@
+Progression 0.3.2
+  Create dummy saved data, to prevent some accidental crashes
+
 Progression 0.3.1
   Fix Crash with Blood Magic
+  Fix loading 'themes' on the server
+  Fix New Criteria Button Selected texture
+  Split Tree and Criteria Editor colour for criteria display name (resource packs)
 
 Progression 0.3.0
   Public Release, \o/

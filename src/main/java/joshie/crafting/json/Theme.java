@@ -21,6 +21,7 @@ public class Theme {
     public int invisible = 0x00000000;
 
     public int criteriaDisplayNameColor = 0xFFFFFFFF;
+    public int criteriaEditDisplayNameColor = 0xFFFFFFFF;
     public int backgroundColor = 0xEE121212;
     public int backgroundBorder = 0xFFFFFFFF;
 

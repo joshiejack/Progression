@@ -84,7 +84,7 @@ public class CraftingMod {
     public static CraftingMod instance;
     public static File configDir;
 
-    public static PlayerSavedData data;
+    public static PlayerSavedData data = new PlayerSavedData(MODNAME);
     public static boolean NEI_LOADED = false;
     public static Item item;
 

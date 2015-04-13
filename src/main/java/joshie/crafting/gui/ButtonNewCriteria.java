@@ -28,7 +28,7 @@ public class ButtonNewCriteria extends ButtonLeft {
         int k = getHoverState(hovering);
         GL11.glColor4f(1F, 1F, 1F, 1F);
         mc.getTextureManager().bindTexture(textures);
-        int yTexture = k == 2 ? 24 : 0;
+        int yTexture = k == 2 ? 25 : 0;
         drawTexturedModalRect(xPosition, yPosition, 231, yTexture, 25, 25);
         mc.fontRenderer.drawString("New", xPosition + 2, yPosition + 9, Theme.INSTANCE.newButtonFontColor);
         if (k == 2) {
