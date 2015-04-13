@@ -1,12 +1,15 @@
 Progression 0.3.0
-  Add 'Criteria Item'. When right clicked, completes a criteria.
-  Add Change Dimension Trigger
-  Fix crash on startup with steves addons
-  Fix crash when breaking blocks with null items
-  Enable scroll wheel when selecting items. 
-  Readd tooltip to book item in creative
-  Add /progression edit to open the editor as on option
-  Allow editing of colour values with resource packs
+  Public Release, \o/
+  
+  Additions/Changes since Testing
+      Add 'Criteria Item'. When right clicked, completes a criteria.
+      Add Change Dimension Trigger
+      Fix crash on startup with steves addons
+      Fix crash when breaking blocks with null items
+      Enable scroll wheel when selecting items. 
+      Readd tooltip to book item in creative
+      Add /progression edit to open the editor as on option
+      Allow editing of colour values with resource packs
 
 Progression 0.2.1
   Added 'Click Block' trigger.

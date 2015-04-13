@@ -168,7 +168,7 @@ public class EditorTree implements ITreeEditor {
                     textureY = 75;
                 }
             }
-
+            
             if (selected != null) {
                 if (selected.getConflicts().contains(criteria)) {
                     textureY = 75;

@@ -22,6 +22,7 @@ import joshie.crafting.helpers.StackHelper;
 import joshie.crafting.lib.CraftingInfo;
 import joshie.crafting.lib.Exceptions.ConditionNotFoundException;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 import org.apache.commons.io.FileUtils;
@@ -105,7 +106,15 @@ public class JSONLoader {
     private static void loadJSON(DefaultSettings tab) {
     	boolean isClient = FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT;
         for (DataTab data: tab.tabs) {
-            ItemStack stack = StackHelper.getStackFromString(data.stack);
+            ItemStack stack = null;
+            if (data.stack != null) {
+                stack = StackHelper.getStackFromString(data.stack);
+            }
+            
+            if (stack == null) {
+                stack = new ItemStack(Items.book);
+            }
+
             ITab iTab = CraftingAPI.registry.newTab(data.uniqueName);
             iTab.setDisplayName(data.displayName).setVisibility(data.isVisible).setStack(stack).setSortIndex(data.sortIndex);
             
@@ -163,7 +172,12 @@ public class JSONLoader {
                 int repeatable = criteria.repeatable;
                 int x = criteria.x;
                 int y = criteria.y;
-                ItemStack icon = StackHelper.getStackFromString(criteria.displayStack);
+                
+                ItemStack icon = null;
+                if (criteria.displayStack != null) {
+                    icon = StackHelper.getStackFromString(criteria.displayStack);
+                }
+                
                 if (icon == null) {
                     icon = new ItemStack(Blocks.stone);
                 }

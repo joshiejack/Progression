@@ -18,6 +18,11 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ItemCriteria extends Item {
     public static CreativeTabs tab = new CreativeTabs("progression") {
         @Override
+        public String getTranslatedTabLabel() {
+            return "Progression";
+        }
+        
+        @Override
         public Item getTabIconItem() {
             return Items.book;
         }

@@ -53,7 +53,9 @@ public class RecipeHandler {
     }
 
     /** Called when trying to find a recipe **/
-    public static ItemStack findMatchingRecipe(InventoryCrafting crafting, World world) {        
+    public static ItemStack findMatchingRecipe(InventoryCrafting crafting, World world) {   
+        if (world == null) return null; //Return null if the world is null
+        
         ItemStack itemstack = null, itemstack1 = null;
         int slot = 0;
         for (int j = 0; j < crafting.getSizeInventory(); j++) {

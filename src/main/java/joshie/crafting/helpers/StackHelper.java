@@ -13,6 +13,7 @@ import net.minecraft.util.IChatComponent;
 
 public class StackHelper {
     public static ItemStack getStackFromString(String str) {
+        if (str == null || str.equals("")) return null;
         return getStackFromArray(str.trim().split(" "));
     }
 
