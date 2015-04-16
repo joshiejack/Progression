@@ -93,6 +93,7 @@ public class GuiTreeEditor extends GuiBase {
 
     @Override
     public void drawForeground() {
+        if (currentTab == null) initGui();
         for (ICriteria criteria : currentTab.getCriteria()) {
             if (criteria.getTreeEditor().isCriteriaVisible() || ClientHelper.canEdit()) {
                 ITreeEditor editor = criteria.getTreeEditor();
