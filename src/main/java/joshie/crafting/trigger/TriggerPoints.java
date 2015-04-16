@@ -21,7 +21,7 @@ public class TriggerPoints extends TriggerBaseBoolean {
     private IntegerFieldHelper amountEdit;
     public int amount = 1;
     public boolean consume = true;
-    public String name = "Research";
+    public String name = "research";
 
     public TriggerPoints() {
         super("Points", theme.triggerPoints, "points");
