@@ -69,9 +69,11 @@ public class SelectItemOverlay extends TextEditable implements IRenderOverlay {
             sorted = new ArrayList();
             for (ItemStack stack : ItemHelper.getItems()) {
                 if (stack != null && stack.getItem() != null) {
-                    if (stack.getDisplayName().toLowerCase().contains(search.toLowerCase())) {
-                        sorted.add(stack);
-                    }
+                    try {
+                        if (stack.getDisplayName().toLowerCase().contains(search.toLowerCase())) {
+                            sorted.add(stack);
+                        }
+                    } catch (Exception e) {}
                 }
             }
         }
