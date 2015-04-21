@@ -1,7 +1,8 @@
 package joshie.crafting.crafting;
 
-import joshie.crafting.api.crafting.ICrafter;
 import joshie.crafting.api.crafting.CraftingEvent.CraftingType;
+import joshie.crafting.api.crafting.ICrafter;
+import joshie.crafting.json.Options;
 import net.minecraft.item.ItemStack;
 
 /** This class is returned when machines look for their owners
@@ -11,17 +12,17 @@ public class CraftingUnclaimed implements ICrafter {
 	
 	@Override
 	public boolean canUseItemForCrafting(CraftingType type, ItemStack stack) {
-		return false;
+		return Options.unclaimedTileCanUseAnythingForCrafting;
 	}
 
 	@Override
 	public boolean canCraftItem(CraftingType type, ItemStack stack) {
-		return false;
+		return Options.unclaimedTileCanCraftAnything;
 	}
 
 	@Override
 	public boolean canCraftWithAnything() {
-		return true;
+		return false;
 	}
 
 	@Override

@@ -1,5 +1,20 @@
 Progression 0.3.2
+  IMPORTANT:
+  Added two config options for 'unclaimed' tile entities in the config
+    Whether or not unclaimed tile entities can craft anything - defaults to false
+    Whether or not unclaimed tile entities can use anything for crafting = defaults to true
+  If a tile is unclaimed (aka placed before progression is installed) then it will default to these options.
+  The default means that noone can craft anything with a furnace made before the mod is installed. (Until they replace it, or claim it).
+  The mod needs to know who placed the block, in order to perform it's craft locking actions.
+  END IMPORTANT:
+  
+  Added a 'claiming' item. Allows players to claim old tiles without, replacing them. (Only works on unclaimed tile entities).
+  Default recipe is a plank with a piece of flint on top
   Create dummy saved data, to prevent some accidental crashes
+  Fix Potential crash when rendering TreeEditor
+  Fix Potential crash when selecting items in search
+  Fix Potential crash when generating worlds
+  Fix crash with ownership on old worlds/furnaces without progression from the start
 
 Progression 0.3.1
   Fix Crash with Blood Magic

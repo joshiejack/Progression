@@ -23,7 +23,7 @@ import org.lwjgl.opengl.GL11;
 public class RenderItemCriteria implements IItemRenderer {
     @Override
     public boolean handleRenderType(ItemStack stack, ItemRenderType type) {
-        return true;
+        return stack.hasTagCompound() && stack.getItemDamage() == ItemCriteria.CRITERIA;
     }
 
     @Override

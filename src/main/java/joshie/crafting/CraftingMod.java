@@ -21,6 +21,7 @@ import joshie.crafting.conditions.ConditionRandom;
 import joshie.crafting.crafting.CraftingRegistry;
 import joshie.crafting.json.Options;
 import joshie.crafting.lib.CraftingInfo;
+import joshie.crafting.network.PacketClaimed;
 import joshie.crafting.network.PacketHandler;
 import joshie.crafting.network.PacketReload;
 import joshie.crafting.network.PacketReset;
@@ -51,11 +52,14 @@ import joshie.crafting.trigger.TriggerPoints;
 import joshie.crafting.trigger.TriggerResearch;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -119,6 +123,10 @@ public class CraftingMod {
         
         item = new ItemCriteria().setUnlocalizedName("item");
         GameRegistry.registerItem(item, "item");
+        
+        if (Options.tileClaimerRecipe) {
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(item, 1, ItemCriteria.CLAIM), new Object[] { "F", "P", 'F', Items.flint, 'P', "plankWood" }));
+        }
 
         CraftingAPI.registry.registerConditionType(new ConditionBiomeType());
         CraftingAPI.registry.registerConditionType(new ConditionRandom());
@@ -154,6 +162,7 @@ public class CraftingMod {
         PacketHandler.registerPacket(PacketSyncCriteria.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketSyncAbilities.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketRewardItem.class, Side.CLIENT);
+        PacketHandler.registerPacket(PacketClaimed.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketSyncJSON.class);
         PacketHandler.registerPacket(PacketReload.class);
         PacketHandler.registerPacket(PacketReset.class);
