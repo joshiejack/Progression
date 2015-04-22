@@ -1,6 +1,8 @@
 package joshie.crafting;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -138,7 +140,7 @@ public class CraftingMappings implements ICraftingMappings {
             if (pair == null || pair.criteria == null) continue; //Avoid broken pairs
             for (int i = 0; i < pair.triggers.length; i++) {
                 int num = pair.triggers[i];
-                completedTriggers.add(pair.criteria.getTriggers().get(num));
+                if (pair.criteria.getTriggers().size() > num) completedTriggers.add(pair.criteria.getTriggers().get(num));
             }
         }
     }
@@ -160,21 +162,18 @@ public class CraftingMappings implements ICraftingMappings {
         } else return data;
     }
 
-    HashSet<ITrigger> forRemovalFromActive = new HashSet();
-    HashSet<ITrigger> forRemovalFromCompleted = new HashSet();
-    HashSet<ICriteria> toRemap = new HashSet();
-
     /** Called to fire a trigger type, Triggers are only ever called on criteria that is activated **/
     @Override
     public boolean fireAllTriggers(String type, Object... data) {
         if (activeTriggers == null) return false; //If the remapping hasn't occured yet, say goodbye!
-
         //If the trigger is a forced completion, then force complete it
         if (type.equals("forced-complete")) {
             ICriteria criteria = (ICriteria) data[0];
             if (criteria == null || completedCritera.keySet().contains(criteria)) return false; //If null or we completed already return false
-            else completeCriteria(criteria);
-            remapStuff();
+            HashSet<ITrigger> forRemovalFromActive = new HashSet();
+            HashSet<ICriteria> toRemap = new HashSet();
+            completeCriteria(criteria, forRemovalFromActive, toRemap);
+            remapStuff(forRemovalFromActive, toRemap);
             CraftingMod.data.markDirty();
             return true;
         } else if (type.equals("forced-remove")) {
@@ -191,6 +190,7 @@ public class CraftingMappings implements ICraftingMappings {
         boolean completedAnyCriteria = false;
         Collection<ITrigger> triggers = activeTriggers.get(type);
         HashSet<ITrigger> cantContinue = new HashSet();
+        List<ITrigger> toTrigger = new ArrayList();
         for (ITrigger trigger : triggers) {
             Collection<ICondition> conditions = trigger.getConditions();
             for (ICondition condition : conditions) {
@@ -201,6 +201,12 @@ public class CraftingMappings implements ICraftingMappings {
             }
 
             if (cantContinue.contains(trigger)) continue; //Grab the old data
+            toTrigger.add(trigger); //Add triggers for firing
+        }
+
+        //Fire the trigger
+        Collections.shuffle(toTrigger);
+        for (ITrigger trigger : toTrigger) {
             trigger.onFired(uuid, getTriggerData(trigger), data); //Fire the new data
         }
 
@@ -222,9 +228,10 @@ public class CraftingMappings implements ICraftingMappings {
         }
 
         //Create a list of new triggers to add to the active trigger map
-        forRemovalFromActive = new HashSet(); //Reset them
-        forRemovalFromCompleted = new HashSet(); //Reset them
-        toRemap = new HashSet(); //Reset them
+        HashSet<ITrigger> forRemovalFromActive = new HashSet(); //Reset them
+        HashSet<ITrigger> forRemovalFromCompleted = new HashSet();
+        HashSet<ICriteria> toRemap = new HashSet();
+        HashSet<ICriteria> toComplete = new HashSet();
 
         //Next step, now that we have fired the trigger, we need to go through all the active criteria
         //We should check if all triggers have been fulfilled
@@ -239,12 +246,22 @@ public class CraftingMappings implements ICraftingMappings {
             }
 
             if (allFired) {
-                completeCriteria(criteria);
                 completedAnyCriteria = true;
+                toComplete.add(criteria);
             }
         }
 
-        remapStuff();
+        for (ICriteria criteria : toComplete) {
+            completeCriteria(criteria, forRemovalFromActive, toRemap);
+        }
+
+        remapStuff(forRemovalFromActive, toRemap);
+        //Now that we have removed all the triggers, and marked this as completed and remapped data, we should give out the rewards
+        for (ICriteria criteria : toComplete) {
+            for (IReward reward : criteria.getRewards()) {
+                reward.reward(uuid);
+            }
+        }
 
         //Mark data as dirty, whether it changed or not
         CraftingMod.data.markDirty();
@@ -256,7 +273,7 @@ public class CraftingMappings implements ICraftingMappings {
         PacketHandler.sendToClient(new PacketSyncCriteria(false, new Integer[] { 0 }, new ICriteria[] { criteria }), uuid);
     }
 
-    private void completeCriteria(ICriteria criteria) {
+    private void completeCriteria(ICriteria criteria, HashSet<ITrigger> forRemovalFromActive, HashSet<ICriteria> toRemap) {
         List<ITrigger> allTriggers = criteria.getTriggers();
         int completedTimes = getCriteriaCount(criteria);
         completedTimes++;
@@ -273,11 +290,6 @@ public class CraftingMappings implements ICraftingMappings {
             triggerData.remove(criteriaTrigger);
         }
 
-        //Now that we have removed all the triggers, and marked this as completed, we should give out the rewards
-        for (IReward reward : criteria.getRewards()) {
-            reward.reward(uuid);
-        }
-
         //The next step in the process is to update the active trigger maps for everything
         //That we unlock with this criteria have been completed
         toRemap.add(criteria);
@@ -289,7 +301,7 @@ public class CraftingMappings implements ICraftingMappings {
         PacketHandler.sendToClient(new PacketSyncCriteria(false, new Integer[] { completedTimes }, new ICriteria[] { criteria }), uuid);
     }
 
-    private void remapStuff() {
+    private void remapStuff(HashSet<ITrigger> forRemovalFromActive, HashSet<ICriteria> toRemap) {
         //Removes all the triggers from the active map
         for (ITrigger trigger : forRemovalFromActive) {
             activeTriggers.get(trigger.getTypeName()).remove(trigger);

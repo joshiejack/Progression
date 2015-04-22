@@ -226,6 +226,7 @@ public class JSONLoader {
             tabData.stack = StackHelper.getStringFromStack(tab.getStack());
             for (ICriteria c: tab.getCriteria()) {
                 if (!names.add(c.getUniqueName())) continue;
+                if (c.getTreeEditor() == null) continue;
                 DataCriteria data = new DataCriteria();
                 data.x = c.getTreeEditor().getX();
                 data.y = c.getTreeEditor().getY();

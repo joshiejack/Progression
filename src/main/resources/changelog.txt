@@ -1,3 +1,11 @@
+Progression 0.3.3
+  Fix Crash when using the points trigger
+  Fix Triggers sometimes firing more than once
+  Fix some ordering issues, meaning not everything would fire correctly
+  Fix resetting of player data in survival when opening the book
+  Fix potential crash when saving json, due to a corrupted criteria
+  Shuffle Trigger fire order
+
 Progression 0.3.2
   IMPORTANT:
   Added two config options for 'unclaimed' tile entities in the config

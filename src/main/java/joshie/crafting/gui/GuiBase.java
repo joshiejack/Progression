@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import joshie.crafting.api.ICriteria;
+import joshie.crafting.helpers.ClientHelper;
 import joshie.crafting.json.JSONLoader;
 import joshie.crafting.json.Theme;
 import net.minecraft.client.gui.GuiButton;
@@ -55,8 +56,10 @@ public abstract class GuiBase extends GuiScreen {
     @Override
     public void onGuiClosed() {
         Keyboard.enableRepeatEvents(false);
-        JSONLoader.saveData();
-        EditorTicker.LAST_TICK = 60;
+        if (ClientHelper.getPlayer().capabilities.isCreativeMode) {
+            JSONLoader.saveData();
+            EditorTicker.LAST_TICK = 60;
+        }
     }
 
     public void drawScreen(int x, int y, float f) {
@@ -70,7 +73,7 @@ public abstract class GuiBase extends GuiScreen {
         drawTooltip(tooltip, x, y);
     }
 
-    public void drawBackground() {       
+    public void drawBackground() {
         drawRectWithBorder(-1, y, mc.displayWidth + 1, y + ySize, theme.backgroundColor, theme.backgroundBorder);
     }
 
