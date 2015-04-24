@@ -1,15 +1,16 @@
 package joshie.crafting.trigger;
 
-import java.util.List;
 import java.util.UUID;
 
 import joshie.crafting.api.Bus;
 import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.api.ITrigger;
+import joshie.crafting.api.DrawHelper;
 import joshie.crafting.api.ITriggerData;
 import joshie.crafting.gui.TextFieldHelper;
 import joshie.crafting.gui.TextFieldHelper.IntegerFieldHelper;
 import joshie.crafting.helpers.ClientHelper;
+import joshie.crafting.helpers.JSONHelper;
+import joshie.crafting.json.Theme;
 import joshie.crafting.trigger.data.DataBoolean;
 
 import com.google.gson.JsonObject;
@@ -24,46 +25,28 @@ public class TriggerPoints extends TriggerBaseBoolean {
     public String name = "research";
 
     public TriggerPoints() {
-        super("Points", theme.triggerPoints, "points");
+        super("points", 0xFFB2B200);
         nameEdit = new TextFieldHelper("name", this);
         amountEdit = new IntegerFieldHelper("amount", this);
     }
 
     @Override
-    public ITrigger newInstance() {
-        return new TriggerPoints();
-    }
-
-    @Override
-    public Bus getBusType() {
+    public Bus getEventBus() {
         return Bus.NONE;
     }
 
     @Override
-    public ITrigger deserialize(JsonObject data) {
-        TriggerPoints trigger = new TriggerPoints();
-        if (data.get("consume") != null) {
-            trigger.consume = data.get("consume").getAsBoolean();
-        }
-
-        trigger.name = data.get("name").getAsString();
-        if (data.get("amount") != null) {
-            trigger.amount = data.get("amount").getAsInt();
-        }
-
-        return trigger;
+    public void readFromJSON(JsonObject data) {
+        name = JSONHelper.getString(data, "research", name);
+        consume = JSONHelper.getBoolean(data, "consume", consume);
+        amount = JSONHelper.getInteger(data, "amount", amount);
     }
 
     @Override
-    public void serialize(JsonObject data) {
-        if (consume != true) {
-            data.addProperty("consume", consume);
-        }
-
-        data.addProperty("name", name);
-        if (amount != 1) {
-            data.addProperty("amount", amount);
-        }
+    public void writeToJSON(JsonObject data) {
+        JSONHelper.setString(data, "research", name, "research");
+        JSONHelper.setBoolean(data, "consume", consume, true);
+        JSONHelper.setInteger(data, "amount", amount, 1);
     }
 
     @Override
@@ -78,7 +61,7 @@ public class TriggerPoints extends TriggerBaseBoolean {
     }
 
     @Override
-    public Result clicked() {
+    public Result onClicked(int mouseX, int mouseY) {
         if (mouseX <= 84 && mouseX >= 1) {
             if (mouseY >= 17 && mouseY <= 25) nameEdit.select();
             if (mouseY > 25 && mouseY <= 33) amountEdit.select();
@@ -90,25 +73,20 @@ public class TriggerPoints extends TriggerBaseBoolean {
     }
 
     @Override
-    public void draw() {
-        int color = theme.optionsFontColor;
-        int amountColor = theme.optionsFontColor;
-        int consumeColor = theme.optionsFontColor;
+    public void draw(int mouseX, int mouseY) {
+        int color = Theme.INSTANCE.optionsFontColor;
+        int amountColor = Theme.INSTANCE.optionsFontColor;
+        int consumeColor = Theme.INSTANCE.optionsFontColor;
         if (ClientHelper.canEdit()) {
             if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 25) color = theme.optionsFontColorHover;
-                if (mouseY > 25 && mouseY <= 33) amountColor = theme.optionsFontColorHover;
-                if (mouseY > 34 && mouseY <= 41) consumeColor = theme.optionsFontColorHover;
+                if (mouseY >= 17 && mouseY <= 25) color = Theme.INSTANCE.optionsFontColorHover;
+                if (mouseY > 25 && mouseY <= 33) amountColor = Theme.INSTANCE.optionsFontColorHover;
+                if (mouseY > 34 && mouseY <= 41) consumeColor = Theme.INSTANCE.optionsFontColorHover;
             }
         }
 
-        drawText("name: " + nameEdit, 4, 18, color);
-        drawText("amount: " + amountEdit, 4, 26, amountColor);
-        drawText("consume: " + consume, 4, 34, consumeColor);
-    }
-    
-    @Override
-    public void addTooltip(List<String> toolTip) {
-        toolTip.add("Have " + amount + " " + name);
+        DrawHelper.triggerDraw.drawText("name: " + nameEdit, 4, 18, color);
+        DrawHelper.triggerDraw.drawText("amount: " + amountEdit, 4, 26, amountColor);
+        DrawHelper.triggerDraw.drawText("consume: " + consume, 4, 34, consumeColor);
     }
 }

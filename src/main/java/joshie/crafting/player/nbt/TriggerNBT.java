@@ -1,8 +1,8 @@
 package joshie.crafting.player.nbt;
 
 import joshie.crafting.Criteria;
+import joshie.crafting.Trigger;
 import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.api.ITrigger;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -13,7 +13,7 @@ public class TriggerNBT extends AbstractUniqueNBT {
     @Override
     public NBTBase write(Object s) {
         NBTTagCompound tag = new NBTTagCompound();
-        ITrigger t = ((ITrigger) s);
+        Trigger t = ((Trigger) s);
         tag.setString("Criteria", t.getCriteria().getUniqueName());
         tag.setInteger("Value", t.getInternalID());
         return tag;
@@ -26,7 +26,7 @@ public class TriggerNBT extends AbstractUniqueNBT {
         if (criteria == null) return null;
         int value = tag.getInteger("Value");
         if (value < criteria.getTriggers().size()) {
-            return (ITrigger) criteria.getTriggers().get(value);
+            return (Trigger) criteria.getTriggers().get(value);
         } else return null;
     }
 }

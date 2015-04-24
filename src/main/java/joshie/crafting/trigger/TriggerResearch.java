@@ -1,12 +1,12 @@
 package joshie.crafting.trigger;
 
-import java.util.List;
-
 import joshie.crafting.api.Bus;
+import joshie.crafting.api.DrawHelper;
 import joshie.crafting.api.IResearch;
-import joshie.crafting.api.ITrigger;
 import joshie.crafting.gui.TextFieldHelper;
 import joshie.crafting.helpers.ClientHelper;
+import joshie.crafting.helpers.JSONHelper;
+import joshie.crafting.json.Theme;
 
 import com.google.gson.JsonObject;
 
@@ -18,30 +18,23 @@ public class TriggerResearch extends TriggerBaseBoolean implements IResearch {
     public String researchName = "dummy";
 
     public TriggerResearch() {
-        super("Research", theme.triggerResearch, "research");
+        super("research", 0xFF26C9FF);
         nameEdit = new TextFieldHelper("researchName", this);
     }
 
     @Override
-    public ITrigger newInstance() {
-        return new TriggerResearch();
-    }
-
-    @Override
-    public Bus getBusType() {
+    public Bus getEventBus() {
         return Bus.NONE;
     }
 
     @Override
-    public ITrigger deserialize(JsonObject data) {
-        TriggerResearch trigger = new TriggerResearch();
-        trigger.researchName = data.get("researchName").getAsString();
-        return trigger;
+    public void readFromJSON (JsonObject data) {
+        researchName = JSONHelper.getString(data, "researchName", researchName);
     }
 
     @Override
-    public void serialize(JsonObject data) {
-        data.addProperty("researchName", researchName);
+    public void writeToJSON(JsonObject data) {
+        JSONHelper.setString(data, "researchName", researchName, "dummy");
     }
 
     @Override
@@ -51,11 +44,11 @@ public class TriggerResearch extends TriggerBaseBoolean implements IResearch {
 
     @Override
     protected boolean isTrue(Object... data) {
-        return asString(data).equals(researchName);
+        return ((String)data[0]).equals(researchName);
     }
 
     @Override
-    public Result clicked() {
+    public Result onClicked(int mouseX, int mouseY) {
         if (mouseX <= 84 && mouseX >= 1) {
             if (mouseY >= 17 && mouseY <= 33) nameEdit.select();
             if (mouseY >= 17 && mouseY <= 33) return Result.ALLOW;
@@ -65,20 +58,15 @@ public class TriggerResearch extends TriggerBaseBoolean implements IResearch {
     }
 
     @Override
-    public void draw() {
-        int color = theme.optionsFontColor;
+    public void draw(int mouseX, int mouseY) {
+        int color = Theme.INSTANCE.optionsFontColor;
         if (ClientHelper.canEdit()) {
             if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 33) color = theme.optionsFontColorHover;
+                if (mouseY >= 17 && mouseY <= 33) color = Theme.INSTANCE.optionsFontColorHover;
             }
         }
 
-        drawText("researchName: ", 4, 18, color);
-        drawText("" + nameEdit, 4, 26, color);
-    }
-    
-    @Override
-    public void addTooltip(List<String> toolTip) {
-        toolTip.add("Have " + researchName + " research");
+        DrawHelper.triggerDraw.drawText("researchName: ", 4, 18, color);
+        DrawHelper.triggerDraw.drawText("" + nameEdit, 4, 26, color);
     }
 }

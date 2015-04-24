@@ -3,9 +3,9 @@ package joshie.crafting.gui;
 import java.util.Iterator;
 import java.util.List;
 
+import joshie.crafting.Trigger;
 import joshie.crafting.api.ICondition;
 import joshie.crafting.api.IConditionEditor;
-import joshie.crafting.api.ITrigger;
 import joshie.crafting.helpers.ClientHelper;
 import joshie.crafting.helpers.RenderItemHelper;
 import joshie.crafting.json.Theme;
@@ -20,11 +20,11 @@ import cpw.mods.fml.common.eventhandler.Event.Result;
 public class EditorCondition implements IConditionEditor {
     private static final ResourceLocation textures = new ResourceLocation("crafting", "textures/gui/textures.png");
     protected static Theme theme = Theme.INSTANCE;
-    private final ITrigger trigger;
+    private final Trigger trigger;
     private int xCoord;
     private int yCoord;
 
-    public EditorCondition(ITrigger criteria) {
+    public EditorCondition(Trigger criteria) {
         this.trigger = criteria;
     }
 
@@ -69,7 +69,7 @@ public class EditorCondition implements IConditionEditor {
         ScaledResolution res = GuiTriggerEditor.INSTANCE.res;
         int fullWidth = (res.getScaledWidth()) - offsetX + 5;
         //Title and Repeatability Box
-        drawText("Editing Trigger conditions for the Criteria: " + trigger.getCriteria().getDisplayName() + " - " + trigger.getLocalisedName(), 9 - offsetX, 9, theme.conditionEditorFont);
+        drawText("Editing Trigger conditions for the Criteria: " + trigger.getCriteria().getDisplayName() + " - " + trigger.getType().getLocalisedName(), 9 - offsetX, 9, theme.conditionEditorFont);
         drawBox(-1, 210, fullWidth, 1, theme.conditionEditorUnderline2, theme.conditionEditorUnderline2);
         drawText("Use arrow keys to scroll sideways, or use the scroll wheel. (Down to go right)", 9 - offsetX, 215, theme.scrollTextFontColor);
         drawText("Hold shift with arrow keys to scroll faster.", 9 - offsetX, 225, theme.scrollTextFontColor);

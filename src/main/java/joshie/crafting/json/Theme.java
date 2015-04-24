@@ -81,16 +81,6 @@ public class Theme {
     public int triggerGradient1 = 0xFF222222;
     public int triggerGradient2 = 0xFF000000;
 
-    public int triggerBreakBlock = 0xFFCCCCCC;
-    public int triggerChangeDimension = 0xFF000000;
-    public int triggerClickBlock = 0xFF69008C;
-    public int triggerCrafting = 0xFF663300;
-    public int triggerKill = 0xFF000000;
-    public int triggerLogin = 0xFF8000FF;
-    public int triggerObtain = 0xFFFFFF00;
-    public int triggerPoints = 0xFFB2B200;
-    public int triggerResearch = 0xFF26C9FF;
-
     //Reward Colors
     public int rewardCommand = 0xFF2626FF;
     public int rewardCrafting = 0xFF0085B2;

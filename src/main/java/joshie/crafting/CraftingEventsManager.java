@@ -5,25 +5,24 @@ import java.util.HashSet;
 import joshie.crafting.api.Bus;
 import joshie.crafting.api.IReward;
 import joshie.crafting.api.IRewardType;
-import joshie.crafting.api.ITrigger;
 import joshie.crafting.api.ITriggerType;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.FMLCommonHandler;
 
 public class CraftingEventsManager {
-    public static HashSet<ITrigger> activeTriggers;
+    public static HashSet<Trigger> activeTriggers;
     public static HashSet<IReward> activeRewards;
 
-    public static void onTriggerAdded(ITrigger trigger) {
+    public static void onTriggerAdded(Trigger trigger) {
         activeTriggers.add(trigger); //Add the new trigger
         HashSet activeTriggerTypes = new HashSet();
-        for (ITrigger existing : activeTriggers) { //Grab a list of all the triggers that should be registered
-            activeTriggerTypes.add(existing.getTypeName());
+        for (Trigger existing : activeTriggers) { //Grab a list of all the triggers that should be registered
+            activeTriggerTypes.add(existing.getType().getUnlocalisedName());
         }
 
         for (ITriggerType type : CraftAPIRegistry.triggerTypes.values()) { //Loop through all trigger types
-            if (activeTriggerTypes.contains(type.getTypeName())) { //If we haven't added this type to active triggers yet add it
-                Bus[] buses = type.getEventBuses();
+            if (activeTriggerTypes.contains(type.getUnlocalisedName())) { //If we haven't added this type to active triggers yet add it
+                Bus[] buses = type.getEventBusTypes();
                 for (Bus bus : buses) {
                     if (bus == Bus.FML) {
                         FMLCommonHandler.instance().bus().register(type);
@@ -39,17 +38,17 @@ public class CraftingEventsManager {
         }
     }
 
-    public static void onTriggerRemoved(ITrigger trigger) {
+    public static void onTriggerRemoved(Trigger trigger) {
         activeTriggers.remove(trigger); //Add the new trigger
         HashSet activeTriggerTypes = new HashSet();
-        for (ITrigger existing : activeTriggers) { //Grab a list of all the triggers that should be registered
-            activeTriggerTypes.add(existing.getTypeName());
+        for (Trigger existing : activeTriggers) { //Grab a list of all the triggers that should be registered
+            activeTriggerTypes.add(existing.getType().getUnlocalisedName());
         }
 
         for (ITriggerType type : CraftAPIRegistry.triggerTypes.values()) { //Loop through all trigger types
-            if (!activeTriggerTypes.contains(type.getTypeName())) { //If this trigger type is no longer in the active ones, unregister it
+            if (!activeTriggerTypes.contains(type.getUnlocalisedName())) { //If this trigger type is no longer in the active ones, unregister it
                 try {
-                    Bus[] buses = type.getEventBuses();
+                    Bus[] buses = type.getEventBusTypes();
                     for (Bus bus : buses) {
                         if (bus == Bus.FML) {
                             FMLCommonHandler.instance().bus().unregister(type);

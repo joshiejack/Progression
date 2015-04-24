@@ -8,7 +8,6 @@ import joshie.crafting.api.ICriteriaViewer;
 import joshie.crafting.api.IReward;
 import joshie.crafting.api.ITab;
 import joshie.crafting.api.ITreeEditor;
-import joshie.crafting.api.ITrigger;
 import joshie.crafting.gui.EditorTree;
 import joshie.crafting.gui.ViewerCriteria;
 import net.minecraft.item.ItemStack;
@@ -17,7 +16,7 @@ import cpw.mods.fml.relauncher.Side;
 
 public class Criteria {
 	/** All the data for this **/
-	private List<ITrigger> triggers = new ArrayList();
+	private List<Trigger> triggers = new ArrayList();
 	private List<IReward> rewards = new ArrayList();
 	private List<Criteria> prereqs = new ArrayList();
 	private List<Criteria> conflicts = new ArrayList();
@@ -55,8 +54,8 @@ public class Criteria {
 		return this;
 	}
 
-	public Criteria addTriggers(ITrigger... triggers) {
-		this.triggers.addAll(Arrays.asList((ITrigger[]) triggers));
+	public Criteria addTriggers(Trigger... triggers) {
+		this.triggers.addAll(Arrays.asList((Trigger[]) triggers));
 		return this;
 	}
 
@@ -99,7 +98,7 @@ public class Criteria {
 	    return this;
 	}
 
-	public List<ITrigger> getTriggers() {
+	public List<Trigger> getTriggers() {
 		return triggers;
 	}
 

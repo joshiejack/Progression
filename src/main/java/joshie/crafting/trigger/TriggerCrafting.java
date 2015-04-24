@@ -1,10 +1,10 @@
 package joshie.crafting.trigger;
 
-import java.util.List;
+import java.util.UUID;
 
 import joshie.crafting.api.Bus;
 import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.api.ITrigger;
+import joshie.crafting.api.DrawHelper;
 import joshie.crafting.api.ITriggerData;
 import joshie.crafting.gui.IItemSelectable;
 import joshie.crafting.gui.SelectItemOverlay;
@@ -12,7 +12,8 @@ import joshie.crafting.gui.SelectItemOverlay.Type;
 import joshie.crafting.gui.SelectTextEdit;
 import joshie.crafting.gui.SelectTextEdit.ITextEditable;
 import joshie.crafting.helpers.ClientHelper;
-import joshie.crafting.helpers.StackHelper;
+import joshie.crafting.helpers.JSONHelper;
+import joshie.crafting.json.Theme;
 import joshie.crafting.trigger.data.DataCrafting;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -33,61 +34,37 @@ public class TriggerCrafting extends TriggerBase implements IItemSelectable {
     public int itemAmount = 1;
 
     public TriggerCrafting() {
-        super("Crafting", theme.triggerCrafting, "crafting");
+        super("crafting", 0xFF663300, "crafting");
         editCraftAmount = new CraftAmount(this);
         editItemAmount = new ItemAmount(this);
     }
 
     @Override
-    public ITrigger newInstance() {
-        return new TriggerCrafting();
-    }
-
-    @Override
-    public Bus getBusType() {
+    public Bus getEventBus() {
         return Bus.FML;
     }
 
     @SubscribeEvent
     public void onEvent(ItemCraftedEvent event) {        
-        CraftingAPI.registry.fireTrigger(event.player, getTypeName(), event.crafting.copy());
+        CraftingAPI.registry.fireTrigger(event.player, getUnlocalisedName(), event.crafting.copy());
     }
 
     @Override
-    public ITrigger deserialize(JsonObject data) {
-        TriggerCrafting trigger = new TriggerCrafting();
-        trigger.stack = StackHelper.getStackFromString(data.get("item").getAsString());
-        if (data.get("matchDamage") != null) {
-            trigger.matchDamage = data.get("matchDamage").getAsBoolean();
-        }
-
-        if (data.get("matchNBT") != null) {
-            trigger.matchNBT = data.get("matchNBT").getAsBoolean();
-        }
-
-        if (data.get("craftingTimes") != null) {
-            trigger.craftingTimes = data.get("craftingTimes").getAsInt();
-        }
-
-        if (data.get("itemAmount") != null) {
-            trigger.itemAmount = data.get("itemAmount").getAsInt();
-        }
-
-        return trigger;
+    public void readFromJSON(JsonObject data) {
+        stack = JSONHelper.getItemStack(data, "item", new ItemStack(Blocks.crafting_table));
+        matchDamage = JSONHelper.getBoolean(data, "matchDamage", matchDamage);
+        matchNBT = JSONHelper.getBoolean(data, "matchNBT", matchNBT);
+        craftingTimes = JSONHelper.getInteger(data, "craftingTimes", craftingTimes);
+        itemAmount = JSONHelper.getInteger(data, "itemAmount", itemAmount);
     }
 
     @Override
-    public void serialize(JsonObject data) {
-        data.addProperty("item", StackHelper.getStringFromStack(stack));
-        if (matchDamage != true) data.addProperty("matchDamage", matchDamage);
-        if (matchNBT != false) data.addProperty("matchNBT", matchNBT);
-        if (craftingTimes != 1) data.addProperty("craftingTimes", craftingTimes);
-        if (itemAmount != 1) data.addProperty("itemAmount", itemAmount);
-    }
-
-    @Override
-    public ITriggerData newData() {
-        return new DataCrafting();
+    public void writeToJSON(JsonObject data) {
+        JSONHelper.setItemStack(data, "item", stack);
+        JSONHelper.setBoolean(data, "matchDamage", matchDamage, true);
+        JSONHelper.setBoolean(data, "matchNBT", matchNBT, false);
+        JSONHelper.setInteger(data, "craftingTimes", craftingTimes, 1);
+        JSONHelper.setInteger(data, "itemAmount", itemAmount, 1);
     }
 
     @Override
@@ -97,9 +74,9 @@ public class TriggerCrafting extends TriggerBase implements IItemSelectable {
     }
 
     @Override
-    public void onFired(ITriggerData existing, Object... additional) {        
+    public void onFired(UUID uuid, ITriggerData existing, Object... additional) {        
         DataCrafting data = (DataCrafting) existing;
-        ItemStack crafted = asStack(additional);        
+        ItemStack crafted = (ItemStack)(additional[0]);        
         if (stack.getItem() == crafted.getItem()) {
             if (matchDamage && stack.getItemDamage() != crafted.getItemDamage()) return;
             if (matchNBT && stack.getTagCompound() != crafted.getTagCompound()) return;
@@ -109,7 +86,7 @@ public class TriggerCrafting extends TriggerBase implements IItemSelectable {
     }
 
     @Override
-    public Result clicked() {
+    public Result onClicked(int mouseX, int mouseY) {
         if (mouseX >= 77 && mouseX <= 100) {
             if (mouseY >= 43 && mouseY <= 68) {
                 SelectItemOverlay.INSTANCE.select(this, Type.TRIGGER);
@@ -129,38 +106,27 @@ public class TriggerCrafting extends TriggerBase implements IItemSelectable {
     }
 
     @Override
-    public void draw() {
-        drawStack(stack, 76, 44, 1.4F);
-        int typeColor = theme.optionsFontColor;
-        int matchColor = theme.optionsFontColor;
-        int match2Color = theme.optionsFontColor;
-        int usageColor = theme.optionsFontColor;
+    public void draw(int mouseX, int mouseY) {
+        DrawHelper.triggerDraw.drawStack(stack, 76, 44, 1.4F);
+        int typeColor = Theme.INSTANCE.optionsFontColor;
+        int matchColor = Theme.INSTANCE.optionsFontColor;
+        int match2Color = Theme.INSTANCE.optionsFontColor;
+        int usageColor = Theme.INSTANCE.optionsFontColor;
         if (ClientHelper.canEdit()) {
             if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 25) typeColor = theme.optionsFontColorHover;
-                if (mouseY > 25 && mouseY <= 33) matchColor = theme.optionsFontColorHover;
-                if (mouseY > 34 && mouseY <= 41) match2Color = theme.optionsFontColorHover;
-                if (mouseY > 42 && mouseY <= 50) usageColor = theme.optionsFontColorHover;
+                if (mouseY >= 17 && mouseY <= 25) typeColor = Theme.INSTANCE.optionsFontColorHover;
+                if (mouseY > 25 && mouseY <= 33) matchColor = Theme.INSTANCE.optionsFontColorHover;
+                if (mouseY > 34 && mouseY <= 41) match2Color = Theme.INSTANCE.optionsFontColorHover;
+                if (mouseY > 42 && mouseY <= 50) usageColor = Theme.INSTANCE.optionsFontColorHover;
             }
         }
 
-        drawText("matchDamage: " + matchDamage, 4, 18, typeColor);
-        drawText("matchNBT: " + matchNBT, 4, 26, matchColor);
-        drawText("craftingTimes: " + SelectTextEdit.INSTANCE.getText(editCraftAmount), 4, 34, match2Color);
-        drawText("itemAmount: " + SelectTextEdit.INSTANCE.getText(editItemAmount), 4, 42, usageColor);
+        DrawHelper.triggerDraw.drawText("matchDamage: " + matchDamage, 4, 18, typeColor);
+        DrawHelper.triggerDraw.drawText("matchNBT: " + matchNBT, 4, 26, matchColor);
+        DrawHelper.triggerDraw.drawText("craftingTimes: " + SelectTextEdit.INSTANCE.getText(editCraftAmount), 4, 34, match2Color);
+        DrawHelper.triggerDraw.drawText("itemAmount: " + SelectTextEdit.INSTANCE.getText(editItemAmount), 4, 42, usageColor);
     }
     
-    @Override
-    public void addTooltip(List<String> toolTip) {
-        if (craftingTimes == 1 && itemAmount == 1) {
-            toolTip.add("  Craft a " + stack.getDisplayName());
-        } else if (craftingTimes == 1 && itemAmount != 1) {
-            toolTip.add("  Craft " + itemAmount + " " + stack.getDisplayName());
-        } else if (craftingTimes != 1 && itemAmount == 1) {
-            toolTip.add("  Perform " + itemAmount + " Crafts of " + stack.getDisplayName());
-        } else toolTip.add("  Perform " + itemAmount + " Crafts of " + stack.getDisplayName() + " and have " + itemAmount + " of them");
-    }
-
     private class CraftAmount implements ITextEditable {
         private TriggerCrafting trigger;
         String textField;

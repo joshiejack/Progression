@@ -15,9 +15,7 @@ import joshie.crafting.api.IResearch;
 import joshie.crafting.api.IReward;
 import joshie.crafting.api.IRewardType;
 import joshie.crafting.api.ITab;
-import joshie.crafting.api.ITrigger;
 import joshie.crafting.api.ITriggerData;
-import joshie.crafting.api.ITriggerNew;
 import joshie.crafting.api.ITriggerType;
 import joshie.crafting.helpers.PlayerHelper;
 import joshie.crafting.trigger.data.DataBoolean;
@@ -36,7 +34,7 @@ public class CraftAPIRegistry implements IRegistry {
     //These four maps are registries for fetching the various types
     public static HashMap<String, ITab> tabs;
     public static HashMap<String, Criteria> criteria;
-    public static Set<ITrigger> triggers;
+    public static Set<Trigger> triggers;
     public static Set<ICondition> conditions;
     public static Set<IReward> rewards;
 
@@ -62,7 +60,7 @@ public class CraftAPIRegistry implements IRegistry {
 
     @Override
     public ITriggerType registerTriggerType(ITriggerType type) {
-        triggerTypes.put(type.getTypeName(), type);
+        triggerTypes.put(type.getUnlocalisedName(), type);
         return type;
     }
 
@@ -96,8 +94,16 @@ public class CraftAPIRegistry implements IRegistry {
     }
 
     @Override
-    public ITrigger newTrigger(Criteria criteria, String type, JsonObject data) {
-        ITrigger trigger = triggerTypes.get(type).deserialize(data).setCriteria(criteria);
+    public Trigger newTrigger(Criteria criteria, String type, JsonObject data) {
+        ITriggerType oldTriggerType = triggerTypes.get(type);
+        ITriggerType newTriggerType = oldTriggerType;
+        
+        try {
+            newTriggerType = oldTriggerType.getClass().newInstance();
+        } catch (Exception e) {}
+        
+        Trigger trigger = new Trigger(newTriggerType);
+        trigger.setCriteria(criteria).getType().readFromJSON(data);
         CraftingEventsManager.onTriggerAdded(trigger);
         triggers.add(trigger);
         return trigger;
@@ -112,8 +118,16 @@ public class CraftAPIRegistry implements IRegistry {
     }
 
     @Override
-    public ITrigger cloneTrigger(Criteria criteria, ITriggerType trigger) {
-        ITrigger newTrigger = trigger.newInstance().setCriteria(criteria);
+    public Trigger cloneTrigger(Criteria criteria, ITriggerType oldTriggerType) {
+        ITriggerType newTriggerType = oldTriggerType;
+        
+        try {
+            newTriggerType = oldTriggerType.getClass().newInstance();
+        } catch (Exception e) {}
+        
+        
+        Trigger newTrigger = new Trigger(newTriggerType);
+        newTrigger.setCriteria(criteria);
         CraftingEventsManager.onTriggerAdded(newTrigger);
         triggers.add(newTrigger);
         criteria.addTriggers(newTrigger);
@@ -130,7 +144,7 @@ public class CraftAPIRegistry implements IRegistry {
     }
 
     @Override
-    public ICondition cloneCondition(ITrigger trigger, IConditionType condition) {
+    public ICondition cloneCondition(Trigger trigger, IConditionType condition) {
         ICondition newCondition = condition.newInstance().setTrigger(trigger);
         conditions.add(newCondition);
         trigger.addCondition(newCondition);
@@ -159,7 +173,7 @@ public class CraftAPIRegistry implements IRegistry {
         conditions.remove(condition);
     }
 
-    public static void removeTrigger(ITrigger trigger) {
+    public static void removeTrigger(Trigger trigger) {
         CraftingEventsManager.onTriggerRemoved(trigger);
         triggers.remove(trigger);
     }
@@ -223,7 +237,7 @@ public class CraftAPIRegistry implements IRegistry {
         }
 
         //Remove all triggers associated with this criteria
-        for (ITrigger trigger : c.getTriggers()) {
+        for (Trigger trigger : c.getTriggers()) {
             removeTrigger(trigger);
         }
 

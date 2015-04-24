@@ -1,18 +1,14 @@
 package joshie.crafting.trigger;
 
+import java.util.UUID;
+
 import joshie.crafting.api.ITriggerData;
-import joshie.crafting.gui.TextFieldHelper.IntegerFieldHelper;
 import joshie.crafting.trigger.data.DataBoolean;
 
 public abstract class TriggerBaseBoolean extends TriggerBase {
-	public TriggerBaseBoolean(String localised, int color, String name) {
-		super(localised, color, name);
-	}
-	
-	@Override
-	public ITriggerData newData() {
-		return new DataBoolean();
-	}
+    public TriggerBaseBoolean(String name, int color) {
+        super(name, color, "boolean");
+    }
 	
 	@Override
 	public boolean isCompleted(ITriggerData iTriggerData) {
@@ -20,7 +16,7 @@ public abstract class TriggerBaseBoolean extends TriggerBase {
 	}
 	
 	@Override
-	public void onFired(ITriggerData iTriggerData, Object... data) {	
+	public void onFired(UUID uuid, ITriggerData iTriggerData, Object... data) {	
 		((DataBoolean)iTriggerData).completed = isTrue(data);
 	}
 

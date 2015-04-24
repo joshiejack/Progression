@@ -3,8 +3,8 @@ package joshie.crafting.gui;
 import java.util.List;
 
 import joshie.crafting.CraftingMod;
+import joshie.crafting.Trigger;
 import joshie.crafting.api.IReward;
-import joshie.crafting.api.ITrigger;
 import joshie.crafting.gui.SelectItemOverlay.Type;
 import joshie.crafting.gui.TextFieldHelper.IntegerFieldHelper;
 import joshie.crafting.helpers.ClientHelper;
@@ -42,11 +42,11 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
         drawBox(-1, 40, fullWidth, 1, theme.triggerBoxUnderline1, theme.invisible);
         drawText("Requirements", 9 - offsetX, 29, theme.triggerBoxFont);
         int xCoord = 0;
-        List<ITrigger> triggers = selected.getTriggers();
+        List<Trigger> triggers = selected.getTriggers();
         int mouseX = GuiCriteriaEditor.INSTANCE.mouseX - offsetX;
         int mouseY = GuiCriteriaEditor.INSTANCE.mouseY;
         for (int i = 0; i < triggers.size(); i++) {
-            ITrigger trigger = triggers.get(i);
+            Trigger trigger = triggers.get(i);
             int xPos = 100 * xCoord;
             trigger.draw(mouseX, mouseY, xPos);
             xCoord++;
@@ -179,7 +179,7 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
 
         //Triggers
         int xCoord = 0;
-        List<ITrigger> triggers = selected.getTriggers();
+        List<Trigger> triggers = selected.getTriggers();
         for (int i = 0; i < triggers.size(); i++) {
             Result result = triggers.get(i).onClicked();
             if (result != Result.DEFAULT) {

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 import joshie.crafting.Criteria;
+import joshie.crafting.Trigger;
 import joshie.crafting.network.PacketSyncTriggers.SyncPair;
 import net.minecraft.entity.player.EntityPlayerMP;
 
@@ -19,7 +20,7 @@ public interface ICraftingMappings {
 	public void markTriggerAsCompleted(boolean overwrite, SyncPair[] pair);
 
 	public HashMap<Criteria, Integer> getCompletedCriteria();
-	public Set<ITrigger> getCompletedTriggers();
+	public Set<Trigger> getCompletedTriggers();
 
 	public void syncToClient(EntityPlayerMP player);
 }

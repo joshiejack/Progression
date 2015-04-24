@@ -1,9 +1,7 @@
 package joshie.crafting.trigger;
 
-import java.util.List;
-
 import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.api.ITrigger;
+import joshie.crafting.api.DrawHelper;
 import joshie.crafting.gui.GuiCriteriaEditor;
 import joshie.crafting.gui.SelectEntity;
 import joshie.crafting.gui.SelectEntity.IEntitySelectable;
@@ -11,6 +9,8 @@ import joshie.crafting.gui.SelectItemOverlay.Type;
 import joshie.crafting.gui.TextFieldHelper.IntegerFieldHelper;
 import joshie.crafting.helpers.ClientHelper;
 import joshie.crafting.helpers.EntityHelper;
+import joshie.crafting.helpers.JSONHelper;
+import joshie.crafting.json.Theme;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -28,16 +28,10 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 public class TriggerKill extends TriggerBaseCounter implements IEntitySelectable {
     private IntegerFieldHelper amountEdit;
     public String entity = "Pig";
-    public int amount = 1;
 
     public TriggerKill() {
-        super("Kill", theme.triggerKill, "kill");
+        super("kill", 0xFF000000);
         amountEdit = new IntegerFieldHelper("amount", this);
-    }
-
-    @Override
-    public ITrigger newInstance() {
-        return new TriggerKill();
     }
 
     @SubscribeEvent
@@ -45,36 +39,29 @@ public class TriggerKill extends TriggerBaseCounter implements IEntitySelectable
         Entity source = event.source.getSourceOfDamage();
         if (source instanceof EntityPlayer) {
             String entity = EntityList.getEntityString(event.entity);
-            CraftingAPI.registry.fireTrigger((EntityPlayer) source, getTypeName(), entity);
+            CraftingAPI.registry.fireTrigger((EntityPlayer) source, getUnlocalisedName(), entity);
         }
     }
 
     @Override
-    public ITrigger deserialize(JsonObject data) {
-        TriggerKill trigger = new TriggerKill();
-        trigger.entity = data.get("entity").getAsString();
-        if (data.get("amount") != null) {
-            trigger.amount = data.get("amount").getAsInt();
-        }
-
-        return trigger;
+    public void readFromJSON(JsonObject data) {
+        super.readFromJSON(data);
+        entity = JSONHelper.getString(data, "entity", entity);
     }
 
     @Override
-    public void serialize(JsonObject data) {
-        data.addProperty("entity", entity);
-        if (amount != 1) {
-            data.addProperty("amount", amount);
-        }
+    public void writeToJSON(JsonObject data) {
+        super.writeToJSON(data);
+        JSONHelper.setString(data, "entity", entity, "Pig");
     }
 
     @Override
     protected boolean canIncrease(Object... data) {
-        return asString(data).equals(entity);
+        return ((String)data[0]).equals(entity);
     }
 
     @Override
-    public Result clicked() {
+    public Result onClicked(int mouseX, int mouseY) {
         if (mouseX <= 84 && mouseX >= 1) {
             if (mouseY >= 17 && mouseY <= 25) {
                 amountEdit.select();
@@ -89,21 +76,21 @@ public class TriggerKill extends TriggerBaseCounter implements IEntitySelectable
     }
 
     @Override
-    public void draw() {
-        int color = theme.optionsFontColor;
+    public void draw(int mouseX, int mouseY) {
+        int color = Theme.INSTANCE.optionsFontColor;
         if (ClientHelper.canEdit()) {
             if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 25) color = theme.optionsFontColorHover;
+                if (mouseY >= 17 && mouseY <= 25) color = Theme.INSTANCE.optionsFontColorHover;
             }
         }
 
-        drawText("times: " + amountEdit, 4, 18, color);
+        DrawHelper.triggerDraw.drawText("times: " + amountEdit, 4, 18, color);
 
         Entity entity = EntityList.createEntityByName(this.entity, ClientHelper.getPlayer().worldObj);
         int yPos = GuiCriteriaEditor.INSTANCE.y + 105;
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
         GL11.glColor4f(1F, 1F, 1F, 1F);
-        GuiInventory.func_147046_a(xPosition + 50 + GuiCriteriaEditor.INSTANCE.offsetX, yPos, EntityHelper.getSizeForString(this.entity), 25F, -5F, (EntityLivingBase) entity);
+        GuiInventory.func_147046_a(DrawHelper.triggerDraw.getXPosition() + 50 + GuiCriteriaEditor.INSTANCE.offsetX, yPos, EntityHelper.getSizeForString(this.entity), 25F, -5F, (EntityLivingBase) entity);
     }
 
     @Override
@@ -111,15 +98,5 @@ public class TriggerKill extends TriggerBaseCounter implements IEntitySelectable
         try {
             this.entity = EntityList.getEntityString(entity);
         } catch (Exception e) {}
-    }
-
-    @Override
-    public int getAmountRequired() {
-        return amount;
-    }
-    
-    @Override
-    public void addTooltip(List<String> toolTip) {
-        toolTip.add("Kill " + amount + " " + EntityList.createEntityByName(this.entity, ClientHelper.getPlayer().worldObj).getCommandSenderName());
     }
 }

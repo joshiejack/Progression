@@ -1,15 +1,11 @@
 package joshie.crafting.trigger;
 
-import java.util.List;
-
 import joshie.crafting.api.Bus;
 import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.api.ITrigger;
+import joshie.crafting.api.DrawHelper;
 import joshie.crafting.gui.TextFieldHelper.IntegerFieldHelper;
 import joshie.crafting.helpers.ClientHelper;
-
-import com.google.gson.JsonObject;
-
+import joshie.crafting.json.Theme;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -17,43 +13,20 @@ import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 
 public class TriggerLogin extends TriggerBaseCounter {
     private IntegerFieldHelper amountEdit;
-    public int amount = 1;
 
     public TriggerLogin() {
-        super("Login", theme.triggerLogin, "login");
+        super("login", 0xFF8000FF);
         amountEdit = new IntegerFieldHelper("amount", this);
     }
 
     @Override
-    public ITrigger newInstance() {
-        return new TriggerLogin();
-    }
-
-    @Override
-    public Bus getBusType() {
+    public Bus getEventBus() {
         return Bus.FML;
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onEvent(PlayerLoggedInEvent event) {
-        CraftingAPI.registry.fireTrigger(event.player, getTypeName());
-    }
-
-    @Override
-    public ITrigger deserialize(JsonObject data) {
-        TriggerLogin trigger = new TriggerLogin();
-        if (data.get("amount") != null) {
-            trigger.amount = data.get("amount").getAsInt();
-        }
-
-        return trigger;
-    }
-
-    @Override
-    public void serialize(JsonObject data) {
-        if (amount != 1) {
-            data.addProperty("amount", amount);
-        }
+        CraftingAPI.registry.fireTrigger(event.player, getUnlocalisedName());
     }
 
     @Override
@@ -62,7 +35,7 @@ public class TriggerLogin extends TriggerBaseCounter {
     }
 
     @Override
-    public Result clicked() {
+    public Result onClicked(int mouseX, int mouseY) {
         if (mouseX <= 84 && mouseX >= 1) {
             if (mouseY >= 17 && mouseY <= 25) {
                 amountEdit.select();
@@ -74,24 +47,14 @@ public class TriggerLogin extends TriggerBaseCounter {
     }
 
     @Override
-    public void draw() {
-        int color = theme.optionsFontColor;
+    public void draw(int mouseX, int mouseY) {
+        int color = Theme.INSTANCE.optionsFontColor;
         if (ClientHelper.canEdit()) {
             if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 25) color = theme.optionsFontColorHover;
+                if (mouseY >= 17 && mouseY <= 25) color = Theme.INSTANCE.optionsFontColorHover;
             }
         }
 
-        drawText("times: " + amountEdit, 4, 18, color);
-    }
-
-    @Override
-    public int getAmountRequired() {
-        return amount;
-    }
-    
-    @Override
-    public void addTooltip(List<String> toolTip) {
-        toolTip.add("Login " + amount + " times");
+        DrawHelper.triggerDraw.drawText("times: " + amountEdit, 4, 18, color);
     }
 }

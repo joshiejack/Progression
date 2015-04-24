@@ -1,5 +1,5 @@
 package joshie.crafting.api;
 
-public interface IResearch extends ITrigger {
+public interface IResearch {
 	public String getResearchName();
 }

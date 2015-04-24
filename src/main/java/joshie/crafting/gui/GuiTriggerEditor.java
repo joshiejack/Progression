@@ -4,13 +4,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import joshie.crafting.CraftingMod;
-import joshie.crafting.api.ITrigger;
+import joshie.crafting.Trigger;
 import joshie.crafting.helpers.ClientHelper;
 
 public class GuiTriggerEditor extends GuiBase {
     public static final GuiTriggerEditor INSTANCE = new GuiTriggerEditor();
     protected static Set<IRenderOverlay> overlays = new HashSet();
-    public static ITrigger trigger;
+    public static Trigger trigger;
 
     public static void registerOverlay(IRenderOverlay overlay) {
         overlays.add(overlay);

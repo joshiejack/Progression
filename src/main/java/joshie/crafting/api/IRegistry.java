@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 import joshie.crafting.Criteria;
+import joshie.crafting.Trigger;
 import net.minecraft.entity.player.EntityPlayer;
 
 import com.google.gson.JsonObject;
@@ -34,10 +35,10 @@ public interface IRegistry {
 	 *  @param      the criteria 
 	 *  @param		the trigger type
 	 *  @param		the data for the trigger **/
-	public ITrigger newTrigger(Criteria criteria, String type, JsonObject data);
+	public Trigger newTrigger(Criteria criteria, String type, JsonObject data);
 	
 	/** Creates a fresh trigger **/
-    public ITrigger cloneTrigger(Criteria criteria, ITriggerType trigger);
+    public Trigger cloneTrigger(Criteria criteria, ITriggerType trigger);
 		
 	/** Returns a new reward
 	 *  @param		the reward type
@@ -48,7 +49,7 @@ public interface IRegistry {
 	public IReward cloneReward(Criteria criteria, IRewardType reward);
 
 	/** Creates a clone of this condition, and attaches it to the trigger **/
-    public ICondition cloneCondition(ITrigger trigger, IConditionType condition);
+    public ICondition cloneCondition(Trigger trigger, IConditionType condition);
 
 	/** Returns a new criteria 
 	 * @param tab **/

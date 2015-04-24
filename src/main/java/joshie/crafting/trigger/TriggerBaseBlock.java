@@ -1,6 +1,6 @@
 package joshie.crafting.trigger;
 
-import joshie.crafting.api.ITrigger;
+import joshie.crafting.api.DrawHelper;
 import joshie.crafting.gui.IItemSelectable;
 import joshie.crafting.gui.SelectItemOverlay;
 import joshie.crafting.gui.SelectItemOverlay.Type;
@@ -10,7 +10,8 @@ import joshie.crafting.gui.TextFieldHelper.IItemGettable;
 import joshie.crafting.gui.TextFieldHelper.ItemAmountHelper;
 import joshie.crafting.helpers.BlockActionHelper;
 import joshie.crafting.helpers.ClientHelper;
-import joshie.crafting.helpers.StackHelper;
+import joshie.crafting.helpers.JSONHelper;
+import joshie.crafting.json.Theme;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -27,62 +28,43 @@ public abstract class TriggerBaseBlock extends TriggerBaseCounter implements IIt
     public Block block = Blocks.stone;
     public int meta = 0;
     public boolean matchDamage = true;
-    public int amount = 1;
     public ItemStack stack = new ItemStack(Blocks.stone, 1, 0);
 
-    public TriggerBaseBlock(String localised, int color, String unlocalised) {
-        super(localised, color, unlocalised);
+    public TriggerBaseBlock(String unlocalised, int color) {
+        super(unlocalised, color);
         oreEdit = new TextFieldHelper("oreDictionary", this);
         amountEdit = new ItemAmountHelper("amount", this);
     }
 
     @Override
-    public ITrigger deserialize(JsonObject data) {
-        TriggerBaseBlock trigger = (TriggerBaseBlock) newInstance();
-        if (data.get("ore") != null) {
-            trigger.oreDictionary = data.get("ore").getAsString();
-            if (OreDictionary.getOres(trigger.oreDictionary).size() > 0) {
-                trigger.stack = OreDictionary.getOres(trigger.oreDictionary).get(0);
-            }
+    public void readFromJSON(JsonObject data) {
+        super.readFromJSON(data);
+        oreDictionary = JSONHelper.getString(data, "ore", "IGNORE");
+        if (OreDictionary.getOres(oreDictionary).size() > 0) {
+            stack = OreDictionary.getOres(oreDictionary).get(0);
         } else {
-            String stack = data.get("item").getAsString();
-            trigger.stack = StackHelper.getStackFromString(stack);
-            trigger.block = Block.getBlockFromItem(trigger.stack.getItem());
-            trigger.meta = trigger.stack.getItemDamage();
-            if (data.get("matchDamage") != null) {
-                trigger.matchDamage = data.get("matchDamage").getAsBoolean();
-            }
+            stack = JSONHelper.getItemStack(data, "item", new ItemStack(Blocks.stone, 1, 0));
+            block = Block.getBlockFromItem(stack.getItem());
+            meta = stack.getItemDamage();
+            matchDamage = JSONHelper.getBoolean(data, "matchDamage", true);
         }
-
-        if (data.get("amount") != null) {
-            trigger.amount = data.get("amount").getAsInt();
-        }
-
-        return trigger;
     }
 
     @Override
-    public void serialize(JsonObject data) {
+    public void writeToJSON(JsonObject data) {
+        super.writeToJSON(data);
+        JSONHelper.setString(data, "ore", oreDictionary, "IGNORE");
         if (!oreDictionary.equals("IGNORE")) {
-            data.addProperty("ore", oreDictionary);
-        } else {
             ItemStack stack = new ItemStack(block, 1, meta);
-            String serial = StackHelper.getStringFromStack(stack);
-            data.addProperty("item", serial);
-            if (matchDamage != true) {
-                data.addProperty("matchDamage", false);
-            }
-        }
-
-        if (amount != 1) {
-            data.addProperty("amount", amount);
+            JSONHelper.setItemStack(data, "item", stack);
+            JSONHelper.setBoolean(data, "matchDamage", matchDamage, true);
         }
     }
 
     @Override
     protected boolean canIncrease(Object... data) {
-        Block theBlock = asBlock(data, 0);
-        int theMeta = asInt(data, 1);
+        Block theBlock = (Block) data[0];
+        int theMeta = (Integer) data[1];
         boolean doesMatch = false;
         if (!oreDictionary.equals("IGNORE")) {
         	ItemStack stack = BlockActionHelper.getStackFromBlockData(theBlock, theMeta);
@@ -106,7 +88,7 @@ public abstract class TriggerBaseBlock extends TriggerBaseCounter implements IIt
     }
 
     @Override
-    public Result clicked() {
+    public Result onClicked(int mouseX, int mouseY) {
         if (mouseX <= 94 && mouseX >= 1) {
             if (mouseY >= 17 && mouseY <= 25) SelectTextEdit.INSTANCE.select(oreEdit);
             if (mouseY > 25 && mouseY <= 33) SelectTextEdit.INSTANCE.select(amountEdit);
@@ -119,23 +101,23 @@ public abstract class TriggerBaseBlock extends TriggerBaseCounter implements IIt
     }
 
     @Override
-    public void draw() {
-        drawStack(stack, 35, 43, 1.7F);
+    public void draw(int mouseX, int mouseY) {
+        DrawHelper.triggerDraw.drawStack(stack, 35, 43, 1.7F);
 
-        int color = theme.optionsFontColor;
-        int amountColor = theme.optionsFontColor;
-        int match2Color = theme.optionsFontColor;
+        int color = Theme.INSTANCE.optionsFontColor;
+        int amountColor = Theme.INSTANCE.optionsFontColor;
+        int match2Color = Theme.INSTANCE.optionsFontColor;
         if (ClientHelper.canEdit()) {
             if (mouseX <= 94 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 25) color = theme.optionsFontColorHover;
-                if (mouseY > 25 && mouseY <= 33) amountColor = theme.optionsFontColorHover;
-                if (mouseY > 34 && mouseY <= 41) match2Color = theme.optionsFontColorHover;
+                if (mouseY >= 17 && mouseY <= 25) color = Theme.INSTANCE.optionsFontColorHover;
+                if (mouseY > 25 && mouseY <= 33) amountColor = Theme.INSTANCE.optionsFontColorHover;
+                if (mouseY > 34 && mouseY <= 41) match2Color = Theme.INSTANCE.optionsFontColorHover;
             }
         }
 
-        drawText("name: " + oreEdit, 4, 18, color);
-        drawText("amount: " + amountEdit, 4, 26, amountColor);
-        drawText("matchDamage: " + matchDamage, 4, 34, match2Color);
+        DrawHelper.triggerDraw.drawText("name: " + oreEdit, 4, 18, color);
+        DrawHelper.triggerDraw.drawText("amount: " + amountEdit, 4, 26, amountColor);
+        DrawHelper.triggerDraw.drawText("matchDamage: " + matchDamage, 4, 34, match2Color);
     }
 
     @Override
@@ -159,10 +141,5 @@ public abstract class TriggerBaseBlock extends TriggerBaseCounter implements IIt
     @Override
     public ItemStack getItemStack() {
         return stack;
-    }
-
-    @Override
-    public int getAmountRequired() {
-        return amount;
     }
 }

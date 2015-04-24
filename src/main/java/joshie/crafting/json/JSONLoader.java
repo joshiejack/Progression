@@ -10,13 +10,13 @@ import java.util.HashSet;
 import java.util.List;
 
 import joshie.crafting.CraftAPIRegistry;
-import joshie.crafting.Criteria;
 import joshie.crafting.CraftingMod;
+import joshie.crafting.Criteria;
+import joshie.crafting.Trigger;
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ICondition;
 import joshie.crafting.api.IReward;
 import joshie.crafting.api.ITab;
-import joshie.crafting.api.ITrigger;
 import joshie.crafting.api.crafting.CraftingEvent.CraftingType;
 import joshie.crafting.helpers.StackHelper;
 import joshie.crafting.lib.CraftingInfo;
@@ -130,10 +130,10 @@ public class JSONLoader {
                     throw new ConditionNotFoundException(criteria.uniqueName);
                 }
 
-                ITrigger[] triggerz = new ITrigger[criteria.triggers.size()];
+                Trigger[] triggerz = new Trigger[criteria.triggers.size()];
                 for (int j = 0; j < triggerz.length; j++) {
                     DataTrigger trigger = criteria.triggers.get(j);
-                    ITrigger iTrigger = CraftingAPI.registry.newTrigger(theCriteria, trigger.type, trigger.data);
+                    Trigger iTrigger = CraftingAPI.registry.newTrigger(theCriteria, trigger.type, trigger.data);
                     ICondition[] conditionz = new ICondition[trigger.conditions.size()];
                     for (int i = 0; i < conditionz.length; i++) {
                         DataGeneric condition = trigger.conditions.get(i);
@@ -235,14 +235,14 @@ public class JSONLoader {
                 data.displayName = c.getDisplayName();
                 data.uniqueName = c.getUniqueName();
                 data.displayStack = StackHelper.getStringFromStack(c.getIcon());
-                List<ITrigger> triggers = c.getTriggers();
+                List<Trigger> triggers = c.getTriggers();
                 List<IReward> rewards = c.getRewards();
                 List<Criteria> prereqs = c.getRequirements();
                 List<Criteria> conflicts = c.getConflicts();
 
                 ArrayList<DataTrigger> theTriggers = new ArrayList();
                 ArrayList<DataGeneric> theRewards = new ArrayList();
-                for (ITrigger trigger : c.getTriggers()) {
+                for (Trigger trigger : c.getTriggers()) {
                     ArrayList<DataGeneric> theConditions = new ArrayList();
                     for (ICondition condition : trigger.getConditions()) {
                         JsonObject object = new JsonObject();
@@ -256,8 +256,8 @@ public class JSONLoader {
                     }
 
                     JsonObject triggerData = new JsonObject();
-                    trigger.serialize(triggerData);
-                    DataTrigger dTrigger = new DataTrigger(trigger.getTypeName(), triggerData, theConditions);
+                    trigger.getType().writeToJSON(triggerData);
+                    DataTrigger dTrigger = new DataTrigger(trigger.getType().getUnlocalisedName(), triggerData, theConditions);
                     theTriggers.add(dTrigger);
                 }
 

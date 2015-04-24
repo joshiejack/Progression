@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import joshie.crafting.Criteria;
+import joshie.crafting.Trigger;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.eventhandler.Event.Result;
@@ -32,7 +33,7 @@ public interface ICondition extends IConditionType {
 
     public Result onClicked();
 
-    public ICondition setTrigger(ITrigger trigger);
+    public ICondition setTrigger(Trigger trigger);
 
     public void addToolTip(List<String> toolTip);
 }

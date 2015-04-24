@@ -1,10 +1,10 @@
 package joshie.crafting.trigger;
 
-import java.util.List;
+import java.util.UUID;
 
 import joshie.crafting.api.Bus;
 import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.api.ITrigger;
+import joshie.crafting.api.DrawHelper;
 import joshie.crafting.api.ITriggerData;
 import joshie.crafting.gui.IItemSelectable;
 import joshie.crafting.gui.SelectItemOverlay;
@@ -12,7 +12,8 @@ import joshie.crafting.gui.SelectItemOverlay.Type;
 import joshie.crafting.gui.SelectTextEdit;
 import joshie.crafting.gui.SelectTextEdit.ITextEditable;
 import joshie.crafting.helpers.ClientHelper;
-import joshie.crafting.helpers.StackHelper;
+import joshie.crafting.helpers.JSONHelper;
+import joshie.crafting.json.Theme;
 import joshie.crafting.trigger.data.DataCrafting;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -32,16 +33,11 @@ public class TriggerObtain extends TriggerBase implements IItemSelectable, IText
     public boolean consume = false;
 
     public TriggerObtain() {
-        super("Obtain", theme.triggerObtain, "obtain");
+        super("obtain", 0xFFFFFF00, "crafting");
     }
 
     @Override
-    public ITrigger newInstance() {
-        return new TriggerObtain();
-    }
-
-    @Override
-    public Bus[] getEventBuses() {
+    public Bus[] getEventBusTypes() {
         return new Bus[] { Bus.FML, Bus.FORGE };
     }
 
@@ -50,45 +46,26 @@ public class TriggerObtain extends TriggerBase implements IItemSelectable, IText
         for (int i = 0; i < event.entityPlayer.inventory.mainInventory.length; i++) {
             ItemStack stack = event.entityPlayer.inventory.mainInventory[i];
             if (stack == null && event.canInteractWith) continue;
-            CraftingAPI.registry.fireTrigger(event.entityPlayer, getTypeName(), stack, event.entityPlayer, i);
+            CraftingAPI.registry.fireTrigger(event.entityPlayer, getUnlocalisedName(), stack, event.entityPlayer, i);
         }
+    }
+    
+    @Override
+    public void readFromJSON(JsonObject data) {
+        stack = JSONHelper.getItemStack(data, "item", new ItemStack(Blocks.crafting_table));
+        matchDamage = JSONHelper.getBoolean(data, "matchDamage", matchDamage);
+        matchNBT = JSONHelper.getBoolean(data, "matchNBT", matchNBT);
+        itemAmount = JSONHelper.getInteger(data, "itemAmount", itemAmount);
+        consume = JSONHelper.getBoolean(data, "consume", consume);
     }
 
     @Override
-    public ITrigger deserialize(JsonObject data) {
-        TriggerObtain trigger = new TriggerObtain();
-        trigger.stack = StackHelper.getStackFromString(data.get("item").getAsString());
-        if (data.get("matchDamage") != null) {
-            trigger.matchDamage = data.get("matchDamage").getAsBoolean();
-        }
-
-        if (data.get("matchNBT") != null) {
-            trigger.matchNBT = data.get("matchNBT").getAsBoolean();
-        }
-
-        if (data.get("itemAmount") != null) {
-            trigger.itemAmount = data.get("itemAmount").getAsInt();
-        }
-
-        if (data.get("consume") != null) {
-            trigger.consume = data.get("consume").getAsBoolean();
-        }
-
-        return trigger;
-    }
-
-    @Override
-    public void serialize(JsonObject data) {
-        data.addProperty("item", StackHelper.getStringFromStack(stack));
-        if (matchDamage != true) data.addProperty("matchDamage", matchDamage);
-        if (matchNBT != false) data.addProperty("matchNBT", matchNBT);
-        if (itemAmount != 1) data.addProperty("itemAmount", itemAmount);
-        if (consume != false) data.addProperty("consume", consume);
-    }
-
-    @Override
-    public ITriggerData newData() {
-        return new DataCrafting();
+    public void writeToJSON(JsonObject data) {
+        JSONHelper.setItemStack(data, "item", stack);
+        JSONHelper.setBoolean(data, "matchDamage", matchDamage, true);
+        JSONHelper.setBoolean(data, "matchNBT", matchNBT, false);
+        JSONHelper.setInteger(data, "itemAmount", itemAmount, 1);
+        JSONHelper.setBoolean(data, "consume", consume, false);
     }
 
     @Override
@@ -98,9 +75,9 @@ public class TriggerObtain extends TriggerBase implements IItemSelectable, IText
     }
 
     @Override
-    public void onFired(ITriggerData existing, Object... additional) {
+    public void onFired(UUID uuid, ITriggerData existing, Object... additional) {
         DataCrafting data = (DataCrafting) existing;
-        ItemStack crafted = asStack(additional);
+        ItemStack crafted = (ItemStack)additional[0];
         if (stack.getItem() == crafted.getItem()) {
             if (matchDamage && stack.getItemDamage() != crafted.getItemDamage()) return;
             if (matchNBT && stack.getTagCompound() != crafted.getTagCompound()) return;
@@ -109,14 +86,14 @@ public class TriggerObtain extends TriggerBase implements IItemSelectable, IText
 
             if (consume) {
                 EntityPlayer player = (EntityPlayer) additional[1];
-                int slot = asInt(additional, 2);
+                int slot = (Integer) additional[2];
                 player.inventory.decrStackSize(slot, stack.stackSize);
             }
         }
     }
 
     @Override
-    public Result clicked() {
+    public Result onClicked(int mouseX, int mouseY) {
         if (mouseX >= 77 && mouseX <= 100) {
             if (mouseY >= 43 && mouseY <= 68) {
                 SelectItemOverlay.INSTANCE.select(this, Type.TRIGGER);
@@ -136,25 +113,25 @@ public class TriggerObtain extends TriggerBase implements IItemSelectable, IText
     }
 
     @Override
-    public void draw() {
-        drawStack(stack, 76, 44, 1.4F);
-        int typeColor = theme.optionsFontColor;
-        int matchColor = theme.optionsFontColor;
-        int match2Color = theme.optionsFontColor;
-        int consumeColor = theme.optionsFontColor;
+    public void draw(int mouseX, int mouseY) {
+        DrawHelper.triggerDraw.drawStack(stack, 76, 44, 1.4F);
+        int typeColor = Theme.INSTANCE.optionsFontColor;
+        int matchColor = Theme.INSTANCE.optionsFontColor;
+        int match2Color = Theme.INSTANCE.optionsFontColor;
+        int consumeColor = Theme.INSTANCE.optionsFontColor;
         if (ClientHelper.canEdit()) {
             if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 25) typeColor = theme.optionsFontColorHover;
-                if (mouseY > 25 && mouseY <= 33) matchColor = theme.optionsFontColorHover;
-                if (mouseY > 34 && mouseY <= 41) match2Color = theme.optionsFontColorHover;
-                if (mouseY > 42 && mouseY <= 50) consumeColor = theme.optionsFontColorHover;
+                if (mouseY >= 17 && mouseY <= 25) typeColor = Theme.INSTANCE.optionsFontColorHover;
+                if (mouseY > 25 && mouseY <= 33) matchColor = Theme.INSTANCE.optionsFontColorHover;
+                if (mouseY > 34 && mouseY <= 41) match2Color = Theme.INSTANCE.optionsFontColorHover;
+                if (mouseY > 42 && mouseY <= 50) consumeColor = Theme.INSTANCE.optionsFontColorHover;
             }
         }
 
-        drawText("matchDamage: " + matchDamage, 4, 18, typeColor);
-        drawText("matchNBT: " + matchNBT, 4, 26, matchColor);
-        drawText("itemAmount: " + SelectTextEdit.INSTANCE.getText(this), 4, 34, match2Color);
-        drawText("consume: " + consume, 4, 42, consumeColor);
+        DrawHelper.triggerDraw.drawText("matchDamage: " + matchDamage, 4, 18, typeColor);
+        DrawHelper.triggerDraw.drawText("matchNBT: " + matchNBT, 4, 26, matchColor);
+        DrawHelper.triggerDraw.drawText("itemAmount: " + SelectTextEdit.INSTANCE.getText(this), 4, 34, match2Color);
+        DrawHelper.triggerDraw.drawText("consume: " + consume, 4, 42, consumeColor);
     }
 
     private String textField;
@@ -183,10 +160,5 @@ public class TriggerObtain extends TriggerBase implements IItemSelectable, IText
     @Override
     public void setItemStack(ItemStack stack) {
         this.stack = stack;
-    }
-
-    @Override
-    public void addTooltip(List<String> toolTip) {
-        toolTip.add("Obtain " + itemAmount + " " + stack.getDisplayName());
     }
 }

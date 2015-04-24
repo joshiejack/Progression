@@ -1,12 +1,12 @@
 package joshie.crafting.trigger;
 
-import java.util.List;
-
 import joshie.crafting.api.Bus;
 import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.api.ITrigger;
+import joshie.crafting.api.DrawHelper;
 import joshie.crafting.gui.TextFieldHelper.IntegerFieldHelper;
 import joshie.crafting.helpers.ClientHelper;
+import joshie.crafting.helpers.JSONHelper;
+import joshie.crafting.json.Theme;
 
 import com.google.gson.JsonObject;
 
@@ -26,68 +26,42 @@ public class TriggerChangeDimension extends TriggerBaseCounter {
     public int to = -1;
 
     public TriggerChangeDimension() {
-        super("Change Dimension", theme.triggerChangeDimension, "changeDimension");
+        super("changeDimension", 0xFF000000);
         amountEdit = new IntegerFieldHelper("amount", this);
         fromEdit = new IntegerFieldHelper("from", this);
         toEdit = new IntegerFieldHelper("to", this);
     }
 
     @Override
-    public ITrigger newInstance() {
-        return new TriggerChangeDimension();
-    }
-
-    @Override
-    public Bus getBusType() {
+    public Bus getEventBus() {
         return Bus.FML;
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onEvent(PlayerChangedDimensionEvent event) {
-        CraftingAPI.registry.fireTrigger(event.player, getTypeName(), event.fromDim, event.toDim);
+        CraftingAPI.registry.fireTrigger(event.player, getUnlocalisedName(), event.fromDim, event.toDim);
     }
 
     @Override
-    public ITrigger deserialize(JsonObject data) {
-        TriggerChangeDimension trigger = new TriggerChangeDimension();
-        if (data.get("amount") != null) {
-            trigger.amount = data.get("amount").getAsInt();
-        }
-
-        trigger.checkFrom = false;
-        if (data.get("from") != null) {
-            trigger.checkFrom = true;
-            trigger.from = data.get("from").getAsInt();
-        }
-
-        trigger.checkTo = false;
-        if (data.get("to") != null) {
-            trigger.checkTo = true;
-            trigger.to = data.get("to").getAsInt();
-        }
-
-        return trigger;
+    public void readFromJSON(JsonObject data) {
+        super.readFromJSON(data);
+        checkFrom = JSONHelper.getExists(data, "from");
+        from = JSONHelper.getInteger(data, "from", from);
+        checkTo = JSONHelper.getExists(data, "to");
+        to = JSONHelper.getInteger(data, "to", to);
     }
 
     @Override
-    public void serialize(JsonObject data) {
-        if (amount != 1) {
-            data.addProperty("amount", amount);
-        }
-
-        if (checkFrom) {
-            data.addProperty("from", from);
-        }
-
-        if (checkTo) {
-            data.addProperty("to", to);
-        }
+    public void writeToJSON(JsonObject data) {
+        super.writeToJSON(data);
+        if (checkFrom) JSONHelper.setInteger(data, "from", from, -5000);
+        if (checkTo) JSONHelper.setInteger(data, "to", to, -5000);
     }
 
     @Override
     protected boolean canIncrease(Object... data) {
-        int fromDim = asInt(data);
-        int toDim = asInt(data, 1);
+        int fromDim = (Integer) data[0];
+        int toDim = (Integer) data[1];
         if (checkFrom) {
             if (from != fromDim) return false;
         }
@@ -100,7 +74,7 @@ public class TriggerChangeDimension extends TriggerBaseCounter {
     }
 
     @Override
-    public Result clicked() {
+    public Result onClicked(int mouseX, int mouseY) {
         if (mouseX <= 94 && mouseX >= 1) {
             if (mouseY >= 17 && mouseY <= 24) amountEdit.select();
             if (mouseY >= 25 && mouseY <= 33) checkFrom = !checkFrom;
@@ -114,42 +88,26 @@ public class TriggerChangeDimension extends TriggerBaseCounter {
     }
 
     @Override
-    public void draw() {
-        int colorEdit = theme.optionsFontColor;
-        int colorCheckFrom = theme.optionsFontColor;
-        int colorFromEdit = theme.optionsFontColor;
-        int colorCheckTo = theme.optionsFontColor;
-        int colorToEdit = theme.optionsFontColor;
+    public void draw(int mouseX, int mouseY) {
+        int colorEdit = Theme.INSTANCE.optionsFontColor;
+        int colorCheckFrom = Theme.INSTANCE.optionsFontColor;
+        int colorFromEdit = Theme.INSTANCE.optionsFontColor;
+        int colorCheckTo = Theme.INSTANCE.optionsFontColor;
+        int colorToEdit = Theme.INSTANCE.optionsFontColor;
         if (ClientHelper.canEdit()) {
             if (mouseX <= 94 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 24) colorEdit = theme.optionsFontColorHover;
-                if (mouseY >= 25 && mouseY <= 33) colorCheckFrom = theme.optionsFontColorHover;
-                if (mouseY >= 34 && mouseY <= 41) colorFromEdit = theme.optionsFontColorHover;
-                if (mouseY >= 42 && mouseY <= 50) colorCheckTo = theme.optionsFontColorHover;
-                if (mouseY >= 51 && mouseY <= 59) colorToEdit = theme.optionsFontColorHover;
+                if (mouseY >= 17 && mouseY <= 24) colorEdit = Theme.INSTANCE.optionsFontColorHover;
+                if (mouseY >= 25 && mouseY <= 33) colorCheckFrom = Theme.INSTANCE.optionsFontColorHover;
+                if (mouseY >= 34 && mouseY <= 41) colorFromEdit = Theme.INSTANCE.optionsFontColorHover;
+                if (mouseY >= 42 && mouseY <= 50) colorCheckTo = Theme.INSTANCE.optionsFontColorHover;
+                if (mouseY >= 51 && mouseY <= 59) colorToEdit = Theme.INSTANCE.optionsFontColorHover;
             }
         }
 
-        drawText("times: " + amountEdit, 4, 18, colorEdit);
-        drawText("checkFrom: " + checkFrom, 4, 26, colorCheckFrom);
-        drawText("from: " + fromEdit, 4, 34, colorFromEdit);
-        drawText("checkTo: " + checkTo, 4, 42, colorCheckTo);
-        drawText("to: " + toEdit, 4, 51, colorToEdit);
-    }
-
-    @Override
-    public int getAmountRequired() {
-        return amount;
-    }
-
-    @Override
-    public void addTooltip(List<String> toolTip) {
-        if (checkFrom && !checkTo) {
-            toolTip.add("Change from Dimension " + from + ", " + amount + " times");
-        } else if (checkTo && !checkFrom) {
-            toolTip.add("Change to Dimension " + to + ", " + amount + " times");
-        } else if (checkTo && checkFrom) {
-            toolTip.add("Change to Dimension " + to + " from Dimension + " + from + " , " + amount + " times");
-        }
+        DrawHelper.triggerDraw.drawText("times: " + amountEdit, 4, 18, colorEdit);
+        DrawHelper.triggerDraw.drawText("checkFrom: " + checkFrom, 4, 26, colorCheckFrom);
+        DrawHelper.triggerDraw.drawText("from: " + fromEdit, 4, 34, colorFromEdit);
+        DrawHelper.triggerDraw.drawText("checkTo: " + checkTo, 4, 42, colorCheckTo);
+        DrawHelper.triggerDraw.drawText("to: " + toEdit, 4, 51, colorToEdit);
     }
 }

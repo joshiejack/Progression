@@ -1,18 +1,18 @@
 package joshie.crafting.gui;
 
 import joshie.crafting.CraftAPIRegistry;
+import joshie.crafting.Trigger;
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.IConditionType;
-import joshie.crafting.api.ITrigger;
 import net.minecraft.item.ItemStack;
 
 import org.lwjgl.opengl.GL11;
 
 public class NewCondition extends OverlayBase {
     public static NewCondition INSTANCE = new NewCondition();
-    private static ITrigger trigger = null;
+    private static Trigger trigger = null;
 
-    public void select(ITrigger trigger) {
+    public void select(Trigger trigger) {
         if (reset()) {
             NewCondition.trigger = trigger;
         }
