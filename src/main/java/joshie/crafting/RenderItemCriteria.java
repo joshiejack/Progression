@@ -2,7 +2,6 @@ package joshie.crafting;
 
 import java.awt.Color;
 
-import joshie.crafting.api.ICriteria;
 import joshie.crafting.helpers.ClientHelper;
 import joshie.crafting.helpers.RenderItemHelper;
 import net.minecraft.block.Block;
@@ -33,7 +32,7 @@ public class RenderItemCriteria implements IItemRenderer {
 
     @Override
     public void renderItem(ItemRenderType type, ItemStack stack2, Object... data) {
-        ICriteria criteria = ItemCriteria.getCriteriaFromStack(stack2);
+        Criteria criteria = ItemCriteria.getCriteriaFromStack(stack2);
         if (criteria != null) {
             ItemStack stack = criteria.getIcon();
             if (type == ItemRenderType.INVENTORY) {

@@ -3,6 +3,7 @@ package joshie.crafting.api;
 import java.util.Collection;
 import java.util.UUID;
 
+import joshie.crafting.Criteria;
 import net.minecraft.entity.player.EntityPlayer;
 
 import com.google.gson.JsonObject;
@@ -19,13 +20,13 @@ public interface IRegistry {
 	public boolean fireTrigger(EntityPlayer player, String trigger, Object... data);
 	
 	/** Returns a criteria based on the name **/
-	public ICriteria getCriteriaFromName(String name);
+	public Criteria getCriteriaFromName(String name);
 	
 	/** Returns a tab based on the name **/
 	public ITab getTabFromName(String name);
 
 	/** Creates a new condition **/
-	public ICondition newCondition(ICriteria criteria, String type, JsonObject data);
+	public ICondition newCondition(Criteria criteria, String type, JsonObject data);
 	
 	/** Returns a trigger with the settings, type and data can be null
 	 *  If you want to just pull from the unique name, but you'd have to
@@ -33,25 +34,25 @@ public interface IRegistry {
 	 *  @param      the criteria 
 	 *  @param		the trigger type
 	 *  @param		the data for the trigger **/
-	public ITrigger newTrigger(ICriteria criteria, String type, JsonObject data);
+	public ITrigger newTrigger(Criteria criteria, String type, JsonObject data);
 	
 	/** Creates a fresh trigger **/
-    public ITrigger cloneTrigger(ICriteria criteria, ITriggerType trigger);
+    public ITrigger cloneTrigger(Criteria criteria, ITriggerType trigger);
 		
 	/** Returns a new reward
 	 *  @param		the reward type
 	 *  @param		the data for the trigger **/
-	public IReward newReward(ICriteria criteria, String type, JsonObject data);
+	public IReward newReward(Criteria criteria, String type, JsonObject data);
 	
 	/** Creates a fresh reward **/
-	public IReward cloneReward(ICriteria criteria, IRewardType reward);
+	public IReward cloneReward(Criteria criteria, IRewardType reward);
 
 	/** Creates a clone of this condition, and attaches it to the trigger **/
     public ICondition cloneCondition(ITrigger trigger, IConditionType condition);
 
 	/** Returns a new criteria 
 	 * @param tab **/
-	public ICriteria newCriteria(ITab tab, String string);
+	public Criteria newCriteria(ITab tab, String string);
 	
 	/** Returns a new tab **/
     public ITab newTab(String uniqueName);
@@ -66,5 +67,8 @@ public interface IRegistry {
 	public IRewardType registerRewardType(IRewardType reward);
 
 	/** Returns a list of all the criteria **/
-	public Collection<ICriteria> getCriteria();
+	public Collection<Criteria> getCriteria();
+
+	/** Creates a new data type based on the passed in string **/
+    public ITriggerData newData(String string);
 }

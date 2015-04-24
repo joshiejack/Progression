@@ -6,8 +6,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import joshie.crafting.CraftAPIRegistry;
+import joshie.crafting.Criteria;
 import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.ITab;
 import joshie.crafting.api.ITreeEditor;
 import joshie.crafting.helpers.ClientHelper;
@@ -94,11 +94,11 @@ public class GuiTreeEditor extends GuiBase {
     @Override
     public void drawForeground() {
         if (currentTab == null) initGui();
-        for (ICriteria criteria : currentTab.getCriteria()) {
+        for (Criteria criteria : currentTab.getCriteria()) {
             if (criteria.getTreeEditor().isCriteriaVisible() || ClientHelper.canEdit()) {
                 ITreeEditor editor = criteria.getTreeEditor();
-                List<ICriteria> prereqs = criteria.getRequirements();
-                for (ICriteria p : prereqs) {
+                List<Criteria> prereqs = criteria.getRequirements();
+                for (Criteria p : prereqs) {
                     int y1 = p.getTreeEditor().getY();
                     int y2 = editor.getY();
                     int x1 = p.getTreeEditor().getX();
@@ -121,7 +121,7 @@ public class GuiTreeEditor extends GuiBase {
         }
 
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-        for (ICriteria criteria : currentTab.getCriteria()) {
+        for (Criteria criteria : currentTab.getCriteria()) {
             if (criteria.getTreeEditor().isCriteriaVisible() || ClientHelper.canEdit()) {
                 ITreeEditor editor = criteria.getTreeEditor();
                 editor.draw(0, y, offsetX);
@@ -135,8 +135,8 @@ public class GuiTreeEditor extends GuiBase {
 
     @Override
     protected void keyTyped(char character, int key) {
-        ICriteria toRemove = null;
-        for (ICriteria criteria : currentTab.getCriteria()) {
+        Criteria toRemove = null;
+        for (Criteria criteria : currentTab.getCriteria()) {
             if (criteria.getTreeEditor().isCriteriaVisible() || ClientHelper.canEdit()) {
                 if (criteria.getTreeEditor().keyTyped(character, key)) {
                     toRemove = criteria;
@@ -170,14 +170,14 @@ public class GuiTreeEditor extends GuiBase {
 
     @Override
     public void mouseMovedOrUp(int x, int y, int button) {
-        for (ICriteria criteria : currentTab.getCriteria()) {
+        for (Criteria criteria : currentTab.getCriteria()) {
             criteria.getTreeEditor().release(mouseX, mouseY);
         }
     }
 
     private long lastClick;
     private int lastType;
-    ICriteria lastClicked = null;
+    Criteria lastClicked = null;
 
     @Override
     protected void mouseClicked(int par1, int par2, int par3) {
@@ -195,7 +195,7 @@ public class GuiTreeEditor extends GuiBase {
 
         super.mouseClicked(par1, par2, par3);
         boolean clicked = false;
-        for (ICriteria criteria : currentTab.getCriteria()) {
+        for (Criteria criteria : currentTab.getCriteria()) {
             if (criteria.getTreeEditor().isCriteriaVisible() || ClientHelper.canEdit()) {
                 if (criteria.getTreeEditor().click(mouseX, mouseY, isDoubleClick)) {
                     if (!clicked) {
@@ -209,7 +209,7 @@ public class GuiTreeEditor extends GuiBase {
     @Override
     public void handleMouseInput() {
         super.handleMouseInput();
-        for (ICriteria criteria : currentTab.getCriteria()) {
+        for (Criteria criteria : currentTab.getCriteria()) {
             criteria.getTreeEditor().follow(mouseX, mouseY);
             int wheel = Mouse.getDWheel();
             if (wheel != 0) {

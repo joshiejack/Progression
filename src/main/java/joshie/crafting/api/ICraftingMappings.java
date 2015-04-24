@@ -1,9 +1,9 @@
 package joshie.crafting.api;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
+import joshie.crafting.Criteria;
 import joshie.crafting.network.PacketSyncTriggers.SyncPair;
 import net.minecraft.entity.player.EntityPlayerMP;
 
@@ -15,10 +15,10 @@ public interface ICraftingMappings {
 	/** Called whenever a server starts, or a player joins **/
 	public void remap();
 
-	public void markCriteriaAsCompleted(boolean overwrite, Integer[] values, ICriteria... criteria);
+	public void markCriteriaAsCompleted(boolean overwrite, Integer[] values, Criteria... criteria);
 	public void markTriggerAsCompleted(boolean overwrite, SyncPair[] pair);
 
-	public HashMap<ICriteria, Integer> getCompletedCriteria();
+	public HashMap<Criteria, Integer> getCompletedCriteria();
 	public Set<ITrigger> getCompletedTriggers();
 
 	public void syncToClient(EntityPlayerMP player);

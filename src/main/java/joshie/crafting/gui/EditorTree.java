@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import joshie.crafting.Criteria;
 import joshie.crafting.CraftingMod;
 import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.IReward;
 import joshie.crafting.api.ITreeEditor;
 import joshie.crafting.helpers.ClientHelper;
@@ -24,7 +24,7 @@ import org.lwjgl.opengl.GL11;
 public class EditorTree implements ITreeEditor {
     private static final ResourceLocation textures = new ResourceLocation("crafting", "textures/gui/textures.png");
     private static final GuiTreeEditor gui = GuiTreeEditor.INSTANCE;
-    private final ICriteria criteria;
+    private final Criteria criteria;
     private boolean isSelected;
     private boolean isHeld;
     private int prevX;
@@ -39,7 +39,7 @@ public class EditorTree implements ITreeEditor {
     private int x;
     private int y;
 
-    public EditorTree(ICriteria criteria) {
+    public EditorTree(Criteria criteria) {
         this.criteria = criteria;
     }
 
@@ -98,16 +98,16 @@ public class EditorTree implements ITreeEditor {
         else return CraftingAPI.players.getClientPlayer().getMappings().getCompletedCriteria().keySet().containsAll(criteria.getRequirements());
     }
 
-    public boolean isCriteriaCompleteable(ICriteria criteria) {
-        HashMap<ICriteria, Integer> completedMap = CraftingAPI.players.getClientPlayer().getMappings().getCompletedCriteria();
+    public boolean isCriteriaCompleteable(Criteria criteria) {
+        HashMap<Criteria, Integer> completedMap = CraftingAPI.players.getClientPlayer().getMappings().getCompletedCriteria();
         boolean completeable = true;
         //Check the conflicts of this criteria
-        for (ICriteria conflicts : criteria.getConflicts()) {
+        for (Criteria conflicts : criteria.getConflicts()) {
             if (completedMap.containsKey(conflicts)) return false;
         }
 
         //Check the requirements, if they aren't completable return false
-        for (ICriteria requirements : criteria.getRequirements()) {
+        for (Criteria requirements : criteria.getRequirements()) {
             if (!isCriteriaCompleteable(requirements)) return false;
         }
 
@@ -120,12 +120,12 @@ public class EditorTree implements ITreeEditor {
         if (highlight != 0) {
             GuiTreeEditor.INSTANCE.drawRectWithBorder(x + left, y + top, x + right, y + bottom, Theme.INSTANCE.invisible, highlight);
         } else {
-            HashMap<ICriteria, Integer> completedMap = CraftingAPI.players.getClientPlayer().getMappings().getCompletedCriteria();
+            HashMap<Criteria, Integer> completedMap = CraftingAPI.players.getClientPlayer().getMappings().getCompletedCriteria();
             boolean isCompleted = completedMap.containsKey(criteria);
             boolean anyConflicts = false;
             boolean allRequires = false;
             int requires = 0;
-            for (ICriteria c : criteria.getConflicts()) {
+            for (Criteria c : criteria.getConflicts()) {
                 if (completedMap.containsKey(c)) {
                     anyConflicts = true;
                     break;
@@ -133,7 +133,7 @@ public class EditorTree implements ITreeEditor {
             }
 
             if (!anyConflicts) {
-                for (ICriteria c : criteria.getRequirements()) {
+                for (Criteria c : criteria.getRequirements()) {
                     if (completedMap.containsKey(c)) {
                         requires++;
                     }
@@ -162,7 +162,7 @@ public class EditorTree implements ITreeEditor {
             }
 
             if (isSelected) textureY = 100;
-            ICriteria selected = GuiTreeEditor.INSTANCE.lastClicked;
+            Criteria selected = GuiTreeEditor.INSTANCE.lastClicked;
             if (!isCompleted) {
                 if (!isCriteriaCompleteable(criteria)) {
                     textureY = 75;
@@ -253,7 +253,7 @@ public class EditorTree implements ITreeEditor {
         GuiTreeEditor.INSTANCE.previous = criteria;
     }
 
-    private ICriteria getPrevious() {
+    private Criteria getPrevious() {
         return GuiTreeEditor.INSTANCE.previous;
     }
 
@@ -261,10 +261,10 @@ public class EditorTree implements ITreeEditor {
         return x >= left && x <= right && y >= top && y <= bottom;
     }
 
-    private void remove(List<ICriteria> list, ICriteria criteria) {
-        Iterator<ICriteria> it = list.iterator();
+    private void remove(List<Criteria> list, Criteria criteria) {
+        Iterator<Criteria> it = list.iterator();
         while (it.hasNext()) {
-            ICriteria c = it.next();
+            Criteria c = it.next();
             if (c.equals(criteria)) {
                 it.remove();
                 break;
@@ -285,9 +285,9 @@ public class EditorTree implements ITreeEditor {
     public boolean click(int x, int y, boolean isDouble) {
         if (isOver(x, y)) {
             if (noOtherSelected()) {
-                ICriteria previous = getPrevious();
+                Criteria previous = getPrevious();
                 if (previous != null && ClientHelper.canEdit()) {
-                    List<ICriteria> list = null;
+                    List<Criteria> list = null;
                     boolean isConflict = false;
                     if (GuiScreen.isShiftKeyDown()) {
                         list = previous.getRequirements();

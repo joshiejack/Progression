@@ -3,6 +3,7 @@ package joshie.crafting.api;
 import java.util.List;
 import java.util.UUID;
 
+import joshie.crafting.Criteria;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 
 
@@ -42,10 +43,10 @@ public interface ITrigger extends ITriggerType {
     public Result onClicked();
 
     /** Returns this criteria this trigger is associated with **/
-    public ICriteria getCriteria();
+    public Criteria getCriteria();
     
     /** Sets the criteria **/
-    public ITrigger setCriteria(ICriteria criteria);
+    public ITrigger setCriteria(Criteria criteria);
 
     /** Returns the internal id for this trigger **/
     public int getInternalID();

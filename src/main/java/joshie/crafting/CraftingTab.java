@@ -3,10 +3,8 @@ package joshie.crafting;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.item.ItemStack;
-import joshie.crafting.api.ICriteria;
-import joshie.crafting.api.IHasUniqueName;
 import joshie.crafting.api.ITab;
+import net.minecraft.item.ItemStack;
 
 public class CraftingTab implements ITab {
     private String uniqueName;
@@ -15,7 +13,7 @@ public class CraftingTab implements ITab {
     private ItemStack stack;
     private int sortIndex;
     
-    private List<ICriteria> criteria = new ArrayList();
+    private List<Criteria> criteria = new ArrayList();
     @Override
     public ITab setUniqueName(String unique) {
         this.uniqueName = unique;
@@ -29,8 +27,8 @@ public class CraftingTab implements ITab {
     }
 
     @Override
-    public ITab addCriteria(ICriteria... critera) {        
-        for (ICriteria c: critera) {
+    public ITab addCriteria(Criteria... critera) {        
+        for (Criteria c: critera) {
             criteria.add(c);
         }
         
@@ -66,7 +64,7 @@ public class CraftingTab implements ITab {
     }
     
     @Override
-    public List<ICriteria> getCriteria() {
+    public List<Criteria> getCriteria() {
         return criteria;
     }
 

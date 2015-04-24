@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.UUID;
 
 import joshie.crafting.CraftAPIRegistry;
+import joshie.crafting.Criteria;
 import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.IReward;
 import joshie.crafting.gui.SelectTextEdit;
 import joshie.crafting.gui.SelectTextEdit.ITextEditable;
@@ -21,7 +21,7 @@ import cpw.mods.fml.common.eventhandler.Event.Result;
 public class RewardCriteria extends RewardBase implements ITextEditable {
     private String criteriaID = "";
     private boolean remove = false;
-    private ICriteria criteria = null;
+    private Criteria criteria = null;
 
     public RewardCriteria() {
         super("Give Criteria", theme.rewardCriteria, "criteria");
@@ -49,13 +49,13 @@ public class RewardCriteria extends RewardBase implements ITextEditable {
         if (remove != false) elements.addProperty("remove", remove);
     }
 
-    public ICriteria getCriteria() {
+    public Criteria getAssignedCriteria() {
         return CraftingAPI.registry.getCriteriaFromName(criteriaID);
     }
 
     @Override
     public void reward(UUID uuid) {
-        criteria = getCriteria();
+        criteria = getAssignedCriteria();
         if (criteria == null) return; //Do not give the reward
         if (remove) {
             CraftingAPI.players.getServerPlayer(uuid).getMappings().fireAllTriggers("forced-remove", criteria);
@@ -119,7 +119,7 @@ public class RewardCriteria extends RewardBase implements ITextEditable {
 
         try {
             criteria = null;
-            for (ICriteria c : CraftAPIRegistry.criteria.values()) {
+            for (Criteria c : CraftAPIRegistry.criteria.values()) {
                 String display = c.getDisplayName();
                 if (c.getDisplayName().equals(displayName)) {
                     criteria = c;

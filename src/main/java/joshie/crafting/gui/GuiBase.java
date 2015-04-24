@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import joshie.crafting.api.ICriteria;
+import joshie.crafting.Criteria;
 import joshie.crafting.helpers.ClientHelper;
 import joshie.crafting.json.JSONLoader;
 import joshie.crafting.json.Theme;
@@ -37,8 +37,8 @@ public abstract class GuiBase extends GuiScreen {
     protected int xSize = 430;
     protected int ySize = 240;
     public Theme theme = null;
-    public ICriteria selected = null;
-    public ICriteria previous = null;
+    public Criteria selected = null;
+    public Criteria previous = null;
     public int y;
 
     @Override

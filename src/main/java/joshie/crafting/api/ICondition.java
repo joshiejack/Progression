@@ -3,9 +3,10 @@ package joshie.crafting.api;
 import java.util.List;
 import java.util.UUID;
 
-import cpw.mods.fml.common.eventhandler.Event.Result;
+import joshie.crafting.Criteria;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+import cpw.mods.fml.common.eventhandler.Event.Result;
 
 public interface ICondition extends IConditionType {
 	/** Whether this condition is satisfied for this player
@@ -22,10 +23,10 @@ public interface ICondition extends IConditionType {
 	public boolean isInverted();
 	
 	/** Gets the criteria associated with this reward **/
-    public ICriteria getCriteria();
+    public Criteria getCriteria();
     
     /** Sets the criteria associated with this reward **/
-    public ICondition setCriteria(ICriteria criteria);
+    public ICondition setCriteria(Criteria criteria);
 
     public void draw(int mouseX, int mouseY, int xPos);
 

@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.UUID;
 
 import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.crafting.CraftingEvent.CraftingType;
 import joshie.crafting.crafting.CraftingRegistry;
 import joshie.crafting.helpers.PlayerHelper;
@@ -22,7 +21,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 public class CraftingRemapper {
-    public static Multimap<ICriteria, ICriteria> criteriaToUnlocks; //A list of the critera completing this one unlocks
+    public static Multimap<Criteria, Criteria> criteriaToUnlocks; //A list of the critera completing this one unlocks
     
     //Grabs the json, as a split string and rebuilds it, sends it in parts to the client
     public static void onPlayerConnect(EntityPlayerMP player) {        
@@ -48,12 +47,12 @@ public class CraftingRemapper {
         JSONLoader.loadServerJSON(); //This fills out all the data once again
         
         //Now that mappings have been synced to the client reload the unlocks list
-        Collection<ICriteria> allCriteria = CraftAPIRegistry.criteria.values();
-        for (ICriteria criteria : allCriteria) { //Remap criteria to unlocks
+        Collection<Criteria> allCriteria = CraftAPIRegistry.criteria.values();
+        for (Criteria criteria : allCriteria) { //Remap criteria to unlocks
             //We do not give a damn about whether this is available or not
             //The unlocking of criteria should happen no matter what
-            List<ICriteria> requirements = criteria.getRequirements();
-            for (ICriteria require : requirements) {
+            List<Criteria> requirements = criteria.getRequirements();
+            for (Criteria require : requirements) {
                 criteriaToUnlocks.get(require).add(criteria);
             }
         }
@@ -73,8 +72,8 @@ public class CraftingRemapper {
         CraftingRegistry.conditions = new HashMap(); //Reset all the data in the crafting registry
         CraftingRegistry.usage = new HashMap(); //Reset all the data in the crafting registry
         for (CraftingType type : CraftingType.craftingTypes) {
-            Multimap<SafeStack, ICriteria> conditions = HashMultimap.create();
-            Multimap<SafeStack, ICriteria> usage = HashMultimap.create();
+            Multimap<SafeStack, Criteria> conditions = HashMultimap.create();
+            Multimap<SafeStack, Criteria> usage = HashMultimap.create();
             CraftingRegistry.conditions.put(type, conditions);
             CraftingRegistry.usage.put(type, usage);
         }

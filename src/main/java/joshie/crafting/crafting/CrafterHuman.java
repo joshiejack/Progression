@@ -4,10 +4,10 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.UUID;
 
+import joshie.crafting.Criteria;
 import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.api.ICriteria;
-import joshie.crafting.api.crafting.ICrafter;
 import joshie.crafting.api.crafting.CraftingEvent.CraftingType;
+import joshie.crafting.api.crafting.ICrafter;
 import joshie.crafting.json.Options;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -23,9 +23,9 @@ public class CrafterHuman implements ICrafter {
 
 	@Override
 	public boolean canUseItemForCrafting(CraftingType type, ItemStack stack) {
-		Collection<ICriteria> conditions = CraftingAPI.crafting.getCraftUsageCriteria(type, stack);
+		Collection<Criteria> conditions = CraftingAPI.crafting.getCraftUsageCriteria(type, stack);
 		if (conditions.size() < 1) return !Options.requireUnlockForUsage;
-		Set<ICriteria> completed = CraftingAPI.players.getPlayerData(uuid).getMappings().getCompletedCriteria().keySet();
+		Set<Criteria> completed = CraftingAPI.players.getPlayerData(uuid).getMappings().getCompletedCriteria().keySet();
 		if (completed.containsAll(conditions)) {
 			return true;
 		} else return false;
@@ -33,9 +33,9 @@ public class CrafterHuman implements ICrafter {
 
 	@Override
 	public boolean canCraftItem(CraftingType type, ItemStack stack) {
-		Collection<ICriteria> conditions = CraftingAPI.crafting.getCraftingCriteria(type, stack);
+		Collection<Criteria> conditions = CraftingAPI.crafting.getCraftingCriteria(type, stack);
 		if (conditions.size() < 1) return !Options.requireUnlockForCrafting;
-		Set<ICriteria> completed = CraftingAPI.players.getPlayerData(uuid).getMappings().getCompletedCriteria().keySet();
+		Set<Criteria> completed = CraftingAPI.players.getPlayerData(uuid).getMappings().getCompletedCriteria().keySet();
 		if (completed.containsAll(conditions)) {
 			return true;
 		} else return false;

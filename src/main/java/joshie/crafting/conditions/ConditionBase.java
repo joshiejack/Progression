@@ -1,10 +1,9 @@
 package joshie.crafting.conditions;
 
+import joshie.crafting.Criteria;
 import joshie.crafting.api.ICondition;
-import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.ITrigger;
 import joshie.crafting.gui.GuiTriggerEditor;
-import joshie.crafting.gui.GuiCriteriaEditor;
 import joshie.crafting.gui.SelectTextEdit;
 import joshie.crafting.gui.SelectTextEdit.ITextEditable;
 import joshie.crafting.helpers.ClientHelper;
@@ -18,7 +17,7 @@ public abstract class ConditionBase implements ICondition {
     protected static final Theme theme = Theme.INSTANCE;
     private String typeName;
     protected boolean inverted = false;
-    private ICriteria criteria;
+    private Criteria criteria;
     private ITrigger trigger;
     private String displayName;
     private int color;
@@ -35,13 +34,13 @@ public abstract class ConditionBase implements ICondition {
     }
 
     @Override
-    public ICondition setCriteria(ICriteria criteria) {
+    public ICondition setCriteria(Criteria criteria) {
         this.criteria = criteria;
         return this;
     }
 
     @Override
-    public ICriteria getCriteria() {
+    public Criteria getCriteria() {
         return this.criteria;
     }
 

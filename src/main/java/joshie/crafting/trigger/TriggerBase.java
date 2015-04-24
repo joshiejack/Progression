@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import joshie.crafting.Criteria;
 import joshie.crafting.CraftingMod;
 import joshie.crafting.api.Bus;
 import joshie.crafting.api.ICondition;
 import joshie.crafting.api.IConditionEditor;
-import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.ITrigger;
 import joshie.crafting.api.ITriggerData;
 import joshie.crafting.gui.EditorCondition;
@@ -32,7 +32,7 @@ public abstract class TriggerBase implements ITrigger {
 	private String typeName;
 	private String localised;
 	private int color;
-	private ICriteria criteria;
+	private Criteria criteria;
 	private IConditionEditor editor;
 
 	public TriggerBase(String localised, int color, String typeName) {
@@ -57,13 +57,13 @@ public abstract class TriggerBase implements ITrigger {
 	}
 
 	@Override
-	public ITrigger setCriteria(ICriteria criteria) {
+	public ITrigger setCriteria(Criteria criteria) {
 		this.criteria = criteria;
 		return this;
 	}
 
 	@Override
-	public ICriteria getCriteria() {
+	public Criteria getCriteria() {
 		return this.criteria;
 	}
 
@@ -120,8 +120,7 @@ public abstract class TriggerBase implements ITrigger {
 		onFired(triggerData, data);
 	}
 
-	public void onFired(ITriggerData triggerData, Object... data) {
-	}
+	public void onFired(ITriggerData triggerData, Object... data) {}
 
 	protected int xPosition;
 	protected int mouseX;
@@ -131,26 +130,20 @@ public abstract class TriggerBase implements ITrigger {
 		GuiCriteriaEditor.INSTANCE.drawText(text, xPosition + x, y + 45, color);
 	}
 
-	protected void drawGradient(int x, int y, int width, int height, int color,
-			int color2, int border) {
-		GuiCriteriaEditor.INSTANCE.drawGradient(xPosition + x, y + 45, width,
-				height, color, color2, border);
+	protected void drawGradient(int x, int y, int width, int height, int color, int color2, int border) {
+		GuiCriteriaEditor.INSTANCE.drawGradient(xPosition + x, y + 45, width, height, color, color2, border);
 	}
 
-	protected void drawBox(int x, int y, int width, int height, int color,
-			int border) {
-		GuiCriteriaEditor.INSTANCE.drawBox(xPosition + x, y + 45, width,
-				height, color, border);
+	protected void drawBox(int x, int y, int width, int height, int color, int border) {
+		GuiCriteriaEditor.INSTANCE.drawBox(xPosition + x, y + 45, width, height, color, border);
 	}
 
 	protected void drawStack(ItemStack stack, int x, int y, float scale) {
-		GuiCriteriaEditor.INSTANCE.drawStack(stack, xPosition + x, y + 45,
-				scale);
+		GuiCriteriaEditor.INSTANCE.drawStack(stack, xPosition + x, y + 45, scale);
 	}
 
 	protected void drawTexture(int x, int y, int u, int v, int width, int height) {
-		GuiCriteriaEditor.INSTANCE.drawTexture(xPosition + x, y + 45, u, v,
-				width, height);
+		GuiCriteriaEditor.INSTANCE.drawTexture(xPosition + x, y + 45, u, v, width, height);
 	}
 
 	protected String getText(ITextEditable editable) {

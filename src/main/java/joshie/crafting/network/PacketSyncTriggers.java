@@ -1,8 +1,8 @@
 package joshie.crafting.network;
 
 import io.netty.buffer.ByteBuf;
+import joshie.crafting.Criteria;
 import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.api.ICriteria;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -10,12 +10,12 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class PacketSyncTriggers implements IMessage, IMessageHandler<PacketSyncTriggers, IMessage> {
     public static class SyncPair {
-        public ICriteria criteria;
+        public Criteria criteria;
         public int[] triggers;
 
         public SyncPair() {}
 
-        public SyncPair(ICriteria criteria, int[] triggers) {
+        public SyncPair(Criteria criteria, int[] triggers) {
             this.criteria = criteria;
             this.triggers = triggers;
         }
@@ -46,7 +46,7 @@ public class PacketSyncTriggers implements IMessage, IMessageHandler<PacketSyncT
         this.toSync = toSync;
     }
 
-    public PacketSyncTriggers(ICriteria criteria, int... triggers) {
+    public PacketSyncTriggers(Criteria criteria, int... triggers) {
         this.toSync = new SyncPair[] { new SyncPair(criteria, triggers) };
         this.overwrite = false;
     }

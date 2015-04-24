@@ -1,7 +1,7 @@
 package joshie.crafting.rewards;
 
+import joshie.crafting.Criteria;
 import joshie.crafting.api.Bus;
-import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.IReward;
 import joshie.crafting.gui.GuiCriteriaEditor;
 import joshie.crafting.helpers.ClientHelper;
@@ -16,7 +16,7 @@ public abstract class RewardBase implements IReward {
     private String localised;
     private String typeName;
     private int color;
-    protected ICriteria criteria;
+    protected Criteria criteria;
 
     public RewardBase(String localised, int color, String typeName) {
         this.localised = localised;
@@ -25,13 +25,13 @@ public abstract class RewardBase implements IReward {
     }
 
     @Override
-    public IReward setCriteria(ICriteria criteria) {
+    public IReward setCriteria(Criteria criteria) {
         this.criteria = criteria;
         return this;
     }
 
     @Override
-    public ICriteria getCriteria() {
+    public Criteria getCriteria() {
         return this.criteria;
     }
 

@@ -10,15 +10,19 @@ import java.util.UUID;
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ICondition;
 import joshie.crafting.api.IConditionType;
-import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.IRegistry;
 import joshie.crafting.api.IResearch;
 import joshie.crafting.api.IReward;
 import joshie.crafting.api.IRewardType;
 import joshie.crafting.api.ITab;
 import joshie.crafting.api.ITrigger;
+import joshie.crafting.api.ITriggerData;
+import joshie.crafting.api.ITriggerNew;
 import joshie.crafting.api.ITriggerType;
 import joshie.crafting.helpers.PlayerHelper;
+import joshie.crafting.trigger.data.DataBoolean;
+import joshie.crafting.trigger.data.DataCount;
+import joshie.crafting.trigger.data.DataCrafting;
 import net.minecraft.entity.player.EntityPlayer;
 
 import com.google.gson.JsonObject;
@@ -31,7 +35,7 @@ public class CraftAPIRegistry implements IRegistry {
 
     //These four maps are registries for fetching the various types
     public static HashMap<String, ITab> tabs;
-    public static HashMap<String, ICriteria> criteria;
+    public static HashMap<String, Criteria> criteria;
     public static Set<ITrigger> triggers;
     public static Set<ICondition> conditions;
     public static Set<IReward> rewards;
@@ -69,8 +73,8 @@ public class CraftAPIRegistry implements IRegistry {
     }
 
     @Override
-    public ICriteria newCriteria(ITab tab, String name) {
-        ICriteria condition = new CraftingCriteria().setUniqueName(name).setTab(tab);
+    public Criteria newCriteria(ITab tab, String name) {
+        Criteria condition = new Criteria().setUniqueName(name).setTab(tab);
         tab.addCriteria(condition);
         criteria.put(name, condition);
         return condition;
@@ -84,7 +88,7 @@ public class CraftAPIRegistry implements IRegistry {
     }
 
     @Override
-    public ICondition newCondition(ICriteria criteria, String type, JsonObject data) {
+    public ICondition newCondition(Criteria criteria, String type, JsonObject data) {
         boolean inverted = data.get("inverted") != null ? data.get("inverted").getAsBoolean() : false;
         ICondition condition = conditionTypes.get(type).deserialize(data).setInversion(inverted).setCriteria(criteria);
         conditions.add(condition);
@@ -92,7 +96,7 @@ public class CraftAPIRegistry implements IRegistry {
     }
 
     @Override
-    public ITrigger newTrigger(ICriteria criteria, String type, JsonObject data) {
+    public ITrigger newTrigger(Criteria criteria, String type, JsonObject data) {
         ITrigger trigger = triggerTypes.get(type).deserialize(data).setCriteria(criteria);
         CraftingEventsManager.onTriggerAdded(trigger);
         triggers.add(trigger);
@@ -100,7 +104,7 @@ public class CraftAPIRegistry implements IRegistry {
     }
 
     @Override
-    public IReward newReward(ICriteria criteria, String type, JsonObject data) {
+    public IReward newReward(Criteria criteria, String type, JsonObject data) {
         IReward reward = rewardTypes.get(type).deserialize(data).setCriteria(criteria);
         CraftingEventsManager.onRewardAdded(reward);
         rewards.add(reward);
@@ -108,7 +112,7 @@ public class CraftAPIRegistry implements IRegistry {
     }
 
     @Override
-    public ITrigger cloneTrigger(ICriteria criteria, ITriggerType trigger) {
+    public ITrigger cloneTrigger(Criteria criteria, ITriggerType trigger) {
         ITrigger newTrigger = trigger.newInstance().setCriteria(criteria);
         CraftingEventsManager.onTriggerAdded(newTrigger);
         triggers.add(newTrigger);
@@ -117,7 +121,7 @@ public class CraftAPIRegistry implements IRegistry {
     }
 
     @Override
-    public IReward cloneReward(ICriteria criteria, IRewardType reward) {
+    public IReward cloneReward(Criteria criteria, IRewardType reward) {
         IReward newReward = reward.newInstance().setCriteria(criteria);
         CraftingEventsManager.onRewardAdded(newReward);
         rewards.add(newReward);
@@ -134,7 +138,7 @@ public class CraftAPIRegistry implements IRegistry {
     }
 
     @Override
-    public ICriteria getCriteriaFromName(String name) {
+    public Criteria getCriteriaFromName(String name) {
         return criteria.get(name);
     }
 
@@ -146,7 +150,7 @@ public class CraftAPIRegistry implements IRegistry {
     private static List<IResearch> technologies;
 
     @Override
-    public Collection<ICriteria> getCriteria() {
+    public Collection<Criteria> getCriteria() {
         return criteria.values();
     }
 
@@ -167,7 +171,7 @@ public class CraftAPIRegistry implements IRegistry {
     }
 
     public static void removeTab(ITab tab) {
-        for (ICriteria c: tab.getCriteria()) {
+        for (Criteria c: tab.getCriteria()) {
             removeCriteria(c.getUniqueName(), true);
         }
         
@@ -179,12 +183,12 @@ public class CraftAPIRegistry implements IRegistry {
     }
 
     public static void removeCriteria(String unique, boolean skipTab) {
-        ICriteria c = criteria.get(unique);
+        Criteria c = criteria.get(unique);
         //Remove the criteria from the tab
         if (!skipTab) {
-            Iterator<ICriteria> itC = c.getTabID().getCriteria().iterator();
+            Iterator<Criteria> itC = c.getTabID().getCriteria().iterator();
             while (itC.hasNext()) {
-                ICriteria ic = itC.next();
+                Criteria ic = itC.next();
                 if (ic.equals(c)) {
                     itC.remove();
                 }
@@ -192,10 +196,10 @@ public class CraftAPIRegistry implements IRegistry {
         }
 
         //Remove this from all the conflict lists
-        for (ICriteria conflict : c.getConflicts()) {
-            Iterator<ICriteria> it = conflict.getConflicts().iterator();
+        for (Criteria conflict : c.getConflicts()) {
+            Iterator<Criteria> it = conflict.getConflicts().iterator();
             while (it.hasNext()) {
-                ICriteria ct = it.next();
+                Criteria ct = it.next();
                 if (ct.equals(c)) {
                     it.remove();
                 }
@@ -203,10 +207,10 @@ public class CraftAPIRegistry implements IRegistry {
         }
 
         //Remove this from all the requirement lists
-        for (ICriteria require : criteria.values()) {
-            Iterator<ICriteria> it = require.getRequirements().iterator();
+        for (Criteria require : criteria.values()) {
+            Iterator<Criteria> it = require.getRequirements().iterator();
             while (it.hasNext()) {
-                ICriteria ct = it.next();
+                Criteria ct = it.next();
                 if (ct.equals(c)) {
                     it.remove();
                 }
@@ -230,5 +234,18 @@ public class CraftAPIRegistry implements IRegistry {
     //Returns the next unique string for this crafting api
     public static String getNextUnique() {
         return "" + System.currentTimeMillis();
+    }
+
+    @Override
+    public ITriggerData newData(String string) {
+        if (string.equalsIgnoreCase("count")) {
+            return new DataCount();
+        } else if (string.equalsIgnoreCase("boolean")) {
+            return new DataBoolean();
+        } else if (string.equalsIgnoreCase("crafting")) {
+            return new DataCrafting();
+        }
+        
+        return null;
     }
 }

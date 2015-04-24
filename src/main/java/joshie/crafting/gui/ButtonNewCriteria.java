@@ -3,8 +3,8 @@ package joshie.crafting.gui;
 import java.util.ArrayList;
 
 import joshie.crafting.CraftAPIRegistry;
+import joshie.crafting.Criteria;
 import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.ITab;
 import joshie.crafting.gui.ButtonBase.ButtonLeft;
 import joshie.crafting.json.Theme;
@@ -53,7 +53,7 @@ public class ButtonNewCriteria extends ButtonLeft {
             int mouseX = GuiTreeEditor.INSTANCE.mouseX;
             int mouseY = GuiTreeEditor.INSTANCE.mouseY;
             int offsetX = GuiTreeEditor.INSTANCE.offsetX;
-            ICriteria criteria = CraftingAPI.registry.newCriteria(currentTab, CraftAPIRegistry.getNextUnique()).setDisplayName("New Criteria").setVisibility(true).setIcon(new ItemStack(Blocks.stone));
+            Criteria criteria = CraftingAPI.registry.newCriteria(currentTab, CraftAPIRegistry.getNextUnique()).setDisplayName("New Criteria").setVisibility(true).setIcon(new ItemStack(Blocks.stone));
             criteria.getTreeEditor().setCoordinates(mouseX - 50 - offsetX, mouseY - 10);
             criteria.getTreeEditor().draw(mouseX - 50, mouseY - 10, offsetX);
             criteria.getTreeEditor().click(mouseX - 50, mouseY - 10, false);

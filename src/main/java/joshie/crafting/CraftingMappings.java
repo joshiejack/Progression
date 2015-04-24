@@ -12,7 +12,6 @@ import java.util.UUID;
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ICondition;
 import joshie.crafting.api.ICraftingMappings;
-import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.IReward;
 import joshie.crafting.api.ITrigger;
 import joshie.crafting.api.ITriggerData;
@@ -40,7 +39,7 @@ public class CraftingMappings implements ICraftingMappings {
     private PlayerDataServer master;
     private UUID uuid;
 
-    protected HashMap<ICriteria, Integer> completedCritera = new HashMap(); //All the completed criteria, with a number for how many times repeated
+    protected HashMap<Criteria, Integer> completedCritera = new HashMap(); //All the completed criteria, with a number for how many times repeated
     protected Set<ITrigger> completedTriggers = new HashSet(); //All the completed trigger, With their unique name as their identifier, Persistent
     protected HashMap<ITrigger, ITriggerData> triggerData = new HashMap(); //Unique String > Data mappings for this trigger
 
@@ -60,7 +59,7 @@ public class CraftingMappings implements ICraftingMappings {
         PacketHandler.sendToClient(new PacketSyncAbilities(master.getAbilities()), player);
         SyncPair[] values = new SyncPair[CraftAPIRegistry.criteria.size()];
         int pos = 0;
-        for (ICriteria criteria : CraftAPIRegistry.criteria.values()) {
+        for (Criteria criteria : CraftAPIRegistry.criteria.values()) {
             int[] numbers = new int[criteria.getTriggers().size()];
             for (int i = 0; i < criteria.getTriggers().size(); i++) {
                 numbers[i] = i;
@@ -72,7 +71,7 @@ public class CraftingMappings implements ICraftingMappings {
         }
 
         PacketHandler.sendToClient(new PacketSyncTriggers(values), player); //Sync all researches to the client
-        PacketHandler.sendToClient(new PacketSyncCriteria(true, completedCritera.values().toArray(new Integer[completedCritera.size()]), completedCritera.keySet().toArray(new ICriteria[completedCritera.size()])), player); //Sync all conditions to the client
+        PacketHandler.sendToClient(new PacketSyncCriteria(true, completedCritera.values().toArray(new Integer[completedCritera.size()]), completedCritera.keySet().toArray(new Criteria[completedCritera.size()])), player); //Sync all conditions to the client
     }
 
     //Reads the completed criteria
@@ -83,7 +82,7 @@ public class CraftingMappings implements ICraftingMappings {
         for (int i = 0; i < data.tagCount(); i++) {
             NBTTagCompound tag = data.getCompoundTagAt(i);
             String name = tag.getString("Name");
-            ICriteria criteria = CraftingAPI.registry.getCriteriaFromName(name);
+            Criteria criteria = CraftingAPI.registry.getCriteriaFromName(name);
             if (criteria != null) {
                 for (ITrigger trigger : criteria.getTriggers()) {
                     ITriggerData iTriggerData = trigger.newData();
@@ -114,7 +113,7 @@ public class CraftingMappings implements ICraftingMappings {
     }
 
     @Override
-    public HashMap<ICriteria, Integer> getCompletedCriteria() {
+    public HashMap<Criteria, Integer> getCompletedCriteria() {
         return completedCritera;
     }
 
@@ -124,7 +123,7 @@ public class CraftingMappings implements ICraftingMappings {
     }
 
     @Override
-    public void markCriteriaAsCompleted(boolean overwrite, Integer[] values, ICriteria... conditions) {
+    public void markCriteriaAsCompleted(boolean overwrite, Integer[] values, Criteria... conditions) {
         if (overwrite) completedCritera = new HashMap();
         for (int i = 0; i < values.length; i++) {
             if (values[i] == 0) {
@@ -145,8 +144,8 @@ public class CraftingMappings implements ICraftingMappings {
         }
     }
 
-    private boolean containsAny(List<ICriteria> list) {
-        for (ICriteria criteria : list) {
+    private boolean containsAny(List<Criteria> list) {
+        for (Criteria criteria : list) {
             if (completedCritera.keySet().contains(criteria)) return true;
         }
 
@@ -168,16 +167,16 @@ public class CraftingMappings implements ICraftingMappings {
         if (activeTriggers == null) return false; //If the remapping hasn't occured yet, say goodbye!
         //If the trigger is a forced completion, then force complete it
         if (type.equals("forced-complete")) {
-            ICriteria criteria = (ICriteria) data[0];
+            Criteria criteria = (Criteria) data[0];
             if (criteria == null || completedCritera.keySet().contains(criteria)) return false; //If null or we completed already return false
             HashSet<ITrigger> forRemovalFromActive = new HashSet();
-            HashSet<ICriteria> toRemap = new HashSet();
+            HashSet<Criteria> toRemap = new HashSet();
             completeCriteria(criteria, forRemovalFromActive, toRemap);
             remapStuff(forRemovalFromActive, toRemap);
             CraftingMod.data.markDirty();
             return true;
         } else if (type.equals("forced-remove")) {
-            ICriteria criteria = (ICriteria) data[0];
+            Criteria criteria = (Criteria) data[0];
             if (criteria == null || !completedCritera.keySet().contains(criteria)) return false;
             else removeCriteria(criteria);
             remap(); //Remap everything
@@ -230,14 +229,14 @@ public class CraftingMappings implements ICraftingMappings {
         //Create a list of new triggers to add to the active trigger map
         HashSet<ITrigger> forRemovalFromActive = new HashSet(); //Reset them
         HashSet<ITrigger> forRemovalFromCompleted = new HashSet();
-        HashSet<ICriteria> toRemap = new HashSet();
-        HashSet<ICriteria> toComplete = new HashSet();
+        HashSet<Criteria> toRemap = new HashSet();
+        HashSet<Criteria> toComplete = new HashSet();
 
         //Next step, now that we have fired the trigger, we need to go through all the active criteria
         //We should check if all triggers have been fulfilled
         for (ITrigger trigger : triggers) {
             if (cantContinue.contains(trigger) || trigger.getCriteria() == null) continue;
-            ICriteria criteria = trigger.getCriteria();
+            Criteria criteria = trigger.getCriteria();
             //Check that all triggers are in the completed set
             List<ITrigger> allTriggers = criteria.getTriggers();
             boolean allFired = true;
@@ -251,13 +250,13 @@ public class CraftingMappings implements ICraftingMappings {
             }
         }
 
-        for (ICriteria criteria : toComplete) {
+        for (Criteria criteria : toComplete) {
             completeCriteria(criteria, forRemovalFromActive, toRemap);
         }
 
         remapStuff(forRemovalFromActive, toRemap);
         //Now that we have removed all the triggers, and marked this as completed and remapped data, we should give out the rewards
-        for (ICriteria criteria : toComplete) {
+        for (Criteria criteria : toComplete) {
             for (IReward reward : criteria.getRewards()) {
                 reward.reward(uuid);
             }
@@ -268,12 +267,12 @@ public class CraftingMappings implements ICraftingMappings {
         return completedAnyCriteria;
     }
 
-    public void removeCriteria(ICriteria criteria) {
+    public void removeCriteria(Criteria criteria) {
         completedCritera.remove(criteria);
-        PacketHandler.sendToClient(new PacketSyncCriteria(false, new Integer[] { 0 }, new ICriteria[] { criteria }), uuid);
+        PacketHandler.sendToClient(new PacketSyncCriteria(false, new Integer[] { 0 }, new Criteria[] { criteria }), uuid);
     }
 
-    private void completeCriteria(ICriteria criteria, HashSet<ITrigger> forRemovalFromActive, HashSet<ICriteria> toRemap) {
+    private void completeCriteria(Criteria criteria, HashSet<ITrigger> forRemovalFromActive, HashSet<Criteria> toRemap) {
         List<ITrigger> allTriggers = criteria.getTriggers();
         int completedTimes = getCriteriaCount(criteria);
         completedTimes++;
@@ -283,7 +282,7 @@ public class CraftingMappings implements ICraftingMappings {
         for (ITrigger criteriaTrigger : allTriggers) {
             forRemovalFromActive.add(criteriaTrigger);
             //Remove all the conflicts triggers
-            for (ICriteria conflict : criteria.getConflicts()) {
+            for (Criteria conflict : criteria.getConflicts()) {
                 forRemovalFromActive.addAll(conflict.getTriggers());
             }
 
@@ -298,22 +297,22 @@ public class CraftingMappings implements ICraftingMappings {
             toRemap.addAll(CraftingRemapper.criteriaToUnlocks.get(criteria));
         }
 
-        PacketHandler.sendToClient(new PacketSyncCriteria(false, new Integer[] { completedTimes }, new ICriteria[] { criteria }), uuid);
+        PacketHandler.sendToClient(new PacketSyncCriteria(false, new Integer[] { completedTimes }, new Criteria[] { criteria }), uuid);
     }
 
-    private void remapStuff(HashSet<ITrigger> forRemovalFromActive, HashSet<ICriteria> toRemap) {
+    private void remapStuff(HashSet<ITrigger> forRemovalFromActive, HashSet<Criteria> toRemap) {
         //Removes all the triggers from the active map
         for (ITrigger trigger : forRemovalFromActive) {
             activeTriggers.get(trigger.getTypeName()).remove(trigger);
         }
 
         //Remap the criteria
-        for (ICriteria criteria : toRemap) {
+        for (Criteria criteria : toRemap) {
             remapCriteriaOnCompletion(criteria);
         }
     }
 
-    public int getCriteriaCount(ICriteria criteria) {
+    public int getCriteriaCount(Criteria criteria) {
         int amount = 0;
         Integer last = completedCritera.get(criteria);
         if (last != null) {
@@ -323,8 +322,8 @@ public class CraftingMappings implements ICraftingMappings {
         return amount;
     }
 
-    private void remapCriteriaOnCompletion(ICriteria criteria) {
-        ICriteria available = null;
+    private void remapCriteriaOnCompletion(Criteria criteria) {
+        Criteria available = null;
         //We are now looping though all criteria, we now need to check to see if this
         //First step is to validate to see if this criteria, is available right now
         //If the criteria is repeatable, or is not completed continue
@@ -358,11 +357,11 @@ public class CraftingMappings implements ICraftingMappings {
 
     @Override
     public void remap() {
-        Set<ICriteria> availableCriteria = new HashSet(); //Recreate the available mappings
+        Set<Criteria> availableCriteria = new HashSet(); //Recreate the available mappings
         activeTriggers = HashMultimap.create(); //Recreate the trigger mappings
 
-        Collection<ICriteria> allCriteria = CraftAPIRegistry.criteria.values();
-        for (ICriteria criteria : allCriteria) {
+        Collection<Criteria> allCriteria = CraftAPIRegistry.criteria.values();
+        for (Criteria criteria : allCriteria) {
             //We are now looping though all criteria, we now need to check to see if this
             //First step is to validate to see if this criteria, is available right now
             //If the criteria is repeatable, or is not completed continue
@@ -382,7 +381,7 @@ public class CraftingMappings implements ICraftingMappings {
         }
 
         //Now that we have remapped all of the criteria, we should remap the triggers
-        for (ICriteria criteria : availableCriteria) {
+        for (Criteria criteria : availableCriteria) {
             List<ITrigger> triggers = criteria.getTriggers(); //Grab a list of all the triggers
             for (ITrigger trigger : triggers) {
                 //If we don't have the trigger in the completed map, mark it as available in the active triggers

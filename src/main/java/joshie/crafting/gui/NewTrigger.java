@@ -1,17 +1,17 @@
 package joshie.crafting.gui;
 
 import joshie.crafting.CraftAPIRegistry;
+import joshie.crafting.Criteria;
 import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.ITriggerType;
 
 import org.lwjgl.opengl.GL11;
 
 public class NewTrigger extends OverlayBase {
     public static NewTrigger INSTANCE = new NewTrigger();
-    private static ICriteria criteria = null;
+    private static Criteria criteria = null;
 
-    public void select(ICriteria criteria) {
+    public void select(Criteria criteria) {
         if (reset()) {
             NewTrigger.criteria = criteria;
         }

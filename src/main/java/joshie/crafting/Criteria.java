@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.ICriteriaViewer;
 import joshie.crafting.api.IReward;
 import joshie.crafting.api.ITab;
@@ -16,12 +15,12 @@ import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
-public class CraftingCriteria implements ICriteria {
+public class Criteria {
 	/** All the data for this **/
 	private List<ITrigger> triggers = new ArrayList();
 	private List<IReward> rewards = new ArrayList();
-	private List<ICriteria> prereqs = new ArrayList();
-	private List<ICriteria> conflicts = new ArrayList();
+	private List<Criteria> prereqs = new ArrayList();
+	private List<Criteria> conflicts = new ArrayList();
 	private ITreeEditor treeEditor;
 	private ICriteriaViewer criteriaViewer;
 	private int isRepeatable = 1;
@@ -31,43 +30,37 @@ public class CraftingCriteria implements ICriteria {
 	private ITab tab;
 	private ItemStack stack;
 
-	public CraftingCriteria() {
+	public Criteria() {
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
 			this.treeEditor = new EditorTree(this);
 			this.criteriaViewer = new ViewerCriteria(this);
 		}
 	}
 
-	@Override
 	public String getUniqueName() {
 		return uniqueName;
 	}
 
-	@Override
-	public ICriteria setUniqueName(String unique) {
+	public Criteria setUniqueName(String unique) {
 		this.uniqueName = unique;
 		return this;
 	}
 
-	@Override
 	public String getDisplayName() {
 		return displayName;
 	}
 
-	@Override
-	public ICriteria setDisplayName(String display) {
+	public Criteria setDisplayName(String display) {
 		this.displayName = display;
 		return this;
 	}
 
-	@Override
-	public ICriteria addTriggers(ITrigger... triggers) {
+	public Criteria addTriggers(ITrigger... triggers) {
 		this.triggers.addAll(Arrays.asList((ITrigger[]) triggers));
 		return this;
 	}
 
-	@Override
-	public ICriteria addRewards(IReward... rewards) {
+	public Criteria addRewards(IReward... rewards) {
 		this.rewards.addAll(Arrays.asList((IReward[]) rewards));
 		for (IReward reward : rewards) {
 			reward.onAdded();
@@ -76,120 +69,103 @@ public class CraftingCriteria implements ICriteria {
 		return this;
 	}
 
-	@Override
-	public ICriteria addRequirements(ICriteria... prereqs) {
-		this.prereqs.addAll(Arrays.asList((ICriteria[]) prereqs));
+	public Criteria addRequirements(Criteria... prereqs) {
+		this.prereqs.addAll(Arrays.asList((Criteria[]) prereqs));
 		return this;
 	}
 
-	@Override
-	public ICriteria addConflicts(ICriteria... conflicts) {
-		this.conflicts.addAll(Arrays.asList((ICriteria[]) conflicts));
+	public Criteria addConflicts(Criteria... conflicts) {
+		this.conflicts.addAll(Arrays.asList((Criteria[]) conflicts));
 		return this;
 	}
 
-	@Override
-	public ICriteria setRepeatAmount(int amount) {
+	public Criteria setRepeatAmount(int amount) {
 		this.isRepeatable = amount;
 		return this;
 	}
 
-	@Override
-	public ICriteria setVisibility(boolean isVisible) {
+	public Criteria setVisibility(boolean isVisible) {
 		this.isVisible = isVisible;
 		return this;
 	}
 
-	@Override
-	public ICriteria setTab(ITab tab) {
+	public Criteria setTab(ITab tab) {
 		this.tab = tab;
 		return this;
 	}
 	
-	@Override
-	public ICriteria setIcon(ItemStack stack) {
+	public Criteria setIcon(ItemStack stack) {
 	    this.stack = stack;
 	    return this;
 	}
 
-	@Override
 	public List<ITrigger> getTriggers() {
 		return triggers;
 	}
 
-	@Override
 	public List<IReward> getRewards() {
 		return rewards;
 	}
 
-	@Override
-	public List<ICriteria> getRequirements() {
+	public List<Criteria> getRequirements() {
 		return prereqs;
 	}
 
-	@Override
-	public List<ICriteria> getConflicts() {
+	public List<Criteria> getConflicts() {
 		return conflicts;
 	}
 
-	@Override
 	public int getRepeatAmount() {
 		return isRepeatable;
 	}
 
-	@Override
 	public boolean isVisible() {
 		return isVisible;
 	}
 
-	@Override
 	public ITab getTabID() {
 		return tab;
 	}
 	
-	@Override
 	public ItemStack getIcon() {
 	    return stack;
 	}
 
-	@Override
 	public ITreeEditor getTreeEditor() {
 		return treeEditor;
 	}
 
-	@Override
 	public ICriteriaViewer getCriteriaViewer() {
 		return criteriaViewer;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((uniqueName == null) ? 0 : uniqueName.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		CraftingCriteria other = (CraftingCriteria) obj;
-		if (uniqueName == null) {
-			if (other.uniqueName != null)
-				return false;
-		} else if (!uniqueName.equals(other.uniqueName))
-			return false;
-		return true;
-	}
-
-	@Override
 	public void addTooltip(List<String> toolTip) {
 		toolTip.add("Requires: " + getDisplayName());
 	}
+	
+	   @Override
+	    public int hashCode() {
+	        final int prime = 31;
+	        int result = 1;
+	        result = prime * result
+	                + ((uniqueName == null) ? 0 : uniqueName.hashCode());
+	        return result;
+	    }
+
+	    @Override
+	    public boolean equals(Object obj) {
+	        if (this == obj)
+	            return true;
+	        if (obj == null)
+	            return false;
+	        if (getClass() != obj.getClass())
+	            return false;
+	        Criteria other = (Criteria) obj;
+	        if (uniqueName == null) {
+	            if (other.uniqueName != null)
+	                return false;
+	        } else if (!uniqueName.equals(other.uniqueName))
+	            return false;
+	        return true;
+	    }
 }

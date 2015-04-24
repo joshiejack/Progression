@@ -5,10 +5,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import joshie.crafting.Criteria;
 import joshie.crafting.CraftingMod;
 import joshie.crafting.api.Bus;
 import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.IReward;
 import joshie.crafting.api.crafting.CraftingEvent.CanCraftItemEvent;
 import joshie.crafting.api.crafting.CraftingEvent.CanRepairItemEvent;
@@ -86,9 +86,9 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (!checkAndCancelEvent(event)) {
-            Collection<ICriteria> requirements = CraftingAPI.crafting.getCraftingCriteria(type, event.entityPlayer.getCurrentEquippedItem());
+            Collection<Criteria> requirements = CraftingAPI.crafting.getCraftingCriteria(type, event.entityPlayer.getCurrentEquippedItem());
             if (requirements.size() > 0) {
-                for (ICriteria c : requirements) {
+                for (Criteria c : requirements) {
                     GuiCriteriaEditor.INSTANCE.selected = c;
                     break;
                 }
@@ -104,7 +104,7 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
         if (!crafter.canCraftItem(CraftingType.CRAFTING, event.itemStack)) {
             boolean hasStuff = false;
             for (CraftingType type : CraftingType.craftingTypes) {
-                Collection<ICriteria> requirements = CraftingAPI.crafting.getCraftingCriteria(type, event.itemStack);
+                Collection<Criteria> requirements = CraftingAPI.crafting.getCraftingCriteria(type, event.itemStack);
                 if (requirements.size() > 0) {
                     if (!hasStuff) {
                         event.toolTip.add("Currently Locked");
@@ -112,7 +112,7 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
                     }
 
                     event.toolTip.add(EnumChatFormatting.WHITE + type.getDisplayName());
-                    for (ICriteria c : requirements) {
+                    for (Criteria c : requirements) {
                         c.addTooltip(event.toolTip);
                     }
                 }

@@ -2,10 +2,11 @@ package joshie.crafting.api;
 
 import java.util.List;
 
+import joshie.crafting.Criteria;
 import net.minecraft.item.ItemStack;
 
 public interface ITab extends IHasUniqueName {
-    public ITab addCriteria(ICriteria... critera);
+    public ITab addCriteria(Criteria... critera);
 
     public ITab setDisplayName(String name);
     
@@ -15,7 +16,7 @@ public interface ITab extends IHasUniqueName {
     
     public ITab setSortIndex(int index);
 
-    public List<ICriteria> getCriteria();
+    public List<Criteria> getCriteria();
 
     public String getDisplayName();
     

@@ -10,10 +10,10 @@ import java.util.HashSet;
 import java.util.List;
 
 import joshie.crafting.CraftAPIRegistry;
+import joshie.crafting.Criteria;
 import joshie.crafting.CraftingMod;
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ICondition;
-import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.IReward;
 import joshie.crafting.api.ITab;
 import joshie.crafting.api.ITrigger;
@@ -125,7 +125,7 @@ public class JSONLoader {
 
             /** Step 2 : Register all the conditions and triggers for this criteria **/
             for (DataCriteria criteria : data.criteria) {
-                ICriteria theCriteria = CraftingAPI.registry.getCriteriaFromName(criteria.uniqueName);
+                Criteria theCriteria = CraftingAPI.registry.getCriteriaFromName(criteria.uniqueName);
                 if (theCriteria == null) {
                     throw new ConditionNotFoundException(criteria.uniqueName);
                 }
@@ -156,14 +156,14 @@ public class JSONLoader {
 
             /** Step 3, nAdd the extra data **/
             for (DataCriteria criteria : data.criteria) {
-                ICriteria theCriteria = CraftingAPI.registry.getCriteriaFromName(criteria.uniqueName);
+                Criteria theCriteria = CraftingAPI.registry.getCriteriaFromName(criteria.uniqueName);
                 if (theCriteria == null) {
                     CraftingMod.logger.log(org.apache.logging.log4j.Level.WARN, "Criteria was not found, do not report this.");
                     throw new ConditionNotFoundException(criteria.uniqueName);
                 }
                 
-                ICriteria[] thePrereqs = new ICriteria[criteria.prereqs.length];
-                ICriteria[] theConflicts = new ICriteria[criteria.conflicts.length];
+                Criteria[] thePrereqs = new Criteria[criteria.prereqs.length];
+                Criteria[] theConflicts = new Criteria[criteria.conflicts.length];
                 for (int i = 0; i < thePrereqs.length; i++)
                     thePrereqs[i] = CraftingAPI.registry.getCriteriaFromName(criteria.prereqs[i]);
                 for (int i = 0; i < theConflicts.length; i++)
@@ -224,7 +224,7 @@ public class JSONLoader {
             tabData.sortIndex = tab.getSortIndex();
             tabData.isVisible = tab.isVisible();
             tabData.stack = StackHelper.getStringFromStack(tab.getStack());
-            for (ICriteria c: tab.getCriteria()) {
+            for (Criteria c: tab.getCriteria()) {
                 if (!names.add(c.getUniqueName())) continue;
                 if (c.getTreeEditor() == null) continue;
                 DataCriteria data = new DataCriteria();
@@ -237,8 +237,8 @@ public class JSONLoader {
                 data.displayStack = StackHelper.getStringFromStack(c.getIcon());
                 List<ITrigger> triggers = c.getTriggers();
                 List<IReward> rewards = c.getRewards();
-                List<ICriteria> prereqs = c.getRequirements();
-                List<ICriteria> conflicts = c.getConflicts();
+                List<Criteria> prereqs = c.getRequirements();
+                List<Criteria> conflicts = c.getConflicts();
 
                 ArrayList<DataTrigger> theTriggers = new ArrayList();
                 ArrayList<DataGeneric> theRewards = new ArrayList();

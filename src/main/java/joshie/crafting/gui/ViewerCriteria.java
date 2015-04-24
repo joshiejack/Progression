@@ -1,12 +1,12 @@
 package joshie.crafting.gui;
 
-import joshie.crafting.api.ICriteria;
+import joshie.crafting.Criteria;
 import joshie.crafting.api.ICriteriaViewer;
 
 public class ViewerCriteria implements ICriteriaViewer {
-    private ICriteria criteria;
+    private Criteria criteria;
     
-    public ViewerCriteria(ICriteria criteria) {
+    public ViewerCriteria(Criteria criteria) {
         this.criteria = criteria;
     }
 

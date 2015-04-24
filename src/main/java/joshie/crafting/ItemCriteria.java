@@ -3,7 +3,6 @@ package joshie.crafting;
 import java.util.List;
 
 import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.crafting.ICrafter;
 import joshie.crafting.crafting.CraftingUnclaimed;
 import joshie.crafting.helpers.PlayerHelper;
@@ -48,7 +47,7 @@ public class ItemCriteria extends Item {
         setCreativeTab(tab);
     }
 
-    public static ICriteria getCriteriaFromStack(ItemStack stack) {
+    public static Criteria getCriteriaFromStack(ItemStack stack) {
         if (!stack.hasTagCompound()) return null;
         return CraftingAPI.registry.getCriteriaFromName(stack.getTagCompound().getString("Criteria"));
     }
@@ -59,7 +58,7 @@ public class ItemCriteria extends Item {
             return "Progression Tile Claimer";
         }
 
-        ICriteria criteria = getCriteriaFromStack(stack);
+        Criteria criteria = getCriteriaFromStack(stack);
         return criteria == null ? "BROKEN ITEM" : criteria.getDisplayName();
     }
 
@@ -84,7 +83,7 @@ public class ItemCriteria extends Item {
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
         if (!world.isRemote) {
-            ICriteria criteria = getCriteriaFromStack(stack);
+            Criteria criteria = getCriteriaFromStack(stack);
             if (criteria != null) {
                 boolean completed = CraftingAPI.players.getServerPlayer(PlayerHelper.getUUIDForPlayer(player)).getMappings().fireAllTriggers("forced-complete", criteria);
                 if (!player.capabilities.isCreativeMode && completed) {
@@ -105,7 +104,7 @@ public class ItemCriteria extends Item {
     public void getSubItems(Item item, CreativeTabs tab, List list) {
         list.add(new ItemStack(Items.book));
         list.add(new ItemStack(item, 1, CLAIM));
-        for (ICriteria c : CraftingAPI.registry.getCriteria()) {
+        for (Criteria c : CraftingAPI.registry.getCriteria()) {
             ItemStack stack = new ItemStack(item);
             stack.setTagCompound(new NBTTagCompound());
             stack.getTagCompound().setString("Criteria", c.getUniqueName());
