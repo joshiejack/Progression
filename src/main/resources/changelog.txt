@@ -1,3 +1,6 @@
+Progression 0.3.4
+  Fix Potential crash when rendering certain entities in the editor
+
 Progression 0.3.3
   Fix Crash when using the points trigger
   Fix Triggers sometimes firing more than once

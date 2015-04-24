@@ -132,8 +132,10 @@ public class SelectEntity extends TextEditable implements IRenderOverlay {
                 if (i >= 0 && i < sorted.size()) {
                     GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
                     GL11.glColor4f(1F, 1F, 1F, 1F);
-                    GuiInventory.func_147046_a(offX + 24 + (j * 32), yPos + 105 + (k * 32) + type.yOffset, EntityHelper.getSizeForEntity(sorted.get(i)), 25F, -5F, sorted.get(i));
-                    //deaw
+                    try {
+                        GuiInventory.func_147046_a(offX + 24 + (j * 32), yPos + 105 + (k * 32) + type.yOffset, EntityHelper.getSizeForEntity(sorted.get(i)), 25F, -5F, sorted.get(i));
+                    } catch (Exception e) {}
+                        //deaw
                     j++;
 
                     if (j > fullWidth) {
