@@ -3,6 +3,7 @@ package joshie.crafting.trigger;
 import java.util.UUID;
 
 import joshie.crafting.api.ITriggerData;
+import joshie.crafting.gui.fields.TextField;
 import joshie.crafting.helpers.JSONHelper;
 import joshie.crafting.trigger.data.DataCount;
 
@@ -13,6 +14,7 @@ public abstract class TriggerBaseCounter extends TriggerBase {
     
 	public TriggerBaseCounter(String name, int color) {
 		super(name, color, "count");
+        list.add(new TextField("amount", this));
 	}
 
 	@Override
@@ -35,7 +37,6 @@ public abstract class TriggerBaseCounter extends TriggerBase {
 
     @Override
     public void writeToJSON(JsonObject data) {
-        System.out.println(amount);
         JSONHelper.setInteger(data, "amount", amount, 1);
     }
 

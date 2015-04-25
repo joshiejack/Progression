@@ -2,16 +2,14 @@ package joshie.crafting.conditions;
 
 import java.util.UUID;
 
-import joshie.crafting.api.DrawHelper;
 import joshie.crafting.gui.TextFieldHelper.IntegerFieldHelper;
+import joshie.crafting.gui.fields.BooleanField;
+import joshie.crafting.gui.fields.TextField;
 import joshie.crafting.helpers.JSONHelper;
-import joshie.crafting.json.Theme;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 import com.google.gson.JsonObject;
-
-import cpw.mods.fml.common.eventhandler.Event.Result;
 
 public class ConditionCoordinates extends ConditionBase {
     private IntegerFieldHelper radiusEdit;
@@ -31,11 +29,17 @@ public class ConditionCoordinates extends ConditionBase {
 
     public ConditionCoordinates() {
         super("coordinates", 0xFF000000);
-        radiusEdit = new IntegerFieldHelper("radius", this);
-        dimensionEdit = new IntegerFieldHelper("dimension", this);
-        xEdit = new IntegerFieldHelper("x", this);
-        yEdit = new IntegerFieldHelper("y", this);
-        zEdit = new IntegerFieldHelper("z", this);
+        list.add(new BooleanField("checkDimension", this));
+        list.add(new BooleanField("checkX", this));
+        list.add(new BooleanField("checkY", this));
+        list.add(new BooleanField("checkZ", this));
+        list.add(new TextField("radius", this));
+        list.add(new TextField("dimension", this));
+        list.add(new TextField("x", this));
+        list.add(new TextField("y", this));
+        list.add(new TextField("z", this));
+        list.add(new BooleanField("greaterThan", this));
+        list.add(new BooleanField("lessThan", this));
     }
 
     @Override
@@ -133,66 +137,5 @@ public class ConditionCoordinates extends ConditionBase {
         JSONHelper.setInteger(data, "radius", radius, 0);
         JSONHelper.setBoolean(data, "greaterThan", greaterThan, false);
         JSONHelper.setBoolean(data, "lessThan", lessThan, false);
-    }
-
-    @Override
-    public Result onClicked(int mouseX, int mouseY) {
-        if (mouseX <= 94 && mouseX >= 1) {
-            if (mouseY > 25 && mouseY <= 33) checkDimension = !checkDimension;
-            if (mouseY > 34 && mouseY <= 41) checkX = !checkX;
-            if (mouseY > 41 && mouseY <= 48) checkY = !checkY;
-            if (mouseY > 48 && mouseY <= 55) checkZ = !checkZ;
-            if (mouseY > 55 && mouseY <= 62) radiusEdit.select();
-            if (mouseY > 62 && mouseY <= 69) dimensionEdit.select();
-            if (mouseY > 69 && mouseY <= 76) xEdit.select();
-            if (mouseY > 76 && mouseY <= 83) yEdit.select();
-            if (mouseY > 83 && mouseY <= 90) zEdit.select();
-            if (mouseY > 90 && mouseY <= 97) greaterThan = !greaterThan;
-            if (mouseY > 97 && mouseY <= 104) lessThan = !lessThan;
-            if (mouseY >= 17 && mouseY < 100) return Result.ALLOW;
-        }
-
-        return Result.DEFAULT;
-    }
-
-    @Override
-    public void draw(int mouseX, int mouseY) {
-        int checkDColor = Theme.INSTANCE.optionsFontColor;
-        int checkXColor = Theme.INSTANCE.optionsFontColor;
-        int checkYColor = Theme.INSTANCE.optionsFontColor;
-        int checkZColor = Theme.INSTANCE.optionsFontColor;
-        int radiusColor = Theme.INSTANCE.optionsFontColor;
-        int dimColor = Theme.INSTANCE.optionsFontColor;
-        int xColor = Theme.INSTANCE.optionsFontColor;
-        int yColor = Theme.INSTANCE.optionsFontColor;
-        int zColor = Theme.INSTANCE.optionsFontColor;
-        int gColor = Theme.INSTANCE.optionsFontColor;
-        int lColor = Theme.INSTANCE.optionsFontColor;
-
-        if (mouseX <= 94 && mouseX >= 1) {
-            if (mouseY > 25 && mouseY <= 33) checkDColor = Theme.INSTANCE.optionsFontColorHover;
-            if (mouseY > 34 && mouseY <= 41) checkXColor = Theme.INSTANCE.optionsFontColorHover;
-            if (mouseY > 41 && mouseY <= 48) checkYColor = Theme.INSTANCE.optionsFontColorHover;
-            if (mouseY > 48 && mouseY <= 55) checkZColor = Theme.INSTANCE.optionsFontColorHover;
-            if (mouseY > 55 && mouseY <= 62) radiusColor = Theme.INSTANCE.optionsFontColorHover;
-            if (mouseY > 62 && mouseY <= 69) dimColor = Theme.INSTANCE.optionsFontColorHover;
-            if (mouseY > 69 && mouseY <= 76) xColor = Theme.INSTANCE.optionsFontColorHover;
-            if (mouseY > 76 && mouseY <= 83) yColor = Theme.INSTANCE.optionsFontColorHover;
-            if (mouseY > 83 && mouseY <= 90) zColor = Theme.INSTANCE.optionsFontColorHover;
-            if (mouseY > 90 && mouseY <= 97) gColor = Theme.INSTANCE.optionsFontColorHover;
-            if (mouseY > 97 && mouseY <= 104) lColor = Theme.INSTANCE.optionsFontColorHover;
-        }
-
-        DrawHelper.drawText("checkDim: " + checkDimension, 4, 25, checkDColor);
-        DrawHelper.drawText("checkX: " + checkX, 4, 34, checkXColor);
-        DrawHelper.drawText("checkY: " + checkY, 4, 41, checkYColor);
-        DrawHelper.drawText("checkZ: " + checkZ, 4, 48, checkZColor);
-        DrawHelper.drawText("radius: " + radiusEdit, 4, 55, radiusColor);
-        DrawHelper.drawText("dimension: " + dimensionEdit, 4, 62, dimColor);
-        DrawHelper.drawText("x: " + xEdit, 4, 69, xColor);
-        DrawHelper.drawText("y: " + yEdit, 4, 76, yColor);
-        DrawHelper.drawText("z: " + zEdit, 4, 83, zColor);
-        DrawHelper.drawText("greaterThan: " + greaterThan, 4, 90, gColor);
-        DrawHelper.drawText("lessThan: " + lessThan, 4, 97, lColor);
     }
 }

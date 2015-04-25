@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import joshie.crafting.api.Bus;
-import joshie.crafting.gui.TextList.TextField;
+import joshie.crafting.gui.fields.TextField;
 import joshie.crafting.helpers.JSONHelper;
 import joshie.crafting.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;

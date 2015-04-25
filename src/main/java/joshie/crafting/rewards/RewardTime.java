@@ -3,8 +3,8 @@ package joshie.crafting.rewards;
 import java.util.List;
 import java.util.UUID;
 
-import joshie.crafting.gui.TextList.BooleanField;
-import joshie.crafting.gui.TextList.TextField;
+import joshie.crafting.gui.fields.BooleanField;
+import joshie.crafting.gui.fields.TextField;
 import joshie.crafting.helpers.JSONHelper;
 import joshie.crafting.helpers.PlayerHelper;
 import net.minecraft.entity.player.EntityPlayer;

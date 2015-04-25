@@ -82,7 +82,7 @@ public class Trigger {
 
     public Result onClicked() {
         if (ClientHelper.canEdit()) {
-            if (this.mouseX >= 88 && this.mouseX <= 95 && this.mouseY >= 4 && this.mouseY <= 14) {
+            if (this.mouseX >= 87 && this.mouseX <= 97 && this.mouseY >= 4 && this.mouseY <= 14) {
                 return Result.DENY; // Delete this trigger
             }
         }
@@ -119,7 +119,7 @@ public class Trigger {
             DrawHelper.triggerDraw.drawTexture(87, 4, xXcoord, 195, 11, 11);
         }
 
-        triggerType.draw(mouseX, mouseY);
+        triggerType.draw(this.mouseX, this.mouseY);
 
         int color = Theme.INSTANCE.blackBarBorder;
         if (this.mouseX >= 2 && this.mouseX <= 87) {

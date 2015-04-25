@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.UUID;
 
 import joshie.crafting.gui.SelectItemOverlay.Type;
-import joshie.crafting.gui.TextList.ItemAmountField;
-import joshie.crafting.gui.TextList.ItemField;
+import joshie.crafting.gui.fields.ItemAmountField;
+import joshie.crafting.gui.fields.ItemField;
 import joshie.crafting.helpers.JSONHelper;
 import joshie.crafting.helpers.PlayerHelper;
 import joshie.crafting.helpers.SpawnItemHelper;

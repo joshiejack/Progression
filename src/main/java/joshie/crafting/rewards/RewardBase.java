@@ -1,12 +1,12 @@
 package joshie.crafting.rewards;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import joshie.crafting.api.Bus;
 import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.IRewardType;
-import joshie.crafting.gui.TextList;
+import joshie.crafting.gui.fields.AbstractField;
 import joshie.crafting.helpers.ClientHelper;
 import joshie.crafting.json.Theme;
 import net.minecraft.init.Blocks;
@@ -15,7 +15,7 @@ import net.minecraft.util.StatCollector;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 
 public abstract class RewardBase implements IRewardType {
-    protected Set<TextList> list = new HashSet();
+    protected List<AbstractField> list = new ArrayList();
     protected ICriteria criteria;
     private String name;
     private int color;
@@ -77,7 +77,7 @@ public abstract class RewardBase implements IRewardType {
     public Result onClicked(int mouseX, int mouseY) {
         if (ClientHelper.canEdit()) {
             int index = 0;
-            for (TextList t : list) {
+            for (AbstractField t : list) {
                 int color = Theme.INSTANCE.optionsFontColor;
                 int yPos = 17 + (index * 8);
                 if (mouseX >= 1 && mouseX <= 84) {
@@ -101,7 +101,7 @@ public abstract class RewardBase implements IRewardType {
     @Override
     public void draw(int mouseX, int mouseY) {
         int index = 0;
-        for (TextList t : list) {
+        for (AbstractField t : list) {
             int color = Theme.INSTANCE.optionsFontColor;
             int yPos = 17 + (index * 8);
             if (ClientHelper.canEdit()) {

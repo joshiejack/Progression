@@ -32,7 +32,7 @@ public class NewTrigger extends OverlayBase {
         int xPos = 0;
         for (ITriggerType trigger : CraftAPIRegistry.triggerTypes.values()) {
             if (mouseX >= (xPos * 100) + 155 && mouseX <= (xPos * 100) + 255) {
-                if (mouseY >= 46 + (yPos * 12) && mouseY <= 46 + (yPos * 12) + 12) {
+                if (mouseY >= 46 + (yPos * 12) && mouseY < 46 + (yPos * 12) + 12) {
                     CraftAPIRegistry.cloneTrigger(criteria, trigger);
                     clear();
                     return true;
@@ -63,7 +63,7 @@ public class NewTrigger extends OverlayBase {
         for (ITriggerType trigger : CraftAPIRegistry.triggerTypes.values()) {
             int color = theme.newTriggerFont;
             if (mouseX >= (xPos * 100) + 155 && mouseX <= (xPos * 100) + 255) {
-                if (mouseY >= 46 + (yPos * 12) && mouseY <= 46 + (yPos * 12) + 12) {
+                if (mouseY >= 46 + (yPos * 12) && mouseY < 46 + (yPos * 12) + 12) {
                     color = theme.newTriggerFontHover;
                 }
             }

@@ -11,7 +11,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public interface ITriggerType {
     /** Create a new instance for storing data **/
     public ITriggerData newData();
-    
+        
     /** Returns the name of this trigger type, used to call from the json **/
     public String getUnlocalisedName();
     
