@@ -3,9 +3,7 @@ package joshie.crafting.rewards;
 import java.util.List;
 import java.util.UUID;
 
-import joshie.crafting.gui.TextFieldHelper;
-import joshie.crafting.gui.TextFieldHelper.IntegerFieldHelper;
-import joshie.crafting.gui.TextList.TextSelector;
+import joshie.crafting.gui.TextList.TextField;
 import joshie.crafting.helpers.JSONHelper;
 import joshie.crafting.player.PlayerTracker;
 import net.minecraft.init.Items;
@@ -20,8 +18,8 @@ public class RewardPoints extends RewardBase {
 
     public RewardPoints() {
         super(new ItemStack(Items.potionitem), "points", 0xFF002DB2);
-        list.add(new TextSelector("name", new TextFieldHelper("name", this)));
-        list.add(new TextSelector("amount", new IntegerFieldHelper("amount", this)));
+        list.add(new TextField("name", this));
+        list.add(new TextField("amount", this));
     }
 
     @Override

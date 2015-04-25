@@ -4,12 +4,9 @@ import java.util.List;
 import java.util.UUID;
 
 import joshie.crafting.api.Bus;
-import joshie.crafting.api.DrawHelper;
-import joshie.crafting.gui.SelectTextEdit;
-import joshie.crafting.gui.SelectTextEdit.ITextEditable;
+import joshie.crafting.gui.TextList.TextField;
 import joshie.crafting.helpers.ClientHelper;
 import joshie.crafting.helpers.JSONHelper;
-import joshie.crafting.json.Theme;
 import joshie.crafting.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -19,21 +16,20 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 
 import com.google.gson.JsonObject;
 
-import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
-public class RewardSpeed extends RewardBase implements ITextEditable {
-    private float speed = 0.1F;
+public class RewardSpeed extends RewardBase {
+    public float speed = 0.1F;
 
     public RewardSpeed() {
         super(new ItemStack(Items.potionitem, 1, 8194), "speed", 0xFFFFBF00);
+        list.add(new TextField("speed", this));
     }
-
-    @Override
-    public Bus getEventBus() {
-        return Bus.FORGE;
+    
+    public String[] getFields() {
+        return new String[] { "speed" };
     }
-
+    
     @SubscribeEvent
     public void onLivingUpdate(LivingUpdateEvent event) {
         if (event.entityLiving instanceof EntityPlayer) {
@@ -45,6 +41,11 @@ public class RewardSpeed extends RewardBase implements ITextEditable {
                 }
             }
         }
+    }
+
+    @Override
+    public Bus getEventBus() {
+        return Bus.FORGE;
     }
 
     @Override
@@ -60,55 +61,6 @@ public class RewardSpeed extends RewardBase implements ITextEditable {
     @Override
     public void reward(UUID uuid) {
         PlayerTracker.getServerPlayer(uuid).addSpeed(speed);
-    }
-
-    @Override
-    public Result onClicked(int mouseX, int mouseY) {
-        if (mouseX <= 84 && mouseX >= 1) {
-            if (mouseY >= 17 && mouseY <= 25) {
-                SelectTextEdit.INSTANCE.select(this);
-                return Result.ALLOW;
-            }
-        }
-
-        return Result.DEFAULT;
-    }
-
-    @Override
-    public void draw(int mouseX, int mouseY) {
-        int speedColor = Theme.INSTANCE.optionsFontColor;
-        if (ClientHelper.canEdit()) {
-            if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 25) speedColor = Theme.INSTANCE.optionsFontColorHover;
-            }
-        }
-
-        if (SelectTextEdit.INSTANCE.getEditable() == this) {
-            DrawHelper.drawText("speed: " + SelectTextEdit.INSTANCE.getText(), 4, 18, speedColor);
-        } else DrawHelper.drawText("speed: " + getTextField(), 4, 18, speedColor);
-    }
-
-    private String textField;
-
-    @Override
-    public String getTextField() {
-        if (textField == null) {
-            textField = "" + speed;
-        }
-
-        return textField;
-    }
-
-    @Override
-    public void setTextField(String text) {
-        String fixed = text.replaceAll("[^0-9.]", "");
-        this.textField = fixed;
-
-        try {
-            this.speed = Float.parseFloat(textField);
-        } catch (Exception e) {
-            this.speed = 0F;
-        }
     }
 
     @Override

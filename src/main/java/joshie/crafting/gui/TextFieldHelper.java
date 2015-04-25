@@ -25,6 +25,16 @@ public class TextFieldHelper implements ITextEditable {
     public String getText() {
         return SelectTextEdit.INSTANCE.getText(this);
     }
+    
+    public float getFloat() {
+        try {
+            return (Float) f.get(o);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 0F;
+    }
 
     public double getDouble() {
         try {
@@ -137,6 +147,35 @@ public class TextFieldHelper implements ITextEditable {
 
             try {
                 set(Double.parseDouble(str));
+            } catch (Exception e) {}
+        }
+    }
+    
+    public static class FloatFieldHelper extends IntegerFieldHelper {
+        public FloatFieldHelper(String f, Object o) {
+            super(f, o);
+        }
+
+        @Override
+        public String getTextField() {
+            if (textField == null) {
+                textField = "" + getFloat();
+            }
+
+            return textField;
+        }
+
+        @Override
+        public void setTextField(String str) {
+            String fixed = str.replaceAll("[^0-9.]", "");
+            if (str.startsWith("-")) {
+                fixed = "-" + fixed;
+            }
+
+            this.textField = fixed;
+
+            try {
+                set(Float.parseFloat(str));
             } catch (Exception e) {}
         }
     }
