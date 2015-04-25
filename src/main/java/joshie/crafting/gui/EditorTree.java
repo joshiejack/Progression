@@ -15,6 +15,7 @@ import joshie.crafting.player.PlayerTracker;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.input.Keyboard;
@@ -221,6 +222,12 @@ public class EditorTree {
                         list.add("Shift + Click to make something a requirement");
                         list.add("Ctrl + Click to make something conflict");
                         list.add("I + Click to Hide/Unhide");
+                    }
+                    
+                    for (Criteria c: criteria.prereqs) {
+                        if (c.tab != criteria.tab) {
+                            list.add(EnumChatFormatting.RED + "Requires: " + c.displayName + " from the \"" + c.tab.getDisplayName() + "\" tab");
+                        }
                     }
 
                     GuiTreeEditor.INSTANCE.addTooltip(list);

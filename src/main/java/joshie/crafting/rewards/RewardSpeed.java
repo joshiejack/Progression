@@ -26,7 +26,7 @@ public class RewardSpeed extends RewardBase implements ITextEditable {
     private float speed = 0.1F;
 
     public RewardSpeed() {
-        super("speed", 0xFFFFBF00);
+        super(new ItemStack(Items.potionitem, 1, 8194), "speed", 0xFFFFBF00);
     }
 
     @Override
@@ -60,13 +60,6 @@ public class RewardSpeed extends RewardBase implements ITextEditable {
     @Override
     public void reward(UUID uuid) {
         PlayerTracker.getServerPlayer(uuid).addSpeed(speed);
-    }
-
-    private static final ItemStack speedStack = new ItemStack(Items.potionitem, 1, 8194);
-
-    @Override
-    public ItemStack getIcon() {
-        return speedStack;
     }
 
     @Override

@@ -67,6 +67,6 @@ public class Reward {
             DrawHelper.triggerDraw.drawTexture(87, 4, xXcoord, 195, 11, 11);
         }
 
-        getType().draw(mouseX, mouseY);
+        getType().draw(mouseX, mouseY - 140);
     }
 }

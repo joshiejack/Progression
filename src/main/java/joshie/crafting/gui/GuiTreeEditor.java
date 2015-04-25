@@ -111,9 +111,11 @@ public class GuiTreeEditor extends GuiBase {
 
                     width -= 3;
 
-                    drawLine(offsetX + width + x1, y + 12 + y1 - 1, offsetX + 5 + x2, y + 12 + y2 - 1, 1, theme.connectLineColor1);
-                    drawLine(offsetX + width + x1, y + 12 + y1 + 1, offsetX + 5 + x2, y + 12 + y2 + 1, 1, theme.connectLineColor2); //#636C69
-                    drawLine(offsetX + width + x1, y + 12 + y1, offsetX + 5 + x2, y + 12 + y2, 1, theme.connectLineColor3);
+                    if (c.tab == criteria.tab) {
+                        drawLine(offsetX + width + x1, y + 12 + y1 - 1, offsetX + 5 + x2, y + 12 + y2 - 1, 1, theme.connectLineColor1);
+                        drawLine(offsetX + width + x1, y + 12 + y1 + 1, offsetX + 5 + x2, y + 12 + y2 + 1, 1, theme.connectLineColor2); //#636C69
+                        drawLine(offsetX + width + x1, y + 12 + y1, offsetX + 5 + x2, y + 12 + y2, 1, theme.connectLineColor3);
+                    }
                 }
             }
         }
@@ -204,7 +206,7 @@ public class GuiTreeEditor extends GuiBase {
                 }
             }
         }
-        
+
         if (lastClicked == null) {
             isDragging = true;
             drag = mouseX;
@@ -214,16 +216,16 @@ public class GuiTreeEditor extends GuiBase {
     @Override
     public void handleMouseInput() {
         super.handleMouseInput();
-        
+
         if (isDragging) {
             int difference = mouseX - drag;
             drag = mouseX;
-            
+
             if (difference != 0) {
                 scroll(difference);
             }
         }
-        
+
         for (Criteria criteria : currentTab.getCriteria()) {
             criteria.treeEditor.follow(mouseX, mouseY);
             int wheel = Mouse.getDWheel();
