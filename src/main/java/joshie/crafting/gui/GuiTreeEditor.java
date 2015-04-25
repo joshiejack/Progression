@@ -78,14 +78,14 @@ public class GuiTreeEditor extends GuiBase {
                 currentTab = tab;
                 break;
             }
-            
+
             if (currentTab == null) {
-            	currentTab = CraftAPIRegistry.newTab(CraftAPIRegistry.getNextUnique()).setDisplayName("New Tab").setStack(new ItemStack(Items.book)).setVisibility(true);
-            	currentTabName = currentTab.getUniqueName();
-            	initGui();
+                currentTab = CraftAPIRegistry.newTab(CraftAPIRegistry.getNextUnique()).setDisplayName("New Tab").setStack(new ItemStack(Items.book)).setVisibility(true);
+                currentTabName = currentTab.getUniqueName();
+                initGui();
             }
         }
-        
+
         currentTabName = currentTab.getUniqueName();
     }
 
@@ -101,16 +101,16 @@ public class GuiTreeEditor extends GuiBase {
                     int y2 = editor.getY();
                     int x1 = p.getTreeEditor().getX();
                     int x2 = editor.getX();
-                    
+
                     int width = 0;
                     int textWidth = mc.fontRenderer.getStringWidth(p.getDisplayName());
                     int iconWidth = 9 + (p.getRewards().size() * 12);
                     if (textWidth >= iconWidth) {
                         width = textWidth + 9;
-                    } else width = iconWidth;     
-                    
+                    } else width = iconWidth;
+
                     width -= 3;
-                    
+
                     drawLine(offsetX + width + x1, y + 12 + y1 - 1, offsetX + 5 + x2, y + 12 + y2 - 1, 1, theme.connectLineColor1);
                     drawLine(offsetX + width + x1, y + 12 + y1 + 1, offsetX + 5 + x2, y + 12 + y2 + 1, 1, theme.connectLineColor2); //#636C69
                     drawLine(offsetX + width + x1, y + 12 + y1, offsetX + 5 + x2, y + 12 + y2, 1, theme.connectLineColor3);
@@ -170,11 +170,17 @@ public class GuiTreeEditor extends GuiBase {
         for (Criteria criteria : currentTab.getCriteria()) {
             criteria.getTreeEditor().release(mouseX, mouseY);
         }
+
+        if (button == 0) {
+            isDragging = false;
+        }
     }
 
     private long lastClick;
     private int lastType;
     Criteria lastClicked = null;
+    private int drag = 0;
+    private boolean isDragging = false;
 
     @Override
     protected void mouseClicked(int par1, int par2, int par3) {
@@ -191,21 +197,33 @@ public class GuiTreeEditor extends GuiBase {
         }
 
         super.mouseClicked(par1, par2, par3);
-        boolean clicked = false;
         for (Criteria criteria : currentTab.getCriteria()) {
             if (criteria.getTreeEditor().isCriteriaVisible() || ClientHelper.canEdit()) {
                 if (criteria.getTreeEditor().click(mouseX, mouseY, isDoubleClick)) {
-                    if (!clicked) {
-                        lastClicked = criteria;
-                    }
+                    lastClicked = criteria;
                 }
             }
+        }
+        
+        if (lastClicked == null) {
+            isDragging = true;
+            drag = mouseX;
         }
     }
 
     @Override
     public void handleMouseInput() {
         super.handleMouseInput();
+        
+        if (isDragging) {
+            int difference = mouseX - drag;
+            drag = mouseX;
+            
+            if (difference != 0) {
+                scroll(difference);
+            }
+        }
+        
         for (Criteria criteria : currentTab.getCriteria()) {
             criteria.getTreeEditor().follow(mouseX, mouseY);
             int wheel = Mouse.getDWheel();
