@@ -26,10 +26,6 @@ public class RewardSpeed extends RewardBase {
         list.add(new TextField("speed", this));
     }
     
-    public String[] getFields() {
-        return new String[] { "speed" };
-    }
-    
     @SubscribeEvent
     public void onLivingUpdate(LivingUpdateEvent event) {
         if (event.entityLiving instanceof EntityPlayer) {

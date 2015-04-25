@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import joshie.crafting.api.Bus;
-import joshie.crafting.api.DrawHelper;
 import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.IRewardType;
 import joshie.crafting.gui.TextList;
@@ -86,6 +85,10 @@ public abstract class RewardBase implements IRewardType {
                         t.click();
                         return Result.ALLOW;
                     }
+                }
+                
+                if (t.attemptClick(mouseX, mouseY)) {
+                    return Result.ALLOW;
                 }
                 
                 index++;

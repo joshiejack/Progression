@@ -3,6 +3,7 @@ package joshie.crafting.gui;
 import java.lang.reflect.Field;
 
 import joshie.crafting.gui.SelectTextEdit.ITextEditable;
+import joshie.crafting.gui.TextList.ItemField;
 import net.minecraft.item.ItemStack;
 
 public class TextFieldHelper implements ITextEditable {
@@ -12,10 +13,11 @@ public class TextFieldHelper implements ITextEditable {
     public TextFieldHelper() {}
 
     public TextFieldHelper(String f, Object o) {
+        this.o = o;
+        
         try {
             this.f = o.getClass().getField(f);
-            this.o = o;
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) { }
     }
 
     public void select() {
@@ -29,9 +31,7 @@ public class TextFieldHelper implements ITextEditable {
     public float getFloat() {
         try {
             return (Float) f.get(o);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e) {}
 
         return 0F;
     }
@@ -39,9 +39,7 @@ public class TextFieldHelper implements ITextEditable {
     public double getDouble() {
         try {
             return (Double) f.get(o);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e) {}
 
         return 0D;
     }
@@ -49,9 +47,7 @@ public class TextFieldHelper implements ITextEditable {
     public int getInteger() {
         try {
             return (Integer) f.get(o);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e) {}
 
         return 0;
     }
@@ -67,7 +63,7 @@ public class TextFieldHelper implements ITextEditable {
     public void set(Object o2) {
         try {
             f.set(o, o2);
-        } catch (Exception e) {}
+        } catch (Exception e) { }
     }
 
     @Override
@@ -177,6 +173,43 @@ public class TextFieldHelper implements ITextEditable {
             try {
                 set(Float.parseFloat(str));
             } catch (Exception e) {}
+        }
+    }
+    
+    public static class ItemAmountFieldHelper extends IntegerFieldHelper {
+        public ItemAmountFieldHelper(String f, ItemField item) {
+            super(f, item);
+        }
+        
+        @Override
+        public String getTextField() {
+            if (textField == null) {
+                textField = "" + ((ItemField)o).getStack().stackSize;
+            }
+
+            return textField;
+        }
+        
+        @Override
+        public void setTextField(String str) {
+            if (str.contains("-")) {
+                str = str.replace("-", "");
+            }
+            
+            super.setTextField(str);
+        }
+        
+        @Override
+        public void setNumber(int parseInt) {
+            if (parseInt < 1) {
+                parseInt = 1;
+                textField = "1";
+            }
+            
+            super.setNumber(parseInt);
+            ItemStack stack = ((ItemField)o).getStack();
+            stack.stackSize = parseInt;
+            ((ItemField)o).setItemStack(stack);
         }
     }
 
