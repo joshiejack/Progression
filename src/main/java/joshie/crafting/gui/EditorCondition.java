@@ -59,7 +59,7 @@ public class EditorCondition {
         ScaledResolution res = GuiTriggerEditor.INSTANCE.res;
         int fullWidth = (res.getScaledWidth()) - offsetX + 5;
         //Title and Repeatability Box
-        drawText("Editing Trigger conditions for the Criteria: " + trigger.getCriteria().getDisplayName() + " - " + trigger.getType().getLocalisedName(), 9 - offsetX, 9, Theme.INSTANCE.conditionEditorFont);
+        drawText("Editing Trigger conditions for the Criteria: " + trigger.getCriteria().displayName + " - " + trigger.getType().getLocalisedName(), 9 - offsetX, 9, Theme.INSTANCE.conditionEditorFont);
         drawBox(-1, 210, fullWidth, 1, Theme.INSTANCE.conditionEditorUnderline2, Theme.INSTANCE.conditionEditorUnderline2);
         drawText("Use arrow keys to scroll sideways, or use the scroll wheel. (Down to go right)", 9 - offsetX, 215, Theme.INSTANCE.scrollTextFontColor);
         drawText("Hold shift with arrow keys to scroll faster.", 9 - offsetX, 225, Theme.INSTANCE.scrollTextFontColor);

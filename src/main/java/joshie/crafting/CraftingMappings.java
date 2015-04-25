@@ -54,8 +54,8 @@ public class CraftingMappings {
         SyncPair[] values = new SyncPair[CraftAPIRegistry.criteria.size()];
         int pos = 0;
         for (Criteria criteria : CraftAPIRegistry.criteria.values()) {
-            int[] numbers = new int[criteria.getTriggers().size()];
-            for (int i = 0; i < criteria.getTriggers().size(); i++) {
+            int[] numbers = new int[criteria.triggers.size()];
+            for (int i = 0; i < criteria.triggers.size(); i++) {
                 numbers[i] = i;
             }
 
@@ -78,7 +78,7 @@ public class CraftingMappings {
             String name = tag.getString("Name");
             Criteria criteria = CraftAPIRegistry.getCriteriaFromName(name);
             if (criteria != null) {
-                for (Trigger trigger : criteria.getTriggers()) {
+                for (Trigger trigger : criteria.triggers) {
                     ITriggerData iTriggerData = trigger.getType().newData();
                     iTriggerData.readFromNBT(tag);
                     triggerData.put(trigger, iTriggerData);
@@ -95,7 +95,7 @@ public class CraftingMappings {
         for (Trigger trigger : triggerData.keySet()) {
             if (trigger != null) {
                 NBTTagCompound tag = new NBTTagCompound();
-                tag.setString("Name", trigger.getCriteria().getUniqueName());
+                tag.setString("Name", trigger.getCriteria().uniqueName);
                 ITriggerData iTriggerData = triggerData.get(trigger);
                 iTriggerData.writeToNBT(tag);
                 data.appendTag(tag);
@@ -129,7 +129,7 @@ public class CraftingMappings {
             if (pair == null || pair.criteria == null) continue; //Avoid broken pairs
             for (int i = 0; i < pair.triggers.length; i++) {
                 int num = pair.triggers[i];
-                if (pair.criteria.getTriggers().size() > num) completedTriggers.add(pair.criteria.getTriggers().get(num));
+                if (pair.criteria.triggers.size() > num) completedTriggers.add(pair.criteria.triggers.get(num));
             }
         }
     }
@@ -227,7 +227,7 @@ public class CraftingMappings {
             if (cantContinue.contains(trigger) || trigger.getCriteria() == null) continue;
             Criteria criteria = trigger.getCriteria();
             //Check that all triggers are in the completed set
-            List<Trigger> allTriggers = criteria.getTriggers();
+            List<Trigger> allTriggers = criteria.triggers;
             boolean allFired = true;
             for (Trigger criteriaTrigger : allTriggers) { //the completed triggers map, doesn't contains all the requirements, then we need to remove it
                 if (!completedTriggers.contains(criteriaTrigger)) allFired = false;
@@ -246,7 +246,7 @@ public class CraftingMappings {
         remapStuff(forRemovalFromActive, toRemap);
         //Now that we have removed all the triggers, and marked this as completed and remapped data, we should give out the rewards
         for (Criteria criteria : toComplete) {
-            for (Reward reward : criteria.getRewards()) {
+            for (Reward reward : criteria.rewards   ) {
                 reward.getType().reward(uuid);
             }
         }
@@ -262,7 +262,7 @@ public class CraftingMappings {
     }
 
     private void completeCriteria(Criteria criteria, HashSet<Trigger> forRemovalFromActive, HashSet<Criteria> toRemap) {
-        List<Trigger> allTriggers = criteria.getTriggers();
+        List<Trigger> allTriggers = criteria.triggers;
         int completedTimes = getCriteriaCount(criteria);
         completedTimes++;
         completedCritera.put(criteria, completedTimes);
@@ -271,8 +271,8 @@ public class CraftingMappings {
         for (Trigger criteriaTrigger : allTriggers) {
             forRemovalFromActive.add(criteriaTrigger);
             //Remove all the conflicts triggers
-            for (Criteria conflict : criteria.getConflicts()) {
-                forRemovalFromActive.addAll(conflict.getTriggers());
+            for (Criteria conflict : criteria.conflicts) {
+                forRemovalFromActive.addAll(conflict.triggers);
             }
 
             triggerData.remove(criteriaTrigger);
@@ -316,25 +316,25 @@ public class CraftingMappings {
         //We are now looping though all criteria, we now need to check to see if this
         //First step is to validate to see if this criteria, is available right now
         //If the criteria is repeatable, or is not completed continue
-        int max = criteria.getRepeatAmount();
+        int max = criteria.isRepeatable;
         int last = getCriteriaCount(criteria);
         if (last < max) {
-            if (completedCritera.keySet().containsAll(criteria.getRequirements())) {
+            if (completedCritera.keySet().containsAll(criteria.prereqs)) {
                 //If we have all the requirements, continue
                 //Now that we know that we have all the requirements, we should check for conflicts
                 //If it doesn't contain any of the conflicts, continue forwards
-                if (!containsAny(criteria.getConflicts())) {
+                if (!containsAny(criteria.conflicts)) {
                     //The Criteria passed the check for being available, mark it as so
                     available = criteria;
                 }
             }
 
             //If we are allowed to redo triggers, remove from completed
-            completedTriggers.removeAll(criteria.getTriggers());
+            completedTriggers.removeAll(criteria.triggers);
         }
 
         if (available != null) {
-            List<Trigger> triggers = criteria.getTriggers(); //Grab a list of all the triggers
+            List<Trigger> triggers = criteria.triggers; //Grab a list of all the triggers
             for (Trigger trigger : triggers) {
                 //If we don't have the trigger in the completed map, mark it as available in the active triggers
                 if (!completedTriggers.contains(trigger)) {
@@ -353,14 +353,14 @@ public class CraftingMappings {
             //We are now looping though all criteria, we now need to check to see if this
             //First step is to validate to see if this criteria, is available right now
             //If the criteria is repeatable, or is not completed continue
-            int max = criteria.getRepeatAmount();
+            int max = criteria.isRepeatable;
             int last = getCriteriaCount(criteria);
             if (last < max) {
-                if (completedCritera.keySet().containsAll(criteria.getRequirements())) {
+                if (completedCritera.keySet().containsAll(criteria.prereqs)) {
                     //If we have all the requirements, continue
                     //Now that we know that we have all the requirements, we should check for conflicts
                     //If it doesn't contain any of the conflicts, continue forwards
-                    if (!containsAny(criteria.getConflicts())) {
+                    if (!containsAny(criteria.conflicts)) {
                         //The Criteria passed the check for being available, mark it as so
                         availableCriteria.add(criteria);
                     }
@@ -370,7 +370,7 @@ public class CraftingMappings {
 
         //Now that we have remapped all of the criteria, we should remap the triggers
         for (Criteria criteria : availableCriteria) {
-            List<Trigger> triggers = criteria.getTriggers(); //Grab a list of all the triggers
+            List<Trigger> triggers = criteria.triggers; //Grab a list of all the triggers
             for (Trigger trigger : triggers) {
                 //If we don't have the trigger in the completed map, mark it as available in the active triggers
                 if (!completedTriggers.contains(trigger)) {

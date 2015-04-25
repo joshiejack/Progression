@@ -60,7 +60,7 @@ public class ItemCriteria extends Item {
         }
 
         Criteria criteria = getCriteriaFromStack(stack);
-        return criteria == null ? "BROKEN ITEM" : criteria.getDisplayName();
+        return criteria == null ? "BROKEN ITEM" : criteria.displayName;
     }
 
     @Override
@@ -108,7 +108,7 @@ public class ItemCriteria extends Item {
         for (Criteria c : CraftAPIRegistry.getCriteria()) {
             ItemStack stack = new ItemStack(item);
             stack.setTagCompound(new NBTTagCompound());
-            stack.getTagCompound().setString("Criteria", c.getUniqueName());
+            stack.getTagCompound().setString("Criteria", c.uniqueName);
             list.add(stack);
         }
     }

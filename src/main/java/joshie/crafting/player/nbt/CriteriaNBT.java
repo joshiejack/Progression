@@ -35,7 +35,7 @@ public class CriteriaNBT implements IMapHelper {
 
 	@Override
 	public void writeKey(NBTTagCompound tag, Object o) {
-		String name = ((Criteria)o).getUniqueName();
+		String name = ((Criteria)o).uniqueName;
 		tag.setString("Name", name);
 	}
 

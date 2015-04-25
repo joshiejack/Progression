@@ -56,7 +56,7 @@ public class EditorTree {
     }
 
     private int getWidthFromRewards() {
-        int size = criteria.getRewards().size();
+        int size = criteria.rewards.size();
         if (size == 1) {
             return 21; //12 Bigger 1 * 12 + 9
         } else if (size == 2) {
@@ -71,8 +71,8 @@ public class EditorTree {
     }
 
     private void recalculate(int x) {
-        int textWidth = gui.mc.fontRenderer.getStringWidth(criteria.getDisplayName());
-        int iconWidth = 9 + (criteria.getRewards().size() * 12);
+        int textWidth = gui.mc.fontRenderer.getStringWidth(criteria.displayName);
+        int iconWidth = 9 + (criteria.rewards.size() * 12);
         if (textWidth >= iconWidth) {
             width = textWidth + 9;
         } else width = iconWidth;
@@ -89,20 +89,20 @@ public class EditorTree {
     }
 
     public boolean isCriteriaVisible() {
-        if (criteria.isVisible()) return true;
-        else return PlayerTracker.getClientPlayer().getMappings().getCompletedCriteria().keySet().containsAll(criteria.getRequirements());
+        if (criteria.isVisible) return true;
+        else return PlayerTracker.getClientPlayer().getMappings().getCompletedCriteria().keySet().containsAll(criteria.prereqs);
     }
 
     public boolean isCriteriaCompleteable(Criteria criteria) {
         HashMap<Criteria, Integer> completedMap = PlayerTracker.getClientPlayer().getMappings().getCompletedCriteria();
         boolean completeable = true;
         //Check the conflicts of this criteria
-        for (Criteria conflicts : criteria.getConflicts()) {
+        for (Criteria conflicts : criteria.conflicts) {
             if (completedMap.containsKey(conflicts)) return false;
         }
 
         //Check the requirements, if they aren't completable return false
-        for (Criteria requirements : criteria.getRequirements()) {
+        for (Criteria requirements : criteria.prereqs) {
             if (!isCriteriaCompleteable(requirements)) return false;
         }
 
@@ -119,7 +119,7 @@ public class EditorTree {
             boolean anyConflicts = false;
             boolean allRequires = false;
             int requires = 0;
-            for (Criteria c : criteria.getConflicts()) {
+            for (Criteria c : criteria.conflicts) {
                 if (completedMap.containsKey(c)) {
                     anyConflicts = true;
                     break;
@@ -127,13 +127,13 @@ public class EditorTree {
             }
 
             if (!anyConflicts) {
-                for (Criteria c : criteria.getRequirements()) {
+                for (Criteria c : criteria.prereqs) {
                     if (completedMap.containsKey(c)) {
                         requires++;
                     }
                 }
 
-                allRequires = criteria.getRequirements().size() == requires;
+                allRequires = criteria.prereqs.size() == requires;
             }
 
             boolean available = allRequires && !anyConflicts;
@@ -145,7 +145,7 @@ public class EditorTree {
 
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-            if (!criteria.isVisible()) {
+            if (!criteria.isVisible) {
                 if (ClientHelper.canEdit()) {
                     textureX = 100;
                 } else {
@@ -164,7 +164,7 @@ public class EditorTree {
             }
             
             if (selected != null) {
-                if (selected.getConflicts().contains(criteria)) {
+                if (selected.conflicts.contains(criteria)) {
                     textureY = 75;
                 }
             }
@@ -179,12 +179,12 @@ public class EditorTree {
             gui.drawTexturedModalRect(x + right - 10, y + top, textureX + 90, textureY, 10, 25);
 
             //gui.drawTexturedModalRect(x + left, y + top, textureX, textureY, 100, 25);
-            gui.mc.fontRenderer.drawString(criteria.getDisplayName(), x + left + 4, y + top + 3, Theme.INSTANCE.criteriaDisplayNameColor);
+            gui.mc.fontRenderer.drawString(criteria.displayName, x + left + 4, y + top + 3, Theme.INSTANCE.criteriaDisplayNameColor);
 
             GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
             //Draw in the rewards
             int xOffset = 0;
-            for (Reward reward : criteria.getRewards()) {
+            for (Reward reward : criteria.rewards) {
                 ItemStack icon = reward.getType().getIcon();
                 if (icon == null || icon.getItem() == null) continue; //Protection against null icons
                 RenderItemHelper.drawStack(icon, x + 4 + left + (xOffset * 12), y + top + 12, 0.75F);
@@ -196,7 +196,7 @@ public class EditorTree {
             GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
             xOffset = 0;
             boolean hoveredReward = false;
-            for (Reward reward : criteria.getRewards()) {
+            for (Reward reward : criteria.rewards) {
                 int x1 = 3 + left + (xOffset * 12);
                 int x2 = x1 + 11;
                 int y1 = bottom - 13;
@@ -282,12 +282,12 @@ public class EditorTree {
                     List<Criteria> list = null;
                     boolean isConflict = false;
                     if (GuiScreen.isShiftKeyDown()) {
-                        list = previous.getRequirements();
-                        if (previous.getConflicts().contains(criteria)) {
+                        list = previous.prereqs;
+                        if (previous.conflicts.contains(criteria)) {
                             list = null;
                         }
                     } else if (GuiScreen.isCtrlKeyDown()) {
-                        list = previous.getConflicts();
+                        list = previous.conflicts;
                         isConflict = true;
                     }
 
@@ -299,13 +299,13 @@ public class EditorTree {
                         if (list.contains(criteria)) {
                             remove(list, criteria);
                             if (isConflict) {
-                                remove(criteria.getConflicts(), previous);
+                                remove(criteria.conflicts, previous);
                             }
                         } else {
                             //Now that it's been added, move everything
                             list.add(criteria);
                             if (isConflict) {
-                                criteria.getConflicts().add(previous);
+                                criteria.conflicts.add(previous);
                             }
                         }
 
@@ -315,8 +315,7 @@ public class EditorTree {
 
                 if (ClientHelper.canEdit()) {
                     if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
-                        boolean invisible = criteria.isVisible();
-                        criteria.setVisibility(!invisible);
+                        criteria.isVisible = !criteria.isVisible;
                         return true;
                     }
                 }

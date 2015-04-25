@@ -150,7 +150,8 @@ public class JSONLoader {
                     rewardz[k] = CraftAPIRegistry.newReward(theCriteria, reward.type, reward.data);
                 }
 
-                theCriteria.addTriggers(triggerz).addRewards(rewardz);
+                theCriteria.addTriggers(triggerz);
+                theCriteria.addRewards(rewardz);
             }
 
             /** Step 3, nAdd the extra data **/
@@ -186,10 +187,10 @@ public class JSONLoader {
                     repeatable = 1;
                 }
                 
-                theCriteria.addRequirements(thePrereqs).addConflicts(theConflicts).setDisplayName(display).setVisibility(isVisible).setRepeatAmount(repeatable).setIcon(icon);
-                
+                theCriteria.init(thePrereqs, theConflicts, display, isVisible, repeatable, icon);
+
                 if (isClient) {
-                	theCriteria.getTreeEditor().setCoordinates(x, y);
+                	theCriteria.treeEditor.setCoordinates(x, y);
                 }
             }
         }
@@ -224,24 +225,24 @@ public class JSONLoader {
             tabData.isVisible = tab.isVisible();
             tabData.stack = StackHelper.getStringFromStack(tab.getStack());
             for (Criteria c: tab.getCriteria()) {
-                if (!names.add(c.getUniqueName())) continue;
-                if (c.getTreeEditor() == null) continue;
+                if (!names.add(c.uniqueName)) continue;
+                if (c.treeEditor == null) continue;
                 DataCriteria data = new DataCriteria();
-                data.x = c.getTreeEditor().getX();
-                data.y = c.getTreeEditor().getY();
-                data.isVisible = c.isVisible();
-                data.repeatable = c.getRepeatAmount();
-                data.displayName = c.getDisplayName();
-                data.uniqueName = c.getUniqueName();
-                data.displayStack = StackHelper.getStringFromStack(c.getIcon());
-                List<Trigger> triggers = c.getTriggers();
-                List<Reward> rewards = c.getRewards();
-                List<Criteria> prereqs = c.getRequirements();
-                List<Criteria> conflicts = c.getConflicts();
+                data.x = c.treeEditor.getX();
+                data.y = c.treeEditor.getY();
+                data.isVisible = c.isVisible;
+                data.repeatable = c.isRepeatable;
+                data.displayName = c.displayName;
+                data.uniqueName = c.uniqueName;
+                data.displayStack = StackHelper.getStringFromStack(c.stack);
+                List<Trigger> triggers = c.triggers;
+                List<Reward> rewards = c.rewards;
+                List<Criteria> prereqs = c.prereqs;
+                List<Criteria> conflicts = c.conflicts;
 
                 ArrayList<DataTrigger> theTriggers = new ArrayList();
                 ArrayList<DataGeneric> theRewards = new ArrayList();
-                for (Trigger trigger : c.getTriggers()) {
+                for (Trigger trigger : c.triggers) {
                     ArrayList<DataGeneric> theConditions = new ArrayList();
                     for (Condition condition : trigger.getConditions()) {
                         JsonObject object = new JsonObject();
@@ -260,7 +261,7 @@ public class JSONLoader {
                     theTriggers.add(dTrigger);
                 }
 
-                for (Reward reward : c.getRewards()) {
+                for (Reward reward : c.rewards) {
                     JsonObject rewardData = new JsonObject();
                     reward.getType().writeToJSON(rewardData);
                     DataGeneric dReward = new DataGeneric(reward.getType().getUnlocalisedName(), rewardData);
@@ -270,9 +271,9 @@ public class JSONLoader {
                 String[] thePrereqs = new String[prereqs.size()];
                 String[] theConflicts = new String[conflicts.size()];
                 for (int i = 0; i < thePrereqs.length; i++)
-                    thePrereqs[i] = prereqs.get(i).getUniqueName();
+                    thePrereqs[i] = prereqs.get(i).uniqueName;
                 for (int i = 0; i < theConflicts.length; i++)
-                    theConflicts[i] = conflicts.get(i).getUniqueName();
+                    theConflicts[i] = conflicts.get(i).uniqueName;
                 data.triggers = theTriggers;
                 data.rewards = theRewards;
                 data.prereqs = thePrereqs;

@@ -30,7 +30,7 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
         ScaledResolution res = GuiCriteriaEditor.INSTANCE.res;
         int fullWidth = (res.getScaledWidth()) - offsetX + 5;
         //Title and Repeatability Box
-        drawStack(selected.getIcon(), 1, 4, 1F);
+        drawStack(selected.stack, 1, 4, 1F);
         drawText("Display Name: " + nameEdit.getText(), 21 - offsetX, 9, theme.criteriaEditDisplayNameColor);
         drawText("Repeatability: " + repeatEdit.getText() + "x", fullWidth - 130, 9, theme.criteriaEditDisplayNameColor);
         drawBox(-1, 210, fullWidth, 1, theme.blackBarUnderLineBorder, theme.blackBarUnderLineBorder);
@@ -42,7 +42,7 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
         drawBox(-1, 40, fullWidth, 1, theme.triggerBoxUnderline1, theme.invisible);
         drawText("Requirements", 9 - offsetX, 29, theme.triggerBoxFont);
         int xCoord = 0;
-        List<Trigger> triggers = selected.getTriggers();
+        List<Trigger> triggers = selected.triggers;
         int mouseX = GuiCriteriaEditor.INSTANCE.mouseX - offsetX;
         int mouseY = GuiCriteriaEditor.INSTANCE.mouseY;
         for (int i = 0; i < triggers.size(); i++) {
@@ -71,7 +71,7 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
         drawGradient(-1, 120, fullWidth, 15, theme.rewardBoxGradient1, theme.rewardBoxGradient2, theme.rewardBoxBorder);
         drawText("Result", 9 - offsetX, 124, theme.rewardBoxFont);
         xCoord = 0;
-        List<Reward> rewards = selected.getRewards();
+        List<Reward> rewards = selected.rewards;
         for (int i = 0; i < rewards.size(); i++) {
             int xPos = 100 * xCoord;
             Reward reward = rewards.get(i);
@@ -141,7 +141,7 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
         //If we are trying to go back
         if (visible <= 1 && !clicked) {
             if (button == 1) {
-                GuiTreeEditor.INSTANCE.currentTab = GuiCriteriaEditor.INSTANCE.selected.getTabID();
+                GuiTreeEditor.INSTANCE.currentTab = GuiCriteriaEditor.INSTANCE.selected.tab;
                 GuiTreeEditor.INSTANCE.currentTabName = GuiTreeEditor.INSTANCE.currentTab.getUniqueName();
                 SelectTextEdit.INSTANCE.reset();
                 GuiTreeEditor.INSTANCE.selected = null;
@@ -179,7 +179,7 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
 
         //Triggers
         int xCoord = 0;
-        List<Trigger> triggers = selected.getTriggers();
+        List<Trigger> triggers = selected.triggers;
         for (int i = 0; i < triggers.size(); i++) {
             Result result = triggers.get(i).onClicked();
             if (result != Result.DEFAULT) {
@@ -205,7 +205,7 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
             }
 
             //Rewards
-            List<Reward> rewards = selected.getRewards();
+            List<Reward> rewards = selected.rewards;
             xCoord = 0;
             for (int i = 0; i < rewards.size(); i++) {
                 Result result = rewards.get(i).onClicked();
@@ -235,12 +235,12 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
     private static class NameEdit extends TextFieldHelper {
         @Override
         public String getTextField() {
-            return INSTANCE.selected.getDisplayName();
+            return INSTANCE.selected.displayName;
         }
 
         @Override
-        public void setTextField(String str) {
-            INSTANCE.selected.setDisplayName(str);
+        public void setTextField(String name) {
+            INSTANCE.selected.displayName = name;
         }
     }
 
@@ -248,20 +248,20 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
         @Override
         public String getTextField() {
             if (textField == null) {
-                textField = "" + INSTANCE.selected.getRepeatAmount();
+                textField = "" + INSTANCE.selected.isRepeatable;
             }
 
-            return "" + INSTANCE.selected.getRepeatAmount();
+            return "" + INSTANCE.selected.isRepeatable;
         }
 
         @Override
         public void setNumber(int amount) {
-            INSTANCE.selected.setRepeatAmount(amount);
+            INSTANCE.selected.isRepeatable = amount;
         }
     }
 
     @Override
     public void setItemStack(ItemStack stack) {
-        selected.setIcon(stack);
+        selected.stack = stack;
     }
 }

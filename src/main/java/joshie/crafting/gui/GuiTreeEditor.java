@@ -93,18 +93,18 @@ public class GuiTreeEditor extends GuiBase {
     public void drawForeground() {
         if (currentTab == null) initGui();
         for (Criteria criteria : currentTab.getCriteria()) {
-            if (criteria.getTreeEditor().isCriteriaVisible() || ClientHelper.canEdit()) {
-                EditorTree editor = criteria.getTreeEditor();
-                List<Criteria> prereqs = criteria.getRequirements();
-                for (Criteria p : prereqs) {
-                    int y1 = p.getTreeEditor().getY();
+            if (criteria.treeEditor.isCriteriaVisible() || ClientHelper.canEdit()) {
+                EditorTree editor = criteria.treeEditor;
+                List<Criteria> prereqs = criteria.prereqs;
+                for (Criteria c : prereqs) {
+                    int y1 = c.treeEditor.getY();
                     int y2 = editor.getY();
-                    int x1 = p.getTreeEditor().getX();
+                    int x1 = c.treeEditor.getX();
                     int x2 = editor.getX();
 
                     int width = 0;
-                    int textWidth = mc.fontRenderer.getStringWidth(p.getDisplayName());
-                    int iconWidth = 9 + (p.getRewards().size() * 12);
+                    int textWidth = mc.fontRenderer.getStringWidth(c.displayName);
+                    int iconWidth = 9 + (c.rewards.size() * 12);
                     if (textWidth >= iconWidth) {
                         width = textWidth + 9;
                     } else width = iconWidth;
@@ -120,8 +120,8 @@ public class GuiTreeEditor extends GuiBase {
 
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
         for (Criteria criteria : currentTab.getCriteria()) {
-            if (criteria.getTreeEditor().isCriteriaVisible() || ClientHelper.canEdit()) {
-                criteria.getTreeEditor().draw(0, y, offsetX);
+            if (criteria.treeEditor.isCriteriaVisible() || ClientHelper.canEdit()) {
+                criteria.treeEditor.draw(0, y, offsetX);
             }
         }
 
@@ -134,8 +134,8 @@ public class GuiTreeEditor extends GuiBase {
     protected void keyTyped(char character, int key) {
         Criteria toRemove = null;
         for (Criteria criteria : currentTab.getCriteria()) {
-            if (criteria.getTreeEditor().isCriteriaVisible() || ClientHelper.canEdit()) {
-                if (criteria.getTreeEditor().keyTyped(character, key)) {
+            if (criteria.treeEditor.isCriteriaVisible() || ClientHelper.canEdit()) {
+                if (criteria.treeEditor.keyTyped(character, key)) {
                     toRemove = criteria;
                     break;
                 }
@@ -143,7 +143,7 @@ public class GuiTreeEditor extends GuiBase {
         }
 
         if (toRemove != null) {
-            CraftAPIRegistry.removeCriteria(toRemove.getUniqueName());
+            CraftAPIRegistry.removeCriteria(toRemove.uniqueName);
         }
 
         if (ClientHelper.canEdit()) {
@@ -168,7 +168,7 @@ public class GuiTreeEditor extends GuiBase {
     @Override
     public void mouseMovedOrUp(int x, int y, int button) {
         for (Criteria criteria : currentTab.getCriteria()) {
-            criteria.getTreeEditor().release(mouseX, mouseY);
+            criteria.treeEditor.release(mouseX, mouseY);
         }
 
         if (button == 0) {
@@ -198,8 +198,8 @@ public class GuiTreeEditor extends GuiBase {
 
         super.mouseClicked(par1, par2, par3);
         for (Criteria criteria : currentTab.getCriteria()) {
-            if (criteria.getTreeEditor().isCriteriaVisible() || ClientHelper.canEdit()) {
-                if (criteria.getTreeEditor().click(mouseX, mouseY, isDoubleClick)) {
+            if (criteria.treeEditor.isCriteriaVisible() || ClientHelper.canEdit()) {
+                if (criteria.treeEditor.click(mouseX, mouseY, isDoubleClick)) {
                     lastClicked = criteria;
                 }
             }
@@ -225,10 +225,10 @@ public class GuiTreeEditor extends GuiBase {
         }
         
         for (Criteria criteria : currentTab.getCriteria()) {
-            criteria.getTreeEditor().follow(mouseX, mouseY);
+            criteria.treeEditor.follow(mouseX, mouseY);
             int wheel = Mouse.getDWheel();
             if (wheel != 0) {
-                criteria.getTreeEditor().scroll(wheel < 0);
+                criteria.treeEditor.scroll(wheel < 0);
             }
         }
     }

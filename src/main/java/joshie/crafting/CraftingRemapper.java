@@ -52,7 +52,7 @@ public class CraftingRemapper {
         for (Criteria criteria : allCriteria) { //Remap criteria to unlocks
             //We do not give a damn about whether this is available or not
             //The unlocking of criteria should happen no matter what
-            List<Criteria> requirements = criteria.getRequirements();
+            List<Criteria> requirements = criteria.prereqs;
             for (Criteria require : requirements) {
                 criteriaToUnlocks.get(require).add(criteria);
             }

@@ -66,10 +66,10 @@ public class CraftAPIRegistry implements IRegistry {
     }
 
     public static Criteria newCriteria(Tab tab, String name) {
-        Criteria condition = new Criteria().setUniqueName(name).setTab(tab);
-        tab.addCriteria(condition);
-        criteria.put(name, condition);
-        return condition;
+        Criteria theCriteria = new Criteria(tab, name);
+        tab.addCriteria(theCriteria);
+        criteria.put(name, theCriteria);
+        return theCriteria;
     }
 
     public static Tab newTab(String name) {
@@ -196,7 +196,7 @@ public class CraftAPIRegistry implements IRegistry {
 
     public static void removeTab(Tab tab) {
         for (Criteria c: tab.getCriteria()) {
-            removeCriteria(c.getUniqueName(), true);
+            removeCriteria(c.uniqueName, true);
         }
         
         tabs.remove(tab.getUniqueName());
@@ -210,7 +210,7 @@ public class CraftAPIRegistry implements IRegistry {
         Criteria c = criteria.get(unique);
         //Remove the criteria from the tab
         if (!skipTab) {
-            Iterator<Criteria> itC = c.getTabID().getCriteria().iterator();
+            Iterator<Criteria> itC = c.tab.getCriteria().iterator();
             while (itC.hasNext()) {
                 Criteria ic = itC.next();
                 if (ic.equals(c)) {
@@ -220,8 +220,8 @@ public class CraftAPIRegistry implements IRegistry {
         }
 
         //Remove this from all the conflict lists
-        for (Criteria conflict : c.getConflicts()) {
-            Iterator<Criteria> it = conflict.getConflicts().iterator();
+        for (Criteria conflict : c.conflicts) {
+            Iterator<Criteria> it = conflict.conflicts.iterator();
             while (it.hasNext()) {
                 Criteria ct = it.next();
                 if (ct.equals(c)) {
@@ -232,7 +232,7 @@ public class CraftAPIRegistry implements IRegistry {
 
         //Remove this from all the requirement lists
         for (Criteria require : criteria.values()) {
-            Iterator<Criteria> it = require.getRequirements().iterator();
+            Iterator<Criteria> it = require.prereqs.iterator();
             while (it.hasNext()) {
                 Criteria ct = it.next();
                 if (ct.equals(c)) {
@@ -242,12 +242,12 @@ public class CraftAPIRegistry implements IRegistry {
         }
 
         //Remove all rewards associated with this criteria
-        for (Reward reward : c.getRewards()) {
+        for (Reward reward : c.rewards) {
             removeReward(reward);
         }
 
         //Remove all triggers associated with this criteria
-        for (Trigger trigger : c.getTriggers()) {
+        for (Trigger trigger : c.triggers) {
             removeTrigger(trigger);
         }
 

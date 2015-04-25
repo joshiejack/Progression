@@ -14,7 +14,7 @@ public class TriggerNBT extends AbstractUniqueNBT {
     public NBTBase write(Object s) {
         NBTTagCompound tag = new NBTTagCompound();
         Trigger t = ((Trigger) s);
-        tag.setString("Criteria", t.getCriteria().getUniqueName());
+        tag.setString("Criteria", t.getCriteria().uniqueName);
         tag.setInteger("Value", t.getInternalID());
         return tag;
     }
@@ -25,8 +25,8 @@ public class TriggerNBT extends AbstractUniqueNBT {
         Criteria criteria = CraftAPIRegistry.getCriteriaFromName(tag.getString("Criteria"));
         if (criteria == null) return null;
         int value = tag.getInteger("Value");
-        if (value < criteria.getTriggers().size()) {
-            return (Trigger) criteria.getTriggers().get(value);
+        if (value < criteria.triggers.size()) {
+            return (Trigger) criteria.triggers.get(value);
         } else return null;
     }
 }

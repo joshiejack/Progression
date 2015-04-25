@@ -52,8 +52,8 @@ public class Trigger {
     }
 
     public int getInternalID() {
-        for (int id = 0; id < getCriteria().getTriggers().size(); id++) {
-            Trigger aTrigger = getCriteria().getTriggers().get(id);
+        for (int id = 0; id < getCriteria().triggers.size(); id++) {
+            Trigger aTrigger = getCriteria().triggers.get(id);
             if (aTrigger.equals(this)) return id;
         }
 

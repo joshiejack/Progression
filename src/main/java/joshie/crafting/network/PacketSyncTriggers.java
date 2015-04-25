@@ -23,7 +23,7 @@ public class PacketSyncTriggers implements IMessage, IMessageHandler<PacketSyncT
 
         public void toBytes(ByteBuf buf) {
             buf.writeInt(triggers.length);
-            ByteBufUtils.writeUTF8String(buf, criteria.getUniqueName());
+            ByteBufUtils.writeUTF8String(buf, criteria.uniqueName);
             for (int tech : triggers) {
                 buf.writeInt(tech);
             }

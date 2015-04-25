@@ -34,7 +34,7 @@ public class RenderItemCriteria implements IItemRenderer {
     public void renderItem(ItemRenderType type, ItemStack stack2, Object... data) {
         Criteria criteria = ItemCriteria.getCriteriaFromStack(stack2);
         if (criteria != null) {
-            ItemStack stack = criteria.getIcon();
+            ItemStack stack = criteria.stack;
             if (type == ItemRenderType.INVENTORY) {
                 RenderItemHelper.drawStack(stack, 0, 0, 1F);
                 RenderHelper.enableGUIStandardItemLighting();

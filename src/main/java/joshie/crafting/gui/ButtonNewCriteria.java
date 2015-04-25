@@ -9,7 +9,6 @@ import joshie.crafting.gui.ButtonBase.ButtonLeft;
 import joshie.crafting.json.Theme;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
@@ -52,10 +51,10 @@ public class ButtonNewCriteria extends ButtonLeft {
             int mouseX = GuiTreeEditor.INSTANCE.mouseX;
             int mouseY = GuiTreeEditor.INSTANCE.mouseY;
             int offsetX = GuiTreeEditor.INSTANCE.offsetX;
-            Criteria criteria = CraftAPIRegistry.newCriteria(currentTab, CraftAPIRegistry.getNextUnique()).setDisplayName("New Criteria").setVisibility(true).setIcon(new ItemStack(Blocks.stone));
-            criteria.getTreeEditor().setCoordinates(mouseX - 50 - offsetX, mouseY - 10);
-            criteria.getTreeEditor().draw(mouseX - 50, mouseY - 10, offsetX);
-            criteria.getTreeEditor().click(mouseX - 50, mouseY - 10, false);
+            Criteria criteria = CraftAPIRegistry.newCriteria(currentTab, CraftAPIRegistry.getNextUnique());
+            criteria.treeEditor.setCoordinates(mouseX - 50 - offsetX, mouseY - 10);
+            criteria.treeEditor.draw(mouseX - 50, mouseY - 10, offsetX);
+            criteria.treeEditor.click(mouseX - 50, mouseY - 10, false);
         }
     }
 }

@@ -28,7 +28,7 @@ public class PacketSyncCriteria implements IMessage, IMessageHandler<PacketSyncC
     	buf.writeBoolean(overwrite);
     	buf.writeInt(criteria.length);
     	for (Criteria tech: criteria) {
-            ByteBufUtils.writeUTF8String(buf, tech.getUniqueName());
+            ByteBufUtils.writeUTF8String(buf, tech.uniqueName);
     	}
     	
     	for (Integer i: integers) {
@@ -58,7 +58,7 @@ public class PacketSyncCriteria implements IMessage, IMessageHandler<PacketSyncC
         	for (Criteria condition: CraftAPIRegistry.criteria.values()) {
         		for (Criteria unlocked: message.criteria) {
         		    if (unlocked == null) continue;
-        			for (Reward reward: unlocked.getRewards()) {
+        			for (Reward reward: unlocked.rewards) {
         				if (reward.getType() instanceof RewardCrafting) {
         					reward.getType().reward(PlayerTracker.getClientPlayer().getUUID());
         				}

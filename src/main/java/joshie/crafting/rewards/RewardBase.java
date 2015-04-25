@@ -9,6 +9,7 @@ public abstract class RewardBase implements IRewardType {
     protected ICriteria criteria;
     private String name;
     private int color;
+    private boolean mustClaim = false;
 
     public RewardBase(String name, int color) {
         this.name = name;

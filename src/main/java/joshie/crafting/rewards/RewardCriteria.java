@@ -99,7 +99,7 @@ public class RewardCriteria extends RewardBase implements ITextEditable {
             criteria = CraftAPIRegistry.getCriteriaFromName(criteriaID);
             if (criteria == null) {
                 displayName = "null";
-            } else displayName = criteria.getDisplayName();
+            } else displayName = criteria.displayName;
         }
 
         return criteria != null ? displayName : displayName;
@@ -112,10 +112,10 @@ public class RewardCriteria extends RewardBase implements ITextEditable {
         try {
             criteria = null;
             for (Criteria c : CraftAPIRegistry.criteria.values()) {
-                String display = c.getDisplayName();
-                if (c.getDisplayName().equals(displayName)) {
+                String display = c.displayName;
+                if (c.displayName.equals(displayName)) {
                     criteria = c;
-                    criteriaID = c.getUniqueName();
+                    criteriaID = c.uniqueName;
                     break;
                 }
             }
@@ -130,8 +130,8 @@ public class RewardCriteria extends RewardBase implements ITextEditable {
 
         if (criteria != null) {
             if (remove) {
-                list.add("Remove " + criteria.getDisplayName());
-            } else list.add("Add " + criteria.getDisplayName());
+                list.add("Remove " + criteria.displayName);
+            } else list.add("Add " + criteria.displayName);
         }
     }
 }
