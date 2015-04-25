@@ -132,6 +132,7 @@ public class CraftingMod {
         CraftingAPI.registry.registerConditionType(new ConditionCoordinates());
         CraftingAPI.registry.registerConditionType(new ConditionDaytime());
         CraftingAPI.registry.registerConditionType(new ConditionInInventory());
+        
         CraftingAPI.registry.registerRewardType(new RewardCommand());
         CraftingAPI.registry.registerRewardType(new RewardCrafting());
         CraftingAPI.registry.registerRewardType(new RewardCriteria());
@@ -140,7 +141,7 @@ public class CraftingMod {
         CraftingAPI.registry.registerRewardType(new RewardResearch());
         CraftingAPI.registry.registerRewardType(new RewardPoints());
         CraftingAPI.registry.registerRewardType(new RewardSpeed());
-        CraftingAPI.registry.registerRewardType(new RewardTime());
+        CraftingAPI.registry.registerRewardType(new RewardTime()); 
 
         CraftingAPI.registry.registerTriggerType(new TriggerBreakBlock());
         CraftingAPI.registry.registerTriggerType(new TriggerCrafting());

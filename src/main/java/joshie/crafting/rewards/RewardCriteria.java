@@ -21,12 +21,12 @@ import com.google.gson.JsonObject;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 
 public class RewardCriteria extends RewardBase implements ITextEditable {
-    private String criteriaID = "";
-    private boolean remove = false;
-    private Criteria criteria = null;
+    public String criteriaID = "";
+    public boolean remove = false;
+    public Criteria criteria = null;
 
     public RewardCriteria() {
-        super("criteria", 0xFF99B3FF);
+        super( new ItemStack(Items.golden_apple), "criteria", 0xFF99B3FF);
     }
 
     @Override
@@ -52,11 +52,6 @@ public class RewardCriteria extends RewardBase implements ITextEditable {
         if (remove) {
             PlayerTracker.getServerPlayer(uuid).getMappings().fireAllTriggers("forced-remove", criteria);
         } else PlayerTracker.getServerPlayer(uuid).getMappings().fireAllTriggers("forced-complete", criteria);
-    }
-
-    @Override
-    public ItemStack getIcon() {
-        return new ItemStack(Items.golden_apple);
     }
 
     @Override

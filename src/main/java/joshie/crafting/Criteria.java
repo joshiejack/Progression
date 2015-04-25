@@ -2,6 +2,7 @@ package joshie.crafting;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import joshie.crafting.api.ICriteria;
@@ -50,12 +51,16 @@ public class Criteria implements ICriteria {
 
     public void addTriggers(Trigger... triggers) {
         this.triggers.addAll(Arrays.asList((Trigger[]) triggers));
+        this.triggers.removeAll(Collections.singleton(null));
     }
 
     public void addRewards(Reward... rewards) {
         this.rewards.addAll(Arrays.asList((Reward[]) rewards));
+        this.rewards.removeAll(Collections.singleton(null));
         for (Reward reward : rewards) {
-            reward.getType().onAdded();
+            if (reward != null) {
+                reward.getType().onAdded();
+            }
         }
     }
 

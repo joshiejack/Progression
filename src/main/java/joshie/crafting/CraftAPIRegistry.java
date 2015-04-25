@@ -79,9 +79,11 @@ public class CraftAPIRegistry implements IRegistry {
     }
 
     public static Condition newCondition(Trigger trigger, String type, JsonObject data) {
-        boolean inverted = data.get("inverted") != null ? data.get("inverted").getAsBoolean() : false;
         IConditionType oldConditionType = conditionTypes.get(type);
+        if (oldConditionType == null) return null;
         IConditionType newConditionType = oldConditionType;
+        
+        boolean inverted = data.get("inverted") != null ? data.get("inverted").getAsBoolean() : false;
         
         try {
             newConditionType = oldConditionType.getClass().newInstance();
@@ -95,6 +97,8 @@ public class CraftAPIRegistry implements IRegistry {
 
     public static Trigger newTrigger(Criteria criteria, String type, JsonObject data) {
         ITriggerType oldTriggerType = triggerTypes.get(type);
+        if (oldTriggerType == null) return null;
+        
         ITriggerType newTriggerType = oldTriggerType;
         
         try {
@@ -110,6 +114,8 @@ public class CraftAPIRegistry implements IRegistry {
 
     public static Reward newReward(Criteria criteria, String type, JsonObject data) {
         IRewardType oldRewardType = rewardTypes.get(type);
+        if (oldRewardType == null) return null;
+        
         IRewardType newRewardType = oldRewardType;
         
         try {
