@@ -3,10 +3,12 @@ package joshie.crafting.rewards;
 import java.util.List;
 import java.util.UUID;
 
-import joshie.crafting.api.IReward;
+import joshie.crafting.api.DrawHelper;
 import joshie.crafting.gui.TextFieldHelper.IntegerFieldHelper;
 import joshie.crafting.helpers.ClientHelper;
+import joshie.crafting.helpers.JSONHelper;
 import joshie.crafting.helpers.PlayerHelper;
+import joshie.crafting.json.Theme;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -21,38 +23,20 @@ public class RewardTime extends RewardBase {
     public int time = 0;
 
     public RewardTime() {
-        super("Adjust Time", theme.rewardTime, "time");
+        super("time", 0xFF26C9FF);
         timeEdit = new IntegerFieldHelper("time", this);
     }
 
     @Override
-    public IReward newInstance() {
-        return new RewardTime();
+    public void readFromJSON(JsonObject data) {
+        add = JSONHelper.getBoolean(data, "add", add);
+        time = JSONHelper.getInteger(data, "time", time);
     }
 
     @Override
-    public IReward deserialize(JsonObject data) {
-        RewardTime reward = new RewardTime();
-        if (data.get("add") != null) {
-            reward.add = data.get("add").getAsBoolean();
-        }
-
-        if (data.get("time") != null) {
-            reward.time = data.get("time").getAsInt();
-        }
-
-        return reward;
-    }
-
-    @Override
-    public void serialize(JsonObject elements) {
-        if (add != false) {
-            elements.addProperty("add", add);
-        }
-
-        if (time != 0) {
-            elements.addProperty("time", time);
-        }
+    public void writeToJSON(JsonObject data) {
+        JSONHelper.setBoolean(data, "add", add, false);
+        JSONHelper.setInteger(data, "time", time, 0);
     }
 
     @Override
@@ -71,7 +55,7 @@ public class RewardTime extends RewardBase {
     }
 
     @Override
-    public Result clicked() {
+    public Result onClicked(int mouseX, int mouseY) {
         if (mouseX <= 84 && mouseX >= 1) {
             if (mouseY >= 17 && mouseY <= 25) add = !add;
             if (mouseY > 25 && mouseY <= 33) timeEdit.select();
@@ -82,18 +66,18 @@ public class RewardTime extends RewardBase {
     }
 
     @Override
-    public void draw() {
-        int color = theme.optionsFontColor;
-        int amountColor = theme.optionsFontColor;
+    public void draw(int mouseX, int mouseY) {
+        int color = Theme.INSTANCE.optionsFontColor;
+        int amountColor = Theme.INSTANCE.optionsFontColor;
         if (ClientHelper.canEdit()) {
             if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 25) color = theme.optionsFontColorHover;
-                if (mouseY > 25 && mouseY <= 33) amountColor = theme.optionsFontColorHover;
+                if (mouseY >= 17 && mouseY <= 25) color = Theme.INSTANCE.optionsFontColorHover;
+                if (mouseY > 25 && mouseY <= 33) amountColor = Theme.INSTANCE.optionsFontColorHover;
             }
         }
 
-        drawText("type: " + (add ? "add" : "set"), 4, 18, color);
-        drawText("time: " + timeEdit, 4, 26, amountColor);
+        DrawHelper.drawText("type: " + (add ? "add" : "set"), 4, 18, color);
+        DrawHelper.drawText("time: " + timeEdit, 4, 26, amountColor);
     }
 
     @Override

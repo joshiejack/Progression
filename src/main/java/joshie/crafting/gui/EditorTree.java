@@ -5,14 +5,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import joshie.crafting.Criteria;
 import joshie.crafting.CraftingMod;
-import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.api.IReward;
-import joshie.crafting.api.ITreeEditor;
+import joshie.crafting.Criteria;
+import joshie.crafting.Reward;
 import joshie.crafting.helpers.ClientHelper;
 import joshie.crafting.helpers.RenderItemHelper;
 import joshie.crafting.json.Theme;
+import joshie.crafting.player.PlayerTracker;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
@@ -21,7 +20,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-public class EditorTree implements ITreeEditor {
+public class EditorTree {
     private static final ResourceLocation textures = new ResourceLocation("crafting", "textures/gui/textures.png");
     private static final GuiTreeEditor gui = GuiTreeEditor.INSTANCE;
     private final Criteria criteria;
@@ -43,17 +42,14 @@ public class EditorTree implements ITreeEditor {
         this.criteria = criteria;
     }
 
-    @Override
     public int getX() {
         return x;
     }
 
-    @Override
     public int getY() {
         return y;
     }
 
-    @Override
     public void setCoordinates(int x, int y) {
         this.x = x;
         this.y = y;
@@ -92,14 +88,13 @@ public class EditorTree implements ITreeEditor {
         draw(x, y, offsetX, 0);
     }
 
-    @Override
     public boolean isCriteriaVisible() {
         if (criteria.isVisible()) return true;
-        else return CraftingAPI.players.getClientPlayer().getMappings().getCompletedCriteria().keySet().containsAll(criteria.getRequirements());
+        else return PlayerTracker.getClientPlayer().getMappings().getCompletedCriteria().keySet().containsAll(criteria.getRequirements());
     }
 
     public boolean isCriteriaCompleteable(Criteria criteria) {
-        HashMap<Criteria, Integer> completedMap = CraftingAPI.players.getClientPlayer().getMappings().getCompletedCriteria();
+        HashMap<Criteria, Integer> completedMap = PlayerTracker.getClientPlayer().getMappings().getCompletedCriteria();
         boolean completeable = true;
         //Check the conflicts of this criteria
         for (Criteria conflicts : criteria.getConflicts()) {
@@ -114,13 +109,12 @@ public class EditorTree implements ITreeEditor {
         return true;
     }
 
-    @Override
     public void draw(int x, int y, int offsetX, int highlight) {
         recalculate(offsetX);
         if (highlight != 0) {
             GuiTreeEditor.INSTANCE.drawRectWithBorder(x + left, y + top, x + right, y + bottom, Theme.INSTANCE.invisible, highlight);
         } else {
-            HashMap<Criteria, Integer> completedMap = CraftingAPI.players.getClientPlayer().getMappings().getCompletedCriteria();
+            HashMap<Criteria, Integer> completedMap = PlayerTracker.getClientPlayer().getMappings().getCompletedCriteria();
             boolean isCompleted = completedMap.containsKey(criteria);
             boolean anyConflicts = false;
             boolean allRequires = false;
@@ -190,8 +184,8 @@ public class EditorTree implements ITreeEditor {
             GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
             //Draw in the rewards
             int xOffset = 0;
-            for (IReward reward : criteria.getRewards()) {
-                ItemStack icon = reward.getIcon();
+            for (Reward reward : criteria.getRewards()) {
+                ItemStack icon = reward.getType().getIcon();
                 if (icon == null || icon.getItem() == null) continue; //Protection against null icons
                 RenderItemHelper.drawStack(icon, x + 4 + left + (xOffset * 12), y + top + 12, 0.75F);
                 xOffset++;
@@ -202,14 +196,14 @@ public class EditorTree implements ITreeEditor {
             GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
             xOffset = 0;
             boolean hoveredReward = false;
-            for (IReward reward : criteria.getRewards()) {
+            for (Reward reward : criteria.getRewards()) {
                 int x1 = 3 + left + (xOffset * 12);
                 int x2 = x1 + 11;
                 int y1 = bottom - 13;
                 int y2 = y1 + 12;
                 if (isOver(mouseX, mouseY, x1, x2, y1, y2)) {
                     List list = new ArrayList();
-                    reward.addTooltip(list);
+                    reward.getType().addTooltip(list);
                     GuiTreeEditor.INSTANCE.addTooltip(list);
                     hoveredReward = true;
                 }
@@ -272,7 +266,6 @@ public class EditorTree implements ITreeEditor {
         }
     }
 
-    @Override
     public boolean keyTyped(char character, int key) {
         if (isSelected && ClientHelper.canEdit()) {
             return key == 211 || key == 14;
@@ -281,7 +274,6 @@ public class EditorTree implements ITreeEditor {
         return false;
     }
 
-    @Override
     public boolean click(int x, int y, boolean isDouble) {
         if (isOver(x, y)) {
             if (noOtherSelected()) {
@@ -363,7 +355,6 @@ public class EditorTree implements ITreeEditor {
         }
     }
 
-    @Override
     public void release(int x, int y) {
         if (isHeld) {
             isHeld = false;
@@ -371,7 +362,6 @@ public class EditorTree implements ITreeEditor {
         }
     }
 
-    @Override
     public void follow(int x, int y) {
         if (isHeld && ClientHelper.canEdit()) {
             this.x += x - prevX;
@@ -381,7 +371,6 @@ public class EditorTree implements ITreeEditor {
         }
     }
 
-    @Override
     public void scroll(boolean scrolledDown) {
         return;
     }

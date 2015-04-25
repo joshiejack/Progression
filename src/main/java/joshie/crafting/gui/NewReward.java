@@ -2,7 +2,6 @@ package joshie.crafting.gui;
 
 import joshie.crafting.CraftAPIRegistry;
 import joshie.crafting.Criteria;
-import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.IRewardType;
 
 import org.lwjgl.opengl.GL11;
@@ -34,7 +33,7 @@ public class NewReward extends OverlayBase {
         for (IRewardType reward : CraftAPIRegistry.rewardTypes.values()) {
             if (mouseX >= (xPos * 100) + 155 && mouseX <= (xPos * 100) + 255) {
                 if (mouseY >= 46 + (yPos * 12) && mouseY < 46 + (yPos * 12) + 12) {
-                    CraftingAPI.registry.cloneReward(criteria, reward);
+                    CraftAPIRegistry.cloneReward(criteria, reward);
                     clear();
                     return true;
                 }

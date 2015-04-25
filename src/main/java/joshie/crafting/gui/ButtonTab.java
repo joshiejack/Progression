@@ -3,7 +3,7 @@ package joshie.crafting.gui;
 import java.util.ArrayList;
 
 import joshie.crafting.CraftAPIRegistry;
-import joshie.crafting.api.ITab;
+import joshie.crafting.Tab;
 import joshie.crafting.gui.SelectItemOverlay.Type;
 import joshie.crafting.gui.SelectTextEdit.ITextEditable;
 import joshie.crafting.helpers.ClientHelper;
@@ -22,9 +22,9 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
         LEFT, RIGHT;
     }
 
-    private ITab tab;
+    private Tab tab;
 
-    public ButtonTab(ITab tab, int x, int y) {
+    public ButtonTab(Tab tab, int x, int y) {
         super(0, x, y, 25, 25, "");
         this.tab = tab;
     }
@@ -73,14 +73,14 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
         //If the tab is already selected, then we should edit it instead        
         if (ClientHelper.canEdit()) {
             if (Keyboard.isKeyDown(Keyboard.KEY_DELETE)) {
-                ITab newTab = GuiTreeEditor.INSTANCE.currentTab;
+                Tab newTab = GuiTreeEditor.INSTANCE.currentTab;
                 if (tab == GuiTreeEditor.INSTANCE.currentTab) {
                     newTab = GuiTreeEditor.INSTANCE.previousTab;
                 }
 
                 if (newTab != null) {
                     if (!CraftAPIRegistry.tabs.containsKey(newTab.getUniqueName())) {
-                        for (ITab tab : CraftAPIRegistry.tabs.values()) {
+                        for (Tab tab : CraftAPIRegistry.tabs.values()) {
                             newTab = tab;
                             break;
                         }

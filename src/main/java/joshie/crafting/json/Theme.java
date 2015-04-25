@@ -81,17 +81,6 @@ public class Theme {
     public int triggerGradient1 = 0xFF222222;
     public int triggerGradient2 = 0xFF000000;
 
-    //Reward Colors
-    public int rewardCommand = 0xFF2626FF;
-    public int rewardCrafting = 0xFF0085B2;
-    public int rewardCriteria = 0xFF99B3FF;
-    public int rewardFallDamage = 0xFF661A00;
-    public int rewardItem = 0xFFE599FF;
-    public int rewardPoints = 0xFF002DB2;
-    public int rewardResearch = 0xFF99B3FF;
-    public int rewardSpeed = 0xFFFFBF00;
-    public int rewardTime = 0xFF26C9FF;
-
     public int newBox1 = 0xDD000000;
     public int newBox2 = 0xFF000000;
 

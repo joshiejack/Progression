@@ -3,9 +3,8 @@ package joshie.crafting.gui;
 import java.util.ArrayList;
 
 import joshie.crafting.CraftAPIRegistry;
+import joshie.crafting.Tab;
 import joshie.crafting.Criteria;
-import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.api.ITab;
 import joshie.crafting.gui.ButtonBase.ButtonLeft;
 import joshie.crafting.json.Theme;
 import net.minecraft.client.Minecraft;
@@ -43,17 +42,17 @@ public class ButtonNewCriteria extends ButtonLeft {
     @Override
     public void onClicked() {
         if (GuiScreen.isShiftKeyDown()) {
-            CraftingAPI.registry.newTab(CraftAPIRegistry.getNextUnique()).setDisplayName("New Tab").setStack(new ItemStack(Items.book)).setVisibility(true);
+            CraftAPIRegistry.newTab(CraftAPIRegistry.getNextUnique()).setDisplayName("New Tab").setStack(new ItemStack(Items.book)).setVisibility(true);
             GuiTreeEditor.INSTANCE.initGui();
         } else {
             GuiTreeEditor.INSTANCE.previous = null;
             GuiTreeEditor.INSTANCE.selected = null;
             GuiTreeEditor.INSTANCE.lastClicked = null;
-            ITab currentTab = GuiTreeEditor.INSTANCE.currentTab;
+            Tab currentTab = GuiTreeEditor.INSTANCE.currentTab;
             int mouseX = GuiTreeEditor.INSTANCE.mouseX;
             int mouseY = GuiTreeEditor.INSTANCE.mouseY;
             int offsetX = GuiTreeEditor.INSTANCE.offsetX;
-            Criteria criteria = CraftingAPI.registry.newCriteria(currentTab, CraftAPIRegistry.getNextUnique()).setDisplayName("New Criteria").setVisibility(true).setIcon(new ItemStack(Blocks.stone));
+            Criteria criteria = CraftAPIRegistry.newCriteria(currentTab, CraftAPIRegistry.getNextUnique()).setDisplayName("New Criteria").setVisibility(true).setIcon(new ItemStack(Blocks.stone));
             criteria.getTreeEditor().setCoordinates(mouseX - 50 - offsetX, mouseY - 10);
             criteria.getTreeEditor().draw(mouseX - 50, mouseY - 10, offsetX);
             criteria.getTreeEditor().click(mouseX - 50, mouseY - 10, false);

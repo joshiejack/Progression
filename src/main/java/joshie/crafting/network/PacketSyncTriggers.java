@@ -1,8 +1,9 @@
 package joshie.crafting.network;
 
 import io.netty.buffer.ByteBuf;
+import joshie.crafting.CraftAPIRegistry;
 import joshie.crafting.Criteria;
-import joshie.crafting.api.CraftingAPI;
+import joshie.crafting.player.PlayerTracker;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -30,7 +31,7 @@ public class PacketSyncTriggers implements IMessage, IMessageHandler<PacketSyncT
 
         public void fromBytes(ByteBuf buf) {
             int size = buf.readInt();
-            criteria = CraftingAPI.registry.getCriteriaFromName(ByteBufUtils.readUTF8String(buf));
+            criteria = CraftAPIRegistry.getCriteriaFromName(ByteBufUtils.readUTF8String(buf));
             triggers = new int[size];
             for (int i = 0; i < size; i++) {
                 triggers[i] = buf.readInt();
@@ -74,7 +75,7 @@ public class PacketSyncTriggers implements IMessage, IMessageHandler<PacketSyncT
 
     @Override
     public IMessage onMessage(PacketSyncTriggers message, MessageContext ctx) {
-        CraftingAPI.players.getClientPlayer().getMappings().markTriggerAsCompleted(message.overwrite, message.toSync);
+        PlayerTracker.getClientPlayer().getMappings().markTriggerAsCompleted(message.overwrite, message.toSync);
         return null;
     }
 }

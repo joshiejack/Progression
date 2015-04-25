@@ -2,7 +2,6 @@ package joshie.crafting.trigger;
 
 import joshie.crafting.api.Bus;
 import joshie.crafting.api.DrawHelper;
-import joshie.crafting.api.IResearch;
 import joshie.crafting.gui.TextFieldHelper;
 import joshie.crafting.helpers.ClientHelper;
 import joshie.crafting.helpers.JSONHelper;
@@ -12,7 +11,7 @@ import com.google.gson.JsonObject;
 
 import cpw.mods.fml.common.eventhandler.Event.Result;
 
-public class TriggerResearch extends TriggerBaseBoolean implements IResearch {
+public class TriggerResearch extends TriggerBaseBoolean {
     private TextFieldHelper nameEdit;
 
     public String researchName = "dummy";
@@ -35,11 +34,6 @@ public class TriggerResearch extends TriggerBaseBoolean implements IResearch {
     @Override
     public void writeToJSON(JsonObject data) {
         JSONHelper.setString(data, "researchName", researchName, "dummy");
-    }
-
-    @Override
-    public String getResearchName() {
-        return researchName;
     }
 
     @Override

@@ -25,6 +25,14 @@ public class JSONHelper {
         return default_;
     }
     
+    public static float getFloat(JsonObject data, String string, float default_) {
+        if (data.get(string) != null) {
+            return data.get(string).getAsFloat();
+        }
+        
+        return default_;
+    }
+    
     public static String getString(JsonObject data, String string, String default_) {
         if (data.get(string) != null) {
             return data.get(string).getAsString();
@@ -50,6 +58,12 @@ public class JSONHelper {
     }
     
     public static void setInteger(JsonObject data, String string, int value, int not) {
+        if (value != not) {
+            data.addProperty(string, value);
+        }
+    }
+    
+    public static void setFloat(JsonObject data, String string, float value, float not) {
         if (value != not) {
             data.addProperty(string, value);
         }

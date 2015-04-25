@@ -74,7 +74,7 @@ public class ConditionBiomeType extends ConditionBase implements ITextEditable {
     }
 
     @Override
-    public Result clicked() {
+    public Result onClicked(int mouseX, int mouseY) {
         if (mouseX <= 84 && mouseX >= 1) {
             if (mouseY > 25 && mouseY <= 200) SelectTextEdit.INSTANCE.select(this);
             if (mouseY >= 17 && mouseY <= 57) return Result.ALLOW;

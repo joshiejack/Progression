@@ -1,8 +1,8 @@
 package joshie.crafting.network;
 
 import io.netty.buffer.ByteBuf;
-import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.player.DataStats;
+import joshie.crafting.player.PlayerTracker;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -28,7 +28,7 @@ public class PacketSyncAbilities implements IMessage, IMessageHandler<PacketSync
     
     @Override
     public IMessage onMessage(PacketSyncAbilities message, MessageContext ctx) {        
-    	CraftingAPI.players.getClientPlayer().setAbilities(message.abilities);
+    	PlayerTracker.getClientPlayer().setAbilities(message.abilities);
         return null;
     }
 }

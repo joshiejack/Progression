@@ -6,10 +6,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import joshie.crafting.CraftAPIRegistry;
+import joshie.crafting.Tab;
 import joshie.crafting.Criteria;
-import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.api.ITab;
-import joshie.crafting.api.ITreeEditor;
 import joshie.crafting.helpers.ClientHelper;
 import joshie.crafting.json.Options;
 import net.minecraft.init.Items;
@@ -22,13 +20,13 @@ import org.lwjgl.opengl.GL11;
 public class GuiTreeEditor extends GuiBase {
     public static final GuiTreeEditor INSTANCE = new GuiTreeEditor();
     public String currentTabName;
-    public ITab currentTab;
+    public Tab currentTab;
 
     private static class SortIndex implements Comparator {
         @Override
         public int compare(Object o1, Object o2) {
-            ITab tab1 = ((ITab) o1);
-            ITab tab2 = ((ITab) o2);
+            Tab tab1 = ((Tab) o1);
+            Tab tab2 = ((Tab) o2);
             if (tab1.getSortIndex() == tab2.getSortIndex()) {
                 return tab1.getDisplayName().compareTo(tab2.getDisplayName());
             }
@@ -51,10 +49,10 @@ public class GuiTreeEditor extends GuiBase {
         }
 
         //Sort tabs alphabetically or by sort index
-        ArrayList<ITab> tabs = new ArrayList(CraftAPIRegistry.tabs.values());
+        ArrayList<Tab> tabs = new ArrayList(CraftAPIRegistry.tabs.values());
         Collections.sort(tabs, new SortIndex());
 
-        for (ITab tab : tabs) {
+        for (Tab tab : tabs) {
             if (tab.isVisible() || ClientHelper.canEdit()) {
                 if (number <= 8) {
                     buttonList.add(new ButtonTab(tab, 0, pos));
@@ -74,15 +72,15 @@ public class GuiTreeEditor extends GuiBase {
             currentTabName = Options.defaultTab;
         }
 
-        currentTab = CraftingAPI.registry.getTabFromName(currentTabName);
+        currentTab = CraftAPIRegistry.getTabFromName(currentTabName);
         if (currentTab == null) {
-            for (ITab tab : CraftAPIRegistry.tabs.values()) {
+            for (Tab tab : CraftAPIRegistry.tabs.values()) {
                 currentTab = tab;
                 break;
             }
             
             if (currentTab == null) {
-            	currentTab = CraftingAPI.registry.newTab(CraftAPIRegistry.getNextUnique()).setDisplayName("New Tab").setStack(new ItemStack(Items.book)).setVisibility(true);
+            	currentTab = CraftAPIRegistry.newTab(CraftAPIRegistry.getNextUnique()).setDisplayName("New Tab").setStack(new ItemStack(Items.book)).setVisibility(true);
             	currentTabName = currentTab.getUniqueName();
             	initGui();
             }
@@ -96,7 +94,7 @@ public class GuiTreeEditor extends GuiBase {
         if (currentTab == null) initGui();
         for (Criteria criteria : currentTab.getCriteria()) {
             if (criteria.getTreeEditor().isCriteriaVisible() || ClientHelper.canEdit()) {
-                ITreeEditor editor = criteria.getTreeEditor();
+                EditorTree editor = criteria.getTreeEditor();
                 List<Criteria> prereqs = criteria.getRequirements();
                 for (Criteria p : prereqs) {
                     int y1 = p.getTreeEditor().getY();
@@ -123,15 +121,14 @@ public class GuiTreeEditor extends GuiBase {
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
         for (Criteria criteria : currentTab.getCriteria()) {
             if (criteria.getTreeEditor().isCriteriaVisible() || ClientHelper.canEdit()) {
-                ITreeEditor editor = criteria.getTreeEditor();
-                editor.draw(0, y, offsetX);
+                criteria.getTreeEditor().draw(0, y, offsetX);
             }
         }
 
         TreeItemSelect.INSTANCE.draw();
     }
 
-    public ITab previousTab = null;
+    public Tab previousTab = null;
 
     @Override
     protected void keyTyped(char character, int key) {

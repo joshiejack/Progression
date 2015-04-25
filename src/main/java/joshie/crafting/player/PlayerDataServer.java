@@ -3,12 +3,11 @@ package joshie.crafting.player;
 import java.util.UUID;
 
 import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.api.IPlayerDataServer;
 import joshie.crafting.network.PacketHandler;
 import joshie.crafting.network.PacketSyncAbilities;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class PlayerDataServer extends PlayerDataCommon implements IPlayerDataServer {
+public class PlayerDataServer extends PlayerDataCommon {
 	private final UUID uuid;
 	
 	public PlayerDataServer(UUID uuid) {
@@ -16,12 +15,10 @@ public class PlayerDataServer extends PlayerDataCommon implements IPlayerDataSer
 		this.mappings.setMaster(this);
 	}
 	
-	@Override
 	public UUID getUUID() {
 		return uuid;
 	}
 
-	@Override
 	public void addSpeed(float speed) {
 		float newStat = abilities.getSpeed() + speed;
 		abilities.setSpeed(newStat);
@@ -29,7 +26,6 @@ public class PlayerDataServer extends PlayerDataCommon implements IPlayerDataSer
 		markDirty();
 	}
 
-	@Override
 	public void addFallDamagePrevention(int maxAbsorbed) {
 		int newStat = abilities.getFallDamagePrevention() + maxAbsorbed;
 		abilities.setFallDamagePrevention(newStat);
@@ -37,7 +33,6 @@ public class PlayerDataServer extends PlayerDataCommon implements IPlayerDataSer
 		markDirty();
 	}
 	
-	@Override
     public void addPoints(String name, int amount) {
         int newStat = abilities.getPoints(name) + amount;
         abilities.setResearchPoints(name, newStat);

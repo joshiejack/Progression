@@ -3,8 +3,8 @@ package joshie.crafting.network;
 import io.netty.buffer.ByteBuf;
 import joshie.crafting.CraftAPIRegistry;
 import joshie.crafting.Criteria;
-import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.api.IReward;
+import joshie.crafting.Reward;
+import joshie.crafting.player.PlayerTracker;
 import joshie.crafting.rewards.RewardCrafting;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -42,7 +42,7 @@ public class PacketSyncCriteria implements IMessage, IMessageHandler<PacketSyncC
     	int size = buf.readInt();
     	criteria = new Criteria[size];
     	for (int i = 0; i < size; i++) {
-    		criteria[i] = CraftingAPI.registry.getCriteriaFromName(ByteBufUtils.readUTF8String(buf));
+    		criteria[i] = CraftAPIRegistry.getCriteriaFromName(ByteBufUtils.readUTF8String(buf));
     	}
     	
     	integers = new Integer[size];
@@ -53,14 +53,14 @@ public class PacketSyncCriteria implements IMessage, IMessageHandler<PacketSyncC
     
     @Override
     public IMessage onMessage(PacketSyncCriteria message, MessageContext ctx) {    
-    	CraftingAPI.players.getClientPlayer().getMappings().markCriteriaAsCompleted(message.overwrite, message.integers, message.criteria);
+        PlayerTracker.getClientPlayer().getMappings().markCriteriaAsCompleted(message.overwrite, message.integers, message.criteria);
         if (message.overwrite) {
         	for (Criteria condition: CraftAPIRegistry.criteria.values()) {
         		for (Criteria unlocked: message.criteria) {
         		    if (unlocked == null) continue;
-        			for (IReward reward: unlocked.getRewards()) {
-        				if (reward instanceof RewardCrafting) {
-        					reward.reward(CraftingAPI.players.getClientPlayer().getUUID());
+        			for (Reward reward: unlocked.getRewards()) {
+        				if (reward.getType() instanceof RewardCrafting) {
+        					reward.getType().reward(PlayerTracker.getClientPlayer().getUUID());
         				}
         			}
         		}

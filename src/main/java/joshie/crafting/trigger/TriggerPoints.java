@@ -3,7 +3,6 @@ package joshie.crafting.trigger;
 import java.util.UUID;
 
 import joshie.crafting.api.Bus;
-import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.DrawHelper;
 import joshie.crafting.api.ITriggerData;
 import joshie.crafting.gui.TextFieldHelper;
@@ -11,6 +10,7 @@ import joshie.crafting.gui.TextFieldHelper.IntegerFieldHelper;
 import joshie.crafting.helpers.ClientHelper;
 import joshie.crafting.helpers.JSONHelper;
 import joshie.crafting.json.Theme;
+import joshie.crafting.player.PlayerTracker;
 import joshie.crafting.trigger.data.DataBoolean;
 
 import com.google.gson.JsonObject;
@@ -51,11 +51,11 @@ public class TriggerPoints extends TriggerBaseBoolean {
 
     @Override
     public void onFired(UUID uuid, ITriggerData iTriggerData, Object... data) {
-        int total = CraftingAPI.players.getPlayerData(uuid).getAbilities().getPoints(name);
+        int total = PlayerTracker.getServerPlayer(uuid).getAbilities().getPoints(name);
         if (total >= amount) {
             ((DataBoolean) iTriggerData).completed = true;
             if (consume) {
-                CraftingAPI.players.getServerPlayer(uuid).addPoints(name, -amount);
+                PlayerTracker.getServerPlayer(uuid).addPoints(name, -amount);
             }
         }
     }

@@ -11,12 +11,11 @@ import java.util.List;
 
 import joshie.crafting.CraftAPIRegistry;
 import joshie.crafting.CraftingMod;
+import joshie.crafting.Tab;
 import joshie.crafting.Criteria;
+import joshie.crafting.Reward;
 import joshie.crafting.Trigger;
-import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ICondition;
-import joshie.crafting.api.IReward;
-import joshie.crafting.api.ITab;
 import joshie.crafting.api.crafting.CraftingEvent.CraftingType;
 import joshie.crafting.helpers.StackHelper;
 import joshie.crafting.lib.CraftingInfo;
@@ -115,17 +114,17 @@ public class JSONLoader {
                 stack = new ItemStack(Items.book);
             }
 
-            ITab iTab = CraftingAPI.registry.newTab(data.uniqueName);
+            Tab iTab = CraftAPIRegistry.newTab(data.uniqueName);
             iTab.setDisplayName(data.displayName).setVisibility(data.isVisible).setStack(stack).setSortIndex(data.sortIndex);
             
             /** Step 1: we create add all instances of criteria to the registry **/
             for (DataCriteria criteria : data.criteria) {
-                CraftingAPI.registry.newCriteria(iTab, criteria.uniqueName);
+                CraftAPIRegistry.newCriteria(iTab, criteria.uniqueName);
             }
 
             /** Step 2 : Register all the conditions and triggers for this criteria **/
             for (DataCriteria criteria : data.criteria) {
-                Criteria theCriteria = CraftingAPI.registry.getCriteriaFromName(criteria.uniqueName);
+                Criteria theCriteria = CraftAPIRegistry.getCriteriaFromName(criteria.uniqueName);
                 if (theCriteria == null) {
                     throw new ConditionNotFoundException(criteria.uniqueName);
                 }
@@ -133,11 +132,11 @@ public class JSONLoader {
                 Trigger[] triggerz = new Trigger[criteria.triggers.size()];
                 for (int j = 0; j < triggerz.length; j++) {
                     DataTrigger trigger = criteria.triggers.get(j);
-                    Trigger iTrigger = CraftingAPI.registry.newTrigger(theCriteria, trigger.type, trigger.data);
+                    Trigger iTrigger = CraftAPIRegistry.newTrigger(theCriteria, trigger.type, trigger.data);
                     ICondition[] conditionz = new ICondition[trigger.conditions.size()];
                     for (int i = 0; i < conditionz.length; i++) {
                         DataGeneric condition = trigger.conditions.get(i);
-                        conditionz[i] = CraftingAPI.registry.newCondition(theCriteria, condition.type, condition.data);
+                        conditionz[i] = CraftAPIRegistry.newCondition(theCriteria, condition.type, condition.data);
                     }
 
                     iTrigger.setConditions(conditionz);
@@ -145,10 +144,10 @@ public class JSONLoader {
                 }
 
                 //Add the Rewards
-                IReward[] rewardz = new IReward[criteria.rewards.size()];
+                Reward[] rewardz = new Reward[criteria.rewards.size()];
                 for (int k = 0; k < criteria.rewards.size(); k++) {
                     DataGeneric reward = criteria.rewards.get(k);
-                    rewardz[k] = CraftingAPI.registry.newReward(theCriteria, reward.type, reward.data);
+                    rewardz[k] = CraftAPIRegistry.newReward(theCriteria, reward.type, reward.data);
                 }
 
                 theCriteria.addTriggers(triggerz).addRewards(rewardz);
@@ -156,7 +155,7 @@ public class JSONLoader {
 
             /** Step 3, nAdd the extra data **/
             for (DataCriteria criteria : data.criteria) {
-                Criteria theCriteria = CraftingAPI.registry.getCriteriaFromName(criteria.uniqueName);
+                Criteria theCriteria = CraftAPIRegistry.getCriteriaFromName(criteria.uniqueName);
                 if (theCriteria == null) {
                     CraftingMod.logger.log(org.apache.logging.log4j.Level.WARN, "Criteria was not found, do not report this.");
                     throw new ConditionNotFoundException(criteria.uniqueName);
@@ -165,9 +164,9 @@ public class JSONLoader {
                 Criteria[] thePrereqs = new Criteria[criteria.prereqs.length];
                 Criteria[] theConflicts = new Criteria[criteria.conflicts.length];
                 for (int i = 0; i < thePrereqs.length; i++)
-                    thePrereqs[i] = CraftingAPI.registry.getCriteriaFromName(criteria.prereqs[i]);
+                    thePrereqs[i] = CraftAPIRegistry.getCriteriaFromName(criteria.prereqs[i]);
                 for (int i = 0; i < theConflicts.length; i++)
-                    theConflicts[i] = CraftingAPI.registry.getCriteriaFromName(criteria.conflicts[i]);
+                    theConflicts[i] = CraftAPIRegistry.getCriteriaFromName(criteria.conflicts[i]);
                 boolean isVisible = criteria.isVisible;
                 int repeatable = criteria.repeatable;
                 int x = criteria.x;
@@ -212,10 +211,10 @@ public class JSONLoader {
 
     public static void saveData() {
         HashSet<String> tabNames = new HashSet();
-        Collection<ITab> allTabs = CraftAPIRegistry.tabs.values();
+        Collection<Tab> allTabs = CraftAPIRegistry.tabs.values();
         HashSet<String> names = new HashSet();
         DefaultSettings forJSONTabs = new DefaultSettings();
-        for (ITab tab: allTabs) {
+        for (Tab tab: allTabs) {
             ArrayList<DataCriteria> list = new ArrayList();
             if (!tabNames.add(tab.getUniqueName())) continue;
             DataTab tabData = new DataTab();
@@ -236,7 +235,7 @@ public class JSONLoader {
                 data.uniqueName = c.getUniqueName();
                 data.displayStack = StackHelper.getStringFromStack(c.getIcon());
                 List<Trigger> triggers = c.getTriggers();
-                List<IReward> rewards = c.getRewards();
+                List<Reward> rewards = c.getRewards();
                 List<Criteria> prereqs = c.getRequirements();
                 List<Criteria> conflicts = c.getConflicts();
 
@@ -261,10 +260,10 @@ public class JSONLoader {
                     theTriggers.add(dTrigger);
                 }
 
-                for (IReward reward : c.getRewards()) {
+                for (Reward reward : c.getRewards()) {
                     JsonObject rewardData = new JsonObject();
-                    reward.serialize(rewardData);
-                    DataGeneric dReward = new DataGeneric(reward.getTypeName(), rewardData);
+                    reward.getType().writeToJSON(rewardData);
+                    DataGeneric dReward = new DataGeneric(reward.getType().getUnlocalisedName(), rewardData);
                     theRewards.add(dReward);
                 }
 

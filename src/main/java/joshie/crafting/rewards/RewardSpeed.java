@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.UUID;
 
 import joshie.crafting.api.Bus;
-import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.api.IReward;
+import joshie.crafting.api.DrawHelper;
 import joshie.crafting.gui.SelectTextEdit;
 import joshie.crafting.gui.SelectTextEdit.ITextEditable;
 import joshie.crafting.helpers.ClientHelper;
+import joshie.crafting.helpers.JSONHelper;
+import joshie.crafting.json.Theme;
+import joshie.crafting.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -24,16 +26,11 @@ public class RewardSpeed extends RewardBase implements ITextEditable {
     private float speed = 0.1F;
 
     public RewardSpeed() {
-        super("Ability: Speed", theme.rewardSpeed, "speed");
+        super("speed", 0xFFFFBF00);
     }
 
     @Override
-    public IReward newInstance() {
-        return new RewardSpeed();
-    }
-
-    @Override
-    public Bus getBusType() {
+    public Bus getEventBus() {
         return Bus.FORGE;
     }
 
@@ -42,7 +39,7 @@ public class RewardSpeed extends RewardBase implements ITextEditable {
         if (event.entityLiving instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) event.entity;
             if (player.worldObj.isRemote) {
-                float speed = CraftingAPI.players.getPlayerData(player).getAbilities().getSpeed();
+                float speed = PlayerTracker.getClientPlayer().getAbilities().getSpeed();
                 if (speed > 0 && player.onGround && !player.isInWater() && player.isSprinting() && ClientHelper.isForwardPressed()) {
                     player.moveFlying(0F, 1.0F, speed);
                 }
@@ -51,20 +48,18 @@ public class RewardSpeed extends RewardBase implements ITextEditable {
     }
 
     @Override
-    public IReward deserialize(JsonObject data) {
-        RewardSpeed reward = new RewardSpeed();
-        reward.speed = data.get("speed").getAsFloat();
-        return reward;
+    public void readFromJSON(JsonObject data) {
+        speed = JSONHelper.getFloat(data, "speed", speed);
     }
 
     @Override
-    public void serialize(JsonObject elements) {
-        elements.addProperty("speed", speed);
+    public void writeToJSON(JsonObject data) {
+        JSONHelper.setFloat(data, "speed", speed, 0.1F);
     }
 
     @Override
     public void reward(UUID uuid) {
-        CraftingAPI.players.getServerPlayer(uuid).addSpeed(speed);
+        PlayerTracker.getServerPlayer(uuid).addSpeed(speed);
     }
 
     private static final ItemStack speedStack = new ItemStack(Items.potionitem, 1, 8194);
@@ -75,7 +70,7 @@ public class RewardSpeed extends RewardBase implements ITextEditable {
     }
 
     @Override
-    public Result clicked() {
+    public Result onClicked(int mouseX, int mouseY) {
         if (mouseX <= 84 && mouseX >= 1) {
             if (mouseY >= 17 && mouseY <= 25) {
                 SelectTextEdit.INSTANCE.select(this);
@@ -87,17 +82,17 @@ public class RewardSpeed extends RewardBase implements ITextEditable {
     }
 
     @Override
-    public void draw() {
-        int speedColor = theme.optionsFontColor;
+    public void draw(int mouseX, int mouseY) {
+        int speedColor = Theme.INSTANCE.optionsFontColor;
         if (ClientHelper.canEdit()) {
             if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 25) speedColor = theme.optionsFontColorHover;
+                if (mouseY >= 17 && mouseY <= 25) speedColor = Theme.INSTANCE.optionsFontColorHover;
             }
         }
 
         if (SelectTextEdit.INSTANCE.getEditable() == this) {
-            drawText("speed: " + SelectTextEdit.INSTANCE.getText(), 4, 18, speedColor);
-        } else drawText("speed: " + getTextField(), 4, 18, speedColor);
+            DrawHelper.drawText("speed: " + SelectTextEdit.INSTANCE.getText(), 4, 18, speedColor);
+        } else DrawHelper.drawText("speed: " + getTextField(), 4, 18, speedColor);
     }
 
     private String textField;

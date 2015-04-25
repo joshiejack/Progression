@@ -3,8 +3,8 @@ package joshie.crafting.gui;
 import java.util.List;
 
 import joshie.crafting.CraftingMod;
+import joshie.crafting.Reward;
 import joshie.crafting.Trigger;
-import joshie.crafting.api.IReward;
 import joshie.crafting.gui.SelectItemOverlay.Type;
 import joshie.crafting.gui.TextFieldHelper.IntegerFieldHelper;
 import joshie.crafting.helpers.ClientHelper;
@@ -71,10 +71,10 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
         drawGradient(-1, 120, fullWidth, 15, theme.rewardBoxGradient1, theme.rewardBoxGradient2, theme.rewardBoxBorder);
         drawText("Result", 9 - offsetX, 124, theme.rewardBoxFont);
         xCoord = 0;
-        List<IReward> rewards = selected.getRewards();
+        List<Reward> rewards = selected.getRewards();
         for (int i = 0; i < rewards.size(); i++) {
             int xPos = 100 * xCoord;
-            IReward reward = rewards.get(i);
+            Reward reward = rewards.get(i);
             reward.draw(mouseX, mouseY, xPos);
             xCoord++;
         }
@@ -205,7 +205,7 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
             }
 
             //Rewards
-            List<IReward> rewards = selected.getRewards();
+            List<Reward> rewards = selected.getRewards();
             xCoord = 0;
             for (int i = 0; i < rewards.size(); i++) {
                 Result result = rewards.get(i).onClicked();

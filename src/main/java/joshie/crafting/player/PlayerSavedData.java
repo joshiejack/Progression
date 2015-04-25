@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 
-import joshie.crafting.api.IPlayerDataServer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.WorldSavedData;
@@ -22,7 +21,7 @@ public class PlayerSavedData extends WorldSavedData {
 		return data.values();
 	}
 
-	public IPlayerDataServer getServerPlayer(UUID uuid) {
+	public PlayerDataServer getServerPlayer(UUID uuid) {
 		PlayerDataServer data = this.data.get(uuid);
 		if (data == null) {
 			data = new PlayerDataServer(uuid);

@@ -148,7 +148,7 @@ public class ConditionInInventory extends ConditionBase implements IItemSelectab
     }
 
     @Override
-    public Result clicked() {
+    public Result onClicked(int mouseX, int mouseY) {
         if (mouseX >= 27 && mouseX <= 69) {
             if (mouseY >= 62 && mouseY <= 107) {
                 SelectItemOverlay.INSTANCE.select(this, Type.TRIGGER);

@@ -109,10 +109,10 @@ public abstract class ConditionBase implements ICondition {
             return Result.ALLOW;
         }
 
-        return clicked();
+        return onClicked(mouseX, mouseY);
     }
 
-    public Result clicked() {
+    public Result onClicked(int mouseX, int mouseY) {
         return Result.DEFAULT;
     }
 

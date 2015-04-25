@@ -3,21 +3,17 @@ package joshie.crafting;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ICondition;
 import joshie.crafting.api.IConditionType;
 import joshie.crafting.api.IRegistry;
-import joshie.crafting.api.IResearch;
-import joshie.crafting.api.IReward;
 import joshie.crafting.api.IRewardType;
-import joshie.crafting.api.ITab;
 import joshie.crafting.api.ITriggerData;
 import joshie.crafting.api.ITriggerType;
 import joshie.crafting.helpers.PlayerHelper;
+import joshie.crafting.player.PlayerTracker;
 import joshie.crafting.trigger.data.DataBoolean;
 import joshie.crafting.trigger.data.DataCount;
 import joshie.crafting.trigger.data.DataCrafting;
@@ -32,16 +28,16 @@ public class CraftAPIRegistry implements IRegistry {
     public static final HashMap<String, IConditionType> conditionTypes = new HashMap();
 
     //These four maps are registries for fetching the various types
-    public static HashMap<String, ITab> tabs;
+    public static HashMap<String, Tab> tabs;
     public static HashMap<String, Criteria> criteria;
     public static Set<Trigger> triggers;
     public static Set<ICondition> conditions;
-    public static Set<IReward> rewards;
+    public static Set<Reward> rewards;
 
     @Override
     //Fired Server Side only
     public boolean fireTrigger(UUID uuid, String string, Object... data) {
-        return CraftingAPI.players.getServerPlayer(uuid).getMappings().fireAllTriggers(string, data);
+        return PlayerTracker.getServerPlayer(uuid).getMappings().fireAllTriggers(string, data);
     }
 
     @Override
@@ -66,35 +62,31 @@ public class CraftAPIRegistry implements IRegistry {
 
     @Override
     public IRewardType registerRewardType(IRewardType type) {
-        rewardTypes.put(type.getTypeName(), type);
+        rewardTypes.put(type.getUnlocalisedName(), type);
         return type;
     }
 
-    @Override
-    public Criteria newCriteria(ITab tab, String name) {
+    public static Criteria newCriteria(Tab tab, String name) {
         Criteria condition = new Criteria().setUniqueName(name).setTab(tab);
         tab.addCriteria(condition);
         criteria.put(name, condition);
         return condition;
     }
 
-    @Override
-    public ITab newTab(String name) {
-        ITab iTab = new CraftingTab().setUniqueName(name);
+    public static Tab newTab(String name) {
+        Tab iTab = new Tab().setUniqueName(name);
         tabs.put(name, iTab);
         return iTab;
     }
 
-    @Override
-    public ICondition newCondition(Criteria criteria, String type, JsonObject data) {
+    public static ICondition newCondition(Criteria criteria, String type, JsonObject data) {
         boolean inverted = data.get("inverted") != null ? data.get("inverted").getAsBoolean() : false;
         ICondition condition = conditionTypes.get(type).deserialize(data).setInversion(inverted).setCriteria(criteria);
         conditions.add(condition);
         return condition;
     }
 
-    @Override
-    public Trigger newTrigger(Criteria criteria, String type, JsonObject data) {
+    public static Trigger newTrigger(Criteria criteria, String type, JsonObject data) {
         ITriggerType oldTriggerType = triggerTypes.get(type);
         ITriggerType newTriggerType = oldTriggerType;
         
@@ -102,23 +94,29 @@ public class CraftAPIRegistry implements IRegistry {
             newTriggerType = oldTriggerType.getClass().newInstance();
         } catch (Exception e) {}
         
-        Trigger trigger = new Trigger(newTriggerType);
-        trigger.setCriteria(criteria).getType().readFromJSON(data);
+        Trigger trigger = new Trigger(criteria, newTriggerType);
+        trigger.getType().readFromJSON(data);
         CraftingEventsManager.onTriggerAdded(trigger);
         triggers.add(trigger);
         return trigger;
     }
 
-    @Override
-    public IReward newReward(Criteria criteria, String type, JsonObject data) {
-        IReward reward = rewardTypes.get(type).deserialize(data).setCriteria(criteria);
+    public static Reward newReward(Criteria criteria, String type, JsonObject data) {
+        IRewardType oldRewardType = rewardTypes.get(type);
+        IRewardType newRewardType = oldRewardType;
+        
+        try {
+            newRewardType = oldRewardType.getClass().newInstance();
+        } catch (Exception e) {}
+        
+        Reward reward = new Reward(criteria, newRewardType);
+        reward.getType().readFromJSON(data);
         CraftingEventsManager.onRewardAdded(reward);
         rewards.add(reward);
         return reward;
     }
 
-    @Override
-    public Trigger cloneTrigger(Criteria criteria, ITriggerType oldTriggerType) {
+    public static Trigger cloneTrigger(Criteria criteria, ITriggerType oldTriggerType) {
         ITriggerType newTriggerType = oldTriggerType;
         
         try {
@@ -126,45 +124,44 @@ public class CraftAPIRegistry implements IRegistry {
         } catch (Exception e) {}
         
         
-        Trigger newTrigger = new Trigger(newTriggerType);
-        newTrigger.setCriteria(criteria);
+        Trigger newTrigger = new Trigger(criteria, newTriggerType);
         CraftingEventsManager.onTriggerAdded(newTrigger);
         triggers.add(newTrigger);
         criteria.addTriggers(newTrigger);
         return newTrigger;
     }
 
-    @Override
-    public IReward cloneReward(Criteria criteria, IRewardType reward) {
-        IReward newReward = reward.newInstance().setCriteria(criteria);
+    public static Reward cloneReward(Criteria criteria, IRewardType oldRewardType) {
+        IRewardType newRewardType = oldRewardType;
+        
+        try {
+            newRewardType = oldRewardType.getClass().newInstance();
+        } catch (Exception e) {}
+        
+        
+        Reward newReward = new Reward(criteria, newRewardType);
         CraftingEventsManager.onRewardAdded(newReward);
         rewards.add(newReward);
         criteria.addRewards(newReward);
         return newReward;
     }
 
-    @Override
-    public ICondition cloneCondition(Trigger trigger, IConditionType condition) {
+    public static ICondition cloneCondition(Trigger trigger, IConditionType condition) {
         ICondition newCondition = condition.newInstance().setTrigger(trigger);
         conditions.add(newCondition);
         trigger.addCondition(newCondition);
         return newCondition;
     }
 
-    @Override
-    public Criteria getCriteriaFromName(String name) {
+    public static Criteria getCriteriaFromName(String name) {
         return criteria.get(name);
     }
 
-    @Override
-    public ITab getTabFromName(String name) {
+    public static Tab getTabFromName(String name) {
         return tabs.get(name);
     }
 
-    private static List<IResearch> technologies;
-
-    @Override
-    public Collection<Criteria> getCriteria() {
+    public static Collection<Criteria> getCriteria() {
         return criteria.values();
     }
 
@@ -178,13 +175,13 @@ public class CraftAPIRegistry implements IRegistry {
         triggers.remove(trigger);
     }
 
-    public static void removeReward(IReward reward) {
+    public static void removeReward(Reward reward) {
         CraftingEventsManager.onRewardRemoved(reward);
-        reward.onRemoved();
+        reward.getType().onRemoved();
         rewards.remove(reward);
     }
 
-    public static void removeTab(ITab tab) {
+    public static void removeTab(Tab tab) {
         for (Criteria c: tab.getCriteria()) {
             removeCriteria(c.getUniqueName(), true);
         }
@@ -232,7 +229,7 @@ public class CraftAPIRegistry implements IRegistry {
         }
 
         //Remove all rewards associated with this criteria
-        for (IReward reward : c.getRewards()) {
+        for (Reward reward : c.getRewards()) {
             removeReward(reward);
         }
 

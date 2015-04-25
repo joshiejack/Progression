@@ -3,11 +3,13 @@ package joshie.crafting.rewards;
 import java.util.List;
 import java.util.UUID;
 
-import joshie.crafting.api.IReward;
+import joshie.crafting.api.DrawHelper;
 import joshie.crafting.gui.SelectTextEdit;
 import joshie.crafting.gui.SelectTextEdit.ITextEditable;
 import joshie.crafting.helpers.ClientHelper;
+import joshie.crafting.helpers.JSONHelper;
 import joshie.crafting.helpers.PlayerHelper;
+import joshie.crafting.json.Theme;
 import joshie.crafting.lib.FakeOp;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -23,24 +25,17 @@ public class RewardCommand extends RewardBase implements ITextEditable {
     private String command = "dummy";
 
     public RewardCommand() {
-        super("Execute Command", theme.rewardCommand, "command");
+        super("command", 0xFF2626FF);
     }
 
     @Override
-    public IReward newInstance() {
-        return new RewardCommand();
+    public void readFromJSON(JsonObject data) {
+        command = JSONHelper.getString(data, "command", command);
     }
 
     @Override
-    public IReward deserialize(JsonObject data) {
-        RewardCommand reward = new RewardCommand();
-        reward.command = data.get("command").getAsString();
-        return reward;
-    }
-
-    @Override
-    public void serialize(JsonObject elements) {
-        elements.addProperty("command", command);
+    public void writeToJSON(JsonObject data) {
+        JSONHelper.setString(data, "command", command, "dummy");
     }
 
     @Override
@@ -58,7 +53,7 @@ public class RewardCommand extends RewardBase implements ITextEditable {
     }
 
     @Override
-    public Result clicked() {
+    public Result onClicked(int mouseX, int mouseY) {
         if (mouseX <= 84 && mouseX >= 1) {
             if (mouseY >= 17 && mouseY <= 100) {
                 SelectTextEdit.INSTANCE.select(this);
@@ -70,16 +65,16 @@ public class RewardCommand extends RewardBase implements ITextEditable {
     }
 
     @Override
-    public void draw() {
-        int commandColor = theme.optionsFontColor;
+    public void draw(int mouseX, int mouseY) {
+        int commandColor = Theme.INSTANCE.optionsFontColor;
         if (ClientHelper.canEdit()) {
             if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 100) commandColor = theme.optionsFontColorHover;
+                if (mouseY >= 17 && mouseY <= 100) commandColor = Theme.INSTANCE.optionsFontColorHover;
             }
         }
 
-        drawText("command: ", 4, 18, commandColor);
-        drawSplitText(SelectTextEdit.INSTANCE.getText(this), 4, 26, 200, commandColor);
+        DrawHelper.drawText("command: ", 4, 18, commandColor);
+        DrawHelper.drawSplitText(SelectTextEdit.INSTANCE.getText(this), 4, 26, 200, commandColor);
     }
 
     @Override

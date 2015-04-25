@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.UUID;
 
 import joshie.crafting.api.Bus;
-import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.api.IReward;
+import joshie.crafting.api.DrawHelper;
 import joshie.crafting.gui.SelectTextEdit;
 import joshie.crafting.gui.SelectTextEdit.ITextEditable;
 import joshie.crafting.helpers.ClientHelper;
+import joshie.crafting.helpers.JSONHelper;
+import joshie.crafting.json.Theme;
+import joshie.crafting.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -24,16 +26,11 @@ public class RewardFallDamage extends RewardBase implements ITextEditable {
     private int maxAbsorbed = 1;
 
     public RewardFallDamage() {
-        super("Ability: Fall Resistance", theme.rewardFallDamage, "fallDamage");
+        super("fallDamage", 0xFF661A00);
     }
 
     @Override
-    public IReward newInstance() {
-        return new RewardFallDamage();
-    }
-
-    @Override
-    public Bus getBusType() {
+    public Bus getEventBus() {
         return Bus.FORGE;
     }
 
@@ -42,7 +39,7 @@ public class RewardFallDamage extends RewardBase implements ITextEditable {
         if (event.entityLiving instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) event.entity;
             int damage = (int) (event.distance - 3);
-            int maxAbsorbed = CraftingAPI.players.getPlayerData(player).getAbilities().getFallDamagePrevention();
+            int maxAbsorbed = PlayerTracker.getPlayerData(player).getAbilities().getFallDamagePrevention();
             if (damage < maxAbsorbed) {
                 event.setCanceled(true);
             } else {
@@ -52,20 +49,18 @@ public class RewardFallDamage extends RewardBase implements ITextEditable {
     }
 
     @Override
-    public IReward deserialize(JsonObject data) {
-        RewardFallDamage reward = new RewardFallDamage();
-        reward.maxAbsorbed = data.get("maxAbsorption").getAsInt();
-        return reward;
+    public void readFromJSON(JsonObject data) {
+        maxAbsorbed = JSONHelper.getInteger(data, "maxAbsorption", maxAbsorbed);
     }
 
     @Override
-    public void serialize(JsonObject elements) {
-        elements.addProperty("maxAbsorption", maxAbsorbed);
+    public void writeToJSON(JsonObject data) {
+        JSONHelper.setInteger(data, "maxAbsorption", maxAbsorbed, 1);
     }
 
     @Override
     public void reward(UUID uuid) {
-        CraftingAPI.players.getServerPlayer(uuid).addFallDamagePrevention(maxAbsorbed);
+        PlayerTracker.getServerPlayer(uuid).addFallDamagePrevention(maxAbsorbed);
     }
 
     private static final ItemStack feather = new ItemStack(Items.feather);
@@ -77,7 +72,7 @@ public class RewardFallDamage extends RewardBase implements ITextEditable {
     }
 
     @Override
-    public Result clicked() {
+    public Result onClicked(int mouseX, int mouseY) {
         if (mouseX <= 84 && mouseX >= 1) {
             if (mouseY >= 17 && mouseY <= 25) {
                 SelectTextEdit.INSTANCE.select(this);
@@ -89,18 +84,18 @@ public class RewardFallDamage extends RewardBase implements ITextEditable {
     }
 
     @Override
-    public void draw() {
-        int color = theme.optionsFontColor;
+    public void draw(int mouseX, int mouseY) {
+        int color = Theme.INSTANCE.optionsFontColor;
         
         if (ClientHelper.canEdit()) {
             if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 25) color = theme.optionsFontColorHover;
+                if (mouseY >= 17 && mouseY <= 25) color = Theme.INSTANCE.optionsFontColorHover;
             }
         }
 
         if (SelectTextEdit.INSTANCE.getEditable() == this) {
-            drawText("absorption: " + SelectTextEdit.INSTANCE.getText(), 4, 18, color);
-        } else drawText("absorption: " + getTextField(), 4, 18, color);
+            DrawHelper.triggerDraw.drawText("absorption: " + SelectTextEdit.INSTANCE.getText(), 4, 18, color);
+        } else DrawHelper.triggerDraw.drawText("absorption: " + getTextField(), 4, 18, color);
     }
 
     private String textField;

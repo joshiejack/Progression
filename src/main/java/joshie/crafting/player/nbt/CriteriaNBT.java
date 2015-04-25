@@ -2,8 +2,8 @@ package joshie.crafting.player.nbt;
 
 import java.util.Map;
 
+import joshie.crafting.CraftAPIRegistry;
 import joshie.crafting.Criteria;
-import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.helpers.NBTHelper.IMapHelper;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -25,7 +25,7 @@ public class CriteriaNBT implements IMapHelper {
 	@Override
 	public Object readKey(NBTTagCompound tag) {
 		String name = tag.getString("Name");
-		return CraftingAPI.registry.getCriteriaFromName(name);
+		return CraftAPIRegistry.getCriteriaFromName(name);
 	}
 
 	@Override

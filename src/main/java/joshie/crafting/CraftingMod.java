@@ -112,11 +112,10 @@ public class CraftingMod {
         CraftingRemapper.resetRegistries();
         NEI_LOADED = Loader.isModLoaded("NotEnoughItems");
         CraftingAPI.registry = new CraftAPIRegistry();
-        CraftingAPI.players = new PlayerTracker();
         CraftingAPI.crafting = new CraftingRegistry();
         CraftingAPI.commands = CommandManager.INSTANCE;
 
-        MinecraftForge.EVENT_BUS.register(CraftingAPI.players);
+        MinecraftForge.EVENT_BUS.register(new PlayerTracker());
         MinecraftForge.EVENT_BUS.register(CraftingAPI.commands);
         MinecraftForge.EVENT_BUS.register(new CraftingEventsHandler());
         FMLCommonHandler.instance().bus().register(new CraftingEventsHandler());

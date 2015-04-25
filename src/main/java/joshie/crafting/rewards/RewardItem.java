@@ -3,16 +3,17 @@ package joshie.crafting.rewards;
 import java.util.List;
 import java.util.UUID;
 
-import joshie.crafting.api.IReward;
+import joshie.crafting.api.DrawHelper;
 import joshie.crafting.gui.IItemSelectable;
 import joshie.crafting.gui.SelectItemOverlay;
 import joshie.crafting.gui.SelectItemOverlay.Type;
 import joshie.crafting.gui.SelectTextEdit;
 import joshie.crafting.gui.SelectTextEdit.ITextEditable;
 import joshie.crafting.helpers.ClientHelper;
+import joshie.crafting.helpers.JSONHelper;
 import joshie.crafting.helpers.PlayerHelper;
 import joshie.crafting.helpers.SpawnItemHelper;
-import joshie.crafting.helpers.StackHelper;
+import joshie.crafting.json.Theme;
 import joshie.crafting.network.PacketHandler;
 import joshie.crafting.network.PacketRewardItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,24 +30,17 @@ public class RewardItem extends RewardBase implements IItemSelectable, ITextEdit
     private ItemStack stack = new ItemStack(Items.diamond);
 
     public RewardItem() {
-        super("Give Item", theme.rewardItem, "item");
+        super("item", 0xFFE599FF);
     }
 
     @Override
-    public IReward newInstance() {
-        return new RewardItem();
+    public void readFromJSON(JsonObject data) {
+        stack = JSONHelper.getItemStack(data, "item", stack);
     }
 
     @Override
-    public IReward deserialize(JsonObject data) {
-        RewardItem reward = new RewardItem();
-        reward.stack = StackHelper.getStackFromString(data.get("item").getAsString());
-        return reward;
-    }
-
-    @Override
-    public void serialize(JsonObject elements) {
-        elements.addProperty("item", StackHelper.getStringFromStack(stack));
+    public void writeToJSON(JsonObject data) {
+        JSONHelper.setItemStack(data, "item", stack);
     }
 
     @Override
@@ -64,7 +58,7 @@ public class RewardItem extends RewardBase implements IItemSelectable, ITextEdit
     }
 
     @Override
-    public Result clicked() {
+    public Result onClicked(int mouseX, int mouseY) {
         if (mouseX >= 10 && mouseX <= 100) {
             if (mouseY >= 30 && mouseY <= 100) {
                 SelectItemOverlay.INSTANCE.select(this, Type.REWARD);
@@ -83,18 +77,18 @@ public class RewardItem extends RewardBase implements IItemSelectable, ITextEdit
     }
 
     @Override
-    public void draw() {
-        drawStack(getIcon(), 27, 27, 2.5F);
-        int typeColor = theme.optionsFontColor;
+    public void draw(int mouseX, int mouseY) {
+        DrawHelper.drawStack(getIcon(), 27, 27, 2.5F);
+        int typeColor = Theme.INSTANCE.optionsFontColor;
         if (ClientHelper.canEdit()) {
             if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 25) typeColor = theme.optionsFontColorHover;
+                if (mouseY >= 17 && mouseY <= 25) typeColor = Theme.INSTANCE.optionsFontColorHover;
             }
         }
 
         if (SelectTextEdit.INSTANCE.getEditable() == this) {
-            drawText("amount: " + SelectTextEdit.INSTANCE.getText(), 4, 18, typeColor);
-        } else drawText("amount: " + getTextField(), 4, 18, typeColor);
+            DrawHelper.drawText("amount: " + SelectTextEdit.INSTANCE.getText(), 4, 18, typeColor);
+        } else DrawHelper.drawText("amount: " + getTextField(), 4, 18, typeColor);
     }
 
     @Override

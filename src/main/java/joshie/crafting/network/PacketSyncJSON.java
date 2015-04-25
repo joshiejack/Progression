@@ -8,9 +8,9 @@ import io.netty.buffer.ByteBuf;
 
 import java.util.UUID;
 
-import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.helpers.PlayerHelper;
 import joshie.crafting.json.JSONLoader;
+import joshie.crafting.player.PlayerTracker;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -95,7 +95,7 @@ public class PacketSyncJSON implements IMessage, IMessageHandler<PacketSyncJSON,
         } else if (message.section == Section.COMPLETE) {
             UUID uuid = PlayerHelper.getUUIDForPlayer(ctx.getServerHandler().playerEntity);
             //Sends all the data to do with this player to the client, so it's up to date
-            CraftingAPI.players.getPlayerData(uuid).getMappings().syncToClient(ctx.getServerHandler().playerEntity);
+            PlayerTracker.getPlayerData(uuid).getMappings().syncToClient(ctx.getServerHandler().playerEntity);
         }
 
         return null;

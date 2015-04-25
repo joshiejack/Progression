@@ -9,10 +9,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ICondition;
-import joshie.crafting.api.ICraftingMappings;
-import joshie.crafting.api.IReward;
 import joshie.crafting.api.ITriggerData;
 import joshie.crafting.helpers.NBTHelper;
 import joshie.crafting.helpers.PlayerHelper;
@@ -34,7 +31,7 @@ import net.minecraftforge.common.DimensionManager;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
-public class CraftingMappings implements ICraftingMappings {
+public class CraftingMappings {
     private PlayerDataServer master;
     private UUID uuid;
 
@@ -51,7 +48,6 @@ public class CraftingMappings implements ICraftingMappings {
         this.uuid = master.getUUID();
     }
 
-    @Override
     public void syncToClient(EntityPlayerMP player) {
         //remap(); //Remap the data, before the client gets sent the data
 
@@ -81,7 +77,7 @@ public class CraftingMappings implements ICraftingMappings {
         for (int i = 0; i < data.tagCount(); i++) {
             NBTTagCompound tag = data.getCompoundTagAt(i);
             String name = tag.getString("Name");
-            Criteria criteria = CraftingAPI.registry.getCriteriaFromName(name);
+            Criteria criteria = CraftAPIRegistry.getCriteriaFromName(name);
             if (criteria != null) {
                 for (Trigger trigger : criteria.getTriggers()) {
                     ITriggerData iTriggerData = trigger.getType().newData();
@@ -111,17 +107,14 @@ public class CraftingMappings implements ICraftingMappings {
         return nbt;
     }
 
-    @Override
     public HashMap<Criteria, Integer> getCompletedCriteria() {
         return completedCritera;
     }
 
-    @Override
     public Set<Trigger> getCompletedTriggers() {
         return completedTriggers;
     }
 
-    @Override
     public void markCriteriaAsCompleted(boolean overwrite, Integer[] values, Criteria... conditions) {
         if (overwrite) completedCritera = new HashMap();
         for (int i = 0; i < values.length; i++) {
@@ -131,7 +124,6 @@ public class CraftingMappings implements ICraftingMappings {
         }
     }
 
-    @Override
     public void markTriggerAsCompleted(boolean overwrite, SyncPair[] pairs) {
         if (overwrite) completedTriggers = new HashSet();
         for (SyncPair pair : pairs) {
@@ -161,7 +153,6 @@ public class CraftingMappings implements ICraftingMappings {
     }
 
     /** Called to fire a trigger type, Triggers are only ever called on criteria that is activated **/
-    @Override
     public boolean fireAllTriggers(String type, Object... data) {
         if (activeTriggers == null) return false; //If the remapping hasn't occured yet, say goodbye!
         //If the trigger is a forced completion, then force complete it
@@ -256,8 +247,8 @@ public class CraftingMappings implements ICraftingMappings {
         remapStuff(forRemovalFromActive, toRemap);
         //Now that we have removed all the triggers, and marked this as completed and remapped data, we should give out the rewards
         for (Criteria criteria : toComplete) {
-            for (IReward reward : criteria.getRewards()) {
-                reward.reward(uuid);
+            for (Reward reward : criteria.getRewards()) {
+                reward.getType().reward(uuid);
             }
         }
 
@@ -354,7 +345,6 @@ public class CraftingMappings implements ICraftingMappings {
         }
     }
 
-    @Override
     public void remap() {
         Set<Criteria> availableCriteria = new HashSet(); //Recreate the available mappings
         activeTriggers = HashMultimap.create(); //Recreate the trigger mappings

@@ -4,29 +4,26 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import joshie.crafting.api.ICriteriaViewer;
-import joshie.crafting.api.IReward;
-import joshie.crafting.api.ITab;
-import joshie.crafting.api.ITreeEditor;
+import joshie.crafting.api.ICriteria;
 import joshie.crafting.gui.EditorTree;
 import joshie.crafting.gui.ViewerCriteria;
 import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
-public class Criteria {
+public class Criteria implements ICriteria {
 	/** All the data for this **/
 	private List<Trigger> triggers = new ArrayList();
-	private List<IReward> rewards = new ArrayList();
+	private List<Reward> rewards = new ArrayList();
 	private List<Criteria> prereqs = new ArrayList();
 	private List<Criteria> conflicts = new ArrayList();
-	private ITreeEditor treeEditor;
-	private ICriteriaViewer criteriaViewer;
+	private EditorTree treeEditor;
+	private ViewerCriteria criteriaViewer;
 	private int isRepeatable = 1;
 	private String uniqueName;
 	private String displayName;
 	private boolean isVisible;
-	private ITab tab;
+	private Tab tab;
 	private ItemStack stack;
 
 	public Criteria() {
@@ -59,10 +56,10 @@ public class Criteria {
 		return this;
 	}
 
-	public Criteria addRewards(IReward... rewards) {
-		this.rewards.addAll(Arrays.asList((IReward[]) rewards));
-		for (IReward reward : rewards) {
-			reward.onAdded();
+	public Criteria addRewards(Reward... rewards) {
+		this.rewards.addAll(Arrays.asList((Reward[]) rewards));
+		for (Reward reward : rewards) {
+			reward.getType().onAdded();
 		}
 
 		return this;
@@ -88,7 +85,7 @@ public class Criteria {
 		return this;
 	}
 
-	public Criteria setTab(ITab tab) {
+	public Criteria setTab(Tab tab) {
 		this.tab = tab;
 		return this;
 	}
@@ -102,7 +99,7 @@ public class Criteria {
 		return triggers;
 	}
 
-	public List<IReward> getRewards() {
+	public List<Reward> getRewards() {
 		return rewards;
 	}
 
@@ -122,7 +119,7 @@ public class Criteria {
 		return isVisible;
 	}
 
-	public ITab getTabID() {
+	public Tab getTabID() {
 		return tab;
 	}
 	
@@ -130,11 +127,11 @@ public class Criteria {
 	    return stack;
 	}
 
-	public ITreeEditor getTreeEditor() {
+	public EditorTree getTreeEditor() {
 		return treeEditor;
 	}
 
-	public ICriteriaViewer getCriteriaViewer() {
+	public ViewerCriteria getCriteriaViewer() {
 		return criteriaViewer;
 	}
 

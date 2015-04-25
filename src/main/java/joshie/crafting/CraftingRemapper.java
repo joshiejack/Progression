@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
-import joshie.crafting.api.CraftingAPI;
+import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.crafting.CraftingEvent.CraftingType;
 import joshie.crafting.crafting.CraftingRegistry;
 import joshie.crafting.helpers.PlayerHelper;
@@ -15,6 +15,7 @@ import joshie.crafting.json.Options;
 import joshie.crafting.lib.SafeStack;
 import joshie.crafting.network.PacketHandler;
 import joshie.crafting.network.PacketSyncJSON;
+import joshie.crafting.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 import com.google.common.collect.HashMultimap;
@@ -26,14 +27,14 @@ public class CraftingRemapper {
     //Grabs the json, as a split string and rebuilds it, sends it in parts to the client
     public static void onPlayerConnect(EntityPlayerMP player) {        
         //Remap the player data, for this player, before doing anything else, as the data may not existing yet
-        CraftingAPI.players.getPlayerData(player).getMappings().remap();
+        PlayerTracker.getServerPlayer(player).getMappings().remap();
         
         if (Options.sync) {
             PacketHandler.sendToClient(new PacketSyncJSON(JSONLoader.serverTabJsonData.length), player);
         } else {
             UUID uuid = PlayerHelper.getUUIDForPlayer(player);
             //Sends all the data to do with this player to the client, so it's up to date
-            CraftingAPI.players.getPlayerData(uuid).getMappings().syncToClient(player);
+            PlayerTracker.getServerPlayer(uuid).getMappings().syncToClient(player);
         }
     }
 
@@ -72,8 +73,8 @@ public class CraftingRemapper {
         CraftingRegistry.conditions = new HashMap(); //Reset all the data in the crafting registry
         CraftingRegistry.usage = new HashMap(); //Reset all the data in the crafting registry
         for (CraftingType type : CraftingType.craftingTypes) {
-            Multimap<SafeStack, Criteria> conditions = HashMultimap.create();
-            Multimap<SafeStack, Criteria> usage = HashMultimap.create();
+            Multimap<SafeStack, ICriteria> conditions = HashMultimap.create();
+            Multimap<SafeStack, ICriteria> usage = HashMultimap.create();
             CraftingRegistry.conditions.put(type, conditions);
             CraftingRegistry.usage.put(type, usage);
         }

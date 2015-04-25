@@ -5,11 +5,13 @@ import java.util.UUID;
 
 import joshie.crafting.CraftAPIRegistry;
 import joshie.crafting.Criteria;
-import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.api.IReward;
+import joshie.crafting.api.DrawHelper;
 import joshie.crafting.gui.SelectTextEdit;
 import joshie.crafting.gui.SelectTextEdit.ITextEditable;
 import joshie.crafting.helpers.ClientHelper;
+import joshie.crafting.helpers.JSONHelper;
+import joshie.crafting.json.Theme;
+import joshie.crafting.player.PlayerTracker;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
@@ -24,33 +26,23 @@ public class RewardCriteria extends RewardBase implements ITextEditable {
     private Criteria criteria = null;
 
     public RewardCriteria() {
-        super("Give Criteria", theme.rewardCriteria, "criteria");
+        super("criteria", 0xFF99B3FF);
     }
 
     @Override
-    public IReward newInstance() {
-        return new RewardCriteria();
+    public void readFromJSON(JsonObject data) {
+        criteriaID = JSONHelper.getString(data, "criteriaID", criteriaID);
+        remove = JSONHelper.getBoolean(data, "remove", remove);
     }
 
     @Override
-    public IReward deserialize(JsonObject data) {
-        RewardCriteria reward = new RewardCriteria();
-        reward.criteriaID = data.get("criteriaID").getAsString();
-        if (data.get("remove") != null) {
-            reward.remove = data.get("remove").getAsBoolean();
-        }
-
-        return reward;
-    }
-
-    @Override
-    public void serialize(JsonObject elements) {
-        elements.addProperty("criteriaID", criteriaID);
-        if (remove != false) elements.addProperty("remove", remove);
+    public void writeToJSON(JsonObject data) {
+        JSONHelper.setString(data, "criteriaID", criteriaID, "");
+        JSONHelper.setBoolean(data, "remove", remove, false);
     }
 
     public Criteria getAssignedCriteria() {
-        return CraftingAPI.registry.getCriteriaFromName(criteriaID);
+        return CraftAPIRegistry.getCriteriaFromName(criteriaID);
     }
 
     @Override
@@ -58,8 +50,8 @@ public class RewardCriteria extends RewardBase implements ITextEditable {
         criteria = getAssignedCriteria();
         if (criteria == null) return; //Do not give the reward
         if (remove) {
-            CraftingAPI.players.getServerPlayer(uuid).getMappings().fireAllTriggers("forced-remove", criteria);
-        } else CraftingAPI.players.getServerPlayer(uuid).getMappings().fireAllTriggers("forced-complete", criteria);
+            PlayerTracker.getServerPlayer(uuid).getMappings().fireAllTriggers("forced-remove", criteria);
+        } else PlayerTracker.getServerPlayer(uuid).getMappings().fireAllTriggers("forced-complete", criteria);
     }
 
     @Override
@@ -68,7 +60,7 @@ public class RewardCriteria extends RewardBase implements ITextEditable {
     }
 
     @Override
-    public Result clicked() {
+    public Result onClicked(int mouseX, int mouseY) {
         if (mouseX <= 84 && mouseX >= 1) {
             if (mouseY >= 17 && mouseY <= 33) {
                 SelectTextEdit.INSTANCE.select(this);
@@ -83,20 +75,20 @@ public class RewardCriteria extends RewardBase implements ITextEditable {
     }
 
     @Override
-    public void draw() {
-        int researchColor = theme.optionsFontColor;
-        int booleanColor = theme.optionsFontColor;
+    public void draw(int mouseX, int mouseY) {
+        int researchColor = Theme.INSTANCE.optionsFontColor;
+        int booleanColor = Theme.INSTANCE.optionsFontColor;
         if (ClientHelper.canEdit()) {
             if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 33) researchColor = theme.optionsFontColorHover;
-                if (mouseY > 33 && mouseY <= 41) booleanColor = theme.optionsFontColorHover;
+                if (mouseY >= 17 && mouseY <= 33) researchColor = Theme.INSTANCE.optionsFontColorHover;
+                if (mouseY > 33 && mouseY <= 41) booleanColor = Theme.INSTANCE.optionsFontColorHover;
             }
         }
 
-        drawText("criteria: ", 4, 18, researchColor);
+        DrawHelper.triggerDraw.drawText("criteria: ", 4, 18, researchColor);
         EnumChatFormatting prefix = criteria != null? EnumChatFormatting.GREEN: EnumChatFormatting.RED;
-        drawText(prefix + SelectTextEdit.INSTANCE.getText(this), 4, 26, researchColor);
-        drawText("remove: " + remove, 4, 33, booleanColor);
+        DrawHelper.triggerDraw.drawText(prefix + SelectTextEdit.INSTANCE.getText(this), 4, 26, researchColor);
+        DrawHelper.triggerDraw.drawText("remove: " + remove, 4, 33, booleanColor);
     }
 
     private String displayName = null;
@@ -104,7 +96,7 @@ public class RewardCriteria extends RewardBase implements ITextEditable {
     @Override
     public String getTextField() {
         if (displayName == null) {
-            criteria = CraftingAPI.registry.getCriteriaFromName(criteriaID);
+            criteria = CraftAPIRegistry.getCriteriaFromName(criteriaID);
             if (criteria == null) {
                 displayName = "null";
             } else displayName = criteria.getDisplayName();
@@ -133,7 +125,7 @@ public class RewardCriteria extends RewardBase implements ITextEditable {
     @Override
     public void addTooltip(List list) {
         if (criteria == null) {
-            criteria = getCriteria();
+            criteria = getAssignedCriteria();
         }
 
         if (criteria != null) {

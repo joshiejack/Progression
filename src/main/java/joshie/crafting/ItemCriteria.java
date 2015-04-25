@@ -8,6 +8,7 @@ import joshie.crafting.crafting.CraftingUnclaimed;
 import joshie.crafting.helpers.PlayerHelper;
 import joshie.crafting.network.PacketClaimed;
 import joshie.crafting.network.PacketHandler;
+import joshie.crafting.player.PlayerTracker;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -49,7 +50,7 @@ public class ItemCriteria extends Item {
 
     public static Criteria getCriteriaFromStack(ItemStack stack) {
         if (!stack.hasTagCompound()) return null;
-        return CraftingAPI.registry.getCriteriaFromName(stack.getTagCompound().getString("Criteria"));
+        return CraftAPIRegistry.getCriteriaFromName(stack.getTagCompound().getString("Criteria"));
     }
 
     @Override
@@ -71,7 +72,7 @@ public class ItemCriteria extends Item {
             if (tile != null) {
                 ICrafter crafter = CraftingAPI.crafting.getCrafterFromTile(tile);
                 if (crafter == CraftingUnclaimed.INSTANCE) {
-                    CraftingAPI.players.setTileOwner(tile, PlayerHelper.getUUIDForPlayer(player));
+                    PlayerTracker.setTileOwner(tile, PlayerHelper.getUUIDForPlayer(player));
                     PacketHandler.sendToClient(new PacketClaimed(x, y, z), (EntityPlayerMP) player);
                 }
             }
@@ -85,7 +86,7 @@ public class ItemCriteria extends Item {
         if (!world.isRemote) {
             Criteria criteria = getCriteriaFromStack(stack);
             if (criteria != null) {
-                boolean completed = CraftingAPI.players.getServerPlayer(PlayerHelper.getUUIDForPlayer(player)).getMappings().fireAllTriggers("forced-complete", criteria);
+                boolean completed = PlayerTracker.getServerPlayer(PlayerHelper.getUUIDForPlayer(player)).getMappings().fireAllTriggers("forced-complete", criteria);
                 if (!player.capabilities.isCreativeMode && completed) {
                     stack.stackSize--;
                 }
@@ -104,7 +105,7 @@ public class ItemCriteria extends Item {
     public void getSubItems(Item item, CreativeTabs tab, List list) {
         list.add(new ItemStack(Items.book));
         list.add(new ItemStack(item, 1, CLAIM));
-        for (Criteria c : CraftingAPI.registry.getCriteria()) {
+        for (Criteria c : CraftAPIRegistry.getCriteria()) {
             ItemStack stack = new ItemStack(item);
             stack.setTagCompound(new NBTTagCompound());
             stack.getTagCompound().setString("Criteria", c.getUniqueName());

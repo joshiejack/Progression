@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import joshie.crafting.Criteria;
 import joshie.crafting.api.CraftingAPI;
+import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.crafting.CraftingEvent.CraftingType;
 import joshie.crafting.api.crafting.ICrafter;
 import joshie.crafting.gui.EditorTicker;
@@ -22,10 +23,10 @@ public class NEIOverrideHandler extends TemplateRecipeHandler {
     public void loadCraftingRecipes(ItemStack result) {
         ICrafter crafter = CraftingAPI.crafting.getCrafterFromPlayer(ClientHelper.getPlayer());
         if (!crafter.canCraftItem(CraftingType.CRAFTING, result)) {
-            Collection<Criteria> requirements = CraftingAPI.crafting.getCraftingCriteria(CraftingType.CRAFTING, result);
+            Collection<ICriteria> requirements = CraftingAPI.crafting.getCraftingCriteria(CraftingType.CRAFTING, result);
             if (requirements.size() > 0) {
-                for (Criteria c : requirements) {
-                    GuiCriteriaEditor.INSTANCE.selected = c;
+                for (ICriteria c : requirements) {
+                    GuiCriteriaEditor.INSTANCE.selected = (Criteria) c;
                     break;
                 }
 

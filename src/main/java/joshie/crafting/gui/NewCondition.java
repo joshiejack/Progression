@@ -2,7 +2,6 @@ package joshie.crafting.gui;
 
 import joshie.crafting.CraftAPIRegistry;
 import joshie.crafting.Trigger;
-import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.IConditionType;
 import net.minecraft.item.ItemStack;
 
@@ -52,7 +51,7 @@ public class NewCondition extends OverlayBase {
         for (IConditionType condition : CraftAPIRegistry.conditionTypes.values()) {
             if (mouseX >= (xPos * 100) + 155 && mouseX <= (xPos * 100) + 255) {
                 if (mouseY >= 46 + (yPos * 12) && mouseY <= 46 + (yPos * 12) + 12) {
-                    CraftingAPI.registry.cloneCondition(trigger, condition);
+                    CraftAPIRegistry.cloneCondition(trigger, condition);
                     clear();
                     return true;
                 }

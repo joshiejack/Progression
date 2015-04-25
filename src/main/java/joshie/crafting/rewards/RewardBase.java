@@ -1,56 +1,46 @@
 package joshie.crafting.rewards;
 
-import joshie.crafting.Criteria;
 import joshie.crafting.api.Bus;
-import joshie.crafting.api.IReward;
-import joshie.crafting.gui.GuiCriteriaEditor;
-import joshie.crafting.helpers.ClientHelper;
-import joshie.crafting.json.Theme;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import cpw.mods.fml.common.eventhandler.Event.Result;
+import joshie.crafting.api.ICriteria;
+import joshie.crafting.api.IRewardType;
+import net.minecraft.util.StatCollector;
 
-public abstract class RewardBase implements IReward {
-    private static final ResourceLocation textures = new ResourceLocation("crafting", "textures/gui/textures.png");
-    protected static final Theme theme = Theme.INSTANCE;
-    private String localised;
-    private String typeName;
+public abstract class RewardBase implements IRewardType {
+    protected ICriteria criteria;
+    private String name;
     private int color;
-    protected Criteria criteria;
 
-    public RewardBase(String localised, int color, String typeName) {
-        this.localised = localised;
+    public RewardBase(String name, int color) {
+        this.name = name;
         this.color = color;
-        this.typeName = typeName;
     }
-
+    
     @Override
-    public IReward setCriteria(Criteria criteria) {
+    public void markCriteria(ICriteria criteria) {
         this.criteria = criteria;
-        return this;
     }
 
     @Override
-    public Criteria getCriteria() {
-        return this.criteria;
-    }
-
-    @Override
-    public String getTypeName() {
-        return typeName;
+    public String getUnlocalisedName() {
+        return name;
     }
 
     @Override
     public String getLocalisedName() {
-        return localised;
+        return StatCollector.translateToLocal("progression.reward." + getUnlocalisedName());
     }
 
+    @Override
     public int getColor() {
         return color;
     }
 
     @Override
-    public Bus getBusType() {
+    public Bus[] getEventBusTypes() {
+        return new Bus[] { getEventBus() };
+    }
+    
+    protected Bus getEventBus() {
         return Bus.NONE;
     }
 
@@ -59,71 +49,4 @@ public abstract class RewardBase implements IReward {
 
     @Override
     public void onRemoved() {}
-
-    protected int xPosition;
-    protected int mouseX;
-    protected int mouseY;
-
-    protected void drawText(String text, int x, int y, int color) {
-        GuiCriteriaEditor.INSTANCE.drawText(text, xPosition + x, y + 140, color);
-    }
-    
-    protected void drawSplitText(String text, int x, int y, int width, int color) {
-        GuiCriteriaEditor.INSTANCE.drawSplitText(text, xPosition + x, y + 140, width, color);
-    }
-
-    protected void drawGradient(int x, int y, int width, int height, int color, int color2, int border) {
-        GuiCriteriaEditor.INSTANCE.drawGradient(xPosition + x, y + 140, width, height, color, color2, border);
-    }
-
-    protected void drawBox(int x, int y, int width, int height, int color, int border) {
-        GuiCriteriaEditor.INSTANCE.drawBox(xPosition + x, y + 140, width, height, color, border);
-    }
-
-    protected void drawStack(ItemStack stack, int x, int y, float scale) {
-        GuiCriteriaEditor.INSTANCE.drawStack(stack, xPosition + x, y + 140, scale);
-    }
-
-    protected void drawTexture(int x, int y, int u, int v, int width, int height) {
-        GuiCriteriaEditor.INSTANCE.drawTexture(xPosition + x, y + 140, u, v, width, height);
-    }
-
-    protected void draw() {
-
-    }
-
-    @Override
-    public Result onClicked() {
-        if (this.mouseX >= 88 && this.mouseX <= 95 && this.mouseY >= 4 && this.mouseY <= 14) {
-            return Result.DENY; //Delete this reward
-        }
-
-        return clicked();
-    }
-
-    public Result clicked() {
-        return Result.DEFAULT;
-    }
-
-    @Override
-    public void draw(int mouseX, int mouseY, int xPos) {
-        this.mouseX = mouseX - xPosition;
-        this.mouseY = mouseY - 140;
-        this.xPosition = xPos + 6;
-
-        drawGradient(1, 2, 99, 15, getColor(), theme.blackBarGradient1, theme.blackBarGradient2);
-        drawText(getLocalisedName(), 6, 6, theme.blackBarFontColor);
-
-        if (ClientHelper.canEdit()) {
-            int xXcoord = 0;
-            if (this.mouseX >= 87 && this.mouseX <= 97 && this.mouseY >= 4 && this.mouseY <= 14) {
-                xXcoord = 11;
-            }
-
-            ClientHelper.getMinecraft().getTextureManager().bindTexture(textures);
-            drawTexture(87, 4, xXcoord, 195, 11, 11);
-        }
-
-        draw();
-    }
 }

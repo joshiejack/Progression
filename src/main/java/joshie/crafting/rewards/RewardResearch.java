@@ -3,11 +3,13 @@ package joshie.crafting.rewards;
 import java.util.List;
 import java.util.UUID;
 
-import joshie.crafting.api.CraftingAPI;
-import joshie.crafting.api.IReward;
+import joshie.crafting.api.DrawHelper;
 import joshie.crafting.gui.SelectTextEdit;
 import joshie.crafting.gui.SelectTextEdit.ITextEditable;
 import joshie.crafting.helpers.ClientHelper;
+import joshie.crafting.helpers.JSONHelper;
+import joshie.crafting.json.Theme;
+import joshie.crafting.player.PlayerTracker;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
@@ -20,29 +22,22 @@ public class RewardResearch extends RewardBase implements ITextEditable {
     private String research = "dummy";
 
     public RewardResearch() {
-        super("Give Research", theme.rewardResearch, "research");
+        super("research", 0xFF99B3FF);
     }
 
     @Override
-    public IReward newInstance() {
-        return new RewardResearch();
+    public void readFromJSON(JsonObject data) {
+        research = JSONHelper.getString(data, "researchName", research);
     }
 
     @Override
-    public IReward deserialize(JsonObject data) {
-        RewardResearch reward = new RewardResearch();
-        reward.research = data.get("researchName").getAsString();
-        return reward;
-    }
-
-    @Override
-    public void serialize(JsonObject elements) {
-        elements.addProperty("researchName", research);
+    public void writeToJSON(JsonObject data) {
+        JSONHelper.setString(data, "researchName", research, "dummy");
     }
 
     @Override
     public void reward(UUID uuid) {
-        CraftingAPI.players.getServerPlayer(uuid).getMappings().fireAllTriggers("research", research);
+        PlayerTracker.getServerPlayer(uuid).getMappings().fireAllTriggers("research", research);
     }
 
     //TODO: Replace this with a research icon
@@ -52,7 +47,7 @@ public class RewardResearch extends RewardBase implements ITextEditable {
     }
 
     @Override
-    public Result clicked() {
+    public Result onClicked(int mouseX, int mouseY) {
         if (mouseX <= 84 && mouseX >= 1) {
             if (mouseY >= 17 && mouseY <= 33) {
                 SelectTextEdit.INSTANCE.select(this);
@@ -64,20 +59,20 @@ public class RewardResearch extends RewardBase implements ITextEditable {
     }
 
     @Override
-    public void draw() {
-        int researchColor = theme.optionsFontColor;
+    public void draw(int mouseX, int mouseY) {
+        int researchColor = Theme.INSTANCE.optionsFontColor;
         if (ClientHelper.canEdit()) {
             if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 33) researchColor = theme.optionsFontColorHover;
+                if (mouseY >= 17 && mouseY <= 33) researchColor = Theme.INSTANCE.optionsFontColorHover;
             }
         }
 
         if (SelectTextEdit.INSTANCE.getEditable() == this) {
-            drawText("research: ", 4, 18, researchColor);
-            drawText(SelectTextEdit.INSTANCE.getText(), 4, 26, researchColor);
+            DrawHelper.drawText("research: ", 4, 18, researchColor);
+            DrawHelper.drawText(SelectTextEdit.INSTANCE.getText(), 4, 26, researchColor);
         } else {
-            drawText("research: ", 4, 18, researchColor);
-            drawText(getTextField(), 4, 26, researchColor);
+            DrawHelper.drawText("research: ", 4, 18, researchColor);
+            DrawHelper.drawText(getTextField(), 4, 26, researchColor);
         }
     }
 

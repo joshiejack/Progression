@@ -158,7 +158,7 @@ public class ConditionCoordinates extends ConditionBase {
     }
     
     @Override
-    public Result clicked() {
+    public Result onClicked(int mouseX, int mouseY) {
         if (mouseX <= 94 && mouseX >= 1) {
             if (mouseY > 25 && mouseY <= 33) checkDimension = !checkDimension;
             if (mouseY > 34 && mouseY <= 41) checkX = !checkX;

@@ -49,7 +49,7 @@ public class ConditionRandom extends ConditionBase {
     }
 
     @Override
-    public Result clicked() {
+    public Result onClicked(int mouseX, int mouseY) {
         if (mouseX <= 94 && mouseX >= 1) {
             if (mouseY > 25 && mouseY <= 33) chanceEdit.select();
             if (mouseY >= 17 && mouseY < 33) return Result.ALLOW;
