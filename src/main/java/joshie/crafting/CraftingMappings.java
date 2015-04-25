@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import joshie.crafting.api.ICondition;
 import joshie.crafting.api.ITriggerData;
 import joshie.crafting.helpers.NBTHelper;
 import joshie.crafting.helpers.PlayerHelper;
@@ -181,9 +180,9 @@ public class CraftingMappings {
         HashSet<Trigger> cantContinue = new HashSet();
         List<Trigger> toTrigger = new ArrayList();
         for (Trigger trigger : triggers) {
-            Collection<ICondition> conditions = trigger.getConditions();
-            for (ICondition condition : conditions) {
-                if (condition.isSatisfied(world, player, uuid) == condition.isInverted()) {
+            Collection<Condition> conditions = trigger.getConditions();
+            for (Condition condition : conditions) {
+                if (condition.getType().isSatisfied(world, player, uuid) == condition.isInverted()) {
                     cantContinue.add(trigger);
                     break;
                 }

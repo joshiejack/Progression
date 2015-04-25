@@ -70,12 +70,6 @@ public class Theme {
     public int conditionGradient1 = 0xFF222222;
     public int conditionGradient2 = 0xFF000000;
 
-    public int conditionBiomeType = 0xFF00B200;
-    public int conditionCoordinates = 0xFF000000;
-    public int conditionDaytime = 0xFFFFFF00;
-    public int conditionInInventory = 0xFF660000;
-    public int conditionRandom = 0xFF00FFBF;
-
     //Trigger Colors
     public int triggerFontColor = 0xFFFFFFFF;
     public int triggerGradient1 = 0xFF222222;

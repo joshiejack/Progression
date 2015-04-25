@@ -3,8 +3,8 @@ package joshie.crafting.gui;
 import java.util.ArrayList;
 
 import joshie.crafting.CraftAPIRegistry;
-import joshie.crafting.Tab;
 import joshie.crafting.Criteria;
+import joshie.crafting.Tab;
 import joshie.crafting.gui.ButtonBase.ButtonLeft;
 import joshie.crafting.json.Theme;
 import net.minecraft.client.Minecraft;

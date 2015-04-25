@@ -3,8 +3,8 @@ package joshie.crafting.gui;
 import java.util.Iterator;
 import java.util.List;
 
+import joshie.crafting.Condition;
 import joshie.crafting.Trigger;
-import joshie.crafting.api.ICondition;
 import joshie.crafting.helpers.ClientHelper;
 import joshie.crafting.helpers.RenderItemHelper;
 import joshie.crafting.json.Theme;
@@ -69,11 +69,11 @@ public class EditorCondition {
         drawBox(-1, 40, fullWidth, 1, Theme.INSTANCE.conditionEditorUnderline, Theme.INSTANCE.invisible);
         drawText("Conditions", 9 - offsetX, 29, Theme.INSTANCE.conditionEditorFont);
         int xCoord = 0;
-        List<ICondition> conditions = trigger.getConditions();
+        List<Condition> conditions = trigger.getConditions();
         int mouseX = GuiTriggerEditor.INSTANCE.mouseX - offsetX;
         int mouseY = GuiTriggerEditor.INSTANCE.mouseY;
         for (int i = 0; i < conditions.size(); i++) {
-            ICondition condition = conditions.get(i);
+            Condition condition = conditions.get(i);
             int xPos = 100 * xCoord;
             condition.draw(mouseX, mouseY, xPos);
             xCoord++;
@@ -118,7 +118,7 @@ public class EditorCondition {
 
         //Triggers
         xCoord = 0;
-        List<ICondition> conditions = trigger.getConditions();
+        List<Condition> conditions = trigger.getConditions();
         for (int i = 0; i < conditions.size(); i++) {
             Result result = conditions.get(i).onClicked();
             if (result != Result.DEFAULT) {

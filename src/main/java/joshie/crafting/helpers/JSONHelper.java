@@ -33,6 +33,15 @@ public class JSONHelper {
         return default_;
     }
     
+
+    public static double getDouble(JsonObject data, String string, double default_) {
+        if (data.get(string) != null) {
+            return data.get(string).getAsDouble();
+        }
+        
+        return default_;
+    }
+    
     public static String getString(JsonObject data, String string, String default_) {
         if (data.get(string) != null) {
             return data.get(string).getAsString();
@@ -64,6 +73,12 @@ public class JSONHelper {
     }
     
     public static void setFloat(JsonObject data, String string, float value, float not) {
+        if (value != not) {
+            data.addProperty(string, value);
+        }
+    }
+    
+    public static void setDouble(JsonObject data, String string, double value, double not) {
         if (value != not) {
             data.addProperty(string, value);
         }

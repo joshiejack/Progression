@@ -1,11 +1,11 @@
 package joshie.crafting.conditions;
 
-import java.util.List;
 import java.util.UUID;
 
-import joshie.crafting.api.ICondition;
+import joshie.crafting.api.DrawHelper;
 import joshie.crafting.gui.SelectTextEdit;
 import joshie.crafting.gui.SelectTextEdit.ITextEditable;
+import joshie.crafting.json.Theme;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.BiomeDictionary;
@@ -21,7 +21,7 @@ public class ConditionBiomeType extends ConditionBase implements ITextEditable {
     private Type[] biomeTypes = new Type[] { Type.FOREST };
 
     public ConditionBiomeType() {
-        super("Biome Type", theme.conditionBiomeType, "biomeType");
+        super("biomeType", 0xFF00B200);
     }
 
     private Type getBiomeType(String string) {
@@ -46,7 +46,7 @@ public class ConditionBiomeType extends ConditionBase implements ITextEditable {
     }
 
     @Override
-    public ICondition deserialize(JsonObject data) {
+    public void readFromJSON(JsonObject data) {
         ConditionBiomeType condition = new ConditionBiomeType();
         JsonArray array = data.get("types").getAsJsonArray();
         Type[] types = new Type[array.size()];
@@ -54,23 +54,17 @@ public class ConditionBiomeType extends ConditionBase implements ITextEditable {
             types[i] = getBiomeType(array.get(i).getAsString());
         }
 
-        condition.biomeTypes = types;
-        return condition;
+        biomeTypes = types;
     }
 
     @Override
-    public void serialize(JsonObject elements) {
+    public void writeToJSON(JsonObject data) {
         JsonArray array = new JsonArray();
         for (Type t : biomeTypes) {
             array.add(new JsonPrimitive(t.name().toLowerCase()));
         }
 
-        elements.add("types", array);
-    }
-
-    @Override
-    public ICondition newInstance() {
-        return new ConditionBiomeType();
+        data.add("types", array);
     }
 
     @Override
@@ -84,13 +78,13 @@ public class ConditionBiomeType extends ConditionBase implements ITextEditable {
     }
 
     @Override
-    public void draw() {
-        int matchColor = theme.optionsFontColor;
+    public void draw(int mouseX, int mouseY) {
+        int matchColor = Theme.INSTANCE.optionsFontColor;
         if (mouseX <= 84 && mouseX >= 1) {
-            if (mouseY > 25 && mouseY <= 200) matchColor = theme.optionsFontColorHover;
+            if (mouseY > 25 && mouseY <= 200) matchColor = Theme.INSTANCE.optionsFontColorHover;
         }
 
-        drawSplitText("biomeTypes: " + SelectTextEdit.INSTANCE.getText(this), 4, 26, matchColor, 100);
+        DrawHelper.drawSplitText("biomeTypes: " + SelectTextEdit.INSTANCE.getText(this), 4, 26, matchColor, 100);
     }
 
     private String textField;
@@ -138,25 +132,5 @@ public class ConditionBiomeType extends ConditionBase implements ITextEditable {
         } catch (Exception e) {}
 
         textField = str;
-    }
-
-    @Override
-    public void addToolTip(List<String> toolTip) {
-        if (textField == null) {
-            StringBuilder builder = new StringBuilder();
-            boolean first = false;
-            for (Type t : biomeTypes) {
-                if (!first) {
-                    first = true;
-                } else builder.append(", ");
-
-                builder.append(t.name().toLowerCase());
-            }
-
-            textField = builder.toString();
-        }
-
-        String prefix = inverted ? "    Not in" : "    In";
-        toolTip.add(prefix + " " + textField);
     }
 }

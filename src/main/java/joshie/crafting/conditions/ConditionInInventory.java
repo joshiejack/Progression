@@ -1,16 +1,16 @@
 package joshie.crafting.conditions;
 
-import java.util.List;
 import java.util.UUID;
 
-import joshie.crafting.api.ICondition;
+import joshie.crafting.api.DrawHelper;
 import joshie.crafting.gui.IItemSelectable;
 import joshie.crafting.gui.SelectItemOverlay;
 import joshie.crafting.gui.SelectItemOverlay.Type;
 import joshie.crafting.gui.TextFieldHelper.IItemGettable;
 import joshie.crafting.gui.TextFieldHelper.ItemAmountHelper;
 import joshie.crafting.helpers.ClientHelper;
-import joshie.crafting.helpers.StackHelper;
+import joshie.crafting.helpers.JSONHelper;
+import joshie.crafting.json.Theme;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -33,13 +33,8 @@ public class ConditionInInventory extends ConditionBase implements IItemSelectab
     private CheckSlots slotType = CheckSlots.INVENTORY;
 
     public ConditionInInventory() {
-        super("In Inventory", theme.conditionInInventory, "ininventory");
+        super("ininventory", 0xFF660000);
         editAmount = new ItemAmountHelper("itemAmount", this);
-    }
-
-    @Override
-    public ConditionInInventory newInstance() {
-        return new ConditionInInventory();
     }
 
     public CheckSlots next() {
@@ -62,35 +57,21 @@ public class ConditionInInventory extends ConditionBase implements IItemSelectab
     }
 
     @Override
-    public ICondition deserialize(JsonObject data) {
-        ConditionInInventory condition = new ConditionInInventory();
-        condition.stack = StackHelper.getStackFromString(data.get("item").getAsString());
-        if (data.get("matchDamage") != null) {
-            condition.matchDamage = data.get("matchDamage").getAsBoolean();
-        }
-
-        if (data.get("matchNBT") != null) {
-            condition.matchNBT = data.get("matchNBT").getAsBoolean();
-        }
-
-        if (data.get("itemAmount") != null) {
-            condition.itemAmount = data.get("itemAmount").getAsInt();
-        }
-
-        if (data.get("checkType") != null) {
-            condition.slotType = getTypeFromString(data.get("checkType").getAsString());
-        }
-
-        return condition;
+    public void readFromJSON(JsonObject data) {
+        stack = JSONHelper.getItemStack(data, "item", stack);
+        matchDamage = JSONHelper.getBoolean(data, "matchDamage", matchDamage);
+        matchNBT = JSONHelper.getBoolean(data, "matchNBT", matchNBT);
+        itemAmount = JSONHelper.getInteger(data, "itemAmount", itemAmount);
+        slotType = getTypeFromString(JSONHelper.getString(data, "checkType", slotType.name().toLowerCase()));
     }
 
     @Override
-    public void serialize(JsonObject data) {
-        data.addProperty("item", StackHelper.getStringFromStack(stack));
-        if (matchDamage != true) data.addProperty("matchDamage", matchDamage);
-        if (matchNBT != false) data.addProperty("matchNBT", matchNBT);
-        if (itemAmount != 1) data.addProperty("itemAmount", itemAmount);
-        if (slotType != CheckSlots.INVENTORY) data.addProperty("checkType", slotType.name().toLowerCase());
+    public void writeToJSON(JsonObject data) {
+        JSONHelper.setItemStack(data, "item", stack);
+        JSONHelper.setBoolean(data, "matchDamage", matchDamage, true);
+        JSONHelper.setBoolean(data, "matchNBT", matchNBT, false);
+        JSONHelper.setInteger(data, "itemAmount", itemAmount, 1);
+        JSONHelper.setString(data, "checkType", slotType.name().toLowerCase(), CheckSlots.INVENTORY.name().toLowerCase());
     }
 
     private boolean matches(ItemStack check) {
@@ -168,25 +149,25 @@ public class ConditionInInventory extends ConditionBase implements IItemSelectab
     }
 
     @Override
-    public void draw() {
-        drawStack(stack, 25, 60, 3F);
-        int typeColor = theme.optionsFontColor;
-        int matchColor = theme.optionsFontColor;
-        int usageColor = theme.optionsFontColor;
-        int typezColor = theme.optionsFontColor;
+    public void draw(int mouseX, int mouseY) {
+        DrawHelper.drawStack(stack, 25, 60, 3F);
+        int typeColor = Theme.INSTANCE.optionsFontColor;
+        int matchColor = Theme.INSTANCE.optionsFontColor;
+        int usageColor = Theme.INSTANCE.optionsFontColor;
+        int typezColor = Theme.INSTANCE.optionsFontColor;
         if (ClientHelper.canEdit()) {
             if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 25 && mouseY <= 33) typeColor = theme.optionsFontColorHover;
-                if (mouseY > 33 && mouseY <= 42) matchColor = theme.optionsFontColorHover;
-                if (mouseY > 42 && mouseY <= 51) usageColor = theme.optionsFontColorHover;
-                if (mouseY > 51 && mouseY <= 60) typezColor = theme.optionsFontColorHover;
+                if (mouseY >= 25 && mouseY <= 33) typeColor = Theme.INSTANCE.optionsFontColorHover;
+                if (mouseY > 33 && mouseY <= 42) matchColor = Theme.INSTANCE.optionsFontColorHover;
+                if (mouseY > 42 && mouseY <= 51) usageColor = Theme.INSTANCE.optionsFontColorHover;
+                if (mouseY > 51 && mouseY <= 60) typezColor = Theme.INSTANCE.optionsFontColorHover;
             }
         }
 
-        drawText("matchDamage: " + matchDamage, 4, 25, typeColor);
-        drawText("matchNBT: " + matchNBT, 4, 33, matchColor);
-        drawText("itemAmount: " + editAmount.getText(), 4, 42, usageColor);
-        drawText("slotType: " + slotType.name().toLowerCase(), 4, 51, typezColor);
+        DrawHelper.drawText("matchDamage: " + matchDamage, 4, 25, typeColor);
+        DrawHelper.drawText("matchNBT: " + matchNBT, 4, 33, matchColor);
+        DrawHelper.drawText("itemAmount: " + editAmount.getText(), 4, 42, usageColor);
+        DrawHelper.drawText("slotType: " + slotType.name().toLowerCase(), 4, 51, typezColor);
     }
 
     @Override
@@ -197,11 +178,5 @@ public class ConditionInInventory extends ConditionBase implements IItemSelectab
     @Override
     public ItemStack getItemStack() {
         return stack;
-    }
-
-    @Override
-    public void addToolTip(List<String> toolTip) {
-        // TODO Auto-generated method stub
-
     }
 }

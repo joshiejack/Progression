@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import joshie.crafting.api.DrawHelper;
-import joshie.crafting.api.ICondition;
 import joshie.crafting.api.ITriggerType;
 import joshie.crafting.gui.EditorCondition;
 import joshie.crafting.gui.GuiDrawHelper;
@@ -23,7 +22,7 @@ public class Trigger {
     @SideOnly(Side.CLIENT)
     private EditorCondition editor;
 
-    private List<ICondition> conditions = new ArrayList();
+    private List<Condition> conditions = new ArrayList();
     private Criteria criteria;
     private ITriggerType triggerType;
 
@@ -40,7 +39,7 @@ public class Trigger {
         return triggerType;
     }
 
-    public void addCondition(ICondition condition) {
+    public void addCondition(Condition condition) {
         conditions.add(condition);
     }
 
@@ -61,15 +60,15 @@ public class Trigger {
         return 0;
     }
 
-    public Trigger setConditions(ICondition[] conditions) {
-        for (ICondition condition : conditions) {
+    public Trigger setConditions(Condition[] conditions) {
+        for (Condition condition : conditions) {
             this.conditions.add(condition);
         }
 
         return this;
     }
 
-    public List<ICondition> getConditions() {
+    public List<Condition> getConditions() {
         return conditions;
     }
 

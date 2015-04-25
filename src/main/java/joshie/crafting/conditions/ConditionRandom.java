@@ -1,10 +1,11 @@
 package joshie.crafting.conditions;
 
-import java.util.List;
 import java.util.UUID;
 
-import joshie.crafting.api.ICondition;
+import joshie.crafting.api.DrawHelper;
 import joshie.crafting.gui.TextFieldHelper.DoubleFieldHelper;
+import joshie.crafting.helpers.JSONHelper;
+import joshie.crafting.json.Theme;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
@@ -17,7 +18,7 @@ public class ConditionRandom extends ConditionBase {
     public double chance = 50D;
 
     public ConditionRandom() {
-        super("Random Chance", theme.conditionRandom, "chance");
+        super("chance", 0xFF00FFBF);
         chanceEdit = new DoubleFieldHelper("chance", this);
     }
 
@@ -27,25 +28,13 @@ public class ConditionRandom extends ConditionBase {
     }
 
     @Override
-    public ICondition deserialize(JsonObject data) {
-        ConditionRandom condition = new ConditionRandom();
-        if (data.get("chance") != null) {
-            condition.chance = data.get("chance").getAsDouble();
-        }
-
-        return condition;
+    public void readFromJSON(JsonObject data) {
+        chance = JSONHelper.getDouble(data, "chance", chance);
     }
 
     @Override
-    public void serialize(JsonObject elements) {
-        if (chance != 50D) {
-            elements.addProperty("chance", chance);
-        }
-    }
-
-    @Override
-    public ICondition newInstance() {
-        return new ConditionRandom();
+    public void writeToJSON(JsonObject elements) {
+        JSONHelper.setDouble(elements, "chance", chance, 50D);
     }
 
     @Override
@@ -59,19 +48,12 @@ public class ConditionRandom extends ConditionBase {
     }
 
     @Override
-    public void draw() {
-        int chanceColor = theme.optionsFontColor;
+    public void draw(int mouseX, int mouseY) {
+        int chanceColor = Theme.INSTANCE.optionsFontColor;
         if (mouseX <= 94 && mouseX >= 1) {
-            if (mouseY > 25 && mouseY <= 33) chanceColor = theme.optionsFontColorHover;
+            if (mouseY > 25 && mouseY <= 33) chanceColor = Theme.INSTANCE.optionsFontColorHover;
         }
 
-        drawText("chance: " + chanceEdit, 4, 25, chanceColor);
-    }
-    
-    @Override
-    public void addToolTip(List<String> toolTip) {
-        if (!inverted) {
-            toolTip.add("    With a chance of " + chance + "%");
-        } toolTip.add("    With a chance of " + (100 - chance) + "%");
+        DrawHelper.drawText("chance: " + chanceEdit, 4, 25, chanceColor);
     }
 }

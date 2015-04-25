@@ -1,10 +1,11 @@
 package joshie.crafting.conditions;
 
-import java.util.List;
 import java.util.UUID;
 
-import joshie.crafting.api.ICondition;
+import joshie.crafting.api.DrawHelper;
 import joshie.crafting.gui.TextFieldHelper.IntegerFieldHelper;
+import joshie.crafting.helpers.JSONHelper;
+import joshie.crafting.json.Theme;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
@@ -18,145 +19,122 @@ public class ConditionCoordinates extends ConditionBase {
     private IntegerFieldHelper xEdit;
     private IntegerFieldHelper yEdit;
     private IntegerFieldHelper zEdit;
-    
+
     public boolean checkDimension = false; //Whether we check the dimension
-	public boolean checkX = true; //Whether we check the x coordinate
-	public boolean checkY = true; //Whether we check the y coordinate
-	public boolean checkZ = true; //Whether we check the x coordinate
-	public int radius = 0; //How much further to check than the block
-	public int dimension = 0, x = 0, y = 0, z = 0; //The coordinates
-	public boolean greaterThan = false; //If we are checking greater than
-	public boolean lessThan = false; //If we are checking less than
-	
-	public ConditionCoordinates() {
-		super("Coordinates", theme.conditionCoordinates, "coordinates");
-		radiusEdit = new IntegerFieldHelper("radius", this);
-		dimensionEdit = new IntegerFieldHelper("dimension", this);
-		xEdit = new IntegerFieldHelper("x", this);
-		yEdit = new IntegerFieldHelper("y", this);
-		zEdit = new IntegerFieldHelper("z", this);
-	}
+    public boolean checkX = true; //Whether we check the x coordinate
+    public boolean checkY = true; //Whether we check the y coordinate
+    public boolean checkZ = true; //Whether we check the x coordinate
+    public int radius = 0; //How much further to check than the block
+    public int dimension = 0, x = 0, y = 0, z = 0; //The coordinates
+    public boolean greaterThan = false; //If we are checking greater than
+    public boolean lessThan = false; //If we are checking less than
 
-	@Override
-	public boolean isSatisfied(World world, EntityPlayer player, UUID uuid) {
-		if (player == null) return false;
-		int playerDimension = player.worldObj.provider.dimensionId;
-		int playerX = (int) player.posX;
-		int playerY = (int) player.posY;
-		int playerZ = (int) player.posZ;
-		
-		if (checkDimension) if (playerDimension != dimension) return false;
-		boolean xMatches = checkX ? false: true;
-		boolean yMatches = checkY ? false: true;
-		boolean zMatches = checkZ ? false: true;
-		if (greaterThan || lessThan) {
-			if (greaterThan) {
-				if(playerX >= x) xMatches = true;
-				if(playerY >= y) yMatches = true;
-				if(playerZ >= z) zMatches = true;
-			} else {
-				if(playerX <= x) xMatches = true;
-				if(playerY <= y) yMatches = true;
-				if(playerZ <= z) zMatches = true;
-			}
-		} else {
-			//Check the xCoordinate
-			if (checkX) {
-				for (int xCoord = playerX - radius; xCoord <= playerX + radius; xCoord++) {
-					if (xCoord == x) {
-						xMatches = true;
-						break;
-					}
-				}
-			}
-			//Check the yCoordinate
-			if (checkY) {
-				for (int yCoord = playerY - radius; yCoord <= playerY + radius; yCoord++) {
-					if (yCoord == y) {
-						yMatches = true;
-						break;
-					}
-				}
-			}
-			//Check the zCoordinate
-			if (checkZ) {
-				for (int zCoord = playerZ - radius; zCoord <= playerZ + radius; zCoord++) {
-					if (zCoord == z) {
-						zMatches = true;
-						break;
-					}
-				}
-			}
-		}
-		
-		return xMatches && yMatches && zMatches;
-	}
-
-	@Override
-	public ICondition deserialize(JsonObject data) {
-		ConditionCoordinates condition = new ConditionCoordinates();
-		if (data.get("dimension") != null) {
-			condition.checkDimension = true;
-			condition.dimension = data.get("dimension").getAsInt();
-		}
-		
-		condition.checkX = false;
-		condition.checkY = false;
-		condition.checkZ = false;
-		
-		if (data.get("x") != null) {
-			condition.checkX = true;
-			condition.x = data.get("x").getAsInt();
-		}
-		
-		if (data.get("y") != null) {
-			condition.checkY = true;
-			condition.y = data.get("y").getAsInt();
-		}
-		
-		if (data.get("z") != null) {
-			condition.checkZ = true;
-			condition.z = data.get("z").getAsInt();
-		}
-		
-		if (data.get("radius") != null) {
-			condition.radius = data.get("radius").getAsInt();
-		}
-		
-		if (data.get("greaterThan") != null) {
-			condition.greaterThan = data.get("greaterThan").getAsBoolean();
-		}
-		
-		if (data.get("lessThan") != null) {
-			condition.lessThan = data.get("lessThan").getAsBoolean();
-		}
-		
-		return condition;
-	}
-
-	@Override
-	public void serialize(JsonObject elements) {
-		if (checkDimension) 
-			elements.addProperty("dimension", dimension);
-		if (checkX)
-			elements.addProperty("x", x);
-		if (checkY)
-			elements.addProperty("y", y);
-		if (checkZ)
-			elements.addProperty("z", z);
-		if (radius > 0)
-			elements.addProperty("radius", radius);
-		if (greaterThan != false)
-			elements.addProperty("greaterThan", greaterThan);
-		if (lessThan != false)
-			elements.addProperty("lessThan", lessThan);
-	}
+    public ConditionCoordinates() {
+        super("coordinates", 0xFF000000);
+        radiusEdit = new IntegerFieldHelper("radius", this);
+        dimensionEdit = new IntegerFieldHelper("dimension", this);
+        xEdit = new IntegerFieldHelper("x", this);
+        yEdit = new IntegerFieldHelper("y", this);
+        zEdit = new IntegerFieldHelper("z", this);
+    }
 
     @Override
-    public ICondition newInstance() {
-        return new ConditionCoordinates();
+    public boolean isSatisfied(World world, EntityPlayer player, UUID uuid) {
+        if (player == null) return false;
+        int playerDimension = player.worldObj.provider.dimensionId;
+        int playerX = (int) player.posX;
+        int playerY = (int) player.posY;
+        int playerZ = (int) player.posZ;
+
+        if (checkDimension) if (playerDimension != dimension) return false;
+        boolean xMatches = checkX ? false : true;
+        boolean yMatches = checkY ? false : true;
+        boolean zMatches = checkZ ? false : true;
+        if (greaterThan || lessThan) {
+            if (greaterThan) {
+                if (playerX >= x) xMatches = true;
+                if (playerY >= y) yMatches = true;
+                if (playerZ >= z) zMatches = true;
+            } else {
+                if (playerX <= x) xMatches = true;
+                if (playerY <= y) yMatches = true;
+                if (playerZ <= z) zMatches = true;
+            }
+        } else {
+            //Check the xCoordinate
+            if (checkX) {
+                for (int xCoord = playerX - radius; xCoord <= playerX + radius; xCoord++) {
+                    if (xCoord == x) {
+                        xMatches = true;
+                        break;
+                    }
+                }
+            }
+            //Check the yCoordinate
+            if (checkY) {
+                for (int yCoord = playerY - radius; yCoord <= playerY + radius; yCoord++) {
+                    if (yCoord == y) {
+                        yMatches = true;
+                        break;
+                    }
+                }
+            }
+            //Check the zCoordinate
+            if (checkZ) {
+                for (int zCoord = playerZ - radius; zCoord <= playerZ + radius; zCoord++) {
+                    if (zCoord == z) {
+                        zMatches = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return xMatches && yMatches && zMatches;
     }
-    
+
+    @Override
+    public void readFromJSON(JsonObject data) {
+        checkDimension = false;
+        checkX = false;
+        checkY = false;
+        checkZ = false;
+
+        if (JSONHelper.getExists(data, "dimension")) {
+            checkDimension = true;
+            dimension = JSONHelper.getInteger(data, "dimension", dimension);
+        }
+
+        if (JSONHelper.getExists(data, "x")) {
+            checkX = true;
+            x = JSONHelper.getInteger(data, "x", x);
+        }
+
+        if (JSONHelper.getExists(data, "y")) {
+            checkY = true;
+            y = JSONHelper.getInteger(data, "y", y);
+        }
+
+        if (JSONHelper.getExists(data, "z")) {
+            checkZ = true;
+            z = JSONHelper.getInteger(data, "z", z);
+        }
+
+        greaterThan = JSONHelper.getBoolean(data, "greaterThan", greaterThan);
+        lessThan = JSONHelper.getBoolean(data, "lessThan", lessThan);
+    }
+
+    @Override
+    public void writeToJSON(JsonObject data) {
+        if (checkDimension) JSONHelper.setInteger(data, "dimension", dimension, 0);
+        if (checkX) JSONHelper.setInteger(data, "x", x, 0);
+        if (checkY) JSONHelper.setInteger(data, "y", y, 0);
+        if (checkZ) JSONHelper.setInteger(data, "z", z, 0);
+        JSONHelper.setInteger(data, "radius", radius, 0);
+        JSONHelper.setBoolean(data, "greaterThan", greaterThan, false);
+        JSONHelper.setBoolean(data, "lessThan", lessThan, false);
+    }
+
     @Override
     public Result onClicked(int mouseX, int mouseY) {
         if (mouseX <= 94 && mouseX >= 1) {
@@ -178,48 +156,43 @@ public class ConditionCoordinates extends ConditionBase {
     }
 
     @Override
-    public void draw() {
-        int checkDColor = theme.optionsFontColor;
-        int checkXColor = theme.optionsFontColor;
-        int checkYColor = theme.optionsFontColor;
-        int checkZColor = theme.optionsFontColor;
-        int radiusColor = theme.optionsFontColor;
-        int dimColor = theme.optionsFontColor;
-        int xColor = theme.optionsFontColor;
-        int yColor = theme.optionsFontColor;
-        int zColor = theme.optionsFontColor;
-        int gColor = theme.optionsFontColor;
-        int lColor = theme.optionsFontColor;
+    public void draw(int mouseX, int mouseY) {
+        int checkDColor = Theme.INSTANCE.optionsFontColor;
+        int checkXColor = Theme.INSTANCE.optionsFontColor;
+        int checkYColor = Theme.INSTANCE.optionsFontColor;
+        int checkZColor = Theme.INSTANCE.optionsFontColor;
+        int radiusColor = Theme.INSTANCE.optionsFontColor;
+        int dimColor = Theme.INSTANCE.optionsFontColor;
+        int xColor = Theme.INSTANCE.optionsFontColor;
+        int yColor = Theme.INSTANCE.optionsFontColor;
+        int zColor = Theme.INSTANCE.optionsFontColor;
+        int gColor = Theme.INSTANCE.optionsFontColor;
+        int lColor = Theme.INSTANCE.optionsFontColor;
 
         if (mouseX <= 94 && mouseX >= 1) {
-            if (mouseY > 25 && mouseY <= 33) checkDColor = theme.optionsFontColorHover;
-            if (mouseY > 34 && mouseY <= 41) checkXColor = theme.optionsFontColorHover;
-            if (mouseY > 41 && mouseY <= 48) checkYColor = theme.optionsFontColorHover;
-            if (mouseY > 48 && mouseY <= 55) checkZColor = theme.optionsFontColorHover;
-            if (mouseY > 55 && mouseY <= 62) radiusColor = theme.optionsFontColorHover;
-            if (mouseY > 62 && mouseY <= 69) dimColor = theme.optionsFontColorHover;
-            if (mouseY > 69 && mouseY <= 76) xColor = theme.optionsFontColorHover;
-            if (mouseY > 76 && mouseY <= 83) yColor = theme.optionsFontColorHover;
-            if (mouseY > 83 && mouseY <= 90) zColor = theme.optionsFontColorHover;
-            if (mouseY > 90 && mouseY <= 97) gColor = theme.optionsFontColorHover;
-            if (mouseY > 97 && mouseY <= 104) lColor = theme.optionsFontColorHover;
+            if (mouseY > 25 && mouseY <= 33) checkDColor = Theme.INSTANCE.optionsFontColorHover;
+            if (mouseY > 34 && mouseY <= 41) checkXColor = Theme.INSTANCE.optionsFontColorHover;
+            if (mouseY > 41 && mouseY <= 48) checkYColor = Theme.INSTANCE.optionsFontColorHover;
+            if (mouseY > 48 && mouseY <= 55) checkZColor = Theme.INSTANCE.optionsFontColorHover;
+            if (mouseY > 55 && mouseY <= 62) radiusColor = Theme.INSTANCE.optionsFontColorHover;
+            if (mouseY > 62 && mouseY <= 69) dimColor = Theme.INSTANCE.optionsFontColorHover;
+            if (mouseY > 69 && mouseY <= 76) xColor = Theme.INSTANCE.optionsFontColorHover;
+            if (mouseY > 76 && mouseY <= 83) yColor = Theme.INSTANCE.optionsFontColorHover;
+            if (mouseY > 83 && mouseY <= 90) zColor = Theme.INSTANCE.optionsFontColorHover;
+            if (mouseY > 90 && mouseY <= 97) gColor = Theme.INSTANCE.optionsFontColorHover;
+            if (mouseY > 97 && mouseY <= 104) lColor = Theme.INSTANCE.optionsFontColorHover;
         }
 
-        drawText("checkDim: " + checkDimension , 4, 25, checkDColor);
-        drawText("checkX: " + checkX, 4, 34, checkXColor);
-        drawText("checkY: " + checkY, 4, 41, checkYColor);
-        drawText("checkZ: " + checkZ, 4, 48, checkZColor);
-        drawText("radius: " + radiusEdit, 4, 55, radiusColor);
-        drawText("dimension: " + dimensionEdit, 4, 62, dimColor);
-        drawText("x: " + xEdit, 4, 69, xColor);
-        drawText("y: " + yEdit, 4, 76, yColor);
-        drawText("z: " + zEdit, 4, 83, zColor);
-        drawText("greaterThan: " + greaterThan, 4, 90, gColor);
-        drawText("lessThan: " + lessThan, 4, 97, lColor);
-    }
-    
-    @Override
-    public void addToolTip(List<String> toolTip) {
-
+        DrawHelper.drawText("checkDim: " + checkDimension, 4, 25, checkDColor);
+        DrawHelper.drawText("checkX: " + checkX, 4, 34, checkXColor);
+        DrawHelper.drawText("checkY: " + checkY, 4, 41, checkYColor);
+        DrawHelper.drawText("checkZ: " + checkZ, 4, 48, checkZColor);
+        DrawHelper.drawText("radius: " + radiusEdit, 4, 55, radiusColor);
+        DrawHelper.drawText("dimension: " + dimensionEdit, 4, 62, dimColor);
+        DrawHelper.drawText("x: " + xEdit, 4, 69, xColor);
+        DrawHelper.drawText("y: " + yEdit, 4, 76, yColor);
+        DrawHelper.drawText("z: " + zEdit, 4, 83, zColor);
+        DrawHelper.drawText("greaterThan: " + greaterThan, 4, 90, gColor);
+        DrawHelper.drawText("lessThan: " + lessThan, 4, 97, lColor);
     }
 }

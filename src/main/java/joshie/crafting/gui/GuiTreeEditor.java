@@ -6,8 +6,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import joshie.crafting.CraftAPIRegistry;
-import joshie.crafting.Tab;
 import joshie.crafting.Criteria;
+import joshie.crafting.Tab;
 import joshie.crafting.helpers.ClientHelper;
 import joshie.crafting.json.Options;
 import net.minecraft.init.Items;

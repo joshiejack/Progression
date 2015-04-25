@@ -9,13 +9,13 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import joshie.crafting.Condition;
 import joshie.crafting.CraftAPIRegistry;
 import joshie.crafting.CraftingMod;
-import joshie.crafting.Tab;
 import joshie.crafting.Criteria;
 import joshie.crafting.Reward;
+import joshie.crafting.Tab;
 import joshie.crafting.Trigger;
-import joshie.crafting.api.ICondition;
 import joshie.crafting.api.crafting.CraftingEvent.CraftingType;
 import joshie.crafting.helpers.StackHelper;
 import joshie.crafting.lib.CraftingInfo;
@@ -133,10 +133,10 @@ public class JSONLoader {
                 for (int j = 0; j < triggerz.length; j++) {
                     DataTrigger trigger = criteria.triggers.get(j);
                     Trigger iTrigger = CraftAPIRegistry.newTrigger(theCriteria, trigger.type, trigger.data);
-                    ICondition[] conditionz = new ICondition[trigger.conditions.size()];
+                    Condition[] conditionz = new Condition[trigger.conditions.size()];
                     for (int i = 0; i < conditionz.length; i++) {
                         DataGeneric condition = trigger.conditions.get(i);
-                        conditionz[i] = CraftAPIRegistry.newCondition(theCriteria, condition.type, condition.data);
+                        conditionz[i] = CraftAPIRegistry.newCondition(iTrigger, condition.type, condition.data);
                     }
 
                     iTrigger.setConditions(conditionz);
@@ -243,14 +243,14 @@ public class JSONLoader {
                 ArrayList<DataGeneric> theRewards = new ArrayList();
                 for (Trigger trigger : c.getTriggers()) {
                     ArrayList<DataGeneric> theConditions = new ArrayList();
-                    for (ICondition condition : trigger.getConditions()) {
+                    for (Condition condition : trigger.getConditions()) {
                         JsonObject object = new JsonObject();
                         if (condition.isInverted()) {
                             object.addProperty("inverted", true);
                         }
 
-                        condition.serialize(object);
-                        DataGeneric dCondition = new DataGeneric(condition.getTypeName(), object);
+                        condition.getType().writeToJSON(object);
+                        DataGeneric dCondition = new DataGeneric(condition.getType().getUnlocalisedName(), object);
                         theConditions.add(dCondition);
                     }
 

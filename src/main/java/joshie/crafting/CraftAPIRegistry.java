@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
 
-import joshie.crafting.api.ICondition;
 import joshie.crafting.api.IConditionType;
 import joshie.crafting.api.IRegistry;
 import joshie.crafting.api.IRewardType;
@@ -31,7 +30,7 @@ public class CraftAPIRegistry implements IRegistry {
     public static HashMap<String, Tab> tabs;
     public static HashMap<String, Criteria> criteria;
     public static Set<Trigger> triggers;
-    public static Set<ICondition> conditions;
+    public static Set<Condition> conditions;
     public static Set<Reward> rewards;
 
     @Override
@@ -50,7 +49,7 @@ public class CraftAPIRegistry implements IRegistry {
 
     @Override
     public IConditionType registerConditionType(IConditionType type) {
-        conditionTypes.put(type.getTypeName(), type);
+        conditionTypes.put(type.getUnlocalisedName(), type);
         return type;
     }
 
@@ -79,9 +78,17 @@ public class CraftAPIRegistry implements IRegistry {
         return iTab;
     }
 
-    public static ICondition newCondition(Criteria criteria, String type, JsonObject data) {
+    public static Condition newCondition(Trigger trigger, String type, JsonObject data) {
         boolean inverted = data.get("inverted") != null ? data.get("inverted").getAsBoolean() : false;
-        ICondition condition = conditionTypes.get(type).deserialize(data).setInversion(inverted).setCriteria(criteria);
+        IConditionType oldConditionType = conditionTypes.get(type);
+        IConditionType newConditionType = oldConditionType;
+        
+        try {
+            newConditionType = oldConditionType.getClass().newInstance();
+        } catch (Exception e) {}
+        
+        Condition condition = new Condition(trigger.getCriteria(), trigger, newConditionType);
+        condition.getType().readFromJSON(data);
         conditions.add(condition);
         return condition;
     }
@@ -146,10 +153,16 @@ public class CraftAPIRegistry implements IRegistry {
         return newReward;
     }
 
-    public static ICondition cloneCondition(Trigger trigger, IConditionType condition) {
-        ICondition newCondition = condition.newInstance().setTrigger(trigger);
+    public static Condition cloneCondition(Trigger trigger, IConditionType oldConditionType) {
+        IConditionType newConditionType = oldConditionType;
+        
+        try {
+            newConditionType = oldConditionType.getClass().newInstance();
+        } catch (Exception e) {}
+        
+        
+        Condition newCondition = new Condition(trigger.getCriteria(), trigger, newConditionType);
         conditions.add(newCondition);
-        trigger.addCondition(newCondition);
         return newCondition;
     }
 
@@ -166,7 +179,7 @@ public class CraftAPIRegistry implements IRegistry {
     }
 
     /** Convenience methods for removals **/
-    public static void removeCondition(ICondition condition) {
+    public static void removeCondition(Condition condition) {
         conditions.remove(condition);
     }
 
