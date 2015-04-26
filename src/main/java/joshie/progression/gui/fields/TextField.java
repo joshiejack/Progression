@@ -1,6 +1,6 @@
 package joshie.progression.gui.fields;
 
-import joshie.progression.api.DrawHelper;
+import joshie.progression.api.ProgressionAPI;
 import joshie.progression.gui.TextFieldHelper;
 import joshie.progression.gui.TextFieldHelper.DoubleFieldHelper;
 import joshie.progression.gui.TextFieldHelper.FloatFieldHelper;
@@ -25,7 +25,7 @@ public class TextField extends AbstractField {
 
     @Override
     public void draw(int color, int yPos) {
-        DrawHelper.drawSplitText(name + ": " + data.getText(), 4, yPos, 105, color);
+        ProgressionAPI.draw.drawSplitText(name + ": " + data.getText(), 4, yPos, 105, color);
     }
 
     public static TextFieldHelper getField(String name, Object object) {

@@ -21,7 +21,7 @@ public class CrafterHuman extends Crafter {
 	}
 
 	@Override
-	public boolean canUseItemForCrafting(CraftingType type, ItemStack stack) {
+	public boolean canUseItemForCrafting(ActionType type, ItemStack stack) {
 		Collection<ICriteria> conditions = CraftingRegistry.getCraftUsageCriteria(type, stack);
 		if (conditions.size() < 1) return !Options.requireUnlockForUsage;
 		Set<Criteria> completed = PlayerTracker.getPlayerData(uuid).getMappings().getCompletedCriteria().keySet();
@@ -31,7 +31,7 @@ public class CrafterHuman extends Crafter {
 	}
 
 	@Override
-	public boolean canCraftItem(CraftingType type, ItemStack stack) {
+	public boolean canCraftItem(ActionType type, ItemStack stack) {
 		Collection<ICriteria> conditions = CraftingRegistry.getCraftingCriteria(type, stack);
 		if (conditions.size() < 1) return !Options.requireUnlockForCrafting;
 		Set<Criteria> completed = PlayerTracker.getPlayerData(uuid).getMappings().getCompletedCriteria().keySet();
@@ -43,10 +43,5 @@ public class CrafterHuman extends Crafter {
 	@Override
 	public boolean canCraftWithAnything() {
 		return false;
-	}
-
-	@Override
-	public boolean canRepairItem(ItemStack stack) {
-		return true;
 	}
 }

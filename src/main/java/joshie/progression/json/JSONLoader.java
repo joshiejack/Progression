@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.List;
 
 import joshie.progression.Progression;
-import joshie.progression.crafting.CraftingType;
 import joshie.progression.criteria.Condition;
 import joshie.progression.criteria.Criteria;
 import joshie.progression.criteria.Reward;
@@ -88,14 +87,6 @@ public class JSONLoader {
             loadJSON(tab);
             return true;
         } catch (Exception e) { return false; }
-    }
-    
-    private static CraftingType getCraftingTypeFromName(String name) {
-        for (CraftingType type : CraftingType.craftingTypes) {
-            if (name.equalsIgnoreCase(type.name)) return type;
-        }
-
-        return CraftingType.CRAFTING;
     }
     
     public static void loadServerJSON() {

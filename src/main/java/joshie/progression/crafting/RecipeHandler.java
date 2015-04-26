@@ -72,11 +72,11 @@ public class RecipeHandler {
         for (Object object : objects) {
             for (int i = 0; i < crafting.getSizeInventory(); i++) {
                 ItemStack stack = crafting.getStackInSlot(i);
-                if (!CraftingHelper.canUseItemForCrafting(CraftingType.CRAFTING, object, stack)) return null;
+                if (!CraftingHelper.canUseItemForCrafting(ActionType.CRAFTING, object, stack)) return null;
             }
             
             //If we are repairing items, check if the crafter can repair it
-            if (slot == 2 && CraftingHelper.canRepairItem(object, itemstack) && itemstack.getItem() == itemstack1.getItem() && itemstack.stackSize == 1 && itemstack1.stackSize == 1 && itemstack.getItem().isRepairable()) {
+            if (slot == 2 && CraftingHelper.canCraftItem(ActionType.REPAIR, object, itemstack) && itemstack.getItem() == itemstack1.getItem() && itemstack.stackSize == 1 && itemstack1.stackSize == 1 && itemstack.getItem().isRepairable()) {
                 Item item = itemstack.getItem();
                 int j1 = item.getMaxDamage() - itemstack.getItemDamageForDisplay();
                 int k = item.getMaxDamage() - itemstack1.getItemDamageForDisplay();
@@ -94,7 +94,7 @@ public class RecipeHandler {
                     IRecipe irecipe = (IRecipe) CraftingManager.getInstance().getRecipeList().get(j);
                     if (irecipe.matches(crafting, world)) {
                         ItemStack stack = irecipe.getCraftingResult(crafting);
-                        if (CraftingHelper.canCraftItem(CraftingType.CRAFTING, object, stack)) { //If we are permitted to craft this, then allow it
+                        if (CraftingHelper.canCraftItem(ActionType.CRAFTING, object, stack)) { //If we are permitted to craft this, then allow it
                             return stack;
                         }
                     }

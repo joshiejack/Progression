@@ -2,7 +2,7 @@ package joshie.progression.gui.fields;
 
 import java.lang.reflect.Field;
 
-import joshie.progression.api.DrawHelper;
+import joshie.progression.api.ProgressionAPI;
 import joshie.progression.gui.IItemSelectable;
 import joshie.progression.gui.SelectItemOverlay;
 import joshie.progression.gui.SelectItemOverlay.Type;
@@ -58,7 +58,7 @@ public class ItemField extends AbstractField implements IItemSelectable {
     @Override
     public void draw(int color, int yPos) {
         try {
-            DrawHelper.drawStack(getStack(), x, y, scale);
+            ProgressionAPI.draw.drawStack(getStack(), x, y, scale);
         } catch (Exception e) {}
     }
 

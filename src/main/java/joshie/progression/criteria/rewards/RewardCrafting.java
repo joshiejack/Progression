@@ -6,15 +6,14 @@ import java.util.List;
 import java.util.UUID;
 
 import joshie.progression.Progression;
-import joshie.progression.api.CraftingEvent.CanCraftItemEvent;
-import joshie.progression.api.CraftingEvent.CanRepairItemEvent;
-import joshie.progression.api.CraftingEvent.CanUseItemCraftingEvent;
-import joshie.progression.api.DrawHelper;
+import joshie.progression.api.ActionEvent.CanObtainFromActionEvent;
+import joshie.progression.api.ActionEvent.CanUseToPeformActionEvent;
 import joshie.progression.api.EventBusType;
 import joshie.progression.api.ICriteria;
+import joshie.progression.api.ProgressionAPI;
+import joshie.progression.crafting.ActionType;
 import joshie.progression.crafting.Crafter;
 import joshie.progression.crafting.CraftingRegistry;
-import joshie.progression.crafting.CraftingType;
 import joshie.progression.criteria.Criteria;
 import joshie.progression.gui.GuiCriteriaEditor;
 import joshie.progression.gui.IItemSelectable;
@@ -49,10 +48,11 @@ import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
+//TODO: SWITCH TO NEW SYSTEM
 public class RewardCrafting extends RewardBase implements IItemSelectable {
     private TextFieldHelper editMod;
     private ItemStack stack = new ItemStack(Blocks.furnace);
-    private CraftingType type = CraftingType.CRAFTING;
+    private ActionType type = ActionType.CRAFTING;
     private boolean matchDamage = true;
     private boolean matchNBT = false;
     private boolean usage = true;
@@ -97,9 +97,9 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onItemTooltipEvent(ItemTooltipEvent event) {
         Crafter crafter = CraftingRegistry.getCrafterFromPlayer(event.entityPlayer);
-        if (!crafter.canCraftItem(CraftingType.CRAFTING, event.itemStack)) {
+        if (!crafter.canCraftItem(ActionType.CRAFTING, event.itemStack)) {
             boolean hasStuff = false;
-            for (CraftingType type : CraftingType.craftingTypes) {
+            for (ActionType type : ActionType.craftingTypes) {
                 Collection<ICriteria> requirements = CraftingRegistry.getCraftingCriteria(type, event.itemStack);
                 if (requirements.size() > 0) {
                     if (!hasStuff) {
@@ -129,7 +129,7 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
                 EntityItem item = it.next();
                 ItemStack stack = item.getEntityItem();
                 EntityPlayer player = (EntityPlayer) source;
-                if (isEventCancelled(player, CraftingType.ENTITY, player.getCurrentEquippedItem(), stack)) {
+                if (isEventCancelled(player, ActionType.ENTITY, player.getCurrentEquippedItem(), stack)) {
                     it.remove();
                 }
             }
@@ -138,7 +138,7 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
 
     @SubscribeEvent
     public void onBreakSpeed(BreakSpeed event) {
-        if (isEventCancelled(event.entityPlayer, CraftingType.BREAKBLOCK, event.entityPlayer.getCurrentEquippedItem(), BlockActionHelper.getStackFromBlockData(event.block, event.metadata))) {
+        if (isEventCancelled(event.entityPlayer, ActionType.BREAKBLOCK, event.entityPlayer.getCurrentEquippedItem(), BlockActionHelper.getStackFromBlockData(event.block, event.metadata))) {
             event.newSpeed = 0F;
         }
     }
@@ -147,7 +147,7 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
     public void onBreakBlock(BreakEvent event) {
         EntityPlayer player = event.getPlayer();
         if (player != null) {
-            if (isEventCancelled(player, CraftingType.BREAKBLOCK, player.getCurrentEquippedItem(), BlockActionHelper.getStackFromBlockData(event.block, event.blockMetadata))) {
+            if (isEventCancelled(player, ActionType.BREAKBLOCK, player.getCurrentEquippedItem(), BlockActionHelper.getStackFromBlockData(event.block, event.blockMetadata))) {
                 event.setCanceled(true);
             }
         }
@@ -160,7 +160,7 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
             Iterator<ItemStack> it = event.drops.iterator();
             while (it.hasNext()) {
                 ItemStack stack = it.next();
-                if (isEventCancelled(player, CraftingType.HARVEST, player.getCurrentEquippedItem(), stack)) {
+                if (isEventCancelled(player, ActionType.HARVEST, player.getCurrentEquippedItem(), stack)) {
                     it.remove();
                 }
             }
@@ -168,7 +168,7 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
     }
 
     @SubscribeEvent
-    public void onAttemptToUseItemForCrafting(CanUseItemCraftingEvent event) {
+    public void onAttemptToUseItemToPerformAction(CanUseToPeformActionEvent event) {
         if (event.stack == null) return;
         Crafter crafter = event.player != null ? CraftingRegistry.getCrafterFromPlayer(event.player) : CraftingRegistry.getCrafterFromTile(event.tile);
         if (crafter.canCraftWithAnything()) return;
@@ -178,15 +178,7 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
     }
 
     @SubscribeEvent
-    public void onAttemptToRepairItem(CanRepairItemEvent event) {
-        Crafter crafter = event.player != null ? CraftingRegistry.getCrafterFromPlayer(event.player) : CraftingRegistry.getCrafterFromTile(event.tile);
-        if (!crafter.canRepairItem(event.stack)) {
-            event.setCanceled(true);
-        }
-    }
-
-    @SubscribeEvent
-    public void onAttemptToCraftItem(CanCraftItemEvent event) {        
+    public void onAttemptToObtainItem(CanObtainFromActionEvent event) {        
         if (event.stack == null) return;
         Crafter crafter = event.player != null ? CraftingRegistry.getCrafterFromPlayer(event.player) : CraftingRegistry.getCrafterFromTile(event.tile);
         if (!crafter.canCraftItem(event.type, event.stack)) {
@@ -194,7 +186,7 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
         }
     }
 
-    private boolean isEventCancelled(EntityPlayer player, CraftingType type, ItemStack usageStack, ItemStack craftingStack) {
+    private boolean isEventCancelled(EntityPlayer player, ActionType type, ItemStack usageStack, ItemStack craftingStack) {
         if (!CraftingHelper.canUseItemForCrafting(type, player, usageStack)) {
             return true;
         } else {
@@ -210,7 +202,7 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
         if (event.entityPlayer.getCurrentEquippedItem() == null) return true;
         EntityPlayer player = event.entityPlayer;
         Crafter crafter = CraftingRegistry.getCrafterFromPlayer(player);
-        if (!crafter.canCraftItem(CraftingType.CRAFTING, player.getCurrentEquippedItem())) {
+        if (!crafter.canCraftItem(ActionType.CRAFTING, player.getCurrentEquippedItem())) {
             event.setCanceled(true);
             return false;
         } else return true;
@@ -221,7 +213,7 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
         stack = JSONHelper.getItemStack(data, "item", stack);
         if (JSONHelper.getExists(data, "craftingType")) {
             String craftingtype = JSONHelper.getString(data, "craftingType", type.name.toLowerCase());
-            for (CraftingType type : CraftingType.craftingTypes) {
+            for (ActionType type : ActionType.craftingTypes) {
                 if (type.name.equalsIgnoreCase(craftingtype)) {
                     this.type = type;
                     break;
@@ -247,7 +239,7 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
     @Override
     public void writeToJSON(JsonObject data) {
         JSONHelper.setItemStack(data, "item", stack);
-        JSONHelper.setString(data, "craftingType", type.name.toLowerCase(), CraftingType.CRAFTING.name.toLowerCase());
+        JSONHelper.setString(data, "craftingType", type.name.toLowerCase(), ActionType.CRAFTING.name.toLowerCase());
         JSONHelper.setBoolean(data, "matchDamage", matchDamage, true);
         JSONHelper.setBoolean(data, "matchNBT", matchNBT, false);
         JSONHelper.setBoolean(data, "disableCrafting", crafting, true);
@@ -282,13 +274,13 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
         return stack;
     }
 
-    public CraftingType next() {
+    public ActionType next() {
         int id = type.id + 1;
-        if (id < CraftingType.craftingTypes.size()) {
-            return CraftingType.craftingTypes.get(id);
+        if (id < ActionType.craftingTypes.size()) {
+            return ActionType.craftingTypes.get(id);
         }
 
-        return CraftingType.craftingTypes.get(0);
+        return ActionType.craftingTypes.get(0);
     }
 
     @Override
@@ -315,7 +307,7 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
 
     @Override
     public void draw(int mouseX, int mouseY) {
-        DrawHelper.drawStack(getIcon(), 76, 44, 1.4F);
+        ProgressionAPI.draw.drawStack(getIcon(), 76, 44, 1.4F);
         int typeColor = Theme.INSTANCE.optionsFontColor;
         int matchColor = Theme.INSTANCE.optionsFontColor;
         int match2Color = Theme.INSTANCE.optionsFontColor;
@@ -334,12 +326,12 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
             }
         }
         
-        DrawHelper.drawText("type: " + type.name.toLowerCase(), 4, 18, typeColor);
-        DrawHelper.drawText("matchDamage: " + matchDamage, 4, 26, matchColor);
-        DrawHelper.drawText("matchNBT: " + matchNBT, 4, 34, match2Color);
-        DrawHelper.drawText("usage: " + usage, 4, 42, usageColor);
-        DrawHelper.drawText("crafting: " + crafting, 4, 50, craftColor);
-        DrawHelper.drawText("modid: " + editMod.getText(), 4, 58, modColor);
+        ProgressionAPI.draw.drawText("type: " + type.name.toLowerCase(), 4, 18, typeColor);
+        ProgressionAPI.draw.drawText("matchDamage: " + matchDamage, 4, 26, matchColor);
+        ProgressionAPI.draw.drawText("matchNBT: " + matchNBT, 4, 34, match2Color);
+        ProgressionAPI.draw.drawText("usage: " + usage, 4, 42, usageColor);
+        ProgressionAPI.draw.drawText("crafting: " + crafting, 4, 50, craftColor);
+        ProgressionAPI.draw.drawText("modid: " + editMod.getText(), 4, 58, modColor);
     }
 
     @Override

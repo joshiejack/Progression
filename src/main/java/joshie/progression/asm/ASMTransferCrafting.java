@@ -46,13 +46,12 @@ public class ASMTransferCrafting extends AbstractASM {
                     boolean isDone = false;
 
                     @Override
-                    //Ignore code between instance and firePlayerCraftingEvent
                     public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
                         if ((name.equals("onSlotChange") || name.equals("func_75220_a") || name.equals("a")) && !isDone) {
                             String copy = name.equals("onSlotChange") ? "copy" : "func_77946_l";
                             isDone = true;
                             super.visitMethodInsn(opcode, owner, name, desc, itf);
-                            mv.visitFieldInsn(Opcodes.GETSTATIC, ProgressionInfo.ASMPATH + "api/ProgressionAPI", "registry", "L" + ProgressionInfo.ASMPATH + "api/IRegistry;");
+                            mv.visitFieldInsn(Opcodes.GETSTATIC, ProgressionInfo.ASMPATH + "api/ProgressionAPI", "registry", "L" + ProgressionInfo.ASMPATH + "api/IProgressionAPI;");
                             mv.visitVarInsn(Opcodes.ALOAD, 1);
                             mv.visitLdcInsn("crafting");
                             mv.visitInsn(Opcodes.ICONST_1);
@@ -62,7 +61,7 @@ public class ASMTransferCrafting extends AbstractASM {
                             mv.visitVarInsn(Opcodes.ALOAD, 3);
                             mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "net/minecraft/item/ItemStack", copy, "()Lnet/minecraft/item/ItemStack;", false);
                             mv.visitInsn(Opcodes.AASTORE);
-                            mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, ProgressionInfo.ASMPATH + "api/IRegistry", "fireTrigger", "(Lnet/minecraft/entity/player/EntityPlayer;Ljava/lang/String;[Ljava/lang/Object;)Z", true);
+                            mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, ProgressionInfo.ASMPATH + "api/IProgressionAPI", "fireTrigger", "(Lnet/minecraft/entity/player/EntityPlayer;Ljava/lang/String;[Ljava/lang/Object;)Z", true);
                             mv.visitInsn(Opcodes.POP);
                         } else super.visitMethodInsn(opcode, owner, name, desc, itf);
                     }

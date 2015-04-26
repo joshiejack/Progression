@@ -7,20 +7,13 @@ public abstract class Crafter {
      *  If the item cannot be used in crafting, it should return false
      * @param           the stack
      * @return          whether the item can be used to craft */
-    public abstract boolean canUseItemForCrafting(CraftingType type, ItemStack stack);
+    public abstract boolean canUseItemForCrafting(ActionType type, ItemStack stack);
     
     /** This is called to check whether the item is permitted to be crafted
      *  
      * @param           the stack
      * @return          whether it can be crafted or not */
-    public abstract boolean canCraftItem(CraftingType type, ItemStack stack);
-    
-
-    /** Called when attempting to repair an item in the crafting table
-     *  
-     * @param           the stack
-     * @return          whether it can be repaired */
-    public abstract boolean canRepairItem(ItemStack stack);
+    public abstract boolean canCraftItem(ActionType type, ItemStack stack);
 
     /** This is used to bypass the canUseItemForCrafting check
      *  Which is handy if you don't want to check for materials

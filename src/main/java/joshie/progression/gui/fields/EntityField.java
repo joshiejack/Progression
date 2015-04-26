@@ -2,7 +2,7 @@ package joshie.progression.gui.fields;
 
 import java.lang.reflect.Field;
 
-import joshie.progression.api.DrawHelper;
+import joshie.progression.api.ProgressionAPI;
 import joshie.progression.gui.GuiCriteriaEditor;
 import joshie.progression.gui.SelectEntity;
 import joshie.progression.gui.SelectEntity.IEntitySelectable;
@@ -70,7 +70,7 @@ public class EntityField extends AbstractField implements IEntitySelectable {
             yPos = GuiCriteriaEditor.INSTANCE.y + y;
             GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
             GL11.glColor4f(1F, 1F, 1F, 1F);
-            GuiInventory.func_147046_a(DrawHelper.draw.getXPosition() + x + GuiCriteriaEditor.INSTANCE.offsetX, yPos, EntityHelper.getSizeForString(getEntity()), 25F, -5F, (EntityLivingBase) entity);
+            GuiInventory.func_147046_a(ProgressionAPI.draw.getXPosition() + x + GuiCriteriaEditor.INSTANCE.offsetX, yPos, EntityHelper.getSizeForString(getEntity()), 25F, -5F, (EntityLivingBase) entity);
         } catch (Exception e) {}
     }
 

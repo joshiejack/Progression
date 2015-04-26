@@ -1,7 +1,7 @@
 package joshie.progression.criteria;
 
-import joshie.progression.api.DrawHelper;
 import joshie.progression.api.IRewardType;
+import joshie.progression.api.ProgressionAPI;
 import joshie.progression.gui.GuiDrawHelper;
 import joshie.progression.helpers.ClientHelper;
 import joshie.progression.json.Theme;
@@ -43,8 +43,8 @@ public class Reward {
         this.xPosition = xPos + 6;
         GuiDrawHelper.INSTANCE.setOffset(xPosition, 140);
 
-        DrawHelper.draw.drawGradient(1, 2, 99, 15, reward.getColor(), Theme.INSTANCE.blackBarGradient1, Theme.INSTANCE.blackBarGradient2);
-        DrawHelper.draw.drawText(reward.getLocalisedName(), 6, 6, Theme.INSTANCE.blackBarFontColor);
+        ProgressionAPI.draw.drawGradient(1, 2, 99, 15, reward.getColor(), Theme.INSTANCE.blackBarGradient1, Theme.INSTANCE.blackBarGradient2);
+        ProgressionAPI.draw.drawText(reward.getLocalisedName(), 6, 6, Theme.INSTANCE.blackBarFontColor);
 
         if (ClientHelper.canEdit()) {
             int xXcoord = 234;
@@ -53,7 +53,7 @@ public class Reward {
             }
 
             ClientHelper.getMinecraft().getTextureManager().bindTexture(ProgressionInfo.textures);
-            DrawHelper.draw.drawTexture(87, 4, xXcoord, 52, 11, 11);
+            ProgressionAPI.draw.drawTexture(87, 4, xXcoord, 52, 11, 11);
         }
 
         getType().draw(this.mouseX, this.mouseY);

@@ -16,10 +16,10 @@ import net.minecraft.tileentity.TileEntity;
 import com.google.common.collect.Multimap;
 
 public class CraftingRegistry {
-    public static HashMap<CraftingType, Multimap<SafeStack, ICriteria>> conditions;
-    public static HashMap<CraftingType, Multimap<SafeStack, ICriteria>> usage;
+    public static HashMap<ActionType, Multimap<SafeStack, ICriteria>> conditions;
+    public static HashMap<ActionType, Multimap<SafeStack, ICriteria>> usage;
 
-    public static void remove(CraftingType type, String modid, ItemStack stack, boolean matchDamage, boolean matchNBT, boolean usage, boolean crafting, ICriteria criteria) {
+    public static void remove(ActionType type, String modid, ItemStack stack, boolean matchDamage, boolean matchNBT, boolean usage, boolean crafting, ICriteria criteria) {
         SafeStack safe = SafeStack.newInstance(modid, stack, matchDamage, matchNBT);
         if (crafting) {
             Multimap<SafeStack, ICriteria> conditions = CraftingRegistry.conditions.get(type);
@@ -32,7 +32,7 @@ public class CraftingRegistry {
         }
     }
 
-    public static Collection<ICriteria> getCraftingCriteria(CraftingType type, ItemStack stack) {
+    public static Collection<ICriteria> getCraftingCriteria(ActionType type, ItemStack stack) {
         Collection<ICriteria> conditions = new HashSet();
         SafeStack[] safe = SafeStack.allInstances(stack);
         for (SafeStack s : safe) {
@@ -42,7 +42,7 @@ public class CraftingRegistry {
         return conditions;
     }
 
-    public static Collection<ICriteria> getCraftUsageCriteria(CraftingType type, ItemStack stack) {
+    public static Collection<ICriteria> getCraftUsageCriteria(ActionType type, ItemStack stack) {
         Collection<ICriteria> conditions = new HashSet();
         SafeStack[] safe = SafeStack.allInstances(stack);
         for (SafeStack s : safe) {
@@ -52,7 +52,7 @@ public class CraftingRegistry {
         return conditions;
     }
 
-    public static void addRequirement(CraftingType type, String modid, ItemStack stack, boolean matchDamage, boolean matchNBT, boolean usage, boolean crafting, ICriteria c) {
+    public static void addRequirement(ActionType type, String modid, ItemStack stack, boolean matchDamage, boolean matchNBT, boolean usage, boolean crafting, ICriteria c) {
         if (crafting) {
             Multimap<SafeStack, ICriteria> conditions = CraftingRegistry.conditions.get(type);
             conditions.get(SafeStack.newInstance(modid, stack, matchDamage, matchNBT)).add(c);

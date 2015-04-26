@@ -1,7 +1,7 @@
 package joshie.progression.criteria;
 
-import joshie.progression.api.DrawHelper;
 import joshie.progression.api.IConditionType;
+import joshie.progression.api.ProgressionAPI;
 import joshie.progression.gui.GuiDrawHelper;
 import joshie.progression.helpers.ClientHelper;
 import joshie.progression.json.Theme;
@@ -54,8 +54,8 @@ public class Condition {
         this.xPosition = xPos + 6;
 
         GuiDrawHelper.INSTANCE.setOffset(xPosition, 45);
-        DrawHelper.drawGradient(1, 2, 99, 15, getType().getColor(), Theme.INSTANCE.conditionGradient1, Theme.INSTANCE.conditionGradient2);
-        DrawHelper.drawText(getType().getLocalisedName(), 6, 6, Theme.INSTANCE.conditionFontColor);
+        ProgressionAPI.draw.drawGradient(1, 2, 99, 15, getType().getColor(), Theme.INSTANCE.conditionGradient1, Theme.INSTANCE.conditionGradient2);
+        ProgressionAPI.draw.drawText(getType().getLocalisedName(), 6, 6, Theme.INSTANCE.conditionFontColor);
         if (ClientHelper.canEdit()) {
             int xXcoord = 234;
             if (this.mouseX >= 87 && this.mouseX <= 97 && this.mouseY >= 4 && this.mouseY <= 14) {
@@ -63,7 +63,7 @@ public class Condition {
             }
 
             ClientHelper.getMinecraft().getTextureManager().bindTexture(ProgressionInfo.textures);
-            DrawHelper.draw.drawTexture(87, 4, xXcoord, 52, 11, 11);
+            ProgressionAPI.draw.drawTexture(87, 4, xXcoord, 52, 11, 11);
         }
 
         int color = Theme.INSTANCE.optionsFontColor;
@@ -71,7 +71,7 @@ public class Condition {
             color = Theme.INSTANCE.optionsFontColorHover;
         }
 
-        DrawHelper.drawText("invert: " + inverted, 4, 18, color);
+        ProgressionAPI.draw.drawText("invert: " + inverted, 4, 18, color);
         getType().draw(mouseX, mouseY);
     }
 }

@@ -5,7 +5,7 @@ import java.util.Collection;
 import joshie.progression.api.ICriteria;
 import joshie.progression.crafting.Crafter;
 import joshie.progression.crafting.CraftingRegistry;
-import joshie.progression.crafting.CraftingType;
+import joshie.progression.crafting.ActionType;
 import joshie.progression.criteria.Criteria;
 import joshie.progression.gui.EditorTicker;
 import joshie.progression.gui.GuiCriteriaEditor;
@@ -22,8 +22,8 @@ public class NEIOverrideHandler extends TemplateRecipeHandler {
     @Override
     public void loadCraftingRecipes(ItemStack result) {
         Crafter crafter = CraftingRegistry.getCrafterFromPlayer(ClientHelper.getPlayer());
-        if (!crafter.canCraftItem(CraftingType.CRAFTING, result)) {
-            Collection<ICriteria> requirements = CraftingRegistry.getCraftingCriteria(CraftingType.CRAFTING, result);
+        if (!crafter.canCraftItem(ActionType.CRAFTING, result)) {
+            Collection<ICriteria> requirements = CraftingRegistry.getCraftingCriteria(ActionType.CRAFTING, result);
             if (requirements.size() > 0) {
                 for (ICriteria c : requirements) {
                     GuiCriteriaEditor.INSTANCE.selected = (Criteria) c;

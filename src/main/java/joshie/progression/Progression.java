@@ -98,7 +98,6 @@ public class Progression {
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        //Initialise the CraftingEvent
         try {
             Class.forName(JAVAPATH + "crafting.CraftingType");
         } catch (ClassNotFoundException e) {

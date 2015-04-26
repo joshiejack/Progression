@@ -3,7 +3,7 @@ package joshie.progression.criteria.rewards;
 import java.util.List;
 import java.util.UUID;
 
-import joshie.progression.api.DrawHelper;
+import joshie.progression.api.ProgressionAPI;
 import joshie.progression.gui.SelectTextEdit;
 import joshie.progression.gui.SelectTextEdit.ITextEditable;
 import joshie.progression.helpers.ClientHelper;
@@ -73,8 +73,8 @@ public class RewardCommand extends RewardBase implements ITextEditable {
             }
         }
 
-        DrawHelper.drawText("command: ", 4, 18, commandColor);
-        DrawHelper.drawSplitText(SelectTextEdit.INSTANCE.getText(this), 4, 26, 200, commandColor);
+        ProgressionAPI.draw.drawText("command: ", 4, 18, commandColor);
+        ProgressionAPI.draw.drawSplitText(SelectTextEdit.INSTANCE.getText(this), 4, 26, 200, commandColor);
     }
 
     @Override

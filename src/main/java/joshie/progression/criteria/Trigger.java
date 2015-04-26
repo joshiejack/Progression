@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import joshie.progression.Progression;
-import joshie.progression.api.DrawHelper;
 import joshie.progression.api.ITriggerType;
+import joshie.progression.api.ProgressionAPI;
 import joshie.progression.gui.EditorCondition;
 import joshie.progression.gui.GuiDrawHelper;
 import joshie.progression.gui.GuiTriggerEditor;
@@ -93,8 +93,8 @@ public class Trigger {
         this.mouseY = mouseY - 45;
         this.xPosition = xPos + 6;
         GuiDrawHelper.INSTANCE.setOffset(xPosition, 45);
-        DrawHelper.draw.drawGradient(1, 2, 99, 15, getType().getColor(), Theme.INSTANCE.triggerGradient1, Theme.INSTANCE.triggerGradient2);
-        DrawHelper.draw.drawText(getType().getLocalisedName(), 6, 6, Theme.INSTANCE.triggerFontColor);
+        ProgressionAPI.draw.drawGradient(1, 2, 99, 15, getType().getColor(), Theme.INSTANCE.triggerGradient1, Theme.INSTANCE.triggerGradient2);
+        ProgressionAPI.draw.drawText(getType().getLocalisedName(), 6, 6, Theme.INSTANCE.triggerFontColor);
 
         if (ClientHelper.canEdit()) {
             int xXcoord = 234;
@@ -103,7 +103,7 @@ public class Trigger {
             }
 
             ClientHelper.getMinecraft().getTextureManager().bindTexture(ProgressionInfo.textures);
-            DrawHelper.draw.drawTexture(87, 4, xXcoord, 52, 11, 11);
+            ProgressionAPI.draw.drawTexture(87, 4, xXcoord, 52, 11, 11);
         }
 
         triggerType.draw(this.mouseX, this.mouseY);
@@ -116,11 +116,11 @@ public class Trigger {
         }
 
         if (ClientHelper.canEdit()) {
-            DrawHelper.draw.drawGradient(2, 66, 85, 11, color, Theme.INSTANCE.blackBarGradient1, Theme.INSTANCE.blackBarGradient2);
-            DrawHelper.draw.drawText("Condition Editor", 6, 67, Theme.INSTANCE.blackBarFontColor);
+            ProgressionAPI.draw.drawGradient(2, 66, 85, 11, color, Theme.INSTANCE.blackBarGradient1, Theme.INSTANCE.blackBarGradient2);
+            ProgressionAPI.draw.drawText("Condition Editor", 6, 67, Theme.INSTANCE.blackBarFontColor);
         } else if (this.getConditions().size() > 0) {
-            DrawHelper.draw.drawGradient(2, 66, 85, 11, color, Theme.INSTANCE.blackBarGradient1, Theme.INSTANCE.blackBarGradient2);
-            DrawHelper.draw.drawText("Condition Viewer", 6, 67, Theme.INSTANCE.blackBarFontColor);
+            ProgressionAPI.draw.drawGradient(2, 66, 85, 11, color, Theme.INSTANCE.blackBarGradient1, Theme.INSTANCE.blackBarGradient2);
+            ProgressionAPI.draw.drawText("Condition Viewer", 6, 67, Theme.INSTANCE.blackBarFontColor);
         }
     }
 }

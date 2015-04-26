@@ -3,7 +3,7 @@ package joshie.progression.criteria.rewards;
 import java.util.List;
 import java.util.UUID;
 
-import joshie.progression.api.DrawHelper;
+import joshie.progression.api.ProgressionAPI;
 import joshie.progression.criteria.Criteria;
 import joshie.progression.gui.SelectTextEdit;
 import joshie.progression.gui.SelectTextEdit.ITextEditable;
@@ -80,10 +80,10 @@ public class RewardCriteria extends RewardBase implements ITextEditable {
             }
         }
 
-        DrawHelper.draw.drawText("criteria: ", 4, 18, researchColor);
+        ProgressionAPI.draw.drawText("criteria: ", 4, 18, researchColor);
         EnumChatFormatting prefix = criteria != null? EnumChatFormatting.GREEN: EnumChatFormatting.RED;
-        DrawHelper.draw.drawText(prefix + SelectTextEdit.INSTANCE.getText(this), 4, 26, researchColor);
-        DrawHelper.draw.drawText("remove: " + remove, 4, 33, booleanColor);
+        ProgressionAPI.draw.drawText(prefix + SelectTextEdit.INSTANCE.getText(this), 4, 26, researchColor);
+        ProgressionAPI.draw.drawText("remove: " + remove, 4, 33, booleanColor);
     }
 
     private String displayName = null;

@@ -1,6 +1,6 @@
 package joshie.progression.gui;
 
-import joshie.progression.api.DrawHelper.IDrawHelper;
+import joshie.progression.api.IDrawHelper;
 import net.minecraft.item.ItemStack;
 
 public class GuiDrawHelper implements IDrawHelper {

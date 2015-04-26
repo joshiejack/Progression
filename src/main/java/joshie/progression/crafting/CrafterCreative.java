@@ -7,22 +7,17 @@ public class CrafterCreative extends Crafter {
 	private CrafterCreative() {}
 	
 	@Override
-	public boolean canUseItemForCrafting(CraftingType type, ItemStack stack) {
+	public boolean canUseItemForCrafting(ActionType type, ItemStack stack) {
 		return true;
 	}
 
 	@Override
-	public boolean canCraftItem(CraftingType type, ItemStack stack) {
+	public boolean canCraftItem(ActionType type, ItemStack stack) {
 		return true;
 	}
 
 	@Override
 	public boolean canCraftWithAnything() {
-		return true;
-	}
-
-	@Override
-	public boolean canRepairItem(ItemStack stack) {
 		return true;
 	}
 }

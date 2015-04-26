@@ -5,11 +5,11 @@ import java.util.Iterator;
 import java.util.UUID;
 
 import joshie.progression.api.IConditionType;
-import joshie.progression.api.IRegistry;
+import joshie.progression.api.IProgressionAPI;
 import joshie.progression.api.IRewardType;
 import joshie.progression.api.ITriggerData;
 import joshie.progression.api.ITriggerType;
-import joshie.progression.crafting.CraftingType;
+import joshie.progression.crafting.ActionType;
 import joshie.progression.criteria.Condition;
 import joshie.progression.criteria.Criteria;
 import joshie.progression.criteria.Reward;
@@ -18,13 +18,15 @@ import joshie.progression.criteria.Trigger;
 import joshie.progression.criteria.triggers.data.DataBoolean;
 import joshie.progression.criteria.triggers.data.DataCount;
 import joshie.progression.criteria.triggers.data.DataCrafting;
+import joshie.progression.helpers.CraftingHelper;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 
 import com.google.gson.JsonObject;
 
-public class APIHandler implements IRegistry {
+public class APIHandler implements IProgressionAPI {
     //This is the registry for trigger type and reward type creation
     public static final HashMap<String, ITriggerType> triggerTypes = new HashMap();
     public static final HashMap<String, IRewardType> rewardTypes = new HashMap();
@@ -170,8 +172,8 @@ public class APIHandler implements IRegistry {
     }
 
     @Override
-    public void registerCraftingType(String name) {
-        new CraftingType(name);
+    public void registerActionType(String name) {
+        new ActionType(name);
     }
 
     public static Criteria getCriteriaFromName(String name) {
@@ -247,5 +249,17 @@ public class APIHandler implements IRegistry {
         }
 
         return null;
+    }
+
+    @Override
+    public boolean canObtainFromAction(String actionType, ItemStack stack, Object tileOrPlayer) {
+        ActionType type = ActionType.getCraftingActionFromName(actionType);
+        return CraftingHelper.canCraftItem(type, tileOrPlayer, stack);
+    }
+
+    @Override
+    public boolean canUseToPerformAction(String actionType, ItemStack stack, Object tileOrPlayer) {
+        ActionType type = ActionType.getCraftingActionFromName(actionType);
+        return CraftingHelper.canUseItemForCrafting(type, tileOrPlayer, stack);
     }
 }

@@ -12,25 +12,29 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public interface IConditionType {       
-    /** Returns the name of this trigger type, used to call from the json **/
+    /** Returns the unlocalised name of this condition
+     *  This name is what is us in the json **/
     public String getUnlocalisedName();
     
-    /** Returns the localised name for this trigger type **/
+    /** Returns the localised name of this condition**/
     public String getLocalisedName();
     
-    /** Returns the colour used for this trigger type **/
+    /** Returns the colour used in the GUI editor **/
     public int getColor();
    
-    /** returns true if this condition is satisfied, player can be null, so check it **/
+    /** Should true true if this condition is satisfied
+     * @param world     the world object
+     * @param player    the player (may be null, if the player is offline)
+     * @param uuid      the uuid of the player **/
     public boolean isSatisfied(World world, EntityPlayer player, UUID uuid);
 
-    /** Called to load the data about this trigger from json **/
+    /** Read this condition in from json **/
     public void readFromJSON(JsonObject object);
     
-    /** Called to save the data about this trigger to json **/
+    /** Write this condition to json **/
     public void writeToJSON(JsonObject object);
 
-    /** Called to draw the information when editing this trigger  */
+    /** Draw this condition in the gui editor, use {@link DrawHelper}  */
     @SideOnly(Side.CLIENT)
     public void draw(int mouseX, int mouseY);
 

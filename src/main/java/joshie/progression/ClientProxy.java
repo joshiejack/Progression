@@ -1,6 +1,6 @@
 package joshie.progression;
 
-import joshie.progression.api.DrawHelper;
+import joshie.progression.api.ProgressionAPI;
 import joshie.progression.gui.EditorTicker;
 import joshie.progression.gui.GuiDrawHelper;
 import joshie.progression.items.RenderItemCriteria;
@@ -15,8 +15,7 @@ public class ClientProxy extends CommonProxy {
             FMLCommonHandler.instance().bus().register(new EditorTicker());
         }
         
-        DrawHelper.draw = GuiDrawHelper.INSTANCE;
-        
+        ProgressionAPI.draw = GuiDrawHelper.INSTANCE;
         MinecraftForgeClient.registerItemRenderer(Progression.item, new RenderItemCriteria());
     }
 }
