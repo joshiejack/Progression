@@ -41,6 +41,7 @@ import joshie.progression.handlers.APIHandler;
 import joshie.progression.handlers.EventsHandler;
 import joshie.progression.handlers.GUIHandler;
 import joshie.progression.handlers.RemappingHandler;
+import joshie.progression.helpers.ModLogHelper;
 import joshie.progression.items.ItemCriteria;
 import joshie.progression.json.Options;
 import joshie.progression.lib.ProgressionInfo;
@@ -98,8 +99,11 @@ public class Progression {
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        ModLogHelper.log("Enchiridion2", "The more that you read, the more things you will know. The more that you learn, the more places you'll go.");
+        ModLogHelper.log("Mariculture", "Just Keep Swimming...");
+        
         try {
-            Class.forName(JAVAPATH + "crafting.CraftingType");
+            Class.forName(JAVAPATH + "crafting.ActionType");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }

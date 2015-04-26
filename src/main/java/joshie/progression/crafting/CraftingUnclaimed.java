@@ -20,6 +20,11 @@ public class CraftingUnclaimed extends Crafter {
 
 	@Override
 	public boolean canCraftWithAnything() {
-		return false;
+		return Options.unclaimedTileCanUseAnythingForCrafting;
 	}
+
+    @Override
+    public boolean canCraftAnything() {
+        return Options.unclaimedTileCanCraftAnything;
+    }
 }

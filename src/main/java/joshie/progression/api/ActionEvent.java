@@ -11,7 +11,8 @@ import cpw.mods.fml.common.eventhandler.Event;
  *  use the helper method that is found in {@link IProgressionAPI }
  *  recommended usage would be :
  *  
- *  ProgressionAPI.registry.canObtainFromAction("crafting", new ItemStack(Blocks.stone), player); */
+ *  ProgressionAPI.registry.canObtainFromAction("crafting", new ItemStack(Blocks.stone), player);
+ *  Obviously if you want to listen to the events for any reason, ignore that ^ */
 @Cancelable
 public class ActionEvent extends Event {
     /** Can be null **/

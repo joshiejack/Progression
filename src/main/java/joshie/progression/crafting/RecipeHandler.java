@@ -86,8 +86,11 @@ public class RecipeHandler {
                 if (i1 < 0) {
                     i1 = 0;
                 }
-
-                return new ItemStack(itemstack.getItem(), 1, i1);
+                
+                ItemStack result = new ItemStack(itemstack.getItem(), 1, i1);
+                if (CraftingHelper.canUseItemForCrafting(ActionType.REPAIR, object, itemstack)) {
+                    return result;
+                } else return null;
             } else {
                 //Check the recipes
                 for (int j = 0; j < CraftingManager.getInstance().getRecipeList().size(); ++j) {

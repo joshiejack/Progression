@@ -44,4 +44,9 @@ public class CrafterHuman extends Crafter {
 	public boolean canCraftWithAnything() {
 		return false;
 	}
+
+    @Override
+    public boolean canCraftAnything() {
+        return false;
+    }
 }

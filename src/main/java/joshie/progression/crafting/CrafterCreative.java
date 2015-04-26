@@ -20,4 +20,9 @@ public class CrafterCreative extends Crafter {
 	public boolean canCraftWithAnything() {
 		return true;
 	}
+
+    @Override
+    public boolean canCraftAnything() {
+        return true;
+    }
 }

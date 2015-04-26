@@ -20,4 +20,7 @@ public abstract class Crafter {
      *  
      * @return          returns true if you can craft anything */
     public abstract boolean canCraftWithAnything();
+
+    /** Used to bypass the can craft check **/
+    public abstract boolean canCraftAnything();
 }

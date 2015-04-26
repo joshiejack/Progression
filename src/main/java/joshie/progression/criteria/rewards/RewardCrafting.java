@@ -181,6 +181,7 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
     public void onAttemptToObtainItem(CanObtainFromActionEvent event) {        
         if (event.stack == null) return;
         Crafter crafter = event.player != null ? CraftingRegistry.getCrafterFromPlayer(event.player) : CraftingRegistry.getCrafterFromTile(event.tile);
+        if (crafter.canCraftAnything()) return;
         if (!crafter.canCraftItem(event.type, event.stack)) {
             event.setCanceled(true);
         }
