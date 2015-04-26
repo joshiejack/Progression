@@ -7,6 +7,11 @@ import net.minecraft.tileentity.TileEntity;
 import cpw.mods.fml.common.eventhandler.Cancelable;
 import cpw.mods.fml.common.eventhandler.Event;
 
+/** You can call this directly, but this is recommended that you
+ *  use the helper method that is found in {@link IProgressionAPI }
+ *  recommended usage would be :
+ *  
+ *  ProgressionAPI.registry.canObtainFromAction("crafting", new ItemStack(Blocks.stone), player); */
 @Cancelable
 public class ActionEvent extends Event {
     /** Can be null **/

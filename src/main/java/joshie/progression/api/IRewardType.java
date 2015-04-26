@@ -16,13 +16,14 @@ public interface IRewardType {
      *  Most reward types will not need access to this. **/
     public void markCriteria(ICriteria criteria);
     
-    /** Returns the name of this trigger type, used to call from the json **/
+    /** Returns the unlocalised name of this reward
+     *  This name is what is us in the json **/
     public String getUnlocalisedName();
     
-    /** Returns the localised name for this trigger type **/
+    /** Returns the localised name of this reward**/
     public String getLocalisedName();
     
-    /** Returns the colour used for this trigger type **/
+    /** Returns the colour used in the GUI editor **/
     public int getColor();
 
     /** This class will automatically be registered/de-registered from the event
