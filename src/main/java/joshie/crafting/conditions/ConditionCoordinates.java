@@ -2,7 +2,6 @@ package joshie.crafting.conditions;
 
 import java.util.UUID;
 
-import joshie.crafting.gui.TextFieldHelper.IntegerFieldHelper;
 import joshie.crafting.gui.fields.BooleanField;
 import joshie.crafting.gui.fields.TextField;
 import joshie.crafting.helpers.JSONHelper;
@@ -12,12 +11,6 @@ import net.minecraft.world.World;
 import com.google.gson.JsonObject;
 
 public class ConditionCoordinates extends ConditionBase {
-    private IntegerFieldHelper radiusEdit;
-    private IntegerFieldHelper dimensionEdit;
-    private IntegerFieldHelper xEdit;
-    private IntegerFieldHelper yEdit;
-    private IntegerFieldHelper zEdit;
-
     public boolean checkDimension = false; //Whether we check the dimension
     public boolean checkX = true; //Whether we check the x coordinate
     public boolean checkY = true; //Whether we check the y coordinate

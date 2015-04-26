@@ -139,7 +139,6 @@ public class JSONLoader {
                         conditionz[i] = CraftAPIRegistry.newCondition(iTrigger, condition.type, condition.data);
                     }
 
-                    iTrigger.setConditions(conditionz);
                     triggerz[j] = iTrigger;
                 }
 

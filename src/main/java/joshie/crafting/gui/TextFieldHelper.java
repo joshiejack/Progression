@@ -3,6 +3,7 @@ package joshie.crafting.gui;
 import java.lang.reflect.Field;
 
 import joshie.crafting.gui.SelectTextEdit.ITextEditable;
+import joshie.crafting.gui.fields.ICallback;
 import joshie.crafting.gui.fields.ItemField;
 import net.minecraft.item.ItemStack;
 
@@ -73,7 +74,9 @@ public class TextFieldHelper implements ITextEditable {
 
     @Override
     public void setTextField(String str) {
-        set(str);
+        if (o instanceof ICallback) {
+            ((ICallback)o).setField(str);
+        } else set(str);
     }
 
     public static class IntegerFieldHelper extends TextFieldHelper {

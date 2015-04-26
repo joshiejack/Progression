@@ -50,7 +50,7 @@ public class NewCondition extends OverlayBase {
         int xPos = 0;
         for (IConditionType condition : CraftAPIRegistry.conditionTypes.values()) {
             if (mouseX >= (xPos * 100) + 155 && mouseX <= (xPos * 100) + 255) {
-                if (mouseY >= 46 + (yPos * 12) && mouseY <= 46 + (yPos * 12) + 12) {
+                if (mouseY >= 46 + (yPos * 12) && mouseY < 46 + (yPos * 12) + 12) {
                     CraftAPIRegistry.cloneCondition(trigger, condition);
                     clear();
                     return true;
@@ -81,7 +81,7 @@ public class NewCondition extends OverlayBase {
         for (IConditionType condition : CraftAPIRegistry.conditionTypes.values()) {
             int color = theme.newConditionFont;
             if (mouseX >= (xPos * 100) + 155 && mouseX <= (xPos * 100) + 255) {
-                if (mouseY >= 46 + (yPos * 12) && mouseY <= 46 + (yPos * 12) + 12) {
+                if (mouseY >= 46 + (yPos * 12) && mouseY < 46 + (yPos * 12) + 12) {
                     color = theme.newConditionFontHover;
                 }
             }

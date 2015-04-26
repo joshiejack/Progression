@@ -91,6 +91,7 @@ public class CraftAPIRegistry implements IRegistry {
         
         Condition condition = new Condition(trigger.getCriteria(), trigger, newConditionType);
         condition.getType().readFromJSON(data);
+        trigger.addCondition(condition);
         conditions.add(condition);
         return condition;
     }
@@ -168,6 +169,7 @@ public class CraftAPIRegistry implements IRegistry {
         
         
         Condition newCondition = new Condition(trigger.getCriteria(), trigger, newConditionType);
+        trigger.addCondition(newCondition);
         conditions.add(newCondition);
         return newCondition;
     }

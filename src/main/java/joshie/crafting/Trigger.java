@@ -60,14 +60,6 @@ public class Trigger {
         return 0;
     }
 
-    public Trigger setConditions(Condition[] conditions) {
-        for (Condition condition : conditions) {
-            this.conditions.add(condition);
-        }
-
-        return this;
-    }
-
     public List<Condition> getConditions() {
         return conditions;
     }

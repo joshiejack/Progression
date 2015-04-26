@@ -2,6 +2,7 @@ package joshie.crafting.gui.fields;
 
 import joshie.crafting.api.DrawHelper;
 import joshie.crafting.gui.TextFieldHelper;
+import joshie.crafting.gui.TextFieldHelper.DoubleFieldHelper;
 import joshie.crafting.gui.TextFieldHelper.FloatFieldHelper;
 import joshie.crafting.gui.TextFieldHelper.IntegerFieldHelper;
 
@@ -31,6 +32,7 @@ public class TextField extends AbstractField {
         try {
             Class clazz = object.getClass().getField(name).getType();
             String className = clazz.getSimpleName();
+            if (className.equalsIgnoreCase("double")) return new DoubleFieldHelper(name, object);
             if (className.equalsIgnoreCase("float")) return new FloatFieldHelper(name, object);
             if (className.equalsIgnoreCase("int")) return new IntegerFieldHelper(name, object);
             if (className.equalsIgnoreCase("string")) return new TextFieldHelper(name, object);

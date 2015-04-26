@@ -2,15 +2,13 @@ package joshie.crafting.conditions;
 
 import java.util.UUID;
 
-import joshie.crafting.api.DrawHelper;
-import joshie.crafting.gui.IItemSelectable;
-import joshie.crafting.gui.SelectItemOverlay;
 import joshie.crafting.gui.SelectItemOverlay.Type;
-import joshie.crafting.gui.TextFieldHelper.IItemGettable;
-import joshie.crafting.gui.TextFieldHelper.ItemAmountHelper;
-import joshie.crafting.helpers.ClientHelper;
+import joshie.crafting.gui.fields.BooleanField;
+import joshie.crafting.gui.fields.EnumField;
+import joshie.crafting.gui.fields.IEnum;
+import joshie.crafting.gui.fields.ItemField;
+import joshie.crafting.gui.fields.TextField;
 import joshie.crafting.helpers.JSONHelper;
-import joshie.crafting.json.Theme;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -18,26 +16,28 @@ import net.minecraft.world.World;
 
 import com.google.gson.JsonObject;
 
-import cpw.mods.fml.common.eventhandler.Event.Result;
-
-public class ConditionInInventory extends ConditionBase implements IItemSelectable, IItemGettable {
+public class ConditionInInventory extends ConditionBase implements IEnum {
     private static enum CheckSlots {
         HELD, ARMOR, HOTBAR, INVENTORY;
     }
 
-    private ItemAmountHelper editAmount;
     public ItemStack stack = new ItemStack(Blocks.crafting_table);
     public boolean matchDamage = true;
     public boolean matchNBT = false;
     public int itemAmount = 1;
-    private CheckSlots slotType = CheckSlots.INVENTORY;
+    public CheckSlots slotType = CheckSlots.INVENTORY;
 
     public ConditionInInventory() {
         super("ininventory", 0xFF660000);
-        editAmount = new ItemAmountHelper("itemAmount", this);
+        list.add(new BooleanField("matchDamage", this));
+        list.add(new BooleanField("matchNBT", this));
+        list.add(new TextField("itemAmount", this));
+        list.add(new EnumField("slotType", this));
+        list.add(new ItemField("stack", this, 25, 60, 3F, 27, 69, 62, 107, Type.TRIGGER));
     }
 
-    public CheckSlots next() {
+    @Override
+    public Enum next() {
         int id = slotType.ordinal() + 1;
         if (id < CheckSlots.values().length) {
             return CheckSlots.values()[id];
@@ -126,57 +126,5 @@ public class ConditionInInventory extends ConditionBase implements IItemSelectab
         }
 
         return false;
-    }
-
-    @Override
-    public Result onClicked(int mouseX, int mouseY) {
-        if (mouseX >= 27 && mouseX <= 69) {
-            if (mouseY >= 62 && mouseY <= 107) {
-                SelectItemOverlay.INSTANCE.select(this, Type.TRIGGER);
-                return Result.ALLOW;
-            }
-        }
-
-        if (mouseX <= 84 && mouseX >= 1) {
-            if (mouseY >= 25 && mouseY <= 33) matchDamage = !matchDamage;
-            if (mouseY > 33 && mouseY <= 42) matchNBT = !matchNBT;
-            if (mouseY > 42 && mouseY <= 51) editAmount.select();
-            if (mouseY > 51 && mouseY <= 60) slotType = next();
-            if (mouseY >= 25 && mouseY <= 60) return Result.ALLOW;
-        }
-
-        return Result.DEFAULT;
-    }
-
-    @Override
-    public void draw(int mouseX, int mouseY) {
-        DrawHelper.drawStack(stack, 25, 60, 3F);
-        int typeColor = Theme.INSTANCE.optionsFontColor;
-        int matchColor = Theme.INSTANCE.optionsFontColor;
-        int usageColor = Theme.INSTANCE.optionsFontColor;
-        int typezColor = Theme.INSTANCE.optionsFontColor;
-        if (ClientHelper.canEdit()) {
-            if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 25 && mouseY <= 33) typeColor = Theme.INSTANCE.optionsFontColorHover;
-                if (mouseY > 33 && mouseY <= 42) matchColor = Theme.INSTANCE.optionsFontColorHover;
-                if (mouseY > 42 && mouseY <= 51) usageColor = Theme.INSTANCE.optionsFontColorHover;
-                if (mouseY > 51 && mouseY <= 60) typezColor = Theme.INSTANCE.optionsFontColorHover;
-            }
-        }
-
-        DrawHelper.drawText("matchDamage: " + matchDamage, 4, 25, typeColor);
-        DrawHelper.drawText("matchNBT: " + matchNBT, 4, 33, matchColor);
-        DrawHelper.drawText("itemAmount: " + editAmount.getText(), 4, 42, usageColor);
-        DrawHelper.drawText("slotType: " + slotType.name().toLowerCase(), 4, 51, typezColor);
-    }
-
-    @Override
-    public void setItemStack(ItemStack stack) {
-        this.stack = stack;
-    }
-
-    @Override
-    public ItemStack getItemStack() {
-        return stack;
     }
 }

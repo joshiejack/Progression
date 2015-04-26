@@ -2,10 +2,8 @@ package joshie.crafting.conditions;
 
 import java.util.UUID;
 
-import joshie.crafting.api.DrawHelper;
-import joshie.crafting.gui.SelectTextEdit;
-import joshie.crafting.gui.SelectTextEdit.ITextEditable;
-import joshie.crafting.json.Theme;
+import joshie.crafting.gui.fields.ICallback;
+import joshie.crafting.gui.fields.TextField;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.BiomeDictionary;
@@ -15,13 +13,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-import cpw.mods.fml.common.eventhandler.Event.Result;
-
-public class ConditionBiomeType extends ConditionBase implements ITextEditable {
-    private Type[] biomeTypes = new Type[] { Type.FOREST };
+public class ConditionBiomeType extends ConditionBase implements ICallback {
+    private Type[] theBiomeTypes = new Type[] { Type.FOREST };
+    public String biomeTypes = "forest";
 
     public ConditionBiomeType() {
         super("biomeType", 0xFF00B200);
+        list.add(new TextField("biomeTypes", this));
     }
 
     private Type getBiomeType(String string) {
@@ -36,7 +34,7 @@ public class ConditionBiomeType extends ConditionBase implements ITextEditable {
     public boolean isSatisfied(World world, EntityPlayer player, UUID uuid) {
         if (player == null) return false;
         Type types[] = BiomeDictionary.getTypesForBiome(world.getBiomeGenForCoords((int) player.posX, (int) player.posZ));
-        for (Type type : biomeTypes) {
+        for (Type type : theBiomeTypes) {
             for (Type compare : types) {
                 if (compare == type) return true;
             }
@@ -54,58 +52,17 @@ public class ConditionBiomeType extends ConditionBase implements ITextEditable {
             types[i] = getBiomeType(array.get(i).getAsString());
         }
 
-        biomeTypes = types;
+        theBiomeTypes = types;
     }
 
     @Override
     public void writeToJSON(JsonObject data) {
         JsonArray array = new JsonArray();
-        for (Type t : biomeTypes) {
+        for (Type t : theBiomeTypes) {
             array.add(new JsonPrimitive(t.name().toLowerCase()));
         }
 
         data.add("types", array);
-    }
-
-    @Override
-    public Result onClicked(int mouseX, int mouseY) {
-        if (mouseX <= 84 && mouseX >= 1) {
-            if (mouseY > 25 && mouseY <= 200) SelectTextEdit.INSTANCE.select(this);
-            if (mouseY >= 17 && mouseY <= 57) return Result.ALLOW;
-        }
-
-        return Result.DEFAULT;
-    }
-
-    @Override
-    public void draw(int mouseX, int mouseY) {
-        int matchColor = Theme.INSTANCE.optionsFontColor;
-        if (mouseX <= 84 && mouseX >= 1) {
-            if (mouseY > 25 && mouseY <= 200) matchColor = Theme.INSTANCE.optionsFontColorHover;
-        }
-
-        DrawHelper.drawSplitText("biomeTypes: " + SelectTextEdit.INSTANCE.getText(this), 4, 26, matchColor, 100);
-    }
-
-    private String textField;
-
-    @Override
-    public String getTextField() {
-        if (textField == null) {
-            StringBuilder builder = new StringBuilder();
-            boolean first = false;
-            for (Type t : biomeTypes) {
-                if (!first) {
-                    first = true;
-                } else builder.append(", ");
-
-                builder.append(t.name().toLowerCase());
-            }
-
-            textField = builder.toString();
-        }
-
-        return textField;
     }
 
     public Type getTypeFromName(String name) {
@@ -119,7 +76,7 @@ public class ConditionBiomeType extends ConditionBase implements ITextEditable {
     }
 
     @Override
-    public void setTextField(String str) {
+    public void setField(String str) {
         String[] split = str.split(",");
         StringBuilder fullString = new StringBuilder();
         try {
@@ -128,9 +85,9 @@ public class ConditionBiomeType extends ConditionBase implements ITextEditable {
                 types[i] = getTypeFromName(split[i].trim());
             }
 
-            biomeTypes = types;
+            theBiomeTypes = types;
         } catch (Exception e) {}
 
-        textField = str;
+        biomeTypes = str;
     }
 }

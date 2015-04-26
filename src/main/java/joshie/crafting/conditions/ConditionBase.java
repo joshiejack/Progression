@@ -50,7 +50,7 @@ public abstract class ConditionBase implements IConditionType {
             int index = 0;
             for (AbstractField t : list) {
                 int color = Theme.INSTANCE.optionsFontColor;
-                int yPos = 17 + (index * 8);
+                int yPos = 25 + (index * 8);
                 if (mouseX >= 1 && mouseX <= 84) {
                     if (mouseY >= yPos && mouseY < yPos + 8) {
                         t.click();
@@ -74,7 +74,7 @@ public abstract class ConditionBase implements IConditionType {
         int index = 0;
         for (AbstractField t : list) {
             int color = Theme.INSTANCE.optionsFontColor;
-            int yPos = 17 + (index * 8);
+            int yPos = 25 + (index * 8);
             if (ClientHelper.canEdit()) {
                 if (mouseX >= 1 && mouseX <= 84) {
                     if (mouseY >= yPos && mouseY < yPos + 8) {
