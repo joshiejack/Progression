@@ -2,6 +2,8 @@ Progression 0.4.0
   Added On Eaten Trigger
   Can drag the mouse to scroll through the tree editor
   Only display links when criteria are in the same tab
+  Speed will now work on negative speeds, as well as not require sprint pressing
+  Add two booleans to speed, whether it affects land or water speed
 
 Progression 0.3.4
   Fix Potential crash when rendering certain entities in the editor
