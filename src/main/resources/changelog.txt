@@ -1,4 +1,5 @@
 Progression 0.4.0
+  Added On Eaten Trigger
   Can drag the mouse to scroll through the tree editor
   Only display links when criteria are in the same tab
 

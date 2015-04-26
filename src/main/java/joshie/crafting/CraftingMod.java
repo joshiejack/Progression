@@ -45,6 +45,7 @@ import joshie.crafting.trigger.TriggerBreakBlock;
 import joshie.crafting.trigger.TriggerChangeDimension;
 import joshie.crafting.trigger.TriggerClickBlock;
 import joshie.crafting.trigger.TriggerCrafting;
+import joshie.crafting.trigger.TriggerItemEaten;
 import joshie.crafting.trigger.TriggerKill;
 import joshie.crafting.trigger.TriggerLogin;
 import joshie.crafting.trigger.TriggerObtain;
@@ -145,6 +146,7 @@ public class CraftingMod {
 
         CraftingAPI.registry.registerTriggerType(new TriggerBreakBlock());
         CraftingAPI.registry.registerTriggerType(new TriggerCrafting());
+        CraftingAPI.registry.registerTriggerType(new TriggerItemEaten());
         CraftingAPI.registry.registerTriggerType(new TriggerKill());
         CraftingAPI.registry.registerTriggerType(new TriggerLogin());
         CraftingAPI.registry.registerTriggerType(new TriggerObtain());
