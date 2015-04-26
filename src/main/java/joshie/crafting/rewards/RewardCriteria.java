@@ -51,7 +51,7 @@ public class RewardCriteria extends RewardBase implements ITextEditable {
         if (criteria == null) return; //Do not give the reward
         if (remove) {
             PlayerTracker.getServerPlayer(uuid).getMappings().fireAllTriggers("forced-remove", criteria);
-        } else PlayerTracker.getServerPlayer(uuid).getMappings().fireAllTriggers("forced-complete", criteria);
+        } else PlayerTracker.getServerPlayer(uuid).getMappings().fireAllTriggers("forced-complete", criteria, criteria.rewards);
     }
 
     @Override

@@ -47,6 +47,7 @@ public class ButtonNewCriteria extends ButtonLeft {
             GuiTreeEditor.INSTANCE.previous = null;
             GuiTreeEditor.INSTANCE.selected = null;
             GuiTreeEditor.INSTANCE.lastClicked = null;
+            GuiTreeEditor.INSTANCE.isDragging = false;
             Tab currentTab = GuiTreeEditor.INSTANCE.currentTab;
             int mouseX = GuiTreeEditor.INSTANCE.mouseX;
             int mouseY = GuiTreeEditor.INSTANCE.mouseY;

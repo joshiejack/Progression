@@ -80,7 +80,7 @@ public class EditorCondition {
         }
 
         if (ClientHelper.canEdit()) {
-            int crossX = 55;
+            int crossX = 110;
             if (!NewCondition.INSTANCE.isVisible()) {
                 if (mouseX >= 15 + 100 * xCoord && mouseX <= 15 + 100 * xCoord + 55) {
                     if (mouseY >= 49 && mouseY <= 49 + 55) {
@@ -91,7 +91,7 @@ public class EditorCondition {
 
             GL11.glColor4f(1F, 1F, 1F, 1F);
             ClientHelper.getMinecraft().getTextureManager().bindTexture(CraftingInfo.textures);
-            drawTexture(15 + 100 * xCoord, 49, crossX, 180, 55, 55);
+            drawTexture(15 + 100 * xCoord, 49, crossX, 201, 55, 55);
         }
     }
 

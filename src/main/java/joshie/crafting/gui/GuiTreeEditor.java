@@ -182,7 +182,7 @@ public class GuiTreeEditor extends GuiBase {
     private int lastType;
     Criteria lastClicked = null;
     private int drag = 0;
-    private boolean isDragging = false;
+    boolean isDragging = false;
 
     @Override
     protected void mouseClicked(int par1, int par2, int par3) {

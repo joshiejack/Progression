@@ -53,18 +53,18 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
         }
 
         if (ClientHelper.canEdit()) {
-            int crossX = 0;
+            int crossY = 64;
             if (!NewTrigger.INSTANCE.isVisible() && !NewReward.INSTANCE.isVisible()) {
                 if (mouseX >= 15 + 100 * xCoord && mouseX <= 15 + 100 * xCoord + 55) {
                     if (mouseY >= 49 && mouseY <= 49 + 55) {
-                        crossX = 110;
+                        crossY = 119;
                     }
                 }
             }
 
             GL11.glColor4f(1F, 1F, 1F, 1F);
             ClientHelper.getMinecraft().getTextureManager().bindTexture(textures);
-            drawTexture(15 + 100 * xCoord, 49, crossX, 125, 55, 55);
+            drawTexture(15 + 100 * xCoord, 49, 201, crossY, 55, 55);
         }
 
         //Rewards
@@ -80,16 +80,16 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
         }
 
         if (ClientHelper.canEdit()) {
-            int crossX = 55;
+            int crossX = 0;
             if (mouseX >= 15 + 100 * xCoord && mouseX <= 15 + 100 * xCoord + 55) {
                 if (mouseY >= 144 && mouseY <= 144 + 55) {
-                    crossX = 165;
+                    crossX = 55;
                 }
             }
 
             GL11.glColor4f(1F, 1F, 1F, 1F);
             ClientHelper.getMinecraft().getTextureManager().bindTexture(textures);
-            drawTexture(15 + 100 * xCoord, 144, crossX, 125, 55, 55);
+            drawTexture(15 + 100 * xCoord, 144, crossX, 201, 55, 55);
         }
 
         for (IRenderOverlay overlay : overlays) {

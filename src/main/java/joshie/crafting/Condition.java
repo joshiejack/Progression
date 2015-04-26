@@ -1,5 +1,6 @@
 package joshie.crafting;
 
+import joshie.crafting.api.DrawHelper;
 import joshie.crafting.api.IConditionType;
 import joshie.crafting.gui.GuiDrawHelper;
 import joshie.crafting.gui.GuiTriggerEditor;
@@ -12,15 +13,16 @@ import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 
 public class Condition {
-    protected boolean inverted = false;
+    public boolean inverted = false;
     private Criteria criteria;
     private Trigger trigger;
     private IConditionType condition;
 
-    public Condition(Criteria criteria, Trigger trigger, IConditionType condition) {
+    public Condition(Criteria criteria, Trigger trigger, IConditionType condition, boolean inverted) {
         this.criteria = criteria;
         this.trigger = trigger;
         this.condition = condition;
+        this.inverted = inverted;
     }
 
     public Criteria getCriteria() {
@@ -29,15 +31,6 @@ public class Condition {
 
     public IConditionType getType() {
         return condition;
-    }
-
-    public Condition setInversion(boolean inverted) {
-        this.inverted = inverted;
-        return this;
-    }
-
-    public boolean isInverted() {
-        return inverted;
     }
 
     protected int xPosition;
@@ -95,20 +88,22 @@ public class Condition {
         GuiDrawHelper.TriggerDrawHelper.INSTANCE.setOffset(xPosition, 45);
         drawGradient(1, 2, 99, 15, getType().getColor(), Theme.INSTANCE.conditionGradient1, Theme.INSTANCE.conditionGradient2);
         drawText(getType().getLocalisedName(), 6, 6, Theme.INSTANCE.conditionFontColor);
-        int xXcoord = 0;
-        if (this.mouseX >= 87 && this.mouseX <= 97 && this.mouseY >= 4 && this.mouseY <= 14) {
-            xXcoord = 11;
-        }
+        if (ClientHelper.canEdit()) {
+            int xXcoord = 234;
+            if (this.mouseX >= 87 && this.mouseX <= 97 && this.mouseY >= 4 && this.mouseY <= 14) {
+                xXcoord += 11;
+            }
 
+            ClientHelper.getMinecraft().getTextureManager().bindTexture(CraftingInfo.textures);
+            DrawHelper.triggerDraw.drawTexture(87, 4, xXcoord, 52, 11, 11);
+        }
+        
         int color = Theme.INSTANCE.optionsFontColor;
         if (this.mouseY >= 17 && this.mouseY <= 25 && this.mouseX >= 0 && this.mouseX <= 100) {
             color = Theme.INSTANCE.optionsFontColorHover;
         }
 
         drawText("invert: " + inverted, 4, 18, color);
-
-        ClientHelper.getMinecraft().getTextureManager().bindTexture(CraftingInfo.textures);
-        drawTexture(87, 4, xXcoord, 195, 11, 11);
         getType().draw(mouseX, mouseY);
     }
 }

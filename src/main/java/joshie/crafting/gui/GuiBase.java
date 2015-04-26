@@ -48,6 +48,7 @@ public abstract class GuiBase extends GuiScreen {
         Keyboard.enableRepeatEvents(true);
         res = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
         theme = Theme.INSTANCE;
+        SelectItemOverlay.INSTANCE.clear();
     }
 
     @Override

@@ -89,7 +89,7 @@ public class CraftAPIRegistry implements IRegistry {
             newConditionType = oldConditionType.getClass().newInstance();
         } catch (Exception e) {}
         
-        Condition condition = new Condition(trigger.getCriteria(), trigger, newConditionType);
+        Condition condition = new Condition(trigger.getCriteria(), trigger, newConditionType, inverted);
         condition.getType().readFromJSON(data);
         trigger.addCondition(condition);
         conditions.add(condition);
@@ -118,12 +118,13 @@ public class CraftAPIRegistry implements IRegistry {
         if (oldRewardType == null) return null;
         
         IRewardType newRewardType = oldRewardType;
+        boolean optional = data.get("optional") != null ? data.get("optional").getAsBoolean() : false;
         
         try {
             newRewardType = oldRewardType.getClass().newInstance();
         } catch (Exception e) {}
         
-        Reward reward = new Reward(criteria, newRewardType);
+        Reward reward = new Reward(criteria, newRewardType, optional);
         reward.getType().readFromJSON(data);
         CraftingEventsManager.onRewardAdded(reward);
         rewards.add(reward);
@@ -153,7 +154,7 @@ public class CraftAPIRegistry implements IRegistry {
         } catch (Exception e) {}
         
         
-        Reward newReward = new Reward(criteria, newRewardType);
+        Reward newReward = new Reward(criteria, newRewardType, false);
         CraftingEventsManager.onRewardAdded(newReward);
         rewards.add(newReward);
         criteria.addRewards(newReward);
@@ -168,7 +169,7 @@ public class CraftAPIRegistry implements IRegistry {
         } catch (Exception e) {}
         
         
-        Condition newCondition = new Condition(trigger.getCriteria(), trigger, newConditionType);
+        Condition newCondition = new Condition(trigger.getCriteria(), trigger, newConditionType, false);
         trigger.addCondition(newCondition);
         conditions.add(newCondition);
         return newCondition;

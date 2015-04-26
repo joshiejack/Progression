@@ -244,13 +244,13 @@ public class JSONLoader {
                 for (Trigger trigger : c.triggers) {
                     ArrayList<DataGeneric> theConditions = new ArrayList();
                     for (Condition condition : trigger.getConditions()) {
-                        JsonObject object = new JsonObject();
-                        if (condition.isInverted()) {
-                            object.addProperty("inverted", true);
+                        JsonObject conditionData = new JsonObject();
+                        if (condition.inverted) {
+                            conditionData.addProperty("inverted", true);
                         }
 
-                        condition.getType().writeToJSON(object);
-                        DataGeneric dCondition = new DataGeneric(condition.getType().getUnlocalisedName(), object);
+                        condition.getType().writeToJSON(conditionData);
+                        DataGeneric dCondition = new DataGeneric(condition.getType().getUnlocalisedName(), conditionData);
                         theConditions.add(dCondition);
                     }
 
@@ -263,6 +263,10 @@ public class JSONLoader {
                 for (Reward reward : c.rewards) {
                     JsonObject rewardData = new JsonObject();
                     reward.getType().writeToJSON(rewardData);
+                    if (reward.optional) {
+                        rewardData.addProperty("optional", true);
+                    }
+                    
                     DataGeneric dReward = new DataGeneric(reward.getType().getUnlocalisedName(), rewardData);
                     theRewards.add(dReward);
                 }

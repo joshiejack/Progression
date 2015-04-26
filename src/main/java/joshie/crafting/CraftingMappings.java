@@ -161,6 +161,11 @@ public class CraftingMappings {
             HashSet<Trigger> forRemovalFromActive = new HashSet();
             HashSet<Criteria> toRemap = new HashSet();
             completeCriteria(criteria, forRemovalFromActive, toRemap);
+            List<Reward> rewards = (List<Reward>) data[1];
+            for (Reward reward : rewards) {
+                reward.getType().reward(uuid);
+            }
+            
             remapStuff(forRemovalFromActive, toRemap);
             CraftingMod.data.markDirty();
             return true;
@@ -182,7 +187,7 @@ public class CraftingMappings {
         for (Trigger trigger : triggers) {
             Collection<Condition> conditions = trigger.getConditions();
             for (Condition condition : conditions) {
-                if (condition.getType().isSatisfied(world, player, uuid) == condition.isInverted()) {
+                if (condition.getType().isSatisfied(world, player, uuid) == condition.inverted) {
                     cantContinue.add(trigger);
                     break;
                 }

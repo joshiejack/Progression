@@ -11,10 +11,12 @@ import cpw.mods.fml.common.eventhandler.Event.Result;
 public class Reward {
     private Criteria criteria;
     private IRewardType reward;
+    public boolean optional = false;
 
-    public Reward(Criteria criteria, IRewardType reward) {
+    public Reward(Criteria criteria, IRewardType reward, boolean optional) {
         this.criteria = criteria;
         this.reward = reward;
+        this.optional = optional;
     }
 
     public IRewardType getType() {
@@ -58,13 +60,13 @@ public class Reward {
         DrawHelper.triggerDraw.drawText(reward.getLocalisedName(), 6, 6, Theme.INSTANCE.blackBarFontColor);
 
         if (ClientHelper.canEdit()) {
-            int xXcoord = 0;
+            int xXcoord = 234;
             if (this.mouseX >= 87 && this.mouseX <= 97 && this.mouseY >= 4 && this.mouseY <= 14) {
-                xXcoord = 11;
+                xXcoord += 11;
             }
 
             ClientHelper.getMinecraft().getTextureManager().bindTexture(CraftingInfo.textures);
-            DrawHelper.triggerDraw.drawTexture(87, 4, xXcoord, 195, 11, 11);
+            DrawHelper.triggerDraw.drawTexture(87, 4, xXcoord, 52, 11, 11);
         }
 
         getType().draw(this.mouseX, this.mouseY);
