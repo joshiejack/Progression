@@ -20,6 +20,7 @@ import com.google.gson.JsonObject;
 
 import cpw.mods.fml.common.eventhandler.Event.Result;
 
+//TODO: SWITCH TO NEW FORMAT
 public class RewardCriteria extends RewardBase implements ITextEditable {
     public String criteriaID = "";
     public boolean remove = false;

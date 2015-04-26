@@ -20,9 +20,9 @@ progression.condition.coordinates=Coordinates
 #Rewards
 progression.reward.fallDamage=Fall Damage
 progression.reward.time=Time
-progression.reward=criteria=Criteria
+progression.reward.criteria=Criteria
 progression.reward.speed=Speed
-progression.reward=item=Item
+progression.reward.item=Item
 progression.reward.command=Command
 progression.reward.points=Points
 progression.reward.research=Research
