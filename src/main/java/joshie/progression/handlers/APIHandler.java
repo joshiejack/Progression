@@ -19,7 +19,6 @@ import joshie.progression.criteria.Trigger;
 import joshie.progression.criteria.triggers.data.DataBoolean;
 import joshie.progression.criteria.triggers.data.DataCount;
 import joshie.progression.criteria.triggers.data.DataCrafting;
-import joshie.progression.helpers.ActionTypeHelper;
 import joshie.progression.helpers.CraftingHelper;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.player.PlayerTracker;
@@ -191,7 +190,6 @@ public class APIHandler implements IProgressionAPI {
     @Override
     public void registerActionType(String name) {
         try {
-            ActionTypeHelper.addAction(name);
             setup.invoke(null);
             EnumHelper.addEnum(actionType, ActionType.class, name);
         } catch (Exception e) {}
