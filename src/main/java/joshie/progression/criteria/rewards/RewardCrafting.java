@@ -51,12 +51,12 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 //TODO: SWITCH TO NEW SYSTEM
 public class RewardCrafting extends RewardBase implements IItemSelectable {
     private TextFieldHelper editMod;
-    private ItemStack stack = new ItemStack(Blocks.furnace);
-    private ActionType type = ActionType.CRAFTING;
-    private boolean matchDamage = true;
-    private boolean matchNBT = false;
-    private boolean usage = true;
-    private boolean crafting = true;
+    public ItemStack stack = new ItemStack(Blocks.furnace);
+    public ActionType type = ActionType.CRAFTING;
+    public boolean matchDamage = true;
+    public boolean matchNBT = false;
+    public boolean usage = true;
+    public boolean crafting = true;
     public String modid = "IGNORE";
 
     public RewardCrafting() {
@@ -99,7 +99,7 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
         Crafter crafter = CraftingRegistry.getCrafterFromPlayer(event.entityPlayer);
         if (!crafter.canCraftItem(ActionType.CRAFTING, event.itemStack)) {
             boolean hasStuff = false;
-            for (ActionType type : ActionType.craftingTypes) {
+            for (ActionType type : ActionType.values()) {
                 Collection<ICriteria> requirements = CraftingRegistry.getCraftingCriteria(type, event.itemStack);
                 if (requirements.size() > 0) {
                     if (!hasStuff) {
@@ -129,7 +129,7 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
                 EntityItem item = it.next();
                 ItemStack stack = item.getEntityItem();
                 EntityPlayer player = (EntityPlayer) source;
-                if (isEventCancelled(player, ActionType.ENTITY, player.getCurrentEquippedItem(), stack)) {
+                if (isEventCancelled(player, ActionType.ENTITYDROP, player.getCurrentEquippedItem(), stack)) {
                     it.remove();
                 }
             }
@@ -160,7 +160,7 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
             Iterator<ItemStack> it = event.drops.iterator();
             while (it.hasNext()) {
                 ItemStack stack = it.next();
-                if (isEventCancelled(player, ActionType.HARVEST, player.getCurrentEquippedItem(), stack)) {
+                if (isEventCancelled(player, ActionType.HARVESTDROP, player.getCurrentEquippedItem(), stack)) {
                     it.remove();
                 }
             }
@@ -213,9 +213,9 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
     public void readFromJSON(JsonObject data) {
         stack = JSONHelper.getItemStack(data, "item", stack);
         if (JSONHelper.getExists(data, "craftingType")) {
-            String craftingtype = JSONHelper.getString(data, "craftingType", type.name.toLowerCase());
-            for (ActionType type : ActionType.craftingTypes) {
-                if (type.name.equalsIgnoreCase(craftingtype)) {
+            String craftingtype = JSONHelper.getString(data, "craftingType", type.name().toLowerCase());
+            for (ActionType type : ActionType.values()) {
+                if (type.name().equalsIgnoreCase(craftingtype)) {
                     this.type = type;
                     break;
                 }
@@ -240,7 +240,7 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
     @Override
     public void writeToJSON(JsonObject data) {
         JSONHelper.setItemStack(data, "item", stack);
-        JSONHelper.setString(data, "craftingType", type.name.toLowerCase(), ActionType.CRAFTING.name.toLowerCase());
+        JSONHelper.setString(data, "craftingType", type.name().toLowerCase(), ActionType.CRAFTING.name().toLowerCase());
         JSONHelper.setBoolean(data, "matchDamage", matchDamage, true);
         JSONHelper.setBoolean(data, "matchNBT", matchNBT, false);
         JSONHelper.setBoolean(data, "disableCrafting", crafting, true);
@@ -276,12 +276,12 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
     }
 
     public ActionType next() {
-        int id = type.id + 1;
-        if (id < ActionType.craftingTypes.size()) {
-            return ActionType.craftingTypes.get(id);
+        int id = type.ordinal() + 1;
+        if (id < ActionType.values().length) {
+            return ActionType.values()[id];
         }
 
-        return ActionType.craftingTypes.get(0);
+        return ActionType.values()[0];
     }
 
     @Override
@@ -327,7 +327,7 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
             }
         }
         
-        ProgressionAPI.draw.drawText("type: " + type.name.toLowerCase(), 4, 18, typeColor);
+        ProgressionAPI.draw.drawText("type: " + type.name().toLowerCase(), 4, 18, typeColor);
         ProgressionAPI.draw.drawText("matchDamage: " + matchDamage, 4, 26, matchColor);
         ProgressionAPI.draw.drawText("matchNBT: " + matchNBT, 4, 34, match2Color);
         ProgressionAPI.draw.drawText("usage: " + usage, 4, 42, usageColor);

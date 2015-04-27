@@ -8,6 +8,7 @@ import joshie.progression.crafting.CraftingUnclaimed;
 import joshie.progression.criteria.Criteria;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.PlayerHelper;
+import joshie.progression.lib.ProgressionInfo;
 import joshie.progression.network.PacketClaimed;
 import joshie.progression.network.PacketHandler;
 import joshie.progression.player.PlayerTracker;
@@ -100,7 +101,7 @@ public class ItemCriteria extends Item {
 
     @SideOnly(Side.CLIENT)
     protected String getIconString() {
-        return "crafting:padlock";
+        return ProgressionInfo.MODPATH + ":padlock";
     }
 
     @SideOnly(Side.CLIENT)

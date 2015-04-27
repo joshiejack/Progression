@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.UUID;
 
 import joshie.progression.api.ICriteria;
-import joshie.progression.crafting.CraftingRegistry;
 import joshie.progression.crafting.ActionType;
+import joshie.progression.crafting.CraftingRegistry;
 import joshie.progression.criteria.Criteria;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.json.JSONLoader;
@@ -70,7 +70,7 @@ public class RemappingHandler {
         EventsManager.activeTriggers = new HashSet(); //Reset active triggers
         CraftingRegistry.conditions = new HashMap(); //Reset all the data in the crafting registry
         CraftingRegistry.usage = new HashMap(); //Reset all the data in the crafting registry
-        for (ActionType type : ActionType.craftingTypes) {
+        for (ActionType type : ActionType.values()) {
             Multimap<SafeStack, ICriteria> conditions = HashMultimap.create();
             Multimap<SafeStack, ICriteria> usage = HashMultimap.create();
             CraftingRegistry.conditions.put(type, conditions);

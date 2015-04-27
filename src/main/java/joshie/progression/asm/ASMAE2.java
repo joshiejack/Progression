@@ -67,7 +67,7 @@ public class ASMAE2 extends AbstractASM {
 				return new MethodVisitor(Opcodes.ASM4, visitor) {
 					@Override
 					public void visitCode() {
-					    String player = CraftingTransformer.isObfuscated? "field_70458_d" : "player";
+					    String player = ProgressionTransformer.isObfuscated? "field_70458_d" : "player";
 						super.visitVarInsn(Opcodes.ALOAD, 0);
 						super.visitVarInsn(Opcodes.ALOAD, 1);
 						super.visitFieldInsn(Opcodes.GETFIELD, "net/minecraft/entity/player/InventoryPlayer", player, "Lnet/minecraft/entity/player/EntityPlayer;");

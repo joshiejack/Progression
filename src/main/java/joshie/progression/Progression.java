@@ -13,6 +13,7 @@ import joshie.progression.commands.CommandHelp;
 import joshie.progression.commands.CommandManager;
 import joshie.progression.commands.CommandReload;
 import joshie.progression.commands.CommandReset;
+import joshie.progression.crafting.ActionType;
 import joshie.progression.criteria.conditions.ConditionBiomeType;
 import joshie.progression.criteria.conditions.ConditionCoordinates;
 import joshie.progression.criteria.conditions.ConditionDaytime;
@@ -173,6 +174,11 @@ public class Progression {
         PacketHandler.registerPacket(PacketReset.class);
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GUIHandler());
         proxy.initClient();
+        
+        ProgressionAPI.registry.registerActionType("TEST");
+        for (ActionType type: ActionType.values()) {
+            System.out.println(type.name());
+        }
     }
 
     @EventHandler

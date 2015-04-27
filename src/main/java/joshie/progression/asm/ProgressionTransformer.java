@@ -12,7 +12,7 @@ import org.objectweb.asm.ClassWriter;
 
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 
-public class CraftingTransformer implements IFMLLoadingPlugin, IClassTransformer {
+public class ProgressionTransformer implements IFMLLoadingPlugin, IClassTransformer {
     public static boolean isObfuscated = false;
     public static List<AbstractASM> asm = new ArrayList();
 
@@ -42,7 +42,7 @@ public class CraftingTransformer implements IFMLLoadingPlugin, IClassTransformer
 
     @Override
     public String[] getASMTransformerClass() {
-        return new String[] { CraftingTransformer.class.getName() };
+        return new String[] { ProgressionTransformer.class.getName() };
     }
 
     @Override

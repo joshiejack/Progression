@@ -23,7 +23,7 @@ if (System.getenv().BUILD_NUMBER) {
 }
 
 version = "${minecraft_version}-${mod_version}${buildnumber}"
-group= "uk.joshiejack.crafting"
+group= "uk.joshiejack.progression"
 archivesBaseName = "Progression"
 
 minecraft {
@@ -65,7 +65,7 @@ processResources
 
 jar {
     manifest {
-        attributes 'FMLCorePlugin': 'joshie.crafting.asm.CraftingTransformer'
+        attributes 'FMLCorePlugin': 'joshie.progression.asm.ProgressionTransformer'
         attributes 'FMLCorePluginContainsFMLMod': 'true'
     }
 }
@@ -77,7 +77,7 @@ task sourceJar(type: Jar) {
 
 task deobfJar(type: Jar) {
     manifest {
-        attributes 'FMLCorePlugin': 'joshie.crafting.asm.CraftingTransformer'
+        attributes 'FMLCorePlugin': 'joshie.progression.asm.ProgressionTransformer'
         attributes 'FMLCorePluginContainsFMLMod': 'true'
     }
     from sourceSets.main.output
