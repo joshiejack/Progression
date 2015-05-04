@@ -54,7 +54,8 @@ public class JSONHelper {
     public static ItemStack getItemStack(JsonObject data, String string, ItemStack default_) {
         if (data.get(string) != null) {
             String name = data.get(string).getAsString();
-            return StackHelper.getStackFromString(name);
+            ItemStack stack = StackHelper.getStackFromString(name);
+            return stack == null? default_ : stack;
         }
         
         return default_;

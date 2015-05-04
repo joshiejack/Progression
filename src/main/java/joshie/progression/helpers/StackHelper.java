@@ -1,5 +1,6 @@
 package joshie.progression.helpers;
 
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
@@ -44,6 +45,8 @@ public class StackHelper {
 
     private static ItemStack getStackFromArray(String[] str) {
         Item item = getItemByText(str[0]);
+        if (item == null) return null;
+        
         int meta = 0;
         int amount = 1;
         ItemStack stack = new ItemStack(item, 1, meta);
@@ -61,7 +64,7 @@ public class StackHelper {
         if (str.length > 3) {
             amount = parseAmount(str[3]);
         }
-                
+        
         stack.setItemDamage(meta);
 
         if (tag != null) {

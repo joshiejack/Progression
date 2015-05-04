@@ -174,11 +174,6 @@ public class Progression {
         PacketHandler.registerPacket(PacketReset.class);
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GUIHandler());
         proxy.initClient();
-        
-        ProgressionAPI.registry.registerActionType("TEST");
-        for (ActionType type: ActionType.values()) {
-            System.out.println(type.name());
-        }
     }
 
     @EventHandler

@@ -102,6 +102,7 @@ public class EditorTree {
 
         //Check the requirements, if they aren't completable return false
         for (Criteria requirements : criteria.prereqs) {
+            if (requirements.equals(criteria)) return false;
             if (!isCriteriaCompleteable(requirements)) return false;
         }
 
@@ -278,6 +279,14 @@ public class EditorTree {
 
         return false;
     }
+    
+    public boolean isAssignableTo(Criteria to, Criteria from) {
+        if (to.equals(from)) return false; //If they are the same criteria we can't assign them
+        if (from.prereqs.contains(to)) return false; //If the criteria we are trying to assign has this one in it, we can't
+        //We need to check down the chain to stop the assignments
+        
+        return true;
+    }
 
     public boolean click(int x, int y, boolean isDouble) {
         if (isOver(x, y)) {
@@ -295,11 +304,9 @@ public class EditorTree {
                         list = previous.conflicts;
                         isConflict = true;
                     }
-
-                    if (previous == criteria) {
-                        list = null;
-                    }
-
+                    
+                    if (!isAssignableTo(previous, criteria)) list = null;
+                    
                     if (list != null) {
                         if (list.contains(criteria)) {
                             remove(list, criteria);
