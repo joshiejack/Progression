@@ -1,6 +1,5 @@
 package joshie.crafting.api;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 

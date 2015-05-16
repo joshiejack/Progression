@@ -6,8 +6,8 @@ import java.util.UUID;
 
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ICriteria;
-import joshie.crafting.api.crafting.ICrafter;
 import joshie.crafting.api.crafting.CraftingEvent.CraftingType;
+import joshie.crafting.api.crafting.ICrafter;
 import joshie.crafting.json.Options;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

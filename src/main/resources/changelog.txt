@@ -1,3 +1,9 @@
+Progression 0.3.5
+  Mods will now bypass the system if there isn't support for them added, instead of not working
+  Add Support for Forestry Worktable
+  Add Support for Autopackager mod
+  Fix Potential crash with Obtain Trigger
+
 Progression 0.3.4
   Fix Potential crash when rendering certain entities in the editor
 

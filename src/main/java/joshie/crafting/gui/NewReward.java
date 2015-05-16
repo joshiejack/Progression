@@ -1,11 +1,11 @@
 package joshie.crafting.gui;
 
-import org.lwjgl.opengl.GL11;
-
 import joshie.crafting.CraftAPIRegistry;
 import joshie.crafting.api.CraftingAPI;
 import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.IRewardType;
+
+import org.lwjgl.opengl.GL11;
 
 public class NewReward extends OverlayBase {
     public static NewReward INSTANCE = new NewReward();

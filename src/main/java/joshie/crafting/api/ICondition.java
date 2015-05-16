@@ -3,9 +3,9 @@ package joshie.crafting.api;
 import java.util.List;
 import java.util.UUID;
 
-import cpw.mods.fml.common.eventhandler.Event.Result;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+import cpw.mods.fml.common.eventhandler.Event.Result;
 
 public interface ICondition extends IConditionType {
 	/** Whether this condition is satisfied for this player

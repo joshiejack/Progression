@@ -3,8 +3,8 @@ package joshie.crafting.api;
 import java.util.Collection;
 import java.util.UUID;
 
-import joshie.crafting.api.crafting.ICrafter;
 import joshie.crafting.api.crafting.CraftingEvent.CraftingType;
+import joshie.crafting.api.crafting.ICrafter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;

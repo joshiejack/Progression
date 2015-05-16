@@ -4,7 +4,6 @@ import joshie.crafting.api.ICondition;
 import joshie.crafting.api.ICriteria;
 import joshie.crafting.api.ITrigger;
 import joshie.crafting.gui.GuiTriggerEditor;
-import joshie.crafting.gui.GuiCriteriaEditor;
 import joshie.crafting.gui.SelectTextEdit;
 import joshie.crafting.gui.SelectTextEdit.ITextEditable;
 import joshie.crafting.helpers.ClientHelper;

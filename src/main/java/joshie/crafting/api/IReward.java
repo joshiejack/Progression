@@ -3,8 +3,8 @@ package joshie.crafting.api;
 import java.util.List;
 import java.util.UUID;
 
-import cpw.mods.fml.common.eventhandler.Event.Result;
 import net.minecraft.item.ItemStack;
+import cpw.mods.fml.common.eventhandler.Event.Result;
 
 /** A reward is what you obtain from completing a full set
  *  of triggers, E.g. Ability to craft an item, Extra Speed */

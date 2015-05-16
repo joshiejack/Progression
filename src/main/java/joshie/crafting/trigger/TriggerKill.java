@@ -52,7 +52,10 @@ public class TriggerKill extends TriggerBaseCounter implements IEntitySelectable
     @Override
     public ITrigger deserialize(JsonObject data) {
         TriggerKill trigger = new TriggerKill();
-        trigger.entity = data.get("entity").getAsString();
+        if (data.get("entity") != null) {
+            trigger.entity = data.get("entity").getAsString();
+        }
+        
         if (data.get("amount") != null) {
             trigger.amount = data.get("amount").getAsInt();
         }
@@ -117,7 +120,7 @@ public class TriggerKill extends TriggerBaseCounter implements IEntitySelectable
     public int getAmountRequired() {
         return amount;
     }
-    
+
     @Override
     public void addTooltip(List<String> toolTip) {
         toolTip.add("Kill " + amount + " " + EntityList.createEntityByName(this.entity, ClientHelper.getPlayer().worldObj).getCommandSenderName());

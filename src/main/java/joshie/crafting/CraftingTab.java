@@ -3,10 +3,9 @@ package joshie.crafting;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.item.ItemStack;
 import joshie.crafting.api.ICriteria;
-import joshie.crafting.api.IHasUniqueName;
 import joshie.crafting.api.ITab;
+import net.minecraft.item.ItemStack;
 
 public class CraftingTab implements ITab {
     private String uniqueName;
