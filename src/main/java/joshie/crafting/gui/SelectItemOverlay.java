@@ -17,9 +17,7 @@ public class SelectItemOverlay extends TextEditable implements IRenderOverlay {
     static int position;
     static Type type;
 
-    public SelectItemOverlay() {
-        ItemHelper.addInventory();
-    }
+    public SelectItemOverlay() {}
 
     public IItemSelectable getEditable() {
         return selectable;
@@ -36,6 +34,7 @@ public class SelectItemOverlay extends TextEditable implements IRenderOverlay {
     }
 
     public void select(IItemSelectable selectable, Type type) {
+        ItemHelper.addInventory();
         if (reset()) {
             //Setup the info
             SelectItemOverlay.type = type;

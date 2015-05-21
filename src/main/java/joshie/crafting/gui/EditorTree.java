@@ -97,7 +97,7 @@ public class EditorTree implements ITreeEditor {
         if (criteria.isVisible()) return true;
         else return CraftingAPI.players.getClientPlayer().getMappings().getCompletedCriteria().keySet().containsAll(criteria.getRequirements());
     }
-
+    
     public boolean isCriteriaCompleteable(ICriteria criteria) {
         HashMap<ICriteria, Integer> completedMap = CraftingAPI.players.getClientPlayer().getMappings().getCompletedCriteria();
         boolean completeable = true;
@@ -108,6 +108,7 @@ public class EditorTree implements ITreeEditor {
 
         //Check the requirements, if they aren't completable return false
         for (ICriteria requirements : criteria.getRequirements()) {
+            if (requirements.equals(criteria)) return false;
             if (!isCriteriaCompleteable(requirements)) return false;
         }
 

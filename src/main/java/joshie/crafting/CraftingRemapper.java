@@ -45,7 +45,7 @@ public class CraftingRemapper {
         //All data has officially been wiped SERVERSIDE
         //Reload in all the data from json
         /** Grab yourself some gson, load it in from the file serverside **/        
-        JSONLoader.loadServerJSON(); //This fills out all the data once again
+        JSONLoader.loadJSON(JSONLoader.getTabs()); //This fills out all the data once again
         
         //Now that mappings have been synced to the client reload the unlocks list
         Collection<ICriteria> allCriteria = CraftAPIRegistry.criteria.values();

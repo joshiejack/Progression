@@ -47,10 +47,13 @@ public class TriggerObtain extends TriggerBase implements IItemSelectable, IText
 
     @SubscribeEvent
     public void onEvent(PlayerOpenContainerEvent event) {
-        for (int i = 0; i < event.entityPlayer.inventory.mainInventory.length; i++) {
-            ItemStack stack = event.entityPlayer.inventory.mainInventory[i];
-            if (stack == null && event.canInteractWith) continue;
-            CraftingAPI.registry.fireTrigger(event.entityPlayer, getTypeName(), stack, event.entityPlayer, i);
+        long time = event.entityPlayer.worldObj.getTotalWorldTime();
+        if (!event.canInteractWith && time % 30 == 0) {
+            for (int i = 0; i < event.entityPlayer.inventory.mainInventory.length; i++) {
+                ItemStack stack = event.entityPlayer.inventory.mainInventory[i];
+                if (stack == null) continue;
+                CraftingAPI.registry.fireTrigger(event.entityPlayer, getTypeName(), stack, event.entityPlayer, i);
+            }
         }
     }
 

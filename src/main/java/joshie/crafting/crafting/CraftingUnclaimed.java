@@ -12,12 +12,12 @@ public class CraftingUnclaimed implements ICrafter {
 	
 	@Override
 	public boolean canUseItemForCrafting(CraftingType type, ItemStack stack) {
-		return Options.unclaimedTileCanUseAnythingForCrafting;
+		return Options.settings.unclaimedTileCanUseAnythingForCrafting;
 	}
 
 	@Override
 	public boolean canCraftItem(CraftingType type, ItemStack stack) {
-		return Options.unclaimedTileCanCraftAnything;
+		return Options.settings.unclaimedTileCanCraftAnything;
 	}
 
 	@Override

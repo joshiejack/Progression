@@ -17,19 +17,6 @@ public class StackHelper {
         return getStackFromArray(str.trim().split(" "));
     }
 
-    public static String getStringFromStack(ItemStack stack) {
-        String str = Item.itemRegistry.getNameForObject(stack.getItem());
-        str = str + " " + stack.getItemDamage();
-
-        if (stack.hasTagCompound()) {
-            str = str + " " + stack.stackTagCompound.toString();
-        }
-
-        str = str + " *" + stack.stackSize;
-
-        return str;
-    }
-
     public static String getStringFromObject(Object object) {
         if (object instanceof Item) {
             return getStringFromStack(new ItemStack((Item) object));
@@ -44,8 +31,21 @@ public class StackHelper {
         } else return "";
     }
 
-    public static boolean matches(String str, ItemStack stack) {
-        return getStringFromStack(stack).equals(str);
+    public static String getStringFromStack(ItemStack stack) {
+        String str = Item.itemRegistry.getNameForObject(stack.getItem());
+        if (stack.getHasSubtypes() || stack.isItemStackDamageable()) {
+            str = str + " " + stack.getItemDamage();
+        }
+
+        if (stack.stackSize > 1) {
+            str = str + " *" + stack.stackSize;
+        }
+
+        if (stack.hasTagCompound()) {
+            str = str + " " + stack.stackTagCompound.toString();
+        }
+
+        return str;
     }
 
     private static NBTTagCompound getTag(String[] str, int pos) {
@@ -59,40 +59,38 @@ public class StackHelper {
         }
     }
 
+    public static boolean isMeta(String str) {
+        return !isNBT(str) && !isAmount(str);
+    }
+
+    public static boolean isNBT(String str) {
+        return str.startsWith("{");
+    }
+
     public static boolean isAmount(String str) {
         return str.startsWith("*");
     }
 
     private static ItemStack getStackFromArray(String[] str) {
         Item item = getItemByText(str[0]);
+        if (item == null) return null;
+
         int meta = 0;
         int amount = 1;
         ItemStack stack = new ItemStack(item, 1, meta);
         NBTTagCompound tag = null;
-        if (str.length > 1) {            
-            if (isAmount(str[1])) amount = parseAmount(str[1]);
-            else meta = parseMeta(str[1]);
+
+        for (int i = 1; i <= 3; i++) {
+            if (str.length > i) {
+                if (isMeta(str[i])) meta = parseMeta(str[i]);
+                if (isAmount(str[i])) amount = parseAmount(str[i]);
+                if (isNBT(str[i])) tag = getTag(str, i);
+            }
         }
 
-        if (str.length > 2) {
-            tag = getTag(str, 2);
-            if (tag == null) amount = parseAmount(str[2]);
-        }
-
-        if (str.length > 3) {
-            amount = parseAmount(str[3]);
-        }
-                
         stack.setItemDamage(meta);
-
-        if (tag != null) {
-            stack.setTagCompound(tag);
-        }
-
-        if (amount >= 1) {
-            stack.stackSize = amount;
-        }
-
+        stack.setTagCompound(tag);
+        stack.stackSize = amount;
         return stack;
     }
 
@@ -139,43 +137,5 @@ public class StackHelper {
         } catch (NumberFormatException numberformatexception) {
             return 0;
         }
-    }
-
-    public static NBTTagCompound writeItemStackToNBT(NBTTagCompound tag, ItemStack stack) {
-        if (tag == null) {
-            tag = new NBTTagCompound();
-        }
-
-        try {
-            tag.setString("Name", Item.itemRegistry.getNameForObject(stack.getItem()));
-            tag.setInteger("Count", (byte) stack.stackSize);
-            tag.setInteger("Damage", (short) stack.getItemDamage());
-
-            if (stack.stackTagCompound != null) {
-                tag.setTag("tag", stack.stackTagCompound);
-            }
-        } catch (Exception e) {}
-
-        return tag;
-    }
-
-    public static ItemStack getItemStackFromNBT(NBTTagCompound tag) {
-        if (tag == null) {
-            tag = new NBTTagCompound();
-        }
-
-        Item item = (Item) Item.itemRegistry.getObject(tag.getString("Name"));
-        int count = tag.getInteger("Count");
-        int damage = tag.getInteger("Damage");
-        if (damage < 0) {
-            damage = 0;
-        }
-
-        ItemStack stack = new ItemStack(item, count, damage);
-        if (tag.hasKey("tag", 10)) {
-            stack.stackTagCompound = tag.getCompoundTag("tag");
-        }
-
-        return stack;
     }
 }

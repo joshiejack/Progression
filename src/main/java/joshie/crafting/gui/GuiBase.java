@@ -60,6 +60,8 @@ public abstract class GuiBase extends GuiScreen {
             JSONLoader.saveData();
             EditorTicker.LAST_TICK = 60;
         }
+        
+        SelectItemOverlay.INSTANCE.clear();
     }
 
     public void drawScreen(int x, int y, float f) {

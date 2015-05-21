@@ -1,3 +1,11 @@
+Progression 0.3.6
+  Fix saving of items with nbt
+  Move some things from options to criteria.json where it applies
+  Make Obtain trigger check every 1 and a half seconds instead of every tick
+  Allow changing of the item to to open the gui
+  Fix Potential crash when rendering criteria
+  More reliably add inventory items to the item selector
+
 Progression 0.3.5
   Mods will now bypass the system if there isn't support for them added, instead of not working
   Add Support for Forestry Worktable
