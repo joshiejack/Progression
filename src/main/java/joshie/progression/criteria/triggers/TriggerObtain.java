@@ -43,10 +43,13 @@ public class TriggerObtain extends TriggerBase {
 
     @SubscribeEvent
     public void onEvent(PlayerOpenContainerEvent event) {
-        for (int i = 0; i < event.entityPlayer.inventory.mainInventory.length; i++) {
-            ItemStack stack = event.entityPlayer.inventory.mainInventory[i];
-            if (stack == null && event.canInteractWith) continue;
-            ProgressionAPI.registry.fireTrigger(event.entityPlayer, getUnlocalisedName(), stack, event.entityPlayer, i);
+        long time = event.entityPlayer.worldObj.getTotalWorldTime();
+        if (!event.canInteractWith && time % 30 == 0) {
+            for (int i = 0; i < event.entityPlayer.inventory.mainInventory.length; i++) {
+                ItemStack stack = event.entityPlayer.inventory.mainInventory[i];
+                if (stack == null) continue;
+                ProgressionAPI.registry.fireTrigger(event.entityPlayer, getUnlocalisedName(), stack, event.entityPlayer, i);
+            }
         }
     }
     
@@ -78,6 +81,7 @@ public class TriggerObtain extends TriggerBase {
     public void onFired(UUID uuid, ITriggerData existing, Object... additional) {
         DataCrafting data = (DataCrafting) existing;
         ItemStack crafted = (ItemStack)additional[0];
+        if (stack == null || crafted == null) return;
         if (stack.getItem() == crafted.getItem()) {
             if (matchDamage && stack.getItemDamage() != crafted.getItemDamage()) return;
             if (matchNBT && stack.getTagCompound() != crafted.getTagCompound()) return;

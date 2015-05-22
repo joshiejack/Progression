@@ -69,7 +69,7 @@ public class GuiTreeEditor extends GuiBase {
         }
 
         if (currentTabName == null) {
-            currentTabName = Options.defaultTab;
+            currentTabName = Options.settings.defaultTabID;
         }
 
         currentTab = APIHandler.getTabFromName(currentTabName);

@@ -17,11 +17,15 @@ public class ProgressionTransformer implements IFMLLoadingPlugin, IClassTransfor
     public static List<AbstractASM> asm = new ArrayList();
 
     static {
-        asm.add(new ASMTransferCrafting());
-        asm.add(new ASMCrafting());
         asm.add(new ASMTileEntity());
         asm.add(new ASMFurnace());
+        asm.add(new ASMTransferCrafting());
+        asm.add(new ASMContainerPlayer());
+        asm.add(new ASMContainerWorkbench());
         asm.add(new ASMAE2());
+        asm.add(new ASMAutopackager());
+        asm.add(new ASMForestry());
+        asm.add(new ASMTinkers());
     }
 
     @Override
@@ -29,11 +33,15 @@ public class ProgressionTransformer implements IFMLLoadingPlugin, IClassTransfor
         byte[] modified = data;
         for (AbstractASM a : asm) {
             if (a.isClass(name)) {
-                ClassReader cr = new ClassReader(modified);
-                ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-                ClassVisitor cv = a.newInstance(cw);
-                cr.accept(cv, ClassReader.EXPAND_FRAMES);
-                modified = cw.toByteArray();
+                if (a.isVisitor()) {
+                    ClassReader cr = new ClassReader(modified);
+                    ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+                    ClassVisitor cv = a.newInstance(cw);
+                    cr.accept(cv, ClassReader.EXPAND_FRAMES);
+                    modified = cw.toByteArray();
+                }
+
+                modified = a.transform(modified);
             }
         }
 

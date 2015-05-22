@@ -89,13 +89,10 @@ public class JSONLoader {
         } catch (Exception e) { return false; }
     }
     
-    public static void loadServerJSON() {
-        loadJSON(JSONLoader.getTabs()); //Repackage the tabs
-    }
-    
-    private static void loadJSON(DefaultSettings tab) {
+    public static void loadJSON(DefaultSettings settings) {
+        Options.settings = settings;
     	boolean isClient = FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT;
-        for (DataTab data: tab.tabs) {
+        for (DataTab data: settings.tabs) {
             ItemStack stack = null;
             if (data.stack != null) {
                 stack = StackHelper.getStackFromString(data.stack);
@@ -181,9 +178,6 @@ public class JSONLoader {
                 }
             }
         }
-
-        
-        tab = null; //Clear out this object
     }
 
     public static void saveJSON(Object toSave, String name) {

@@ -16,6 +16,7 @@ public class ASMTransferCrafting extends AbstractASM {
     public static List accepted = new ArrayList();
     static {
         accepted.add("tconstruct.tools.inventory.CraftingStationContainer");
+        accepted.add("forestry.factory.gui.ContainerWorktable");
         accepted.add("net.minecraft.inventory.ContainerPlayer$1");
         accepted.add("net.minecraft.inventory.ContainerPlayer");
         accepted.add("net.minecraft.inventory.ContainerWorkbench");
