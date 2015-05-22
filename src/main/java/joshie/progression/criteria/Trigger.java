@@ -28,6 +28,7 @@ public class Trigger {
     public Trigger(Criteria criteria, ITriggerType triggerType) {
         this.criteria = criteria;
         this.triggerType = triggerType;
+        this.triggerType.markCriteria(criteria);
         //Don't load the editor server side
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
             this.editor = new EditorCondition(this);

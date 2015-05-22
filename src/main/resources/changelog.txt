@@ -4,6 +4,7 @@ Progression 0.4.0
   Only display links when criteria are in the same tab
   Speed will now work on negative speeds, as well as not require sprint pressing
   Add two booleans to speed, whether it affects land or water speed
+  Criteria now stored in seperate areas for ssp/smp
 
 Progression 0.3.6
   Fix saving of items with nbt

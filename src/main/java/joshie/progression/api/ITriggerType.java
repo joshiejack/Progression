@@ -9,6 +9,10 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public interface ITriggerType {
+    /** Associates this reward type with the criteria
+     *  Most trigger types will not need access to this. **/
+    public void markCriteria(ICriteria criteria);
+    
     /** Create a new instance for storing data **/
     public ITriggerData newData();
         

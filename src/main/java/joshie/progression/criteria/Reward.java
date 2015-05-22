@@ -17,6 +17,7 @@ public class Reward {
         this.criteria = criteria;
         this.reward = reward;
         this.optional = optional;
+        this.reward.markCriteria(criteria);
     }
 
     public IRewardType getType() {

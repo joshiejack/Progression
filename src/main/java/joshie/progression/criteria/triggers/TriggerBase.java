@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import joshie.progression.api.EventBusType;
+import joshie.progression.api.ICriteria;
 import joshie.progression.api.ITriggerData;
 import joshie.progression.api.ITriggerType;
 import joshie.progression.gui.fields.AbstractField;
@@ -15,6 +16,7 @@ import cpw.mods.fml.common.eventhandler.Event.Result;
 
 public abstract class TriggerBase implements ITriggerType {
     protected List<AbstractField> list = new ArrayList();
+    protected ICriteria criteria;
     private String name;
     private int color;
     private String data;
@@ -28,6 +30,11 @@ public abstract class TriggerBase implements ITriggerType {
     @Override
     public ITriggerData newData() {
         return APIHandler.newData(data);
+    }
+    
+    @Override
+    public void markCriteria(ICriteria criteria) {
+        this.criteria = criteria;
     }
 
     @Override
