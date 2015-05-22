@@ -1,229 +1,56 @@
 package joshie.progression.criteria.rewards;
 
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
 import joshie.progression.Progression;
-import joshie.progression.api.ActionEvent.CanObtainFromActionEvent;
-import joshie.progression.api.ActionEvent.CanUseToPeformActionEvent;
 import joshie.progression.api.EventBusType;
-import joshie.progression.api.ICriteria;
-import joshie.progression.api.ProgressionAPI;
 import joshie.progression.crafting.ActionType;
-import joshie.progression.crafting.Crafter;
 import joshie.progression.crafting.CraftingRegistry;
-import joshie.progression.criteria.Criteria;
-import joshie.progression.gui.GuiCriteriaEditor;
-import joshie.progression.gui.IItemSelectable;
-import joshie.progression.gui.SelectItemOverlay;
 import joshie.progression.gui.SelectItemOverlay.Type;
-import joshie.progression.gui.TextFieldHelper;
-import joshie.progression.helpers.BlockActionHelper;
-import joshie.progression.helpers.ClientHelper;
-import joshie.progression.helpers.CraftingHelper;
+import joshie.progression.gui.fields.BooleanField;
+import joshie.progression.gui.fields.IItemCallback;
+import joshie.progression.gui.fields.ItemField;
+import joshie.progression.gui.fields.TextField;
 import joshie.progression.helpers.JSONHelper;
-import joshie.progression.json.Theme;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.event.entity.player.EntityInteractEvent;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.world.BlockEvent.BreakEvent;
-import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 import codechicken.nei.api.API;
 
 import com.google.gson.JsonObject;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.Event.Result;
-import cpw.mods.fml.common.eventhandler.EventPriority;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-
-//TODO: SWITCH TO NEW SYSTEM
-public class RewardAction extends RewardBase implements IItemSelectable {
-    private TextFieldHelper editMod;
+public abstract class RewardAction extends RewardBase implements IItemCallback {
     public ItemStack stack = new ItemStack(Blocks.furnace);
     public ActionType type = ActionType.CRAFTING;
+    public String orename = "IGNORE";
     public boolean matchDamage = true;
     public boolean matchNBT = false;
     public boolean usage = true;
     public boolean crafting = true;
     public String modid = "IGNORE";
-
-    public RewardAction() {
-        super("crafting", 0xFF0085B2);
-        editMod = new TextFieldHelper("modid", this);
+    
+    /** Moving actions to be seperated from one another **/
+    public RewardAction(String name, int color) {
+        super(name, color);
+        ItemField field = new ItemField("stack", this, 80, 34, 1.4F, 67, 100, 33, 58, Type.REWARD);     
+        list.add(new BooleanField("matchDamage", this));
+        list.add(new BooleanField("matchNBT", this));
+        list.add(new BooleanField("usage", this));
+        list.add(new BooleanField("crafting", this));
+        list.add(new TextField("modid", this));
+        list.add(new TextField("orename", this));
+        list.add(field);
     }
-
+    
     @Override
     public EventBusType getEventBus() {
         return EventBusType.FORGE;
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onPlayerAttack(AttackEntityEvent event) {
-        checkAndCancelEvent(event);
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onPlayerInteract(EntityInteractEvent event) {
-        checkAndCancelEvent(event);
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onPlayerInteract(PlayerInteractEvent event) {
-        if (!checkAndCancelEvent(event)) {
-            Collection<ICriteria> requirements = CraftingRegistry.getCraftingCriteria(type, event.entityPlayer.getCurrentEquippedItem());
-            if (requirements.size() > 0) {
-                if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
-                    for (ICriteria c : requirements) {
-                        GuiCriteriaEditor.INSTANCE.selected = (Criteria) c;
-                        break;
-                    }
-                } else event.entityPlayer.openGui(Progression.instance, 1, null, 0, 0, 0);
-            }
-        }
-    }
-
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onItemTooltipEvent(ItemTooltipEvent event) {
-        Crafter crafter = CraftingRegistry.getCrafterFromPlayer(event.entityPlayer);
-        if (!crafter.canCraftItem(ActionType.CRAFTING, event.itemStack)) {
-            boolean hasStuff = false;
-            for (ActionType type : ActionType.values()) {
-                Collection<ICriteria> requirements = CraftingRegistry.getCraftingCriteria(type, event.itemStack);
-                if (requirements.size() > 0) {
-                    if (!hasStuff) {
-                        event.toolTip.add("Currently Locked");
-                        hasStuff = true;
-                    }
-
-                    event.toolTip.add(EnumChatFormatting.WHITE + type.getDisplayName());
-                    for (ICriteria c : requirements) {
-                        ((Criteria) c).addTooltip(event.toolTip);
-                    }
-                }
-            }
-
-            if (hasStuff) {
-                event.toolTip.add(EnumChatFormatting.AQUA + "Click for more info");
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public void onLivingDrop(LivingDropsEvent event) {
-        Entity source = event.source.getSourceOfDamage();
-        if (source instanceof EntityPlayer) {
-            Iterator<EntityItem> it = event.drops.iterator();
-            while (it.hasNext()) {
-                EntityItem item = it.next();
-                ItemStack stack = item.getEntityItem();
-                EntityPlayer player = (EntityPlayer) source;
-                if (isEventCancelled(player, ActionType.ENTITYDROP, player.getCurrentEquippedItem(), stack)) {
-                    it.remove();
-                }
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public void onBreakSpeed(BreakSpeed event) {
-        if (isEventCancelled(event.entityPlayer, ActionType.BREAKBLOCK, event.entityPlayer.getCurrentEquippedItem(), BlockActionHelper.getStackFromBlockData(event.block, event.metadata))) {
-            event.newSpeed = 0F;
-        }
-    }
-
-    @SubscribeEvent
-    public void onBreakBlock(BreakEvent event) {
-        EntityPlayer player = event.getPlayer();
-        if (player != null) {
-            if (isEventCancelled(player, ActionType.BREAKBLOCK, player.getCurrentEquippedItem(), BlockActionHelper.getStackFromBlockData(event.block, event.blockMetadata))) {
-                event.setCanceled(true);
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public void onHarvestDrop(HarvestDropsEvent event) {
-        EntityPlayer player = event.harvester;
-        if (player != null) {
-            Iterator<ItemStack> it = event.drops.iterator();
-            while (it.hasNext()) {
-                ItemStack stack = it.next();
-                if (isEventCancelled(player, ActionType.HARVESTDROP, player.getCurrentEquippedItem(), stack)) {
-                    it.remove();
-                }
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public void onAttemptToUseItemToPerformAction(CanUseToPeformActionEvent event) {
-        if (event.stack == null) return;
-        Crafter crafter = event.player != null ? CraftingRegistry.getCrafterFromPlayer(event.player) : CraftingRegistry.getCrafterFromTile(event.tile);
-        if (crafter.canCraftWithAnything()) return;
-        if (!crafter.canUseItemForCrafting(event.type, event.stack)) {
-            event.setCanceled(true);
-        }
-    }
-
-    @SubscribeEvent
-    public void onAttemptToObtainItem(CanObtainFromActionEvent event) {
-        if (event.stack == null) return;
-        Crafter crafter = event.player != null ? CraftingRegistry.getCrafterFromPlayer(event.player) : CraftingRegistry.getCrafterFromTile(event.tile);
-        if (crafter.canCraftAnything()) return;
-        if (!crafter.canCraftItem(event.type, event.stack)) {
-            event.setCanceled(true);
-        }
-    }
-
-    private boolean isEventCancelled(EntityPlayer player, ActionType type, ItemStack usageStack, ItemStack craftingStack) {
-        if (!CraftingHelper.canUseItemForCrafting(type, player, usageStack)) {
-            return true;
-        } else {
-            if (!CraftingHelper.canCraftItem(type, player, craftingStack)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private boolean checkAndCancelEvent(PlayerEvent event) {
-        if (event.entityPlayer.getCurrentEquippedItem() == null) return true;
-        EntityPlayer player = event.entityPlayer;
-        Crafter crafter = CraftingRegistry.getCrafterFromPlayer(player);
-        if (!crafter.canCraftItem(ActionType.CRAFTING, player.getCurrentEquippedItem())) {
-            event.setCanceled(true);
-            return false;
-        } else return true;
-    }
-
     @Override
     public void readFromJSON(JsonObject data) {
         stack = JSONHelper.getItemStack(data, "item", stack);
-        if (JSONHelper.getExists(data, "craftingType")) {
-            String craftingtype = JSONHelper.getString(data, "craftingType", type.name().toLowerCase());
-            for (ActionType type : ActionType.values()) {
-                if (type.name().equalsIgnoreCase(craftingtype)) {
-                    this.type = type;
-                    break;
-                }
-            }
-        }
-
         matchDamage = JSONHelper.getBoolean(data, "matchDamage", matchDamage);
         matchNBT = JSONHelper.getBoolean(data, "matchNBT", matchNBT);
         crafting = JSONHelper.getBoolean(data, "disableCrafting", crafting);
@@ -242,7 +69,6 @@ public class RewardAction extends RewardBase implements IItemSelectable {
     @Override
     public void writeToJSON(JsonObject data) {
         JSONHelper.setItemStack(data, "item", stack);
-        JSONHelper.setString(data, "craftingType", type.name().toLowerCase(), ActionType.CRAFTING.name().toLowerCase());
         JSONHelper.setBoolean(data, "matchDamage", matchDamage, true);
         JSONHelper.setBoolean(data, "matchNBT", matchNBT, false);
         JSONHelper.setBoolean(data, "disableCrafting", crafting, true);
@@ -262,86 +88,26 @@ public class RewardAction extends RewardBase implements IItemSelectable {
 
     @Override
     public void onAdded() {
-        CraftingRegistry.addRequirement(type, modid, stack, matchDamage, matchNBT, usage, crafting, criteria);
+        CraftingRegistry.addRequirement(type, modid, stack, orename, matchDamage, matchNBT, usage, crafting, criteria);
     }
 
     @Override
     public void onRemoved() {
-        CraftingRegistry.remove(type, modid, stack, matchDamage, matchNBT, usage, crafting, criteria);
+        CraftingRegistry.remove(type, modid, stack, orename, matchDamage, matchNBT, usage, crafting, criteria);
     }
 
-    //TODO: Replace this with an item which overlay the item
-    //With some of crafting representation
     @Override
     public ItemStack getIcon() {
         return stack;
     }
 
-    public ActionType next() {
-        int id = type.ordinal() + 1;
-        if (id < ActionType.values().length) {
-            return ActionType.values()[id];
-        }
-
-        return ActionType.values()[0];
-    }
-
     @Override
-    public Result onClicked(int mouseX, int mouseY) {
-        if (mouseX >= 77 && mouseX <= 100) {
-            if (mouseY >= 43 && mouseY <= 68) {
-                SelectItemOverlay.INSTANCE.select(this, Type.REWARD);
-                return Result.ALLOW;
-            }
+    public void setItem(String fieldName, ItemStack stack) {
+        if (fieldName.equals("stack")) {
+            onRemoved();
+            this.stack = stack;
+            onAdded();
         }
-
-        if (mouseX <= 84 && mouseX >= 1) {
-            if (mouseY >= 17 && mouseY <= 25) type = next();
-            if (mouseY > 25 && mouseY <= 33) matchDamage = !matchDamage;
-            if (mouseY > 34 && mouseY <= 41) matchNBT = !matchNBT;
-            if (mouseY > 42 && mouseY <= 50) usage = !usage;
-            if (mouseY > 50 && mouseY <= 58) crafting = !crafting;
-            if (mouseY > 58 && mouseY <= 66) editMod.select();
-            if (mouseY >= 17 && mouseY <= 66) return Result.ALLOW;
-        }
-
-        return Result.DEFAULT;
-    }
-
-    @Override
-    public void draw(int mouseX, int mouseY) {
-        ProgressionAPI.draw.drawStack(getIcon(), 76, 44, 1.4F);
-        int typeColor = Theme.INSTANCE.optionsFontColor;
-        int matchColor = Theme.INSTANCE.optionsFontColor;
-        int match2Color = Theme.INSTANCE.optionsFontColor;
-        int usageColor = Theme.INSTANCE.optionsFontColor;
-        int craftColor = Theme.INSTANCE.optionsFontColor;
-        int modColor = Theme.INSTANCE.optionsFontColor;
-
-        if (ClientHelper.canEdit()) {
-            if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 25) typeColor = Theme.INSTANCE.optionsFontColorHover;
-                if (mouseY > 25 && mouseY <= 33) matchColor = Theme.INSTANCE.optionsFontColorHover;
-                if (mouseY > 34 && mouseY <= 41) match2Color = Theme.INSTANCE.optionsFontColorHover;
-                if (mouseY > 42 && mouseY <= 50) usageColor = Theme.INSTANCE.optionsFontColorHover;
-                if (mouseY > 50 && mouseY <= 58) craftColor = Theme.INSTANCE.optionsFontColorHover;
-                if (mouseY > 58 && mouseY <= 66) modColor = Theme.INSTANCE.optionsFontColorHover;
-            }
-        }
-
-        ProgressionAPI.draw.drawText("type: " + type.name().toLowerCase(), 4, 18, typeColor);
-        ProgressionAPI.draw.drawText("matchDamage: " + matchDamage, 4, 26, matchColor);
-        ProgressionAPI.draw.drawText("matchNBT: " + matchNBT, 4, 34, match2Color);
-        ProgressionAPI.draw.drawText("usage: " + usage, 4, 42, usageColor);
-        ProgressionAPI.draw.drawText("crafting: " + crafting, 4, 50, craftColor);
-        ProgressionAPI.draw.drawText("modid: " + editMod.getText(), 4, 58, modColor);
-    }
-
-    @Override
-    public void setItemStack(ItemStack stack) {
-        onRemoved();
-        this.stack = stack;
-        onAdded();
     }
 
     @Override

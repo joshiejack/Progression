@@ -95,7 +95,7 @@ public class JSONLoader {
                     sspToSmpConversion = true;
                 }
             }
-            
+
             if (fileOld.exists()) { //If we still have the old file
                 if (!fileNew.exists()) {
                     FileUtils.copyFile(fileOld, fileNew); //Copy it to it's new directory
@@ -184,24 +184,30 @@ public class JSONLoader {
                     throw new CriteriaNotFoundException(criteria.uniqueName);
                 }
 
-                Trigger[] triggerz = new Trigger[criteria.triggers.size()];
-                for (int j = 0; j < triggerz.length; j++) {
-                    DataTrigger trigger = criteria.triggers.get(j);
-                    Trigger iTrigger = APIHandler.newTrigger(theCriteria, trigger.type, trigger.data);
-                    Condition[] conditionz = new Condition[trigger.conditions.size()];
-                    for (int i = 0; i < conditionz.length; i++) {
-                        DataGeneric condition = trigger.conditions.get(i);
-                        conditionz[i] = APIHandler.newCondition(iTrigger, condition.type, condition.data);
-                    }
+                if (criteria.triggers != null) {
+                    Trigger[] triggerz = new Trigger[criteria.triggers.size()];
+                    for (int j = 0; j < triggerz.length; j++) {
+                        DataTrigger trigger = criteria.triggers.get(j);
+                        Trigger iTrigger = APIHandler.newTrigger(theCriteria, trigger.type, trigger.data);
+                        if (trigger.conditions != null) {
+                            Condition[] conditionz = new Condition[trigger.conditions.size()];
+                            for (int i = 0; i < conditionz.length; i++) {
+                                DataGeneric condition = trigger.conditions.get(i);
+                                conditionz[i] = APIHandler.newCondition(iTrigger, condition.type, condition.data);
+                            }
+                        }
 
-                    triggerz[j] = iTrigger;
+                        triggerz[j] = iTrigger;
+                    }
                 }
 
                 //Add the Rewards
-                Reward[] rewardz = new Reward[criteria.rewards.size()];
-                for (int k = 0; k < criteria.rewards.size(); k++) {
-                    DataGeneric reward = criteria.rewards.get(k);
-                    rewardz[k] = APIHandler.newReward(theCriteria, reward.type, reward.data);
+                if (criteria.rewards != null) {
+                    Reward[] rewardz = new Reward[criteria.rewards.size()];
+                    for (int k = 0; k < criteria.rewards.size(); k++) {
+                        DataGeneric reward = criteria.rewards.get(k);
+                        rewardz[k] = APIHandler.newReward(theCriteria, reward.type, reward.data);
+                    }
                 }
             }
 
@@ -213,12 +219,20 @@ public class JSONLoader {
                     throw new CriteriaNotFoundException(criteria.uniqueName);
                 }
 
-                Criteria[] thePrereqs = new Criteria[criteria.prereqs.length];
-                Criteria[] theConflicts = new Criteria[criteria.conflicts.length];
-                for (int i = 0; i < thePrereqs.length; i++)
-                    thePrereqs[i] = APIHandler.getCriteriaFromName(criteria.prereqs[i]);
-                for (int i = 0; i < theConflicts.length; i++)
-                    theConflicts[i] = APIHandler.getCriteriaFromName(criteria.conflicts[i]);
+                Criteria[] thePrereqs = new Criteria[0];
+                if (criteria.prereqs != null) {
+                    thePrereqs = new Criteria[criteria.prereqs.length];
+                    for (int i = 0; i < thePrereqs.length; i++)
+                        thePrereqs[i] = APIHandler.getCriteriaFromName(criteria.prereqs[i]);
+                }
+
+                Criteria[] theConflicts = new Criteria[0];
+                if (criteria.conflicts != null) {
+                    theConflicts = new Criteria[criteria.conflicts.length];
+                    for (int i = 0; i < theConflicts.length; i++)
+                        theConflicts[i] = APIHandler.getCriteriaFromName(criteria.conflicts[i]);
+                }
+
                 boolean isVisible = criteria.isVisible;
                 int repeatable = criteria.repeatable;
                 int x = criteria.x;
@@ -290,34 +304,41 @@ public class JSONLoader {
 
                 ArrayList<DataTrigger> theTriggers = new ArrayList();
                 ArrayList<DataGeneric> theRewards = new ArrayList();
-                for (Trigger trigger : c.triggers) {
-                    ArrayList<DataGeneric> theConditions = new ArrayList();
-                    for (Condition condition : trigger.getConditions()) {
-                        JsonObject conditionData = new JsonObject();
-                        if (condition.inverted) {
-                            conditionData.addProperty("inverted", true);
+                if (c.triggers.size() > 0) {
+                    for (Trigger trigger : c.triggers) {
+                        ArrayList<DataGeneric> theConditions = null;
+                        if (trigger.getConditions().size() > 0) {
+                            theConditions = new ArrayList();
+                            for (Condition condition : trigger.getConditions()) {
+                                JsonObject conditionData = new JsonObject();
+                                if (condition.inverted) {
+                                    conditionData.addProperty("inverted", true);
+                                }
+
+                                condition.getType().writeToJSON(conditionData);
+                                DataGeneric dCondition = new DataGeneric(condition.getType().getUnlocalisedName(), conditionData);
+                                theConditions.add(dCondition);
+                            }
                         }
 
-                        condition.getType().writeToJSON(conditionData);
-                        DataGeneric dCondition = new DataGeneric(condition.getType().getUnlocalisedName(), conditionData);
-                        theConditions.add(dCondition);
+                        JsonObject triggerData = new JsonObject();
+                        trigger.getType().writeToJSON(triggerData);
+                        DataTrigger dTrigger = new DataTrigger(trigger.getType().getUnlocalisedName(), triggerData, theConditions);
+                        theTriggers.add(dTrigger);
                     }
-
-                    JsonObject triggerData = new JsonObject();
-                    trigger.getType().writeToJSON(triggerData);
-                    DataTrigger dTrigger = new DataTrigger(trigger.getType().getUnlocalisedName(), triggerData, theConditions);
-                    theTriggers.add(dTrigger);
                 }
 
-                for (Reward reward : c.rewards) {
-                    JsonObject rewardData = new JsonObject();
-                    reward.getType().writeToJSON(rewardData);
-                    if (reward.optional) {
-                        rewardData.addProperty("optional", true);
-                    }
+                if (c.rewards.size() > 0) {
+                    for (Reward reward : c.rewards) {
+                        JsonObject rewardData = new JsonObject();
+                        reward.getType().writeToJSON(rewardData);
+                        if (reward.optional) {
+                            rewardData.addProperty("optional", true);
+                        }
 
-                    DataGeneric dReward = new DataGeneric(reward.getType().getUnlocalisedName(), rewardData);
-                    theRewards.add(dReward);
+                        DataGeneric dReward = new DataGeneric(reward.getType().getUnlocalisedName(), rewardData);
+                        theRewards.add(dReward);
+                    }
                 }
 
                 String[] thePrereqs = new String[prereqs.size()];
@@ -326,10 +347,10 @@ public class JSONLoader {
                     thePrereqs[i] = prereqs.get(i).uniqueName;
                 for (int i = 0; i < theConflicts.length; i++)
                     theConflicts[i] = conflicts.get(i).uniqueName;
-                data.triggers = theTriggers;
-                data.rewards = theRewards;
-                data.prereqs = thePrereqs;
-                data.conflicts = theConflicts;
+                if (theTriggers.size() > 0) data.triggers = theTriggers;
+                if (theRewards.size() > 0) data.rewards = theRewards;
+                if (thePrereqs.length > 0) data.prereqs = thePrereqs;
+                if (theConflicts.length > 0) data.conflicts = theConflicts;
                 list.add(data);
             }
 

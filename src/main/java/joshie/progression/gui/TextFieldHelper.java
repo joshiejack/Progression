@@ -75,7 +75,9 @@ public class TextFieldHelper implements ITextEditable {
     @Override
     public void setTextField(String str) {
         if (o instanceof ICallback) {
-            ((ICallback)o).setField(str);
+            if(!((ICallback)o).setField(f.getName(), str)) {
+                set(str);
+            }
         } else set(str);
     }
 

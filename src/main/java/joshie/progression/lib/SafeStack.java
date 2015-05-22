@@ -1,8 +1,12 @@
 package joshie.progression.lib;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class SafeStack {
     public String item;
@@ -11,18 +15,27 @@ public class SafeStack {
         this.item = Item.itemRegistry.getNameForObject(stack.getItem());
     }
 
-    public static SafeStack[] allInstances(ItemStack stack) {
-        SafeStack modid = new SafeStackMod(stack);
-        SafeStack basic = new SafeStack(stack);
-        SafeStack damage = new SafeStackDamage(stack);
-        SafeStack nbt = new SafeStackNBT(stack);
-        SafeStack both = new SafeStackNBTDamage(stack);
-        return new SafeStack[] { modid, basic, damage, nbt, both };
+    public static List<SafeStack> allInstances(ItemStack stack) {
+        List<SafeStack> safe = new ArrayList();
+        safe.add(new SafeStackMod(stack));
+        int[] ids = OreDictionary.getOreIDs(stack);
+        for (int i : ids) {
+            safe.add(new SafeStackOre(stack, OreDictionary.getOreName(i)));
+        }
+
+        safe.add(new SafeStackMod(stack));
+        safe.add(new SafeStack(stack));
+        safe.add(new SafeStackDamage(stack));
+        safe.add(new SafeStackNBT(stack));
+        safe.add(new SafeStackNBTDamage(stack));
+        return safe;
     }
 
-    public static SafeStack newInstance(String modid, ItemStack stack, boolean matchDamage, boolean matchNBT) {
+    public static SafeStack newInstance(String modid, ItemStack stack, String orename, boolean matchDamage, boolean matchNBT) {
         if (!modid.equals("IGNORE")) {
             return new SafeStackMod(stack);
+        } else if (!orename.equals("IGNORE")) {
+            return new SafeStackOre(stack, orename);
         } else if (matchNBT && matchDamage) {
             return new SafeStackNBTDamage(stack);
         } else if (matchNBT) {
@@ -30,6 +43,35 @@ public class SafeStack {
         } else if (matchDamage) {
             return new SafeStackDamage(stack);
         } else return new SafeStack(stack);
+    }
+
+    public static class SafeStackOre extends SafeStack {
+        public String orename;
+
+        protected SafeStackOre(ItemStack stack, String orename) {
+            super(null);
+            this.orename = orename;
+        }
+
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = super.hashCode();
+            result = prime * result + ((orename == null) ? 0 : orename.hashCode());
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            if (!super.equals(obj)) return false;
+            if (getClass() != obj.getClass()) return false;
+            SafeStackOre other = (SafeStackOre) obj;
+            if (orename == null) {
+                if (other.orename != null) return false;
+            } else if (!orename.equals(other.orename)) return false;
+            return true;
+        }
     }
 
     public static class SafeStackMod extends SafeStack {

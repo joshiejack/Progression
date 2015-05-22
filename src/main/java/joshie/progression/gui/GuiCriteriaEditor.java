@@ -35,9 +35,9 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
         drawStack(selected.stack, 1, 4, 1F);
         drawText("Display Name: " + nameEdit.getText(), 21 - offsetX, 9, theme.criteriaEditDisplayNameColor);
         drawText("Repeatability: " + repeatEdit.getText() + "x", fullWidth - 130, 9, theme.criteriaEditDisplayNameColor);
-        drawBox(-1, 210, fullWidth, 1, theme.blackBarUnderLineBorder, theme.blackBarUnderLineBorder);
-        drawText("Use arrow keys to scroll sideways, or use the scroll wheel. (Down to go right)", 9 - offsetX, 215, theme.scrollTextFontColor);
-        drawText("Hold shift with arrow keys to scroll faster.", 9 - offsetX, 225, theme.scrollTextFontColor);
+        drawBox(-1, 215, fullWidth, 1, theme.blackBarUnderLineBorder, theme.blackBarUnderLineBorder);
+        drawText("Use arrow keys to scroll sideways, or use the scroll wheel. (Down to go right)", 9 - offsetX, 218, theme.scrollTextFontColor);
+        drawText("Hold shift with arrow keys to scroll faster.", 9 - offsetX, 228, theme.scrollTextFontColor);
 
         //Triggers
         drawGradient(-1, 25, fullWidth, 15, theme.triggerBoxGradient1, theme.triggerBoxGradient2, theme.triggerBoxBorder);

@@ -1,6 +1,10 @@
 package joshie.progression.handlers;
 
 import joshie.progression.Progression;
+import joshie.progression.api.ActionEvent.CanObtainFromActionEvent;
+import joshie.progression.api.ActionEvent.CanUseToPeformActionEvent;
+import joshie.progression.crafting.Crafter;
+import joshie.progression.crafting.CraftingRegistry;
 import joshie.progression.helpers.StackHelper;
 import joshie.progression.json.Options;
 import net.minecraft.entity.player.EntityPlayerMP;

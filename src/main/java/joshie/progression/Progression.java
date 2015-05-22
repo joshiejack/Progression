@@ -18,11 +18,15 @@ import joshie.progression.criteria.conditions.ConditionCoordinates;
 import joshie.progression.criteria.conditions.ConditionDaytime;
 import joshie.progression.criteria.conditions.ConditionInInventory;
 import joshie.progression.criteria.conditions.ConditionRandom;
-import joshie.progression.criteria.rewards.RewardAction;
+import joshie.progression.criteria.rewards.RewardBreakBlock;
 import joshie.progression.criteria.rewards.RewardCommand;
+import joshie.progression.criteria.rewards.RewardCrafting;
 import joshie.progression.criteria.rewards.RewardCriteria;
 import joshie.progression.criteria.rewards.RewardFallDamage;
+import joshie.progression.criteria.rewards.RewardFurnace;
+import joshie.progression.criteria.rewards.RewardHarvestDrop;
 import joshie.progression.criteria.rewards.RewardItem;
+import joshie.progression.criteria.rewards.RewardLivingDrop;
 import joshie.progression.criteria.rewards.RewardPoints;
 import joshie.progression.criteria.rewards.RewardResearch;
 import joshie.progression.criteria.rewards.RewardSpeed;
@@ -138,7 +142,6 @@ public class Progression {
         ProgressionAPI.registry.registerConditionType(new ConditionInInventory());
         
         ProgressionAPI.registry.registerRewardType(new RewardCommand());
-        ProgressionAPI.registry.registerRewardType(new RewardAction());
         ProgressionAPI.registry.registerRewardType(new RewardCriteria());
         ProgressionAPI.registry.registerRewardType(new RewardFallDamage());
         ProgressionAPI.registry.registerRewardType(new RewardItem());
@@ -146,6 +149,11 @@ public class Progression {
         ProgressionAPI.registry.registerRewardType(new RewardPoints());
         ProgressionAPI.registry.registerRewardType(new RewardSpeed());
         ProgressionAPI.registry.registerRewardType(new RewardTime()); 
+        ProgressionAPI.registry.registerRewardType(new RewardBreakBlock()); 
+        ProgressionAPI.registry.registerRewardType(new RewardCrafting());
+        ProgressionAPI.registry.registerRewardType(new RewardFurnace());
+        ProgressionAPI.registry.registerRewardType(new RewardHarvestDrop());
+        ProgressionAPI.registry.registerRewardType(new RewardLivingDrop());
 
         ProgressionAPI.registry.registerTriggerType(new TriggerBreakBlock());
         ProgressionAPI.registry.registerTriggerType(new TriggerCrafting());

@@ -65,7 +65,9 @@ public class ItemField extends AbstractField implements IItemSelectable {
     @Override
     public void setItemStack(ItemStack stack) {
         try {
-            field.set(object, stack);
+            if (object instanceof IItemCallback) {
+                ((IItemCallback)object).setItem(field.getName(), stack);
+            } else field.set(object, stack);
         } catch (Exception e) {}
     }
     

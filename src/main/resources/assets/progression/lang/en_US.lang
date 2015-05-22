@@ -26,7 +26,11 @@ progression.reward.item=Item
 progression.reward.command=Command
 progression.reward.points=Points
 progression.reward.research=Research
-progression.reward.crafting=Allow Action
+progression.reward.crafting=Crafting
+progression.reward.furnace=Furnace
+progression.reward.livingDrop=Entity Drops
+progression.reward.harvestDrop=Block Drops
+progression.reward.breakBlock=Break Block
 
 #Actions
 progression.action.crafting=Crafting

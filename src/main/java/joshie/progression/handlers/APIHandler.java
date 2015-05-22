@@ -16,10 +16,17 @@ import joshie.progression.criteria.Criteria;
 import joshie.progression.criteria.Reward;
 import joshie.progression.criteria.Tab;
 import joshie.progression.criteria.Trigger;
+import joshie.progression.criteria.rewards.RewardAction;
+import joshie.progression.criteria.rewards.RewardBreakBlock;
+import joshie.progression.criteria.rewards.RewardCrafting;
+import joshie.progression.criteria.rewards.RewardFurnace;
+import joshie.progression.criteria.rewards.RewardHarvestDrop;
+import joshie.progression.criteria.rewards.RewardLivingDrop;
 import joshie.progression.criteria.triggers.data.DataBoolean;
 import joshie.progression.criteria.triggers.data.DataCount;
 import joshie.progression.criteria.triggers.data.DataCrafting;
 import joshie.progression.helpers.CraftingHelper;
+import joshie.progression.helpers.JSONHelper;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
@@ -127,6 +134,17 @@ public class APIHandler implements IProgressionAPI {
         try {
             newRewardType = oldRewardType.getClass().newInstance();
         } catch (Exception e) {}
+        
+        /** SPECIAL CASE SWITCHING OF OLD REWARDS TO NEW **/
+        if (newRewardType instanceof RewardAction && JSONHelper.getExists(data, "craftingType")) {
+            //If we are trying to create the old reward actions
+            if (JSONHelper.getString(data, "craftingType", "").equals("breakblock")) newRewardType = new RewardBreakBlock();
+            if (JSONHelper.getString(data, "craftingType", "").equals("entitydrop")) newRewardType = new RewardLivingDrop();
+            if (JSONHelper.getString(data, "craftingType", "").equals("harvestdrop")) newRewardType = new RewardHarvestDrop();
+            if (JSONHelper.getString(data, "craftingType", "").equals("crafting")) newRewardType = new RewardCrafting();
+            if (JSONHelper.getString(data, "craftingType", "").equals("repair")) newRewardType = new RewardCrafting();
+            if (JSONHelper.getString(data, "craftingType", "").equals("furnace")) newRewardType = new RewardFurnace();
+        }
 
         Reward reward = new Reward(criteria, newRewardType, optional);
         reward.getType().readFromJSON(data);

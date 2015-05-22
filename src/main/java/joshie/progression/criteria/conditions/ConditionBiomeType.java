@@ -76,8 +76,8 @@ public class ConditionBiomeType extends ConditionBase implements ICallback {
     }
 
     @Override
-    public void setField(String str) {
-        String[] split = str.split(",");
+    public boolean setField(String fieldName, String fieldValue) {
+        String[] split = fieldValue.split(",");
         StringBuilder fullString = new StringBuilder();
         try {
             Type[] types = new Type[split.length];
@@ -88,6 +88,7 @@ public class ConditionBiomeType extends ConditionBase implements ICallback {
             theBiomeTypes = types;
         } catch (Exception e) {}
 
-        biomeTypes = str;
+        biomeTypes = fieldValue;
+        return true;
     }
 }

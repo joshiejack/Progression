@@ -3,7 +3,7 @@ package joshie.progression.crafting;
 import net.minecraft.util.StatCollector;
 
 public enum ActionType {
-   CRAFTING, REPAIR, FURNACE, BREAKBLOCK, HARVESTDROP, ENTITYDROP;
+   CRAFTING, FURNACE, BREAKBLOCK, HARVESTDROP, ENTITYDROP;
 
     public String getDisplayName() {
         return StatCollector.translateToLocal("progression.action." + name().toLowerCase());
