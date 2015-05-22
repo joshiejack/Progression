@@ -1,7 +1,5 @@
 package joshie.progression.api;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 
 public class ProgressionAPI {

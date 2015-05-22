@@ -6,7 +6,7 @@ public enum ActionType {
    CRAFTING, REPAIR, FURNACE, BREAKBLOCK, HARVESTDROP, ENTITYDROP;
 
     public String getDisplayName() {
-        return StatCollector.translateToLocal("progression.action." + name());
+        return StatCollector.translateToLocal("progression.action." + name().toLowerCase());
     }
     
     public static ActionType getCraftingActionFromName(String name) {

@@ -13,14 +13,13 @@ import joshie.progression.commands.CommandHelp;
 import joshie.progression.commands.CommandManager;
 import joshie.progression.commands.CommandReload;
 import joshie.progression.commands.CommandReset;
-import joshie.progression.crafting.ActionType;
 import joshie.progression.criteria.conditions.ConditionBiomeType;
 import joshie.progression.criteria.conditions.ConditionCoordinates;
 import joshie.progression.criteria.conditions.ConditionDaytime;
 import joshie.progression.criteria.conditions.ConditionInInventory;
 import joshie.progression.criteria.conditions.ConditionRandom;
+import joshie.progression.criteria.rewards.RewardAction;
 import joshie.progression.criteria.rewards.RewardCommand;
-import joshie.progression.criteria.rewards.RewardCrafting;
 import joshie.progression.criteria.rewards.RewardCriteria;
 import joshie.progression.criteria.rewards.RewardFallDamage;
 import joshie.progression.criteria.rewards.RewardItem;
@@ -139,7 +138,7 @@ public class Progression {
         ProgressionAPI.registry.registerConditionType(new ConditionInInventory());
         
         ProgressionAPI.registry.registerRewardType(new RewardCommand());
-        ProgressionAPI.registry.registerRewardType(new RewardCrafting());
+        ProgressionAPI.registry.registerRewardType(new RewardAction());
         ProgressionAPI.registry.registerRewardType(new RewardCriteria());
         ProgressionAPI.registry.registerRewardType(new RewardFallDamage());
         ProgressionAPI.registry.registerRewardType(new RewardItem());

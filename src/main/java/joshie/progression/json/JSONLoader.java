@@ -16,6 +16,7 @@ import joshie.progression.criteria.Reward;
 import joshie.progression.criteria.Tab;
 import joshie.progression.criteria.Trigger;
 import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.RemappingHandler;
 import joshie.progression.helpers.StackHelper;
 import joshie.progression.lib.Exceptions.CriteriaNotFoundException;
 import joshie.progression.lib.ProgressionInfo;
@@ -39,9 +40,9 @@ public class JSONLoader {
         GsonBuilder builder = new GsonBuilder().setPrettyPrinting();
         gson = builder.create();
     }
-   
+
     private static String[] splitStringEvery(String s, int interval) {
-        int arrayLength = (int) Math.ceil(((s.length() / (double)interval)));
+        int arrayLength = (int) Math.ceil(((s.length() / (double) interval)));
         String[] result = new String[arrayLength];
 
         int j = 0;
@@ -49,62 +50,128 @@ public class JSONLoader {
         for (int i = 0; i < lastIndex; i++) {
             result[i] = s.substring(j, j + interval);
             j += interval;
-        } 
-        
+        }
+
         result[lastIndex] = s.substring(j);
         return result;
     }
-    
+
     @SideOnly(Side.CLIENT)
     public static String[] clientTabJsonData;
     public static String[] serverTabJsonData;
-    
-    public static DefaultSettings getTabs() {     
-        final int MAX_LENGTH = 10000;
+    public static int serverHashcode;
+
+    final static int MAX_LENGTH = 10000;
+
+    public static String getClientTabJsonData() {
         DefaultSettings loader = null;
         try {
-            File file = new File("config" + File.separator + ProgressionInfo.MODPATH + File.separator + "criteria.json");
+            File file = new File("config" + File.separator + ProgressionInfo.MODPATH + File.separator + serverName + File.separator + "criteria.json");
+            if (!file.getParentFile().exists()) {
+                file.getParentFile().mkdir();
+            }
+
             if (!file.exists()) {
+                return "";
+            } else {
+                String json = FileUtils.readFileToString(file);
+                clientTabJsonData = splitStringEvery(json, MAX_LENGTH);
+                return json;
+            }
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    public static DefaultSettings getTabs() {
+        DefaultSettings loader = null;
+        try {
+            File fileNew = new File("config" + File.separator + ProgressionInfo.MODPATH + File.separator + RemappingHandler.getHostName() + File.separator + "criteria.json");
+            File fileOld = new File("config" + File.separator + ProgressionInfo.MODPATH + File.separator + "criteria.json"); //Attempt to copy from the ssp or smp folders
+            boolean sspToSmpConversion = false;
+            if (!RemappingHandler.getHostName().equals("ssp")) { //Only copy from the ssp folder if we're a live server
+                if (!fileOld.exists()) {
+                    fileOld = new File("config" + File.separator + ProgressionInfo.MODPATH + File.separator + "ssp" + File.separator + "criteria.json");
+                    sspToSmpConversion = true;
+                }
+            }
+            
+            if (fileOld.exists()) { //If we still have the old file
+                if (!fileNew.exists()) {
+                    FileUtils.copyFile(fileOld, fileNew); //Copy it to it's new directory
+                }
+
+                fileOld.delete(); //And then delete the old one
+                if (sspToSmpConversion) { //Delete the folder if we're converting from ssp to smp
+                    fileOld.getParentFile().delete();
+                }
+            }
+
+            //Make the directory if it doesn't exist yet
+            if (!fileNew.getParentFile().exists()) {
+                fileNew.getParentFile().mkdir();
+            }
+
+            if (!fileNew.exists()) {
                 loader = new DefaultSettings().setDefaults();
                 String json = gson.toJson(loader);
+                serverHashcode = json.hashCode();
                 serverTabJsonData = splitStringEvery(json, MAX_LENGTH);
-                Writer writer = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
+                Writer writer = new OutputStreamWriter(new FileOutputStream(fileNew), "UTF-8");
                 writer.write(json);
                 writer.close();
                 return loader;
             } else {
-                String json = FileUtils.readFileToString(file);
+                String json = FileUtils.readFileToString(fileNew);
+                serverHashcode = json.hashCode();
                 serverTabJsonData = splitStringEvery(json, MAX_LENGTH);
                 return gson.fromJson(json, DefaultSettings.class);
             }
-        } catch (Exception e) { e.printStackTrace(); } 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return loader; //Return it whether it's null or not
     }
-    
-    public static boolean setTabsAndCriteriaFromString(String json) {
+
+    public static String serverName;
+
+    //Client side only
+    public static boolean setTabsAndCriteriaFromString(String json, boolean create) {
         try {
             DefaultSettings tab = gson.fromJson(json, DefaultSettings.class);
             loadJSON(tab);
+
+            if (create) {
+                //Attempt to write
+                File file = new File("config" + File.separator + ProgressionInfo.MODPATH + File.separator + serverName + File.separator + "criteria.json");
+                Writer writer = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
+                writer.write(json);
+                writer.close();
+            }
             return true;
-        } catch (Exception e) { return false; }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
-    
+
     public static void loadJSON(DefaultSettings settings) {
         Options.settings = settings;
-    	boolean isClient = FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT;
-        for (DataTab data: settings.tabs) {
+        boolean isClient = FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT;
+        for (DataTab data : settings.tabs) {
             ItemStack stack = null;
             if (data.stack != null) {
                 stack = StackHelper.getStackFromString(data.stack);
             }
-            
+
             if (stack == null) {
                 stack = new ItemStack(Items.book);
             }
 
             Tab iTab = APIHandler.newTab(data.uniqueName);
             iTab.setDisplayName(data.displayName).setVisibility(data.isVisible).setStack(stack).setSortIndex(data.sortIndex);
-            
+
             /** Step 1: we create add all instances of criteria to the registry **/
             for (DataCriteria criteria : data.criteria) {
                 APIHandler.newCriteria(iTab, criteria.uniqueName);
@@ -145,7 +212,7 @@ public class JSONLoader {
                     Progression.logger.log(org.apache.logging.log4j.Level.WARN, "Criteria was not found, do not report this.");
                     throw new CriteriaNotFoundException(criteria.uniqueName);
                 }
-                
+
                 Criteria[] thePrereqs = new Criteria[criteria.prereqs.length];
                 Criteria[] theConflicts = new Criteria[criteria.conflicts.length];
                 for (int i = 0; i < thePrereqs.length; i++)
@@ -156,32 +223,32 @@ public class JSONLoader {
                 int repeatable = criteria.repeatable;
                 int x = criteria.x;
                 int y = criteria.y;
-                
+
                 ItemStack icon = null;
                 if (criteria.displayStack != null) {
                     icon = StackHelper.getStackFromString(criteria.displayStack);
                 }
-                
+
                 if (icon == null) {
                     icon = new ItemStack(Blocks.stone);
                 }
-                
+
                 String display = criteria.displayName;
                 if (repeatable <= 1) {
                     repeatable = 1;
                 }
-                
+
                 theCriteria.init(thePrereqs, theConflicts, display, isVisible, repeatable, icon);
 
                 if (isClient) {
-                	theCriteria.treeEditor.setCoordinates(x, y);
+                    theCriteria.treeEditor.setCoordinates(x, y);
                 }
             }
         }
     }
 
-    public static void saveJSON(Object toSave, String name) {
-        File file = new File("config" + File.separator + ProgressionInfo.MODPATH + File.separator + name + ".json");
+    public static void saveJSON(DefaultSettings toSave) {
+        File file = new File("config" + File.separator + ProgressionInfo.MODPATH + File.separator + serverName + File.separator + "criteria.json");
         try {
             Writer writer = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
             writer.write(gson.toJson(toSave));
@@ -196,7 +263,7 @@ public class JSONLoader {
         Collection<Tab> allTabs = APIHandler.tabs.values();
         HashSet<String> names = new HashSet();
         DefaultSettings forJSONTabs = new DefaultSettings();
-        for (Tab tab: allTabs) {
+        for (Tab tab : allTabs) {
             ArrayList<DataCriteria> list = new ArrayList();
             if (!tabNames.add(tab.getUniqueName())) continue;
             DataTab tabData = new DataTab();
@@ -205,7 +272,7 @@ public class JSONLoader {
             tabData.sortIndex = tab.getSortIndex();
             tabData.isVisible = tab.isVisible();
             tabData.stack = StackHelper.getStringFromStack(tab.getStack());
-            for (Criteria c: tab.getCriteria()) {
+            for (Criteria c : tab.getCriteria()) {
                 if (!names.add(c.uniqueName)) continue;
                 if (c.treeEditor == null) continue;
                 DataCriteria data = new DataCriteria();
@@ -248,7 +315,7 @@ public class JSONLoader {
                     if (reward.optional) {
                         rewardData.addProperty("optional", true);
                     }
-                    
+
                     DataGeneric dReward = new DataGeneric(reward.getType().getUnlocalisedName(), rewardData);
                     theRewards.add(dReward);
                 }
@@ -265,11 +332,11 @@ public class JSONLoader {
                 data.conflicts = theConflicts;
                 list.add(data);
             }
-            
+
             tabData.criteria = list;
             forJSONTabs.tabs.add(tabData);
         }
-        
-        saveJSON(forJSONTabs, "criteria");
+
+        saveJSON(forJSONTabs);
     }
 }

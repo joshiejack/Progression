@@ -4,20 +4,19 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.UUID;
 
 import joshie.progression.api.ICriteria;
 import joshie.progression.crafting.ActionType;
 import joshie.progression.crafting.CraftingRegistry;
 import joshie.progression.criteria.Criteria;
-import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.json.JSONLoader;
-import joshie.progression.json.Options;
 import joshie.progression.lib.SafeStack;
 import joshie.progression.network.PacketHandler;
 import joshie.progression.network.PacketSyncJSON;
+import joshie.progression.network.PacketSyncJSON.Section;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -25,29 +24,30 @@ import com.google.common.collect.Multimap;
 public class RemappingHandler {
     public static Multimap<Criteria, Criteria> criteriaToUnlocks; //A list of the critera completing this one unlocks
     
+    public static String getHostName() {
+        String hostname = MinecraftServer.getServer().isDedicatedServer()? MinecraftServer.getServer().getHostname(): "ssp";  
+        if (hostname.equals("")) hostname = "smp";
+        return hostname;
+    }
+
     //Grabs the json, as a split string and rebuilds it, sends it in parts to the client
-    public static void onPlayerConnect(EntityPlayerMP player) {        
+    public static void onPlayerConnect(EntityPlayerMP player) {
         //Remap the player data, for this player, before doing anything else, as the data may not existing yet
         PlayerTracker.getServerPlayer(player).getMappings().remap();
         
-        if (Options.sync) {
-            PacketHandler.sendToClient(new PacketSyncJSON(JSONLoader.serverTabJsonData.length), player);
-        } else {
-            UUID uuid = PlayerHelper.getUUIDForPlayer(player);
-            //Sends all the data to do with this player to the client, so it's up to date
-            PlayerTracker.getServerPlayer(uuid).getMappings().syncToClient(player);
-        }
+        
+        PacketHandler.sendToClient(new PacketSyncJSON(Section.SEND_HASH, JSONLoader.serverHashcode, getHostName()), player);
     }
 
     public static void reloadServerData() {
         //Reset the data
         resetRegistries();
-               
+
         //All data has officially been wiped SERVERSIDE
         //Reload in all the data from json
-        /** Grab yourself some gson, load it in from the file serverside **/        
+        /** Grab yourself some gson, load it in from the file serverside **/
         JSONLoader.loadJSON(JSONLoader.getTabs()); //This fills out all the data once again
-        
+
         //Now that mappings have been synced to the client reload the unlocks list
         Collection<Criteria> allCriteria = APIHandler.criteria.values();
         for (Criteria criteria : allCriteria) { //Remap criteria to unlocks
@@ -59,7 +59,7 @@ public class RemappingHandler {
             }
         }
     }
-    
+
     public static void resetRegistries() {
         //Resets all of the registries to default empty data
         //Create a a new unlocker

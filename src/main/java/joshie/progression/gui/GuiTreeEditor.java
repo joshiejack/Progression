@@ -207,7 +207,7 @@ public class GuiTreeEditor extends GuiBase {
             }
         }
 
-        if (lastClicked == null) {
+        if (lastClicked == null && selected == null){
             isDragging = true;
             drag = mouseX;
         }

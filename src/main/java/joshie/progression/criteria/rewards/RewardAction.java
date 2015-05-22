@@ -44,12 +44,14 @@ import codechicken.nei.api.API;
 
 import com.google.gson.JsonObject;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
 
 //TODO: SWITCH TO NEW SYSTEM
-public class RewardCrafting extends RewardBase implements IItemSelectable {
+public class RewardAction extends RewardBase implements IItemSelectable {
     private TextFieldHelper editMod;
     public ItemStack stack = new ItemStack(Blocks.furnace);
     public ActionType type = ActionType.CRAFTING;
@@ -59,7 +61,7 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
     public boolean crafting = true;
     public String modid = "IGNORE";
 
-    public RewardCrafting() {
+    public RewardAction() {
         super("crafting", 0xFF0085B2);
         editMod = new TextFieldHelper("modid", this);
     }
@@ -84,12 +86,12 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
         if (!checkAndCancelEvent(event)) {
             Collection<ICriteria> requirements = CraftingRegistry.getCraftingCriteria(type, event.entityPlayer.getCurrentEquippedItem());
             if (requirements.size() > 0) {
-                for (ICriteria c : requirements) {
-                    GuiCriteriaEditor.INSTANCE.selected = (Criteria) c;
-                    break;
-                }
-
-                event.entityPlayer.openGui(Progression.instance, 1, null, 0, 0, 0);
+                if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+                    for (ICriteria c : requirements) {
+                        GuiCriteriaEditor.INSTANCE.selected = (Criteria) c;
+                        break;
+                    }
+                } else event.entityPlayer.openGui(Progression.instance, 1, null, 0, 0, 0);
             }
         }
     }
@@ -109,7 +111,7 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
 
                     event.toolTip.add(EnumChatFormatting.WHITE + type.getDisplayName());
                     for (ICriteria c : requirements) {
-                        ((Criteria)c).addTooltip(event.toolTip);
+                        ((Criteria) c).addTooltip(event.toolTip);
                     }
                 }
             }
@@ -178,7 +180,7 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
     }
 
     @SubscribeEvent
-    public void onAttemptToObtainItem(CanObtainFromActionEvent event) {        
+    public void onAttemptToObtainItem(CanObtainFromActionEvent event) {
         if (event.stack == null) return;
         Crafter crafter = event.player != null ? CraftingRegistry.getCrafterFromPlayer(event.player) : CraftingRegistry.getCrafterFromTile(event.tile);
         if (crafter.canCraftAnything()) return;
@@ -221,7 +223,7 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
                 }
             }
         }
-        
+
         matchDamage = JSONHelper.getBoolean(data, "matchDamage", matchDamage);
         matchNBT = JSONHelper.getBoolean(data, "matchNBT", matchNBT);
         crafting = JSONHelper.getBoolean(data, "disableCrafting", crafting);
@@ -326,7 +328,7 @@ public class RewardCrafting extends RewardBase implements IItemSelectable {
                 if (mouseY > 58 && mouseY <= 66) modColor = Theme.INSTANCE.optionsFontColorHover;
             }
         }
-        
+
         ProgressionAPI.draw.drawText("type: " + type.name().toLowerCase(), 4, 18, typeColor);
         ProgressionAPI.draw.drawText("matchDamage: " + matchDamage, 4, 26, matchColor);
         ProgressionAPI.draw.drawText("matchNBT: " + matchNBT, 4, 34, match2Color);

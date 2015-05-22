@@ -1,27 +1,39 @@
 package joshie.progression.network;
 
 import static joshie.progression.network.PacketSyncJSON.Section.COMPLETE;
+import static joshie.progression.network.PacketSyncJSON.Section.FAILED_HASH;
 import static joshie.progression.network.PacketSyncJSON.Section.RECEIVED_LENGTH;
+import static joshie.progression.network.PacketSyncJSON.Section.RESYNC;
+import static joshie.progression.network.PacketSyncJSON.Section.SEND_HASH;
 import static joshie.progression.network.PacketSyncJSON.Section.SEND_LENGTH;
 import static joshie.progression.network.PacketSyncJSON.Section.SEND_STRING;
 import io.netty.buffer.ByteBuf;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStreamReader;
 import java.util.UUID;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
+import joshie.progression.handlers.RemappingHandler;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.json.JSONLoader;
 import joshie.progression.player.PlayerTracker;
-import cpw.mods.fml.common.network.ByteBufUtils;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+
+import com.google.common.io.CharStreams;
+
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class PacketSyncJSON implements IMessage, IMessageHandler<PacketSyncJSON, IMessage> {
     public static enum Section {
-        SEND_LENGTH, RECEIVED_LENGTH, SEND_STRING, COMPLETE;
+        RESYNC, SEND_HASH, FAILED_HASH, SEND_LENGTH, RECEIVED_LENGTH, SEND_STRING, COMPLETE;
     }
-
-    private Section section;
 
     public PacketSyncJSON() {}
 
@@ -29,55 +41,91 @@ public class PacketSyncJSON implements IMessage, IMessageHandler<PacketSyncJSON,
         this.section = section;
     }
 
-    private int length;
-
-    public PacketSyncJSON(int length) {
-        this.section = SEND_LENGTH;
-        this.length = length;
+    public PacketSyncJSON(Section section, int length) {
+        this.section = section;
+        this.integer = length;
     }
 
-    private int position;
-    private String data;
+    private Section section;
+    private int integer = -1;
+    private String string = null;
 
-    public PacketSyncJSON(int position, String data) {
-        this.section = SEND_STRING;
-        this.position = position;
-        this.data = data;
+    public PacketSyncJSON(Section section, int position, String data) {
+        this.section = section;
+        this.integer = position;
+        this.string = data;
+    }
+
+    public void writeGzipString(ByteBuf buf, String string) {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            GZIPOutputStream gzip = new GZIPOutputStream(baos);
+            gzip.write(string.getBytes("UTF-8"));
+            gzip.close();
+            byte[] data = baos.toByteArray();
+            buf.writeInt(data.length);
+            buf.writeBytes(data);
+        } catch (Exception e) {}
+    }
+
+    public String readGzipString(ByteBuf buf) {
+        try {
+            int length = buf.readInt();
+            byte[] data = buf.readBytes(length).array();
+            GZIPInputStream gzip = new GZIPInputStream(new ByteArrayInputStream(data));
+            BufferedReader bf = new BufferedReader(new InputStreamReader(gzip, "UTF-8"));
+            return CharStreams.toString(bf);
+        } catch (Exception e) {
+            return "";
+        }
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeInt(section.ordinal());
-        if (section == SEND_LENGTH) {
-            buf.writeInt(length);
-        } else if (section == SEND_STRING) {
-            buf.writeInt(position);
-            ByteBufUtils.writeUTF8String(buf, data);
-        }
+        buf.writeInt(integer);
+        if (string != null) {
+            buf.writeBoolean(true);
+            writeGzipString(buf, string);
+        } else buf.writeBoolean(false);
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         section = Section.values()[buf.readInt()];
-        if (section == SEND_LENGTH) {
-            length = buf.readInt();
-        } else if (section == SEND_STRING) {
-            position = buf.readInt();
-            data = ByteBufUtils.readUTF8String(buf);
+        integer = buf.readInt();
+        if (buf.readBoolean()) {
+            string = readGzipString(buf);
         }
     }
 
     @Override
-    public IMessage onMessage(PacketSyncJSON message, MessageContext ctx) {        
-        if (message.section == SEND_LENGTH) { //Clientside set the data for receival of this packet
-            JSONLoader.clientTabJsonData = new String[message.length];
+    public IMessage onMessage(PacketSyncJSON message, MessageContext ctx) {
+        if (message.section == RESYNC) {
+            //Called from a command, sends all the data
+            for (EntityPlayer player: PlayerHelper.getAllPlayers()) {
+                RemappingHandler.onPlayerConnect((EntityPlayerMP) player);
+            }
+        } else if (message.section == SEND_HASH) { //Called when a player logins, sends the client the hash
+            JSONLoader.serverName = message.string; 
+            String json = JSONLoader.getClientTabJsonData();
+            if (json.hashCode() == message.integer) {
+                //If we set the json correctly
+                if (JSONLoader.setTabsAndCriteriaFromString(json, false)) {
+                    PacketHandler.sendToServer(new PacketSyncJSON(COMPLETE));
+                }
+            } else PacketHandler.sendToServer(new PacketSyncJSON(FAILED_HASH));
+        } else if (message.section == FAILED_HASH) {
+            PacketHandler.sendToClient(new PacketSyncJSON(Section.SEND_LENGTH, JSONLoader.serverTabJsonData.length), ctx.getServerHandler().playerEntity);
+        } else if (message.section == SEND_LENGTH) { //Clientside set the data for receival of this packet
+            JSONLoader.clientTabJsonData = new String[message.integer];
             PacketHandler.sendToServer(new PacketSyncJSON(RECEIVED_LENGTH));
         } else if (message.section == RECEIVED_LENGTH) {
             for (int i = 0; i < JSONLoader.serverTabJsonData.length; i++) {
-                PacketHandler.sendToClient(new PacketSyncJSON(i, JSONLoader.serverTabJsonData[i]), ctx.getServerHandler().playerEntity);
+                PacketHandler.sendToClient(new PacketSyncJSON(SEND_STRING, i, JSONLoader.serverTabJsonData[i]), ctx.getServerHandler().playerEntity);
             } //Now that we have received the data, send more
         } else if (message.section == SEND_STRING) { //Client has now been sent the string
-            JSONLoader.clientTabJsonData [message.position] = message.data;
+            JSONLoader.clientTabJsonData[message.integer] = message.string;
             for (String s : JSONLoader.clientTabJsonData) {
                 if (s == null) return null;
             }
@@ -89,7 +137,7 @@ public class PacketSyncJSON implements IMessage, IMessageHandler<PacketSyncJSON,
             }
 
             //If we set the json correctly
-            if (JSONLoader.setTabsAndCriteriaFromString(result.toString())) {
+            if (JSONLoader.setTabsAndCriteriaFromString(result.toString(), true)) {
                 PacketHandler.sendToServer(new PacketSyncJSON(COMPLETE));
             }
         } else if (message.section == Section.COMPLETE) {

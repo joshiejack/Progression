@@ -3,9 +3,9 @@ package joshie.progression.nei;
 import java.util.Collection;
 
 import joshie.progression.api.ICriteria;
+import joshie.progression.crafting.ActionType;
 import joshie.progression.crafting.Crafter;
 import joshie.progression.crafting.CraftingRegistry;
-import joshie.progression.crafting.ActionType;
 import joshie.progression.criteria.Criteria;
 import joshie.progression.gui.EditorTicker;
 import joshie.progression.gui.GuiCriteriaEditor;

@@ -3,7 +3,7 @@ package joshie.progression.network;
 import io.netty.buffer.ByteBuf;
 import joshie.progression.criteria.Criteria;
 import joshie.progression.criteria.Reward;
-import joshie.progression.criteria.rewards.RewardCrafting;
+import joshie.progression.criteria.rewards.RewardAction;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.player.PlayerTracker;
 import cpw.mods.fml.common.network.ByteBufUtils;
@@ -59,7 +59,7 @@ public class PacketSyncCriteria implements IMessage, IMessageHandler<PacketSyncC
         		for (Criteria unlocked: message.criteria) {
         		    if (unlocked == null) continue;
         			for (Reward reward: unlocked.rewards) {
-        				if (reward.getType() instanceof RewardCrafting) {
+        				if (reward.getType() instanceof RewardAction) {
         					reward.getType().reward(PlayerTracker.getClientPlayer().getUUID());
         				}
         			}
