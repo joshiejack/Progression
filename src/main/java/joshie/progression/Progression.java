@@ -31,6 +31,7 @@ import joshie.progression.criteria.rewards.RewardPoints;
 import joshie.progression.criteria.rewards.RewardResearch;
 import joshie.progression.criteria.rewards.RewardSpeed;
 import joshie.progression.criteria.rewards.RewardTime;
+import joshie.progression.criteria.triggers.TriggerAchievement;
 import joshie.progression.criteria.triggers.TriggerBreakBlock;
 import joshie.progression.criteria.triggers.TriggerChangeDimension;
 import joshie.progression.criteria.triggers.TriggerClickBlock;
@@ -165,6 +166,7 @@ public class Progression {
         ProgressionAPI.registry.registerTriggerType(new TriggerClickBlock());
         ProgressionAPI.registry.registerTriggerType(new TriggerPoints());
         ProgressionAPI.registry.registerTriggerType(new TriggerChangeDimension());
+        ProgressionAPI.registry.registerTriggerType(new TriggerAchievement());
 
         CommandManager.INSTANCE.registerCommand(new CommandHelp());
         CommandManager.INSTANCE.registerCommand(new CommandEdit());
