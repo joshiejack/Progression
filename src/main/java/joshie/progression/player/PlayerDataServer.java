@@ -8,10 +8,12 @@ import joshie.progression.network.PacketSyncAbilities;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class PlayerDataServer extends PlayerDataCommon {
+    private final PlayerTeam team;
 	private final UUID uuid;
 	
-	public PlayerDataServer(UUID uuid) {
-		this.uuid = uuid;
+	public PlayerDataServer(PlayerTeam team) {
+	    this.team = team;
+		this.uuid = team.getOwner();
 		this.mappings.setMaster(this);
 	}
 	
@@ -22,21 +24,21 @@ public class PlayerDataServer extends PlayerDataCommon {
 	public void addSpeed(float speed) {
 		float newStat = abilities.getSpeed() + speed;
 		abilities.setSpeed(newStat);
-		PacketHandler.sendToClient(new PacketSyncAbilities(abilities), uuid);
+		PacketHandler.sendToTeam(new PacketSyncAbilities(abilities), team);
 		markDirty();
 	}
 
 	public void addFallDamagePrevention(int maxAbsorbed) {
 		int newStat = abilities.getFallDamagePrevention() + maxAbsorbed;
 		abilities.setFallDamagePrevention(newStat);
-		PacketHandler.sendToClient(new PacketSyncAbilities(abilities), uuid);
+		PacketHandler.sendToTeam(new PacketSyncAbilities(abilities), team);
 		markDirty();
 	}
 	
     public void addPoints(String name, int amount) {
         int newStat = abilities.getPoints(name) + amount;
         abilities.setResearchPoints(name, newStat);
-        PacketHandler.sendToClient(new PacketSyncAbilities(abilities), uuid);
+        PacketHandler.sendToTeam(new PacketSyncAbilities(abilities), team);
         ProgressionAPI.registry.fireTrigger(uuid, "points", name, newStat);
         markDirty();
     }

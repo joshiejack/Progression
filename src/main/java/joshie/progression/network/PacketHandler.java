@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.lib.ProgressionInfo;
+import joshie.progression.player.PlayerTeam;
 import net.minecraft.entity.player.EntityPlayerMP;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -32,6 +33,22 @@ public class PacketHandler {
 		if (player != null) {
 			sendToClient(packet, player);
 		}
+    }
+    
+    public static void sendToTeam(IMessage packet, PlayerTeam team) {
+        /** Send the stuff to the captain first **/
+        EntityPlayerMP owner = (EntityPlayerMP) PlayerHelper.getPlayerFromUUID(team.getOwner());
+        if (owner != null) {
+            sendToClient(packet, owner);
+        }
+        
+        /** Then send it to all team members **/
+        for (UUID uuid: team.getMembers()) {
+            EntityPlayerMP member = (EntityPlayerMP) PlayerHelper.getPlayerFromUUID(uuid);
+            if (member != null) {
+                sendToClient(packet, member);
+            }
+        }
     }
     
     public static void sendToClient(IMessage packet, EntityPlayerMP player) {

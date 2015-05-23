@@ -4,7 +4,7 @@ import java.util.List;
 
 public class DataCriteria {
 	public DataCriteria() {}
-	public DataCriteria(String uniqueName, String displayName, List<DataTrigger> triggers, List<DataGeneric> rewards, String[] requirements, String[] conflicts, int x, int y, boolean isVisible) {
+	public DataCriteria(String uniqueName, String displayName, List<DataTrigger> triggers, List<DataGeneric> rewards, String[] requirements, String[] conflicts, int x, int y, boolean isVisible, boolean mustClaim) {
 		this.uniqueName = uniqueName;
 		this.displayName = displayName;
 		this.triggers = triggers;
@@ -14,6 +14,7 @@ public class DataCriteria {
 		this.x = x;
 		this.y = y;
 		this.isVisible = isVisible;
+		this.mustClaim = mustClaim;
 	}
 	
 	String uniqueName;
@@ -27,4 +28,5 @@ public class DataCriteria {
 	int x;
 	int y;
 	boolean isVisible;
+	boolean mustClaim;
 }

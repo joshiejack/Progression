@@ -40,9 +40,10 @@ public class Criteria implements ICriteria {
         }
     }
 
-    public void init(Criteria[] prereqs, Criteria[] theConflicts, String displayName, boolean isVisible, int repeatable, ItemStack icon) {
+    public void init(Criteria[] prereqs, Criteria[] theConflicts, String displayName, boolean isVisible, boolean mustClaim, int repeatable, ItemStack icon) {
         this.displayName = displayName;
         this.isVisible = isVisible;
+        this.mustClaim = mustClaim;
         this.isRepeatable = repeatable;
         this.stack = icon;
         addRequirements(prereqs);

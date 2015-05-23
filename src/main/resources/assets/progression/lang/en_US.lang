@@ -9,6 +9,7 @@ progression.trigger.login=Login
 progression.trigger.points=Points
 progression.trigger.research=Research
 progression.trigger.onEaten=On Eaten
+progression.trigger.achievement=Achievement
 
 #Conditions
 progression.condition.daytime=Is Daytime?

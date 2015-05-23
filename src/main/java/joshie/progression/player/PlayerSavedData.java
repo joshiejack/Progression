@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 
+import joshie.progression.player.PlayerTeam.TeamType;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.WorldSavedData;
@@ -11,52 +12,70 @@ import net.minecraft.world.WorldSavedData;
 import com.google.common.collect.Maps;
 
 public class PlayerSavedData extends WorldSavedData {
-	private HashMap<UUID, PlayerDataServer> data = Maps.newHashMap();
-	
-	public PlayerSavedData(String data) {
-		super(data);
-	}
-	
-	public Collection<PlayerDataServer> getPlayerData() {
-		return data.values();
-	}
+    private HashMap<UUID, PlayerTeam> teams = Maps.newHashMap();
+    private HashMap<PlayerTeam, PlayerDataServer> data = Maps.newHashMap();
 
-	public PlayerDataServer getServerPlayer(UUID uuid) {
-		PlayerDataServer data = this.data.get(uuid);
-		if (data == null) {
-			data = new PlayerDataServer(uuid);
-			this.data.put(uuid, data);
-			this.markDirty();
-		}
-		
-		return data;
-	}
+    public PlayerSavedData(String data) {
+        super(data);
+    }
 
-	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		NBTTagList map = nbt.getTagList("PlayerData", 10);
-		for (int i = 0; i < map.tagCount(); i++) {
-			NBTTagCompound tag = map.getCompoundTagAt(i);
-			UUID uuid = new UUID(tag.getLong("UUID-Most"), tag.getLong("UUID-Least"));
-			PlayerDataServer server = new PlayerDataServer(uuid);
-			server.readFromNBT(tag);
-			data.put(uuid, server);
-		}
-	}
+    public Collection<PlayerDataServer> getPlayerData() {
+        return data.values();
+    }
 
-	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
-		NBTTagList map = new NBTTagList();
-		for (UUID uuid: data.keySet()) {
-			if (uuid != null) {
-				NBTTagCompound tag = new NBTTagCompound();
-				tag.setLong("UUID-Most", uuid.getMostSignificantBits());
-				tag.setLong("UUID-Least", uuid.getLeastSignificantBits());
-				data.get(uuid).writeToNBT(tag);
-				map.appendTag(tag);
-			}
-		}
-		
-		nbt.setTag("PlayerData", map);
-	}
+    public PlayerDataServer getServerPlayer(UUID uuid) {
+        PlayerTeam team = teams.get(uuid);
+        if (team == null) {
+            team = new PlayerTeam(TeamType.SINGLE, uuid);
+            teams.put(uuid, team);
+        }
+
+        PlayerDataServer data = this.data.get(team);
+        if (data == null) {
+            data = new PlayerDataServer(team);
+            this.data.put(team, data);
+            this.markDirty();
+        }
+
+        return data;
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+        /** Load in the data about teams **/
+        NBTTagList map = nbt.getTagList("PlayerData", 10);
+        for (int i = 0; i < map.tagCount(); i++) {
+            NBTTagCompound tag = map.getCompoundTagAt(i);
+            if (tag.hasKey("Owner") || tag.hasKey("UUID-Most")) {
+                PlayerTeam team = new PlayerTeam();
+                team.readFromNBT(tag);
+                PlayerDataServer server = new PlayerDataServer(team);
+                server.readFromNBT(tag);
+                data.put(team, server);
+            }
+        }
+
+        /** Create the mappings for team member > team **/
+        for (PlayerTeam team : data.keySet()) {
+            if (team.isActive()) {
+                teams.put(team.getOwner(), team);
+                for (UUID member : team.getMembers()) {
+                    teams.put(member, team);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
+        NBTTagList map = new NBTTagList();
+        for (PlayerTeam team : data.keySet()) {
+            NBTTagCompound tag = new NBTTagCompound();
+            team.writeToNBT(tag);
+            data.get(team).writeToNBT(tag);
+            map.appendTag(tag);
+        }
+
+        nbt.setTag("PlayerData", map);
+    }
 }
