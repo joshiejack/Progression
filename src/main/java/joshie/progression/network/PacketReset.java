@@ -18,7 +18,7 @@ public class PacketReset extends PacketAction implements IMessageHandler<PacketR
     @Override
     public IMessage onMessage(PacketReset message, MessageContext ctx) {
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
-            ClientHelper.getPlayer().addChatComponentMessage(new ChatComponentText("All player data for Progression on was reset."));
+            ClientHelper.getPlayer().addChatComponentMessage(new ChatComponentText("All player data for Progression was reset."));
         } else {
             if (Options.editor) {
                 Progression.instance.createWorldData(); //Recreate the world data, Wiping out any saved information for players

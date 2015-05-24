@@ -19,6 +19,7 @@ import joshie.progression.handlers.APIHandler;
 import joshie.progression.handlers.RemappingHandler;
 import joshie.progression.helpers.NBTHelper;
 import joshie.progression.helpers.PlayerHelper;
+import joshie.progression.network.PacketCompleted;
 import joshie.progression.network.PacketHandler;
 import joshie.progression.network.PacketSyncAbilities;
 import joshie.progression.network.PacketSyncCriteria;
@@ -313,8 +314,12 @@ public class CriteriaMappings {
         if (completedTimes == 1) { //Only do shit if this is the first time it was completed                    
             toRemap.addAll(RemappingHandler.criteriaToUnlocks.get(criteria));
         }
-
-        PacketHandler.sendToClient(new PacketSyncCriteria(false, new Integer[] { completedTimes }, new Criteria[] { criteria }), uuid);
+        
+        List<EntityPlayerMP> list = PlayerHelper.getPlayersFromUUID(uuid);
+        for (EntityPlayerMP player: list) {
+            PacketHandler.sendToClient(new PacketSyncCriteria(false, new Integer[] { completedTimes }, new Criteria[] { criteria }), player);
+            if (criteria.achievement) PacketHandler.sendToClient(new PacketCompleted(criteria), player);
+        }
     }
 
     private void remapStuff(HashSet<Trigger> forRemovalFromActive, HashSet<Criteria> toRemap) {

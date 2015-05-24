@@ -53,6 +53,7 @@ import joshie.progression.items.ItemCriteria;
 import joshie.progression.json.Options;
 import joshie.progression.lib.ProgressionInfo;
 import joshie.progression.network.PacketClaimed;
+import joshie.progression.network.PacketCompleted;
 import joshie.progression.network.PacketHandler;
 import joshie.progression.network.PacketReload;
 import joshie.progression.network.PacketReset;
@@ -182,6 +183,7 @@ public class Progression {
         PacketHandler.registerPacket(PacketSyncAbilities.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketRewardItem.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketClaimed.class, Side.CLIENT);
+        PacketHandler.registerPacket(PacketCompleted.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketSyncJSON.class);
         PacketHandler.registerPacket(PacketReload.class);
         PacketHandler.registerPacket(PacketReset.class);

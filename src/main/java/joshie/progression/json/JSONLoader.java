@@ -235,6 +235,7 @@ public class JSONLoader {
 
                 boolean isVisible = criteria.isVisible;
                 boolean mustClaim = criteria.mustClaim;
+                boolean achievement = criteria.displayAchievement;
                 int repeatable = criteria.repeatable;
                 int x = criteria.x;
                 int y = criteria.y;
@@ -253,7 +254,7 @@ public class JSONLoader {
                     repeatable = 1;
                 }
 
-                theCriteria.init(thePrereqs, theConflicts, display, isVisible, mustClaim, repeatable, icon);
+                theCriteria.init(thePrereqs, theConflicts, display, isVisible, mustClaim, achievement, repeatable, icon);
 
                 if (isClient) {
                     theCriteria.treeEditor.setCoordinates(x, y);
@@ -295,6 +296,7 @@ public class JSONLoader {
                 data.y = c.treeEditor.getY();
                 data.isVisible = c.isVisible;
                 data.mustClaim = c.mustClaim;
+                data.displayAchievement = c.achievement;
                 data.repeatable = c.isRepeatable;
                 data.displayName = c.displayName;
                 data.uniqueName = c.uniqueName;

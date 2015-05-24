@@ -25,7 +25,7 @@ public class EventsHandler {
 
     private static ItemStack stack;
 
-    private static ItemStack getItem() {
+    public static ItemStack getItem() {
         if (stack != null) return stack;
         String object = Options.settings.interfaceItem;
         stack = StackHelper.getStackFromString(object);

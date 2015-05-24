@@ -28,6 +28,7 @@ public class Criteria implements ICriteria {
     public String displayName = "New Criteria";
     public boolean isVisible = true;
     public boolean mustClaim = false;
+    public boolean achievement = true;
     public ItemStack stack = new ItemStack(Blocks.stone);
 
     public Criteria(Tab tab, String uniqueName) {
@@ -40,10 +41,11 @@ public class Criteria implements ICriteria {
         }
     }
 
-    public void init(Criteria[] prereqs, Criteria[] theConflicts, String displayName, boolean isVisible, boolean mustClaim, int repeatable, ItemStack icon) {
+    public void init(Criteria[] prereqs, Criteria[] theConflicts, String displayName, boolean isVisible, boolean mustClaim, boolean achievement, int repeatable, ItemStack icon) {
         this.displayName = displayName;
         this.isVisible = isVisible;
         this.mustClaim = mustClaim;
+        this.achievement = achievement;
         this.isRepeatable = repeatable;
         this.stack = icon;
         addRequirements(prereqs);

@@ -4,6 +4,7 @@ Progression 0.4.0
   Added On Eaten Trigger
   Added On Achievement Trigger
   Added Remove Item Reward
+  Add Achievement Popup when completing a Criteria (can be toggled off per criteria)
   Can drag the mouse to scroll through the tree editor
   Only display links when criteria are in the same tab
   Speed will now work on negative speeds, as well as not require sprint pressing

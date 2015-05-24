@@ -2,6 +2,7 @@ package joshie.progression.items;
 
 import java.util.List;
 
+import joshie.progression.Progression;
 import joshie.progression.crafting.Crafter;
 import joshie.progression.crafting.CraftingRegistry;
 import joshie.progression.crafting.CraftingUnclaimed;
@@ -12,40 +13,53 @@ import joshie.progression.lib.ProgressionInfo;
 import joshie.progression.network.PacketClaimed;
 import joshie.progression.network.PacketHandler;
 import joshie.progression.player.PlayerTracker;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemCriteria extends Item {
-    public static CreativeTabs tab = new CreativeTabs("progression") {
-        @Override
-        public String getTranslatedTabLabel() {
-            return "Progression";
-        }
-
-        @Override
-        public Item getTabIconItem() {
-            return Items.book;
-        }
-
-        @Override
-        public boolean hasSearchBar() {
-            return true;
-        }
-    };
-
+    public static CreativeTabs tab;
     public static final int CRITERIA = 0;
     public static final int CLAIM = 1;
+    public static final int BOOK = 2;
+    private IIcon padlock;
+    private IIcon book;
 
     public ItemCriteria() {
+        final Item item = this;
+        tab = new CreativeTabs("progression") {
+            private ItemStack stack = new ItemStack(item, 1, BOOK);
+
+            @Override
+            public String getTranslatedTabLabel() {
+                return "Progression";
+            }
+
+            @Override
+            public boolean hasSearchBar() {
+                return true;
+            }
+
+            @Override
+            public Item getTabIconItem() {
+                return item;
+            }
+
+            @Override
+            public int func_151243_f() {
+                return BOOK;
+            }
+        };
+
         setHasSubtypes(true);
         setMaxStackSize(1);
         setCreativeTab(tab);
@@ -60,6 +74,8 @@ public class ItemCriteria extends Item {
     public String getItemStackDisplayName(ItemStack stack) {
         if (stack.getItemDamage() == 1) {
             return "Progression Tile Claimer";
+        } else if (stack.getItemDamage() == 2) {
+            return "Progression Book";
         }
 
         Criteria criteria = getCriteriaFromStack(stack);
@@ -68,8 +84,8 @@ public class ItemCriteria extends Item {
 
     @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
+        if (stack.getItemDamage() == BOOK) player.openGui(Progression.instance, 0, null, 0, 0, 0);
         if (world.isRemote || player == null || stack == null) return true;
-
         if (stack.getItemDamage() == CLAIM) {
             TileEntity tile = world.getTileEntity(x, y, z);
             if (tile != null) {
@@ -86,7 +102,9 @@ public class ItemCriteria extends Item {
 
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-        if (!world.isRemote) {
+        if (stack.getItemDamage() == BOOK) {
+            player.openGui(Progression.instance, 0, null, 0, 0, 0);
+        } else if (!world.isRemote) {
             Criteria criteria = getCriteriaFromStack(stack);
             if (criteria != null) {
                 boolean completed = PlayerTracker.getServerPlayer(PlayerHelper.getUUIDForPlayer(player)).getMappings().fireAllTriggers("forced-complete", criteria, criteria.rewards);
@@ -99,15 +117,35 @@ public class ItemCriteria extends Item {
         return stack;
     }
 
+    @Override
     @SideOnly(Side.CLIENT)
-    protected String getIconString() {
-        return ProgressionInfo.MODPATH + ":padlock";
+    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean debug) {
+        if (stack.getItemDamage() == CLAIM) {
+            list.add("Right click me on tiles");
+            list.add("to claim them as yours");
+        } else if (stack.getItemDamage() == BOOK) {
+            list.add("Right click me to open");
+            list.add("'Progression editor'");
+        }
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public IIcon getIconFromDamage(int damage) {
+        return damage == CLAIM ? padlock : book;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IIconRegister register) {
+        padlock = register.registerIcon(ProgressionInfo.MODPATH + ":padlock");
+        book = register.registerIcon(ProgressionInfo.MODPATH + ":book");
     }
 
     @SideOnly(Side.CLIENT)
     public void getSubItems(Item item, CreativeTabs tab, List list) {
-        list.add(new ItemStack(Items.book));
         list.add(new ItemStack(item, 1, CLAIM));
+        list.add(new ItemStack(item, 1, BOOK));
         for (Criteria c : APIHandler.criteria.values()) {
             ItemStack stack = new ItemStack(item);
             stack.setTagCompound(new NBTTagCompound());

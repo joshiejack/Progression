@@ -29,4 +29,5 @@ public class DataCriteria {
 	int y;
 	boolean isVisible;
 	boolean mustClaim;
+    boolean displayAchievement;
 }
