@@ -8,7 +8,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
-public class RewardBreakBlock extends RewardAction {
+public class RewardBreakBlock extends RewardBaseAction {
     public RewardBreakBlock() {
         super("breakBlock", 0xFF74246D);
         this.type = ActionType.BREAKBLOCK;

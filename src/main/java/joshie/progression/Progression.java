@@ -43,6 +43,7 @@ import joshie.progression.criteria.triggers.TriggerObtain;
 import joshie.progression.criteria.triggers.TriggerPoints;
 import joshie.progression.criteria.triggers.TriggerResearch;
 import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.CraftingEvents;
 import joshie.progression.handlers.EventsHandler;
 import joshie.progression.handlers.GUIHandler;
 import joshie.progression.handlers.RemappingHandler;
@@ -127,6 +128,7 @@ public class Progression {
         MinecraftForge.EVENT_BUS.register(new PlayerTracker());
         MinecraftForge.EVENT_BUS.register(CommandManager.INSTANCE);
         MinecraftForge.EVENT_BUS.register(new EventsHandler());
+        MinecraftForge.EVENT_BUS.register(new CraftingEvents());
         FMLCommonHandler.instance().bus().register(new EventsHandler());
         
         item = new ItemCriteria().setUnlocalizedName("item");

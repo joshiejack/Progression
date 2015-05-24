@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
-public class RewardLivingDrop extends RewardAction {
+public class RewardLivingDrop extends RewardBaseAction {
     public RewardLivingDrop() {
         super("livingDrop", 0xFF00B22D);
         this.type = ActionType.ENTITYDROP;

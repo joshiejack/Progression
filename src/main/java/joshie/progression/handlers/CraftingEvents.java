@@ -11,6 +11,7 @@ import joshie.progression.crafting.Crafter;
 import joshie.progression.crafting.CraftingRegistry;
 import joshie.progression.criteria.Criteria;
 import joshie.progression.gui.GuiCriteriaEditor;
+import joshie.progression.helpers.ClientHelper;
 import joshie.progression.helpers.CraftingHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -73,7 +74,7 @@ public class CraftingEvents {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onItemTooltipEvent(ItemTooltipEvent event) {
-        Crafter crafter = CraftingRegistry.getCrafterFromPlayer(event.entityPlayer);
+        Crafter crafter = CraftingRegistry.getCrafterFromPlayer(ClientHelper.getPlayer());
         if (!crafter.canCraftItem(ActionType.CRAFTING, event.itemStack)) {
             boolean hasStuff = false;
             for (ActionType type : ActionType.values()) {

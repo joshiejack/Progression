@@ -12,7 +12,9 @@ public class SafeStack {
     public String item;
 
     protected SafeStack(ItemStack stack) {
-        this.item = Item.itemRegistry.getNameForObject(stack.getItem());
+        if (stack != null) {
+            this.item = Item.itemRegistry.getNameForObject(stack.getItem());
+        }
     }
 
     public static List<SafeStack> allInstances(ItemStack stack) {

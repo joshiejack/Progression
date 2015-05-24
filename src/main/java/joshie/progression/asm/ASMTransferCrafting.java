@@ -15,6 +15,8 @@ import org.objectweb.asm.Opcodes;
 public class ASMTransferCrafting extends AbstractASM {
     public static List accepted = new ArrayList();
     static {
+        accepted.add("thaumcraft.common.container.ContainerArcaneWorkbench");
+        accepted.add("cofh.thermalexpansion.gui.container.device.ContainerWorkbench");
         accepted.add("tconstruct.tools.inventory.CraftingStationContainer");
         accepted.add("forestry.factory.gui.ContainerWorktable");
         accepted.add("net.minecraft.inventory.ContainerPlayer$1");

@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
-public class RewardHarvestDrop extends RewardAction {
+public class RewardHarvestDrop extends RewardBaseAction {
     public RewardHarvestDrop() {
         super("harvestDrop", 0xFF555555);
         this.type = ActionType.HARVESTDROP;

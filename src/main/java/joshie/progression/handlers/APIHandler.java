@@ -16,7 +16,7 @@ import joshie.progression.criteria.Criteria;
 import joshie.progression.criteria.Reward;
 import joshie.progression.criteria.Tab;
 import joshie.progression.criteria.Trigger;
-import joshie.progression.criteria.rewards.RewardAction;
+import joshie.progression.criteria.rewards.RewardBaseAction;
 import joshie.progression.criteria.rewards.RewardBreakBlock;
 import joshie.progression.criteria.rewards.RewardCrafting;
 import joshie.progression.criteria.rewards.RewardFurnace;
@@ -136,7 +136,7 @@ public class APIHandler implements IProgressionAPI {
         } catch (Exception e) {}
         
         /** SPECIAL CASE SWITCHING OF OLD REWARDS TO NEW **/
-        if (newRewardType instanceof RewardAction && JSONHelper.getExists(data, "craftingType")) {
+        if (newRewardType instanceof RewardBaseAction && JSONHelper.getExists(data, "craftingType")) {
             //If we are trying to create the old reward actions
             if (JSONHelper.getString(data, "craftingType", "").equals("breakblock")) newRewardType = new RewardBreakBlock();
             if (JSONHelper.getString(data, "craftingType", "").equals("entitydrop")) newRewardType = new RewardLivingDrop();
