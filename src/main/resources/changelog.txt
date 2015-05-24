@@ -2,7 +2,8 @@ Progression 0.4.0
   Add Support for Thermal Expansion Machinist's Workbench
   Add Support for Thaumcraft Worktable
   Added On Eaten Trigger
-  Addd On Achievement Trigger
+  Added On Achievement Trigger
+  Added Remove Item Reward
   Can drag the mouse to scroll through the tree editor
   Only display links when criteria are in the same tab
   Speed will now work on negative speeds, as well as not require sprint pressing

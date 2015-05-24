@@ -19,6 +19,7 @@ import joshie.progression.criteria.conditions.ConditionDaytime;
 import joshie.progression.criteria.conditions.ConditionInInventory;
 import joshie.progression.criteria.conditions.ConditionRandom;
 import joshie.progression.criteria.rewards.RewardBreakBlock;
+import joshie.progression.criteria.rewards.RewardClear;
 import joshie.progression.criteria.rewards.RewardCommand;
 import joshie.progression.criteria.rewards.RewardCrafting;
 import joshie.progression.criteria.rewards.RewardCriteria;
@@ -157,6 +158,7 @@ public class Progression {
         ProgressionAPI.registry.registerRewardType(new RewardFurnace());
         ProgressionAPI.registry.registerRewardType(new RewardHarvestDrop());
         ProgressionAPI.registry.registerRewardType(new RewardLivingDrop());
+        ProgressionAPI.registry.registerRewardType(new RewardClear());
 
         ProgressionAPI.registry.registerTriggerType(new TriggerBreakBlock());
         ProgressionAPI.registry.registerTriggerType(new TriggerCrafting());

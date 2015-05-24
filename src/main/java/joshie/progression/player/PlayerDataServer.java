@@ -17,6 +17,10 @@ public class PlayerDataServer extends PlayerDataCommon {
 		this.mappings.setMaster(this);
 	}
 	
+	public PlayerTeam getTeam() {
+	    return team;
+	}
+	
 	public UUID getUUID() {
 		return uuid;
 	}

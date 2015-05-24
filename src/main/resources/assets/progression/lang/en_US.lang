@@ -23,7 +23,7 @@ progression.reward.fallDamage=Fall Damage
 progression.reward.time=Time
 progression.reward.criteria=Criteria
 progression.reward.speed=Speed
-progression.reward.item=Item
+progression.reward.item=Give Item
 progression.reward.command=Command
 progression.reward.points=Points
 progression.reward.research=Research
@@ -32,6 +32,7 @@ progression.reward.furnace=Furnace
 progression.reward.livingDrop=Entity Drops
 progression.reward.harvestDrop=Block Drops
 progression.reward.breakBlock=Break Block
+progression.reward.clear=Take Item
 
 #Actions
 progression.action.crafting=Crafting

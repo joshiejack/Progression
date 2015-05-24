@@ -46,7 +46,7 @@ public class RewardCommand extends RewardBase {
     public ItemStack getIcon() {
         return new ItemStack(Blocks.command_block);
     }
-    
+
     @Override
     public void addTooltip(List list) {
         list.add(EnumChatFormatting.WHITE + "Execute Command");
