@@ -32,7 +32,7 @@ public class StackHelper {
     }
 
     public static String getStringFromStack(ItemStack stack) {
-        String str = Item.itemRegistry.getNameForObject(stack.getItem());
+        String str = Item.itemRegistry.getNameForObject(stack.getItem()).replace(" ", "%20");
         if (stack.getHasSubtypes() || stack.isItemStackDamageable()) {
             str = str + " " + stack.getItemDamage();
         }
@@ -95,6 +95,7 @@ public class StackHelper {
     }
 
     private static Item getItemByText(String str) {
+        str = str.replace("%20", " ");
         Item item = (Item) Item.itemRegistry.getObject(str);
         if (item == null) {
             try {
