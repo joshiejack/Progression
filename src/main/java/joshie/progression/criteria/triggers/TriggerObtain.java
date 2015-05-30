@@ -44,7 +44,7 @@ public class TriggerObtain extends TriggerBase {
     @SubscribeEvent
     public void onEvent(PlayerOpenContainerEvent event) {
         long time = event.entityPlayer.worldObj.getTotalWorldTime();
-        if (!event.canInteractWith && time % 30 == 0) {
+        if (time % 30 == 0) {
             for (int i = 0; i < event.entityPlayer.inventory.mainInventory.length; i++) {
                 ItemStack stack = event.entityPlayer.inventory.mainInventory[i];
                 if (stack == null) continue;
