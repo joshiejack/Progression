@@ -1,3 +1,7 @@
+Progression 0.3.7
+  Fix Obtain Trigger
+  Add config to disable nei display for locked recipes
+
 Progression 0.3.6
   Fix saving of items with nbt
   Move some things from options to criteria.json where it applies
