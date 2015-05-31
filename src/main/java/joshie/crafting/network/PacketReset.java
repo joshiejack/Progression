@@ -17,6 +17,11 @@ import cpw.mods.fml.relauncher.Side;
 public class PacketReset extends PacketAction implements IMessageHandler<PacketReset, IMessage> {
     @Override
     public IMessage onMessage(PacketReset message, MessageContext ctx) {
+        PacketReset.handle();
+        return null;
+    }
+    
+    public static void handle() {
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
             ClientHelper.getPlayer().addChatComponentMessage(new ChatComponentText("All player data for Progression on was reset."));
         } else {
@@ -30,7 +35,5 @@ public class PacketReset extends PacketAction implements IMessageHandler<PacketR
                 PacketHandler.sendToEveryone(new PacketReset());
             }
         }
-
-        return null;
     }
 }
