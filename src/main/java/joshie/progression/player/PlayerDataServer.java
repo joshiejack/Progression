@@ -5,6 +5,7 @@ import java.util.UUID;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.network.PacketHandler;
 import joshie.progression.network.PacketSyncAbilities;
+import joshie.progression.player.DataStats.SpeedType;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class PlayerDataServer extends PlayerDataCommon {
@@ -25,9 +26,9 @@ public class PlayerDataServer extends PlayerDataCommon {
 		return uuid;
 	}
 
-	public void addSpeed(float speed) {
-		float newStat = abilities.getSpeed() + speed;
-		abilities.setSpeed(newStat);
+	public void addSpeed(SpeedType type, float speed) {
+		float newStat = abilities.getSpeed(type) + speed;
+		abilities.setSpeed(type, newStat);
 		PacketHandler.sendToTeam(new PacketSyncAbilities(abilities), team);
 		markDirty();
 	}

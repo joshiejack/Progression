@@ -11,13 +11,11 @@ public class CommandReload extends AbstractCommand {
     }
 
     @Override
-    public String getUsage() {
-        return "";
-    }
-
-    @Override
     public boolean processCommand(ICommandSender sender, String[] parameters) {
-        PacketHandler.sendToServer(new PacketReload());
+        if (sender.getEntityWorld().isRemote) {
+            PacketHandler.sendToServer(new PacketReload());
+        } else PacketReload.handle();
+
         return true;
     }
 }

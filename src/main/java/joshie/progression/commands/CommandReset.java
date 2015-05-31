@@ -17,7 +17,10 @@ public class CommandReset extends AbstractCommand {
 
     @Override
     public boolean processCommand(ICommandSender sender, String[] parameters) {
-        PacketHandler.sendToServer(new PacketReset());
+        if (sender.getEntityWorld().isRemote) {
+            PacketHandler.sendToServer(new PacketReset());
+        } else PacketReset.handle();
+
         return true;
     }
 }

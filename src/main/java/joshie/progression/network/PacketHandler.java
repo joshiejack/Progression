@@ -5,6 +5,7 @@ import java.util.UUID;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.lib.ProgressionInfo;
 import joshie.progression.player.PlayerTeam;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -26,6 +27,12 @@ public class PacketHandler {
 
     public static void sendToEveryone(IMessage packet) {
         INSTANCE.sendToAll(packet);
+    }
+
+    public static void sendToClient(IMessage packet, ICommandSender sender) {
+        if (sender instanceof EntityPlayerMP) {
+            sendToClient(packet, (EntityPlayerMP)sender);
+        }
     }
 
     public static void sendToClient(IMessage packet, UUID uuid) {

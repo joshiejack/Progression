@@ -17,5 +17,7 @@ public abstract class AbstractCommand implements Comparable {
 
     public abstract boolean processCommand(ICommandSender sender, String[] parameters);
 
-    public abstract String getUsage();
+    public String getUsage() {
+        return "";
+    }
 }

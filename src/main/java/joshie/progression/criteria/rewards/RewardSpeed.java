@@ -1,13 +1,17 @@
 package joshie.progression.criteria.rewards;
 
+import static joshie.progression.player.DataStats.SpeedType.AIR;
+import static joshie.progression.player.DataStats.SpeedType.LAND;
+import static joshie.progression.player.DataStats.SpeedType.WATER;
+
 import java.util.List;
 import java.util.UUID;
 
 import joshie.progression.api.EventBusType;
 import joshie.progression.gui.fields.BooleanField;
 import joshie.progression.gui.fields.TextField;
-import joshie.progression.helpers.ClientHelper;
 import joshie.progression.helpers.JSONHelper;
+import joshie.progression.player.DataStats.SpeedType;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -22,29 +26,27 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 public class RewardSpeed extends RewardBase {
     public float speed = 0.1F;
     public boolean land = true;
-    public boolean water = false;
+    public boolean air = false;
+    public boolean water = true;
 
     public RewardSpeed() {
         super(new ItemStack(Items.potionitem, 1, 8194), "speed", 0xFFFFBF00);
         list.add(new TextField("speed", this));
         list.add(new BooleanField("land", this));
+        list.add(new BooleanField("air", this));
         list.add(new BooleanField("water", this));
     }
-    
+
     @SubscribeEvent
     public void onLivingUpdate(LivingUpdateEvent event) {
         if (event.entityLiving instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) event.entity;
             if (player.worldObj.isRemote) {
-                float speed = PlayerTracker.getClientPlayer().getAbilities().getSpeed();
-                if (speed != 0) {
-                    if (ClientHelper.isMovementPressed()) {
-                        boolean shouldSpeed = player.isInWater()? water: land;
-                        if (shouldSpeed) {
-                            player.motionX *= speed;
-                            player.motionZ *= speed;
-                        }
-                    }
+                SpeedType type = player.isInWater() ? WATER : !player.onGround ? AIR : LAND;
+                float speed = PlayerTracker.getClientPlayer().getAbilities().getSpeed(type);
+                if (speed != 1F) {
+                    player.motionX *= speed;
+                    player.motionZ *= speed;
                 }
             }
         }
@@ -59,6 +61,7 @@ public class RewardSpeed extends RewardBase {
     public void readFromJSON(JsonObject data) {
         speed = JSONHelper.getFloat(data, "speed", speed);
         land = JSONHelper.getBoolean(data, "land", land);
+        land = JSONHelper.getBoolean(data, "air", air);
         water = JSONHelper.getBoolean(data, "water", water);
     }
 
@@ -66,18 +69,25 @@ public class RewardSpeed extends RewardBase {
     public void writeToJSON(JsonObject data) {
         JSONHelper.setFloat(data, "speed", speed, 0.1F);
         JSONHelper.setBoolean(data, "land", land, true);
+        JSONHelper.setBoolean(data, "air", air, true);
         JSONHelper.setBoolean(data, "water", water, false);
     }
 
     @Override
     public void reward(UUID uuid) {
-        PlayerTracker.getServerPlayer(uuid).addSpeed(speed);
+        if (land) PlayerTracker.getServerPlayer(uuid).addSpeed(LAND, speed);
+        if (air) PlayerTracker.getServerPlayer(uuid).addSpeed(AIR, speed);
+        if (water) PlayerTracker.getServerPlayer(uuid).addSpeed(WATER, speed);
     }
-    
+
     private String getType() {
-        if (land && water) return "in water or on land";
-        if (land && !water) return "on land";
-        else if (!land && water) return "in water";
+        if (land && water && air) return "in water, on land or in air";
+        else if (land && air && !water) return "on land or in air";
+        else if (water && air && !land) return "in water or in air";
+        else if (land && water && !air) return "in water or on land";
+        else if (!land && !water && air) return "in air";
+        else if (land && !water && !air) return "on land";
+        else if (!land && water && !air) return "in water";
         else return "never";
     }
 

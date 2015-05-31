@@ -1,5 +1,5 @@
 package joshie.progression.player;
-
+import static joshie.progression.player.DataStats.SpeedType.*;
 import io.netty.buffer.ByteBuf;
 
 import java.util.HashMap;
@@ -10,16 +10,25 @@ import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.common.network.ByteBufUtils;
 
 public class DataStats {
+    public static enum SpeedType {      
+        LAND, AIR, WATER;
+    }
+    
     private HashMap<String, Integer> points = new HashMap();
-	private float speed;
+	private float airSpeed = 1F;
+	private float landSpeed = 1F;
+	private float waterSpeed = 1F;
+	
 	private int fallDamage;
 
-	public float getSpeed() {
-		return this.speed;
+	public float getSpeed(SpeedType type) {
+	    return type == LAND ? landSpeed : type == AIR ? airSpeed: waterSpeed;
 	}
 	
-	void setSpeed(float speed) {
-		this.speed = speed;
+	void setSpeed(SpeedType type, float speed) {
+	    if (type == LAND) landSpeed = speed;
+	    if (type == AIR) airSpeed = speed;
+	    if (type == WATER) waterSpeed = speed;
 	}
 
 	public int getFallDamagePrevention() {
@@ -44,20 +53,27 @@ public class DataStats {
 	}
 
 	public void readFromNBT(NBTTagCompound tag) {
-		this.speed = tag.getFloat("Speed");
-		this.fallDamage = tag.getInteger("Fall Damage");
+	    if (tag.hasKey("Speed")) landSpeed = tag.getFloat("Speed");
+	    else landSpeed = tag.getFloat("LandSpeed");
+		airSpeed = tag.getFloat("AirSpeed");
+		waterSpeed = tag.getFloat("WaterSpeed");
+		fallDamage = tag.getInteger("Fall Damage");
 		NBTHelper.readMap(tag, "Points", PointsNBT.INSTANCE.setMap(points));
 	}
 
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
-		tag.setFloat("Speed", speed);
+		tag.setFloat("LandSpeed", landSpeed);
+		tag.setFloat("AirSpeed", airSpeed);
+		tag.setFloat("WaterSpeed", waterSpeed);
 		tag.setInteger("Fall Damage", fallDamage);
 		NBTHelper.writeMap(tag, "Points", PointsNBT.INSTANCE.setMap(points));
 		return tag;
 	}
 
 	public void toBytes(ByteBuf buf) {
-		buf.writeFloat(speed);
+		buf.writeFloat(landSpeed);
+		buf.writeFloat(airSpeed);
+		buf.writeFloat(waterSpeed);
 		buf.writeInt(fallDamage);
 		buf.writeInt(points.size());
 		for (String key: points.keySet()) {
@@ -67,7 +83,9 @@ public class DataStats {
 	}
 
 	public void fromBytes(ByteBuf buf) {
-		speed = buf.readFloat();
+	    landSpeed = buf.readFloat();
+	    airSpeed = buf.readFloat();
+	    waterSpeed = buf.readFloat();
 		fallDamage = buf.readInt();
 		int size = buf.readInt();
 		for (int i = 0; i < size; i++) {

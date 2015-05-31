@@ -16,6 +16,11 @@ import cpw.mods.fml.relauncher.Side;
 public class PacketReload extends PacketAction implements IMessageHandler<PacketReload, IMessage> {
     @Override
     public IMessage onMessage(PacketReload message, MessageContext ctx) {
+        PacketReload.handle();
+        return null;
+    }
+    
+    public static void handle() {
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
             ClientHelper.getPlayer().addChatComponentMessage(new ChatComponentText("Progression data was reloaded."));
         } else {
@@ -27,7 +32,5 @@ public class PacketReload extends PacketAction implements IMessageHandler<Packet
                 }
             }
         }
-
-        return null;
     }
 }

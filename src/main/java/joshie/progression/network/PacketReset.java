@@ -17,20 +17,23 @@ import cpw.mods.fml.relauncher.Side;
 public class PacketReset extends PacketAction implements IMessageHandler<PacketReset, IMessage> {
     @Override
     public IMessage onMessage(PacketReset message, MessageContext ctx) {
+        PacketReset.handle();
+        return null;
+    }
+
+    public static void handle() {
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
             ClientHelper.getPlayer().addChatComponentMessage(new ChatComponentText("All player data for Progression was reset."));
         } else {
             if (Options.editor) {
                 Progression.instance.createWorldData(); //Recreate the world data, Wiping out any saved information for players
                 RemappingHandler.reloadServerData();
-                for (EntityPlayer player: PlayerHelper.getAllPlayers()) {
+                for (EntityPlayer player : PlayerHelper.getAllPlayers()) {
                     RemappingHandler.onPlayerConnect((EntityPlayerMP) player);
                 }
-                
+
                 PacketHandler.sendToEveryone(new PacketReset());
             }
         }
-
-        return null;
     }
 }
