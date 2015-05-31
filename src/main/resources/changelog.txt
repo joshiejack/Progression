@@ -1,3 +1,6 @@
+Progression 0.3.8
+  Fix commands in smp
+
 Progression 0.3.7
   Fix Obtain Trigger
   Add config to disable nei display for locked recipes
