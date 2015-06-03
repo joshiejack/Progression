@@ -10,6 +10,7 @@ import joshie.progression.criteria.Criteria;
 import joshie.progression.gui.EditorTicker;
 import joshie.progression.gui.GuiCriteriaEditor;
 import joshie.progression.helpers.ClientHelper;
+import joshie.progression.json.Options;
 import net.minecraft.item.ItemStack;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 
@@ -21,16 +22,18 @@ public class NEIOverrideHandler extends TemplateRecipeHandler {
 
     @Override
     public void loadCraftingRecipes(ItemStack result) {
-        Crafter crafter = CraftingRegistry.getCrafterFromPlayer(ClientHelper.getPlayer());
-        if (!crafter.canCraftItem(ActionType.CRAFTING, result)) {
-            Collection<ICriteria> requirements = CraftingRegistry.getCraftingCriteria(ActionType.CRAFTING, result);
-            if (requirements.size() > 0) {
-                for (ICriteria c : requirements) {
-                    GuiCriteriaEditor.INSTANCE.selected = (Criteria) c;
-                    break;
-                }
+        if (Options.settings.displayRequirementsOnNEIClick) {
+            Crafter crafter = CraftingRegistry.getCrafterFromPlayer(ClientHelper.getPlayer());
+            if (!crafter.canCraftItem(ActionType.CRAFTING, result)) {
+                Collection<ICriteria> requirements = CraftingRegistry.getCraftingCriteria(ActionType.CRAFTING, result);
+                if (requirements.size() > 0) {
+                    for (ICriteria c : requirements) {
+                        GuiCriteriaEditor.INSTANCE.selected = (Criteria) c;
+                        break;
+                    }
 
-                EditorTicker.OVERRIDE_TICK = 1;
+                    EditorTicker.OVERRIDE_TICK = 1;
+                }
             }
         }
     }

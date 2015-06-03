@@ -10,6 +10,13 @@ Progression 0.4.0
   Speed will now work on negative speeds, as well as not require sprint pressing
   Add three booleans to speed, whether it affects land, air or water speed
   Criteria now stored in seperate areas for ssp/smp
+  
+Progression 0.3.8
+  Fix commands in smp
+
+Progression 0.3.7
+  Fix Obtain Trigger
+  Add config to disable nei display for locked recipes
 
 Progression 0.3.6
   Fix saving of items with nbt

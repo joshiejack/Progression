@@ -11,11 +11,12 @@ public class DefaultSettings {
     public Set<DataTab> tabs = new HashSet();
     
     public String defaultTabID = "DEFAULT";
-    public boolean disableCraftingUntilRewardAdded;
-    public boolean disableUsageUntilRewardAdded;
-    public boolean unclaimedTileCanCraftAnything;
-    public boolean unclaimedTileCanUseAnythingForCrafting;
+    public boolean disableCraftingUntilRewardAdded = false;
+    public boolean disableUsageUntilRewardAdded = false;
+    public boolean unclaimedTileCanCraftAnything = false;
+    public boolean unclaimedTileCanUseAnythingForCrafting = false;
     public String interfaceItem = "minecraft:book";
+    public boolean displayRequirementsOnNEIClick = true;
 
     public DefaultSettings setDefaults() {
         tabs.add(new DataTab("DEFAULT", "Default", 0, new ArrayList(), true, new ItemStack(Items.book)));
