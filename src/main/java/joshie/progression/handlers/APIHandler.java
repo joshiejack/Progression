@@ -35,6 +35,8 @@ import net.minecraftforge.common.util.EnumHelper;
 
 import com.google.gson.JsonObject;
 
+import cpw.mods.fml.common.eventhandler.Event.Result;
+
 public class APIHandler implements IProgressionAPI {
     //This is the registry for trigger type and reward type creation
     public static final HashMap<String, ITriggerType> triggerTypes = new HashMap();
@@ -47,16 +49,16 @@ public class APIHandler implements IProgressionAPI {
 
     @Override
     //Fired Server Side only
-    public boolean fireTrigger(UUID uuid, String string, Object... data) {
+    public Result fireTrigger(UUID uuid, String string, Object... data) {
         return PlayerTracker.getServerPlayer(uuid).getMappings().fireAllTriggers(string, data);
     }
 
     @Override
     //Fired Server Side only
-    public boolean fireTrigger(EntityPlayer player, String string, Object... data) {
+    public Result fireTrigger(EntityPlayer player, String string, Object... data) {
         if (!player.worldObj.isRemote) {
             return fireTrigger(PlayerHelper.getUUIDForPlayer(player), string, data);
-        } else return false;
+        } else return Result.DEFAULT;
     }
 
     @Override

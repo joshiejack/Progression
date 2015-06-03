@@ -38,6 +38,8 @@ import net.minecraftforge.common.DimensionManager;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
+import cpw.mods.fml.common.eventhandler.Event.Result;
+
 public class CriteriaMappings {
     private PlayerDataServer master;
     private UUID uuid;
@@ -161,25 +163,25 @@ public class CriteriaMappings {
             return data;
         } else return data;
     }
-    
+
     public void claimUnclaimedReward(Criteria criteria) {
         if (unclaimed.contains(criteria)) {
             unclaimed.remove(criteria);
             for (Reward reward : criteria.rewards) {
                 reward.getType().reward(uuid);
             }
-            
+
             Progression.data.markDirty();
         }
     }
 
     /** Called to fire a trigger type, Triggers are only ever called on criteria that is activated **/
-    public boolean fireAllTriggers(String type, Object... data) {
-        if (activeTriggers == null) return false; //If the remapping hasn't occured yet, say goodbye!
+    public Result fireAllTriggers(String type, Object... data) {
+        if (activeTriggers == null) return Result.DEFAULT; //If the remapping hasn't occured yet, say goodbye!
         //If the trigger is a forced completion, then force complete it
         if (type.equals("forced-complete")) {
             Criteria criteria = (Criteria) data[0];
-            if (criteria == null || completedCritera.keySet().contains(criteria)) return false; //If null or we completed already return false
+            if (criteria == null || completedCritera.keySet().contains(criteria)) return Result.DEFAULT; //If null or we completed already return false
             HashSet<Trigger> forRemovalFromActive = new HashSet();
             HashSet<Criteria> toRemap = new HashSet();
             completeCriteria(criteria, forRemovalFromActive, toRemap);
@@ -190,14 +192,14 @@ public class CriteriaMappings {
 
             remapStuff(forRemovalFromActive, toRemap);
             Progression.data.markDirty();
-            return true;
+            return Result.ALLOW;
         } else if (type.equals("forced-remove")) {
             Criteria criteria = (Criteria) data[0];
-            if (criteria == null || !completedCritera.keySet().contains(criteria)) return false;
+            if (criteria == null || !completedCritera.keySet().contains(criteria)) return Result.DEFAULT;
             else removeCriteria(criteria);
             remap(); //Remap everything
             Progression.data.markDirty();
-            return true;
+            return Result.ALLOW;
         }
 
         EntityPlayer player = PlayerHelper.getPlayerFromUUID(uuid);
@@ -222,7 +224,8 @@ public class CriteriaMappings {
         //Fire the trigger
         Collections.shuffle(toTrigger);
         for (Trigger trigger : toTrigger) {
-            trigger.getType().onFired(uuid, getTriggerData(trigger), data); //Fire the new data
+            if (!trigger.getType().onFired(uuid, getTriggerData(trigger), data)) //Fire the new data
+                return Result.DENY;
         }
 
         //Next step, now that the triggers have been fire, we need to go through them again
@@ -282,7 +285,7 @@ public class CriteriaMappings {
 
         //Mark data as dirty, whether it changed or not
         Progression.data.markDirty();
-        return completedAnyCriteria;
+        return completedAnyCriteria ? Result.ALLOW : Result.DEFAULT;
     }
 
     public void removeCriteria(Criteria criteria) {
@@ -314,9 +317,9 @@ public class CriteriaMappings {
         if (completedTimes == 1) { //Only do shit if this is the first time it was completed                    
             toRemap.addAll(RemappingHandler.criteriaToUnlocks.get(criteria));
         }
-        
+
         List<EntityPlayerMP> list = PlayerHelper.getPlayersFromUUID(uuid);
-        for (EntityPlayerMP player: list) {
+        for (EntityPlayerMP player : list) {
             PacketHandler.sendToClient(new PacketSyncCriteria(false, new Integer[] { completedTimes }, new Criteria[] { criteria }), player);
             if (criteria.achievement) PacketHandler.sendToClient(new PacketCompleted(criteria), player);
         }

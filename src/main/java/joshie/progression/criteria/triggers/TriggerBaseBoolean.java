@@ -16,8 +16,10 @@ public abstract class TriggerBaseBoolean extends TriggerBase {
 	}
 	
 	@Override
-	public void onFired(UUID uuid, ITriggerData iTriggerData, Object... data) {	
+	public boolean onFired(UUID uuid, ITriggerData iTriggerData, Object... data) {	
+	    if (!super.onFired(uuid, iTriggerData, data)) return false;
 		((DataBoolean)iTriggerData).completed = isTrue(data);
+		return true;
 	}
 
 	protected boolean isTrue(Object... data) {

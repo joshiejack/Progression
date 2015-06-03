@@ -13,7 +13,6 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 
 public class TriggerChangeDimension extends TriggerBaseCounter {
-    public int times = 1;
     public boolean checkFrom = false;
     public int from = 0;
     public boolean checkTo = true;
@@ -21,7 +20,6 @@ public class TriggerChangeDimension extends TriggerBaseCounter {
 
     public TriggerChangeDimension() {
         super("changeDimension", 0xFF000000);
-        list.add(new TextField("times", this));
         list.add(new BooleanField("checkFrom", this));
         list.add(new TextField("from", this));
         list.add(new BooleanField("checkTo", this));

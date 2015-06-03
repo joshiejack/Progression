@@ -23,11 +23,14 @@ public abstract class TriggerBaseCounter extends TriggerBase {
 	}
 	
 	@Override
-	public void onFired(UUID uuid, ITriggerData iTriggerData, Object... data) {	
+	public boolean onFired(UUID uuid, ITriggerData iTriggerData, Object... data) {	
+	    if (!super.onFired(uuid, iTriggerData, data)) return false;
 		DataCount triggerData = (DataCount)iTriggerData;
 		if (canIncrease(data)) {
 			triggerData.count++;
 		}
+		
+		return true;
 	}
 	
 	@Override

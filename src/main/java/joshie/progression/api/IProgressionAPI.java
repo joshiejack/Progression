@@ -4,17 +4,20 @@ import java.util.UUID;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import cpw.mods.fml.common.eventhandler.Event.Result;
 
 /** The registry is where you register new types of rewards, triggers and
  *  conditions, and the criteria. All triggers and rewards should be registered before any criteria, and conditions before triggers */
 public interface IProgressionAPI {
 	/** Fires all triggers, of the type specified, Triggers should only be fired
 	 *  On the server side.
-	 *  @return		returns true if just one of the triggers suceeded **/
-	public boolean fireTrigger(UUID uuid, String trigger, Object... data);
+	 *  @return		returns allow if the triggers suceeded
+	 *              returns deny if one of the triggers cancelled the event
+	 *              returns default if nothing happened **/
+	public Result fireTrigger(UUID uuid, String trigger, Object... data);
 	
 	/** Convenience method **/
-	public boolean fireTrigger(EntityPlayer player, String trigger, Object... data);
+	public Result fireTrigger(EntityPlayer player, String trigger, Object... data);
 	
 	/** Register a condition with the registry **/
 	public IConditionType registerConditionType(IConditionType reward);

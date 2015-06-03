@@ -22,6 +22,7 @@ public abstract class TriggerBaseBlock extends TriggerBaseCounter {
 
     public TriggerBaseBlock(String unlocalised, int color) {
         super(unlocalised, color);
+        cancelable = true;
         list.add(new TextField("name", this));
         list.add(new BooleanField("matchDamage", this));
         list.add(new BlockField("stack", "block", "meta", this, 35, 41, 1.5F, 1, 94, 40, 99, Type.TRIGGER));
@@ -30,6 +31,7 @@ public abstract class TriggerBaseBlock extends TriggerBaseCounter {
     @Override
     public void readFromJSON(JsonObject data) {
         super.readFromJSON(data);
+        cancel = JSONHelper.getBoolean(data, "cancel", cancel);
         name = JSONHelper.getString(data, "ore", "IGNORE");
         if (OreDictionary.getOres(name).size() > 0) {
             stack = OreDictionary.getOres(name).get(0);
@@ -44,6 +46,7 @@ public abstract class TriggerBaseBlock extends TriggerBaseCounter {
     @Override
     public void writeToJSON(JsonObject data) {
         super.writeToJSON(data);
+        JSONHelper.setBoolean(data, "cancel", cancel, false);
         JSONHelper.setString(data, "ore", name, "IGNORE");
         if (name.equals("IGNORE")) {
             ItemStack stack = new ItemStack(block, 1, meta);

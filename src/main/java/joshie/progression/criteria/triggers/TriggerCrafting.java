@@ -70,14 +70,16 @@ public class TriggerCrafting extends TriggerBase {
     }
 
     @Override
-    public void onFired(UUID uuid, ITriggerData existing, Object... additional) {        
+    public boolean onFired(UUID uuid, ITriggerData existing, Object... additional) {        
         DataCrafting data = (DataCrafting) existing;
         ItemStack crafted = (ItemStack)(additional[0]);        
         if (stack.getItem() == crafted.getItem()) {
-            if (matchDamage && stack.getItemDamage() != crafted.getItemDamage()) return;
-            if (matchNBT && stack.getTagCompound() != crafted.getTagCompound()) return;
+            if (matchDamage && stack.getItemDamage() != crafted.getItemDamage()) return true;
+            if (matchNBT && stack.getTagCompound() != crafted.getTagCompound()) return true;
             data.amountCrafted += crafted.stackSize;
             data.timesCrafted++;
         }
+        
+        return true;
     }
 }

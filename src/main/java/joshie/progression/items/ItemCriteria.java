@@ -23,6 +23,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -107,8 +108,8 @@ public class ItemCriteria extends Item {
         } else if (!world.isRemote) {
             Criteria criteria = getCriteriaFromStack(stack);
             if (criteria != null) {
-                boolean completed = PlayerTracker.getServerPlayer(PlayerHelper.getUUIDForPlayer(player)).getMappings().fireAllTriggers("forced-complete", criteria, criteria.rewards);
-                if (!player.capabilities.isCreativeMode && completed) {
+                Result completed = PlayerTracker.getServerPlayer(PlayerHelper.getUUIDForPlayer(player)).getMappings().fireAllTriggers("forced-complete", criteria, criteria.rewards);
+                if (!player.capabilities.isCreativeMode && completed == Result.ALLOW) {
                     stack.stackSize--;
                 }
             }

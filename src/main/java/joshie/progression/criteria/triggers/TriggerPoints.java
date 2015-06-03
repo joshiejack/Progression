@@ -44,7 +44,7 @@ public class TriggerPoints extends TriggerBaseBoolean {
     }
 
     @Override
-    public void onFired(UUID uuid, ITriggerData iTriggerData, Object... data) {
+    public boolean onFired(UUID uuid, ITriggerData iTriggerData, Object... data) {
         int total = PlayerTracker.getServerPlayer(uuid).getAbilities().getPoints(name);
         if (total >= amount) {
             ((DataBoolean) iTriggerData).completed = true;
@@ -52,5 +52,7 @@ public class TriggerPoints extends TriggerBaseBoolean {
                 PlayerTracker.getServerPlayer(uuid).addPoints(name, -amount);
             }
         }
+        
+        return true;
     }
 }
