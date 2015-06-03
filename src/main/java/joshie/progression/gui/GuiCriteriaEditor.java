@@ -34,6 +34,7 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
         //Title and Repeatability Box
         drawStack(selected.stack, 1, 4, 1F);
         drawText("Display Name: " + nameEdit.getText(), 21 - offsetX, 9, theme.criteriaEditDisplayNameColor);
+        drawText("Popup: " + INSTANCE.selected.achievement, fullWidth - 210, 9, theme.criteriaEditDisplayNameColor);
         drawText("Repeatability: " + repeatEdit.getText() + "x", fullWidth - 130, 9, theme.criteriaEditDisplayNameColor);
         drawBox(-1, 215, fullWidth, 1, theme.blackBarUnderLineBorder, theme.blackBarUnderLineBorder);
         drawText("Use arrow keys to scroll sideways, or use the scroll wheel. (Down to go right)", 9 - offsetX, 218, theme.scrollTextFontColor);
@@ -169,6 +170,11 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
                 
                 if (mouseX >= 16 && mouseX <= 200) {
                     nameEdit.select();
+                    hasClicked = true;
+                }
+                
+                if (mouseX >= 311 && mouseX <= 344) {
+                    INSTANCE.selected.achievement = !INSTANCE.selected.achievement;
                     hasClicked = true;
                 }
 
