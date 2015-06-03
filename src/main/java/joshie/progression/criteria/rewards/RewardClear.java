@@ -48,7 +48,7 @@ public class RewardClear extends RewardBase {
     public void reward(UUID uuid) {
         int toTake = stack.stackSize;
         int taken = 0;
-
+        
         List<EntityPlayerMP> players = PlayerHelper.getPlayersFromUUID(uuid);
         for (int k = 0; k < players.size() && taken < toTake; k++) {
             EntityPlayer player = players.get(k);

@@ -64,7 +64,7 @@ public class ASMTransferCrafting extends AbstractASM {
                             mv.visitVarInsn(Opcodes.ALOAD, 3);
                             mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "net/minecraft/item/ItemStack", copy, "()Lnet/minecraft/item/ItemStack;", false);
                             mv.visitInsn(Opcodes.AASTORE);
-                            mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, ProgressionInfo.ASMPATH + "api/IProgressionAPI", "fireTrigger", "(Lnet/minecraft/entity/player/EntityPlayer;Ljava/lang/String;[Ljava/lang/Object;)Z", true);
+                            mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, ProgressionInfo.ASMPATH + "api/IProgressionAPI", "fireTrigger", "(Lnet/minecraft/entity/player/EntityPlayer;Ljava/lang/String;[Ljava/lang/Object;)Lcpw/mods/fml/common/eventhandler/Event$Result;", true);
                             mv.visitInsn(Opcodes.POP);
                         } else super.visitMethodInsn(opcode, owner, name, desc, itf);
                     }

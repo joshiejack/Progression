@@ -41,18 +41,24 @@ public class TriggerObtain extends TriggerBase {
         return new EventBusType[] { EventBusType.FML, EventBusType.FORGE };
     }
 
+    private boolean fired = false;
+
     @SubscribeEvent
     public void onEvent(PlayerOpenContainerEvent event) {
         long time = event.entityPlayer.worldObj.getTotalWorldTime();
         if (time % 30 == 0) {
-            for (int i = 0; i < event.entityPlayer.inventory.mainInventory.length; i++) {
-                ItemStack stack = event.entityPlayer.inventory.mainInventory[i];
-                if (stack == null) continue;
-                ProgressionAPI.registry.fireTrigger(event.entityPlayer, getUnlocalisedName(), stack, event.entityPlayer, i);
+            if (fired) {
+                for (int i = 0; i < event.entityPlayer.inventory.mainInventory.length; i++) {
+                    ItemStack stack = event.entityPlayer.inventory.mainInventory[i];
+                    if (stack == null) continue;
+                    ProgressionAPI.registry.fireTrigger(event.entityPlayer, getUnlocalisedName(), stack, event.entityPlayer, i);
+                }
             }
+            
+            fired = !fired;
         }
     }
-    
+
     @Override
     public void readFromJSON(JsonObject data) {
         stack = JSONHelper.getItemStack(data, "item", new ItemStack(Blocks.crafting_table));
@@ -80,7 +86,7 @@ public class TriggerObtain extends TriggerBase {
     @Override
     public boolean onFired(UUID uuid, ITriggerData existing, Object... additional) {
         DataCrafting data = (DataCrafting) existing;
-        ItemStack crafted = (ItemStack)additional[0];
+        ItemStack crafted = (ItemStack) additional[0];
         if (stack == null || crafted == null) return true;
         if (stack.getItem() == crafted.getItem()) {
             if (matchDamage && stack.getItemDamage() != crafted.getItemDamage()) return true;
@@ -94,7 +100,7 @@ public class TriggerObtain extends TriggerBase {
                 player.inventory.decrStackSize(slot, stack.stackSize);
             }
         }
-        
+
         return true;
     }
 }
