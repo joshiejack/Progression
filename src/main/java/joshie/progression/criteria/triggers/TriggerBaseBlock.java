@@ -31,7 +31,6 @@ public abstract class TriggerBaseBlock extends TriggerBaseCounter {
     @Override
     public void readFromJSON(JsonObject data) {
         super.readFromJSON(data);
-        cancel = JSONHelper.getBoolean(data, "cancel", cancel);
         name = JSONHelper.getString(data, "ore", "IGNORE");
         if (OreDictionary.getOres(name).size() > 0) {
             stack = OreDictionary.getOres(name).get(0);
@@ -46,7 +45,6 @@ public abstract class TriggerBaseBlock extends TriggerBaseCounter {
     @Override
     public void writeToJSON(JsonObject data) {
         super.writeToJSON(data);
-        JSONHelper.setBoolean(data, "cancel", cancel, false);
         JSONHelper.setString(data, "ore", name, "IGNORE");
         if (name.equals("IGNORE")) {
             ItemStack stack = new ItemStack(block, 1, meta);
@@ -61,7 +59,7 @@ public abstract class TriggerBaseBlock extends TriggerBaseCounter {
         int theMeta = (Integer) data[1];
         boolean doesMatch = false;
         if (!name.equals("IGNORE")) {
-        	ItemStack stack = BlockActionHelper.getStackFromBlockData(theBlock, theMeta);
+            ItemStack stack = BlockActionHelper.getStackFromBlockData(theBlock, theMeta);
             int[] ids = OreDictionary.getOreIDs(stack);
             for (int i : ids) {
                 String oreName = OreDictionary.getOreName(i);

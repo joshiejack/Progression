@@ -35,11 +35,13 @@ public abstract class TriggerBaseCounter extends TriggerBase {
 	
 	@Override
     public void readFromJSON(JsonObject data) {
+	    super.readFromJSON(data);
 	    amount = JSONHelper.getInteger(data, "amount", amount);
     }
 
     @Override
     public void writeToJSON(JsonObject data) {
+        super.writeToJSON(data);
         JSONHelper.setInteger(data, "amount", amount, 1);
     }
 

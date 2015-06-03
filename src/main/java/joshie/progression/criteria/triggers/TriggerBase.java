@@ -12,8 +12,12 @@ import joshie.progression.api.ProgressionAPI;
 import joshie.progression.gui.fields.AbstractField;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.ClientHelper;
+import joshie.progression.helpers.JSONHelper;
 import joshie.progression.json.Theme;
 import net.minecraft.util.StatCollector;
+
+import com.google.gson.JsonObject;
+
 import cpw.mods.fml.common.eventhandler.Event.Result;
 
 public abstract class TriggerBase implements ITriggerType {
@@ -69,6 +73,16 @@ public abstract class TriggerBase implements ITriggerType {
     public boolean onFired(UUID uuid, ITriggerData existing, Object... additional) {
         if (cancelable) return cancel ? false : true;
         else return true;
+    }
+
+    @Override
+    public void readFromJSON(JsonObject data) {
+        if (cancelable) cancel = JSONHelper.getBoolean(data, "cancel", cancel);
+    }
+
+    @Override
+    public void writeToJSON(JsonObject data) {
+        if (cancelable) JSONHelper.setBoolean(data, "cancel", cancel, false);
     }
 
     @Override
