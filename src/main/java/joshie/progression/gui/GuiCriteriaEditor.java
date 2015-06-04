@@ -172,13 +172,13 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
                     nameEdit.select();
                     hasClicked = true;
                 }
-                
-                if (mouseX >= 311 && mouseX <= 344) {
+                               
+                if (mouseX >= res.getScaledWidth() - 205 && mouseX <= res.getScaledWidth() - 140) {
                     INSTANCE.selected.achievement = !INSTANCE.selected.achievement;
                     hasClicked = true;
                 }
 
-                if (mouseX <= res.getScaledWidth() && mouseX >= res.getScaledWidth() - 250) {
+                if (mouseX <= res.getScaledWidth() && mouseX >= res.getScaledWidth() - 135) {
                     repeatEdit.select();
                     hasClicked = true;
                 }

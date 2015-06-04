@@ -1,3 +1,6 @@
+Progression 0.4.1
+  Fix click position for popup toggle
+
 Progression 0.4.0
   Add Support for Thermal Expansion Machinist's Workbench
   Add Support for Thaumcraft Worktable
@@ -10,6 +13,7 @@ Progression 0.4.0
   Speed will now work on negative speeds, as well as not require sprint pressing
   Add three booleans to speed, whether it affects land, air or water speed
   Criteria now stored in seperate areas for ssp/smp
+  Fix a bunch of things?
   
 Progression 0.3.8
   Fix commands in smp

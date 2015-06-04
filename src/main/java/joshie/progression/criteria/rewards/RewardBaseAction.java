@@ -36,10 +36,10 @@ public abstract class RewardBaseAction extends RewardBase implements IItemCallba
         ItemField field = new ItemField("stack", this, 80, 34, 1.4F, 67, 100, 33, 58, Type.REWARD);     
         list.add(new BooleanField("matchDamage", this));
         list.add(new BooleanField("matchNBT", this));
+        list.add(new TextField("orename", this));
         list.add(new BooleanField("usage", this));
         list.add(new BooleanField("crafting", this));
         list.add(new TextField("modid", this));
-        list.add(new TextField("orename", this));
         list.add(field);
     }
     
