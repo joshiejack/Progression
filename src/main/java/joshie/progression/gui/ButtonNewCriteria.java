@@ -52,7 +52,7 @@ public class ButtonNewCriteria extends ButtonBase {
             int mouseX = GuiTreeEditor.INSTANCE.mouseX;
             int mouseY = GuiTreeEditor.INSTANCE.mouseY;
             int offsetX = GuiTreeEditor.INSTANCE.offsetX;
-            Criteria criteria = APIHandler.newCriteria(currentTab, APIHandler.getNextUnique());
+            Criteria criteria = APIHandler.newCriteria(currentTab, APIHandler.getNextUnique(), true);
             criteria.treeEditor.setCoordinates(mouseX - 50 - offsetX, mouseY - 10);
             criteria.treeEditor.draw(mouseX - 50, mouseY - 10, offsetX);
             criteria.treeEditor.click(mouseX - 50, mouseY - 10, false);

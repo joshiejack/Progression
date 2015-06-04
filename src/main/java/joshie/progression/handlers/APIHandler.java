@@ -79,8 +79,8 @@ public class APIHandler implements IProgressionAPI {
         return type;
     }
 
-    public static Criteria newCriteria(Tab tab, String name) {
-        Criteria theCriteria = new Criteria(tab, name);
+    public static Criteria newCriteria(Tab tab, String name, boolean isClientside) {
+        Criteria theCriteria = new Criteria(tab, name, isClientside);
         tab.addCriteria(theCriteria);
         criteria.put(name, theCriteria);
         return theCriteria;

@@ -14,7 +14,7 @@ import cpw.mods.fml.common.eventhandler.EventBus;
 public class EventsManager {
     public static HashSet<Trigger> activeTriggers;
     public static HashSet<Reward> activeRewards;
-    
+
     public static EventBus getBus(EventBusType bus) {
         if (bus == EventBusType.FML) {
             return FMLCommonHandler.instance().bus();
@@ -36,11 +36,13 @@ public class EventsManager {
 
         for (ITriggerType type : APIHandler.triggerTypes.values()) { //Loop through all trigger types
             if (activeTriggerTypes.contains(type.getUnlocalisedName())) { //If we haven't added this type to active triggers yet add it
-                EventBusType[] buses = type.getEventBusTypes();
-                for (EventBusType bus : buses) {
-                    EventBus theBus = getBus(bus);
-                    if (theBus != null) theBus.register(type);
-                }
+                try {
+                    EventBusType[] buses = type.getEventBusTypes();
+                    for (EventBusType bus : buses) {
+                        EventBus theBus = getBus(bus);
+                        if (theBus != null) theBus.register(type);
+                    }
+                } catch (Exception e) {}
             }
         }
     }
@@ -74,18 +76,13 @@ public class EventsManager {
 
         for (IRewardType type : APIHandler.rewardTypes.values()) { //Loop through all reward types
             if (activeRewardTypes.contains(type.getUnlocalisedName())) { //If we haven't added this type to active rewards yet add it
-                EventBusType[] buses = type.getEventBusTypes();
-                for (EventBusType bus : buses) {
-                    if (bus == EventBusType.FML) {
-                        FMLCommonHandler.instance().bus().register(type);
-                    } else if (bus == EventBusType.FORGE) {
-                        MinecraftForge.EVENT_BUS.register(type);
-                    } else if (bus == EventBusType.ORE) {
-                        MinecraftForge.ORE_GEN_BUS.register(type);
-                    } else if (bus == EventBusType.TERRAIN) {
-                        MinecraftForge.TERRAIN_GEN_BUS.register(type);
+                try {
+                    EventBusType[] buses = type.getEventBusTypes();
+                    for (EventBusType bus : buses) {
+                        EventBus theBus = getBus(bus);
+                        if (theBus != null) theBus.register(type);
                     }
-                }
+                } catch (Exception e) {}
             }
         }
     }
@@ -102,15 +99,8 @@ public class EventsManager {
                 try {
                     EventBusType[] buses = type.getEventBusTypes();
                     for (EventBusType bus : buses) {
-                        if (bus == EventBusType.FML) {
-                            FMLCommonHandler.instance().bus().unregister(type);
-                        } else if (bus == EventBusType.FORGE) {
-                            MinecraftForge.EVENT_BUS.unregister(type);
-                        } else if (bus == EventBusType.ORE) {
-                            MinecraftForge.ORE_GEN_BUS.unregister(type);
-                        } else if (bus == EventBusType.TERRAIN) {
-                            MinecraftForge.TERRAIN_GEN_BUS.unregister(type);
-                        }
+                        EventBus theBus = getBus(bus);
+                        if (theBus != null) theBus.unregister(type);
                     }
                 } catch (Exception e) {}
             }

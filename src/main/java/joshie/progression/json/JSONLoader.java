@@ -30,7 +30,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -140,7 +139,7 @@ public class JSONLoader {
     public static boolean setTabsAndCriteriaFromString(String json, boolean create) {
         try {
             DefaultSettings tab = gson.fromJson(json, DefaultSettings.class);
-            loadJSON(tab);
+            loadJSON(true, tab);
 
             if (create) {
                 //Attempt to write
@@ -156,9 +155,8 @@ public class JSONLoader {
         }
     }
 
-    public static void loadJSON(DefaultSettings settings) {
+    public static void loadJSON(boolean isClientside, DefaultSettings settings) {
         Options.settings = settings;
-        boolean isClient = FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT;
         for (DataTab data : settings.tabs) {
             ItemStack stack = null;
             if (data.stack != null) {
@@ -174,7 +172,7 @@ public class JSONLoader {
 
             /** Step 1: we create add all instances of criteria to the registry **/
             for (DataCriteria criteria : data.criteria) {
-                APIHandler.newCriteria(iTab, criteria.uniqueName);
+                APIHandler.newCriteria(iTab, criteria.uniqueName, isClientside);
             }
 
             /** Step 2 : Register all the conditions and triggers for this criteria **/
@@ -256,7 +254,7 @@ public class JSONLoader {
 
                 theCriteria.init(thePrereqs, theConflicts, display, isVisible, mustClaim, achievement, repeatable, icon);
 
-                if (isClient) {
+                if (isClientside) {
                     theCriteria.treeEditor.setCoordinates(x, y);
                 }
             }

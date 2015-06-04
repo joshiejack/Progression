@@ -31,11 +31,11 @@ public class Criteria implements ICriteria {
     public boolean achievement = true;
     public ItemStack stack = new ItemStack(Blocks.stone);
 
-    public Criteria(Tab tab, String uniqueName) {
+    public Criteria(Tab tab, String uniqueName, boolean isClientside) {
         this.tab = tab;
         this.uniqueName = uniqueName;
 
-        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+        if (isClientside) {
             this.treeEditor = new EditorTree(this);
             this.criteriaViewer = new ViewerCriteria(this);
         }

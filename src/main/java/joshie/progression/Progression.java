@@ -202,6 +202,7 @@ public class Progression {
 
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) return;
 
+        
         //Remap all relevant data
         RemappingHandler.reloadServerData();
         
