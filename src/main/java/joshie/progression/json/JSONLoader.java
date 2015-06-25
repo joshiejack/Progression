@@ -296,6 +296,7 @@ public class JSONLoader {
                 data.mustClaim = c.mustClaim;
                 data.displayAchievement = c.achievement;
                 data.repeatable = c.isRepeatable;
+                data.infinite = c.infinite;
                 data.displayName = c.displayName;
                 data.uniqueName = c.uniqueName;
                 data.displayStack = StackHelper.getStringFromStack(c.stack);

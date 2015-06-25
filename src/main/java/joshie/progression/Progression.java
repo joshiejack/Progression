@@ -43,6 +43,7 @@ import joshie.progression.criteria.triggers.TriggerLogin;
 import joshie.progression.criteria.triggers.TriggerObtain;
 import joshie.progression.criteria.triggers.TriggerPoints;
 import joshie.progression.criteria.triggers.TriggerResearch;
+import joshie.progression.criteria.triggers.TriggerTick;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.handlers.CraftingEvents;
 import joshie.progression.handlers.EventsHandler;
@@ -173,6 +174,7 @@ public class Progression {
         ProgressionAPI.registry.registerTriggerType(new TriggerPoints());
         ProgressionAPI.registry.registerTriggerType(new TriggerChangeDimension());
         ProgressionAPI.registry.registerTriggerType(new TriggerAchievement());
+        ProgressionAPI.registry.registerTriggerType(new TriggerTick());
 
         CommandManager.INSTANCE.registerCommand(new CommandHelp());
         CommandManager.INSTANCE.registerCommand(new CommandEdit());

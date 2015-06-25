@@ -225,7 +225,7 @@ public class CriteriaMappings {
         Collections.shuffle(toTrigger);
         for (Trigger trigger : toTrigger) {
             if (!trigger.getType().onFired(uuid, getTriggerData(trigger), data)) //Fire the new data
-                return Result.DENY;
+            return Result.DENY;
         }
 
         //Next step, now that the triggers have been fire, we need to go through them again
@@ -352,9 +352,14 @@ public class CriteriaMappings {
         //We are now looping though all criteria, we now need to check to see if this
         //First step is to validate to see if this criteria, is available right now
         //If the criteria is repeatable, or is not completed continue
-        int max = criteria.isRepeatable;
-        int last = getCriteriaCount(criteria);
-        if (last < max) {
+        boolean repeat = criteria.infinite;
+        if (!repeat) {
+            int max = criteria.isRepeatable;
+            int last = getCriteriaCount(criteria);
+            repeat = last < max;
+        }
+
+        if (repeat) {
             if (completedCritera.keySet().containsAll(criteria.prereqs)) {
                 //If we have all the requirements, continue
                 //Now that we know that we have all the requirements, we should check for conflicts
@@ -389,9 +394,14 @@ public class CriteriaMappings {
             //We are now looping though all criteria, we now need to check to see if this
             //First step is to validate to see if this criteria, is available right now
             //If the criteria is repeatable, or is not completed continue
-            int max = criteria.isRepeatable;
-            int last = getCriteriaCount(criteria);
-            if (last < max) {
+            boolean repeat = criteria.infinite;
+            if (!repeat) {
+                int max = criteria.isRepeatable;
+                int last = getCriteriaCount(criteria);
+                repeat = last < max;
+            }
+
+            if (repeat) {
                 if (completedCritera.keySet().containsAll(criteria.prereqs)) {
                     //If we have all the requirements, continue
                     //Now that we know that we have all the requirements, we should check for conflicts

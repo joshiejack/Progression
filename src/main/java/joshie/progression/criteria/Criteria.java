@@ -25,6 +25,7 @@ public class Criteria implements ICriteria {
     public Tab tab;
     public String uniqueName;
     public int isRepeatable = 1;
+    public boolean infinite = false;
     public String displayName = "New Criteria";
     public boolean isVisible = true;
     public boolean mustClaim = false;

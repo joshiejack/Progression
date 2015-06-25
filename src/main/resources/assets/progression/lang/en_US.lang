@@ -10,6 +10,7 @@ progression.trigger.points=Points
 progression.trigger.research=Research
 progression.trigger.onEaten=On Eaten
 progression.trigger.achievement=Achievement
+progression.trigger.tick=On Second
 
 #Conditions
 progression.condition.daytime=Is Daytime?

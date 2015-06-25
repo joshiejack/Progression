@@ -16,7 +16,7 @@ public class PlayerTeam {
     private Set<UUID> members = new HashSet();
     private TeamType type;
     private UUID owner;
-    private boolean isActive;
+    private boolean isActive = true;
 
     public PlayerTeam() {}
     public PlayerTeam(TeamType type, UUID owner) {

@@ -1,5 +1,8 @@
 Progression 0.4.1
+  Add On Second Trigger
   Fix click position for popup toggle
+  Fix potential crash when editing
+  Fix saving/loading of player data
 
 Progression 0.4.0
   Add Support for Thermal Expansion Machinist's Workbench

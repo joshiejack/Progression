@@ -25,6 +25,7 @@ public class DataCriteria {
 	String[] prereqs;
 	String[] conflicts;
 	int repeatable;
+    boolean infinite;
 	int x;
 	int y;
 	boolean isVisible;
