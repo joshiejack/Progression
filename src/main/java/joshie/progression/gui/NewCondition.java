@@ -2,6 +2,7 @@ package joshie.progression.gui;
 
 import joshie.progression.api.IConditionType;
 import joshie.progression.criteria.Trigger;
+import joshie.progression.gui.base.OverlayBase;
 import joshie.progression.handlers.APIHandler;
 import net.minecraft.item.ItemStack;
 

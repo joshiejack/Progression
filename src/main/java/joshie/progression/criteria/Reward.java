@@ -2,7 +2,7 @@ package joshie.progression.criteria;
 
 import joshie.progression.api.IRewardType;
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.gui.GuiDrawHelper;
+import joshie.progression.gui.base.DrawHelper;
 import joshie.progression.helpers.ClientHelper;
 import joshie.progression.json.Theme;
 import joshie.progression.lib.ProgressionInfo;
@@ -42,7 +42,7 @@ public class Reward {
         this.mouseX = mouseX - xPosition;
         this.mouseY = mouseY - 140;
         this.xPosition = xPos + 6;
-        GuiDrawHelper.INSTANCE.setOffset(xPosition, 140);
+        DrawHelper.INSTANCE.setOffset(xPosition, 140);
 
         ProgressionAPI.draw.drawGradient(1, 2, 99, 15, reward.getColor(), Theme.INSTANCE.blackBarGradient1, Theme.INSTANCE.blackBarGradient2);
         ProgressionAPI.draw.drawText(reward.getLocalisedName(), 6, 6, Theme.INSTANCE.blackBarFontColor);

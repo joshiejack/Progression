@@ -1,6 +1,6 @@
 package joshie.progression.criteria.triggers;
 
-import joshie.progression.gui.SelectItemOverlay.Type;
+import joshie.progression.gui.editors.SelectItem.Type;
 import joshie.progression.gui.fields.BlockField;
 import joshie.progression.gui.fields.BooleanField;
 import joshie.progression.gui.fields.TextField;

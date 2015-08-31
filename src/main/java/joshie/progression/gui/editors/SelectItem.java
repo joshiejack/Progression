@@ -1,7 +1,10 @@
-package joshie.progression.gui;
+package joshie.progression.gui.editors;
 
 import java.util.ArrayList;
 
+import joshie.progression.gui.GuiCriteriaEditor;
+import joshie.progression.gui.GuiTreeEditor;
+import joshie.progression.gui.base.IRenderOverlay;
 import joshie.progression.helpers.ClientHelper;
 import joshie.progression.helpers.ItemHelper;
 import net.minecraft.client.gui.ScaledResolution;
@@ -9,15 +12,15 @@ import net.minecraft.item.ItemStack;
 
 import org.lwjgl.opengl.GL11;
 
-public class SelectItemOverlay extends TextEditable implements IRenderOverlay {
-    public static SelectItemOverlay INSTANCE = new SelectItemOverlay();
-    static IItemSelectable selectable = null;
-    static ArrayList<ItemStack> sorted;
-    static String search = "";
-    static int position;
-    static Type type;
+public class SelectItem extends TextEditable implements IRenderOverlay {
+    public static SelectItem INSTANCE = new SelectItem();
+    public static IItemSelectable selectable = null;
+    public static ArrayList<ItemStack> sorted;
+    public static String search = "";
+    public static int position;
+    public static Type type;
 
-    public SelectItemOverlay() {}
+    public SelectItem() {}
 
     public IItemSelectable getEditable() {
         return selectable;
@@ -38,8 +41,8 @@ public class SelectItemOverlay extends TextEditable implements IRenderOverlay {
         
         if (reset()) {
             //Setup the info
-            SelectItemOverlay.type = type;
-            SelectItemOverlay.selectable = selectable;
+            SelectItem.type = type;
+            SelectItem.selectable = selectable;
             super.position = search.length();
         }
     }
@@ -55,10 +58,10 @@ public class SelectItemOverlay extends TextEditable implements IRenderOverlay {
     }
 
     @Override
-    void clear() {
-        SelectItemOverlay.selectable = null;
-        SelectItemOverlay.search = "";
-        SelectItemOverlay.position = 0;
+    public void clear() {
+        SelectItem.selectable = null;
+        SelectItem.search = "";
+        SelectItem.position = 0;
     }
 
     public void updateSearch() {

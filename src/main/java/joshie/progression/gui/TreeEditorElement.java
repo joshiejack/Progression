@@ -21,7 +21,7 @@ import net.minecraft.util.EnumChatFormatting;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-public class EditorTree {
+public class TreeEditorElement {
     private static final GuiTreeEditor gui = GuiTreeEditor.INSTANCE;
     private final Criteria criteria;
     private boolean isSelected;
@@ -38,7 +38,7 @@ public class EditorTree {
     private int x;
     private int y;
 
-    public EditorTree(Criteria criteria) {
+    public TreeEditorElement(Criteria criteria) {
         this.criteria = criteria;
     }
 

@@ -1,7 +1,8 @@
-package joshie.progression.gui;
+package joshie.progression.gui.editors;
 
-public class SelectTextEdit extends TextEditable {
-    public static SelectTextEdit INSTANCE = new SelectTextEdit();
+
+public class EditText extends TextEditable {
+    public static EditText INSTANCE = new EditText();
     private static ITextEditable text;
 
     public static ITextEditable getEditable() {
@@ -14,14 +15,14 @@ public class SelectTextEdit extends TextEditable {
 
     public void select(ITextEditable text) {
         if (reset()) {
-            SelectTextEdit.text = text;
-            position = SelectTextEdit.text.getTextField().length();
+            EditText.text = text;
+            position = EditText.text.getTextField().length();
         }
     }
 
     @Override
     public void clear() {
-        SelectTextEdit.text = null;
+        EditText.text = null;
     }
 
     @Override

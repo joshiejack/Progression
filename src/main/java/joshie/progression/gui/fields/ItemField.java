@@ -3,9 +3,9 @@ package joshie.progression.gui.fields;
 import java.lang.reflect.Field;
 
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.gui.IItemSelectable;
-import joshie.progression.gui.SelectItemOverlay;
-import joshie.progression.gui.SelectItemOverlay.Type;
+import joshie.progression.gui.editors.IItemSelectable;
+import joshie.progression.gui.editors.SelectItem;
+import joshie.progression.gui.editors.SelectItem.Type;
 import net.minecraft.item.ItemStack;
 
 public class ItemField extends AbstractField implements IItemSelectable {
@@ -44,7 +44,7 @@ public class ItemField extends AbstractField implements IItemSelectable {
     public boolean attemptClick(int mouseX, int mouseY) {
         boolean clicked = mouseX >= mouseX1 && mouseX <= mouseX2 && mouseY >= mouseY1 && mouseY <= mouseY2;
         if (clicked) {
-            SelectItemOverlay.INSTANCE.select(this, type);
+            SelectItem.INSTANCE.select(this, type);
             return true;
         } else return false;
     }

@@ -1,11 +1,15 @@
-package joshie.progression.gui;
+package joshie.progression.gui.buttons;
 
 import java.util.ArrayList;
 
 import joshie.progression.criteria.Criteria;
 import joshie.progression.criteria.Tab;
-import joshie.progression.gui.SelectItemOverlay.Type;
-import joshie.progression.gui.SelectTextEdit.ITextEditable;
+import joshie.progression.gui.GuiTreeEditor;
+import joshie.progression.gui.editors.EditText;
+import joshie.progression.gui.editors.IItemSelectable;
+import joshie.progression.gui.editors.SelectItem;
+import joshie.progression.gui.editors.EditText.ITextEditable;
+import joshie.progression.gui.editors.SelectItem.Type;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.ClientHelper;
 import joshie.progression.helpers.RenderItemHelper;
@@ -44,13 +48,13 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
 
         boolean displayTooltip = false;
         if (ClientHelper.canEdit()) {
-            displayTooltip = SelectTextEdit.INSTANCE.getEditable() == this;
+            displayTooltip = EditText.INSTANCE.getEditable() == this;
         }
 
         if (k == 2 || displayTooltip) {
             ArrayList<String> name = new ArrayList();
             String hidden = tab.isVisible() ? "" : "(Hidden)";
-            name.add(SelectTextEdit.INSTANCE.getText(this) + hidden);
+            name.add(EditText.INSTANCE.getText(this) + hidden);
             if (ClientHelper.canEdit()) {
                 name.add(EnumChatFormatting.GRAY + "(Sort Index) " + tab.getSortIndex());
                 name.add(EnumChatFormatting.GRAY + "Shift + Click to rename");
@@ -99,9 +103,9 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
             }
 
             if (GuiScreen.isShiftKeyDown()) {
-                SelectTextEdit.INSTANCE.select(this);
+                EditText.INSTANCE.select(this);
             } else if (GuiScreen.isCtrlKeyDown()) {
-                SelectItemOverlay.INSTANCE.select(this, Type.TREE);
+                SelectItem.INSTANCE.select(this, Type.TREE);
             } else if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
                 boolean current = tab.isVisible();
                 tab.setVisibility(!current);
@@ -116,12 +120,12 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
     @Override
     public void onNotClicked() {
         if (ClientHelper.canEdit()) {
-            if (SelectTextEdit.INSTANCE.getEditable() == this) {
-                SelectTextEdit.INSTANCE.clear();
+            if (EditText.INSTANCE.getEditable() == this) {
+                EditText.INSTANCE.clear();
             }
 
-            if (SelectItemOverlay.INSTANCE.getEditable() == this) {
-                SelectItemOverlay.INSTANCE.clear();
+            if (SelectItem.INSTANCE.getEditable() == this) {
+                SelectItem.INSTANCE.clear();
             }
         }
     }

@@ -1,5 +1,6 @@
-package joshie.progression.gui;
+package joshie.progression.gui.editors;
 
+import joshie.progression.gui.base.OverlayBase;
 import joshie.progression.json.Theme;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ChatAllowedCharacters;

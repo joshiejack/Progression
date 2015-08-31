@@ -1,7 +1,7 @@
 package joshie.progression.criteria.triggers;
 
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.gui.SelectItemOverlay.Type;
+import joshie.progression.gui.editors.SelectItem.Type;
 import joshie.progression.gui.fields.EntityField;
 import joshie.progression.helpers.JSONHelper;
 import net.minecraft.entity.Entity;

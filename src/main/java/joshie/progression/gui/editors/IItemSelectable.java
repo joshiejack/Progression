@@ -1,4 +1,4 @@
-package joshie.progression.gui;
+package joshie.progression.gui.editors;
 
 import net.minecraft.item.ItemStack;
 

@@ -1,4 +1,4 @@
-package joshie.progression.gui;
+package joshie.progression.gui.base;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Set;
 
 import joshie.progression.criteria.Criteria;
+import joshie.progression.gui.editors.EditText;
+import joshie.progression.gui.editors.SelectItem;
 import joshie.progression.helpers.ClientHelper;
 import joshie.progression.json.JSONLoader;
 import joshie.progression.json.Theme;
@@ -23,13 +25,13 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 public abstract class GuiBase extends GuiScreen {
-    protected Set<IRenderOverlay> overlays = new HashSet();
+    public Set<IRenderOverlay> overlays = new HashSet();
     public int mouseX = 0;
     public int mouseY = 0;
 
-    protected ScaledResolution res;
-    protected ArrayList<String> tooltip;
-    protected int ySize = 240;
+    public ScaledResolution res;
+    public ArrayList<String> tooltip;
+    public int ySize = 240;
     public Theme theme = null;
     public Criteria selected = null;
     public Criteria previous = null;
@@ -42,7 +44,7 @@ public abstract class GuiBase extends GuiScreen {
         Keyboard.enableRepeatEvents(true);
         res = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
         theme = Theme.INSTANCE;
-        SelectItemOverlay.INSTANCE.clear();
+        SelectItem.INSTANCE.clear();
     }
 
     @Override
@@ -53,7 +55,7 @@ public abstract class GuiBase extends GuiScreen {
         Keyboard.enableRepeatEvents(false);
         if (ClientHelper.getPlayer().capabilities.isCreativeMode) {
             JSONLoader.saveData();
-            EditorTicker.LAST_TICK = 60;
+            SaveTicker.LAST_TICK = 60;
         }
     }
 
@@ -226,7 +228,7 @@ public abstract class GuiBase extends GuiScreen {
 
     @Override
     protected void keyTyped(char character, int key) {
-        if (SelectTextEdit.getEditable() == null) {
+        if (EditText.getEditable() == null) {
             int jump = 1;
             if (Keyboard.isKeyDown(54) || Keyboard.isKeyDown(42)) {
                 jump = 50;
@@ -252,14 +254,14 @@ public abstract class GuiBase extends GuiScreen {
         int wheel = Mouse.getDWheel();
         boolean down = wheel < 0;
         if (wheel != 0) {
-            if (!SelectItemOverlay.INSTANCE.isVisible()) {
+            if (!SelectItem.INSTANCE.isVisible()) {
                 if (!down) {
                     scroll(20);
                 } else {
                     scroll(-20);
                 }
             } else {
-                SelectItemOverlay.INSTANCE.scroll(down);
+                SelectItem.INSTANCE.scroll(down);
             }
         }
 

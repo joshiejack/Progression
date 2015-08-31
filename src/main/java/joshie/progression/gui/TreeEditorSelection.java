@@ -1,16 +1,18 @@
 package joshie.progression.gui;
 
+import joshie.progression.gui.editors.SelectItem;
+import joshie.progression.gui.editors.TextEditable;
 import joshie.progression.helpers.RenderItemHelper;
 import net.minecraft.client.gui.ScaledResolution;
 
 import org.lwjgl.opengl.GL11;
 
-public class TreeItemSelect extends TextEditable {
-    public static TreeItemSelect INSTANCE = new TreeItemSelect();
+public class TreeEditorSelection extends TextEditable {
+    public static TreeEditorSelection INSTANCE = new TreeEditorSelection();
 
     public boolean mouseClicked(int mouseX, int mouseY) {
-        if (SelectItemOverlay.INSTANCE.sorted == null) {
-            SelectItemOverlay.INSTANCE.updateSearch();
+        if (SelectItem.INSTANCE.sorted == null) {
+            SelectItem.INSTANCE.updateSearch();
         }
 
         ScaledResolution res = GuiTreeEditor.INSTANCE.res;
@@ -18,11 +20,11 @@ public class TreeItemSelect extends TextEditable {
         int width = (int) ((double) fullWidth / 18.633333334D);
         int j = 0;
         int k = 0;
-        for (int i = SelectItemOverlay.INSTANCE.position; i < SelectItemOverlay.INSTANCE.position + (width * 10); i++) {
-            if (i >= 0 && i < SelectItemOverlay.INSTANCE.sorted.size()) {
+        for (int i = SelectItem.INSTANCE.position; i < SelectItem.INSTANCE.position + (width * 10); i++) {
+            if (i >= 0 && i < SelectItem.INSTANCE.sorted.size()) {
                 if (mouseX >= 32 + (j * 16) && mouseX <= 32 + (j * 16) + 16) {
                     if (mouseY >= 45 + (k * 16) && mouseY <= 45 + (k * 16) + 16) {
-                        SelectItemOverlay.INSTANCE.selectable.setItemStack(SelectItemOverlay.INSTANCE.sorted.get(i).copy());
+                        SelectItem.INSTANCE.selectable.setItemStack(SelectItem.INSTANCE.sorted.get(i).copy());
                         return true;
                     }
                 }
@@ -41,9 +43,9 @@ public class TreeItemSelect extends TextEditable {
 
     public void draw() {
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-        if (SelectItemOverlay.INSTANCE.selectable != null) {
-            if (SelectItemOverlay.INSTANCE.sorted == null) {
-                SelectItemOverlay.INSTANCE.updateSearch();
+        if (SelectItem.INSTANCE.selectable != null) {
+            if (SelectItem.INSTANCE.sorted == null) {
+                SelectItem.INSTANCE.updateSearch();
             }
             
             int y = GuiTreeEditor.INSTANCE.y;
@@ -57,7 +59,7 @@ public class TreeItemSelect extends TextEditable {
 
             GuiTreeEditor.INSTANCE.mc.fontRenderer.drawString("Select Item - Click elsewhere to close", 35 - offsetX, y + 27, theme.blackBarFontColor);
             GuiTreeEditor.INSTANCE.drawRectWithBorder(res.getScaledWidth() - 180, y + 23, res.getScaledWidth() - 35, y + 38, theme.blackBarUnderLine, theme.blackBarUnderLineBorder);
-            GuiTreeEditor.INSTANCE.mc.fontRenderer.drawString(SelectItemOverlay.INSTANCE.getText(), res.getScaledWidth() - 175, y + 29, theme.blackBarFontColor);
+            GuiTreeEditor.INSTANCE.mc.fontRenderer.drawString(SelectItem.INSTANCE.getText(), res.getScaledWidth() - 175, y + 29, theme.blackBarFontColor);
 
             int width = (int) ((double) fullWidth / 18.633333334D);
             int j = 0;
@@ -66,9 +68,9 @@ public class TreeItemSelect extends TextEditable {
             //Switch 8 > 32 (-offsetX + 32)
             //Switch 16.6333333 to 18
             //width * 4 to width *10
-            for (int i = SelectItemOverlay.INSTANCE.position; i < SelectItemOverlay.INSTANCE.position + (width * 10); i++) {
-                if (i >= 0 && i < SelectItemOverlay.INSTANCE.sorted.size()) {
-                	RenderItemHelper.drawStack(SelectItemOverlay.INSTANCE.sorted.get(i), -offsetX + 32 + (j * 16), y + 45 + (k * 16), 1F);
+            for (int i = SelectItem.INSTANCE.position; i < SelectItem.INSTANCE.position + (width * 10); i++) {
+                if (i >= 0 && i < SelectItem.INSTANCE.sorted.size()) {
+                	RenderItemHelper.drawStack(SelectItem.INSTANCE.sorted.get(i), -offsetX + 32 + (j * 16), y + 45 + (k * 16), 1F);
 
                     j++;
 
@@ -83,11 +85,11 @@ public class TreeItemSelect extends TextEditable {
 
     @Override
     public String getTextField() {
-        return SelectItemOverlay.INSTANCE.getTextField();
+        return SelectItem.INSTANCE.getTextField();
     }
 
     @Override
     public void setTextField(String str) {
-        SelectItemOverlay.INSTANCE.setTextField(str);
+        SelectItem.INSTANCE.setTextField(str);
     }
 }

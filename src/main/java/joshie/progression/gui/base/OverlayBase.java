@@ -1,5 +1,13 @@
-package joshie.progression.gui;
+package joshie.progression.gui.base;
 
+import joshie.progression.gui.GuiCriteriaEditor;
+import joshie.progression.gui.GuiTriggerEditor;
+import joshie.progression.gui.NewCondition;
+import joshie.progression.gui.NewReward;
+import joshie.progression.gui.NewTrigger;
+import joshie.progression.gui.editors.EditText;
+import joshie.progression.gui.editors.SelectEntity;
+import joshie.progression.gui.editors.SelectItem;
 import joshie.progression.json.Theme;
 import net.minecraft.item.ItemStack;
 
@@ -29,8 +37,8 @@ public class OverlayBase implements IRenderOverlay {
 
     //Resets
     public boolean reset() {
-        SelectItemOverlay.INSTANCE.clear();
-        SelectTextEdit.INSTANCE.clear();
+        SelectItem.INSTANCE.clear();
+        EditText.INSTANCE.clear();
         SelectEntity.INSTANCE.clear();
         NewCondition.INSTANCE.clear();
         NewTrigger.INSTANCE.clear();
@@ -38,7 +46,7 @@ public class OverlayBase implements IRenderOverlay {
         return true;
     }
 
-    void clear() {}
+    public void clear() {}
 
     @Override
     public boolean isVisible() {

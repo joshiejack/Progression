@@ -1,19 +1,18 @@
-package joshie.progression.gui;
+package joshie.progression.gui.fields;
 
 import java.lang.reflect.Field;
 
-import joshie.progression.gui.SelectTextEdit.ITextEditable;
-import joshie.progression.gui.fields.ICallback;
-import joshie.progression.gui.fields.ItemField;
+import joshie.progression.gui.editors.EditText;
+import joshie.progression.gui.editors.EditText.ITextEditable;
 import net.minecraft.item.ItemStack;
 
-public class TextFieldHelper implements ITextEditable {
+public class FieldHelper implements ITextEditable {
     public Object o;
     public Field f;
 
-    public TextFieldHelper() {}
+    public FieldHelper() {}
 
-    public TextFieldHelper(String f, Object o) {
+    public FieldHelper(String f, Object o) {
         this.o = o;
         
         try {
@@ -22,11 +21,11 @@ public class TextFieldHelper implements ITextEditable {
     }
 
     public void select() {
-        SelectTextEdit.INSTANCE.select(this);
+        EditText.INSTANCE.select(this);
     }
 
     public String getText() {
-        return SelectTextEdit.INSTANCE.getText(this);
+        return EditText.INSTANCE.getText(this);
     }
     
     public float getFloat() {
@@ -81,7 +80,7 @@ public class TextFieldHelper implements ITextEditable {
         } else set(str);
     }
 
-    public static class IntegerFieldHelper extends TextFieldHelper {
+    public static class IntegerFieldHelper extends FieldHelper {
         protected String textField = null;
 
         public IntegerFieldHelper() {}

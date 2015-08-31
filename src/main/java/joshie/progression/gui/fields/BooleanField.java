@@ -6,7 +6,6 @@ import joshie.progression.api.ProgressionAPI;
 
 public class BooleanField extends AbstractField {
     public Field field;
-    public Object object;
     public String truth;
     public String lies;
 
@@ -58,10 +57,5 @@ public class BooleanField extends AbstractField {
                 ProgressionAPI.draw.drawSplitText(name + ": " + value, 4, yPos, 105, color);
             }
         } catch (Exception e) {}
-    }
-
-    @Override
-    public void setObject(Object object) {
-        this.object = object;
     }
 }

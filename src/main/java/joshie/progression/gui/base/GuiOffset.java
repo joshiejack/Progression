@@ -1,5 +1,6 @@
-package joshie.progression.gui;
+package joshie.progression.gui.base;
 
+import joshie.progression.gui.GuiCriteriaEditor;
 import joshie.progression.helpers.RenderItemHelper;
 import net.minecraft.item.ItemStack;
 

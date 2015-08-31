@@ -5,8 +5,14 @@ import java.util.List;
 import joshie.progression.Progression;
 import joshie.progression.criteria.Reward;
 import joshie.progression.criteria.Trigger;
-import joshie.progression.gui.SelectItemOverlay.Type;
-import joshie.progression.gui.TextFieldHelper.IntegerFieldHelper;
+import joshie.progression.gui.base.GuiOffset;
+import joshie.progression.gui.base.IRenderOverlay;
+import joshie.progression.gui.editors.EditText;
+import joshie.progression.gui.editors.IItemSelectable;
+import joshie.progression.gui.editors.SelectItem;
+import joshie.progression.gui.editors.SelectItem.Type;
+import joshie.progression.gui.fields.FieldHelper;
+import joshie.progression.gui.fields.FieldHelper.IntegerFieldHelper;
 import joshie.progression.handlers.EventsManager;
 import joshie.progression.helpers.ClientHelper;
 import joshie.progression.helpers.ListHelper;
@@ -137,7 +143,7 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
 
         if (!clicked) {
             if (!onCriteriaClicked(isDoubleClick)) {
-                SelectTextEdit.INSTANCE.reset();
+                EditText.INSTANCE.reset();
             }
         }
 
@@ -146,7 +152,7 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
             if (button == 1) {
                 GuiTreeEditor.INSTANCE.currentTab = GuiCriteriaEditor.INSTANCE.selected.tab;
                 GuiTreeEditor.INSTANCE.currentTabName = GuiTreeEditor.INSTANCE.currentTab.getUniqueName();
-                SelectTextEdit.INSTANCE.reset();
+                EditText.INSTANCE.reset();
                 GuiTreeEditor.INSTANCE.selected = null;
                 GuiTreeEditor.INSTANCE.previous = null;
                 GuiTreeEditor.INSTANCE.lastClicked = null;
@@ -164,7 +170,7 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
         if (ClientHelper.canEdit()) {            
             if (mouseY >= 4 && mouseY <= 19) {
                 if (mouseX <= 15) {
-                    SelectItemOverlay.INSTANCE.select(this, Type.REWARD);
+                    SelectItem.INSTANCE.select(this, Type.REWARD);
                     hasClicked = true;
                 }
                 
@@ -245,7 +251,7 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
         return hasClicked;
     }
 
-    private static class NameEdit extends TextFieldHelper {
+    private static class NameEdit extends FieldHelper {
         @Override
         public String getTextField() {
             return INSTANCE.selected.displayName;

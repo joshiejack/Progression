@@ -5,6 +5,9 @@ import java.util.Set;
 
 import joshie.progression.Progression;
 import joshie.progression.criteria.Trigger;
+import joshie.progression.gui.base.GuiBase;
+import joshie.progression.gui.base.IRenderOverlay;
+import joshie.progression.gui.editors.EditText;
 import joshie.progression.helpers.ClientHelper;
 
 public class GuiTriggerEditor extends GuiBase {
@@ -18,7 +21,6 @@ public class GuiTriggerEditor extends GuiBase {
 
     @Override
     public void drawForeground() {
-        trigger.getConditionEditor().draw(0, y, offsetX);
         for (IRenderOverlay overlay : overlays) {
             if (overlay.isVisible()) {
                 overlay.draw(0, y);
@@ -29,7 +31,6 @@ public class GuiTriggerEditor extends GuiBase {
     @Override
     protected void keyTyped(char character, int key) {
         super.keyTyped(character, key);
-
         for (IRenderOverlay overlay : overlays) {
             if (overlay.isVisible()) {
                 overlay.keyTyped(character, key);
@@ -61,14 +62,14 @@ public class GuiTriggerEditor extends GuiBase {
 
         if (!clicked) {
             if (!trigger.getConditionEditor().click(mouseX, mouseY, isDoubleClick)) {
-                SelectTextEdit.INSTANCE.reset();
+                EditText.INSTANCE.reset();
             }
         }
 
         //If we are trying to go back
         if (visible <= 1 && !clicked) {
             if (par3 == 1) {
-                SelectTextEdit.INSTANCE.reset();
+                EditText.INSTANCE.reset();
                 ClientHelper.getPlayer().openGui(Progression.instance, 1, null, 0, 0, 0);
             }
         }

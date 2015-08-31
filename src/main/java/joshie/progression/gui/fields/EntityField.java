@@ -4,9 +4,9 @@ import java.lang.reflect.Field;
 
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.gui.GuiCriteriaEditor;
-import joshie.progression.gui.SelectEntity;
-import joshie.progression.gui.SelectEntity.IEntitySelectable;
-import joshie.progression.gui.SelectItemOverlay.Type;
+import joshie.progression.gui.editors.SelectEntity;
+import joshie.progression.gui.editors.SelectEntity.IEntitySelectable;
+import joshie.progression.gui.editors.SelectItem.Type;
 import joshie.progression.helpers.ClientHelper;
 import joshie.progression.helpers.EntityHelper;
 import net.minecraft.client.gui.inventory.GuiInventory;

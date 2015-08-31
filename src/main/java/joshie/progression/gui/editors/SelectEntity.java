@@ -1,8 +1,11 @@
-package joshie.progression.gui;
+package joshie.progression.gui.editors;
 
 import java.util.ArrayList;
 
-import joshie.progression.gui.SelectItemOverlay.Type;
+import joshie.progression.gui.GuiCriteriaEditor;
+import joshie.progression.gui.GuiTreeEditor;
+import joshie.progression.gui.base.IRenderOverlay;
+import joshie.progression.gui.editors.SelectItem.Type;
 import joshie.progression.helpers.EntityHelper;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -30,7 +33,7 @@ public class SelectEntity extends TextEditable implements IRenderOverlay {
     }
 
     @Override
-    void clear() {
+    public void clear() {
         SelectEntity.selectable = null;
         SelectEntity.search = "";
         SelectEntity.position = 0;

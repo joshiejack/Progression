@@ -5,8 +5,8 @@ import java.util.UUID;
 
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.criteria.Criteria;
-import joshie.progression.gui.SelectTextEdit;
-import joshie.progression.gui.SelectTextEdit.ITextEditable;
+import joshie.progression.gui.editors.EditText;
+import joshie.progression.gui.editors.EditText.ITextEditable;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.ClientHelper;
 import joshie.progression.helpers.JSONHelper;
@@ -59,7 +59,7 @@ public class RewardCriteria extends RewardBase implements ITextEditable {
     public Result onClicked(int mouseX, int mouseY) {
         if (mouseX <= 84 && mouseX >= 1) {
             if (mouseY >= 17 && mouseY <= 33) {
-                SelectTextEdit.INSTANCE.select(this);
+                EditText.INSTANCE.select(this);
                 return Result.ALLOW;
             } else if (mouseY > 33 && mouseY <= 41) {
                 remove = !remove;
@@ -83,7 +83,7 @@ public class RewardCriteria extends RewardBase implements ITextEditable {
 
         ProgressionAPI.draw.drawText("criteria: ", 4, 18, researchColor);
         EnumChatFormatting prefix = criteria != null? EnumChatFormatting.GREEN: EnumChatFormatting.RED;
-        ProgressionAPI.draw.drawText(prefix + SelectTextEdit.INSTANCE.getText(this), 4, 26, researchColor);
+        ProgressionAPI.draw.drawText(prefix + EditText.INSTANCE.getText(this), 4, 26, researchColor);
         ProgressionAPI.draw.drawText("remove: " + remove, 4, 33, booleanColor);
     }
 

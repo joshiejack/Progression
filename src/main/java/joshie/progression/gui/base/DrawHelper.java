@@ -1,10 +1,11 @@
-package joshie.progression.gui;
+package joshie.progression.gui.base;
 
 import joshie.progression.api.IDrawHelper;
+import joshie.progression.gui.GuiCriteriaEditor;
 import net.minecraft.item.ItemStack;
 
-public class GuiDrawHelper implements IDrawHelper {
-    public static final GuiDrawHelper INSTANCE = new GuiDrawHelper();
+public class DrawHelper implements IDrawHelper {
+    public static final DrawHelper INSTANCE = new DrawHelper();
 
     private int xPosition = 0;
     private int yPosition = 0;

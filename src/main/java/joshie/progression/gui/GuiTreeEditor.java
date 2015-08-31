@@ -7,6 +7,11 @@ import java.util.List;
 
 import joshie.progression.criteria.Criteria;
 import joshie.progression.criteria.Tab;
+import joshie.progression.gui.base.GuiBase;
+import joshie.progression.gui.buttons.ButtonNewCriteria;
+import joshie.progression.gui.buttons.ButtonTab;
+import joshie.progression.gui.editors.EditText;
+import joshie.progression.gui.editors.SelectItem;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.ClientHelper;
 import joshie.progression.json.Options;
@@ -94,7 +99,7 @@ public class GuiTreeEditor extends GuiBase {
         if (currentTab == null) initGui();
         for (Criteria criteria : currentTab.getCriteria()) {
             if (criteria.treeEditor.isCriteriaVisible() || ClientHelper.canEdit()) {
-                EditorTree editor = criteria.treeEditor;
+                TreeEditorElement editor = criteria.treeEditor;
                 List<Criteria> prereqs = criteria.prereqs;
                 for (Criteria c : prereqs) {
                     int y1 = c.treeEditor.getY();
@@ -127,7 +132,7 @@ public class GuiTreeEditor extends GuiBase {
             }
         }
 
-        TreeItemSelect.INSTANCE.draw();
+        TreeEditorSelection.INSTANCE.draw();
     }
 
     public Tab previousTab = null;
@@ -149,10 +154,10 @@ public class GuiTreeEditor extends GuiBase {
         }
 
         if (ClientHelper.canEdit()) {
-            SelectTextEdit.INSTANCE.keyTyped(character, key);
+            EditText.INSTANCE.keyTyped(character, key);
 
-            if (SelectItemOverlay.INSTANCE.getEditable() != null) {
-                TreeItemSelect.INSTANCE.keyTyped(character, key);
+            if (SelectItem.INSTANCE.getEditable() != null) {
+                TreeEditorSelection.INSTANCE.keyTyped(character, key);
             }
         }
 
@@ -178,11 +183,11 @@ public class GuiTreeEditor extends GuiBase {
         }
     }
 
-    private long lastClick;
-    private int lastType;
-    Criteria lastClicked = null;
-    private int drag = 0;
-    boolean isDragging = false;
+    public long lastClick;
+    public int lastType;
+    public Criteria lastClicked = null;
+    public int drag = 0;
+    public boolean isDragging = false;
 
     @Override
     protected void mouseClicked(int par1, int par2, int par3) {
@@ -194,8 +199,8 @@ public class GuiTreeEditor extends GuiBase {
         lastType = par3;
 
         lastClicked = null;
-        if (SelectItemOverlay.INSTANCE.getEditable() != null) {
-            TreeItemSelect.INSTANCE.mouseClicked(mouseX, mouseY);
+        if (SelectItem.INSTANCE.getEditable() != null) {
+            TreeEditorSelection.INSTANCE.mouseClicked(mouseX, mouseY);
         }
 
         super.mouseClicked(par1, par2, par3);

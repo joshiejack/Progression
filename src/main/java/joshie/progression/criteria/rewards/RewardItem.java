@@ -3,7 +3,7 @@ package joshie.progression.criteria.rewards;
 import java.util.List;
 import java.util.UUID;
 
-import joshie.progression.gui.SelectItemOverlay.Type;
+import joshie.progression.gui.editors.SelectItem.Type;
 import joshie.progression.gui.fields.ItemAmountField;
 import joshie.progression.gui.fields.ItemField;
 import joshie.progression.helpers.JSONHelper;

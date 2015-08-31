@@ -18,6 +18,7 @@ import joshie.progression.criteria.conditions.ConditionCoordinates;
 import joshie.progression.criteria.conditions.ConditionDaytime;
 import joshie.progression.criteria.conditions.ConditionInInventory;
 import joshie.progression.criteria.conditions.ConditionRandom;
+import joshie.progression.criteria.filters.FilterItem;
 import joshie.progression.criteria.rewards.RewardBreakBlock;
 import joshie.progression.criteria.rewards.RewardClear;
 import joshie.progression.criteria.rewards.RewardCommand;
@@ -141,6 +142,8 @@ public class Progression {
         if (Options.tileClaimerRecipe) {
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(item, 1, ItemCriteria.CLAIM), new Object[] { "F", "P", 'F', Items.flint, 'P', "plankWood" }));
         }
+        
+        ProgressionAPI.registry.registerItemFilter(new FilterItem());
 
         ProgressionAPI.registry.registerConditionType(new ConditionBiomeType());
         ProgressionAPI.registry.registerConditionType(new ConditionRandom());

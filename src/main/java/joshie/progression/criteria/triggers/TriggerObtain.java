@@ -6,7 +6,7 @@ import joshie.progression.api.EventBusType;
 import joshie.progression.api.ITriggerData;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.criteria.triggers.data.DataCrafting;
-import joshie.progression.gui.SelectItemOverlay.Type;
+import joshie.progression.gui.editors.SelectItem.Type;
 import joshie.progression.gui.fields.BooleanField;
 import joshie.progression.gui.fields.ItemField;
 import joshie.progression.gui.fields.TextField;

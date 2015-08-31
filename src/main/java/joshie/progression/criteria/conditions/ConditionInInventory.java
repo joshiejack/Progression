@@ -2,7 +2,7 @@ package joshie.progression.criteria.conditions;
 
 import java.util.UUID;
 
-import joshie.progression.gui.SelectItemOverlay.Type;
+import joshie.progression.gui.editors.SelectItem.Type;
 import joshie.progression.gui.fields.BooleanField;
 import joshie.progression.gui.fields.EnumField;
 import joshie.progression.gui.fields.IEnum;

@@ -6,9 +6,9 @@ import java.util.List;
 import joshie.progression.Progression;
 import joshie.progression.api.ITriggerType;
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.gui.EditorCondition;
-import joshie.progression.gui.GuiDrawHelper;
+import joshie.progression.gui.TriggerEditorElement;
 import joshie.progression.gui.GuiTriggerEditor;
+import joshie.progression.gui.base.DrawHelper;
 import joshie.progression.helpers.ClientHelper;
 import joshie.progression.json.Theme;
 import joshie.progression.lib.ProgressionInfo;
@@ -19,7 +19,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class Trigger {
     @SideOnly(Side.CLIENT)
-    private EditorCondition editor;
+    private TriggerEditorElement editor;
 
     private List<Condition> conditions = new ArrayList();
     private Criteria criteria;
@@ -31,7 +31,7 @@ public class Trigger {
         this.triggerType.markCriteria(criteria);
         //Don't load the editor server side
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
-            this.editor = new EditorCondition(this);
+            this.editor = new TriggerEditorElement(this);
         }
     }
 
@@ -43,7 +43,7 @@ public class Trigger {
         conditions.add(condition);
     }
 
-    public EditorCondition getConditionEditor() {
+    public TriggerEditorElement getConditionEditor() {
         return editor;
     }
 
@@ -93,7 +93,7 @@ public class Trigger {
         this.mouseX = mouseX - xPosition;
         this.mouseY = mouseY - 45;
         this.xPosition = xPos + 6;
-        GuiDrawHelper.INSTANCE.setOffset(xPosition, 45);
+        DrawHelper.INSTANCE.setOffset(xPosition, 45);
         ProgressionAPI.draw.drawGradient(1, 2, 99, 15, getType().getColor(), Theme.INSTANCE.triggerGradient1, Theme.INSTANCE.triggerGradient2);
         ProgressionAPI.draw.drawText(getType().getLocalisedName(), 6, 6, Theme.INSTANCE.triggerFontColor);
 

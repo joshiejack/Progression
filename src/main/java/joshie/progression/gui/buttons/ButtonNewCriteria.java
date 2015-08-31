@@ -1,9 +1,10 @@
-package joshie.progression.gui;
+package joshie.progression.gui.buttons;
 
 import java.util.ArrayList;
 
 import joshie.progression.criteria.Criteria;
 import joshie.progression.criteria.Tab;
+import joshie.progression.gui.GuiTreeEditor;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.json.Theme;
 import joshie.progression.lib.ProgressionInfo;

@@ -28,6 +28,9 @@ public interface IProgressionAPI {
 	/** Register a reward with the registry **/
 	public IRewardType registerRewardType(IRewardType reward);
 	
+	/** Register a filter type with the registry **/
+	public IItemFilter registerItemFilter(IItemFilter filter);
+	
 	/** Register a new crafting type **/
 	public void registerActionType(String unlocalised);
 	

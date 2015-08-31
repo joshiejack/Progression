@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.UUID;
 
 import joshie.progression.api.IConditionType;
+import joshie.progression.api.IItemFilter;
 import joshie.progression.api.IProgressionAPI;
 import joshie.progression.api.IRewardType;
 import joshie.progression.api.ITriggerData;
@@ -42,6 +43,7 @@ public class APIHandler implements IProgressionAPI {
     public static final HashMap<String, ITriggerType> triggerTypes = new HashMap();
     public static final HashMap<String, IRewardType> rewardTypes = new HashMap();
     public static final HashMap<String, IConditionType> conditionTypes = new HashMap();
+    public static final HashMap<String, IItemFilter> filterTypes = new HashMap();
 
     //These four maps are registries for fetching the various types
     public static HashMap<String, Tab> tabs;
@@ -77,6 +79,12 @@ public class APIHandler implements IProgressionAPI {
     public IRewardType registerRewardType(IRewardType type) {
         rewardTypes.put(type.getUnlocalisedName(), type);
         return type;
+    }
+
+    @Override
+    public IItemFilter registerItemFilter(IItemFilter filter) {
+        filterTypes.put(filter.getName(), filter);
+        return filter;
     }
 
     public static Criteria newCriteria(Tab tab, String name, boolean isClientside) {
@@ -153,6 +161,18 @@ public class APIHandler implements IProgressionAPI {
         EventsManager.onRewardAdded(reward);
         criteria.addRewards(reward);
         return reward;
+    }
+    
+    public static IItemFilter newFilter(String typeName, JsonObject typeData) {
+        IItemFilter type = filterTypes.get(typeName);
+        if (type != null) {
+            try {
+                type = type.getClass().newInstance();
+                type.readFromJSON(typeData);
+            } catch (Exception e) {}
+        }
+        
+        return type;
     }
 
     public static Trigger cloneTrigger(Criteria criteria, ITriggerType oldTriggerType) {

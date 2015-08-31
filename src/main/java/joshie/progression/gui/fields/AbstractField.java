@@ -3,6 +3,7 @@ package joshie.progression.gui.fields;
 
 public abstract class AbstractField {
     public String name;
+    public Object object;
 
     public AbstractField(String name) {
         this.name = name;
@@ -16,5 +17,7 @@ public abstract class AbstractField {
         return false;
     }
 
-    public abstract void setObject(Object object);
+    public void setObject(Object object) {
+        this.object = object;
+    }
 }

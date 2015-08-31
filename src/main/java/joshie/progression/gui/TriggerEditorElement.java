@@ -16,12 +16,12 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.common.eventhandler.Event.Result;
 
-public class EditorCondition {
+public class TriggerEditorElement {
     private final Trigger trigger;
     private int xCoord;
     private int yCoord;
 
-    public EditorCondition(Trigger criteria) {
+    public TriggerEditorElement(Trigger criteria) {
         this.trigger = criteria;
     }
 

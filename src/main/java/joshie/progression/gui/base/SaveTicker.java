@@ -1,4 +1,4 @@
-package joshie.progression.gui;
+package joshie.progression.gui.base;
 
 import joshie.progression.Progression;
 import joshie.progression.helpers.ClientHelper;
@@ -7,7 +7,7 @@ import joshie.progression.network.PacketReload;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 
-public class EditorTicker {
+public class SaveTicker {
     public static int LAST_TICK = 0;
     public static int OVERRIDE_TICK = 0;
 

@@ -2,6 +2,7 @@ package joshie.progression.gui;
 
 import joshie.progression.api.ITriggerType;
 import joshie.progression.criteria.Criteria;
+import joshie.progression.gui.base.OverlayBase;
 import joshie.progression.handlers.APIHandler;
 
 import org.lwjgl.opengl.GL11;

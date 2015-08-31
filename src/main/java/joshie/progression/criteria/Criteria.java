@@ -6,12 +6,9 @@ import java.util.Collections;
 import java.util.List;
 
 import joshie.progression.api.ICriteria;
-import joshie.progression.gui.EditorTree;
-import joshie.progression.gui.ViewerCriteria;
+import joshie.progression.gui.TreeEditorElement;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
 
 public class Criteria implements ICriteria {
     /** All the data for this **/
@@ -19,8 +16,7 @@ public class Criteria implements ICriteria {
     public List<Reward> rewards = new ArrayList();
     public List<Criteria> prereqs = new ArrayList();
     public List<Criteria> conflicts = new ArrayList();
-    public EditorTree treeEditor;
-    public ViewerCriteria criteriaViewer;
+    public TreeEditorElement treeEditor;
 
     public Tab tab;
     public String uniqueName;
@@ -37,8 +33,7 @@ public class Criteria implements ICriteria {
         this.uniqueName = uniqueName;
 
         if (isClientside) {
-            this.treeEditor = new EditorTree(this);
-            this.criteriaViewer = new ViewerCriteria(this);
+            this.treeEditor = new TreeEditorElement(this);
         }
     }
 

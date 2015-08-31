@@ -2,7 +2,7 @@ package joshie.progression.gui.fields;
 
 import java.lang.reflect.Field;
 
-import joshie.progression.gui.SelectItemOverlay.Type;
+import joshie.progression.gui.editors.SelectItem.Type;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 

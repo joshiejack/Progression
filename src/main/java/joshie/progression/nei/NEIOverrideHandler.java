@@ -7,8 +7,8 @@ import joshie.progression.crafting.ActionType;
 import joshie.progression.crafting.Crafter;
 import joshie.progression.crafting.CraftingRegistry;
 import joshie.progression.criteria.Criteria;
-import joshie.progression.gui.EditorTicker;
 import joshie.progression.gui.GuiCriteriaEditor;
+import joshie.progression.gui.base.SaveTicker;
 import joshie.progression.helpers.ClientHelper;
 import joshie.progression.json.Options;
 import net.minecraft.item.ItemStack;
@@ -32,7 +32,7 @@ public class NEIOverrideHandler extends TemplateRecipeHandler {
                         break;
                     }
 
-                    EditorTicker.OVERRIDE_TICK = 1;
+                    SaveTicker.OVERRIDE_TICK = 1;
                 }
             }
         }
