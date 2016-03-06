@@ -11,11 +11,6 @@ public class TriggerLogin extends TriggerBaseCounter {
         super("login", 0xFF8000FF);
     }
 
-    @Override
-    public EventBusType getEventBus() {
-        return EventBusType.FML;
-    }
-
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onEvent(PlayerLoggedInEvent event) {
         ProgressionAPI.registry.fireTrigger(event.player, getUnlocalisedName());

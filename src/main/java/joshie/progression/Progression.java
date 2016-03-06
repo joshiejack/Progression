@@ -59,7 +59,7 @@ public class Progression {
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        ModLogHelper.log("Enchiridion2", "The more that you read, the more things you will know. The more that you learn, the more places you'll go.");
+        ModLogHelper.log("enchiridion", "The more that you read, the more things you will know. The more that you learn, the more places you'll go.");
         ModLogHelper.log("Mariculture", "Just Keep Swimming...");
         
         try {
@@ -77,13 +77,12 @@ public class Progression {
         Options.init(new Configuration(new File(dir, "options.cfg")));
 
         RemappingHandler.resetRegistries();
-        JEI_LOADED = Loader.isModLoaded("NotEnoughItems");
+        JEI_LOADED = Loader.isModLoaded("JEI");
         ProgressionAPI.registry = new APIHandler();
         MinecraftForge.EVENT_BUS.register(new PlayerTracker());
         MinecraftForge.EVENT_BUS.register(CommandManager.INSTANCE);
         MinecraftForge.EVENT_BUS.register(new EventsHandler());
         MinecraftForge.EVENT_BUS.register(new CraftingEvents());
-        MinecraftForge.EVENT_BUS.register(new EventsHandler());
         
         item = new ItemCriteria().setUnlocalizedName("item");
         GameRegistry.registerItem(item, "item");

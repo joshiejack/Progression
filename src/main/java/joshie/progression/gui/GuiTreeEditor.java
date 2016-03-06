@@ -174,7 +174,7 @@ public class GuiTreeEditor extends GuiBase {
     }
 
     @Override
-    public void mouseClickMove(int x, int y, int button, long lastClick) {
+    public void mouseReleased(int x, int y, int button) {
         for (Criteria criteria : currentTab.getCriteria()) {
             criteria.treeEditor.release(mouseX, mouseY);
         }

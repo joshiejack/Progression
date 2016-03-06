@@ -5,6 +5,6 @@ package joshie.progression.api;
  *  are created, this enum determines which event bus they should
  *  get registered to. */
 public enum EventBusType {
-    FML, FORGE, TERRAIN, ORE, NONE;
+    FORGE, TERRAIN, ORE, NONE;
 }
 

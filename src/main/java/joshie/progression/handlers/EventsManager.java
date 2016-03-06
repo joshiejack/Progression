@@ -15,7 +15,7 @@ public class EventsManager {
     public static HashSet<Reward> activeRewards;
 
     public static EventBus getBus(EventBusType bus) {
-        if (bus == EventBusType.FML || bus == EventBusType.FORGE) {
+        if (bus == EventBusType.FORGE) {
             return MinecraftForge.EVENT_BUS;
         } else if (bus == EventBusType.ORE) {
             return MinecraftForge.ORE_GEN_BUS;

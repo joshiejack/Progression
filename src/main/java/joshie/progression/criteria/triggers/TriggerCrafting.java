@@ -34,11 +34,6 @@ public class TriggerCrafting extends TriggerBase {
         list.add(new ItemField("stack", this, 76, 44, 1.4F, 77, 100, 43, 68, Type.TRIGGER));
     }
 
-    @Override
-    public EventBusType getEventBus() {
-        return EventBusType.FML;
-    }
-
     @SubscribeEvent
     public void onEvent(ItemCraftedEvent event) {        
         ProgressionAPI.registry.fireTrigger(event.player, getUnlocalisedName(), event.crafting.copy());

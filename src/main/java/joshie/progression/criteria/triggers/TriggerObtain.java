@@ -35,11 +35,6 @@ public class TriggerObtain extends TriggerBase {
         list.add(new ItemField("stack", this, 76, 44, 1.4F, 77, 100, 43, 69, Type.TRIGGER));
     }
 
-    @Override
-    public EventBusType[] getEventBusTypes() {
-        return new EventBusType[] { EventBusType.FML, EventBusType.FORGE };
-    }
-
     private boolean fired = false;
 
     @SubscribeEvent

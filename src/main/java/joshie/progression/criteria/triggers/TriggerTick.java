@@ -11,11 +11,6 @@ public class TriggerTick extends TriggerBaseBoolean {
         super("tick", 0xFFA300D9);
     }
 
-    @Override
-    public EventBusType getEventBus() {
-        return EventBusType.FML;
-    }
-
     @SubscribeEvent
     public void onPlayerTick(PlayerTickEvent event) {
         if (event.phase != Phase.END) return;

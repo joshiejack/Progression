@@ -25,11 +25,6 @@ public class TriggerChangeDimension extends TriggerBaseCounter {
         list.add(new TextField("to", this));
     }
 
-    @Override
-    public EventBusType getEventBus() {
-        return EventBusType.FML;
-    }
-
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onEvent(PlayerChangedDimensionEvent event) {
         ProgressionAPI.registry.fireTrigger(event.player, getUnlocalisedName(), event.fromDim, event.toDim);
