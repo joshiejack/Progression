@@ -6,6 +6,7 @@ import java.util.List;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class SafeStack {
@@ -13,7 +14,7 @@ public class SafeStack {
 
     protected SafeStack(ItemStack stack) {
         if (stack != null) {
-            this.item = Item.itemRegistry.getNameForObject(stack.getItem());
+            this.item = Item.itemRegistry.getNameForObject(stack.getItem()).getResourcePath();
         }
     }
 
@@ -82,8 +83,8 @@ public class SafeStack {
         protected SafeStackMod(ItemStack stack) {
             super(stack);
 
-            String key = Item.itemRegistry.getNameForObject(stack.getItem());
-            modid = key.split(":")[0];
+            ResourceLocation key = Item.itemRegistry.getNameForObject(stack.getItem());
+            modid = key.getResourceDomain();
         }
 
         @Override

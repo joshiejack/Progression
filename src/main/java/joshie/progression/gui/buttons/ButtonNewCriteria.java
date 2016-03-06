@@ -23,13 +23,13 @@ public class ButtonNewCriteria extends ButtonBase {
 
     @Override
     public void drawButton(Minecraft mc, int x, int y) {
-        boolean hovering = field_146123_n = x >= xPosition && y >= yPosition && x < xPosition + width && y < yPosition + height;
+        boolean hovering = hovered = x >= xPosition && y >= yPosition && x < xPosition + width && y < yPosition + height;
         int k = getHoverState(hovering);
         GL11.glColor4f(1F, 1F, 1F, 1F);
         mc.getTextureManager().bindTexture(ProgressionInfo.textures);
         int yTexture = k == 2 ? 25 : 0;
         drawTexturedModalRect(xPosition, yPosition, 231, yTexture, 25, 25);
-        mc.fontRenderer.drawString("New", xPosition + 2, yPosition + 9, Theme.INSTANCE.newButtonFontColor);
+        mc.fontRendererObj.drawString("New", xPosition + 2, yPosition + 9, Theme.INSTANCE.newButtonFontColor);
         if (k == 2) {
             ArrayList<String> name = new ArrayList();
             name.add(EnumChatFormatting.WHITE + "New");

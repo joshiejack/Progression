@@ -5,6 +5,7 @@ import joshie.progression.player.DataStats;
 import joshie.progression.player.PlayerTracker;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class PacketSyncAbilities implements IMessage, IMessageHandler<PacketSyncAbilities, IMessage> {
 	private DataStats abilities;

@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.util.ResourceLocation;
 
 public class StackHelper {
     public static ItemStack getStackFromString(String str) {
@@ -32,7 +33,7 @@ public class StackHelper {
     }
 
     public static String getStringFromStack(ItemStack stack) {
-        String str = Item.itemRegistry.getNameForObject(stack.getItem()).replace(" ", "%20");
+        String str = Item.itemRegistry.getNameForObject(stack.getItem()).getResourcePath().replace(" ", "%20");
         if (stack.getHasSubtypes() || stack.isItemStackDamageable()) {
             str = str + " " + stack.getItemDamage();
         }
@@ -42,7 +43,7 @@ public class StackHelper {
         }
 
         if (stack.hasTagCompound()) {
-            str = str + " " + stack.stackTagCompound.toString();
+            str = str + " " + stack.getTagCompound().toString();
         }
 
         return str;
@@ -51,7 +52,7 @@ public class StackHelper {
     private static NBTTagCompound getTag(String[] str, int pos) {
         String s = formatNBT(str, pos).getUnformattedText();
         try {
-            NBTBase nbtbase = JsonToNBT.func_150315_a(s);
+            NBTBase nbtbase = JsonToNBT.getTagFromJson(s);
             if (!(nbtbase instanceof NBTTagCompound)) return null;
             return (NBTTagCompound) nbtbase;
         } catch (Exception nbtexception) {
@@ -96,7 +97,7 @@ public class StackHelper {
 
     private static Item getItemByText(String str) {
         str = str.replace("%20", " ");
-        Item item = (Item) Item.itemRegistry.getObject(str);
+        Item item = (Item) Item.itemRegistry.getObject(new ResourceLocation(str));
         if (item == null) {
             try {
                 Item item1 = Item.getItemById(Integer.parseInt(str));

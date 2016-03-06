@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.ItemStack;
 
 public class RenderItemHelper {
-    private final static RenderItem itemRenderer = new RenderItem();
+    private final static RenderItem itemRenderer = Minecraft.getMinecraft().getRenderItem();
 
     public static void drawStack(ItemStack stack, int left, int top, float size) {
         try {
@@ -23,8 +23,8 @@ public class RenderItemHelper {
             GL11.glEnable(GL12.GL_RESCALE_NORMAL);
             RenderHelper.enableGUIStandardItemLighting();
             Minecraft mc = ClientHelper.getMinecraft();
-            itemRenderer.renderItemAndEffectIntoGUI(mc.fontRenderer, mc.getTextureManager(), stack, (int) (left / size), (int) (top / size));
-            itemRenderer.renderItemOverlayIntoGUI(mc.fontRenderer, mc.getTextureManager(), stack, (int) (left / size), (int) (top / size));
+            itemRenderer.renderItemAndEffectIntoGUI(stack, (int) (left / size), (int) (top / size));
+            itemRenderer.renderItemOverlayIntoGUI(mc.fontRendererObj, stack, (int) (left / size), (int) (top / size), null);
             RenderHelper.disableStandardItemLighting();
             GL11.glDisable(GL11.GL_LIGHTING);
             GL11.glPopMatrix();

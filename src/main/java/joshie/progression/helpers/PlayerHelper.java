@@ -47,14 +47,14 @@ public class PlayerHelper {
     }
 
     public static UUID getUUIDForPlayer(EntityPlayer player) {
-        return EntityPlayer.func_146094_a(player.getGameProfile());
+        return EntityPlayer.getUUID(player.getGameProfile());
     }
 
     /** Should only ever be called serverside **/
     public static List<EntityPlayerMP> getPlayersFromUUID(UUID uuid) {
         List<EntityPlayerMP> list = new ArrayList();
         PlayerTeam team = PlayerTracker.getServerPlayer(uuid).getTeam();
-        for (EntityPlayer player : (List<EntityPlayer>) FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList) {
+        for (EntityPlayer player : (List<EntityPlayerMP>) FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList) {
             /** Add the Owner **/
             if (getUUIDForPlayer(player).equals(team.getOwner())) {
                 list.add((EntityPlayerMP) player);
@@ -73,7 +73,7 @@ public class PlayerHelper {
 
     public static EntityPlayer getPlayerFromUUID(UUID uuid) {
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) return ClientHelper.getPlayer();
-        for (EntityPlayer player : (List<EntityPlayer>) FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList) {
+        for (EntityPlayer player : (List<EntityPlayerMP>) FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList) {
             if (getUUIDForPlayer(player).equals(uuid)) {
                 return (EntityPlayerMP) player;
             }
@@ -82,7 +82,7 @@ public class PlayerHelper {
         return null;
     }
 
-    public static List<EntityPlayer> getAllPlayers() {
-        return (List<EntityPlayer>) FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList;
+    public static List<EntityPlayerMP> getAllPlayers() {
+        return (List<EntityPlayerMP>) FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList;
     }
 }

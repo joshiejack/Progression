@@ -9,6 +9,7 @@ import net.minecraft.stats.Achievement;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -35,7 +36,7 @@ public class PacketCompleted implements IMessage, IMessageHandler<PacketComplete
     @Override
     public IMessage onMessage(PacketCompleted message, MessageContext ctx) {
         GuiAchievement gui = Minecraft.getMinecraft().guiAchievement;
-        gui.func_146255_b(new DummyAchievement(message.criteria));
+        gui.displayAchievement(new DummyAchievement(message.criteria));
         ReflectionHelper.setPrivateValue(GuiAchievement.class, gui, Minecraft.getSystemTime(), "field_146263_l");
         ReflectionHelper.setPrivateValue(GuiAchievement.class, gui, false, "field_146262_n");
         return null;

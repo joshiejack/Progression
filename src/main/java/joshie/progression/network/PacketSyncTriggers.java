@@ -7,6 +7,7 @@ import joshie.progression.player.PlayerTracker;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class PacketSyncTriggers implements IMessage, IMessageHandler<PacketSyncTriggers, IMessage> {
     public static class SyncPair {

@@ -33,7 +33,7 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
 
     @Override
     public void drawButton(Minecraft mc, int x, int y) {
-        boolean hovering = field_146123_n = x >= xPosition && y >= yPosition && x < xPosition + width && y < yPosition + height;
+        boolean hovering = hovered = x >= xPosition && y >= yPosition && x < xPosition + width && y < yPosition + height;
         int k = getHoverState(hovering);
         GL11.glColor4f(1F, 1F, 1F, 1F);
         mc.getTextureManager().bindTexture(ProgressionInfo.textures);

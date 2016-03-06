@@ -17,7 +17,12 @@ public class BlockActionHelper {
 		block_item_mappings.put(Blocks.standing_sign, Items.sign);
 		block_item_mappings.put(Blocks.cake, Items.cake);
 		block_item_mappings.put(Blocks.flower_pot, Items.flower_pot);
-		block_item_mappings.put(Blocks.wooden_door, Items.wooden_door);
+		block_item_mappings.put(Blocks.oak_door, Items.oak_door);
+		block_item_mappings.put(Blocks.spruce_door, Items.spruce_door);
+		block_item_mappings.put(Blocks.birch_door, Items.birch_door);
+		block_item_mappings.put(Blocks.jungle_door, Items.jungle_door);
+		block_item_mappings.put(Blocks.dark_oak_door, Items.dark_oak_door);
+		block_item_mappings.put(Blocks.acacia_door, Items.acacia_door);
 		block_item_mappings.put(Blocks.iron_door, Items.iron_door);
 	}
 
