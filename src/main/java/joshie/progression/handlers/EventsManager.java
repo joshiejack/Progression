@@ -1,24 +1,21 @@
 package joshie.progression.handlers;
 
-import java.util.HashSet;
-
 import joshie.progression.api.EventBusType;
 import joshie.progression.api.IRewardType;
 import joshie.progression.api.ITriggerType;
 import joshie.progression.criteria.Reward;
 import joshie.progression.criteria.Trigger;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.EventBus;
+
+import java.util.HashSet;
 
 public class EventsManager {
     public static HashSet<Trigger> activeTriggers;
     public static HashSet<Reward> activeRewards;
 
     public static EventBus getBus(EventBusType bus) {
-        if (bus == EventBusType.FML) {
-            return FMLCommonHandler.instance().bus();
-        } else if (bus == EventBusType.FORGE) {
+        if (bus == EventBusType.FML || bus == EventBusType.FORGE) {
             return MinecraftForge.EVENT_BUS;
         } else if (bus == EventBusType.ORE) {
             return MinecraftForge.ORE_GEN_BUS;

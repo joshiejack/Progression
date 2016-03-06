@@ -1,7 +1,5 @@
 package joshie.progression.items;
 
-import java.util.List;
-
 import joshie.progression.Progression;
 import joshie.progression.crafting.Crafter;
 import joshie.progression.crafting.CraftingRegistry;
@@ -9,7 +7,6 @@ import joshie.progression.crafting.CraftingUnclaimed;
 import joshie.progression.criteria.Criteria;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.PlayerHelper;
-import joshie.progression.lib.ProgressionInfo;
 import joshie.progression.network.PacketClaimed;
 import joshie.progression.network.PacketHandler;
 import joshie.progression.player.PlayerTracker;
@@ -20,18 +17,22 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
 
 public class ItemCriteria extends Item {
     public static CreativeTabs tab;
     public static final int CRITERIA = 0;
     public static final int CLAIM = 1;
     public static final int BOOK = 2;
-    private IIcon padlock;
-    private IIcon book;
+    //private IIcon padlock;
+    //private IIcon book;
 
     public ItemCriteria() {
         final Item item = this;
@@ -54,7 +55,7 @@ public class ItemCriteria extends Item {
             }
 
             @Override
-            public int func_151243_f() {
+            public int getIconItemDamage() {
                 return BOOK;
             }
         };
@@ -82,16 +83,16 @@ public class ItemCriteria extends Item {
     }
 
     @Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
+    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (stack.getItemDamage() == BOOK) player.openGui(Progression.instance, 0, null, 0, 0, 0);
         if (world.isRemote || player == null || stack == null) return true;
         if (stack.getItemDamage() == CLAIM) {
-            TileEntity tile = world.getTileEntity(x, y, z);
+            TileEntity tile = world.getTileEntity(pos);
             if (tile != null) {
                 Crafter crafter = CraftingRegistry.getCrafterFromTile(tile);
                 if (crafter == CraftingUnclaimed.INSTANCE) {
                     PlayerTracker.setTileOwner(tile, PlayerHelper.getUUIDForPlayer(player));
-                    PacketHandler.sendToClient(new PacketClaimed(x, y, z), (EntityPlayerMP) player);
+                    PacketHandler.sendToClient(new PacketClaimed(pos.getX(), pos.getY(), pos.getZ()), (EntityPlayerMP) player);
                 }
             }
         }
@@ -118,7 +119,7 @@ public class ItemCriteria extends Item {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean debug) {
+    public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean debug) {
         if (stack.getItemDamage() == CLAIM) {
             list.add("Right click me on tiles");
             list.add("to claim them as yours");
@@ -128,21 +129,21 @@ public class ItemCriteria extends Item {
         }
     }
 
-    @Override
+    /*@Override
     @SideOnly(Side.CLIENT)
     public IIcon getIconFromDamage(int damage) {
         return damage == CLAIM ? padlock : book;
-    }
+    }*/
 
-    @Override
+    /*@Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister register) {
         padlock = register.registerIcon(ProgressionInfo.MODPATH + ":padlock");
         book = register.registerIcon(ProgressionInfo.MODPATH + ":book");
-    }
+    }*/
 
     @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs tab, List list) {
+    public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
         list.add(new ItemStack(item, 1, CLAIM));
         list.add(new ItemStack(item, 1, BOOK));
         for (Criteria c : APIHandler.criteria.values()) {

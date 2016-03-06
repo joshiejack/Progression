@@ -1,10 +1,6 @@
 package joshie.progression.criteria.rewards;
 
-import java.util.List;
-import java.util.UUID;
-
 import com.google.gson.JsonObject;
-
 import joshie.progression.Progression;
 import joshie.progression.api.EventBusType;
 import joshie.progression.crafting.ActionType;
@@ -19,6 +15,9 @@ import joshie.progression.jei.JEISupport;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
+
+import java.util.List;
+import java.util.UUID;
 
 public abstract class RewardBaseAction extends RewardBase implements IItemCallback {
     public ItemStack stack = new ItemStack(Blocks.furnace);
@@ -81,7 +80,7 @@ public abstract class RewardBaseAction extends RewardBase implements IItemCallba
     @Override
     public void reward(UUID uuid) {
         if (Progression.JEI_LOADED && !isAdded) {
-        	JEISupport.registry.getItemList().add(stack);
+        	JEISupport.itemRegistry.getItemList().add(stack);
             isAdded = true;
         }
     }
