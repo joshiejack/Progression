@@ -3,13 +3,12 @@ package joshie.progression.network;
 import io.netty.buffer.ByteBuf;
 import joshie.progression.criteria.Criteria;
 import joshie.progression.handlers.APIHandler;
+import joshie.progression.network.core.PenguinPacket;
 import joshie.progression.player.PlayerTracker;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class PacketSyncTriggers implements IMessage, IMessageHandler<PacketSyncTriggers, IMessage> {
+public class PacketSyncTriggers extends PenguinPacket {
     public static class SyncPair {
         public Criteria criteria;
         public int[] triggers;
@@ -74,8 +73,7 @@ public class PacketSyncTriggers implements IMessage, IMessageHandler<PacketSyncT
     }
 
     @Override
-    public IMessage onMessage(PacketSyncTriggers message, MessageContext ctx) {
-        PlayerTracker.getClientPlayer().getMappings().markTriggerAsCompleted(message.overwrite, message.toSync);
-        return null;
+	public void handlePacket(EntityPlayer player) {   
+        PlayerTracker.getClientPlayer().getMappings().markTriggerAsCompleted(overwrite, toSync);
     }
 }
