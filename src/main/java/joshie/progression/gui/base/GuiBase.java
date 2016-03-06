@@ -1,17 +1,5 @@
 package joshie.progression.gui.base;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-
 import joshie.progression.criteria.Criteria;
 import joshie.progression.gui.editors.EditText;
 import joshie.progression.gui.editors.SelectItem;
@@ -21,12 +9,20 @@ import joshie.progression.json.Theme;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+
+import java.io.IOException;
+import java.util.*;
 
 public abstract class GuiBase extends GuiScreen {
-    public Set<IRenderOverlay> overlays = new HashSet();
+    public Set<IRenderOverlay> overlays = new HashSet<IRenderOverlay>();
     public int mouseX = 0;
     public int mouseY = 0;
 
@@ -49,7 +45,8 @@ public abstract class GuiBase extends GuiScreen {
     }
 
     @Override
-    protected void actionPerformed(GuiButton button) {}
+    protected void actionPerformed(GuiButton button) {
+    }
 
     @Override
     public void onGuiClosed() {
@@ -60,15 +57,16 @@ public abstract class GuiBase extends GuiScreen {
         }
     }
 
-    public void drawScreen(int x, int y, float f) {
-        tooltip = new ArrayList();
-        drawBackground();
-        GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+    @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        tooltip = new ArrayList<String>();
+        drawBackground(0);
+        GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
         drawForeground();
-        GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-        super.drawScreen(x, y, f);
-        GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-        drawTooltip(tooltip, x, y);
+        GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
+        drawTooltip(tooltip, mouseX, mouseY);
     }
 
     public void drawBackground() {
@@ -77,89 +75,81 @@ public abstract class GuiBase extends GuiScreen {
 
     public abstract void drawForeground();
 
-    public void drawRectWithBorder(int x, int y, int x2, int y2, int color, int border) {
-        drawRect(x, y, x2, y2, color);
-        drawRect(x, y, x + 1, y2, border);
-        drawRect(x2 - 1, y, x2, y2, border);
-        drawRect(x, y, x2, y + 1, border);
-        drawRect(x, y2 - 1, x2, y2, border);
+    public void drawRectWithBorder(int left, int top, int right, int bottom, int color, int border) {
+        drawRect(left, top, right, bottom, color);
+        drawRect(left, top, left + 1, bottom, border);
+        drawRect(right - 1, top, right, bottom, border);
+        drawRect(left, top, right, top + 1, border);
+        drawRect(left, bottom - 1, right, bottom, border);
     }
 
-    public void drawGradientRectWithBorder(int x, int y, int x2, int y2, int color1, int color2, int border) {
-        drawGradientRect(x, y, x2, y2, color1, color2);
-        drawRect(x, y, x + 1, y2, border);
-        drawRect(x2 - 1, y, x2, y2, border);
-        drawRect(x, y, x2, y + 1, border);
-        drawRect(x, y2 - 1, x2, y2, border);
+    public void drawGradientRectWithBorder(int left, int top, int right, int bottom, int startColor, int endColor, int border) {
+        drawGradientRect(left, top, right, bottom, startColor, endColor);
+        drawRect(left, top, left + 1, bottom, border);
+        drawRect(right - 1, top, right, bottom, border);
+        drawRect(left, top, right, y + 1, border);
+        drawRect(left, top - 1, right, bottom, border);
     }
-    
-    public void drawLine(int x, int y, int x2, int y2, int thickness, int color) {
+
+    public void drawLine(int left, int top, int right, int bottom, int thickness, int color) {
         float f3 = (float) (color >> 24 & 255) / 255.0F;
         float f = (float) (color >> 16 & 255) / 255.0F;
         float f1 = (float) (color >> 8 & 255) / 255.0F;
         float f2 = (float) (color & 255) / 255.0F;
-        Tessellator tessellator = Tessellator.instance;
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-        GL11.glColor4f(f, f1, f2, f3);
+        Tessellator tessellator = Tessellator.getInstance();
+        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+        GlStateManager.enableBlend();
+        GlStateManager.disableTexture2D();
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+        GlStateManager.color(f, f1, f2, f3);
 
-        int posX = 0;
-        if (x2 > x) {
+        int posX;
+        if (right > left) {
             posX = thickness;
         } else {
             posX = -thickness;
         }
 
-        int posY = 0;
-        if (y2 > y) {
+        int posY;
+        if (bottom > top) {
             posY = thickness;
         } else {
             posY = -thickness;
         }
 
-        tessellator.startDrawing(7);
-        tessellator.addVertex((double) x, (double) y + posX, 0.0D);
-        tessellator.addVertex((double) x2, (double) y2 + posX, 0.0D);
-        tessellator.addVertex((double) x2 + posY, (double) y2, 0.0D);
-        tessellator.addVertex((double) x + posY, (double) y, 0.0D);
+        worldrenderer.begin(7, DefaultVertexFormats.POSITION);
+        worldrenderer.pos((double) left, (double) top + posX, 0.0D).endVertex();
+        worldrenderer.pos((double) right, (double) bottom + posX, 0.0D).endVertex();
+        worldrenderer.pos((double) right + posY, (double) bottom, 0.0D).endVertex();
+        worldrenderer.pos((double) left + posY, (double) top, 0.0D).endVertex();
         tessellator.draw();
 
-        tessellator.startDrawing(7);
-        colorize(theme.connectLineColorize);
-        tessellator.addVertex((double) x, (double) y, 0.0D);
-        tessellator.addVertex((double) x + 5, (double) y, 0.0D);
-        tessellator.addVertex((double) x + 5, (double) y + 5, 0.0D);
-        tessellator.addVertex((double) x, (double) y + 5, 0.0D);
+        worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
+        worldrenderer.pos((double) left, (double) top, 0.0D).color(f, f1, f2, f3).endVertex();
+        worldrenderer.pos((double) left + 5, (double) top, 0.0D).color(f, f1, f2, f3).endVertex();
+        worldrenderer.pos((double) left + 5, (double) top + 5, 0.0D).color(f, f1, f2, f3).endVertex();
+        worldrenderer.pos((double) left, (double) top + 5, 0.0D).color(f, f1, f2, f3).endVertex();
         tessellator.draw();
 
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GL11.glDisable(GL11.GL_BLEND);
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
     }
 
-    private void colorize(int color) {
-        float f3 = (float) (color >> 24 & 255) / 255.0F;
-        float f = (float) (color >> 16 & 255) / 255.0F;
-        float f1 = (float) (color >> 8 & 255) / 255.0F;
-        float f2 = (float) (color & 255) / 255.0F;
-        GL11.glColor4f(f, f1, f2, f3);
-    }
-
-    public void addTooltip(List list) {
+    public void addTooltip(List<String> list) {
         tooltip.addAll(list);
     }
 
-    private void drawTooltip(List list, int x, int y) {
+    private void drawTooltip(List<String> list, int x, int y) {
         if (!list.isEmpty()) {
-            GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+            GlStateManager.disableRescaleNormal();
             RenderHelper.disableStandardItemLighting();
-            GL11.glDisable(GL11.GL_LIGHTING);
-            GL11.glDisable(GL11.GL_DEPTH_TEST);
+            GlStateManager.disableLighting();
+            GlStateManager.disableDepth();
             int k = 0;
-            Iterator iterator = list.iterator();
+            Iterator<String> iterator = list.iterator();
 
             while (iterator.hasNext()) {
-                String s = (String) iterator.next();
+                String s = iterator.next();
                 int l = fontRendererObj.getStringWidth(s);
 
                 if (l > k) {
@@ -199,7 +189,7 @@ public abstract class GuiBase extends GuiScreen {
             this.drawGradientRect(j2 - 3, k2 + i1 + 2, j2 + k + 3, k2 + i1 + 3, l1, l1);
 
             for (int i2 = 0; i2 < list.size(); ++i2) {
-                String s1 = (String) list.get(i2);
+                String s1 = list.get(i2);
                 fontRendererObj.drawStringWithShadow(s1, j2, k2, -1);
 
                 if (i2 == 0) {
@@ -211,10 +201,10 @@ public abstract class GuiBase extends GuiScreen {
 
             this.zLevel = 0.0F;
             itemRender.zLevel = 0.0F;
-            GL11.glEnable(GL11.GL_LIGHTING);
-            GL11.glEnable(GL11.GL_DEPTH_TEST);
+            GlStateManager.enableLighting();
+            GlStateManager.enableDepth();
             RenderHelper.enableStandardItemLighting();
-            GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+            GlStateManager.enableRescaleNormal();
         }
     }
 
@@ -265,7 +255,6 @@ public abstract class GuiBase extends GuiScreen {
                 SelectItem.INSTANCE.scroll(down);
             }
         }
-
         super.handleMouseInput();
     }
 }

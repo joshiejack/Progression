@@ -1,73 +1,17 @@
 package joshie.progression;
 
-import static joshie.progression.lib.ProgressionInfo.JAVAPATH;
-import static joshie.progression.lib.ProgressionInfo.MODID;
-import static joshie.progression.lib.ProgressionInfo.MODNAME;
-import static joshie.progression.lib.ProgressionInfo.VERSION;
-
-import java.io.File;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.commands.CommandEdit;
-import joshie.progression.commands.CommandHelp;
-import joshie.progression.commands.CommandManager;
-import joshie.progression.commands.CommandReload;
-import joshie.progression.commands.CommandReset;
-import joshie.progression.criteria.conditions.ConditionBiomeType;
-import joshie.progression.criteria.conditions.ConditionCoordinates;
-import joshie.progression.criteria.conditions.ConditionDaytime;
-import joshie.progression.criteria.conditions.ConditionInInventory;
-import joshie.progression.criteria.conditions.ConditionRandom;
+import joshie.progression.commands.*;
+import joshie.progression.criteria.conditions.*;
 import joshie.progression.criteria.filters.FilterItem;
-import joshie.progression.criteria.rewards.RewardBreakBlock;
-import joshie.progression.criteria.rewards.RewardClear;
-import joshie.progression.criteria.rewards.RewardCommand;
-import joshie.progression.criteria.rewards.RewardCrafting;
-import joshie.progression.criteria.rewards.RewardCriteria;
-import joshie.progression.criteria.rewards.RewardFallDamage;
-import joshie.progression.criteria.rewards.RewardFurnace;
-import joshie.progression.criteria.rewards.RewardHarvestDrop;
-import joshie.progression.criteria.rewards.RewardItem;
-import joshie.progression.criteria.rewards.RewardLivingDrop;
-import joshie.progression.criteria.rewards.RewardPoints;
-import joshie.progression.criteria.rewards.RewardResearch;
-import joshie.progression.criteria.rewards.RewardSpeed;
-import joshie.progression.criteria.rewards.RewardTime;
-import joshie.progression.criteria.triggers.TriggerAchievement;
-import joshie.progression.criteria.triggers.TriggerBreakBlock;
-import joshie.progression.criteria.triggers.TriggerChangeDimension;
-import joshie.progression.criteria.triggers.TriggerClickBlock;
-import joshie.progression.criteria.triggers.TriggerCrafting;
-import joshie.progression.criteria.triggers.TriggerItemEaten;
-import joshie.progression.criteria.triggers.TriggerKill;
-import joshie.progression.criteria.triggers.TriggerLogin;
-import joshie.progression.criteria.triggers.TriggerObtain;
-import joshie.progression.criteria.triggers.TriggerPoints;
-import joshie.progression.criteria.triggers.TriggerResearch;
-import joshie.progression.criteria.triggers.TriggerTick;
-import joshie.progression.handlers.APIHandler;
-import joshie.progression.handlers.CraftingEvents;
-import joshie.progression.handlers.EventsHandler;
-import joshie.progression.handlers.GUIHandler;
-import joshie.progression.handlers.RemappingHandler;
+import joshie.progression.criteria.rewards.*;
+import joshie.progression.criteria.triggers.*;
+import joshie.progression.handlers.*;
 import joshie.progression.helpers.ModLogHelper;
 import joshie.progression.items.ItemCriteria;
 import joshie.progression.json.Options;
 import joshie.progression.lib.ProgressionInfo;
-import joshie.progression.network.PacketClaimed;
-import joshie.progression.network.PacketCompleted;
-import joshie.progression.network.PacketHandler;
-import joshie.progression.network.PacketOpenEditor;
-import joshie.progression.network.PacketReload;
-import joshie.progression.network.PacketReset;
-import joshie.progression.network.PacketRewardItem;
-import joshie.progression.network.PacketSyncAbilities;
-import joshie.progression.network.PacketSyncCriteria;
-import joshie.progression.network.PacketSyncJSON;
-import joshie.progression.network.PacketSyncTriggers;
+import joshie.progression.network.*;
 import joshie.progression.player.PlayerSavedData;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.command.ICommandManager;
@@ -92,6 +36,12 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+
+import static joshie.progression.lib.ProgressionInfo.*;
 
 @Mod(modid = MODID, name = MODNAME, version = VERSION)
 public class Progression {
@@ -133,7 +83,7 @@ public class Progression {
         MinecraftForge.EVENT_BUS.register(CommandManager.INSTANCE);
         MinecraftForge.EVENT_BUS.register(new EventsHandler());
         MinecraftForge.EVENT_BUS.register(new CraftingEvents());
-        FMLCommonHandler.instance().bus().register(new EventsHandler());
+        MinecraftForge.EVENT_BUS.register(new EventsHandler());
         
         item = new ItemCriteria().setUnlocalizedName("item");
         GameRegistry.registerItem(item, "item");

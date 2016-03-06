@@ -109,7 +109,7 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
     }
 
     @Override
-    protected void keyTyped(char character, int key) {
+    protected void keyTyped(char character, int key) throws IOException {
         super.keyTyped(character, key);
 
         for (IRenderOverlay overlay : overlays) {
