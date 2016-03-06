@@ -1,13 +1,13 @@
 package joshie.progression.criteria.filters;
 
+import com.google.gson.JsonObject;
+
 import joshie.progression.gui.editors.SelectItem.Type;
 import joshie.progression.gui.fields.BooleanField;
 import joshie.progression.gui.fields.ItemField;
 import joshie.progression.helpers.JSONHelper;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-
-import com.google.gson.JsonObject;
 
 public class FilterItem extends FilterBase {
     public ItemStack stack = new ItemStack(Items.arrow);

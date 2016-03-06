@@ -1,13 +1,15 @@
 package joshie.progression.player;
-import static joshie.progression.player.DataStats.SpeedType.*;
-import io.netty.buffer.ByteBuf;
+import static joshie.progression.player.DataStats.SpeedType.AIR;
+import static joshie.progression.player.DataStats.SpeedType.LAND;
+import static joshie.progression.player.DataStats.SpeedType.WATER;
 
 import java.util.HashMap;
 
+import io.netty.buffer.ByteBuf;
 import joshie.progression.helpers.NBTHelper;
 import joshie.progression.player.nbt.PointsNBT;
 import net.minecraft.nbt.NBTTagCompound;
-import cpw.mods.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 public class DataStats {
     public static enum SpeedType {      

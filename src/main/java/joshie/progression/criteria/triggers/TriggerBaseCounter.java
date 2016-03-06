@@ -2,12 +2,12 @@ package joshie.progression.criteria.triggers;
 
 import java.util.UUID;
 
+import com.google.gson.JsonObject;
+
 import joshie.progression.api.ITriggerData;
 import joshie.progression.criteria.triggers.data.DataCount;
 import joshie.progression.gui.fields.TextField;
 import joshie.progression.helpers.JSONHelper;
-
-import com.google.gson.JsonObject;
 
 public abstract class TriggerBaseCounter extends TriggerBase {
     public int amount = 1;

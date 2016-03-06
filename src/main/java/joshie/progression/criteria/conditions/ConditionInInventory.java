@@ -2,6 +2,8 @@ package joshie.progression.criteria.conditions;
 
 import java.util.UUID;
 
+import com.google.gson.JsonObject;
+
 import joshie.progression.gui.editors.SelectItem.Type;
 import joshie.progression.gui.fields.BooleanField;
 import joshie.progression.gui.fields.EnumField;
@@ -13,8 +15,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-
-import com.google.gson.JsonObject;
 
 public class ConditionInInventory extends ConditionBase implements IEnum {
     private static enum CheckSlots {

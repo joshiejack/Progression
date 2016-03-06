@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import joshie.progression.lib.CommandLevel;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.CommandNotFoundException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.NumberInvalidException;
@@ -25,7 +26,7 @@ public class CommandHelp extends AbstractCommand {
     }
 
     @Override
-    public boolean processCommand(ICommandSender sender, String[] parameters) {
+    public boolean processCommand(ICommandSender sender, String[] parameters) throws CommandException {
         List list = this.getSortedPossibleCommands(sender);
         byte b0 = 7;
         int i = (list.size() - 1) / b0;
@@ -33,7 +34,7 @@ public class CommandHelp extends AbstractCommand {
         int k;
 
         try {
-            k = parameters.length == 0 ? 0 : net.minecraft.command.CommandBase.parseIntBounded(sender, parameters[0], 1, i + 1) - 1;
+            k = parameters.length == 0 ? 0 : net.minecraft.command.CommandBase.parseInt(parameters[0], 1, i + 1) - 1;
         } catch (NumberInvalidException numberinvalidexception) {
             Map map = this.getCommands();
             AbstractCommand icommand = (AbstractCommand) map.get(parameters[0]);

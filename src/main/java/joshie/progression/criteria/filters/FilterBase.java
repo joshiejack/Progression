@@ -3,14 +3,13 @@ package joshie.progression.criteria.filters;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.JsonObject;
+
 import joshie.progression.api.IItemFilter;
 import joshie.progression.gui.fields.AbstractField;
 import joshie.progression.helpers.ClientHelper;
 import joshie.progression.json.Theme;
-
-import com.google.gson.JsonObject;
-
-import cpw.mods.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
 public abstract class FilterBase implements IItemFilter {
     protected List<AbstractField> list = new ArrayList();

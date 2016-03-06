@@ -2,12 +2,12 @@ package joshie.progression.criteria.conditions;
 
 import java.util.UUID;
 
+import com.google.gson.JsonObject;
+
 import joshie.progression.gui.fields.TextField;
 import joshie.progression.helpers.JSONHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
-
-import com.google.gson.JsonObject;
 
 public class ConditionRandom extends ConditionBase {
     public double chance = 50D;

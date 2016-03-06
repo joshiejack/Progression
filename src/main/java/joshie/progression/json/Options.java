@@ -1,9 +1,9 @@
 package joshie.progression.json;
 
+import org.apache.logging.log4j.Level;
+
 import joshie.progression.Progression;
 import net.minecraftforge.common.config.Configuration;
-
-import org.apache.logging.log4j.Level;
 
 public class Options {
     public static boolean editor = true;

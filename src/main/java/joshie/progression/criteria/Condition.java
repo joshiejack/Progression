@@ -6,7 +6,7 @@ import joshie.progression.gui.base.DrawHelper;
 import joshie.progression.helpers.ClientHelper;
 import joshie.progression.json.Theme;
 import joshie.progression.lib.ProgressionInfo;
-import cpw.mods.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
 public class Condition {
     public boolean inverted = false;

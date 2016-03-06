@@ -2,6 +2,8 @@ package joshie.progression.criteria.triggers;
 
 import java.util.UUID;
 
+import com.google.gson.JsonObject;
+
 import joshie.progression.api.EventBusType;
 import joshie.progression.api.ITriggerData;
 import joshie.progression.api.ProgressionAPI;
@@ -13,11 +15,8 @@ import joshie.progression.gui.fields.TextField;
 import joshie.progression.helpers.JSONHelper;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-
-import com.google.gson.JsonObject;
-
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 
 public class TriggerCrafting extends TriggerBase {
     public ItemStack stack = new ItemStack(Blocks.crafting_table);

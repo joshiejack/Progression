@@ -1,16 +1,15 @@
 package joshie.progression.criteria.triggers;
 
+import com.google.gson.JsonObject;
+
 import joshie.progression.api.EventBusType;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.gui.fields.BooleanField;
 import joshie.progression.gui.fields.TextField;
 import joshie.progression.helpers.JSONHelper;
-
-import com.google.gson.JsonObject;
-
-import cpw.mods.fml.common.eventhandler.EventPriority;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 
 public class TriggerChangeDimension extends TriggerBaseCounter {
     public boolean checkFrom = false;

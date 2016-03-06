@@ -4,12 +4,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 
+import com.google.common.collect.Maps;
+
 import joshie.progression.player.PlayerTeam.TeamType;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.WorldSavedData;
-
-import com.google.common.collect.Maps;
 
 public class PlayerSavedData extends WorldSavedData {
     private HashMap<UUID, PlayerTeam> teams = Maps.newHashMap();

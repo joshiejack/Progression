@@ -1,10 +1,8 @@
 package joshie.progression.helpers;
 
-import joshie.progression.Progression;
-
 import org.apache.logging.log4j.Level;
 
-import cpw.mods.fml.common.Loader;
+import joshie.progression.Progression;
 
 public class ModLogHelper {
     public static void log(String mod, String text) {

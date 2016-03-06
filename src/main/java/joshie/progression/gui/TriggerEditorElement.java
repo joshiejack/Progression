@@ -3,6 +3,8 @@ package joshie.progression.gui;
 import java.util.Iterator;
 import java.util.List;
 
+import org.lwjgl.opengl.GL11;
+
 import joshie.progression.criteria.Condition;
 import joshie.progression.criteria.Trigger;
 import joshie.progression.helpers.ClientHelper;
@@ -11,10 +13,7 @@ import joshie.progression.json.Theme;
 import joshie.progression.lib.ProgressionInfo;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.item.ItemStack;
-
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
 public class TriggerEditorElement {
     private final Trigger trigger;
@@ -26,11 +25,11 @@ public class TriggerEditorElement {
     }
 
     public void drawSplitText(String text, int x, int y, int color, int width) {
-        GuiTreeEditor.INSTANCE.mc.fontRenderer.drawSplitString(text, xCoord + x, yCoord + y, width, color);
+        GuiTreeEditor.INSTANCE.mc.fontRendererObj.drawSplitString(text, xCoord + x, yCoord + y, width, color);
     }
 
     public void drawText(String text, int x, int y, int color) {
-        GuiTreeEditor.INSTANCE.mc.fontRenderer.drawString(text, xCoord + x, yCoord + y, color);
+        GuiTreeEditor.INSTANCE.mc.fontRendererObj.drawString(text, xCoord + x, yCoord + y, color);
     }
 
     public void drawBox(int x, int y, int width, int height, int color, int border) {

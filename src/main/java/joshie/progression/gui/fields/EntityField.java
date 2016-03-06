@@ -2,6 +2,8 @@ package joshie.progression.gui.fields;
 
 import java.lang.reflect.Field;
 
+import org.lwjgl.opengl.GL11;
+
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.gui.GuiCriteriaEditor;
 import joshie.progression.gui.editors.SelectEntity;
@@ -13,8 +15,6 @@ import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
-
-import org.lwjgl.opengl.GL11;
 
 public class EntityField extends AbstractField implements IEntitySelectable {
     private Field field;

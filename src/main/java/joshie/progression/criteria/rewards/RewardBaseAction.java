@@ -3,6 +3,8 @@ package joshie.progression.criteria.rewards;
 import java.util.List;
 import java.util.UUID;
 
+import com.google.gson.JsonObject;
+
 import joshie.progression.Progression;
 import joshie.progression.api.EventBusType;
 import joshie.progression.crafting.ActionType;
@@ -13,12 +15,10 @@ import joshie.progression.gui.fields.IItemCallback;
 import joshie.progression.gui.fields.ItemField;
 import joshie.progression.gui.fields.TextField;
 import joshie.progression.helpers.JSONHelper;
+import joshie.progression.jei.JEISupport;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-import codechicken.nei.api.API;
-
-import com.google.gson.JsonObject;
 
 public abstract class RewardBaseAction extends RewardBase implements IItemCallback {
     public ItemStack stack = new ItemStack(Blocks.furnace);
@@ -57,11 +57,11 @@ public abstract class RewardBaseAction extends RewardBase implements IItemCallba
         usage = JSONHelper.getBoolean(data, "disableUsage", usage);
         modid = JSONHelper.getString(data, "modid", modid);
 
-        if (Progression.NEI_LOADED) {
+        if (Progression.JEI_LOADED) {
             boolean hide = JSONHelper.getBoolean(data, "hideFromNEI", false);
             if (hide) {
                 isAdded = false;
-                API.hideItem(stack);
+                JEISupport.helpers.getItemBlacklist().addItemToBlacklist(stack);
             }
         }
     }
@@ -80,8 +80,8 @@ public abstract class RewardBaseAction extends RewardBase implements IItemCallba
 
     @Override
     public void reward(UUID uuid) {
-        if (Progression.NEI_LOADED && !isAdded) {
-            API.addItemListEntry(stack);
+        if (Progression.JEI_LOADED && !isAdded) {
+        	JEISupport.registry.getItemList().add(stack);
             isAdded = true;
         }
     }

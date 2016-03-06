@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+
 import joshie.progression.api.ICriteria;
 import joshie.progression.crafting.ActionType;
 import joshie.progression.crafting.CraftingRegistry;
@@ -17,9 +20,6 @@ import joshie.progression.network.PacketSyncJSON.Section;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 
 public class RemappingHandler {
     public static Multimap<Criteria, Criteria> criteriaToUnlocks; //A list of the critera completing this one unlocks

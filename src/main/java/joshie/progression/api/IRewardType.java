@@ -3,13 +3,12 @@ package joshie.progression.api;
 import java.util.List;
 import java.util.UUID;
 
-import net.minecraft.item.ItemStack;
-
 import com.google.gson.JsonObject;
 
-import cpw.mods.fml.common.eventhandler.Event.Result;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public interface IRewardType {    
     /** Associates this reward type with the criteria

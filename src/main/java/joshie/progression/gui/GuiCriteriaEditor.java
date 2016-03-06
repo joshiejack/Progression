@@ -1,6 +1,9 @@
 package joshie.progression.gui;
 
+import java.io.IOException;
 import java.util.List;
+
+import org.lwjgl.opengl.GL11;
 
 import joshie.progression.Progression;
 import joshie.progression.criteria.Reward;
@@ -19,10 +22,7 @@ import joshie.progression.helpers.ListHelper;
 import joshie.progression.lib.ProgressionInfo;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.item.ItemStack;
-
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
 public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
     public static final GuiCriteriaEditor INSTANCE = new GuiCriteriaEditor();
@@ -122,7 +122,7 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
     private static long lastClick;
 
     @Override
-    protected void mouseClicked(int x, int y, int button) {
+    protected void mouseClicked(int x, int y, int button) throws IOException {
         long thisClick = System.currentTimeMillis();
         long difference = thisClick - lastClick;
         boolean isDoubleClick = difference <= 150;

@@ -2,6 +2,8 @@ package joshie.progression.gui.editors;
 
 import java.util.ArrayList;
 
+import org.lwjgl.opengl.GL11;
+
 import joshie.progression.gui.GuiCriteriaEditor;
 import joshie.progression.gui.GuiTreeEditor;
 import joshie.progression.gui.base.IRenderOverlay;
@@ -9,8 +11,6 @@ import joshie.progression.helpers.ClientHelper;
 import joshie.progression.helpers.ItemHelper;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.item.ItemStack;
-
-import org.lwjgl.opengl.GL11;
 
 public class SelectItem extends TextEditable implements IRenderOverlay {
     public static SelectItem INSTANCE = new SelectItem();

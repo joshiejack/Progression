@@ -2,13 +2,13 @@ package joshie.progression.criteria.conditions;
 
 import java.util.UUID;
 
+import com.google.gson.JsonObject;
+
 import joshie.progression.gui.fields.BooleanField;
 import joshie.progression.gui.fields.TextField;
 import joshie.progression.helpers.JSONHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
-
-import com.google.gson.JsonObject;
 
 public class ConditionCoordinates extends ConditionBase {
     public boolean checkDimension = false; //Whether we check the dimension
@@ -38,7 +38,7 @@ public class ConditionCoordinates extends ConditionBase {
     @Override
     public boolean isSatisfied(World world, EntityPlayer player, UUID uuid) {
         if (player == null) return false;
-        int playerDimension = player.worldObj.provider.dimensionId;
+        int playerDimension = player.worldObj.provider.getDimensionId();
         int playerX = (int) player.posX;
         int playerY = (int) player.posY;
         int playerZ = (int) player.posZ;

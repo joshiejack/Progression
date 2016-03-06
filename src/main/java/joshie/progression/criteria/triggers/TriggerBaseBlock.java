@@ -1,5 +1,7 @@
 package joshie.progression.criteria.triggers;
 
+import com.google.gson.JsonObject;
+
 import joshie.progression.gui.editors.SelectItem.Type;
 import joshie.progression.gui.fields.BlockField;
 import joshie.progression.gui.fields.BooleanField;
@@ -10,8 +12,6 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
-
-import com.google.gson.JsonObject;
 
 public abstract class TriggerBaseBlock extends TriggerBaseCounter {
     public String name = "IGNORE";

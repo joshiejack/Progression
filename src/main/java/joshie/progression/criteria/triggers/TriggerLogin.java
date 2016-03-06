@@ -2,9 +2,9 @@ package joshie.progression.criteria.triggers;
 
 import joshie.progression.api.EventBusType;
 import joshie.progression.api.ProgressionAPI;
-import cpw.mods.fml.common.eventhandler.EventPriority;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 
 public class TriggerLogin extends TriggerBaseCounter {
     public TriggerLogin() {

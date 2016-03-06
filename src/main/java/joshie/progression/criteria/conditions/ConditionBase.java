@@ -3,15 +3,14 @@ package joshie.progression.criteria.conditions;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.JsonObject;
+
 import joshie.progression.api.IConditionType;
 import joshie.progression.gui.fields.AbstractField;
 import joshie.progression.helpers.ClientHelper;
 import joshie.progression.json.Theme;
 import net.minecraft.util.StatCollector;
-
-import com.google.gson.JsonObject;
-
-import cpw.mods.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
 public abstract class ConditionBase implements IConditionType {
     protected List<AbstractField> list = new ArrayList();

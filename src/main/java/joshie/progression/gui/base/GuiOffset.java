@@ -6,11 +6,11 @@ import net.minecraft.item.ItemStack;
 
 public abstract class GuiOffset extends GuiBase {    
     public void drawSplitText(String text, int xCoord, int yCoord, int width, int color) {
-        mc.fontRenderer.drawSplitString(text, offsetX + xCoord, y + yCoord, width, color);
+        mc.fontRendererObj.drawSplitString(text, offsetX + xCoord, y + yCoord, width, color);
     }
 
     public void drawText(String text, int xCoord, int yCoord, int color) {
-        mc.fontRenderer.drawString(text, offsetX + xCoord, y + yCoord, color);
+        mc.fontRendererObj.drawString(text, offsetX + xCoord, y + yCoord, color);
     }
 
     public void drawBox(int xCoord, int yCoord, int width, int height, int color, int border) {

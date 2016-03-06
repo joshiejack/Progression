@@ -2,6 +2,8 @@ package joshie.progression.gui.buttons;
 
 import java.util.ArrayList;
 
+import org.lwjgl.opengl.GL11;
+
 import joshie.progression.criteria.Criteria;
 import joshie.progression.criteria.Tab;
 import joshie.progression.gui.GuiTreeEditor;
@@ -13,8 +15,6 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-
-import org.lwjgl.opengl.GL11;
 
 public class ButtonNewCriteria extends ButtonBase {
     public ButtonNewCriteria(int y) {

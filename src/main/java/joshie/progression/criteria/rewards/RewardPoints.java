@@ -3,14 +3,14 @@ package joshie.progression.criteria.rewards;
 import java.util.List;
 import java.util.UUID;
 
+import com.google.gson.JsonObject;
+
 import joshie.progression.gui.fields.TextField;
 import joshie.progression.helpers.JSONHelper;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-
-import com.google.gson.JsonObject;
 
 public class RewardPoints extends RewardBase {
     public String name = "research";

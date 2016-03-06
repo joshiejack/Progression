@@ -1,5 +1,6 @@
 package joshie.progression.gui;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,7 +30,7 @@ public class GuiTriggerEditor extends GuiBase {
     }
 
     @Override
-    protected void keyTyped(char character, int key) {
+    protected void keyTyped(char character, int key) throws IOException {
         super.keyTyped(character, key);
         for (IRenderOverlay overlay : overlays) {
             if (overlay.isVisible()) {
@@ -41,7 +42,7 @@ public class GuiTriggerEditor extends GuiBase {
     private static long lastClick;
 
     @Override
-    protected void mouseClicked(int par1, int par2, int par3) {
+    protected void mouseClicked(int par1, int par2, int par3) throws IOException {
         long thisClick = System.currentTimeMillis();
         long difference = thisClick - lastClick;
         boolean isDoubleClick = difference <= 150;

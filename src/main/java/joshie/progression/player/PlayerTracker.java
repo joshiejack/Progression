@@ -3,20 +3,19 @@ package joshie.progression.player;
 import java.util.HashMap;
 import java.util.UUID;
 
+import com.google.common.collect.Maps;
+
 import joshie.progression.Progression;
 import joshie.progression.helpers.PlayerHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
-
-import com.google.common.collect.Maps;
-
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.EventPriority;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class PlayerTracker {
     private static final HashMap<TileEntity, UUID> owners = Maps.newHashMap();

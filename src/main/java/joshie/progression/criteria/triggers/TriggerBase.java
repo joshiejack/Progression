@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.google.gson.JsonObject;
+
 import joshie.progression.api.EventBusType;
 import joshie.progression.api.ICriteria;
 import joshie.progression.api.ITriggerData;
@@ -15,10 +17,7 @@ import joshie.progression.helpers.ClientHelper;
 import joshie.progression.helpers.JSONHelper;
 import joshie.progression.json.Theme;
 import net.minecraft.util.StatCollector;
-
-import com.google.gson.JsonObject;
-
-import cpw.mods.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
 public abstract class TriggerBase implements ITriggerType {
     protected List<AbstractField> list = new ArrayList();

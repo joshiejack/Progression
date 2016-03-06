@@ -3,16 +3,15 @@ package joshie.progression.json;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.apache.commons.io.IOUtils;
+
 import joshie.progression.lib.ProgressionInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
-
-import org.apache.commons.io.IOUtils;
-
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class Theme {
     protected static final ResourceLocation resource = new ResourceLocation(ProgressionInfo.MODPATH, "config.json");

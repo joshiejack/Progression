@@ -1,10 +1,10 @@
 package joshie.progression.criteria.triggers;
 
+import com.google.gson.JsonObject;
+
 import joshie.progression.api.EventBusType;
 import joshie.progression.gui.fields.TextField;
 import joshie.progression.helpers.JSONHelper;
-
-import com.google.gson.JsonObject;
 
 public class TriggerResearch extends TriggerBaseBoolean {
     public String name = "dummy";

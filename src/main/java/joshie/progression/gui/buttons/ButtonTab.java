@@ -2,13 +2,16 @@ package joshie.progression.gui.buttons;
 
 import java.util.ArrayList;
 
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
+
 import joshie.progression.criteria.Criteria;
 import joshie.progression.criteria.Tab;
 import joshie.progression.gui.GuiTreeEditor;
 import joshie.progression.gui.editors.EditText;
+import joshie.progression.gui.editors.EditText.ITextEditable;
 import joshie.progression.gui.editors.IItemSelectable;
 import joshie.progression.gui.editors.SelectItem;
-import joshie.progression.gui.editors.EditText.ITextEditable;
 import joshie.progression.gui.editors.SelectItem.Type;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.ClientHelper;
@@ -19,9 +22,6 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
 
 public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelectable {
     private Tab tab;

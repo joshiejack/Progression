@@ -8,8 +8,7 @@ import joshie.progression.api.ITriggerType;
 import joshie.progression.criteria.Reward;
 import joshie.progression.criteria.Trigger;
 import net.minecraftforge.common.MinecraftForge;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.EventBus;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class EventsManager {
     public static HashSet<Trigger> activeTriggers;

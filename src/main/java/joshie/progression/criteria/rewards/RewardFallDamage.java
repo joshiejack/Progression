@@ -3,6 +3,8 @@ package joshie.progression.criteria.rewards;
 import java.util.List;
 import java.util.UUID;
 
+import com.google.gson.JsonObject;
+
 import joshie.progression.api.EventBusType;
 import joshie.progression.gui.fields.TextField;
 import joshie.progression.helpers.JSONHelper;
@@ -12,10 +14,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
-
-import com.google.gson.JsonObject;
-
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class RewardFallDamage extends RewardBase {
     public int absorption = 1;

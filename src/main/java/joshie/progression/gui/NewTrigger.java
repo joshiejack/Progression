@@ -1,11 +1,11 @@
 package joshie.progression.gui;
 
+import org.lwjgl.opengl.GL11;
+
 import joshie.progression.api.ITriggerType;
 import joshie.progression.criteria.Criteria;
 import joshie.progression.gui.base.OverlayBase;
 import joshie.progression.handlers.APIHandler;
-
-import org.lwjgl.opengl.GL11;
 
 public class NewTrigger extends OverlayBase {
     public static NewTrigger INSTANCE = new NewTrigger();

@@ -7,7 +7,6 @@ import static joshie.progression.network.PacketSyncJSON.Section.RESYNC;
 import static joshie.progression.network.PacketSyncJSON.Section.SEND_HASH;
 import static joshie.progression.network.PacketSyncJSON.Section.SEND_LENGTH;
 import static joshie.progression.network.PacketSyncJSON.Section.SEND_STRING;
-import io.netty.buffer.ByteBuf;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -17,18 +16,17 @@ import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import com.google.common.io.CharStreams;
+
+import io.netty.buffer.ByteBuf;
 import joshie.progression.handlers.RemappingHandler;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.json.JSONLoader;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-
-import com.google.common.io.CharStreams;
-
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 
 public class PacketSyncJSON implements IMessage, IMessageHandler<PacketSyncJSON, IMessage> {
     public static enum Section {

@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.UUID;
 
+import com.google.gson.JsonObject;
+
 import joshie.progression.api.IConditionType;
 import joshie.progression.api.IItemFilter;
 import joshie.progression.api.IProgressionAPI;
@@ -33,10 +35,7 @@ import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.EnumHelper;
-
-import com.google.gson.JsonObject;
-
-import cpw.mods.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
 public class APIHandler implements IProgressionAPI {
     //This is the registry for trigger type and reward type creation

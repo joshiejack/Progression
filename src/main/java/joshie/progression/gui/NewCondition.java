@@ -1,12 +1,12 @@
 package joshie.progression.gui;
 
+import org.lwjgl.opengl.GL11;
+
 import joshie.progression.api.IConditionType;
 import joshie.progression.criteria.Trigger;
 import joshie.progression.gui.base.OverlayBase;
 import joshie.progression.handlers.APIHandler;
 import net.minecraft.item.ItemStack;
-
-import org.lwjgl.opengl.GL11;
 
 public class NewCondition extends OverlayBase {
     public static NewCondition INSTANCE = new NewCondition();

@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import cpw.mods.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
 /** The registry is where you register new types of rewards, triggers and
  *  conditions, and the criteria. All triggers and rewards should be registered before any criteria, and conditions before triggers */

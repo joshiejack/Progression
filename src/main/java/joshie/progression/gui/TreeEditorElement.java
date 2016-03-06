@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
+
 import joshie.progression.Progression;
 import joshie.progression.criteria.Criteria;
 import joshie.progression.criteria.Reward;
@@ -17,9 +20,6 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
 
 public class TreeEditorElement {
     private static final GuiTreeEditor gui = GuiTreeEditor.INSTANCE;
@@ -71,7 +71,7 @@ public class TreeEditorElement {
     }
 
     private void recalculate(int x) {
-        int textWidth = gui.mc.fontRenderer.getStringWidth(criteria.displayName);
+        int textWidth = gui.mc.fontRendererObj.getStringWidth(criteria.displayName);
         int iconWidth = 9 + (criteria.rewards.size() * 12);
         if (textWidth >= iconWidth) {
             width = textWidth + 9;
@@ -179,7 +179,7 @@ public class TreeEditorElement {
             gui.drawTexturedModalRect(x + right - 10, y + top, textureX + 90, textureY, 10, 25);
 
             //gui.drawTexturedModalRect(x + left, y + top, textureX, textureY, 100, 25);
-            gui.mc.fontRenderer.drawString(criteria.displayName, x + left + 4, y + top + 3, Theme.INSTANCE.criteriaDisplayNameColor);
+            gui.mc.fontRendererObj.drawString(criteria.displayName, x + left + 4, y + top + 3, Theme.INSTANCE.criteriaDisplayNameColor);
 
             GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
             //Draw in the rewards

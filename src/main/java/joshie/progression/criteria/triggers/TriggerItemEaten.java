@@ -3,17 +3,15 @@ package joshie.progression.criteria.triggers;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.google.gson.JsonObject;
+
 import joshie.progression.api.IItemFilter;
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.criteria.filters.FilterItem;
 import joshie.progression.helpers.JSONHelper;
 import joshie.progression.helpers.LegacyHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
-
-import com.google.gson.JsonObject;
-
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class TriggerItemEaten extends TriggerBaseCounter {
     public Set<IItemFilter> filters = new HashSet();

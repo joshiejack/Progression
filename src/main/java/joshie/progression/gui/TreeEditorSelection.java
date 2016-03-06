@@ -1,11 +1,11 @@
 package joshie.progression.gui;
 
+import org.lwjgl.opengl.GL11;
+
 import joshie.progression.gui.editors.SelectItem;
 import joshie.progression.gui.editors.TextEditable;
 import joshie.progression.helpers.RenderItemHelper;
 import net.minecraft.client.gui.ScaledResolution;
-
-import org.lwjgl.opengl.GL11;
 
 public class TreeEditorSelection extends TextEditable {
     public static TreeEditorSelection INSTANCE = new TreeEditorSelection();
@@ -57,9 +57,9 @@ public class TreeEditorSelection extends TextEditable {
             GuiTreeEditor.INSTANCE.drawGradientRectWithBorder(30, y + 20, res.getScaledWidth() - 30, y + 40, theme.blackBarGradient1, theme.blackBarGradient2, theme.blackBarBorder);
             GuiTreeEditor.INSTANCE.drawRectWithBorder(30, y + 40, res.getScaledWidth() - 30, y + 210, theme.blackBarUnderLine, theme.blackBarUnderLineBorder);
 
-            GuiTreeEditor.INSTANCE.mc.fontRenderer.drawString("Select Item - Click elsewhere to close", 35 - offsetX, y + 27, theme.blackBarFontColor);
+            GuiTreeEditor.INSTANCE.mc.fontRendererObj.drawString("Select Item - Click elsewhere to close", 35 - offsetX, y + 27, theme.blackBarFontColor);
             GuiTreeEditor.INSTANCE.drawRectWithBorder(res.getScaledWidth() - 180, y + 23, res.getScaledWidth() - 35, y + 38, theme.blackBarUnderLine, theme.blackBarUnderLineBorder);
-            GuiTreeEditor.INSTANCE.mc.fontRenderer.drawString(SelectItem.INSTANCE.getText(), res.getScaledWidth() - 175, y + 29, theme.blackBarFontColor);
+            GuiTreeEditor.INSTANCE.mc.fontRendererObj.drawString(SelectItem.INSTANCE.getText(), res.getScaledWidth() - 175, y + 29, theme.blackBarFontColor);
 
             int width = (int) ((double) fullWidth / 18.633333334D);
             int j = 0;

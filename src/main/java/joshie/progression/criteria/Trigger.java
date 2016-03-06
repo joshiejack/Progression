@@ -6,16 +6,16 @@ import java.util.List;
 import joshie.progression.Progression;
 import joshie.progression.api.ITriggerType;
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.gui.TriggerEditorElement;
 import joshie.progression.gui.GuiTriggerEditor;
+import joshie.progression.gui.TriggerEditorElement;
 import joshie.progression.gui.base.DrawHelper;
 import joshie.progression.helpers.ClientHelper;
 import joshie.progression.json.Theme;
 import joshie.progression.lib.ProgressionInfo;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.Event.Result;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class Trigger {
     @SideOnly(Side.CLIENT)

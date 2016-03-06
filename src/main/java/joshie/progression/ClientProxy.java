@@ -6,16 +6,16 @@ import joshie.progression.gui.base.SaveTicker;
 import joshie.progression.items.RenderItemCriteria;
 import joshie.progression.json.Options;
 import net.minecraftforge.client.MinecraftForgeClient;
-import cpw.mods.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class ClientProxy extends CommonProxy {
     @Override
     public void initClient() {
-        if (Options.editor || Progression.NEI_LOADED) {
+        if (Options.editor || Progression.JEI_LOADED) {
             FMLCommonHandler.instance().bus().register(new SaveTicker());
         }
         
         ProgressionAPI.draw = DrawHelper.INSTANCE;
-        MinecraftForgeClient.registerItemRenderer(Progression.item, new RenderItemCriteria());
+        //TODO: Render Criteria MinecraftForgeClient.registerItemRenderer(Progression.item, new RenderItemCriteria());
     }
 }

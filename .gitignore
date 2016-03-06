@@ -1,11 +1,22 @@
-/build
-/common
-/eclipse/*
-/.gradle
-/bin/*
+# eclipse
+bin
+*.launch
+.settings
+.metadata
 .classpath
 .project
-.settings/*
-.checkstyle
-src/api/resources/*
-src/api/java/hacker/
+
+# idea
+out
+*.ipr
+*.iws
+*.iml
+.idea
+
+# gradle
+build
+.gradle
+
+# other
+eclipse
+run

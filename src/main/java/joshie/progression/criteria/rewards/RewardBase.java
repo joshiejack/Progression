@@ -12,7 +12,7 @@ import joshie.progression.json.Theme;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
-import cpw.mods.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
 public abstract class RewardBase implements IRewardType {
     protected List<AbstractField> list = new ArrayList();

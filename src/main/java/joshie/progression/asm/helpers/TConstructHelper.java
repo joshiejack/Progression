@@ -5,11 +5,10 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import tconstruct.library.crafting.ModifyBuilder;
-import tconstruct.library.modifier.IModifyable;
 
+//TODO: Tinkers
 public class TConstructHelper {
-    public static void onContainerChanged(InventoryCrafting matrix, IInventory inventory, World world) {
+    /*public static void onContainerChanged(InventoryCrafting matrix, IInventory inventory, World world) {
         ItemStack tool = modifyItem(matrix);
         if (tool != null) inventory.setInventorySlotContents(0, tool);
         else {
@@ -17,7 +16,6 @@ public class TConstructHelper {
         }
     }
 
-    /** From Tinkers **/
     public static ItemStack modifyItem(InventoryCrafting matrix) {
         ItemStack input = matrix.getStackInSlot(4);
         if (input != null) {
@@ -33,5 +31,5 @@ public class TConstructHelper {
             }
         }
         return null;
-    }
+    } */
 }

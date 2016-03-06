@@ -1,11 +1,11 @@
 package joshie.progression.gui;
 
+import org.lwjgl.opengl.GL11;
+
 import joshie.progression.api.IRewardType;
 import joshie.progression.criteria.Criteria;
 import joshie.progression.gui.base.OverlayBase;
 import joshie.progression.handlers.APIHandler;
-
-import org.lwjgl.opengl.GL11;
 
 public class NewReward extends OverlayBase {
     public static NewReward INSTANCE = new NewReward();

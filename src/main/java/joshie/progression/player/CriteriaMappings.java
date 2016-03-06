@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+
 import joshie.progression.Progression;
 import joshie.progression.api.ITriggerData;
 import joshie.progression.criteria.Condition;
@@ -34,11 +37,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
-
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-
-import cpw.mods.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
 public class CriteriaMappings {
     private PlayerDataServer master;

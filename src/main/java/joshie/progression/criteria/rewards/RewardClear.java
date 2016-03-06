@@ -3,6 +3,8 @@ package joshie.progression.criteria.rewards;
 import java.util.List;
 import java.util.UUID;
 
+import com.google.gson.JsonObject;
+
 import joshie.progression.gui.editors.SelectItem.Type;
 import joshie.progression.gui.fields.BooleanField;
 import joshie.progression.gui.fields.ItemAmountField;
@@ -15,8 +17,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-
-import com.google.gson.JsonObject;
 
 public class RewardClear extends RewardBase {
     public ItemStack stack = new ItemStack(Items.diamond);

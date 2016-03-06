@@ -3,6 +3,8 @@ package joshie.progression.criteria.rewards;
 import java.util.List;
 import java.util.UUID;
 
+import com.google.gson.JsonObject;
+
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.criteria.Criteria;
 import joshie.progression.gui.editors.EditText;
@@ -15,10 +17,7 @@ import joshie.progression.player.PlayerTracker;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-
-import com.google.gson.JsonObject;
-
-import cpw.mods.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
 //TODO: SWITCH TO NEW FORMAT
 public class RewardCriteria extends RewardBase implements ITextEditable {

@@ -1,10 +1,6 @@
 package joshie.progression.handlers;
 
 import joshie.progression.Progression;
-import joshie.progression.api.ActionEvent.CanObtainFromActionEvent;
-import joshie.progression.api.ActionEvent.CanUseToPeformActionEvent;
-import joshie.progression.crafting.Crafter;
-import joshie.progression.crafting.CraftingRegistry;
 import joshie.progression.helpers.StackHelper;
 import joshie.progression.json.Options;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -12,9 +8,9 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.oredict.OreDictionary;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 
 /** Sync data, and make locked items useless **/
 public class EventsHandler {

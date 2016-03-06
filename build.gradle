@@ -1,21 +1,24 @@
+// For those who want the bleeding edge
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
         maven {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
-        maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
     }
 }
 
-apply plugin: 'forge'
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+repositories {
+  maven {
+    url "http://dvs1.progwml6.com/files/maven"
+  }
+}
 
 ext.buildnumber=""
 if (System.getenv().BUILD_NUMBER) {
@@ -28,23 +31,15 @@ archivesBaseName = "Progression"
 
 minecraft {
     version = "${minecraft_version}-${forge_version}"
-    runDir = "eclipse"
+    runDir = "run"
+    mappings = "stable_20"
     
     replace "@VERSION@", "${mod_version}"
     replaceIn "ProgressionInfo.java"
 }
 
-repositories {
-    maven {
-        name = "chickenbones"
-        url = "http://chickenbones.net/maven/"
-    }
-}
-
 dependencies {
-    compile "codechicken:CodeChickenLib:${minecraft_version}-1.1.3.127:dev"
-    compile "codechicken:CodeChickenCore:${minecraft_version}-1.0.4.35:dev"
-    compile "codechicken:NotEnoughItems:${minecraft_version}-1.0.4.90:dev"
+  deobfCompile "mezz.jei:jei_1.8.9:2.28.2.166"
 }
 
 processResources
@@ -54,12 +49,12 @@ processResources
 
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
+                
         expand 'version':project.version, 'mcversion':project.minecraft.version
     }
         
     from(sourceSets.main.resources.srcDirs) {
-        exclude '**/*.info'
-        exclude '**/*.properties'
+        exclude 'mcmod.info'
     }
 }
 
@@ -68,23 +63,4 @@ jar {
         attributes 'FMLCorePlugin': 'joshie.progression.asm.ProgressionTransformer'
         attributes 'FMLCorePluginContainsFMLMod': 'true'
     }
-}
-
-task sourceJar(type: Jar) {
-    from sourceSets.main.allSource
-    classifier = 'src'
-}
-
-task deobfJar(type: Jar) {
-    manifest {
-        attributes 'FMLCorePlugin': 'joshie.progression.asm.ProgressionTransformer'
-        attributes 'FMLCorePluginContainsFMLMod': 'true'
-    }
-    from sourceSets.main.output
-    classifier = 'dev'
-}
-
-artifacts {
-    archives deobfJar
-    archives sourceJar
 }

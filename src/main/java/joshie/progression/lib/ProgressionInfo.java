@@ -1,8 +1,8 @@
 package joshie.progression.lib;
 
 import net.minecraft.util.ResourceLocation;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ProgressionInfo {
 	public static final String MODID = "Progression";

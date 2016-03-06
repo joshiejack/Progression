@@ -1,15 +1,14 @@
 package joshie.progression.criteria.triggers;
 
+import com.google.gson.JsonObject;
+
 import joshie.progression.api.EventBusType;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.gui.fields.TextField;
 import joshie.progression.helpers.JSONHelper;
 import net.minecraft.stats.Achievement;
 import net.minecraftforge.event.entity.player.AchievementEvent;
-
-import com.google.gson.JsonObject;
-
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class TriggerAchievement extends TriggerBaseBoolean {
     public String id = "openInventory";

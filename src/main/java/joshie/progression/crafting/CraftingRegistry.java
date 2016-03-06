@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
+import com.google.common.collect.Multimap;
+
 import joshie.progression.api.ICriteria;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.lib.SafeStack;
@@ -13,8 +15,6 @@ import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-
-import com.google.common.collect.Multimap;
 
 public class CraftingRegistry {
     public static HashMap<ActionType, Multimap<SafeStack, ICriteria>> conditions;

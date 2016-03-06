@@ -3,12 +3,12 @@ package joshie.progression.asm;
 import java.util.ArrayList;
 import java.util.List;
 
-import joshie.progression.lib.ProgressionInfo;
-
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+
+import joshie.progression.lib.ProgressionInfo;
 
 /** Moves the firing of the oncrafting event in slotcrafting
  *  to firing when the onCrafting is called, instead of onPickupFrom Slot. */

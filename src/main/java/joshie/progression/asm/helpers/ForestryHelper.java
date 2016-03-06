@@ -5,13 +5,10 @@ import joshie.progression.helpers.CraftingHelper;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import forestry.core.inventory.InvTools;
-import forestry.core.inventory.TileInventoryAdapter;
-import forestry.core.utils.RecipeUtil;
-import forestry.factory.gadgets.TileWorktable;
-import forestry.factory.recipes.RecipeMemory.Recipe;
 
+//TODO: Forestry
 public class ForestryHelper {
+	/*
     public static boolean canCraftRecipe(TileEntity tile, TileInventoryAdapter craftingInventory, IInventory internalInventory, Recipe currentRecipe, int slotIndex) {
         if (slotIndex == TileWorktable.SLOT_CRAFTING_RESULT) {
             if (currentRecipe == null) {
@@ -33,5 +30,5 @@ public class ForestryHelper {
                 return true;
             } else return false;
         } else return true;
-    }
+    } */
 }

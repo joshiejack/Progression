@@ -5,11 +5,12 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.CommandEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class CommandManager extends CommandBase {
     public static final CommandManager INSTANCE = new CommandManager();
@@ -40,7 +41,7 @@ public class CommandManager extends CommandBase {
     }
 
     @SubscribeEvent
-    public void onCommandSend(CommandEvent event) {
+    public void onCommandSend(CommandEvent event) throws CommandException {
         if (event.command == this && event.parameters.length > 0) {
             String commandName = event.parameters[0];
             AbstractCommand command = commands.get(commandName);
@@ -53,7 +54,7 @@ public class CommandManager extends CommandBase {
     }
 
     //Attempt to process the command, throw wrong usage otherwise
-    private void processCommand(CommandEvent event, AbstractCommand command) {
+    private void processCommand(CommandEvent event, AbstractCommand command) throws CommandException {
         String[] args = new String[event.parameters.length - 1];
         System.arraycopy(event.parameters, 1, args, 0, args.length);
         if (!command.processCommand(event.sender, args)) {
@@ -71,7 +72,6 @@ public class CommandManager extends CommandBase {
         return "/" + "progression" + " " + command.getCommandName() + " " + command.getUsage();
     }
 
-    @Override
     public List addTabCompletionOptions(ICommandSender sender, String[] parameters) {
         return new ArrayList();
     }

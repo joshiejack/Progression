@@ -1,10 +1,16 @@
 package joshie.progression.gui.base;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import joshie.progression.criteria.Criteria;
 import joshie.progression.gui.editors.EditText;
@@ -18,11 +24,6 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
 public abstract class GuiBase extends GuiScreen {
     public Set<IRenderOverlay> overlays = new HashSet();
@@ -42,7 +43,7 @@ public abstract class GuiBase extends GuiScreen {
         super.initGui();
         y = (height - ySize) / 2;
         Keyboard.enableRepeatEvents(true);
-        res = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+        res = new ScaledResolution(mc);
         theme = Theme.INSTANCE;
         SelectItem.INSTANCE.clear();
     }
@@ -227,7 +228,7 @@ public abstract class GuiBase extends GuiScreen {
     }
 
     @Override
-    protected void keyTyped(char character, int key) {
+    protected void keyTyped(char character, int key) throws IOException {
         if (EditText.getEditable() == null) {
             int jump = 1;
             if (Keyboard.isKeyDown(54) || Keyboard.isKeyDown(42)) {
@@ -245,7 +246,7 @@ public abstract class GuiBase extends GuiScreen {
     }
 
     @Override
-    public void handleMouseInput() {
+    public void handleMouseInput() throws IOException {
         int x = Mouse.getEventX() * width / mc.displayWidth;
         int y = height - Mouse.getEventY() * height / mc.displayHeight - 1;
 

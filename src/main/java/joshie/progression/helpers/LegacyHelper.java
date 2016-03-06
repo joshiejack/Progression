@@ -2,11 +2,11 @@ package joshie.progression.helpers;
 
 import java.util.Set;
 
+import com.google.gson.JsonObject;
+
 import joshie.progression.api.IItemFilter;
 import joshie.progression.criteria.filters.FilterItem;
 import net.minecraft.item.ItemStack;
-
-import com.google.gson.JsonObject;
 
 public class LegacyHelper {
     public static void readLegacyItems(JsonObject data, Set<IItemFilter> filters) {

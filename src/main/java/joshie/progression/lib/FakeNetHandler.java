@@ -1,14 +1,13 @@
 package joshie.progression.lib;
 
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.util.concurrent.GenericFutureListener;
-
 import java.net.InetAddress;
 import java.net.SocketAddress;
 
 import javax.crypto.SecretKey;
 
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.util.concurrent.GenericFutureListener;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.EnumConnectionState;
 import net.minecraft.network.INetHandler;
@@ -38,8 +37,8 @@ import net.minecraft.network.play.client.C16PacketClientStatus;
 import net.minecraft.network.play.client.C17PacketCustomPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.IChatComponent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /** FakeNet from CoFh Core **/
 

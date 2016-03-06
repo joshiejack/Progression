@@ -1,5 +1,7 @@
 package joshie.progression.criteria.triggers;
 
+import com.google.gson.JsonObject;
+
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.gui.editors.SelectItem.Type;
 import joshie.progression.gui.fields.EntityField;
@@ -8,10 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
-
-import com.google.gson.JsonObject;
-
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class TriggerKill extends TriggerBaseCounter {
     public String entity = "Pig";

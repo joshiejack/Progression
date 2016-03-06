@@ -2,6 +2,8 @@ package joshie.progression.gui.editors;
 
 import java.util.ArrayList;
 
+import org.lwjgl.opengl.GL11;
+
 import joshie.progression.gui.GuiCriteriaEditor;
 import joshie.progression.gui.GuiTreeEditor;
 import joshie.progression.gui.base.IRenderOverlay;
@@ -12,8 +14,6 @@ import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
-
-import org.lwjgl.opengl.GL11;
 
 public class SelectEntity extends TextEditable implements IRenderOverlay {
     public static SelectEntity INSTANCE = new SelectEntity();

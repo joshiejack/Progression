@@ -6,10 +6,9 @@ import joshie.progression.criteria.Reward;
 import joshie.progression.criteria.rewards.RewardBaseAction;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.player.PlayerTracker;
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 
 public class PacketSyncCriteria implements IMessage, IMessageHandler<PacketSyncCriteria, IMessage> {
 	private Criteria[] criteria;

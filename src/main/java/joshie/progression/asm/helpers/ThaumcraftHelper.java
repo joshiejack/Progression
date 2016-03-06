@@ -6,14 +6,11 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
-import thaumcraft.common.container.ContainerDummy;
-import thaumcraft.common.items.wands.ItemWandCasting;
-import thaumcraft.common.lib.crafting.ThaumcraftCraftingManager;
-import thaumcraft.common.tiles.TileArcaneWorkbench;
 
 public class ThaumcraftHelper {
+	//TODO: Thaumcraft
     /** Code adapted from thaumcraft to fit my purposes **/
-    public static void onContainerChanged(TileArcaneWorkbench tile, InventoryPlayer ip) {
+    /*public static void onContainerChanged(TileArcaneWorkbench tile, InventoryPlayer ip) {
         InventoryCrafting craftMatrix = new InventoryCrafting(new ContainerDummy(), 3, 3);
         for (int a = 0; a < 9; a++) {
             ItemStack stack = tile.getStackInSlot(a);
@@ -36,5 +33,5 @@ public class ThaumcraftHelper {
                 tile.setInventorySlotContentsSoftly(9, ThaumcraftCraftingManager.findMatchingArcaneRecipe(tile, ip.player));
             }
         }
-    }
+    } */
 }

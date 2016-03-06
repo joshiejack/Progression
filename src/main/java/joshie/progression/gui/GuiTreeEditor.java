@@ -1,9 +1,14 @@
 package joshie.progression.gui;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
 
 import joshie.progression.criteria.Criteria;
 import joshie.progression.criteria.Tab;
@@ -17,10 +22,6 @@ import joshie.progression.helpers.ClientHelper;
 import joshie.progression.json.Options;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
 
 public class GuiTreeEditor extends GuiBase {
     public static final GuiTreeEditor INSTANCE = new GuiTreeEditor();
@@ -108,7 +109,7 @@ public class GuiTreeEditor extends GuiBase {
                     int x2 = editor.getX();
 
                     int width = 0;
-                    int textWidth = mc.fontRenderer.getStringWidth(c.displayName);
+                    int textWidth = mc.fontRendererObj.getStringWidth(c.displayName);
                     int iconWidth = 9 + (c.rewards.size() * 12);
                     if (textWidth >= iconWidth) {
                         width = textWidth + 9;
@@ -138,7 +139,7 @@ public class GuiTreeEditor extends GuiBase {
     public Tab previousTab = null;
 
     @Override
-    protected void keyTyped(char character, int key) {
+    protected void keyTyped(char character, int key) throws IOException {
         Criteria toRemove = null;
         for (Criteria criteria : currentTab.getCriteria()) {
             if (criteria.treeEditor.isCriteriaVisible() || ClientHelper.canEdit()) {
@@ -173,7 +174,7 @@ public class GuiTreeEditor extends GuiBase {
     }
 
     @Override
-    public void mouseMovedOrUp(int x, int y, int button) {
+    public void mouseClickMove(int x, int y, int button, long lastClick) {
         for (Criteria criteria : currentTab.getCriteria()) {
             criteria.treeEditor.release(mouseX, mouseY);
         }
@@ -190,7 +191,7 @@ public class GuiTreeEditor extends GuiBase {
     public boolean isDragging = false;
 
     @Override
-    protected void mouseClicked(int par1, int par2, int par3) {
+    protected void mouseClicked(int par1, int par2, int par3) throws IOException {
         if (currentTab == null) return;
         long thisClick = System.currentTimeMillis();
         long difference = thisClick - lastClick;
@@ -219,7 +220,7 @@ public class GuiTreeEditor extends GuiBase {
     }
 
     @Override
-    public void handleMouseInput() {
+    public void handleMouseInput() throws IOException {
         super.handleMouseInput();
 
         if (isDragging) {

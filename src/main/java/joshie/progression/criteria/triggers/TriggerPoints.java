@@ -2,6 +2,8 @@ package joshie.progression.criteria.triggers;
 
 import java.util.UUID;
 
+import com.google.gson.JsonObject;
+
 import joshie.progression.api.EventBusType;
 import joshie.progression.api.ITriggerData;
 import joshie.progression.criteria.triggers.data.DataBoolean;
@@ -9,8 +11,6 @@ import joshie.progression.gui.fields.BooleanField;
 import joshie.progression.gui.fields.TextField;
 import joshie.progression.helpers.JSONHelper;
 import joshie.progression.player.PlayerTracker;
-
-import com.google.gson.JsonObject;
 
 public class TriggerPoints extends TriggerBaseBoolean {
     public String name = "research";
