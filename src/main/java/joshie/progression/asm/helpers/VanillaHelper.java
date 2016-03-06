@@ -8,7 +8,7 @@ import java.util.List;
 import joshie.progression.asm.ContainerPlayer;
 import joshie.progression.asm.ContainerTile;
 import joshie.progression.crafting.ActionType;
-import joshie.progression.helpers.ClientHelper;
+import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.CraftingHelper;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -33,7 +33,7 @@ public class VanillaHelper {
     }
 
     public static List<Object> getPlayers(InventoryCrafting crafting, boolean isClient) {
-        if (isClient && ClientHelper.getPlayer() != null) return Arrays.asList(new Object[] { ClientHelper.getPlayer() });
+        if (isClient && MCClientHelper.getPlayer() != null) return Arrays.asList(new Object[] { MCClientHelper.getPlayer() });
         try {
             Container container = (Container) fContainer.get(crafting);
             List list = (List) fCrafters.get(container);

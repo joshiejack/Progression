@@ -3,7 +3,7 @@ package joshie.progression.gui.base;
 import joshie.progression.criteria.Criteria;
 import joshie.progression.gui.editors.EditText;
 import joshie.progression.gui.editors.SelectItem;
-import joshie.progression.helpers.ClientHelper;
+import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.json.JSONLoader;
 import joshie.progression.json.Theme;
 import net.minecraft.client.gui.GuiButton;
@@ -51,7 +51,7 @@ public abstract class GuiBase extends GuiScreen {
     @Override
     public void onGuiClosed() {
         Keyboard.enableRepeatEvents(false);
-        if (ClientHelper.getPlayer().capabilities.isCreativeMode) {
+        if (MCClientHelper.getPlayer().capabilities.isCreativeMode) {
             JSONLoader.saveData();
             SaveTicker.LAST_TICK = 60;
         }

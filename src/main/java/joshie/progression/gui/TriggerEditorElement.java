@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL11;
 
 import joshie.progression.criteria.Condition;
 import joshie.progression.criteria.Trigger;
-import joshie.progression.helpers.ClientHelper;
+import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.RenderItemHelper;
 import joshie.progression.json.Theme;
 import joshie.progression.lib.ProgressionInfo;
@@ -78,7 +78,7 @@ public class TriggerEditorElement {
             xCoord++;
         }
 
-        if (ClientHelper.canEdit()) {
+        if (MCClientHelper.canEdit()) {
             int crossX = 110;
             if (!NewCondition.INSTANCE.isVisible()) {
                 if (mouseX >= 15 + 100 * xCoord && mouseX <= 15 + 100 * xCoord + 55) {
@@ -89,7 +89,7 @@ public class TriggerEditorElement {
             }
 
             GL11.glColor4f(1F, 1F, 1F, 1F);
-            ClientHelper.getMinecraft().getTextureManager().bindTexture(ProgressionInfo.textures);
+            MCClientHelper.getMinecraft().getTextureManager().bindTexture(ProgressionInfo.textures);
             drawTexture(15 + 100 * xCoord, 49, crossX, 201, 55, 55);
         }
     }
@@ -106,7 +106,7 @@ public class TriggerEditorElement {
     }
 
     public boolean click(int mouseX, int mouseY, boolean isDoubleClick) {
-        if (!ClientHelper.canEdit()) {
+        if (!MCClientHelper.canEdit()) {
             return false;
         }
 

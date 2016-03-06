@@ -13,7 +13,7 @@ import joshie.progression.api.ITriggerType;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.gui.fields.AbstractField;
 import joshie.progression.handlers.APIHandler;
-import joshie.progression.helpers.ClientHelper;
+import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.JSONHelper;
 import joshie.progression.json.Theme;
 import net.minecraft.util.StatCollector;
@@ -86,7 +86,7 @@ public abstract class TriggerBase implements ITriggerType {
 
     @Override
     public Result onClicked(int mouseX, int mouseY) {
-        if (ClientHelper.canEdit()) {
+        if (MCClientHelper.canEdit()) {
             if (!cancel) {
                 int yStart = cancelable ? 25 : 17;
                 int index = 0;
@@ -130,7 +130,7 @@ public abstract class TriggerBase implements ITriggerType {
                 t.setObject(this);
                 int color = Theme.INSTANCE.optionsFontColor;
                 int yPos = yStart + (index * 8);
-                if (ClientHelper.canEdit()) {
+                if (MCClientHelper.canEdit()) {
                     if (mouseX >= 1 && mouseX <= 84) {
                         if (mouseY >= yPos && mouseY < yPos + 8) {
                             color = Theme.INSTANCE.optionsFontColorHover;
@@ -145,7 +145,7 @@ public abstract class TriggerBase implements ITriggerType {
 
         if (cancelable) {
             int color = Theme.INSTANCE.optionsFontColor;
-            if (ClientHelper.canEdit()) {
+            if (MCClientHelper.canEdit()) {
                 if (mouseX >= 1 && mouseX <= 84) {
                     if (mouseY >= 17 && mouseY < 25) {
                         color = Theme.INSTANCE.optionsFontColorHover;

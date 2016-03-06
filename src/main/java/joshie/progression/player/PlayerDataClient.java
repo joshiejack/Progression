@@ -2,7 +2,7 @@ package joshie.progression.player;
 
 import java.util.UUID;
 
-import joshie.progression.helpers.ClientHelper;
+import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.PlayerHelper;
 
 
@@ -14,7 +14,7 @@ public class PlayerDataClient extends PlayerDataCommon {
 	}
 	
 	public UUID getUUID() {
-		return PlayerHelper.getUUIDForPlayer(ClientHelper.getPlayer());
+		return PlayerHelper.getUUIDForPlayer(MCClientHelper.getPlayer());
 	}
 
 	public void setAbilities(DataStats abilities) {

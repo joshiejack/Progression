@@ -32,7 +32,7 @@ public class EntityHelper {
     static {
         for (String name : (Set<String>) EntityList.stringToClassMapping.keySet()) {
             if (name.equals("Mob") || name.equals("Monster")) continue;
-            Entity entity = EntityList.createEntityByName(name, ClientHelper.getWorld());
+            Entity entity = EntityList.createEntityByName(name, MCClientHelper.getWorld());
             if (entity instanceof EntityLivingBase) {
                 entities.add((EntityLivingBase) entity);
             }

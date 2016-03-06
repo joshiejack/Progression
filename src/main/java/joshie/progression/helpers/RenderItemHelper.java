@@ -22,7 +22,7 @@ public class RenderItemHelper {
             GL11.glEnable(GL11.GL_LIGHTING);
             GL11.glEnable(GL12.GL_RESCALE_NORMAL);
             RenderHelper.enableGUIStandardItemLighting();
-            Minecraft mc = ClientHelper.getMinecraft();
+            Minecraft mc = MCClientHelper.getMinecraft();
             itemRenderer.renderItemAndEffectIntoGUI(stack, (int) (left / size), (int) (top / size));
             itemRenderer.renderItemOverlayIntoGUI(mc.fontRendererObj, stack, (int) (left / size), (int) (top / size), null);
             RenderHelper.disableStandardItemLighting();

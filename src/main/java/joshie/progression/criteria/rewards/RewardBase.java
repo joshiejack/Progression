@@ -7,7 +7,7 @@ import joshie.progression.api.EventBusType;
 import joshie.progression.api.ICriteria;
 import joshie.progression.api.IRewardType;
 import joshie.progression.gui.fields.AbstractField;
-import joshie.progression.helpers.ClientHelper;
+import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.json.Theme;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -75,7 +75,7 @@ public abstract class RewardBase implements IRewardType {
     
     @Override
     public Result onClicked(int mouseX, int mouseY) {
-        if (ClientHelper.canEdit()) {
+        if (MCClientHelper.canEdit()) {
             int index = 0;
             for (AbstractField t : list) {
                 int color = Theme.INSTANCE.optionsFontColor;
@@ -104,7 +104,7 @@ public abstract class RewardBase implements IRewardType {
         for (AbstractField t : list) {
             int color = Theme.INSTANCE.optionsFontColor;
             int yPos = 17 + (index * 8);
-            if (ClientHelper.canEdit()) {
+            if (MCClientHelper.canEdit()) {
                 if (mouseX >= 1 && mouseX <= 84) {
                     if (mouseY >= yPos && mouseY < yPos + 8) {
                         color = Theme.INSTANCE.optionsFontColorHover;

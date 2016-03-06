@@ -5,13 +5,12 @@ import joshie.progression.criteria.Criteria;
 import joshie.progression.criteria.Reward;
 import joshie.progression.criteria.rewards.RewardBaseAction;
 import joshie.progression.handlers.APIHandler;
+import joshie.progression.network.core.PenguinPacket;
 import joshie.progression.player.PlayerTracker;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class PacketSyncCriteria implements IMessage, IMessageHandler<PacketSyncCriteria, IMessage> {
+public class PacketSyncCriteria extends PenguinPacket {
 	private Criteria[] criteria;
 	private Integer[] integers;
 	private boolean overwrite;
@@ -52,11 +51,11 @@ public class PacketSyncCriteria implements IMessage, IMessageHandler<PacketSyncC
     }
     
     @Override
-    public IMessage onMessage(PacketSyncCriteria message, MessageContext ctx) {    
-        PlayerTracker.getClientPlayer().getMappings().markCriteriaAsCompleted(message.overwrite, message.integers, message.criteria);
-        if (message.overwrite) {
+	public void handlePacket(EntityPlayer player) {   
+        PlayerTracker.getClientPlayer().getMappings().markCriteriaAsCompleted(overwrite, integers, criteria);
+        if (overwrite) {
         	for (Criteria condition: APIHandler.criteria.values()) {
-        		for (Criteria unlocked: message.criteria) {
+        		for (Criteria unlocked: criteria) {
         		    if (unlocked == null) continue;
         			for (Reward reward: unlocked.rewards) {
         				if (reward.getType() instanceof RewardBaseAction) {
@@ -66,7 +65,5 @@ public class PacketSyncCriteria implements IMessage, IMessageHandler<PacketSyncC
         		}
         	}
         }
-    	
-    	return null;
     }
 }

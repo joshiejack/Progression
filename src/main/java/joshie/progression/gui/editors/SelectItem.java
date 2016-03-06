@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL11;
 import joshie.progression.gui.GuiCriteriaEditor;
 import joshie.progression.gui.GuiTreeEditor;
 import joshie.progression.gui.base.IRenderOverlay;
-import joshie.progression.helpers.ClientHelper;
+import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.ItemHelper;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.item.ItemStack;
@@ -164,7 +164,7 @@ public class SelectItem extends TextEditable implements IRenderOverlay {
                     drawStack(stack, -offsetX + 8 + (j * 16), type.yOffset + 45 + (k * 16), 1F);
                     if (mouseX >= 8 + (j * 16) && mouseX < 8 + (j * 16) + 16) {
                         if (mouseY >= 45 + (k * 16) && mouseY < 45 + (k * 16) + 16) {
-                            GuiCriteriaEditor.INSTANCE.addTooltip(stack.getTooltip(ClientHelper.getPlayer(), false));
+                            GuiCriteriaEditor.INSTANCE.addTooltip(stack.getTooltip(MCClientHelper.getPlayer(), false));
                         }
                     }
 

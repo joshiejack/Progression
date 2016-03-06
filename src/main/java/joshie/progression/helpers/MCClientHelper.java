@@ -5,7 +5,7 @@ import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
-public class ClientHelper {	
+public class MCClientHelper {	
 	public static EntityPlayer getPlayer() {
 		return getMinecraft().thePlayer;
 	}

@@ -17,7 +17,7 @@ import joshie.progression.gui.editors.SelectItem.Type;
 import joshie.progression.gui.fields.FieldHelper;
 import joshie.progression.gui.fields.FieldHelper.IntegerFieldHelper;
 import joshie.progression.handlers.EventsManager;
-import joshie.progression.helpers.ClientHelper;
+import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.ListHelper;
 import joshie.progression.lib.ProgressionInfo;
 import net.minecraft.client.gui.ScaledResolution;
@@ -61,7 +61,7 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
             xCoord++;
         }
 
-        if (ClientHelper.canEdit()) {
+        if (MCClientHelper.canEdit()) {
             int crossY = 64;
             if (!NewTrigger.INSTANCE.isVisible() && !NewReward.INSTANCE.isVisible()) {
                 if (mouseX >= 15 + 100 * xCoord && mouseX <= 15 + 100 * xCoord + 55) {
@@ -72,7 +72,7 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
             }
 
             GL11.glColor4f(1F, 1F, 1F, 1F);
-            ClientHelper.getMinecraft().getTextureManager().bindTexture(ProgressionInfo.textures);
+            MCClientHelper.getMinecraft().getTextureManager().bindTexture(ProgressionInfo.textures);
             drawTexture(15 + 100 * xCoord, 49, 201, crossY, 55, 55);
         }
 
@@ -88,7 +88,7 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
             xCoord++;
         }
 
-        if (ClientHelper.canEdit()) {
+        if (MCClientHelper.canEdit()) {
             int crossX = 0;
             if (mouseX >= 15 + 100 * xCoord && mouseX <= 15 + 100 * xCoord + 55) {
                 if (mouseY >= 144 && mouseY <= 144 + 55) {
@@ -97,7 +97,7 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
             }
 
             GL11.glColor4f(1F, 1F, 1F, 1F);
-            ClientHelper.getMinecraft().getTextureManager().bindTexture(ProgressionInfo.textures);
+            MCClientHelper.getMinecraft().getTextureManager().bindTexture(ProgressionInfo.textures);
             drawTexture(15 + 100 * xCoord, 144, crossX, 201, 55, 55);
         }
 
@@ -156,7 +156,7 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
                 GuiTreeEditor.INSTANCE.selected = null;
                 GuiTreeEditor.INSTANCE.previous = null;
                 GuiTreeEditor.INSTANCE.lastClicked = null;
-                ClientHelper.getPlayer().openGui(Progression.instance, 0, null, 0, 0, 0);
+                MCClientHelper.getPlayer().openGui(Progression.instance, 0, null, 0, 0, 0);
             }
         }
 
@@ -167,7 +167,7 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
         boolean hasClicked = false;
         //Name and repeat
         int fullWidth = (res.getScaledWidth()) - offsetX + 5;
-        if (ClientHelper.canEdit()) {            
+        if (MCClientHelper.canEdit()) {            
             if (mouseY >= 4 && mouseY <= 19) {
                 if (mouseX <= 15) {
                     SelectItem.INSTANCE.select(this, Type.REWARD);
@@ -210,7 +210,7 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
             xCoord++;
         }
 
-        if (ClientHelper.canEdit()) {
+        if (MCClientHelper.canEdit()) {
             mouseX = GuiCriteriaEditor.INSTANCE.mouseX - offsetX;
             mouseY = GuiCriteriaEditor.INSTANCE.mouseY;
             if (mouseX >= 15 + 100 * xCoord && mouseX <= 15 + 100 * xCoord + 55) {

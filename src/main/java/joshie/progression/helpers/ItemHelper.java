@@ -36,7 +36,7 @@ public class ItemHelper {
 	}
 
 	public static void addInventory() {
-		for (ItemStack stack : ClientHelper.getPlayer().inventory.mainInventory) {
+		for (ItemStack stack : MCClientHelper.getPlayer().inventory.mainInventory) {
 			if (stack != null) {
 				if (!items.contains(stack)) {
 					items.add(stack);

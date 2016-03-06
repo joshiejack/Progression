@@ -72,7 +72,7 @@ public class PlayerHelper {
     }
 
     public static EntityPlayer getPlayerFromUUID(UUID uuid) {
-        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) return ClientHelper.getPlayer();
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) return MCClientHelper.getPlayer();
         for (EntityPlayer player : (List<EntityPlayerMP>) FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList) {
             if (getUUIDForPlayer(player).equals(uuid)) {
                 return (EntityPlayerMP) player;

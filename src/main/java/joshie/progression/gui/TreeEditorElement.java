@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL11;
 import joshie.progression.Progression;
 import joshie.progression.criteria.Criteria;
 import joshie.progression.criteria.Reward;
-import joshie.progression.helpers.ClientHelper;
+import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.RenderItemHelper;
 import joshie.progression.json.Theme;
 import joshie.progression.lib.ProgressionInfo;
@@ -146,7 +146,7 @@ public class TreeEditorElement {
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
             if (!criteria.isVisible) {
-                if (ClientHelper.canEdit()) {
+                if (MCClientHelper.canEdit()) {
                     textureX = 100;
                 } else {
                     if (available || isCompleted) {
@@ -216,7 +216,7 @@ public class TreeEditorElement {
             if (!hoveredReward) { //If we weren't hovering over the reward, display the requirements
                 if (isOver(mouseX, mouseY)) {
                     List list = new ArrayList();
-                    if (ClientHelper.canEdit()) {
+                    if (MCClientHelper.canEdit()) {
                         list.add("Double Click to edit "/* + (Hold shift for display mode) */);
                         list.add("Shift + Click to make something a requirement");
                         list.add("Ctrl + Click to make something conflict");
@@ -273,7 +273,7 @@ public class TreeEditorElement {
     }
 
     public boolean keyTyped(char character, int key) {
-        if (isSelected && ClientHelper.canEdit()) {
+        if (isSelected && MCClientHelper.canEdit()) {
             return key == 211 || key == 14;
         }
 
@@ -292,7 +292,7 @@ public class TreeEditorElement {
         if (isOver(x, y)) {
             if (noOtherSelected()) {
                 Criteria previous = getPrevious();
-                if (previous != null && ClientHelper.canEdit()) {
+                if (previous != null && MCClientHelper.canEdit()) {
                     List<Criteria> list = null;
                     boolean isConflict = false;
                     if (GuiScreen.isShiftKeyDown()) {
@@ -325,7 +325,7 @@ public class TreeEditorElement {
                     }
                 }
 
-                if (ClientHelper.canEdit()) {
+                if (MCClientHelper.canEdit()) {
                     if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
                         criteria.isVisible = !criteria.isVisible;
                         return true;
@@ -337,7 +337,7 @@ public class TreeEditorElement {
                     isSelected = false;
 
                     GuiCriteriaEditor.INSTANCE.selected = criteria;
-                    ClientHelper.getPlayer().openGui(Progression.instance, 1, null, 0, 0, 0);
+                    MCClientHelper.getPlayer().openGui(Progression.instance, 1, null, 0, 0, 0);
 
                     return true;
                 }
@@ -370,7 +370,7 @@ public class TreeEditorElement {
     }
 
     public void follow(int x, int y) {
-        if (isHeld && ClientHelper.canEdit()) {
+        if (isHeld && MCClientHelper.canEdit()) {
             this.x += x - prevX;
             this.y += y - prevY;
             prevX = x;

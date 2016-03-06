@@ -9,7 +9,7 @@ import joshie.progression.api.ProgressionAPI;
 import joshie.progression.gui.GuiTriggerEditor;
 import joshie.progression.gui.TriggerEditorElement;
 import joshie.progression.gui.base.DrawHelper;
-import joshie.progression.helpers.ClientHelper;
+import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.json.Theme;
 import joshie.progression.lib.ProgressionInfo;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -69,24 +69,24 @@ public class Trigger {
     protected int xPosition;
 
     public Result onClicked() {
-        if (ClientHelper.canEdit()) {
+        if (MCClientHelper.canEdit()) {
             if (this.mouseX >= 87 && this.mouseX <= 97 && this.mouseY >= 4 && this.mouseY <= 14) {
                 return Result.DENY; // Delete this trigger
             }
         }
 
-        if (ClientHelper.canEdit() || this.getConditions().size() > 0) {
+        if (MCClientHelper.canEdit() || this.getConditions().size() > 0) {
             if (this.mouseX >= 2 && this.mouseX <= 87) {
                 if (this.mouseY >= 66 && this.mouseY <= 77) {
 
                     GuiTriggerEditor.INSTANCE.trigger = this;
-                    ClientHelper.getPlayer().openGui(Progression.instance, 2, null, 0, 0, 0);
+                    MCClientHelper.getPlayer().openGui(Progression.instance, 2, null, 0, 0, 0);
                     return Result.ALLOW;
                 }
             }
         }
 
-        return ClientHelper.canEdit() ? triggerType.onClicked(mouseX, mouseY) : Result.DEFAULT;
+        return MCClientHelper.canEdit() ? triggerType.onClicked(mouseX, mouseY) : Result.DEFAULT;
     }
 
     public void draw(int mouseX, int mouseY, int xPos) {
@@ -97,13 +97,13 @@ public class Trigger {
         ProgressionAPI.draw.drawGradient(1, 2, 99, 15, getType().getColor(), Theme.INSTANCE.triggerGradient1, Theme.INSTANCE.triggerGradient2);
         ProgressionAPI.draw.drawText(getType().getLocalisedName(), 6, 6, Theme.INSTANCE.triggerFontColor);
 
-        if (ClientHelper.canEdit()) {
+        if (MCClientHelper.canEdit()) {
             int xXcoord = 234;
             if (this.mouseX >= 87 && this.mouseX <= 97 && this.mouseY >= 4 && this.mouseY <= 14) {
                 xXcoord += 11;
             }
 
-            ClientHelper.getMinecraft().getTextureManager().bindTexture(ProgressionInfo.textures);
+            MCClientHelper.getMinecraft().getTextureManager().bindTexture(ProgressionInfo.textures);
             ProgressionAPI.draw.drawTexture(87, 4, xXcoord, 52, 11, 11);
         }
 
@@ -116,7 +116,7 @@ public class Trigger {
             }
         }
 
-        if (ClientHelper.canEdit()) {
+        if (MCClientHelper.canEdit()) {
             ProgressionAPI.draw.drawGradient(2, 66, 85, 11, color, Theme.INSTANCE.blackBarGradient1, Theme.INSTANCE.blackBarGradient2);
             ProgressionAPI.draw.drawText("Condition Editor", 6, 67, Theme.INSTANCE.blackBarFontColor);
         } else if (this.getConditions().size() > 0) {

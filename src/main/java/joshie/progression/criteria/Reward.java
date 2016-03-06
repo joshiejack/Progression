@@ -3,7 +3,7 @@ package joshie.progression.criteria;
 import joshie.progression.api.IRewardType;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.gui.base.DrawHelper;
-import joshie.progression.helpers.ClientHelper;
+import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.json.Theme;
 import joshie.progression.lib.ProgressionInfo;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
@@ -29,13 +29,13 @@ public class Reward {
     protected int mouseY;
 
     public Result onClicked() {
-        if (ClientHelper.canEdit()) {
+        if (MCClientHelper.canEdit()) {
             if (this.mouseX >= 88 && this.mouseX <= 95 && this.mouseY >= 4 && this.mouseY <= 14) {
                 return Result.DENY; //Delete this reward
             }
         }
 
-        return ClientHelper.canEdit() ? reward.onClicked(mouseX, mouseY) : Result.DEFAULT;
+        return MCClientHelper.canEdit() ? reward.onClicked(mouseX, mouseY) : Result.DEFAULT;
     }
 
     public void draw(int mouseX, int mouseY, int xPos) {
@@ -47,13 +47,13 @@ public class Reward {
         ProgressionAPI.draw.drawGradient(1, 2, 99, 15, reward.getColor(), Theme.INSTANCE.blackBarGradient1, Theme.INSTANCE.blackBarGradient2);
         ProgressionAPI.draw.drawText(reward.getLocalisedName(), 6, 6, Theme.INSTANCE.blackBarFontColor);
 
-        if (ClientHelper.canEdit()) {
+        if (MCClientHelper.canEdit()) {
             int xXcoord = 234;
             if (this.mouseX >= 87 && this.mouseX <= 97 && this.mouseY >= 4 && this.mouseY <= 14) {
                 xXcoord += 11;
             }
 
-            ClientHelper.getMinecraft().getTextureManager().bindTexture(ProgressionInfo.textures);
+            MCClientHelper.getMinecraft().getTextureManager().bindTexture(ProgressionInfo.textures);
             ProgressionAPI.draw.drawTexture(87, 4, xXcoord, 52, 11, 11);
         }
 

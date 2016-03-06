@@ -9,7 +9,7 @@ import joshie.progression.criteria.Trigger;
 import joshie.progression.gui.base.GuiBase;
 import joshie.progression.gui.base.IRenderOverlay;
 import joshie.progression.gui.editors.EditText;
-import joshie.progression.helpers.ClientHelper;
+import joshie.progression.helpers.MCClientHelper;
 
 public class GuiTriggerEditor extends GuiBase {
     public static final GuiTriggerEditor INSTANCE = new GuiTriggerEditor();
@@ -71,7 +71,7 @@ public class GuiTriggerEditor extends GuiBase {
         if (visible <= 1 && !clicked) {
             if (par3 == 1) {
                 EditText.INSTANCE.reset();
-                ClientHelper.getPlayer().openGui(Progression.instance, 1, null, 0, 0, 0);
+                MCClientHelper.getPlayer().openGui(Progression.instance, 1, null, 0, 0, 0);
             }
         }
 

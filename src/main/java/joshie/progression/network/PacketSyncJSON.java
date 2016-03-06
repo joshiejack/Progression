@@ -22,14 +22,14 @@ import io.netty.buffer.ByteBuf;
 import joshie.progression.handlers.RemappingHandler;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.json.JSONLoader;
+import joshie.progression.network.core.PenguinPacket;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class PacketSyncJSON implements IMessage, IMessageHandler<PacketSyncJSON, IMessage> {
+public class PacketSyncJSON extends PenguinPacket {
     public static enum Section {
         RESYNC, SEND_HASH, FAILED_HASH, SEND_LENGTH, RECEIVED_LENGTH, SEND_STRING, COMPLETE;
     }
@@ -99,34 +99,34 @@ public class PacketSyncJSON implements IMessage, IMessageHandler<PacketSyncJSON,
     }
 
     @Override
-    public IMessage onMessage(PacketSyncJSON message, MessageContext ctx) {
-        if (message.section == RESYNC) {
+	public void handlePacket(EntityPlayer thePlayer) {
+        if (section == RESYNC) {
             //Called from a command, sends all the data
             for (EntityPlayer player: PlayerHelper.getAllPlayers()) {
                 RemappingHandler.onPlayerConnect((EntityPlayerMP) player);
             }
-        } else if (message.section == SEND_HASH) { //Called when a player logins, sends the client the hash
-            JSONLoader.serverName = message.string; 
+        } else if (section == SEND_HASH) { //Called when a player logins, sends the client the hash
+            JSONLoader.serverName = string; 
             String json = JSONLoader.getClientTabJsonData();
-            if (json.hashCode() == message.integer) {
+            if (json.hashCode() == integer) {
                 //If we set the json correctly
                 if (JSONLoader.setTabsAndCriteriaFromString(json, false)) {
                     PacketHandler.sendToServer(new PacketSyncJSON(COMPLETE));
                 }
             } else PacketHandler.sendToServer(new PacketSyncJSON(FAILED_HASH));
-        } else if (message.section == FAILED_HASH) {
-            PacketHandler.sendToClient(new PacketSyncJSON(Section.SEND_LENGTH, JSONLoader.serverTabJsonData.length), ctx.getServerHandler().playerEntity);
-        } else if (message.section == SEND_LENGTH) { //Clientside set the data for receival of this packet
-            JSONLoader.clientTabJsonData = new String[message.integer];
+        } else if (section == FAILED_HASH) {
+            PacketHandler.sendToClient(new PacketSyncJSON(Section.SEND_LENGTH, JSONLoader.serverTabJsonData.length), thePlayer);
+        } else if (section == SEND_LENGTH) { //Clientside set the data for receival of this packet
+            JSONLoader.clientTabJsonData = new String[integer];
             PacketHandler.sendToServer(new PacketSyncJSON(RECEIVED_LENGTH));
-        } else if (message.section == RECEIVED_LENGTH) {
+        } else if (section == RECEIVED_LENGTH) {
             for (int i = 0; i < JSONLoader.serverTabJsonData.length; i++) {
-                PacketHandler.sendToClient(new PacketSyncJSON(SEND_STRING, i, JSONLoader.serverTabJsonData[i]), ctx.getServerHandler().playerEntity);
+                PacketHandler.sendToClient(new PacketSyncJSON(SEND_STRING, i, JSONLoader.serverTabJsonData[i]), thePlayer);
             } //Now that we have received the data, send more
-        } else if (message.section == SEND_STRING) { //Client has now been sent the string
-            JSONLoader.clientTabJsonData[message.integer] = message.string;
+        } else if (section == SEND_STRING) { //Client has now been sent the string
+            JSONLoader.clientTabJsonData[integer] = string;
             for (String s : JSONLoader.clientTabJsonData) {
-                if (s == null) return null;
+                if (s == null) return;
             }
 
             //All data has arrived, on the client
@@ -139,12 +139,10 @@ public class PacketSyncJSON implements IMessage, IMessageHandler<PacketSyncJSON,
             if (JSONLoader.setTabsAndCriteriaFromString(result.toString(), true)) {
                 PacketHandler.sendToServer(new PacketSyncJSON(COMPLETE));
             }
-        } else if (message.section == Section.COMPLETE) {
-            UUID uuid = PlayerHelper.getUUIDForPlayer(ctx.getServerHandler().playerEntity);
+        } else if (section == Section.COMPLETE) {
+            UUID uuid = PlayerHelper.getUUIDForPlayer(thePlayer);
             //Sends all the data to do with this player to the client, so it's up to date
-            PlayerTracker.getPlayerData(uuid).getMappings().syncToClient(ctx.getServerHandler().playerEntity);
+            PlayerTracker.getPlayerData(uuid).getMappings().syncToClient((EntityPlayerMP) thePlayer);
         }
-
-        return null;
     }
 }

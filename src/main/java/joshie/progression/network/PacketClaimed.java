@@ -1,15 +1,14 @@
 package joshie.progression.network;
 
 import io.netty.buffer.ByteBuf;
-import joshie.progression.helpers.ClientHelper;
+import joshie.progression.helpers.MCClientHelper;
+import joshie.progression.network.core.PenguinPacket;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class PacketClaimed implements IMessage, IMessageHandler<PacketClaimed, IMessage> {
+public class PacketClaimed extends PenguinPacket {
     private int x, y, z;
     
     public PacketClaimed() {}
@@ -33,12 +32,10 @@ public class PacketClaimed implements IMessage, IMessageHandler<PacketClaimed, I
         z = buf.readInt();
     }
     
-    @Override
-    public IMessage onMessage(PacketClaimed message, MessageContext ctx) {
-        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
-            ClientHelper.getPlayer().addChatComponentMessage(new ChatComponentText("You have claimed the Tile Entity at " + message.x + " " + message.y + " " + message.z));
+	@Override
+	public void handlePacket(EntityPlayer player) {
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+            MCClientHelper.getPlayer().addChatComponentMessage(new ChatComponentText("You have claimed the Tile Entity at " + x + " " + y + " " + z));
         }
-
-        return null;
-    }
+	}
 }

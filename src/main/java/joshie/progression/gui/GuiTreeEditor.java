@@ -18,7 +18,7 @@ import joshie.progression.gui.buttons.ButtonTab;
 import joshie.progression.gui.editors.EditText;
 import joshie.progression.gui.editors.SelectItem;
 import joshie.progression.handlers.APIHandler;
-import joshie.progression.helpers.ClientHelper;
+import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.json.Options;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -48,7 +48,7 @@ public class GuiTreeEditor extends GuiBase {
         buttonList = new ArrayList(); //Recreate the button list, in order to reposition it
         int number = 0;
         int pos = y - 5;
-        if (ClientHelper.canEdit()) {
+        if (MCClientHelper.canEdit()) {
             buttonList.add(new ButtonNewCriteria(pos));
             pos += 28;
             number++;
@@ -59,7 +59,7 @@ public class GuiTreeEditor extends GuiBase {
         Collections.sort(tabs, new SortIndex());
 
         for (Tab tab : tabs) {
-            if (tab.isVisible() || ClientHelper.canEdit()) {
+            if (tab.isVisible() || MCClientHelper.canEdit()) {
                 if (number <= 8) {
                     buttonList.add(new ButtonTab(tab, 0, pos));
                 } else buttonList.add(new ButtonTab(tab, res.getScaledWidth() - 25, pos));
@@ -99,7 +99,7 @@ public class GuiTreeEditor extends GuiBase {
     public void drawForeground() {
         if (currentTab == null) initGui();
         for (Criteria criteria : currentTab.getCriteria()) {
-            if (criteria.treeEditor.isCriteriaVisible() || ClientHelper.canEdit()) {
+            if (criteria.treeEditor.isCriteriaVisible() || MCClientHelper.canEdit()) {
                 TreeEditorElement editor = criteria.treeEditor;
                 List<Criteria> prereqs = criteria.prereqs;
                 for (Criteria c : prereqs) {
@@ -128,7 +128,7 @@ public class GuiTreeEditor extends GuiBase {
 
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
         for (Criteria criteria : currentTab.getCriteria()) {
-            if (criteria.treeEditor.isCriteriaVisible() || ClientHelper.canEdit()) {
+            if (criteria.treeEditor.isCriteriaVisible() || MCClientHelper.canEdit()) {
                 criteria.treeEditor.draw(0, y, offsetX);
             }
         }
@@ -142,7 +142,7 @@ public class GuiTreeEditor extends GuiBase {
     protected void keyTyped(char character, int key) throws IOException {
         Criteria toRemove = null;
         for (Criteria criteria : currentTab.getCriteria()) {
-            if (criteria.treeEditor.isCriteriaVisible() || ClientHelper.canEdit()) {
+            if (criteria.treeEditor.isCriteriaVisible() || MCClientHelper.canEdit()) {
                 if (criteria.treeEditor.keyTyped(character, key)) {
                     toRemove = criteria;
                     break;
@@ -154,7 +154,7 @@ public class GuiTreeEditor extends GuiBase {
             APIHandler.removeCriteria(toRemove.uniqueName, false);
         }
 
-        if (ClientHelper.canEdit()) {
+        if (MCClientHelper.canEdit()) {
             EditText.INSTANCE.keyTyped(character, key);
 
             if (SelectItem.INSTANCE.getEditable() != null) {
@@ -206,7 +206,7 @@ public class GuiTreeEditor extends GuiBase {
 
         super.mouseClicked(par1, par2, par3);
         for (Criteria criteria : currentTab.getCriteria()) {
-            if (criteria.treeEditor.isCriteriaVisible() || ClientHelper.canEdit()) {
+            if (criteria.treeEditor.isCriteriaVisible() || MCClientHelper.canEdit()) {
                 if (criteria.treeEditor.click(mouseX, mouseY, isDoubleClick)) {
                     lastClicked = criteria;
                 }

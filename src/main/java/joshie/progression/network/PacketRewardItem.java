@@ -1,15 +1,14 @@
 package joshie.progression.network;
 
 import io.netty.buffer.ByteBuf;
-import joshie.progression.helpers.ClientHelper;
+import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.SpawnItemHelper;
+import joshie.progression.network.core.PenguinPacket;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class PacketRewardItem implements IMessage, IMessageHandler<PacketRewardItem, IMessage> {
+public class PacketRewardItem extends PenguinPacket {
     private ItemStack stack;
 
     public PacketRewardItem() {}
@@ -29,8 +28,7 @@ public class PacketRewardItem implements IMessage, IMessageHandler<PacketRewardI
     }
 
     @Override
-    public IMessage onMessage(PacketRewardItem message, MessageContext ctx) {
-        SpawnItemHelper.addToPlayerInventory(ClientHelper.getPlayer(), message.stack);
-        return null;
+	public void handlePacket(EntityPlayer player) {
+        SpawnItemHelper.addToPlayerInventory(MCClientHelper.getPlayer(), stack);
     }
 }

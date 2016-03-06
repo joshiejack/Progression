@@ -10,7 +10,7 @@ import joshie.progression.criteria.Criteria;
 import joshie.progression.gui.editors.EditText;
 import joshie.progression.gui.editors.EditText.ITextEditable;
 import joshie.progression.handlers.APIHandler;
-import joshie.progression.helpers.ClientHelper;
+import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.JSONHelper;
 import joshie.progression.json.Theme;
 import joshie.progression.player.PlayerTracker;
@@ -73,7 +73,7 @@ public class RewardCriteria extends RewardBase implements ITextEditable {
     public void draw(int mouseX, int mouseY) {
         int researchColor = Theme.INSTANCE.optionsFontColor;
         int booleanColor = Theme.INSTANCE.optionsFontColor;
-        if (ClientHelper.canEdit()) {
+        if (MCClientHelper.canEdit()) {
             if (mouseX <= 84 && mouseX >= 1) {
                 if (mouseY >= 17 && mouseY <= 33) researchColor = Theme.INSTANCE.optionsFontColorHover;
                 if (mouseY > 33 && mouseY <= 41) booleanColor = Theme.INSTANCE.optionsFontColorHover;

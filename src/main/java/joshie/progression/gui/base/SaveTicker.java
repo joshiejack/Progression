@@ -1,7 +1,7 @@
 package joshie.progression.gui.base;
 
 import joshie.progression.Progression;
-import joshie.progression.helpers.ClientHelper;
+import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.network.PacketHandler;
 import joshie.progression.network.PacketReload;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -17,7 +17,7 @@ public class SaveTicker {
             OVERRIDE_TICK--;
                         
             if (OVERRIDE_TICK == 0) {
-                ClientHelper.getPlayer().openGui(Progression.instance, 1, null, 0, 0, 0);
+                MCClientHelper.getPlayer().openGui(Progression.instance, 1, null, 0, 0, 0);
             }
         }
         

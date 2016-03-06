@@ -14,7 +14,7 @@ import joshie.progression.gui.editors.IItemSelectable;
 import joshie.progression.gui.editors.SelectItem;
 import joshie.progression.gui.editors.SelectItem.Type;
 import joshie.progression.handlers.APIHandler;
-import joshie.progression.helpers.ClientHelper;
+import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.RenderItemHelper;
 import joshie.progression.lib.ProgressionInfo;
 import net.minecraft.client.Minecraft;
@@ -47,7 +47,7 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
         } else RenderItemHelper.drawStack(tab.getStack(), xPosition + 7, yPosition + 5, 1F);
 
         boolean displayTooltip = false;
-        if (ClientHelper.canEdit()) {
+        if (MCClientHelper.canEdit()) {
             displayTooltip = EditText.INSTANCE.getEditable() == this;
         }
 
@@ -55,7 +55,7 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
             ArrayList<String> name = new ArrayList();
             String hidden = tab.isVisible() ? "" : "(Hidden)";
             name.add(EditText.INSTANCE.getText(this) + hidden);
-            if (ClientHelper.canEdit()) {
+            if (MCClientHelper.canEdit()) {
                 name.add(EnumChatFormatting.GRAY + "(Sort Index) " + tab.getSortIndex());
                 name.add(EnumChatFormatting.GRAY + "Shift + Click to rename");
                 name.add(EnumChatFormatting.GRAY + "Ctrl + Click to select item icon");
@@ -73,7 +73,7 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
     @Override
     public void onClicked() {
         //If the tab is already selected, then we should edit it instead        
-        if (ClientHelper.canEdit()) {
+        if (MCClientHelper.canEdit()) {
             if (Keyboard.isKeyDown(Keyboard.KEY_DELETE)) {
                 Tab newTab = GuiTreeEditor.INSTANCE.currentTab;
                 if (tab == GuiTreeEditor.INSTANCE.currentTab) {
@@ -119,7 +119,7 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
 
     @Override
     public void onNotClicked() {
-        if (ClientHelper.canEdit()) {
+        if (MCClientHelper.canEdit()) {
             if (EditText.INSTANCE.getEditable() == this) {
                 EditText.INSTANCE.clear();
             }
