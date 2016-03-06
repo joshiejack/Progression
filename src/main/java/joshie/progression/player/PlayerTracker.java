@@ -51,7 +51,7 @@ public class PlayerTracker {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onBlockPlaced(PlaceEvent event) {
-        TileEntity tile = event.world.getTileEntity(event.x, event.y, event.z);
+        TileEntity tile = event.world.getTileEntity(event.pos);
         if (event.player != null) {
             setTileOwner(tile, PlayerHelper.getUUIDForPlayer(event.player));
         }
@@ -72,7 +72,7 @@ public class PlayerTracker {
 
     //Called VIA ASM to SAVE Additional TileData
     public static void writeToNBT(TileEntity tile, NBTTagCompound nbt) {
-        if (tile.getWorldObj() == null) return; //Don't continue if the world is null
+        if (tile.getWorld() == null) return; //Don't continue if the world is null
         UUID uuid = PlayerTracker.getTileOwner(tile);
         if (uuid != null) {
             nbt.setLong(MOST, uuid.getMostSignificantBits());

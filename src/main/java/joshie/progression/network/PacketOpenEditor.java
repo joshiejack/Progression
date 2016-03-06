@@ -4,6 +4,7 @@ import joshie.progression.Progression;
 import joshie.progression.helpers.ClientHelper;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class PacketOpenEditor extends PacketAction implements IMessageHandler<PacketOpenEditor, IMessage> {
     @Override
