@@ -2,6 +2,7 @@ package joshie.progression.gui.base;
 
 import joshie.progression.Progression;
 import joshie.progression.helpers.MCClientHelper;
+import joshie.progression.json.JSONLoader;
 import joshie.progression.network.PacketHandler;
 import joshie.progression.network.PacketReload;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;

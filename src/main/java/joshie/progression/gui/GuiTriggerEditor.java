@@ -22,6 +22,7 @@ public class GuiTriggerEditor extends GuiBase {
 
     @Override
     public void drawForeground() {
+    	trigger.getConditionEditor().draw(0, y, offsetX);
         for (IRenderOverlay overlay : overlays) {
             if (overlay.isVisible()) {
                 overlay.draw(0, y);

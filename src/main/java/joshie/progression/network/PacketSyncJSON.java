@@ -107,7 +107,7 @@ public class PacketSyncJSON extends PenguinPacket {
             }
         } else if (section == SEND_HASH) { //Called when a player logins, sends the client the hash
             JSONLoader.serverName = string; 
-            String json = JSONLoader.getClientTabJsonData();
+            String json = JSONLoader.getClientTabJsonData();            
             if (json.hashCode() == integer) {
                 //If we set the json correctly
                 if (JSONLoader.setTabsAndCriteriaFromString(json, false)) {

@@ -35,7 +35,6 @@ public class RemappingHandler {
         //Remap the player data, for this player, before doing anything else, as the data may not existing yet
         PlayerTracker.getServerPlayer(player).getMappings().remap();
         
-        
         PacketHandler.sendToClient(new PacketSyncJSON(Section.SEND_HASH, JSONLoader.serverHashcode, getHostName()), player);
     }
 

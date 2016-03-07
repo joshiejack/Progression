@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.Level;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -115,6 +116,7 @@ public class JSONLoader {
                 String json = gson.toJson(loader);
                 serverHashcode = json.hashCode();
                 serverTabJsonData = splitStringEvery(json, MAX_LENGTH);
+                if (Options.debugMode) Progression.logger.log(Level.INFO, "Writing to the file is being done at getTabs(");
                 Writer writer = new OutputStreamWriter(new FileOutputStream(fileNew), "UTF-8");
                 writer.write(json);
                 writer.close();
@@ -141,12 +143,14 @@ public class JSONLoader {
             loadJSON(true, tab);
 
             if (create) {
+            	if (Options.debugMode) Progression.logger.log(Level.INFO, "Writing to the file is being done at setTabsAndCriteriaFromString");
                 //Attempt to write
                 File file = new File("config" + File.separator + ProgressionInfo.MODPATH + File.separator + serverName + File.separator + "criteria.json");
                 Writer writer = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
                 writer.write(json);
                 writer.close();
             }
+            
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -155,6 +159,10 @@ public class JSONLoader {
     }
 
     public static void loadJSON(boolean isClientside, DefaultSettings settings) {
+    	if (Options.debugMode) {
+    		Progression.logger.log(Level.INFO, "Reloaded JSON at " + System.currentTimeMillis() + " " + isClientside);
+    	}
+    	
         Options.settings = settings;
         for (DataTab data : settings.tabs) {
             ItemStack stack = null;
@@ -263,15 +271,19 @@ public class JSONLoader {
     public static void saveJSON(DefaultSettings toSave) {
         File file = new File("config" + File.separator + ProgressionInfo.MODPATH + File.separator + serverName + File.separator + "criteria.json");
         try {
+        	if (Options.debugMode) Progression.logger.log(Level.INFO, "Writing to the file is being done at saveJSON");
             Writer writer = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
             writer.write(gson.toJson(toSave));
             writer.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        
+        if (Options.debugMode) Progression.logger.log(Level.INFO, "Saved JSON at " + System.currentTimeMillis());
     }
 
     public static void saveData() {
+    	if (Options.debugMode) Progression.logger.log(Level.INFO, "Begin logging");
         HashSet<String> tabNames = new HashSet();
         Collection<Tab> allTabs = APIHandler.tabs.values();
         HashSet<String> names = new HashSet();
@@ -297,6 +309,7 @@ public class JSONLoader {
                 data.repeatable = c.isRepeatable;
                 data.infinite = c.infinite;
                 data.displayName = c.displayName;
+                if (Options.debugMode) Progression.logger.log(Level.INFO, "Saved the display name " + c.displayName);
                 data.uniqueName = c.uniqueName;
                 data.displayStack = StackHelper.getStringFromStack(c.stack);
                 List<Trigger> triggers = c.triggers;

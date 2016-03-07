@@ -1,11 +1,27 @@
 package joshie.progression.gui.base;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.logging.log4j.Level;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+
+import joshie.progression.Progression;
 import joshie.progression.criteria.Criteria;
 import joshie.progression.gui.editors.EditText;
 import joshie.progression.gui.editors.SelectItem;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.json.JSONLoader;
+import joshie.progression.json.Options;
 import joshie.progression.json.Theme;
+import joshie.progression.network.PacketHandler;
+import joshie.progression.network.PacketReload;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
@@ -14,12 +30,6 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-
-import java.io.IOException;
-import java.util.*;
 
 public abstract class GuiBase extends GuiScreen {
     public Set<IRenderOverlay> overlays = new HashSet<IRenderOverlay>();
@@ -45,15 +55,17 @@ public abstract class GuiBase extends GuiScreen {
     }
 
     @Override
-    protected void actionPerformed(GuiButton button) {
-    }
+    protected void actionPerformed(GuiButton button) {}
+    
+    private static int GUI_CLOSED;
 
     @Override
     public void onGuiClosed() {
         Keyboard.enableRepeatEvents(false);
         if (MCClientHelper.getPlayer().capabilities.isCreativeMode) {
-            JSONLoader.saveData();
-            SaveTicker.LAST_TICK = 60;
+        	if (Options.debugMode) Progression.logger.log(Level.INFO, "Saving JSON Data");
+        	JSONLoader.saveData(); 
+        	SaveTicker.LAST_TICK = 500;
         }
     }
 
