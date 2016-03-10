@@ -3,6 +3,7 @@ package joshie.progression.criteria;
 import joshie.progression.api.IConditionType;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.gui.base.DrawHelper;
+import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.json.Theme;
 import joshie.progression.lib.ProgressionInfo;
@@ -49,9 +50,9 @@ public class Condition {
     }
 
     public void draw(int mouseX, int mouseY, int xPos) {
-        this.mouseX = mouseX - xPosition;
+        /*this.mouseX = mouseX - xPosition;
         this.mouseY = mouseY - 45;
-        this.xPosition = xPos + 6;
+        this.xPosition = renderX + 6;
 
         DrawHelper.INSTANCE.setOffset(xPosition, 45);
         ProgressionAPI.draw.drawGradient(1, 2, 99, 15, getType().getColor(), Theme.INSTANCE.conditionGradient1, Theme.INSTANCE.conditionGradient2);
@@ -72,6 +73,6 @@ public class Condition {
         }
 
         ProgressionAPI.draw.drawText("invert: " + inverted, 4, 18, color);
-        getType().draw(mouseX, mouseY);
+        getType().draw(helper, renderX, renderY, mouseX, mouseY); */
     }
 }

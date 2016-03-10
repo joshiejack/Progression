@@ -2,7 +2,8 @@ package joshie.progression.gui.fields;
 
 import java.lang.reflect.Field;
 
-import joshie.progression.gui.editors.SelectItem.Type;
+import joshie.progression.gui.newversion.overlays.FeatureItemSelector;
+import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
@@ -30,6 +31,15 @@ public class BlockField extends ItemField {
             return metaField.getInt(object);
         } catch (Exception e) { return 0; }
     }
+    
+    @Override
+    public boolean attemptClick(int mouseX, int mouseY) {
+        boolean clicked = mouseX >= mouseX1 && mouseX <= mouseX2 && mouseY >= mouseY1 && mouseY <= mouseY2;
+        if (clicked) {
+            FeatureItemSelector.INSTANCE.select(true, this, type);
+            return true;
+        } else return false;
+    }   
     
     @Override
     public void setItemStack(ItemStack stack) {

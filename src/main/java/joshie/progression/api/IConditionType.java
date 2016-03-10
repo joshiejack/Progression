@@ -5,6 +5,7 @@ import java.util.UUID;
 import com.google.gson.JsonObject;
 
 import joshie.progression.gui.base.DrawHelper;
+import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
@@ -36,7 +37,7 @@ public interface IConditionType {
 
     /** Draw this condition in the gui editor, use {@link DrawHelper}  */
     @SideOnly(Side.CLIENT)
-    public void draw(int mouseX, int mouseY);
+    public void drawEditor(DrawFeatureHelper helper, int renderX, int renderY, int mouseX, int mouseY);
 
     /** Should return allow, if clicked, or default if not **/
     @SideOnly(Side.CLIENT)

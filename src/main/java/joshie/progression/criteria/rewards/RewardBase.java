@@ -7,6 +7,7 @@ import joshie.progression.api.EventBusType;
 import joshie.progression.api.ICriteria;
 import joshie.progression.api.IRewardType;
 import joshie.progression.gui.fields.AbstractField;
+import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.json.Theme;
 import net.minecraft.init.Blocks;
@@ -74,6 +75,9 @@ public abstract class RewardBase implements IRewardType {
     public void onRemoved() {}
     
     @Override
+    public void update() {}
+    
+    @Override
     public Result onClicked(int mouseX, int mouseY) {
         if (MCClientHelper.canEdit()) {
             int index = 0;
@@ -97,9 +101,14 @@ public abstract class RewardBase implements IRewardType {
 
         return Result.DEFAULT;
     }
+    
+    @Override
+    public void drawDisplay(int mouseX, int mouseY) {
+        
+    }
 
     @Override
-    public void draw(int mouseX, int mouseY) {
+    public void drawEditor(DrawFeatureHelper helper, int renderX, int renderY, int mouseX, int mouseY) {
         int index = 0;
         for (AbstractField t : list) {
             int color = Theme.INSTANCE.optionsFontColor;
@@ -112,8 +121,13 @@ public abstract class RewardBase implements IRewardType {
                 }
             }
 
-            t.draw(color, yPos);
+            t.draw(helper, renderX, renderY, color, yPos);
             index++;
         }
+    }
+    
+    @Override
+    public String getDescription() {
+        return "MISSING DESCRIPTION";
     }
 }

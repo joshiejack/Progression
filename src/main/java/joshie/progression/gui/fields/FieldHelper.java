@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 
 import joshie.progression.gui.editors.EditText;
 import joshie.progression.gui.editors.EditText.ITextEditable;
+import joshie.progression.gui.newversion.overlays.TextEditor;
 import net.minecraft.item.ItemStack;
 
 public class FieldHelper implements ITextEditable {
@@ -21,11 +22,11 @@ public class FieldHelper implements ITextEditable {
     }
 
     public void select() {
-        EditText.INSTANCE.select(this);
+        TextEditor.INSTANCE.setEditable(this);
     }
 
     public String getText() {
-        return EditText.INSTANCE.getText(this);
+        return TextEditor.INSTANCE.getText(this);
     }
     
     public float getFloat() {

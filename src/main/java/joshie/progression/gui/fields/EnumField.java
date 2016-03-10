@@ -2,7 +2,7 @@ package joshie.progression.gui.fields;
 
 import java.lang.reflect.Field;
 
-import joshie.progression.api.ProgressionAPI;
+import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 
 public class EnumField extends AbstractField {
     public Field field;
@@ -37,10 +37,10 @@ public class EnumField extends AbstractField {
     }
 
     @Override
-    public void draw(int color, int yPos) {
+    public void draw(DrawFeatureHelper helper, int renderX, int renderY, int color, int yPos) {
         try {
             String value = getName().toString().toLowerCase();
-            ProgressionAPI.draw.drawSplitText(name + ": " + value, 4, yPos, 105, color);
+            helper.drawSplitText(renderX, renderY, name + ": " + value, 4, yPos, 105, color);
         } catch (Exception e) {}
     }
 

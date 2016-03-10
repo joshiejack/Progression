@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.google.gson.JsonObject;
 
-import joshie.progression.gui.editors.SelectItem.Type;
+import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
 import joshie.progression.gui.fields.ItemAmountField;
 import joshie.progression.gui.fields.ItemField;
 import joshie.progression.helpers.JSONHelper;

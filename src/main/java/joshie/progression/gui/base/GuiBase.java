@@ -92,7 +92,7 @@ public abstract class GuiBase extends GuiScreen {
         drawRect(left, top, left + 1, bottom, border);
         drawRect(right - 1, top, right, bottom, border);
         drawRect(left, top, right, top + 1, border);
-        drawRect(right - 1, bottom - 1, right, bottom, border);
+        drawRect(left, bottom - 1, right, bottom, border);
     }
 
     public void drawGradientRectWithBorder(int left, int top, int right, int bottom, int startColor, int endColor, int border) {
@@ -100,7 +100,7 @@ public abstract class GuiBase extends GuiScreen {
         drawRect(left, top, left + 1, bottom, border);
         drawRect(right - 1, top, right, bottom, border);
         drawRect(left, top, right, top + 1, border);
-        drawRect(right - 1, bottom - 1, right, bottom, border);
+        drawRect(left, bottom - 1, right, bottom, border);
     }
 
     public void drawLine(int left, int top, int right, int bottom, int thickness, int color) {

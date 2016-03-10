@@ -26,7 +26,7 @@ public class RewardCriteria extends RewardBase implements ITextEditable {
     public Criteria criteria = null;
 
     public RewardCriteria() {
-        super( new ItemStack(Items.golden_apple), "criteria", 0xFF99B3FF);
+        super(new ItemStack(Items.golden_apple), "criteria", 0xFF99B3FF);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class RewardCriteria extends RewardBase implements ITextEditable {
         return Result.DEFAULT;
     }
 
-    @Override
+    /* @Override //TODO: Criteria Reward
     public void draw(int mouseX, int mouseY) {
         int researchColor = Theme.INSTANCE.optionsFontColor;
         int booleanColor = Theme.INSTANCE.optionsFontColor;
@@ -84,7 +84,7 @@ public class RewardCriteria extends RewardBase implements ITextEditable {
         EnumChatFormatting prefix = criteria != null? EnumChatFormatting.GREEN: EnumChatFormatting.RED;
         ProgressionAPI.draw.drawText(prefix + EditText.INSTANCE.getText(this), 4, 26, researchColor);
         ProgressionAPI.draw.drawText("remove: " + remove, 4, 33, booleanColor);
-    }
+    } */
 
     private String displayName = null;
 

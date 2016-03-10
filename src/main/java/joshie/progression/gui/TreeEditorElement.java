@@ -337,6 +337,7 @@ public class TreeEditorElement {
                     isSelected = false;
 
                     GuiCriteriaEditor.INSTANCE.selected = criteria;
+                    joshie.progression.gui.newversion.GuiCriteriaEditor.INSTANCE.setCriteria(criteria);
                     MCClientHelper.getPlayer().openGui(Progression.instance, 1, null, 0, 0, 0);
 
                     return true;

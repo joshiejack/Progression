@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 
 import joshie.progression.api.IConditionType;
 import joshie.progression.gui.fields.AbstractField;
+import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.json.Theme;
 import net.minecraft.util.StatCollector;
@@ -69,7 +70,7 @@ public abstract class ConditionBase implements IConditionType {
     }
 
     @Override
-    public void draw(int mouseX, int mouseY) {
+    public void drawEditor(DrawFeatureHelper helper, int renderX, int renderY, int mouseX, int mouseY) {
         int index = 0;
         for (AbstractField t : list) {
             int color = Theme.INSTANCE.optionsFontColor;
@@ -82,7 +83,7 @@ public abstract class ConditionBase implements IConditionType {
                 }
             }
 
-            t.draw(color, yPos);
+            t.draw(helper, renderX, renderY, color, yPos);
             index++;
         }
     }

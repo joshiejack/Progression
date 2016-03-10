@@ -8,6 +8,8 @@ import java.util.UUID;
 import com.google.gson.JsonObject;
 
 import joshie.progression.api.IConditionType;
+import joshie.progression.api.IEntityFilter;
+import joshie.progression.api.IFilter;
 import joshie.progression.api.IItemFilter;
 import joshie.progression.api.IProgressionAPI;
 import joshie.progression.api.IRewardType;
@@ -42,7 +44,8 @@ public class APIHandler implements IProgressionAPI {
     public static final HashMap<String, ITriggerType> triggerTypes = new HashMap();
     public static final HashMap<String, IRewardType> rewardTypes = new HashMap();
     public static final HashMap<String, IConditionType> conditionTypes = new HashMap();
-    public static final HashMap<String, IItemFilter> filterTypes = new HashMap();
+    public static final HashMap<String, IItemFilter> itemFilterTypes = new HashMap();
+    public static final HashMap<String, IEntityFilter> entityFilterTypes = new HashMap();
 
     //These four maps are registries for fetching the various types
     public static HashMap<String, Tab> tabs;
@@ -82,9 +85,15 @@ public class APIHandler implements IProgressionAPI {
 
     @Override
     public IItemFilter registerItemFilter(IItemFilter filter) {
-        filterTypes.put(filter.getName(), filter);
+        itemFilterTypes.put(filter.getName(), filter);
         return filter;
     }
+    
+    @Override
+	public IEntityFilter registerEntityFilter(IEntityFilter filter) {
+    	entityFilterTypes.put(filter.getName(), filter);
+        return filter;
+	}
 
     public static Criteria newCriteria(Tab tab, String name, boolean isClientside) {
         Criteria theCriteria = new Criteria(tab, name, isClientside);
@@ -162,8 +171,16 @@ public class APIHandler implements IProgressionAPI {
         return reward;
     }
     
-    public static IItemFilter newFilter(String typeName, JsonObject typeData) {
-        IItemFilter type = filterTypes.get(typeName);
+    public static IItemFilter newItemFilter(String typeName, JsonObject typeData) {
+    	return (IItemFilter) newFilter(true, typeName, typeData);
+    }
+    
+    public static IEntityFilter newEntityFilter(String typeName, JsonObject typeData) {
+    	return (IEntityFilter) newFilter(true, typeName, typeData);
+    }
+    
+    private static IFilter newFilter(boolean isItemFilter, String typeName, JsonObject typeData) {
+    	IFilter type = isItemFilter ? itemFilterTypes.get(typeName) : entityFilterTypes.get(typeName);
         if (type != null) {
             try {
                 type = type.getClass().newInstance();

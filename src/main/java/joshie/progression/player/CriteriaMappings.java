@@ -257,12 +257,17 @@ public class CriteriaMappings {
             Criteria criteria = trigger.getCriteria();
             //Check that all triggers are in the completed set
             List<Trigger> allTriggers = criteria.triggers;
+            boolean allRequired = criteria.allTasks;
+            int countRequired = criteria.tasksRequired;
+            int firedCount = 0;
             boolean allFired = true;
             for (Trigger criteriaTrigger : allTriggers) { //the completed triggers map, doesn't contains all the requirements, then we need to remove it
-                if (!completedTriggers.contains(criteriaTrigger)) allFired = false;
+                if (!completedTriggers.contains(criteriaTrigger)) {
+                    allFired = false;
+                } else firedCount++;
             }
 
-            if (allFired) {
+            if ((allFired && allRequired) || (firedCount >= countRequired)) {
                 completedAnyCriteria = true;
                 toComplete.add(criteria);
             }

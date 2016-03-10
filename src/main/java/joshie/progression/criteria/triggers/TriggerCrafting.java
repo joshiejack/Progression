@@ -8,7 +8,7 @@ import joshie.progression.api.EventBusType;
 import joshie.progression.api.ITriggerData;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.criteria.triggers.data.DataCrafting;
-import joshie.progression.gui.editors.SelectItem.Type;
+import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
 import joshie.progression.gui.fields.BooleanField;
 import joshie.progression.gui.fields.ItemField;
 import joshie.progression.gui.fields.TextField;
@@ -27,11 +27,11 @@ public class TriggerCrafting extends TriggerBase {
 
     public TriggerCrafting() {
         super("crafting", 0xFF663300, "crafting");
-        list.add(new BooleanField("matchDamage", this));
-        list.add(new BooleanField("matchNBT", this));
-        list.add(new TextField("amount", this));
-        list.add(new TextField("times", this));
-        list.add(new ItemField("stack", this, 76, 44, 1.4F, 77, 100, 43, 68, Type.TRIGGER));
+        editList.add(new BooleanField("matchDamage", this));
+        editList.add(new BooleanField("matchNBT", this));
+        editList.add(new TextField("amount", this));
+        editList.add(new TextField("times", this));
+        editList.add(new ItemField("stack", this, 76, 44, 1.4F, 77, 100, 43, 68, Type.TRIGGER));
     }
 
     @SubscribeEvent

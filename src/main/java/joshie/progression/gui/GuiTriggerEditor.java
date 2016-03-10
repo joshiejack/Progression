@@ -14,7 +14,7 @@ import joshie.progression.helpers.MCClientHelper;
 public class GuiTriggerEditor extends GuiBase {
     public static final GuiTriggerEditor INSTANCE = new GuiTriggerEditor();
     protected static Set<IRenderOverlay> overlays = new HashSet();
-    public static Trigger trigger;
+    public Trigger trigger;
 
     public static void registerOverlay(IRenderOverlay overlay) {
         overlays.add(overlay);

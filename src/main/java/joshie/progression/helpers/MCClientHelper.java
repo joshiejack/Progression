@@ -25,4 +25,8 @@ public class MCClientHelper {
     public static boolean canEdit() {
         return getPlayer().capabilities.isCreativeMode;
     }
+
+	public static boolean isInEditMode() {
+		return canEdit();
+	}
 }

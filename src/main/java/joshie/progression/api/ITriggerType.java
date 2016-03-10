@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.google.gson.JsonObject;
 
+import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -22,8 +23,14 @@ public interface ITriggerType {
     /** Returns the localised name for this trigger type **/
     public String getLocalisedName();
     
+    /** Returns the description of this trigger, to be displayed in the book **/
+    public String getDescription();
+    
     /** Returns the colour used for this trigger type **/
     public int getColor();
+    
+    /** Called when ticking the gui **/
+	public void update();
 
     /** This class will automatically be registered/de-registered from the event
      *  buses that are returned from this */
@@ -44,7 +51,10 @@ public interface ITriggerType {
 
     /** Called to draw the information when editing this trigger  */
     @SideOnly(Side.CLIENT)
-    public void draw(int mouseX, int mouseY);
+    public void drawEditor(DrawFeatureHelper helper, int renderX, int renderY, int mouseX, int mouseY);
+    
+    /** Called to draw this trigger out of edit mode **/
+	public void drawDisplay(int mouseX, int mouseY);
 
     /** Should return allow, if clicked, or default if not **/
     @SideOnly(Side.CLIENT)

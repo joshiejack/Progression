@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 
 import joshie.progression.api.IItemFilter;
 import joshie.progression.gui.fields.AbstractField;
+import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.json.Theme;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
@@ -56,7 +57,7 @@ public abstract class FilterBase implements IItemFilter {
     }
 
     @Override
-    public void draw(int mouseX, int mouseY) {
+    public void drawEditor(DrawFeatureHelper helper, int renderX, int renderY, int mouseX, int mouseY) {
         int index = 0;
         for (AbstractField t : list) {
             int color = Theme.INSTANCE.optionsFontColor;
@@ -69,7 +70,7 @@ public abstract class FilterBase implements IItemFilter {
                 }
             }
 
-            t.draw(color, yPos);
+            t.draw(helper, renderX, renderY, color, yPos);
             index++;
         }
     }

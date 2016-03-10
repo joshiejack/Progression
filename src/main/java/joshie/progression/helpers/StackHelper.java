@@ -1,5 +1,6 @@
 package joshie.progression.helpers;
 
+import java.util.HashMap;
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -13,6 +14,17 @@ import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
 
 public class StackHelper {
+	private static HashMap<Item, String> modidcache = new HashMap();
+	
+	public static String getModFromItem(Item item) {
+		if (modidcache.containsKey(item)) return modidcache.get(item);
+		else {
+			String modid = Item.itemRegistry.getNameForObject(item).getResourceDomain();
+			modidcache.put(item, modid);
+			return modid;
+		}
+	}
+	
     public static ItemStack getStackFromString(String str) {
         if (str == null || str.equals("")) return null;
         return getStackFromArray(str.trim().split(" "));
@@ -49,7 +61,7 @@ public class StackHelper {
         return str;
     }
 
-    private static NBTTagCompound getTag(String[] str, int pos) {
+    public static NBTTagCompound getTag(String[] str, int pos) {
         String s = formatNBT(str, pos).getUnformattedText();
         try {
             NBTBase nbtbase = JsonToNBT.getTagFromJson(s);
@@ -95,7 +107,7 @@ public class StackHelper {
         return stack;
     }
 
-    private static Item getItemByText(String str) {
+    public static Item getItemByText(String str) {
         str = str.replace("%20", " ");
         Item item = (Item) Item.itemRegistry.getObject(new ResourceLocation(str));
         if (item == null) {

@@ -38,8 +38,19 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
         ScaledResolution res = GuiCriteriaEditor.INSTANCE.res;
         int fullWidth = (res.getScaledWidth()) - offsetX + 5;
         //Title and Repeatability Box
+        //Draw Tabs
+        mc.getTextureManager().bindTexture(ProgressionInfo.textures);
+        drawTexturedModalRect(fullWidth - 30, 15, 80, 0, 20, 25);
+        for (int i = 0; i < 40; i++) {
+            //drawTexturedModalRect(10 + i, 10, 0, 0, 1, 25);
+        }
+
+        drawTexturedModalRect(fullWidth - 50, 15, 0, 0, 20, 25);
+        
+        
         drawStack(selected.stack, 1, 4, 1F);
-        drawText("Display Name: " + nameEdit.getText(), 21 - offsetX, 9, theme.criteriaEditDisplayNameColor);
+        String displayName = MCClientHelper.isInEditMode() ? Progression.translate("name.display") + ": " + nameEdit.getText() : nameEdit.getText();
+        drawText(displayName, 21 - offsetX, 9, theme.criteriaEditDisplayNameColor);
         drawText("Popup: " + INSTANCE.selected.achievement, fullWidth - 210, 9, theme.criteriaEditDisplayNameColor);
         drawText("Repeatability: " + repeatEdit.getText() + "x", fullWidth - 130, 9, theme.criteriaEditDisplayNameColor);
         drawBox(-1, 215, fullWidth, 1, theme.blackBarUnderLineBorder, theme.blackBarUnderLineBorder);
@@ -49,15 +60,15 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
         //Triggers
         drawGradient(-1, 25, fullWidth, 15, theme.triggerBoxGradient1, theme.triggerBoxGradient2, theme.triggerBoxBorder);
         drawBox(-1, 40, fullWidth, 1, theme.triggerBoxUnderline1, theme.invisible);
-        drawText("Requirements", 9 - offsetX, 29, theme.triggerBoxFont);
+        drawText(Progression.translate("requirements"), 9 - offsetX, 29, theme.triggerBoxFont);
         int xCoord = 0;
         List<Trigger> triggers = selected.triggers;
         int mouseX = GuiCriteriaEditor.INSTANCE.mouseX - offsetX;
         int mouseY = GuiCriteriaEditor.INSTANCE.mouseY;
         for (int i = 0; i < triggers.size(); i++) {
             Trigger trigger = triggers.get(i);
-            int xPos = 100 * xCoord;
-            trigger.draw(mouseX, mouseY, xPos);
+            int xPos = (MCClientHelper.isInEditMode() ? 100 : 80) * xCoord;
+            //trigger.draw(mouseX, mouseY, xPos);
             xCoord++;
         }
 
@@ -221,7 +232,7 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
             }
 
             //Rewards
-            List<Reward> rewards = selected.rewards;
+            /*List<Reward> rewards = selected.rewards;
             xCoord = 0;
             for (int i = 0; i < rewards.size(); i++) {
                 Result result = rewards.get(i).onClicked();
@@ -238,7 +249,7 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
                 }
 
                 xCoord++;
-            }
+            } */
 
             if (mouseX >= 15 + 100 * xCoord && mouseX <= 15 + 100 * xCoord + 55) {
                 if (mouseY >= 144 && mouseY <= 144 + 55) {

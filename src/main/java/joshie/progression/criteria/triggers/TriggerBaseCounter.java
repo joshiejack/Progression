@@ -14,7 +14,7 @@ public abstract class TriggerBaseCounter extends TriggerBase {
     
 	public TriggerBaseCounter(String name, int color) {
 		super(name, color, "count");
-        list.add(new TextField("amount", this));
+        editList.add(new TextField("amount", this));
 	}
 
 	@Override

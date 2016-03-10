@@ -2,7 +2,7 @@ package joshie.progression.criteria.triggers;
 
 import com.google.gson.JsonObject;
 
-import joshie.progression.gui.editors.SelectItem.Type;
+import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
 import joshie.progression.gui.fields.BlockField;
 import joshie.progression.gui.fields.BooleanField;
 import joshie.progression.gui.fields.TextField;
@@ -23,9 +23,9 @@ public abstract class TriggerBaseBlock extends TriggerBaseCounter {
     public TriggerBaseBlock(String unlocalised, int color) {
         super(unlocalised, color);
         cancelable = true;
-        list.add(new TextField("name", this));
-        list.add(new BooleanField("matchDamage", this));
-        list.add(new BlockField("stack", "block", "meta", this, 35, 41, 1.5F, 1, 94, 40, 99, Type.TRIGGER));
+        editList.add(new TextField("name", this));
+        editList.add(new BooleanField("matchDamage", this));
+        editList.add(new BlockField("stack", "block", "meta", this, 35, 41, 1.5F, 1, 94, 40, 99, Type.TRIGGER));
     }
 
     @Override

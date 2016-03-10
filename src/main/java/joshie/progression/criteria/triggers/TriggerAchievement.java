@@ -15,7 +15,7 @@ public class TriggerAchievement extends TriggerBaseBoolean {
 
     public TriggerAchievement() {
         super("achievement", 0xFF00D9D9);
-        list.add(new TextField("id", this));
+        editList.add(new TextField("id", this));
     }
 
     @SubscribeEvent

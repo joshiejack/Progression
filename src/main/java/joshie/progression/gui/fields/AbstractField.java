@@ -1,5 +1,6 @@
 package joshie.progression.gui.fields;
 
+import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 
 public abstract class AbstractField {
     public String name;
@@ -11,7 +12,7 @@ public abstract class AbstractField {
 
     public abstract void click();
 
-    public abstract void draw(int color, int yPos);
+    public abstract void draw(DrawFeatureHelper helper, int renderX, int renderY, int color, int yPos);
 
     public boolean attemptClick(int mouseX, int mouseY) {
         return false;

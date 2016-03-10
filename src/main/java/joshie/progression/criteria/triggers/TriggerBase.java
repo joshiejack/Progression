@@ -6,21 +6,21 @@ import java.util.UUID;
 
 import com.google.gson.JsonObject;
 
+import joshie.progression.Progression;
 import joshie.progression.api.EventBusType;
 import joshie.progression.api.ICriteria;
 import joshie.progression.api.ITriggerData;
 import joshie.progression.api.ITriggerType;
-import joshie.progression.api.ProgressionAPI;
 import joshie.progression.gui.fields.AbstractField;
+import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import joshie.progression.handlers.APIHandler;
-import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.JSONHelper;
+import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.json.Theme;
-import net.minecraft.util.StatCollector;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
 public abstract class TriggerBase implements ITriggerType {
-    protected List<AbstractField> list = new ArrayList();
+    protected List<AbstractField> editList = new ArrayList();
     protected ICriteria criteria;
     private String name;
     private int color;
@@ -51,13 +51,16 @@ public abstract class TriggerBase implements ITriggerType {
 
     @Override
     public String getLocalisedName() {
-        return StatCollector.translateToLocal("progression.trigger." + getUnlocalisedName());
+        return Progression.translate("trigger." + getUnlocalisedName());
     }
 
     @Override
     public int getColor() {
         return color;
     }
+    
+    @Override
+    public void update() {}
 
     @Override
     public EventBusType[] getEventBusTypes() {
@@ -90,7 +93,7 @@ public abstract class TriggerBase implements ITriggerType {
             if (!cancel) {
                 int yStart = cancelable ? 25 : 17;
                 int index = 0;
-                for (AbstractField t : list) {
+                for (AbstractField t : editList) {
                     t.setObject(this);
                     if (t.attemptClick(mouseX, mouseY)) {
                         return Result.ALLOW;
@@ -120,13 +123,16 @@ public abstract class TriggerBase implements ITriggerType {
 
         return Result.DEFAULT;
     }
+    
+    @Override
+    public void drawDisplay(int mouseX, int mouseY) {}
 
     @Override
-    public void draw(int mouseX, int mouseY) {
+    public void drawEditor(DrawFeatureHelper helper, int renderX, int renderY, int mouseX, int mouseY) {
         if (!cancel) {
             int yStart = cancelable ? 25 : 17;
             int index = 0;
-            for (AbstractField t : list) {
+            for (AbstractField t : editList) {
                 t.setObject(this);
                 int color = Theme.INSTANCE.optionsFontColor;
                 int yPos = yStart + (index * 8);
@@ -138,7 +144,7 @@ public abstract class TriggerBase implements ITriggerType {
                     }
                 }
 
-                t.draw(color, yPos);
+                t.draw(helper, renderX, renderY, color, yPos);
                 index++;
             }
         }
@@ -152,8 +158,13 @@ public abstract class TriggerBase implements ITriggerType {
                     }
                 }
 
-                ProgressionAPI.draw.drawSplitText("cancel: " + cancel, 4, 17, 105, color);
+                helper.drawSplitText(renderX, renderY, "cancel: " + cancel, 4, 17, 105, color);
             }
         }
+    }
+    
+    @Override
+	public String getDescription() {
+    	return "MISSING DESCRIPTION";
     }
 }

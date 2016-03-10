@@ -8,7 +8,6 @@ import com.google.gson.JsonObject;
 import joshie.progression.api.IItemFilter;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.helpers.JSONHelper;
-import joshie.progression.helpers.LegacyHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -28,14 +27,13 @@ public class TriggerItemEaten extends TriggerBaseCounter {
     @Override
     public void readFromJSON(JsonObject data) {
         super.readFromJSON(data);
-        filters = JSONHelper.getFilters(data, "filters");
-        LegacyHelper.readLegacyItems(data, filters);
+        filters = JSONHelper.getItemFilters(data, "filters");
     }
 
     @Override
     public void writeToJSON(JsonObject data) {
         super.writeToJSON(data);
-        JSONHelper.setFilters(data, "filters", filters);
+        JSONHelper.setItemFilters(data, "filters", filters);
     }
 
     @Override

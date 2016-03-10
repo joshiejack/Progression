@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.google.gson.JsonObject;
 
+import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.relauncher.Side;
@@ -52,9 +53,16 @@ public interface IRewardType {
 
     /** Called to draw the information when editing this trigger  */
     @SideOnly(Side.CLIENT)
-    public void draw(int mouseX, int mouseY);
+    public void drawEditor(DrawFeatureHelper helper, int renderX, int renderY, int mouseX, int mouseY);
 
     /** Should return allow, if clicked, or default if not **/
     @SideOnly(Side.CLIENT)
     public Result onClicked(int mouseX, int mouseY);
+
+    /** Called to update drawing for this render **/
+    public void update();
+
+    public String getDescription();
+
+    public void drawDisplay(int mouseX, int mouseY);
 }

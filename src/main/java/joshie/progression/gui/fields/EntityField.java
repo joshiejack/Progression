@@ -9,8 +9,9 @@ import joshie.progression.gui.GuiCriteriaEditor;
 import joshie.progression.gui.editors.SelectEntity;
 import joshie.progression.gui.editors.SelectEntity.IEntitySelectable;
 import joshie.progression.gui.editors.SelectItem.Type;
-import joshie.progression.helpers.MCClientHelper;
+import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import joshie.progression.helpers.EntityHelper;
+import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -64,7 +65,7 @@ public class EntityField extends AbstractField implements IEntitySelectable {
     }
 
     @Override
-    public void draw(int color, int yPos) {
+    public void draw(DrawFeatureHelper helper, int renderX, int renderY, int color, int yPos) {
         try {
             Entity entity = EntityList.createEntityByName(getEntity(), MCClientHelper.getPlayer().worldObj);
             yPos = GuiCriteriaEditor.INSTANCE.y + y;

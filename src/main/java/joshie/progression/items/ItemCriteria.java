@@ -123,7 +123,7 @@ public class ItemCriteria extends Item {
         if (stack.getItemDamage() == CLAIM) {
             list.add("Right click me on tiles");
             list.add("to claim them as yours");
-        } else if (stack.getItemDamage() == BOOK) {
+        } else if (stack.getItemDamage() == BOOK && player.capabilities.isCreativeMode) {
             list.add("Right click me to open");
             list.add("'Progression editor'");
         }

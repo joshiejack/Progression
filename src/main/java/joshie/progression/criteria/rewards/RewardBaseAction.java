@@ -5,7 +5,7 @@ import joshie.progression.Progression;
 import joshie.progression.api.EventBusType;
 import joshie.progression.crafting.ActionType;
 import joshie.progression.crafting.CraftingRegistry;
-import joshie.progression.gui.editors.SelectItem.Type;
+import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
 import joshie.progression.gui.fields.BooleanField;
 import joshie.progression.gui.fields.IItemCallback;
 import joshie.progression.gui.fields.ItemField;

@@ -44,3 +44,12 @@ progression.action.harvestdrop=Harvest Drop
 progression.action.entitydrop=Entity Drop
 
 achievement.criteria=Criteria Complete
+progression.name.display=Display Name
+progression.tab.expand=E X P A N D
+progression.tab.close=C O L L A P S E
+progression.requirements=Tasks
+progression.results=Rewards
+progression.footer.line1=Use arrow keys to scroll sideways, or use the scroll wheel. (Down to go right)
+progression.footer.line2=Hold shift with arrow keys to scroll faster.
+progression.selector.items=Select Item - Click elsewhere to close
+progression.selector.blocks=Select Block - Click elsewhere to close

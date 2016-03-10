@@ -22,6 +22,10 @@ import joshie.progression.criteria.conditions.ConditionDaytime;
 import joshie.progression.criteria.conditions.ConditionInInventory;
 import joshie.progression.criteria.conditions.ConditionRandom;
 import joshie.progression.criteria.filters.FilterItem;
+import joshie.progression.criteria.filters.FilterItemStack;
+import joshie.progression.criteria.filters.FilterMeta;
+import joshie.progression.criteria.filters.FilterMod;
+import joshie.progression.criteria.filters.FilterNBT;
 import joshie.progression.criteria.rewards.RewardBreakBlock;
 import joshie.progression.criteria.rewards.RewardClear;
 import joshie.progression.criteria.rewards.RewardCommand;
@@ -76,6 +80,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -142,7 +147,11 @@ public class Progression {
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(item, 1, ItemCriteria.CLAIM), new Object[] { "F", "P", 'F', Items.flint, 'P', "plankWood" }));
         }
         
+        ProgressionAPI.registry.registerItemFilter(new FilterItemStack());
         ProgressionAPI.registry.registerItemFilter(new FilterItem());
+        ProgressionAPI.registry.registerItemFilter(new FilterMeta());
+        ProgressionAPI.registry.registerItemFilter(new FilterNBT());
+        ProgressionAPI.registry.registerItemFilter(new FilterMod());
 
         ProgressionAPI.registry.registerConditionType(new ConditionBiomeType());
         ProgressionAPI.registry.registerConditionType(new ConditionRandom());
@@ -232,4 +241,8 @@ public class Progression {
         data = new PlayerSavedData(MODNAME);
         world.setItemData(MODNAME, data);
     }
+
+	public static String translate(String string) {
+		return StatCollector.translateToLocal("progression." + string);
+	}
 }
