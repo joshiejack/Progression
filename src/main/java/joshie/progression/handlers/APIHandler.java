@@ -37,7 +37,10 @@ import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class APIHandler implements IProgressionAPI {
     //This is the registry for trigger type and reward type creation
@@ -48,8 +51,35 @@ public class APIHandler implements IProgressionAPI {
     public static final HashMap<String, IEntityFilter> entityFilterTypes = new HashMap();
 
     //These four maps are registries for fetching the various types
-    public static HashMap<String, Tab> tabs;
-    public static HashMap<String, Criteria> criteria;
+    @SideOnly(Side.CLIENT)
+    private static HashMap<String, Tab> tabsClient;
+    private static HashMap<String, Tab> tabsServer;
+    @SideOnly(Side.CLIENT)
+    private static HashMap<String, Criteria> criteriaClient;
+    private static HashMap<String, Criteria> criteriaServer;
+    
+
+    public static void resetAPIHandler() {
+        tabsServer = new HashMap();
+        criteriaServer = new HashMap();
+        
+        if (isClientSide()) {
+            tabsClient = new HashMap();
+            criteriaClient = new HashMap();
+        }
+    }
+    
+    public static HashMap<String, Criteria> getCriteria() {
+        return isClientSide() ? criteriaClient : criteriaServer;
+    }
+    
+    public static HashMap<String, Tab> getTabs() {
+        return isClientSide() ? tabsClient : tabsServer;
+    }
+    
+    private static boolean isClientSide() {
+        return FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT;
+    }
 
     @Override
     //Fired Server Side only
@@ -98,13 +128,13 @@ public class APIHandler implements IProgressionAPI {
     public static Criteria newCriteria(Tab tab, String name, boolean isClientside) {
         Criteria theCriteria = new Criteria(tab, name, isClientside);
         tab.addCriteria(theCriteria);
-        criteria.put(name, theCriteria);
+        getCriteria().put(name, theCriteria);
         return theCriteria;
     }
 
     public static Tab newTab(String name) {
         Tab iTab = new Tab().setUniqueName(name);
-        tabs.put(name, iTab);
+        getTabs().put(name, iTab);
         return iTab;
     }
 
@@ -196,7 +226,7 @@ public class APIHandler implements IProgressionAPI {
 
         try {
             newTriggerType = oldTriggerType.getClass().newInstance();
-        } catch (Exception e) {}
+        } catch (Exception e) { e.printStackTrace(); }
 
         Trigger newTrigger = new Trigger(criteria, newTriggerType);
         EventsManager.onTriggerAdded(newTrigger);
@@ -252,15 +282,15 @@ public class APIHandler implements IProgressionAPI {
     }
 
     public static Criteria getCriteriaFromName(String name) {
-        return criteria.get(name);
+        return getCriteria().get(name);
     }
 
     public static Tab getTabFromName(String name) {
-        return tabs.get(name);
+        return getTabs().get(name);
     }
 
     public static void removeCriteria(String unique, boolean skipTab) {
-        Criteria c = criteria.get(unique);
+        Criteria c = getCriteria().get(unique);
         //Remove the criteria from the tab
         if (!skipTab) {
             Iterator<Criteria> itC = c.tab.getCriteria().iterator();
@@ -284,7 +314,7 @@ public class APIHandler implements IProgressionAPI {
         }
 
         //Remove this from all the requirement lists
-        for (Criteria require : criteria.values()) {
+        for (Criteria require : getCriteria().values()) {
             Iterator<Criteria> it = require.prereqs.iterator();
             while (it.hasNext()) {
                 Criteria ct = it.next();
@@ -306,7 +336,7 @@ public class APIHandler implements IProgressionAPI {
         }
 
         //Remove it in general
-        criteria.remove(unique);
+        getCriteria().remove(unique);
     }
 
     //Returns the next unique string for this crafting api

@@ -17,6 +17,7 @@ public class DataCriteria {
 		this.mustClaim = mustClaim;
 	}
 	
+	long timestamp;
 	String uniqueName;
 	String displayName;
     String displayStack;
@@ -26,6 +27,8 @@ public class DataCriteria {
 	String[] conflicts;
 	int repeatable;
     boolean infinite;
+    int tasksRequired;
+    boolean allTasks;
 	int x;
 	int y;
 	boolean isVisible;

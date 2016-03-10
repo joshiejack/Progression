@@ -59,8 +59,9 @@ public class JSONLoader {
     public static String[] clientTabJsonData;
     public static String[] serverTabJsonData;
     public static int serverHashcode;
+    public static String serverName;
 
-    final static int MAX_LENGTH = 10000;
+    public final static int MAX_LENGTH = 10000;
 
     public static String getClientTabJsonData() {
         DefaultSettings loader = null;
@@ -134,8 +135,6 @@ public class JSONLoader {
         return loader; //Return it whether it's null or not
     }
 
-    public static String serverName;
-
     //Client side only
     public static boolean setTabsAndCriteriaFromString(String json, boolean create) {
         try {
@@ -181,7 +180,7 @@ public class JSONLoader {
             for (DataCriteria criteria : data.criteria) {
                 APIHandler.newCriteria(iTab, criteria.uniqueName, isClientside);
             }
-
+            
             /** Step 2 : Register all the conditions and triggers for this criteria **/
             for (DataCriteria criteria : data.criteria) {
                 Criteria theCriteria = APIHandler.getCriteriaFromName(criteria.uniqueName);
@@ -238,9 +237,12 @@ public class JSONLoader {
                         theConflicts[i] = APIHandler.getCriteriaFromName(criteria.conflicts[i]);
                 }
 
+                boolean allRequired = criteria.allTasks;
+                int tasksRequired = criteria.tasksRequired;
                 boolean isVisible = criteria.isVisible;
                 boolean mustClaim = criteria.mustClaim;
                 boolean achievement = criteria.displayAchievement;
+                boolean infinite = criteria.infinite;
                 int repeatable = criteria.repeatable;
                 int x = criteria.x;
                 int y = criteria.y;
@@ -258,8 +260,8 @@ public class JSONLoader {
                 if (repeatable <= 1) {
                     repeatable = 1;
                 }
-
-                theCriteria.init(thePrereqs, theConflicts, display, isVisible, mustClaim, achievement, repeatable, icon);
+                
+                theCriteria.init(thePrereqs, theConflicts, display, isVisible, mustClaim, achievement, repeatable, icon, allRequired, tasksRequired, infinite);
 
                 if (isClientside) {
                     theCriteria.treeEditor.setCoordinates(x, y);
@@ -285,7 +287,7 @@ public class JSONLoader {
     public static void saveData() {
     	if (Options.debugMode) Progression.logger.log(Level.INFO, "Begin logging");
         HashSet<String> tabNames = new HashSet();
-        Collection<Tab> allTabs = APIHandler.tabs.values();
+        Collection<Tab> allTabs = APIHandler.getTabs().values();
         HashSet<String> names = new HashSet();
         DefaultSettings forJSONTabs = new DefaultSettings();
         for (Tab tab : allTabs) {

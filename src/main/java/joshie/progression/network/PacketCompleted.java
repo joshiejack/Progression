@@ -34,10 +34,12 @@ public class PacketCompleted extends PenguinPacket {
 
 	@Override
 	public void handlePacket(EntityPlayer player) {
-		GuiAchievement gui = Minecraft.getMinecraft().guiAchievement;
-        gui.displayAchievement(new DummyAchievement(criteria));
-        ReflectionHelper.setPrivateValue(GuiAchievement.class, gui, Minecraft.getSystemTime(), "field_146263_l");
-        ReflectionHelper.setPrivateValue(GuiAchievement.class, gui, false, "field_146262_n");
+	    if (criteria != null) {
+    		GuiAchievement gui = Minecraft.getMinecraft().guiAchievement;
+            gui.displayAchievement(new DummyAchievement(criteria));
+            ReflectionHelper.setPrivateValue(GuiAchievement.class, gui, Minecraft.getSystemTime(), "notificationTime", "field_146263_l");
+            ReflectionHelper.setPrivateValue(GuiAchievement.class, gui, false, "permanentNotification", "field_146262_n");
+	    }
 	}
     
     public static class DummyAchievement extends Achievement {

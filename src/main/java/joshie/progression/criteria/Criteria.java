@@ -33,19 +33,23 @@ public class Criteria implements ICriteria {
     public Criteria(Tab tab, String uniqueName, boolean isClientside) {
         this.tab = tab;
         this.uniqueName = uniqueName;
+        this.allTasks = true;
 
         if (isClientside) {
             this.treeEditor = new TreeEditorElement(this);
         }
     }
 
-    public void init(Criteria[] prereqs, Criteria[] theConflicts, String displayName, boolean isVisible, boolean mustClaim, boolean achievement, int repeatable, ItemStack icon) {
+    public void init(Criteria[] prereqs, Criteria[] theConflicts, String displayName, boolean isVisible, boolean mustClaim, boolean achievement, int repeatable, ItemStack icon, boolean allRequired, int tasksRequired, boolean infinite) {
         this.displayName = displayName;
         this.isVisible = isVisible;
         this.mustClaim = mustClaim;
         this.achievement = achievement;
         this.isRepeatable = repeatable;
         this.stack = icon;
+        this.tasksRequired = tasksRequired;
+        this.allTasks = allRequired;
+        this.infinite = infinite;
         addRequirements(prereqs);
         addConflicts(theConflicts);
     }

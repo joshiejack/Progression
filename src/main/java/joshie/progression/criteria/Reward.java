@@ -56,7 +56,8 @@ public class Reward implements IDrawable {
     @Override
     public void remove(List list) {
         EventsManager.onRewardRemoved(this);
-        ListHelper.remove(list, this);  
+        ListHelper.remove(list, this); //Remove from temporary list    
+        ListHelper.remove(criteria.rewards, this); //Remove from real list
     }
 
     public void draw(int mouseX, int mouseY, int xPos) {

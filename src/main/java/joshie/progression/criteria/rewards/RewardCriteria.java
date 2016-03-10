@@ -106,7 +106,7 @@ public class RewardCriteria extends RewardBase implements ITextEditable {
 
         try {
             criteria = null;
-            for (Criteria c : APIHandler.criteria.values()) {
+            for (Criteria c : APIHandler.getCriteria().values()) {
                 String display = c.displayName;
                 if (c.displayName.equals(displayName)) {
                     criteria = c;

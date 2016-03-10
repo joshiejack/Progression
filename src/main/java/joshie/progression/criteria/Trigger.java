@@ -99,7 +99,8 @@ public class Trigger implements IDrawable {
     @Override
     public void remove(List list) {
     	EventsManager.onTriggerRemoved(this);
-        ListHelper.remove(list, this);	
+    	ListHelper.remove(list, this); //Remove from temporary list    
+        ListHelper.remove(criteria.triggers, this);	//Remove from real list
     }
 
     @Override

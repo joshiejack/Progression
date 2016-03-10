@@ -26,7 +26,7 @@ public class SaveTicker {
             LAST_TICK--;
             
             if (LAST_TICK == 0) {
-                PacketHandler.sendToServer(new PacketReload());
+                
             }
         }
     }

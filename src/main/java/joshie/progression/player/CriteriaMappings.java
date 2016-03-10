@@ -61,9 +61,9 @@ public class CriteriaMappings {
         //remap(); //Remap the data, before the client gets sent the data
 
         PacketHandler.sendToClient(new PacketSyncAbilities(master.getAbilities()), player);
-        SyncPair[] values = new SyncPair[APIHandler.criteria.size()];
+        SyncPair[] values = new SyncPair[APIHandler.getCriteria().size()];
         int pos = 0;
-        for (Criteria criteria : APIHandler.criteria.values()) {
+        for (Criteria criteria : APIHandler.getCriteria().values()) {
             int[] numbers = new int[criteria.triggers.size()];
             for (int i = 0; i < criteria.triggers.size(); i++) {
                 numbers[i] = i;
@@ -393,7 +393,7 @@ public class CriteriaMappings {
         Set<Criteria> availableCriteria = new HashSet(); //Recreate the available mappings
         activeTriggers = HashMultimap.create(); //Recreate the trigger mappings
 
-        Collection<Criteria> allCriteria = APIHandler.criteria.values();
+        Collection<Criteria> allCriteria = APIHandler.getCriteria().values();
         for (Criteria criteria : allCriteria) {
             //We are now looping though all criteria, we now need to check to see if this
             //First step is to validate to see if this criteria, is available right now

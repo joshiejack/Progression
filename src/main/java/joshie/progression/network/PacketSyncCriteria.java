@@ -54,7 +54,7 @@ public class PacketSyncCriteria extends PenguinPacket {
 	public void handlePacket(EntityPlayer player) {   
         PlayerTracker.getClientPlayer().getMappings().markCriteriaAsCompleted(overwrite, integers, criteria);
         if (overwrite) {
-        	for (Criteria condition: APIHandler.criteria.values()) {
+        	for (Criteria condition: APIHandler.getCriteria().values()) {
         		for (Criteria unlocked: criteria) {
         		    if (unlocked == null) continue;
         			for (Reward reward: unlocked.rewards) {

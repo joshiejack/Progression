@@ -9,4 +9,5 @@ public interface IGuiFeature {
 	public boolean mouseClicked(int mouseX, int mouseY, int button);
     public boolean isVisible();
     public boolean scroll(int mouseX, int mouseY, boolean down);
+    public void setVisibility(boolean isVisible);
 }

@@ -18,7 +18,7 @@ public class FeatureBarsX2 extends FeatureBarsX1 {
 	@Override
 	public void drawFeature(int mouseX, int mouseY) {
 		super.drawFeature(mouseX, mouseY);
-        draw.drawGradient(-1, 120, screenWidth, 15, provider.getColorForBar(BAR2_GRADIENT1), provider.getColorForBar(BAR2_GRADIENT2), provider.getColorForBar(BAR2_BORDER));
+		offset.drawGradient(-1, 120, screenWidth, 15, provider.getColorForBar(BAR2_GRADIENT1), provider.getColorForBar(BAR2_GRADIENT2), provider.getColorForBar(BAR2_BORDER));
         offset.drawText(Progression.translate(bar2), 9, 124, provider.getColorForBar(BAR2_FONT));
 	}
 }

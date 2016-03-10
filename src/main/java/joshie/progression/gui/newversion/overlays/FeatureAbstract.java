@@ -14,6 +14,7 @@ public abstract class FeatureAbstract implements IGuiFeature {
 	protected Theme theme;
 	protected int screenWidth;
 	protected int guiHeight;
+	private boolean isHidden;
 
 	@Override
 	public FeatureAbstract init(GuiCore core) {
@@ -47,7 +48,12 @@ public abstract class FeatureAbstract implements IGuiFeature {
 	}
 	
 	@Override
+	public void setVisibility(boolean value) {
+	    this.isHidden = !value;
+	}
+	
+	@Override
 	public boolean isVisible() {
-	    return true;
+	    return !isHidden;
 	}
 }

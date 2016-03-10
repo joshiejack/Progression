@@ -12,11 +12,12 @@ import joshie.progression.api.ICriteria;
 import joshie.progression.crafting.ActionType;
 import joshie.progression.crafting.CraftingRegistry;
 import joshie.progression.criteria.Criteria;
+import joshie.progression.json.DefaultSettings;
 import joshie.progression.json.JSONLoader;
 import joshie.progression.lib.SafeStack;
 import joshie.progression.network.PacketHandler;
-import joshie.progression.network.PacketSyncJSON;
-import joshie.progression.network.PacketSyncJSON.Section;
+import joshie.progression.network.PacketSyncJSONToClient;
+import joshie.progression.network.PacketSyncJSONToClient.Section;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
@@ -34,21 +35,20 @@ public class RemappingHandler {
     public static void onPlayerConnect(EntityPlayerMP player) {
         //Remap the player data, for this player, before doing anything else, as the data may not existing yet
         PlayerTracker.getServerPlayer(player).getMappings().remap();
-        
-        PacketHandler.sendToClient(new PacketSyncJSON(Section.SEND_HASH, JSONLoader.serverHashcode, getHostName()), player);
+        PacketHandler.sendToClient(new PacketSyncJSONToClient(Section.SEND_HASH, JSONLoader.serverHashcode, getHostName()), player);
     }
 
-    public static void reloadServerData() {
+    public static void reloadServerData(DefaultSettings settings) {
         //Reset the data
         resetRegistries();
 
         //All data has officially been wiped SERVERSIDE
         //Reload in all the data from json
         /** Grab yourself some gson, load it in from the file serverside **/
-        JSONLoader.loadJSON(false, JSONLoader.getTabs()); //This fills out all the data once again
+        JSONLoader.loadJSON(false, settings); //This fills out all the data once again
 
         //Now that mappings have been synced to the client reload the unlocks list
-        Collection<Criteria> allCriteria = APIHandler.criteria.values();
+        Collection<Criteria> allCriteria = APIHandler.getCriteria().values();
         for (Criteria criteria : allCriteria) { //Remap criteria to unlocks
             //We do not give a damn about whether this is available or not
             //The unlocking of criteria should happen no matter what
@@ -63,8 +63,7 @@ public class RemappingHandler {
         //Resets all of the registries to default empty data
         //Create a a new unlocker
         criteriaToUnlocks = HashMultimap.create(); //Reset all data
-        APIHandler.tabs = new HashMap(); //Reset all data
-        APIHandler.criteria = new HashMap(); //Reset all data
+        APIHandler.resetAPIHandler(); //Reset tabs and criteria maps
         EventsManager.activeRewards = new HashSet(); //Reset active rewards
         EventsManager.activeTriggers = new HashSet(); //Reset active triggers
         CraftingRegistry.conditions = new HashMap(); //Reset all the data in the crafting registry

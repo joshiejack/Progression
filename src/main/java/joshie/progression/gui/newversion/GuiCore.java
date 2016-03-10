@@ -1,30 +1,38 @@
 package joshie.progression.gui.newversion;
 
+import static joshie.progression.network.core.PacketPart.SEND_SIZE;
+
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.logging.log4j.Level;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import joshie.progression.Progression;
-import joshie.progression.gui.base.SaveTicker;
 import joshie.progression.gui.newversion.overlays.FeatureBackground;
 import joshie.progression.gui.newversion.overlays.FeatureFooter;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector;
+import joshie.progression.gui.newversion.overlays.FeatureNewReward;
+import joshie.progression.gui.newversion.overlays.FeatureNewTrigger;
 import joshie.progression.gui.newversion.overlays.FeatureTooltip;
 import joshie.progression.gui.newversion.overlays.IGuiFeature;
 import joshie.progression.gui.newversion.overlays.TextEditor;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.RenderItemHelper;
+import joshie.progression.helpers.SplitHelper;
 import joshie.progression.json.JSONLoader;
 import joshie.progression.json.Options;
 import joshie.progression.json.Theme;
+import joshie.progression.network.PacketHandler;
+import joshie.progression.network.PacketSyncJSONToServer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.ItemStack;
 
 public class GuiCore extends GuiScreen {
     protected ArrayList<IGuiFeature> features = new ArrayList<IGuiFeature>();
+    private HashMap<Object, Integer> offsetCache = new HashMap();
     private int mouseX = 0;
     private int mouseY = 0;
     protected Theme theme;
@@ -34,9 +42,13 @@ public class GuiCore extends GuiScreen {
     public int top; // Top of the screen :D
 
     @Override
-    public void initGui() {
+    public void initGui() {        
         Keyboard.enableRepeatEvents(true);
         theme = Theme.INSTANCE;
+        if (offsetCache.containsKey(getKey())) {
+            offsetX = offsetCache.get(getKey());
+        } else  offsetX = 0;
+
         features.clear(); // Clear out the features
         features.add(new FeatureBackground()); // Readd the background
         addFeatures(); // Add extra features
@@ -52,6 +64,8 @@ public class GuiCore extends GuiScreen {
     public void clearEditors() {
         FeatureItemSelector.INSTANCE.clearEditable();
         TextEditor.INSTANCE.clearEditable();
+        FeatureNewTrigger.INSTANCE.setVisibility(false);
+        FeatureNewReward.INSTANCE.setVisibility(false);
     }
 
     public void addFeatures() {}
@@ -64,8 +78,11 @@ public class GuiCore extends GuiScreen {
                 Progression.logger.log(Level.INFO, "Saving JSON Data");
             }
 
-            JSONLoader.saveData();
-            SaveTicker.LAST_TICK = 500;
+            JSONLoader.saveData(); //Save the data clientside
+            String json = JSONLoader.getClientTabJsonData();
+            int length = SplitHelper.splitStringEvery(json, 5000).length;
+            PacketHandler.sendToServer(new PacketSyncJSONToServer(SEND_SIZE, "", length, System.currentTimeMillis()));
+            //Send the packet to the server about the new json
             clearEditors();
         }
     }
@@ -142,6 +159,10 @@ public class GuiCore extends GuiScreen {
         }
         super.handleMouseInput();
     }
+    
+    public Object getKey() {
+        return this;
+    }
 
     // Scrolling Helpers
     public void scroll(int amount) {
@@ -149,6 +170,8 @@ public class GuiCore extends GuiScreen {
         if (offsetX >= 0) {
             offsetX = 0;
         }
+        
+        offsetCache.put(getKey(), offsetX);
     }
 
     // Helper Drawing functions

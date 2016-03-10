@@ -81,8 +81,8 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
                 }
 
                 if (newTab != null) {
-                    if (!APIHandler.tabs.containsKey(newTab.getUniqueName())) {
-                        for (Tab tab : APIHandler.tabs.values()) {
+                    if (!APIHandler.getTabs().containsKey(newTab.getUniqueName())) {
+                        for (Tab tab : APIHandler.getTabs().values()) {
                             newTab = tab;
                             break;
                         }
@@ -97,7 +97,7 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
                     APIHandler.removeCriteria(c.uniqueName, true);
                 }
 
-                APIHandler.tabs.remove(tab.getUniqueName());
+                APIHandler.getTabs().remove(tab.getUniqueName());
                 GuiTreeEditor.INSTANCE.initGui();
                 return;
             }

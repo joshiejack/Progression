@@ -146,7 +146,7 @@ public class ItemCriteria extends Item {
     public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
         list.add(new ItemStack(item, 1, CLAIM));
         list.add(new ItemStack(item, 1, BOOK));
-        for (Criteria c : APIHandler.criteria.values()) {
+        for (Criteria c : APIHandler.getCriteria().values()) {
             ItemStack stack = new ItemStack(item);
             stack.setTagCompound(new NBTTagCompound());
             stack.getTagCompound().setString("Criteria", c.uniqueName);

@@ -4,6 +4,7 @@ import joshie.progression.Progression;
 import joshie.progression.handlers.RemappingHandler;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.PlayerHelper;
+import joshie.progression.json.JSONLoader;
 import joshie.progression.json.Options;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -23,7 +24,7 @@ public class PacketReset extends PacketAction {
         } else {
             if (Options.editor) {
                 Progression.instance.createWorldData(); //Recreate the world data, Wiping out any saved information for players
-                RemappingHandler.reloadServerData();
+                RemappingHandler.reloadServerData(JSONLoader.getTabs());
                 for (EntityPlayer player : PlayerHelper.getAllPlayers()) {
                     RemappingHandler.onPlayerConnect((EntityPlayerMP) player);
                 }

@@ -64,7 +64,7 @@ public abstract class GuiBase extends GuiScreen {
         Keyboard.enableRepeatEvents(false);
         if (MCClientHelper.getPlayer().capabilities.isCreativeMode) {
         	if (Options.debugMode) Progression.logger.log(Level.INFO, "Saving JSON Data");
-        	JSONLoader.saveData(); 
+        	//JSONLoader.saveData(); 
         	SaveTicker.LAST_TICK = 500;
         }
     }

@@ -15,12 +15,14 @@ public class TriggerClickBlock extends TriggerBaseBlock {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onEvent(PlayerInteractEvent event) {
-    	IBlockState state = event.world.getBlockState(event.pos);
-    	Block block = state.getBlock();
-    	int meta = block.getMetaFromState(state);
-
-        if (ProgressionAPI.registry.fireTrigger(event.entityPlayer, getUnlocalisedName(), block, meta) == Result.DENY) {
-            event.setCanceled(true);
+        if (event.pos != null) {
+        	IBlockState state = event.world.getBlockState(event.pos);
+        	Block block = state.getBlock();
+        	int meta = block.getMetaFromState(state);
+    
+            if (ProgressionAPI.registry.fireTrigger(event.entityPlayer, getUnlocalisedName(), block, meta) == Result.DENY) {
+                event.setCanceled(true);
+            }
         }
     }
 }

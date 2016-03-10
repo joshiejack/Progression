@@ -59,6 +59,7 @@ import joshie.progression.handlers.GUIHandler;
 import joshie.progression.handlers.RemappingHandler;
 import joshie.progression.helpers.ModLogHelper;
 import joshie.progression.items.ItemCriteria;
+import joshie.progression.json.JSONLoader;
 import joshie.progression.json.Options;
 import joshie.progression.lib.ProgressionInfo;
 import joshie.progression.network.PacketClaimed;
@@ -70,7 +71,8 @@ import joshie.progression.network.PacketReset;
 import joshie.progression.network.PacketRewardItem;
 import joshie.progression.network.PacketSyncAbilities;
 import joshie.progression.network.PacketSyncCriteria;
-import joshie.progression.network.PacketSyncJSON;
+import joshie.progression.network.PacketSyncJSONToClient;
+import joshie.progression.network.PacketSyncJSONToServer;
 import joshie.progression.network.PacketSyncTriggers;
 import joshie.progression.player.PlayerSavedData;
 import joshie.progression.player.PlayerTracker;
@@ -201,7 +203,8 @@ public class Progression {
         PacketHandler.registerPacket(PacketOpenEditor.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketReload.class);
         PacketHandler.registerPacket(PacketReset.class);
-        PacketHandler.registerPacket(PacketSyncJSON.class);
+        PacketHandler.registerPacket(PacketSyncJSONToClient.class);
+        PacketHandler.registerPacket(PacketSyncJSONToServer.class);
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GUIHandler());
         proxy.initClient();
     }
@@ -222,7 +225,7 @@ public class Progression {
 
         
         //Remap all relevant data
-        RemappingHandler.reloadServerData();
+        RemappingHandler.reloadServerData(JSONLoader.getTabs());
         
         World world = MinecraftServer.getServer().worldServers[0];
         data = (PlayerSavedData) world.loadItemData(PlayerSavedData.class, MODNAME);

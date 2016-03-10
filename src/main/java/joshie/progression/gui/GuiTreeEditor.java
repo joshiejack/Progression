@@ -55,7 +55,7 @@ public class GuiTreeEditor extends GuiBase {
         }
 
         //Sort tabs alphabetically or by sort index
-        ArrayList<Tab> tabs = new ArrayList(APIHandler.tabs.values());
+        ArrayList<Tab> tabs = new ArrayList(APIHandler.getTabs().values());
         Collections.sort(tabs, new SortIndex());
 
         for (Tab tab : tabs) {
@@ -80,7 +80,7 @@ public class GuiTreeEditor extends GuiBase {
 
         currentTab = APIHandler.getTabFromName(currentTabName);
         if (currentTab == null) {
-            for (Tab tab : APIHandler.tabs.values()) {
+            for (Tab tab : APIHandler.getTabs().values()) {
                 currentTab = tab;
                 break;
             }

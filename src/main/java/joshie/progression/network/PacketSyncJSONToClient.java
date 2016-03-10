@@ -1,12 +1,12 @@
 package joshie.progression.network;
 
-import static joshie.progression.network.PacketSyncJSON.Section.COMPLETE;
-import static joshie.progression.network.PacketSyncJSON.Section.FAILED_HASH;
-import static joshie.progression.network.PacketSyncJSON.Section.RECEIVED_LENGTH;
-import static joshie.progression.network.PacketSyncJSON.Section.RESYNC;
-import static joshie.progression.network.PacketSyncJSON.Section.SEND_HASH;
-import static joshie.progression.network.PacketSyncJSON.Section.SEND_LENGTH;
-import static joshie.progression.network.PacketSyncJSON.Section.SEND_STRING;
+import static joshie.progression.network.PacketSyncJSONToClient.Section.COMPLETE;
+import static joshie.progression.network.PacketSyncJSONToClient.Section.FAILED_HASH;
+import static joshie.progression.network.PacketSyncJSONToClient.Section.RECEIVED_LENGTH;
+import static joshie.progression.network.PacketSyncJSONToClient.Section.RESYNC;
+import static joshie.progression.network.PacketSyncJSONToClient.Section.SEND_HASH;
+import static joshie.progression.network.PacketSyncJSONToClient.Section.SEND_LENGTH;
+import static joshie.progression.network.PacketSyncJSONToClient.Section.SEND_STRING;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -29,18 +29,18 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class PacketSyncJSON extends PenguinPacket {
+public class PacketSyncJSONToClient extends PenguinPacket {
     public static enum Section {
         RESYNC, SEND_HASH, FAILED_HASH, SEND_LENGTH, RECEIVED_LENGTH, SEND_STRING, COMPLETE;
     }
 
-    public PacketSyncJSON() {}
+    public PacketSyncJSONToClient() {}
 
-    public PacketSyncJSON(Section section) {
+    public PacketSyncJSONToClient(Section section) {
         this.section = section;
     }
 
-    public PacketSyncJSON(Section section, int length) {
+    public PacketSyncJSONToClient(Section section, int length) {
         this.section = section;
         this.integer = length;
     }
@@ -49,7 +49,7 @@ public class PacketSyncJSON extends PenguinPacket {
     private int integer = -1;
     private String string = null;
 
-    public PacketSyncJSON(Section section, int position, String data) {
+    public PacketSyncJSONToClient(Section section, int position, String data) {
         this.section = section;
         this.integer = position;
         this.string = data;
@@ -111,17 +111,17 @@ public class PacketSyncJSON extends PenguinPacket {
             if (json.hashCode() == integer) {
                 //If we set the json correctly
                 if (JSONLoader.setTabsAndCriteriaFromString(json, false)) {
-                    PacketHandler.sendToServer(new PacketSyncJSON(COMPLETE));
+                    PacketHandler.sendToServer(new PacketSyncJSONToClient(COMPLETE));
                 }
-            } else PacketHandler.sendToServer(new PacketSyncJSON(FAILED_HASH));
+            } else PacketHandler.sendToServer(new PacketSyncJSONToClient(FAILED_HASH));
         } else if (section == FAILED_HASH) {
-            PacketHandler.sendToClient(new PacketSyncJSON(Section.SEND_LENGTH, JSONLoader.serverTabJsonData.length), thePlayer);
+            PacketHandler.sendToClient(new PacketSyncJSONToClient(Section.SEND_LENGTH, JSONLoader.serverTabJsonData.length), thePlayer);
         } else if (section == SEND_LENGTH) { //Clientside set the data for receival of this packet
             JSONLoader.clientTabJsonData = new String[integer];
-            PacketHandler.sendToServer(new PacketSyncJSON(RECEIVED_LENGTH));
+            PacketHandler.sendToServer(new PacketSyncJSONToClient(RECEIVED_LENGTH));
         } else if (section == RECEIVED_LENGTH) {
             for (int i = 0; i < JSONLoader.serverTabJsonData.length; i++) {
-                PacketHandler.sendToClient(new PacketSyncJSON(SEND_STRING, i, JSONLoader.serverTabJsonData[i]), thePlayer);
+                PacketHandler.sendToClient(new PacketSyncJSONToClient(SEND_STRING, i, JSONLoader.serverTabJsonData[i]), thePlayer);
             } //Now that we have received the data, send more
         } else if (section == SEND_STRING) { //Client has now been sent the string
             JSONLoader.clientTabJsonData[integer] = string;
@@ -137,7 +137,7 @@ public class PacketSyncJSON extends PenguinPacket {
 
             //If we set the json correctly
             if (JSONLoader.setTabsAndCriteriaFromString(result.toString(), true)) {
-                PacketHandler.sendToServer(new PacketSyncJSON(COMPLETE));
+                PacketHandler.sendToServer(new PacketSyncJSONToClient(COMPLETE));
             }
         } else if (section == Section.COMPLETE) {
             UUID uuid = PlayerHelper.getUUIDForPlayer(thePlayer);
