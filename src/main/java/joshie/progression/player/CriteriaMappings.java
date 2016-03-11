@@ -166,9 +166,7 @@ public class CriteriaMappings {
     public void claimUnclaimedReward(Criteria criteria) {
         if (unclaimed.contains(criteria)) {
             unclaimed.remove(criteria);
-            for (Reward reward : criteria.rewards) {
-                reward.getType().reward(uuid);
-            }
+            claimRewards(criteria);
 
             Progression.data.markDirty();
         }
@@ -184,10 +182,7 @@ public class CriteriaMappings {
             HashSet<Trigger> forRemovalFromActive = new HashSet();
             HashSet<Criteria> toRemap = new HashSet();
             completeCriteria(criteria, forRemovalFromActive, toRemap);
-            List<Reward> rewards = (List<Reward>) data[1];
-            for (Reward reward : rewards) {
-                reward.getType().reward(uuid);
-            }
+            claimRewards(criteria);
 
             remapStuff(forRemovalFromActive, toRemap);
             Progression.data.markDirty();
@@ -281,15 +276,29 @@ public class CriteriaMappings {
         //Now that we have removed all the triggers, and marked this as completed and remapped data, we should give out the rewards
         for (Criteria criteria : toComplete) {
             if (!criteria.mustClaim) {
-                for (Reward reward : criteria.rewards) {
-                    reward.getType().reward(uuid);
-                }
+                claimRewards(criteria);
             } else unclaimed.add(criteria);
         }
 
         //Mark data as dirty, whether it changed or not
         Progression.data.markDirty();
         return completedAnyCriteria ? Result.ALLOW : Result.DEFAULT;
+    }
+    
+    public void claimRewards(Criteria criteria) {
+        ArrayList<Reward> copy = new ArrayList(criteria.rewards);
+        Collections.shuffle(copy);
+        int rewardsGiven = 0;
+        
+        for (Reward reward : criteria.rewards) {
+            if (rewardsGiven < criteria.rewardsGiven || criteria.allRewards) {
+                reward.getType().reward(uuid);
+            } else if (rewardsGiven >= criteria.rewardsGiven && !criteria.allRewards) {
+                break; //Exit the loop, no use carrying on if we've reached the maximum rewards allowed
+            }
+            
+            rewardsGiven++;
+        }
     }
 
     public void removeCriteria(Criteria criteria) {

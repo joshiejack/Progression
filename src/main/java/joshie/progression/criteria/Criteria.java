@@ -24,6 +24,8 @@ public class Criteria implements ICriteria {
     public boolean infinite = false;
     public int tasksRequired = 1;
     public boolean allTasks = true;
+    public int rewardsGiven;
+    public boolean allRewards = true;
     public String displayName = "New Criteria";
     public boolean isVisible = true;
     public boolean mustClaim = false;
@@ -36,13 +38,15 @@ public class Criteria implements ICriteria {
         this.isRepeatable = 1;
         this.tasksRequired = 1;
         this.allTasks = true;
+        this.allRewards = true;
+        this.rewardsGiven = 1;
 
         if (isClientside) {
             this.treeEditor = new TreeEditorElement(this);
         }
     }
 
-    public void init(Criteria[] prereqs, Criteria[] theConflicts, String displayName, boolean isVisible, boolean mustClaim, boolean achievement, int repeatable, ItemStack icon, boolean allRequired, int tasksRequired, boolean infinite) {
+    public void init(Criteria[] prereqs, Criteria[] theConflicts, String displayName, boolean isVisible, boolean mustClaim, boolean achievement, int repeatable, ItemStack icon, boolean allRequired, int tasksRequired, boolean infinite, boolean allRewards, int rewardsGiven) {
         this.displayName = displayName;
         this.isVisible = isVisible;
         this.mustClaim = mustClaim;
@@ -52,6 +56,8 @@ public class Criteria implements ICriteria {
         this.tasksRequired = tasksRequired;
         this.allTasks = allRequired;
         this.infinite = infinite;
+        this.allRewards = allRewards;
+        this.rewardsGiven = rewardsGiven;
         addRequirements(prereqs);
         addConflicts(theConflicts);
     }

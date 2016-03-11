@@ -107,7 +107,7 @@ public class ItemCriteria extends Item {
         } else if (!world.isRemote) {
             Criteria criteria = getCriteriaFromStack(stack);
             if (criteria != null) {
-                Result completed = PlayerTracker.getServerPlayer(PlayerHelper.getUUIDForPlayer(player)).getMappings().fireAllTriggers("forced-complete", criteria, criteria.rewards);
+                Result completed = PlayerTracker.getServerPlayer(PlayerHelper.getUUIDForPlayer(player)).getMappings().fireAllTriggers("forced-complete", criteria);
                 if (!player.capabilities.isCreativeMode && completed == Result.ALLOW) {
                     stack.stackSize--;
                 }

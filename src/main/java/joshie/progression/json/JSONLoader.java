@@ -239,6 +239,8 @@ public class JSONLoader {
 
                 boolean allRequired = criteria.allTasks;
                 int tasksRequired = criteria.tasksRequired;
+                boolean allRewards = criteria.allRewards;
+                int rewardsGiven = criteria.rewardsGiven;
                 boolean isVisible = criteria.isVisible;
                 boolean mustClaim = criteria.mustClaim;
                 boolean achievement = criteria.displayAchievement;
@@ -261,7 +263,7 @@ public class JSONLoader {
                     repeatable = 1;
                 }
                 
-                theCriteria.init(thePrereqs, theConflicts, display, isVisible, mustClaim, achievement, repeatable, icon, allRequired, tasksRequired, infinite);
+                theCriteria.init(thePrereqs, theConflicts, display, isVisible, mustClaim, achievement, repeatable, icon, allRequired, tasksRequired, infinite, allRewards, rewardsGiven);
 
                 if (isClientside) {
                     theCriteria.treeEditor.setCoordinates(x, y);
@@ -313,6 +315,8 @@ public class JSONLoader {
                 data.displayName = c.displayName;
                 data.tasksRequired = c.tasksRequired;
                 data.allTasks = c.allTasks;
+                data.rewardsGiven = c.rewardsGiven;
+                data.allRewards = c.allRewards;
                 if (Options.debugMode) Progression.logger.log(Level.INFO, "Saved the display name " + c.displayName);
                 data.uniqueName = c.uniqueName;
                 data.displayStack = StackHelper.getStringFromStack(c.stack);

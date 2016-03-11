@@ -34,4 +34,6 @@ public class DataCriteria {
 	boolean isVisible;
 	boolean mustClaim;
     boolean displayAchievement;
+    public int rewardsGiven;
+    public boolean allRewards;
 }
