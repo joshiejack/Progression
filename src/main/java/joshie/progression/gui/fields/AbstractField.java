@@ -1,8 +1,9 @@
 package joshie.progression.gui.fields;
 
+import joshie.progression.api.IField;
 import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 
-public abstract class AbstractField {
+public abstract class AbstractField implements IField {
     public String name;
     public Object object;
 

@@ -95,7 +95,7 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
         for (int i = 0; i < rewards.size(); i++) {
             int xPos = 100 * xCoord;
             Reward reward = rewards.get(i);
-            reward.draw(mouseX, mouseY, xPos);
+            //reward.draw(mouseX, mouseY, xPos);
             xCoord++;
         }
 

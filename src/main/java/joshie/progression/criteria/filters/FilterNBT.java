@@ -2,14 +2,14 @@
 
 import com.google.gson.JsonObject;
 
-import joshie.progression.gui.fields.ICallback;
+import joshie.progression.gui.fields.ISetterCallback;
 import joshie.progression.gui.fields.TextField;
 import joshie.progression.helpers.JSONHelper;
 import joshie.progression.helpers.StackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class FilterNBT extends FilterBase implements ICallback {
+public class FilterNBT extends FilterBase implements ISetterCallback {
     public NBTTagCompound tagValue = new NBTTagCompound();
     public String tagText;
 

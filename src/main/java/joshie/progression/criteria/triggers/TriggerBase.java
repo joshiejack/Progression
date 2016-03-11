@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import joshie.progression.Progression;
 import joshie.progression.api.EventBusType;
 import joshie.progression.api.ICriteria;
+import joshie.progression.api.IField;
 import joshie.progression.api.ITriggerData;
 import joshie.progression.api.ITriggerType;
 import joshie.progression.gui.fields.AbstractField;
@@ -20,7 +21,7 @@ import joshie.progression.json.Theme;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
 public abstract class TriggerBase implements ITriggerType {
-    protected List<AbstractField> editList = new ArrayList();
+    protected List<IField> editList = new ArrayList();
     protected ICriteria criteria;
     private String name;
     private int color;
@@ -86,40 +87,15 @@ public abstract class TriggerBase implements ITriggerType {
     public void writeToJSON(JsonObject data) {
         if (cancelable) JSONHelper.setBoolean(data, "cancel", cancel, false);
     }
+    
+    @Override
+    public List<IField> getFields() {
+        return editList;
+    }
 
     @Override
     public Result onClicked(int mouseX, int mouseY) {
-        if (MCClientHelper.canEdit()) {
-            if (!cancel) {
-                int yStart = cancelable ? 25 : 17;
-                int index = 0;
-                for (AbstractField t : editList) {
-                    t.setObject(this);
-                    if (t.attemptClick(mouseX, mouseY)) {
-                        return Result.ALLOW;
-                    }
-
-                    int color = Theme.INSTANCE.optionsFontColor;
-                    int yPos = yStart + (index * 8);
-                    if (mouseX >= 1 && mouseX <= 99) {
-                        if (mouseY >= yPos && mouseY < yPos + 8) {
-                            t.click();
-                            return Result.ALLOW;
-                        }
-                    }
-
-                    index++;
-                }
-            }
-
-            if (cancelable) {
-                if (mouseX >= 1 && mouseX <= 84) {
-                    if (mouseY >= 17 && mouseY < 25) {
-                        cancel = !cancel;
-                    }
-                }
-            }
-        }
+        
 
         return Result.DEFAULT;
     }
@@ -129,42 +105,26 @@ public abstract class TriggerBase implements ITriggerType {
 
     @Override
     public void drawEditor(DrawFeatureHelper helper, int renderX, int renderY, int mouseX, int mouseY) {
-        if (!cancel) {
-            int yStart = cancelable ? 25 : 17;
-            int index = 0;
-            for (AbstractField t : editList) {
-                t.setObject(this);
-                int color = Theme.INSTANCE.optionsFontColor;
-                int yPos = yStart + (index * 8);
-                if (MCClientHelper.canEdit()) {
-                    if (mouseX >= 1 && mouseX <= 84) {
-                        if (mouseY >= yPos && mouseY < yPos + 8) {
-                            color = Theme.INSTANCE.optionsFontColorHover;
-                        }
-                    }
-                }
-
-                t.draw(helper, renderX, renderY, color, yPos);
-                index++;
-            }
-        }
-
-        if (cancelable) {
-            int color = Theme.INSTANCE.optionsFontColor;
-            if (MCClientHelper.canEdit()) {
-                if (mouseX >= 1 && mouseX <= 84) {
-                    if (mouseY >= 17 && mouseY < 25) {
-                        color = Theme.INSTANCE.optionsFontColorHover;
-                    }
-                }
-
-                helper.drawSplitText(renderX, renderY, "cancel: " + cancel, 4, 17, 105, color);
-            }
-        }
+        
     }
     
     @Override
 	public String getDescription() {
     	return "MISSING DESCRIPTION";
+    }
+    
+    @Override
+    public boolean isCancelable() {
+        return cancelable;
+    }
+    
+    @Override
+    public boolean isCanceling() {
+        return cancel;
+    }
+    
+    @Override
+    public void setCanceling(boolean cancel) {
+        this.cancel = cancel;
     }
 }

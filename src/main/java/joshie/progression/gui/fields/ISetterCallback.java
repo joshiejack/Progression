@@ -1,5 +1,5 @@
 package joshie.progression.gui.fields;
 
-public interface ICallback {
+public interface ISetterCallback {
     public boolean setField(String fieldName, String fieldValue);
 }

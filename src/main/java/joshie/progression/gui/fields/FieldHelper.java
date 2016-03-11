@@ -2,7 +2,6 @@ package joshie.progression.gui.fields;
 
 import java.lang.reflect.Field;
 
-import joshie.progression.gui.editors.EditText;
 import joshie.progression.gui.editors.EditText.ITextEditable;
 import joshie.progression.gui.newversion.overlays.TextEditor;
 import net.minecraft.item.ItemStack;
@@ -69,13 +68,18 @@ public class FieldHelper implements ITextEditable {
 
     @Override
     public String getTextField() {
-        return getString();
+        String ret = null;
+        if (o instanceof IGetterCallback) {
+            ret = ((IGetterCallback)o).getField(f.getName());
+        }
+        
+        return ret != null? ret: getString();
     }
 
     @Override
     public void setTextField(String str) {
-        if (o instanceof ICallback) {
-            if(!((ICallback)o).setField(f.getName(), str)) {
+        if (o instanceof ISetterCallback) {
+            if(!((ISetterCallback)o).setField(f.getName(), str)) {
                 set(str);
             }
         } else set(str);

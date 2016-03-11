@@ -6,7 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-import joshie.progression.gui.fields.ICallback;
+import joshie.progression.gui.fields.ISetterCallback;
 import joshie.progression.gui.fields.TextField;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 
-public class ConditionBiomeType extends ConditionBase implements ICallback {
+public class ConditionBiomeType extends ConditionBase implements ISetterCallback {
     private Type[] theBiomeTypes = new Type[] { Type.FOREST };
     public String biomeTypes = "forest";
 

@@ -7,11 +7,10 @@ import com.google.gson.JsonObject;
 
 import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public interface IRewardType {    
+public interface IRewardType extends IFieldProvider {    
     /** Associates this reward type with the criteria
      *  Most reward types will not need access to this. **/
     public void markCriteria(ICriteria criteria);
@@ -55,14 +54,11 @@ public interface IRewardType {
     @SideOnly(Side.CLIENT)
     public void drawEditor(DrawFeatureHelper helper, int renderX, int renderY, int mouseX, int mouseY);
 
-    /** Should return allow, if clicked, or default if not **/
-    @SideOnly(Side.CLIENT)
-    public Result onClicked(int mouseX, int mouseY);
-
     /** Called to update drawing for this render **/
     public void update();
 
     public String getDescription();
 
     public void drawDisplay(int mouseX, int mouseY);
+
 }

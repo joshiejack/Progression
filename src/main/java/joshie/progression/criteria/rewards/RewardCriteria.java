@@ -5,28 +5,28 @@ import java.util.UUID;
 
 import com.google.gson.JsonObject;
 
-import joshie.progression.api.ProgressionAPI;
 import joshie.progression.criteria.Criteria;
-import joshie.progression.gui.editors.EditText;
-import joshie.progression.gui.editors.EditText.ITextEditable;
+import joshie.progression.gui.fields.BooleanField;
+import joshie.progression.gui.fields.IGetterCallback;
+import joshie.progression.gui.fields.ISetterCallback;
+import joshie.progression.gui.fields.TextField;
 import joshie.progression.handlers.APIHandler;
-import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.JSONHelper;
-import joshie.progression.json.Theme;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
-//TODO: SWITCH TO NEW FORMAT
-public class RewardCriteria extends RewardBase implements ITextEditable {
+public class RewardCriteria extends RewardBase implements IGetterCallback, ISetterCallback {
+    public String displayName = "";
     public String criteriaID = "";
     public boolean remove = false;
     public Criteria criteria = null;
 
     public RewardCriteria() {
         super(new ItemStack(Items.golden_apple), "criteria", 0xFF99B3FF);
+        list.add(new TextField("displayName", this));
+        list.add(new BooleanField("remove", this));
     }
 
     @Override
@@ -55,66 +55,35 @@ public class RewardCriteria extends RewardBase implements ITextEditable {
     }
 
     @Override
-    public Result onClicked(int mouseX, int mouseY) {
-        if (mouseX <= 84 && mouseX >= 1) {
-            if (mouseY >= 17 && mouseY <= 33) {
-                EditText.INSTANCE.select(this);
-                return Result.ALLOW;
-            } else if (mouseY > 33 && mouseY <= 41) {
-                remove = !remove;
-                return Result.ALLOW;
-            }
-        }
-
-        return Result.DEFAULT;
-    }
-
-    /* @Override //TODO: Criteria Reward
-    public void draw(int mouseX, int mouseY) {
-        int researchColor = Theme.INSTANCE.optionsFontColor;
-        int booleanColor = Theme.INSTANCE.optionsFontColor;
-        if (MCClientHelper.canEdit()) {
-            if (mouseX <= 84 && mouseX >= 1) {
-                if (mouseY >= 17 && mouseY <= 33) researchColor = Theme.INSTANCE.optionsFontColorHover;
-                if (mouseY > 33 && mouseY <= 41) booleanColor = Theme.INSTANCE.optionsFontColorHover;
-            }
-        }
-
-        ProgressionAPI.draw.drawText("criteria: ", 4, 18, researchColor);
-        EnumChatFormatting prefix = criteria != null? EnumChatFormatting.GREEN: EnumChatFormatting.RED;
-        ProgressionAPI.draw.drawText(prefix + EditText.INSTANCE.getText(this), 4, 26, researchColor);
-        ProgressionAPI.draw.drawText("remove: " + remove, 4, 33, booleanColor);
-    } */
-
-    private String displayName = null;
-
-    @Override
-    public String getTextField() {
-        if (displayName == null) {
-            criteria = APIHandler.getCriteriaFromName(criteriaID);
+    public String getField(String fieldName) {
+        if (fieldName.equals(displayName)) {
             if (criteria == null) {
-                displayName = "null";
-            } else displayName = criteria.displayName;
-        }
+                criteria = APIHandler.getCriteriaFromName(criteriaID);
+            }
 
-        return criteria != null ? displayName : displayName;
+            return criteria != null ? EnumChatFormatting.GREEN + displayName : EnumChatFormatting.RED + displayName;
+        } else return null;
     }
 
     @Override
-    public void setTextField(String text) {
-        displayName = text;
+    public boolean setField(String fieldName, String fieldValue) {
+        if (fieldName.equals("displayName")) {
+            displayName = fieldValue;
 
-        try {
-            criteria = null;
-            for (Criteria c : APIHandler.getCriteria().values()) {
-                String display = c.displayName;
-                if (c.displayName.equals(displayName)) {
-                    criteria = c;
-                    criteriaID = c.uniqueName;
-                    break;
+            try {
+                for (Criteria c : APIHandler.getCriteria().values()) {
+                    String display = c.displayName;
+                    if (c.displayName.equals(displayName)) {
+                        criteria = c;
+                        criteriaID = c.uniqueName;
+                        return true;
+                    }
                 }
-            }
-        } catch (Exception e) {}
+            } catch (Exception e) {}
+        }
+
+        //FAILURE :D
+        return false;
     }
 
     @Override

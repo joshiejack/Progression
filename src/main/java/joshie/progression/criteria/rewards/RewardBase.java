@@ -5,18 +5,17 @@ import java.util.List;
 
 import joshie.progression.api.EventBusType;
 import joshie.progression.api.ICriteria;
+import joshie.progression.api.IField;
 import joshie.progression.api.IRewardType;
-import joshie.progression.gui.fields.AbstractField;
 import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.json.Theme;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
-import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
 public abstract class RewardBase implements IRewardType {
-    protected List<AbstractField> list = new ArrayList();
+    protected List<IField> list = new ArrayList();
     protected ICriteria criteria;
     private String name;
     private int color;
@@ -32,6 +31,11 @@ public abstract class RewardBase implements IRewardType {
         this.name = name;
         this.color = color;
         this.stack = new ItemStack(Blocks.stone);
+    }
+    
+    @Override
+    public List<IField> getFields() {
+        return list;
     }
     
     @Override
@@ -78,53 +82,10 @@ public abstract class RewardBase implements IRewardType {
     public void update() {}
     
     @Override
-    public Result onClicked(int mouseX, int mouseY) {
-        if (MCClientHelper.canEdit()) {
-            int index = 0;
-            for (AbstractField t : list) {
-                int color = Theme.INSTANCE.optionsFontColor;
-                int yPos = 17 + (index * 8);
-                if (mouseX >= 1 && mouseX <= 84) {
-                    if (mouseY >= yPos && mouseY < yPos + 8) {
-                        t.click();
-                        return Result.ALLOW;
-                    }
-                }
-                
-                if (t.attemptClick(mouseX, mouseY)) {
-                    return Result.ALLOW;
-                }
-                
-                index++;
-            }
-        }
-
-        return Result.DEFAULT;
-    }
-    
-    @Override
-    public void drawDisplay(int mouseX, int mouseY) {
-        
-    }
+    public void drawDisplay(int mouseX, int mouseY) {}
 
     @Override
-    public void drawEditor(DrawFeatureHelper helper, int renderX, int renderY, int mouseX, int mouseY) {
-        int index = 0;
-        for (AbstractField t : list) {
-            int color = Theme.INSTANCE.optionsFontColor;
-            int yPos = 17 + (index * 8);
-            if (MCClientHelper.canEdit()) {
-                if (mouseX >= 1 && mouseX <= 84) {
-                    if (mouseY >= yPos && mouseY < yPos + 8) {
-                        color = Theme.INSTANCE.optionsFontColorHover;
-                    }
-                }
-            }
-
-            t.draw(helper, renderX, renderY, color, yPos);
-            index++;
-        }
-    }
+    public void drawEditor(DrawFeatureHelper helper, int renderX, int renderY, int mouseX, int mouseY) {}
     
     @Override
     public String getDescription() {

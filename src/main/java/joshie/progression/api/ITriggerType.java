@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public interface ITriggerType {
+public interface ITriggerType extends IFieldProvider {
     /** Associates this reward type with the criteria
      *  Most trigger types will not need access to this. **/
     public void markCriteria(ICriteria criteria);
@@ -59,4 +59,10 @@ public interface ITriggerType {
     /** Should return allow, if clicked, or default if not **/
     @SideOnly(Side.CLIENT)
     public Result onClicked(int mouseX, int mouseY);
+
+    public boolean isCanceling();
+
+    public boolean isCancelable();
+
+    public void setCanceling(boolean b);
 }
