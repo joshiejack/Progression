@@ -311,6 +311,8 @@ public class JSONLoader {
                 data.repeatable = c.isRepeatable;
                 data.infinite = c.infinite;
                 data.displayName = c.displayName;
+                data.tasksRequired = c.tasksRequired;
+                data.allTasks = c.allTasks;
                 if (Options.debugMode) Progression.logger.log(Level.INFO, "Saved the display name " + c.displayName);
                 data.uniqueName = c.uniqueName;
                 data.displayStack = StackHelper.getStringFromStack(c.stack);
