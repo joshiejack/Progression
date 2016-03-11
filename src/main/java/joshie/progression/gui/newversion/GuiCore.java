@@ -11,6 +11,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import joshie.progression.Progression;
+import joshie.progression.api.IField;
 import joshie.progression.gui.newversion.overlays.FeatureBackground;
 import joshie.progression.gui.newversion.overlays.FeatureFooter;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector;
@@ -28,21 +29,28 @@ import joshie.progression.json.Theme;
 import joshie.progression.network.PacketHandler;
 import joshie.progression.network.PacketSyncJSONToServer;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
-public class GuiCore extends GuiScreen {
+public abstract class GuiCore extends GuiScreen {
     protected ArrayList<IGuiFeature> features = new ArrayList<IGuiFeature>();
+    protected HashMap<String, IField> fields = new HashMap();
     private HashMap<Object, Integer> offsetCache = new HashMap();
+    private ResourceLocation lastResource;
     private int mouseX = 0;
     private int mouseY = 0;
     protected Theme theme;
 
     public int offsetX; // Offset position
     public int ySize = 240; // Height of the Gui :O
-    public int top; // Top of the screen :D
+    public int screenTop; // Top of the screen :D
+    public int screenWidth; //Width of the screen
 
     @Override
-    public void initGui() {        
+    public void initGui() {
+        screenWidth = new ScaledResolution(mc).getScaledWidth();
         Keyboard.enableRepeatEvents(true);
         theme = Theme.INSTANCE;
         if (offsetCache.containsKey(getKey())) {
@@ -51,7 +59,7 @@ public class GuiCore extends GuiScreen {
 
         features.clear(); // Clear out the features
         features.add(new FeatureBackground()); // Readd the background
-        addFeatures(); // Add extra features
+        initGuiData(); // Add extra features
         features.add(new FeatureFooter()); // Add the footer
 
         // Init all the features
@@ -68,7 +76,7 @@ public class GuiCore extends GuiScreen {
         FeatureNewReward.INSTANCE.setVisibility(false);
     }
 
-    public void addFeatures() {}
+    public void initGuiData() {}
 
     @Override
     public void onGuiClosed() {
@@ -89,30 +97,41 @@ public class GuiCore extends GuiScreen {
 
     @Override
     public void drawScreen(int cursorX, int cursorY, float partialTicks) {
+        lastResource = null; //Reset the lastResource
         FeatureTooltip.INSTANCE.clear();
-        top = (height - ySize) / 2;
+        screenTop = (height - ySize) / 2;
         for (IGuiFeature feature : features) {
             if (feature.isVisible()) { //Only draw visible stuff
-                feature.draw(cursorX, cursorY - top);
+                feature.draw(cursorX, cursorY - screenTop);
             }
         }
+        
+        drawGuiForeground(mouseX, mouseY - screenTop);
         
         //Draw the tooltip in the right place
         FeatureTooltip.INSTANCE.drawFeature(cursorX, cursorY);
     }
+    
+    public abstract void drawGuiForeground(int cursorX, int cursorY);
 
     @Override
     protected void mouseClicked(int x, int y, int button) throws IOException {
         for (IGuiFeature feature : features) {
             if (feature.isVisible()) { //Don't process hidden features
-                if (feature.mouseClicked(mouseX, mouseY - top, button)) {
+                if (feature.mouseClicked(mouseX, mouseY - screenTop, button)) {
                     return; // Don't continue if a mouse click was processed
                 }
             }
         }
         
+        if(guiMouseClicked(mouseX, mouseY - screenTop, button)) {
+            return;
+        }
+        
        clearEditors();
     }
+    
+    public abstract boolean guiMouseClicked(int mouseX, int mouseY, int button);
 
     @Override
     protected void keyTyped(char character, int key) throws IOException {
@@ -142,7 +161,7 @@ public class GuiCore extends GuiScreen {
             boolean scrolled = false;
             for (IGuiFeature feature : features) {
                 if (feature.isVisible()) { //Must be visible of course!
-                    if (feature.scroll(mouseX, mouseY - top, down)) {
+                    if (feature.scroll(mouseX, mouseY - screenTop, down)) {
                         scrolled = true;
                         break;
                     }
@@ -177,6 +196,8 @@ public class GuiCore extends GuiScreen {
     // Helper Drawing functions
     // Regular Rectangle
     public void drawRectWithBorder(int left, int top, int right, int bottom, int color, int border) {
+        top = screenTop + top; //Adjust for the screenHeight
+        bottom = screenTop + bottom; //Adjust the bottom too
         drawRect(left, top, right, bottom, color);
         drawRect(left, top, left + 1, bottom, border);
         drawRect(right - 1, top, right, bottom, border);
@@ -186,6 +207,8 @@ public class GuiCore extends GuiScreen {
 
     // Gradient Rectangle
     public void drawGradientRectWithBorder(int left, int top, int right, int bottom, int startColor, int endColor, int border) {
+        top = screenTop + top; //Adjust for the screenHeight
+        bottom = screenTop + bottom; //Adjust the bottom too
         drawGradientRect(left, top, right, bottom, startColor, endColor);
         drawRect(left, top, left + 1, bottom, border);
         drawRect(right - 1, top, right, bottom, border);
@@ -193,14 +216,29 @@ public class GuiCore extends GuiScreen {
         drawRect(left, bottom - 1, right, bottom, border);
     }
     
-    //Gradient rect
+    //Gradient rect, For tooltip useage so leave alone
     @Override
     public void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
         super.drawGradientRect(left, top, right, bottom, startColor, endColor);
     }
 
     public void drawStack(ItemStack stack, int x, int y, float scale) {
-        RenderItemHelper.drawStack(stack, x, y, scale);
+        RenderItemHelper.drawStack(stack, x, y + screenTop, scale);
+    }
+    
+    public void drawText(String text, int left, int top, int color) {
+        fontRendererObj.drawString(text, left, top + screenTop, color);
+    }
+    
+    public void drawSplitText(String text, int left, int top, int width, int color) {
+        fontRendererObj.drawSplitString(text, left, top + screenTop, width, color);
+    }
+    
+    public void drawTexture(ResourceLocation resource, int left, int top, int u, int v, int width, int height) {
+        GlStateManager.color(1F, 1F, 1F); //Fix Colours
+        mc.getTextureManager().bindTexture(resource);
+        top = screenTop + top; //Adjust for the screenHeight
+        drawTexturedModalRect(left, top, u, v, width, height);
     }
 
     public Theme getTheme() {

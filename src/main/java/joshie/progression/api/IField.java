@@ -7,4 +7,5 @@ public interface IField {
     public boolean attemptClick(int mouseX, int mouseY);
     public void draw(DrawFeatureHelper helper, int renderX, int renderY, int color, int yPos);
     public void setObject(Object object);
+    public String getField();
 }

@@ -21,6 +21,11 @@ public class TextField extends AbstractField {
     public void click() {
         data.select();
     }
+    
+    @Override
+    public String getField() {
+        return data.getText();
+    }
 
     @Override
     public void draw(DrawFeatureHelper helper, int renderX, int renderY, int color, int yPos) {

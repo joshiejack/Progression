@@ -22,7 +22,7 @@ public class Criteria implements ICriteria {
     public String uniqueName;
     public int isRepeatable = 1;
     public boolean infinite = false;
-    public int tasksRequired;
+    public int tasksRequired = 1;
     public boolean allTasks = true;
     public String displayName = "New Criteria";
     public boolean isVisible = true;
@@ -33,6 +33,8 @@ public class Criteria implements ICriteria {
     public Criteria(Tab tab, String uniqueName, boolean isClientside) {
         this.tab = tab;
         this.uniqueName = uniqueName;
+        this.isRepeatable = 1;
+        this.tasksRequired = 1;
         this.allTasks = true;
 
         if (isClientside) {

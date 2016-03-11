@@ -7,6 +7,11 @@ public class ItemFilterField extends AbstractField {
     public ItemFilterField() {
         super("");
     }
+    
+    @Override
+    public String getField() {
+        return "";
+    }
 
     @Override
     public void draw(DrawFeatureHelper helper, int renderX, int renderY, int color, int yPos) {

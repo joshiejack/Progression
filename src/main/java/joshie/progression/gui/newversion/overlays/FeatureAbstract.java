@@ -8,7 +8,6 @@ public abstract class FeatureAbstract implements IGuiFeature {
 	protected int offsetX; //OffsetX on the scroll position
 	protected DrawFeatureHelper offset;
 	protected DrawFeatureHelper draw;
-	protected ScaledResolution res;
 
 	// Variables used when drawing shizz
 	protected Theme theme;
@@ -20,7 +19,6 @@ public abstract class FeatureAbstract implements IGuiFeature {
 	public FeatureAbstract init(GuiCore core) {
 		offset = new DrawFeatureHelper(core);
 		draw = new DrawFeatureOffsetHelper(core);
-		res = new ScaledResolution(core.mc);
 		return this;
 	}
 	
@@ -30,7 +28,7 @@ public abstract class FeatureAbstract implements IGuiFeature {
 		offset.configure();
 		theme = Theme.INSTANCE; // Grab that theme?
 		guiHeight = draw.getGui().ySize; // Set that gui height
-		screenWidth = draw.getGui().mc.displayWidth; // Mark the size of the screen
+		screenWidth = draw.getGui().screenWidth; // Mark the size of the screen
 		offsetX = draw.getGui().offsetX; //Scroll position
 		drawFeature(mouseX, mouseY); // Draw the features
 	}

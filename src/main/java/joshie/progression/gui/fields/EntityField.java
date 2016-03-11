@@ -63,6 +63,11 @@ public class EntityField extends AbstractField implements IEntitySelectable {
             return null;
         }
     }
+    
+    @Override
+    public String getField() {
+        return getEntity();
+    }
 
     @Override
     public void draw(DrawFeatureHelper helper, int renderX, int renderY, int color, int yPos) {

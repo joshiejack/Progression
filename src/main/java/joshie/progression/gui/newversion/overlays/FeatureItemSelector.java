@@ -57,7 +57,7 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
         mouseY -= type.yOffset;
         if (mouseY >= 40 && mouseY <= 110) {
             if (selectable != null) {
-                int width = (int) ((double) (res.getScaledWidth() - 10) / 16.133333334D) * 4;
+                int width = (int) ((double) (screenWidth - 10) / 16.133333334D) * 4;
                 if (scrolledDown) position = Math.min(sorted.size() - 200, position + width);
                 else position = Math.max(0, position - width);
                 return true;
@@ -129,7 +129,7 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
         }
 
         mouseY -= type.yOffset;
-        int width = (int) ((double) (res.getScaledWidth() - 10) / 16.133333334D);
+        int width = (int) ((double) (screenWidth - 10) / 16.133333334D);
         int j = 0;
         int k = 0;
         for (int i = position; i < position + (width * 4); i++) {
@@ -166,14 +166,12 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
         offset.drawGradient(-1, 25 + type.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 15, theme.blackBarGradient1, theme.blackBarGradient2, theme.blackBarBorder);
         offset.drawRectangle(-1, 40 + type.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 73, theme.blackBarUnderLine, theme.blackBarUnderLineBorder);
 
-        //ScaledResolution res = GuiCriteriaEditor.INSTANCE.res;
-        //int fullWidth = res.getScaledWidth() - 10;
         String text = blocksOnly ? Progression.translate("selector.blocks") : Progression.translate("selector.items");
         offset.drawText(text, 5, 29 + type.yOffset, theme.blackBarFontColor);
         offset.drawRectangle(285 - offsetX, 27 + type.yOffset, 200, 12, theme.blackBarUnderLine, theme.blackBarUnderLineBorder);
         offset.drawText(TextEditor.INSTANCE.getText(this), 290, 29 + type.yOffset, theme.blackBarFontColor);
 
-        int width = (int) ((double) (res.getScaledWidth() - 10) / 16.133333334D);
+        int width = (int) ((double) (screenWidth - 10) / 16.133333334D);
         int j = 0;
         int k = 0;
         for (int i = position; i < position + (width * 4); i++) {

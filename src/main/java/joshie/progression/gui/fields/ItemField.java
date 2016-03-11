@@ -54,6 +54,13 @@ public class ItemField extends AbstractField implements IItemSelectable {
             return (ItemStack) field.get(object);
         } catch (Exception e) { return null; }
     }
+    
+    @Override
+    public String getField() {
+        try {
+            return getStack().getDisplayName();
+        } catch (Exception e) { return ""; } 
+    }
 
     @Override
     public void draw(DrawFeatureHelper helper, int renderX, int renderY, int color, int yPos) {

@@ -35,6 +35,13 @@ public class EnumField extends AbstractField {
             setField(object.next());
         } catch (Exception e) {}
     }
+    
+    @Override
+    public String getField() {
+        try {
+            return getName().toString().toLowerCase();
+        } catch (Exception e) { return ""; }
+    }
 
     @Override
     public void draw(DrawFeatureHelper helper, int renderX, int renderY, int color, int yPos) {

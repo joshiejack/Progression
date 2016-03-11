@@ -47,6 +47,13 @@ public class BooleanField extends AbstractField {
             setBoolean(!getBoolean());
         } catch (Exception e) {}
     }
+    
+    @Override
+    public String getField() {
+        try {
+            return "" + getBoolean();
+        } catch (Exception e) { return "" + false; }
+    }
 
     @Override
     public void draw(DrawFeatureHelper helper, int renderX, int renderY, int color, int yPos) {
