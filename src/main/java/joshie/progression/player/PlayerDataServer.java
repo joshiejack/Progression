@@ -25,6 +25,12 @@ public class PlayerDataServer extends PlayerDataCommon {
 	public UUID getUUID() {
 		return uuid;
 	}
+	
+	public void setCustomData(String key, NBTTagCompound tag) {
+	    abilities.setCustomData(key, tag);
+	    PacketHandler.sendToTeam(new PacketSyncAbilities(abilities), team);
+	    markDirty();
+	}
 
 	public void addSpeed(SpeedType type, float speed) {
 		float newStat = abilities.getSpeed(type) + speed;

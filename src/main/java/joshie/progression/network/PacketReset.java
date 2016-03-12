@@ -13,8 +13,8 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class PacketReset extends PacketAction {
-	@Override
-	public void handlePacket(EntityPlayer player) {
+    @Override
+    public void handlePacket(EntityPlayer player) {
         PacketReset.handle();
     }
 
@@ -25,8 +25,9 @@ public class PacketReset extends PacketAction {
             if (Options.editor) {
                 Progression.instance.createWorldData(); //Recreate the world data, Wiping out any saved information for players
                 RemappingHandler.reloadServerData(JSONLoader.getTabs());
-                for (EntityPlayer player : PlayerHelper.getAllPlayers()) {
-                    RemappingHandler.onPlayerConnect((EntityPlayerMP) player);
+                for (EntityPlayerMP player : PlayerHelper.getAllPlayers()) {
+                    //Reset all the data to default
+                    RemappingHandler.onPlayerConnect(player);
                 }
 
                 PacketHandler.sendToEveryone(new PacketReset());

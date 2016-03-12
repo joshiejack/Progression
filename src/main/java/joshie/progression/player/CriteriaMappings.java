@@ -175,19 +175,8 @@ public class CriteriaMappings {
     /** Called to fire a trigger type, Triggers are only ever called on criteria that is activated **/
     public Result fireAllTriggers(String type, Object... data) {
         if (activeTriggers == null) return Result.DEFAULT; //If the remapping hasn't occured yet, say goodbye!
-        //If the trigger is a forced completion, then force complete it
-        if (type.equals("forced-complete")) {
-            Criteria criteria = (Criteria) data[0];
-            if (criteria == null || completedCritera.keySet().contains(criteria)) return Result.DEFAULT; //If null or we completed already return false
-            HashSet<Trigger> forRemovalFromActive = new HashSet();
-            HashSet<Criteria> toRemap = new HashSet();
-            completeCriteria(criteria, forRemovalFromActive, toRemap);
-            claimRewards(criteria);
-
-            remapStuff(forRemovalFromActive, toRemap);
-            Progression.data.markDirty();
-            return Result.ALLOW;
-        } else if (type.equals("forced-remove")) {
+        //If the trigger is a forced removal, then force remve it
+        if (type.equals("forced-remove")) {
             Criteria criteria = (Criteria) data[0];
             if (criteria == null || !completedCritera.keySet().contains(criteria)) return Result.DEFAULT;
             else removeCriteria(criteria);
@@ -204,7 +193,7 @@ public class CriteriaMappings {
         List<Trigger> toTrigger = new ArrayList();
         for (Trigger trigger : triggers) {
             Collection<Condition> conditions = trigger.getConditions();
-            for (Condition condition : conditions) {
+            for (Condition condition : conditions) { //If we're bypassing everything, ignore conditions
                 if (condition.getType().isSatisfied(world, player, uuid) == condition.inverted) {
                     cantContinue.add(trigger);
                     break;
@@ -226,7 +215,7 @@ public class CriteriaMappings {
         //Check if they have been satisfied, and if so, mark them as completed triggers
         HashSet<Trigger> toRemove = new HashSet();
         for (Trigger trigger : triggers) {
-            if (cantContinue.contains(trigger)) continue;
+            if (cantContinue.contains(trigger)) continue; //If we're bypassing mark all triggers as fired
             if (trigger.getType().isCompleted(getTriggerData(trigger))) {
                 completedTriggers.add(trigger);
                 toRemove.add(trigger);
@@ -262,7 +251,24 @@ public class CriteriaMappings {
                 } else firedCount++;
             }
 
+            //Complete the criteria and bypass any requirements
             if ((allFired && allRequired) || (firedCount >= countRequired)) {
+                completedAnyCriteria = true;
+                toComplete.add(criteria);
+            }
+        }
+        
+        //Add the bypassing of requirements completion
+        if (type.equals("forced-complete")) {
+            Criteria criteria = (Criteria) data[0];
+            boolean repeat = criteria.infinite;
+            if (!repeat) {
+                int max = criteria.isRepeatable;
+                int last = getCriteriaCount(criteria);
+                repeat = last < max;
+            }
+            
+            if (repeat) { //If we're allowed to fire again, do so
                 completedAnyCriteria = true;
                 toComplete.add(criteria);
             }

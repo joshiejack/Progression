@@ -19,6 +19,19 @@ public interface IProgressionAPI {
 	/** Convenience method **/
 	public Result fireTrigger(EntityPlayer player, String trigger, Object... data);
 	
+	/** Call this when firing triggers on the server, the data objects you can use are limited to the following
+	 *  boolean, byte, short, int, long, double, float, String
+	 *  ItemStack, NBTTagCompound, Criteria, Block, Item, Entity 
+	 *  If you want to be able to handle your own items, send them in one of these forms
+	 *  Then use the ICustomDataBuilder to build your objects again from the data you passed,
+	 *  Keep note that */
+    public void fireTriggerClientside(String trigger, Object... data);
+    
+    /** Register an ICustomDataBuilder
+     *  Keep in mind you need to pass the same string
+     *  to fireTrigger for this to work correctly. **/
+    public void registerCustomDataBuilder(String trigger, ICustomDataBuilder builder);
+	
 	/** Register a condition with the registry **/
 	public IConditionType registerConditionType(IConditionType reward);
 	

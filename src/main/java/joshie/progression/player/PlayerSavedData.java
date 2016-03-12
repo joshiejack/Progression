@@ -6,6 +6,10 @@ import java.util.UUID;
 
 import com.google.common.collect.Maps;
 
+import joshie.progression.criteria.Criteria;
+import joshie.progression.criteria.Reward;
+import joshie.progression.criteria.Tab;
+import joshie.progression.handlers.APIHandler;
 import joshie.progression.player.PlayerTeam.TeamType;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -35,6 +39,17 @@ public class PlayerSavedData extends WorldSavedData {
             data = new PlayerDataServer(team);
             this.data.put(team, data);
             this.markDirty();
+            //If this team never existed before
+            //Loop through all the rewards loaded and init them with player data
+            for (Tab tab: APIHandler.getTabs().values()) {
+                for (Criteria c: tab.getCriteria()) {
+                    for (Reward r: c.rewards) {
+                        if (r.getType() != null) {
+                            data.getAbilities().setCustomData(r.getType().getNBTKey(), r.getType().getDefaultTags(new NBTTagCompound()));
+                        }
+                    }
+                }
+            }
         }
 
         return data;

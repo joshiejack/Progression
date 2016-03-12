@@ -1,5 +1,7 @@
 package joshie.progression.items;
 
+import java.util.List;
+
 import joshie.progression.Progression;
 import joshie.progression.crafting.Crafter;
 import joshie.progression.crafting.CraftingRegistry;
@@ -23,8 +25,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
 
 public class ItemCriteria extends Item {
     public static CreativeTabs tab;
@@ -128,19 +128,6 @@ public class ItemCriteria extends Item {
             list.add("'Progression editor'");
         }
     }
-
-    /*@Override
-    @SideOnly(Side.CLIENT)
-    public IIcon getIconFromDamage(int damage) {
-        return damage == CLAIM ? padlock : book;
-    }*/
-
-    /*@Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister register) {
-        padlock = register.registerIcon(ProgressionInfo.MODPATH + ":padlock");
-        book = register.registerIcon(ProgressionInfo.MODPATH + ":book");
-    }*/
 
     @SideOnly(Side.CLIENT)
     public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {

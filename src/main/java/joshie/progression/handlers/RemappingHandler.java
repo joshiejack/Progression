@@ -12,6 +12,8 @@ import joshie.progression.api.ICriteria;
 import joshie.progression.crafting.ActionType;
 import joshie.progression.crafting.CraftingRegistry;
 import joshie.progression.criteria.Criteria;
+import joshie.progression.criteria.Reward;
+import joshie.progression.criteria.Tab;
 import joshie.progression.json.DefaultSettings;
 import joshie.progression.json.JSONLoader;
 import joshie.progression.lib.SafeStack;

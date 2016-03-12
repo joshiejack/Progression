@@ -34,6 +34,7 @@ progression.reward.livingDrop=Entity Drops
 progression.reward.harvestDrop=Block Drops
 progression.reward.breakBlock=Break Block
 progression.reward.clear=Take Item
+progression.reward.layer.show=Enchiridion: Layer
 
 #Actions
 progression.action.crafting=Crafting

@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 
 import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -61,4 +62,10 @@ public interface IRewardType extends IFieldProvider {
 
     public void drawDisplay(int mouseX, int mouseY);
 
+    /** Return the name of the nbt key,
+     *  return null if not using nbt */
+    public String getNBTKey();
+    
+    /** Called to get the default tags for players **/
+    public NBTTagCompound getDefaultTags(NBTTagCompound tag);
 }

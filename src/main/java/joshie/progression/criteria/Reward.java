@@ -10,6 +10,7 @@ import joshie.progression.handlers.EventsManager;
 import joshie.progression.helpers.ListHelper;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.json.Theme;
+import net.minecraft.nbt.NBTTagCompound;
 
 public class Reward implements IDrawable {
     private Criteria criteria;

@@ -7,6 +7,7 @@ import static joshie.progression.lib.ProgressionInfo.VERSION;
 
 import java.io.File;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -52,6 +53,7 @@ import joshie.progression.criteria.triggers.TriggerObtain;
 import joshie.progression.criteria.triggers.TriggerPoints;
 import joshie.progression.criteria.triggers.TriggerResearch;
 import joshie.progression.criteria.triggers.TriggerTick;
+import joshie.progression.enchiridion.EnchiridionSupport;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.handlers.CraftingEvents;
 import joshie.progression.handlers.EventsHandler;
@@ -64,6 +66,7 @@ import joshie.progression.json.Options;
 import joshie.progression.lib.ProgressionInfo;
 import joshie.progression.network.PacketClaimed;
 import joshie.progression.network.PacketCompleted;
+import joshie.progression.network.PacketFireTrigger;
 import joshie.progression.network.PacketHandler;
 import joshie.progression.network.PacketOpenEditor;
 import joshie.progression.network.PacketReload;
@@ -74,6 +77,7 @@ import joshie.progression.network.PacketSyncCriteria;
 import joshie.progression.network.PacketSyncJSONToClient;
 import joshie.progression.network.PacketSyncJSONToServer;
 import joshie.progression.network.PacketSyncTriggers;
+import joshie.progression.player.PlayerHandler;
 import joshie.progression.player.PlayerSavedData;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.command.ICommandManager;
@@ -137,6 +141,7 @@ public class Progression {
         RemappingHandler.resetRegistries();
         JEI_LOADED = Loader.isModLoaded("JEI");
         ProgressionAPI.registry = new APIHandler();
+        ProgressionAPI.player = new PlayerHandler();
         MinecraftForge.EVENT_BUS.register(new PlayerTracker());
         MinecraftForge.EVENT_BUS.register(CommandManager.INSTANCE);
         MinecraftForge.EVENT_BUS.register(new EventsHandler());
@@ -201,6 +206,7 @@ public class Progression {
         PacketHandler.registerPacket(PacketClaimed.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketCompleted.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketOpenEditor.class, Side.CLIENT);
+        PacketHandler.registerPacket(PacketFireTrigger.class, Side.SERVER);
         PacketHandler.registerPacket(PacketReload.class);
         PacketHandler.registerPacket(PacketReset.class);
         PacketHandler.registerPacket(PacketSyncJSONToClient.class);
@@ -210,7 +216,13 @@ public class Progression {
     }
     
     @EventHandler
-    public void preInit(FMLInitializationEvent event) {
+    public void init(FMLInitializationEvent event) {
+        if (Loader.isModLoaded("enchiridion")) {
+            try {
+                EnchiridionSupport.init();
+            } catch (Exception e) { logger.log(Level.ERROR, "Failed to load the Enchiridion Support"); }
+        }
+        
     	proxy.registerRendering();
     }
 

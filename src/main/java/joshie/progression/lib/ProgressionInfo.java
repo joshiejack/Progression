@@ -11,6 +11,7 @@ public class ProgressionInfo {
     public static final String JAVAPATH = "joshie.progression.";
     public static final String ASMPATH = "joshie/progression/";
     public static final String VERSION = "@VERSION@";
+    public static final String BOOKPATH = "progression:textures/books/";
     
     @SideOnly(Side.CLIENT)
     public static final ResourceLocation textures = new ResourceLocation(MODPATH, "textures/gui/textures.png");

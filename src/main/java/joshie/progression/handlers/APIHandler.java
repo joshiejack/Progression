@@ -8,6 +8,7 @@ import java.util.UUID;
 import com.google.gson.JsonObject;
 
 import joshie.progression.api.IConditionType;
+import joshie.progression.api.ICustomDataBuilder;
 import joshie.progression.api.IEntityFilter;
 import joshie.progression.api.IFilter;
 import joshie.progression.api.IItemFilter;
@@ -33,6 +34,8 @@ import joshie.progression.criteria.triggers.data.DataCrafting;
 import joshie.progression.helpers.CraftingHelper;
 import joshie.progression.helpers.JSONHelper;
 import joshie.progression.helpers.PlayerHelper;
+import joshie.progression.network.PacketFireTrigger;
+import joshie.progression.network.PacketHandler;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -93,6 +96,16 @@ public class APIHandler implements IProgressionAPI {
         if (!player.worldObj.isRemote) {
             return fireTrigger(PlayerHelper.getUUIDForPlayer(player), string, data);
         } else return Result.DEFAULT;
+    }
+    
+    @Override
+    public void fireTriggerClientside(String trigger, Object... data) {
+        PacketHandler.sendToServer(new PacketFireTrigger(trigger, data));
+    }
+    
+    @Override
+    public void registerCustomDataBuilder(String trigger, ICustomDataBuilder builder) {
+        PacketFireTrigger.handlers.put(trigger, builder);
     }
 
     @Override
