@@ -1,13 +1,16 @@
 package joshie.progression.criteria.rewards;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import com.google.gson.JsonObject;
 
-import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
-import joshie.progression.gui.fields.ItemAmountField;
-import joshie.progression.gui.fields.ItemField;
+import joshie.progression.api.IItemFilter;
+import joshie.progression.gui.fields.ItemFilterField;
+import joshie.progression.gui.fields.ItemFilterFieldPreview;
+import joshie.progression.gui.fields.TextField;
+import joshie.progression.helpers.ItemHelper;
 import joshie.progression.helpers.JSONHelper;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.helpers.SpawnItemHelper;
@@ -20,29 +23,38 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
 public class RewardItem extends RewardBase {
-    public ItemStack stack = new ItemStack(Items.diamond);
+    private static final ItemStack BROKEN = new ItemStack(Items.baked_potato);
+    public List<IItemFilter> filters = new ArrayList();
+    public int stackSize = 1;
+    private ItemStack preview;
+    private int ticker;
 
     public RewardItem() {
         super("item", 0xFFE599FF);
-        ItemField field = new ItemField("stack", this, 27, 27, 2.5F, 10, 100, 30, 100, Type.REWARD);
-        list.add(new ItemAmountField("stack", "stack", field));
-        list.add(field);
+        list.add(new TextField("stackSize", this));
+        list.add(new ItemFilterField("filters", this));
+        list.add(new ItemFilterFieldPreview("filters", this, false, 25, 30, 26, 70, 25, 75, 2.8F));
     }
 
     @Override
     public void readFromJSON(JsonObject data) {
-        stack = JSONHelper.getItemStack(data, "item", stack);
+        stackSize = JSONHelper.getInteger(data, "stackSize", 1);
+        filters = JSONHelper.getItemFilters(data, "filters");
     }
 
     @Override
     public void writeToJSON(JsonObject data) {
-        JSONHelper.setItemStack(data, "item", stack);
+        JSONHelper.setInteger(data, "stackSize", stackSize, 1);
+        JSONHelper.setItemFilters(data, "filters", filters);
     }
 
     @Override
     public void reward(UUID uuid) {
         EntityPlayer player = PlayerHelper.getPlayerFromUUID(uuid);
         if (player != null) {
+            ItemStack stack = ItemHelper.getRandomItem(filters, false).copy();
+            stack.stackSize = stackSize;
+            
             PacketHandler.sendToClient(new PacketRewardItem(stack.copy()), (EntityPlayerMP)player);
             SpawnItemHelper.addToPlayerInventory(player, stack.copy());
         }
@@ -50,12 +62,20 @@ public class RewardItem extends RewardBase {
 
     @Override
     public ItemStack getIcon() {
-        return stack;
+        if (ticker == 0 || ticker >= 200) {
+            preview = ItemHelper.getRandomItem(filters, false);
+            ticker = 1;
+        }
+        
+        ticker++;
+        
+        return preview == null ? BROKEN: preview;
     }
 
     @Override
     public void addTooltip(List list) {
         list.add(EnumChatFormatting.WHITE + "Free Item");
-        list.add(stack.getDisplayName() + " x" + stack.stackSize);
+        ItemStack stack = preview == null ? BROKEN: preview;;
+        list.add(stack.getDisplayName() + " x" + stackSize);
     }
 }

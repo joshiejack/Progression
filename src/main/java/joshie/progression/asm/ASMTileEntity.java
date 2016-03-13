@@ -10,7 +10,7 @@ import joshie.progression.lib.ProgressionInfo;
 public class ASMTileEntity extends AbstractASM {
 	@Override
 	public boolean isClass(String name) {
-		return name.equals("net.minecraft.tileentity.TileEntity") || name.equals("aor");
+		return name.equals("net.minecraft.tileentity.TileEntity") || name.equals("akw");
 	}
 
 	@Override
@@ -26,7 +26,7 @@ public class ASMTileEntity extends AbstractASM {
 		@Override
 		public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
 			MethodVisitor visitor = super.visitMethod(access, name, desc, signature, exceptions);			
-			if (desc.equals("(Lnet/minecraft/nbt/NBTTagCompound;)V") || desc.equals("(Ldh;)V")) {
+			if (desc.equals("(Lnet/minecraft/nbt/NBTTagCompound;)V") || desc.equals("(Ldn;)V")) {
 				if (name.equals("readFromNBT") || name.equals("a")) {
 					return new MethodVisitor(Opcodes.ASM4, visitor) {
 						@Override

@@ -15,15 +15,12 @@ import joshie.progression.lib.ProgressionInfo;
 public class ASMTransferCrafting extends AbstractASM {
     public static List accepted = new ArrayList();
     static {
-        accepted.add("thaumcraft.common.container.ContainerArcaneWorkbench");
-        accepted.add("cofh.thermalexpansion.gui.container.device.ContainerWorkbench");
-        accepted.add("tconstruct.tools.inventory.CraftingStationContainer");
-        accepted.add("forestry.factory.gui.ContainerWorktable");
         accepted.add("net.minecraft.inventory.ContainerPlayer$1");
         accepted.add("net.minecraft.inventory.ContainerPlayer");
         accepted.add("net.minecraft.inventory.ContainerWorkbench");
-        accepted.add("aaf");
-        accepted.add("aaq");
+        accepted.add("xq");
+        accepted.add("xy");
+        accepted.add("xy$1");
     }
 
     @Override
@@ -44,7 +41,7 @@ public class ASMTransferCrafting extends AbstractASM {
         @Override
         public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
             MethodVisitor visitor = super.visitMethod(access, name, desc, signature, exceptions);
-            if ((desc.equals("(Lnet/minecraft/entity/player/EntityPlayer;I)Lnet/minecraft/item/ItemStack;") && name.equals("transferStackInSlot")) || (desc.equals("(Lyz;I)Ladd;") && name.equals("b"))) {
+            if ((desc.equals("(Lnet/minecraft/entity/player/EntityPlayer;I)Lnet/minecraft/item/ItemStack;") && name.equals("transferStackInSlot")) || (desc.equals("(Lwn;I)Lzx;") && name.equals("b"))) {
                 return new MethodVisitor(Opcodes.ASM4, visitor) {
                     boolean isDone = false;
 

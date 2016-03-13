@@ -10,7 +10,7 @@ import joshie.progression.lib.ProgressionInfo;
 public class ASMContainerWorkbench extends AbstractASM {
     @Override
     public boolean isClass(String name) {
-        return name.equals("net.minecraft.inventory.ContainerWorkbench") || name.equals("aaq") || name.equals("aaf");
+        return name.equals("net.minecraft.inventory.ContainerWorkbench") || name.equals("xq") || name.equals("xy$1");
     }
 
     @Override
@@ -26,7 +26,7 @@ public class ASMContainerWorkbench extends AbstractASM {
         @Override
         public MethodVisitor visitMethod(int access, final String name, String desc, String signature, String[] exceptions) {
             MethodVisitor visitor = super.visitMethod(access, name, desc, signature, exceptions);
-            if (desc.equals("(Lnet/minecraft/inventory/IInventory;)V") || desc.equals("(Lrb;)V")) {
+            if (desc.equals("(Lnet/minecraft/inventory/IInventory;)V") || desc.equals("(Log;)V")) {
                 if (name.equals("onCraftMatrixChanged") || name.equals("a") || name.equals("func_75130_a")) {
                     return new MethodVisitor(Opcodes.ASM4, visitor) {
                         @Override
