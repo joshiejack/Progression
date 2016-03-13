@@ -5,24 +5,32 @@ import java.util.List;
 
 import com.google.gson.JsonObject;
 
+import joshie.progression.Progression;
+import joshie.progression.api.IField;
 import joshie.progression.api.IItemFilter;
-import joshie.progression.gui.fields.AbstractField;
-import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
-import joshie.progression.helpers.MCClientHelper;
+import joshie.progression.gui.newversion.GuiItemFilterEditor;
+import joshie.progression.helpers.ListHelper;
 import joshie.progression.json.Theme;
-import net.minecraftforge.fml.common.eventhandler.Event.Result;
+import net.minecraft.item.ItemStack;
 
-public abstract class FilterBase implements IItemFilter {
-    protected List<AbstractField> list = new ArrayList();
+public class FilterBase implements IItemFilter {
+    protected List<IField> list = new ArrayList();
+    private int color;
     protected String name;
 
-    public FilterBase(String name) {
+    public FilterBase(String name, int color) {
         this.name = name;
+        this.color = color;
     }
 
     @Override
     public String getName() {
         return name;
+    }
+    
+    @Override
+    public String getLocalisedName() {
+        return Progression.translate("filter.item." + getName());
     }
 
     @Override
@@ -30,48 +38,51 @@ public abstract class FilterBase implements IItemFilter {
 
     @Override
     public void writeToJSON(JsonObject data) {}
-
+    
     @Override
-    public Result onClicked(int mouseX, int mouseY) {
-        if (MCClientHelper.canEdit()) {
-            int index = 0;
-            for (AbstractField t : list) {
-                int color = Theme.INSTANCE.optionsFontColor;
-                int yPos = 25 + (index * 8);
-                if (mouseX >= 1 && mouseX <= 84) {
-                    if (mouseY >= yPos && mouseY < yPos + 8) {
-                        t.click();
-                        return Result.ALLOW;
-                    }
-                }
-
-                if (t.attemptClick(mouseX, mouseY)) {
-                    return Result.ALLOW;
-                }
-
-                index++;
-            }
-        }
-
-        return Result.DEFAULT;
+    public List<IField> getFields() {
+        return list;
     }
 
     @Override
-    public void drawEditor(DrawFeatureHelper helper, int renderX, int renderY, int mouseX, int mouseY) {
-        int index = 0;
-        for (AbstractField t : list) {
-            int color = Theme.INSTANCE.optionsFontColor;
-            int yPos = 25 + (index * 8);
-            if (MCClientHelper.canEdit()) {
-                if (mouseX >= 1 && mouseX <= 84) {
-                    if (mouseY >= yPos && mouseY < yPos + 8) {
-                        color = Theme.INSTANCE.optionsFontColorHover;
-                    }
-                }
-            }
+    public void remove(List list) {
+        ListHelper.remove(GuiItemFilterEditor.INSTANCE.field.getFilters(), this);
+        GuiItemFilterEditor.INSTANCE.initGui();
+    }
 
-            t.draw(helper, renderX, renderY, color, yPos);
-            index++;
-        }
+    @Override
+    public void update() {}
+
+    @Override
+    public int getColor() {
+        return color;
+    }
+
+    @Override
+    public int getGradient1() {
+        return Theme.INSTANCE.triggerGradient1;
+    }
+    
+    @Override
+    public int getGradient2() {
+        return Theme.INSTANCE.triggerGradient2;
+    }
+    
+    @Override
+    public int getFontColor() {
+        return Theme.INSTANCE.triggerFontColor;
+    }
+
+    @Override
+    public String getDescription() {
+        return "";
+    }
+
+    @Override
+    public void drawDisplay(int mouseX, int mouseY) {}
+
+    @Override
+    public boolean matches(ItemStack stack) {
+        return false;
     }
 }

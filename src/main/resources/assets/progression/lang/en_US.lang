@@ -1,4 +1,6 @@
 #Triggers
+progression.tasks=Tasks
+progression.new.trigger=Add New Task
 progression.trigger.breakBlock=Break Block
 progression.trigger.obtain=Obtain
 progression.trigger.clickBlock=Click Block
@@ -20,6 +22,8 @@ progression.condition.ininventory=In Inventory
 progression.condition.coordinates=Coordinates
 
 #Rewards
+progression.results=Rewards
+progression.new.reward=Add New Reward
 progression.reward.fallDamage=Fall Damage
 progression.reward.time=Time
 progression.reward.criteria=Criteria
@@ -34,7 +38,7 @@ progression.reward.livingDrop=Entity Drops
 progression.reward.harvestDrop=Block Drops
 progression.reward.breakBlock=Break Block
 progression.reward.clear=Take Item
-progression.reward.layer.show=Enchiridion: Layer
+progression.reward.layer.show=Book: Layer
 
 #Actions
 progression.action.crafting=Crafting
@@ -44,20 +48,27 @@ progression.action.breakblock=Break Block
 progression.action.harvestdrop=Harvest Drop
 progression.action.entitydrop=Entity Drop
 
+#Filters
+progression.filters=Filters
+progression.new.item=Add New Item Filter
+progression.filter.item.itemOnly=Item Only
+progression.filter.item.nbtString=NBT Match
+progression.filter.item.modid=Mod
+progression.filter.item.itemStack=Item Stacks
+progression.filter.item.metadata=Metadata
+progression.filter.item.oreDictionary=Ore Dictionary
+
 achievement.criteria=Criteria Complete
 progression.name.display=Name
 progression.tab.expand=E X P A N D
 progression.tab.close=C O L L A P S E
-progression.requirements=Tasks
-progression.results=Rewards
-progression.new.trigger=Add New Task
-progression.new.reward=Add New Reward
+progression.requirements=Tasks Required
 progression.footer.line1=Use arrow keys to scroll sideways, or use the scroll wheel. (Down to go right)
 progression.footer.line2=Hold shift with arrow keys to scroll faster.
 progression.selector.items=Select Item - Click elsewhere to close
 progression.selector.blocks=Select Block - Click elsewhere to close
-progression.tasks=Tasks
 progression.popup=Popup
 progression.repeat=Repeat
 progression.hideable.allTasks=All
 progression.hideable.infinite=Infinite
+progression.preview=Preview

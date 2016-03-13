@@ -7,7 +7,7 @@ import joshie.progression.crafting.ActionType;
 import joshie.progression.crafting.CraftingRegistry;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
 import joshie.progression.gui.fields.BooleanField;
-import joshie.progression.gui.fields.IItemCallback;
+import joshie.progression.gui.fields.IItemSetterCallback;
 import joshie.progression.gui.fields.ItemField;
 import joshie.progression.gui.fields.TextField;
 import joshie.progression.helpers.JSONHelper;
@@ -19,7 +19,7 @@ import net.minecraft.util.EnumChatFormatting;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class RewardBaseAction extends RewardBase implements IItemCallback {
+public abstract class RewardBaseAction extends RewardBase implements IItemSetterCallback {
     public ItemStack stack = new ItemStack(Blocks.furnace);
     public ActionType type = ActionType.CRAFTING;
     public String orename = "IGNORE";

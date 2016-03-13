@@ -28,11 +28,11 @@ public class TriggerObtain extends TriggerBase {
 
     public TriggerObtain() {
         super("obtain", 0xFFFFFF00, "crafting");
-        editList.add(new BooleanField("matchDamage", this));
-        editList.add(new BooleanField("matchNBT", this));
-        editList.add(new TextField("itemAmount", this));
-        editList.add(new BooleanField("consume", this));
-        editList.add(new ItemField("stack", this, 76, 44, 1.4F, 77, 100, 43, 69, Type.TRIGGER));
+        list.add(new BooleanField("matchDamage", this));
+        list.add(new BooleanField("matchNBT", this));
+        list.add(new TextField("itemAmount", this));
+        list.add(new BooleanField("consume", this));
+        list.add(new ItemField("stack", this, 76, 44, 1.4F, 77, 100, 43, 69, Type.TRIGGER));
     }
 
     private boolean fired = false;

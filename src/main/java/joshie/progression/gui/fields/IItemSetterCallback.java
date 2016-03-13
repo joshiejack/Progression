@@ -2,6 +2,6 @@ package joshie.progression.gui.fields;
 
 import net.minecraft.item.ItemStack;
 
-public interface IItemCallback {
+public interface IItemSetterCallback {
     public void setItem(String fieldName, ItemStack stack);
 }

@@ -85,14 +85,14 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
         if (search == null || search.equals("")) {
             if (blocksOnly) {
                 sorted = new ArrayList();
-                for (ItemStack stack : ItemHelper.getItems()) {
+                for (ItemStack stack : ItemHelper.getAllItems()) {
                     attemptToAddBlock(stack);
                 }
-            } else sorted = new ArrayList(ItemHelper.getItems());
+            } else sorted = new ArrayList(ItemHelper.getAllItems());
         } else {
             position = 0;
             sorted = new ArrayList();
-            for (ItemStack stack : ItemHelper.getItems()) {
+            for (ItemStack stack : ItemHelper.getAllItems()) {
                 if (stack != null && stack.getItem() != null) {
                     try {
                         if (stack.getDisplayName().toLowerCase().contains(search.toLowerCase())) {

@@ -15,7 +15,7 @@ public class FilterItemStack extends FilterBase {
     public boolean matchNBT = false;
 
     public FilterItemStack() {
-        super("itemStack");
+        super("itemStack", 0xFF663300);
         list.add(new BooleanField("matchDamage", this));
         list.add(new BooleanField("matchNBT", this));
         list.add(new ItemField("stack", this, 76, 44, 1.4F, 77, 100, 43, 68, Type.TRIGGER));

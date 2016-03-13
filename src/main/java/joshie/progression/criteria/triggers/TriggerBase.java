@@ -21,7 +21,7 @@ import joshie.progression.json.Theme;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
 public abstract class TriggerBase implements ITriggerType {
-    protected List<IField> editList = new ArrayList();
+    protected List<IField> list = new ArrayList();
     protected ICriteria criteria;
     private String name;
     private int color;
@@ -90,7 +90,7 @@ public abstract class TriggerBase implements ITriggerType {
     
     @Override
     public List<IField> getFields() {
-        return editList;
+        return list;
     }
 
     @Override

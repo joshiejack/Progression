@@ -11,7 +11,7 @@ public class TriggerResearch extends TriggerBaseBoolean {
 
     public TriggerResearch() {
         super("research", 0xFF26C9FF);
-        editList.add(new TextField("name", this));
+        list.add(new TextField("name", this));
     }
 
     @Override

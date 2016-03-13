@@ -10,7 +10,7 @@ public class FilterMeta extends FilterBase {
     public int damage = 0;
 
     public FilterMeta() {
-        super("metadata");
+        super("metadata", 0xFFFF73FF);
         list.add(new TextField("damage", this));
     }
 
@@ -26,6 +26,6 @@ public class FilterMeta extends FilterBase {
 
     @Override
     public boolean matches(ItemStack check) {
-    	return check.getItemDamage() == damage;
+    	return check.getItemDamage() == damage || damage == Short.MAX_VALUE;
     }
 }

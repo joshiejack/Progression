@@ -27,6 +27,7 @@ import joshie.progression.criteria.filters.FilterItemStack;
 import joshie.progression.criteria.filters.FilterMeta;
 import joshie.progression.criteria.filters.FilterMod;
 import joshie.progression.criteria.filters.FilterNBT;
+import joshie.progression.criteria.filters.FilterOre;
 import joshie.progression.criteria.rewards.RewardBreakBlock;
 import joshie.progression.criteria.rewards.RewardClear;
 import joshie.progression.criteria.rewards.RewardCommand;
@@ -159,6 +160,7 @@ public class Progression {
         ProgressionAPI.registry.registerItemFilter(new FilterMeta());
         ProgressionAPI.registry.registerItemFilter(new FilterNBT());
         ProgressionAPI.registry.registerItemFilter(new FilterMod());
+        ProgressionAPI.registry.registerItemFilter(new FilterOre());
 
         ProgressionAPI.registry.registerConditionType(new ConditionBiomeType());
         ProgressionAPI.registry.registerConditionType(new ConditionRandom());

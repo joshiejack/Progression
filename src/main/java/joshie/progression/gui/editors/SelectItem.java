@@ -66,11 +66,11 @@ public class SelectItem extends TextEditable implements IRenderOverlay {
 
     public void updateSearch() {
         if (search == null || search.equals("")) {
-            sorted = new ArrayList(ItemHelper.getItems());
+            sorted = new ArrayList(ItemHelper.getAllItems());
         } else {
             position = 0;
             sorted = new ArrayList();
-            for (ItemStack stack : ItemHelper.getItems()) {
+            for (ItemStack stack : ItemHelper.getAllItems()) {
                 if (stack != null && stack.getItem() != null) {
                     try {
                         if (stack.getDisplayName().toLowerCase().contains(search.toLowerCase())) {

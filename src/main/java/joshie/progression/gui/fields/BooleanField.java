@@ -59,8 +59,8 @@ public class BooleanField extends AbstractField {
     public void draw(DrawFeatureHelper helper, int renderX, int renderY, int color, int yPos) {
         try {
             boolean value = getBoolean();
-            if (truth != null) helper.drawSplitText(renderX, renderY, name + ": " + (value ? truth : lies), 4, yPos, 105, color);
-            else helper.drawSplitText(renderX, renderY, name + ": " + value, 4, yPos, 105, color);
+            if (truth != null) helper.drawSplitText(renderX, renderY, name + ": " + (value ? truth : lies), 4, yPos, 105, color, 0.75F);
+            else helper.drawSplitText(renderX, renderY, name + ": " + value, 4, yPos, 105, color, 0.75F);
         } catch (Exception e) {}
     }
 }

@@ -11,10 +11,10 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class FilterNBT extends FilterBase implements ISetterCallback {
     public NBTTagCompound tagValue = new NBTTagCompound();
-    public String tagText;
+    public String tagText = "";
 
     public FilterNBT() {
-        super("nbtString");
+        super("nbtString", 0xFF00B2B2);
         list.add(new TextField("tagText", this));
     }
 

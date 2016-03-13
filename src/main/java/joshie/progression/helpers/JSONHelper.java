@@ -1,7 +1,7 @@
 package joshie.progression.helpers;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -136,8 +136,8 @@ public class JSONHelper {
         }
     }
 
-    public static Set<IItemFilter> getItemFilters(JsonObject data, String name) {
-        HashSet<IItemFilter> filters = new HashSet();
+    public static List<IItemFilter> getItemFilters(JsonObject data, String name) {
+        ArrayList<IItemFilter> filters = new ArrayList();
         if (data.get(name) == null) return filters;
         JsonArray array = data.get(name).getAsJsonArray();
         for (int i = 0; i < array.size(); i++) {
@@ -153,7 +153,7 @@ public class JSONHelper {
         return filters;
     }
 
-    public static void setItemFilters(JsonObject data, String name, Set<IItemFilter> filters) {
+    public static void setItemFilters(JsonObject data, String name, List<IItemFilter> filters) {
         JsonArray array = new JsonArray();
         for (IItemFilter filter: filters) {
             if (filter == null) continue;
@@ -168,8 +168,8 @@ public class JSONHelper {
         data.add(name, array);
     }
     
-    public static Set<IEntityFilter> getEntityFilters(JsonObject data, String name) {
-        HashSet<IEntityFilter> filters = new HashSet();
+    public static List<IEntityFilter> getEntityFilters(JsonObject data, String name) {
+        ArrayList<IEntityFilter> filters = new ArrayList();
         if (data.get(name) == null) return filters;
         JsonArray array = data.get(name).getAsJsonArray();
         for (int i = 0; i < array.size(); i++) {
@@ -185,7 +185,7 @@ public class JSONHelper {
         return filters;
     }
 
-    public static void setEntityFilters(JsonObject data, String name, Set<IEntityFilter> filters) {
+    public static void setEntityFilters(JsonObject data, String name, List<IEntityFilter> filters) {
         JsonArray array = new JsonArray();
         for (IEntityFilter filter: filters) {
             if (filter == null) continue;

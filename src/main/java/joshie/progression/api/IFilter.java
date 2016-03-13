@@ -2,12 +2,9 @@ package joshie.progression.api;
 
 import com.google.gson.JsonObject;
 
-import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
-import net.minecraftforge.fml.common.eventhandler.Event.Result;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import joshie.progression.gui.newversion.overlays.IDrawable;
 
-public interface IFilter {
+public interface IFilter extends IDrawable {
     /** Read data about this filter from json **/
     public void readFromJSON(JsonObject data);
     
@@ -16,10 +13,7 @@ public interface IFilter {
 
     /** Type name **/
     public String getName();
-
-    @SideOnly(Side.CLIENT)
-    public Result onClicked(int mouseX, int mouseY);
-
-    @SideOnly(Side.CLIENT)
-    public void drawEditor(DrawFeatureHelper helper, int renderX, int renderY, int mouseX, int mouseY);
+    
+    /** Return the localised name of this filter **/
+    public String getLocalisedName();
 }

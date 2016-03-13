@@ -23,9 +23,9 @@ public abstract class TriggerBaseBlock extends TriggerBaseCounter {
     public TriggerBaseBlock(String unlocalised, int color) {
         super(unlocalised, color);
         cancelable = true;
-        editList.add(new TextField("name", this));
-        editList.add(new BooleanField("matchDamage", this));
-        editList.add(new BlockField("stack", "block", "meta", this, 35, 41, 1.5F, 1, 94, 40, 99, Type.TRIGGER));
+        list.add(new TextField("name", this));
+        list.add(new BooleanField("matchDamage", this));
+        list.add(new BlockField("stack", "block", "meta", this, 35, 41, 1.5F, 1, 94, 40, 99, Type.TRIGGER));
     }
 
     @Override

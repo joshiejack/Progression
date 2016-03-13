@@ -206,17 +206,17 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
         int xCoord = 0;
         List<Trigger> triggers = selected.triggers;
         for (int i = 0; i < triggers.size(); i++) {
-            Result result = triggers.get(i).onClicked();
-            if (result != Result.DEFAULT) {
-                hasClicked = true;
-            }
+            //Result result = triggers.get(i).onClicked();
+            //if (result != Result.DEFAULT) {
+               // hasClicked = true;
+            //}
 
-            if (result == Result.DENY) {
+            /*if (result == Result.DENY) {
                 Trigger trigger = triggers.get(i);
                 EventsManager.onTriggerRemoved(trigger);
                 ListHelper.remove(triggers, trigger);
                 break;
-            }
+            } */
 
             xCoord++;
         }

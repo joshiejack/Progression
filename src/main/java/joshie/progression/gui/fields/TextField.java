@@ -29,7 +29,7 @@ public class TextField extends AbstractField {
 
     @Override
     public void draw(DrawFeatureHelper helper, int renderX, int renderY, int color, int yPos) {
-        helper.drawSplitText(renderX, renderY, name + ": " + data.getText(), 4, yPos, 105, color);
+        helper.drawSplitText(renderX, renderY, name + ": " + data.getText(), 4, yPos, 105, color, 0.75F);
     }
 
     public static FieldHelper getField(String name, Object object) {

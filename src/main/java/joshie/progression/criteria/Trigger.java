@@ -3,23 +3,19 @@ package joshie.progression.criteria;
 import java.util.ArrayList;
 import java.util.List;
 
-import joshie.progression.Progression;
+import joshie.progression.api.ICancelable;
 import joshie.progression.api.IField;
 import joshie.progression.api.ITriggerType;
-import joshie.progression.gui.GuiTriggerEditor;
 import joshie.progression.gui.TriggerEditorElement;
-import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import joshie.progression.gui.newversion.overlays.IDrawable;
 import joshie.progression.handlers.EventsManager;
 import joshie.progression.helpers.ListHelper;
-import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.json.Theme;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class Trigger implements IDrawable {
+public class Trigger implements IDrawable, ICancelable {
     @SideOnly(Side.CLIENT)
     private TriggerEditorElement editor;
 
@@ -67,158 +63,70 @@ public class Trigger implements IDrawable {
         return conditions;
     }
 
-    protected int mouseX;
-    protected int mouseY;
-    protected int xPosition;
-
-    public Result onClicked() {
-        if (MCClientHelper.canEdit()) {
-            if (this.mouseX >= 87 && this.mouseX <= 97 && this.mouseY >= 4 && this.mouseY <= 14) {
-                return Result.DENY; // Delete this trigger
-            }
-        }
-
-        //Conditiion editor
-        if (MCClientHelper.canEdit() || this.getConditions().size() > 0) {
-            if (this.mouseX >= 2 && this.mouseX <= 87) {
-                if (this.mouseY >= 66 && this.mouseY <= 77) {
-
-                    GuiTriggerEditor.INSTANCE.trigger = this;
-                    MCClientHelper.getPlayer().openGui(Progression.instance, 2, null, 0, 0, 0);
-                    return Result.ALLOW;
-                }
-            }
-        }
-
-        return MCClientHelper.canEdit() ? triggerType.onClicked(mouseX, mouseY) : Result.DEFAULT;
-    }
-
-    @Override
-    public boolean mouseClicked(int mouseX, int mouseY, int xPos, int button) {
-        if (MCClientHelper.canEdit()) {
-            if (!triggerType.isCanceling()) {
-                int yStart = triggerType.isCancelable() ? 25 : 17;
-                int index = 0;
-                for (IField t : triggerType.getFields()) {
-                    if (t.attemptClick(mouseX, mouseY)) {
-                        return true;
-                    }
-
-                    int color = Theme.INSTANCE.optionsFontColor;
-                    int yPos = yStart + (index * 8);
-                    if (mouseX >= 1 && mouseX <= 99) {
-                        if (mouseY >= yPos && mouseY < yPos + 8) {
-                            t.click();
-                            return true;
-                        }
-                    }
-
-                    index++;
-                }
-            }
-
-            if (triggerType.isCancelable()) {
-                if (mouseX >= 1 && mouseX <= 84) {
-                    if (mouseY >= 17 && mouseY < 25) {
-                        triggerType.setCanceling(!triggerType.isCanceling());
-                    }
-                }
-            }
-        }
-
-        return false;
-    }
-
     @Override
     public void remove(List list) {
         EventsManager.onTriggerRemoved(this);
         ListHelper.remove(list, this); //Remove from temporary list    
         ListHelper.remove(criteria.triggers, this); //Remove from real list
     }
+    
+    @Override
+    public void update() {
+        triggerType.update();
+    }
+    
+    @Override
+    public int getColor() {
+        return triggerType.getColor();
+    }
+    
+    @Override
+    public int getGradient1() {
+        return Theme.INSTANCE.triggerGradient1;
+    }
+    
+    @Override
+    public int getGradient2() {
+        return Theme.INSTANCE.triggerGradient2;
+    }
+    
+    @Override
+    public int getFontColor() {
+        return Theme.INSTANCE.triggerFontColor;
+    }
+    
+    @Override
+    public String getLocalisedName() {
+        return triggerType.getLocalisedName();
+    }
 
     @Override
-    public void draw(DrawFeatureHelper helper, int renderX, int renderY, int mouseX, int mouseY) {
-        //For updating the render ticker
-        ticker++;
-        if (ticker == 0 || ticker >= 200) {
-            triggerType.update();
-            ticker = 1;
-        }
+    public String getDescription() {
+        return triggerType.getDescription();
+    }
 
-        int width = MCClientHelper.isInEditMode() ? 99 : 79;
-        helper.drawGradient(renderX, renderY, 1, 2, width, 15, getType().getColor(), helper.getTheme().triggerGradient1, helper.getTheme().triggerGradient2);
-        helper.drawText(renderX, renderY, getType().getLocalisedName(), 6, 6, helper.getTheme().triggerFontColor);
-        if (MCClientHelper.isInEditMode()) {
-            if (!triggerType.isCanceling()) {
-                int yStart = triggerType.isCancelable() ? 25 : 17;
-                int index = 0;
-                for (IField t : triggerType.getFields()) {
-                    int color = Theme.INSTANCE.optionsFontColor;
-                    int yPos = yStart + (index * 8);
-                    if (MCClientHelper.canEdit()) {
-                        if (mouseX >= 1 && mouseX <= 84) {
-                            if (mouseY >= yPos && mouseY < yPos + 8) {
-                                color = Theme.INSTANCE.optionsFontColorHover;
-                            }
-                        }
-                    }
+    @Override
+    public void drawDisplay(int mouseX, int mouseY) {
+        triggerType.drawDisplay(mouseX, mouseY);
+    }
 
-                    t.draw(helper, renderX, renderY, color, yPos);
-                    index++;
-                }
-            }
+    @Override
+    public List<IField> getFields() {
+        return triggerType.getFields();
+    }
 
-            if (triggerType.isCancelable()) {
-                int color = Theme.INSTANCE.optionsFontColor;
-                if (MCClientHelper.canEdit()) {
-                    if (mouseX >= 1 && mouseX <= 84) {
-                        if (mouseY >= 17 && mouseY < 25) {
-                            color = Theme.INSTANCE.optionsFontColorHover;
-                        }
-                    }
+    @Override
+    public boolean isCanceling() {
+        return triggerType.isCanceling();
+    }
 
-                    helper.drawSplitText(renderX, renderY, "cancel: " + triggerType.isCanceling(), 4, 17, 105, color);
-                }
-            }
-        } else {
-            helper.drawSplitText(renderX, renderY, triggerType.getDescription(), 6, 20, 80, helper.getTheme().triggerFontColor);
-            triggerType.drawDisplay(mouseX, mouseY);
-        }
-        /*
-        ticker++;
-        if (ticker == 0 || ticker >= 200) {
-        	triggerType.update();
-        	ticker = 1;
-        }
-        
-        this.mouseX = mouseX - xPosition;
-        this.mouseY = mouseY - 45;
-        this.xPosition = xPos + 6;
-        DrawHelper.INSTANCE.setOffset(xPosition, 45);
-        
-        ProgressionAPI.draw.drawGradient(1, 2, width, 15, getType().getColor(), Theme.INSTANCE.triggerGradient1, Theme.INSTANCE.triggerGradient2);
-        ProgressionAPI.draw.drawText(getType().getLocalisedName(), 6, 6, Theme.INSTANCE.triggerFontColor);
-                
-        
-        
-        if (!MCClientHelper.isInEditMode()) {
-            
-        } else  {
-            if (MCClientHelper.isInEditMode()) triggerType.drawEditor(this.mouseX, this.mouseY);
-            int color = Theme.INSTANCE.blackBarBorder;
-            if (this.mouseX >= 2 && this.mouseX <= 87) {
-                if (this.mouseY >= 66 && this.mouseY <= 77) {
-                    color = Theme.INSTANCE.blackBarFontColor;
-                }
-            }
-        
-            if (MCClientHelper.canEdit()) {
-                ProgressionAPI.draw.drawGradient(2, 66, 85, 11, color, Theme.INSTANCE.blackBarGradient1, Theme.INSTANCE.blackBarGradient2);
-                ProgressionAPI.draw.drawText("Condition Editor", 6, 67, Theme.INSTANCE.blackBarFontColor);
-            } else if (this.getConditions().size() > 0) {
-                ProgressionAPI.draw.drawGradient(2, 66, 85, 11, color, Theme.INSTANCE.blackBarGradient1, Theme.INSTANCE.blackBarGradient2);
-                ProgressionAPI.draw.drawText("Condition Viewer", 6, 67, Theme.INSTANCE.blackBarFontColor);
-            }
-        } */
+    @Override
+    public boolean isCancelable() {
+        return triggerType.isCancelable();
+    }
+
+    @Override
+    public void setCanceling(boolean isCanceld) {
+        triggerType.setCanceling(isCanceld);
     }
 }

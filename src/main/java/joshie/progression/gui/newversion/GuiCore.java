@@ -9,6 +9,7 @@ import java.util.HashMap;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
 
 import joshie.progression.Progression;
 import joshie.progression.api.IField;
@@ -47,9 +48,13 @@ public abstract class GuiCore extends GuiScreen {
     public int ySize = 240; // Height of the Gui :O
     public int screenTop; // Top of the screen :D
     public int screenWidth; //Width of the screen
+    public boolean switching = false;
+    
+    public abstract int getPreviousGuiID();
 
     @Override
     public void initGui() {
+        switching = false;
         screenWidth = new ScaledResolution(mc).getScaledWidth();
         Keyboard.enableRepeatEvents(true);
         theme = Theme.INSTANCE;
@@ -81,7 +86,7 @@ public abstract class GuiCore extends GuiScreen {
     @Override
     public void onGuiClosed() {
         Keyboard.enableRepeatEvents(false);
-        if (MCClientHelper.isInEditMode()) {
+        if (MCClientHelper.isInEditMode() && !switching) {
             if (Options.debugMode) {
                 Progression.logger.log(Level.INFO, "Saving JSON Data");
             }
@@ -126,6 +131,11 @@ public abstract class GuiCore extends GuiScreen {
         
         if(guiMouseClicked(mouseX, mouseY - screenTop, button)) {
             return;
+        }
+        
+        if (button == 1) {
+            switching = true;
+            mc.thePlayer.openGui(Progression.instance, getPreviousGuiID(), mc.theWorld, 0, 0, 0);
         }
         
        clearEditors();
@@ -227,11 +237,22 @@ public abstract class GuiCore extends GuiScreen {
     }
     
     public void drawText(String text, int left, int top, int color) {
-        fontRendererObj.drawString(text, left, top + screenTop, color);
+        drawText(text, left, top, color, 1F);
+    }
+    
+    public void drawText(String text, int left, int top, int color, float scale) {
+        fontRendererObj.drawString(text, (int) (left / scale), (int) ((top + screenTop) / scale), color);
     }
     
     public void drawSplitText(String text, int left, int top, int width, int color) {
-        fontRendererObj.drawSplitString(text, left, top + screenTop, width, color);
+        drawSplitText(text, left, top, width, color, 1F);
+    }
+    
+    public void drawSplitText(String text, int left, int top, int width, int color, float scale) {
+        GlStateManager.pushMatrix();
+        GlStateManager.scale(scale, scale, scale);
+        fontRendererObj.drawSplitString(text, (int) (left / scale), (int) ((top + screenTop) / scale), width, color);
+        GlStateManager.popMatrix();
     }
     
     public void drawTexture(ResourceLocation resource, int left, int top, int u, int v, int width, int height) {

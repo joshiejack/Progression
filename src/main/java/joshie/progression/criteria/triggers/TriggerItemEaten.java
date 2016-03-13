@@ -1,22 +1,26 @@
 package joshie.progression.criteria.triggers;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gson.JsonObject;
 
 import joshie.progression.api.IItemFilter;
 import joshie.progression.api.ProgressionAPI;
+import joshie.progression.gui.fields.ItemFilterField;
+import joshie.progression.gui.fields.ItemFilterFieldPreview;
 import joshie.progression.helpers.JSONHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class TriggerItemEaten extends TriggerBaseCounter {
-    public Set<IItemFilter> filters = new HashSet();
+    public List<IItemFilter> filters = new ArrayList();
 
     public TriggerItemEaten() {
         super("onEaten", 0xFF00B285);
+        list.add(new ItemFilterField("filters", this));
+        list.add(new ItemFilterFieldPreview("filters", this, false, 25, 30, 26, 70, 25, 75, 2.8F));
     }
 
     @SubscribeEvent

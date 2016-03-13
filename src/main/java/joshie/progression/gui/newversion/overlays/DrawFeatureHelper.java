@@ -52,6 +52,10 @@ public class DrawFeatureHelper {
     public void drawSplitText(int renderX, int renderY, String text, int left, int top, int width, int color) {
         guiDraw.drawSplitText(text, offsetX + left + renderX, top + renderY, width, color);
     }
+    
+    public void drawSplitText(int renderX, int renderY, String text, int left, int top, int width, int color, float scale) {
+        guiDraw.drawSplitText(text, offsetX + left + renderX, top + renderY, width, color, scale);
+    }
 
     public void drawRectangle(int renderX, int renderY, int left, int top, int width, int height, int color, int border) {
         guiDraw.drawRectWithBorder(offsetX + left + renderX, top + renderY, offsetX + left + renderX + width, top + renderY + height, color, border);

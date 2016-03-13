@@ -19,10 +19,10 @@ public class TriggerChangeDimension extends TriggerBaseCounter {
 
     public TriggerChangeDimension() {
         super("changeDimension", 0xFF000000);
-        editList.add(new BooleanField("checkFrom", this));
-        editList.add(new TextField("from", this));
-        editList.add(new BooleanField("checkTo", this));
-        editList.add(new TextField("to", this));
+        list.add(new BooleanField("checkFrom", this));
+        list.add(new TextField("from", this));
+        list.add(new BooleanField("checkTo", this));
+        list.add(new TextField("to", this));
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)

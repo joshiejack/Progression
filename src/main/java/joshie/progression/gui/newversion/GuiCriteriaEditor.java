@@ -17,6 +17,7 @@ import joshie.progression.gui.newversion.overlays.FeatureTooltip;
 import joshie.progression.gui.newversion.overlays.IBarProvider;
 import joshie.progression.gui.newversion.overlays.TextEditor;
 import joshie.progression.helpers.MCClientHelper;
+import joshie.progression.lib.GuiIDs;
 import net.minecraft.util.EnumChatFormatting;
 
 public class GuiCriteriaEditor extends GuiCore implements IBarProvider {
@@ -32,6 +33,11 @@ public class GuiCriteriaEditor extends GuiCore implements IBarProvider {
     @Override
     public Object getKey() {
         return criteria;
+    }
+    
+    @Override
+    public int getPreviousGuiID() {
+        return GuiIDs.TREE;
     }
 
     @Override

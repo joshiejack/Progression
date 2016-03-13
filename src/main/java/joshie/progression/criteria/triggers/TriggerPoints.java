@@ -19,9 +19,9 @@ public class TriggerPoints extends TriggerBaseBoolean {
 
     public TriggerPoints() {
         super("points", 0xFFB2B200);
-        editList.add(new TextField("name", this));
-        editList.add(new TextField("amount", this));
-        editList.add(new BooleanField("consume", this));
+        list.add(new TextField("name", this));
+        list.add(new TextField("amount", this));
+        list.add(new BooleanField("consume", this));
     }
 
     @Override

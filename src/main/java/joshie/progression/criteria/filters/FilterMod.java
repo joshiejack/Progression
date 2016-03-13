@@ -11,7 +11,7 @@ public class FilterMod extends FilterBase {
     public String modid = "minecraft";
 
     public FilterMod() {
-        super("modid");
+        super("modid", 0xFFFF8000);
         list.add(new TextField("modid", this));
     }
 

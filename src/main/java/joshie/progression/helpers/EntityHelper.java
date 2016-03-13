@@ -3,6 +3,7 @@ package joshie.progression.helpers;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 import joshie.progression.api.IEntityFilter;
@@ -47,7 +48,7 @@ public class EntityHelper {
         return entities;
     }
     
-    public static EntityLivingBase getRandomEntityForFilters(Set<IEntityFilter> filters) {
+    public static EntityLivingBase getRandomEntityForFilters(List<IEntityFilter> filters) {
     	ArrayList<IEntityFilter> shuffledFilters = new ArrayList(filters);
     	Collections.shuffle(shuffledEntityCache);
     	Collections.shuffle(shuffledFilters);
