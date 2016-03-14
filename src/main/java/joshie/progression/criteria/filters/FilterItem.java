@@ -7,6 +7,7 @@ import joshie.progression.gui.fields.IItemSetterCallback;
 import joshie.progression.gui.fields.ItemField;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
 import joshie.progression.helpers.JSONHelper;
+import joshie.progression.lib.SafeStack;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

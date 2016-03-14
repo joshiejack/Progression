@@ -19,7 +19,7 @@ public class FeatureNewItemFilter extends FeatureNew {
             if (mouseX >= (xPos * 100) + 155 && mouseX <= (xPos * 100) + 255) {
                 if (mouseY >= 46 + (yPos * 12) && mouseY < 46 + (yPos * 12) + 12) {
                     try {
-                        GuiItemFilterEditor.INSTANCE.field.getFilters().add(filter.getClass().newInstance());
+                        GuiItemFilterEditor.INSTANCE.field.add(filter.getClass().newInstance());
                     } catch (Exception e) { e.printStackTrace(); }
                     
                     GuiItemFilterEditor.INSTANCE.initGui(); //Refresh the gui

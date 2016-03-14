@@ -11,6 +11,7 @@ import joshie.progression.gui.newversion.GuiCriteriaEditor;
 import joshie.progression.gui.newversion.GuiItemFilterEditor;
 import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import joshie.progression.gui.newversion.overlays.FeatureItemPreview;
+import joshie.progression.helpers.CollectionHelper;
 
 public class ItemFilterField extends AbstractField {
     private Field field;
@@ -53,7 +54,9 @@ public class ItemFilterField extends AbstractField {
 
     public void setFilters(List<IItemFilter> filters) {
         try {
-             field.set(object, filters);
+            if (object instanceof IItemFilterSetterCallback) {
+                ((IItemFilterSetterCallback)object).setFilter(field.getName(), filters);
+            } else field.set(object, filters);
         } catch (Exception e) {}
     }
 
@@ -64,5 +67,21 @@ public class ItemFilterField extends AbstractField {
 
         //Return a blank list yo!
         return new ArrayList();
+    }
+
+    public void add(IItemFilter filter) {
+        List<IItemFilter> filters = getFilters();
+        filters.add(filter);
+        if (object instanceof IItemFilterSetterCallback) {
+            ((IItemFilterSetterCallback)object).setFilter(field.getName(), filters);
+        }
+    }
+
+    public void remove(IItemFilter filter) {
+        List<IItemFilter> filters = getFilters();
+        CollectionHelper.remove(filters, filter);
+        if (object instanceof IItemFilterSetterCallback) {
+            ((IItemFilterSetterCallback)object).setFilter(field.getName(), filters);
+        }
     }
 }

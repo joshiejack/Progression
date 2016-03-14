@@ -9,7 +9,7 @@ import joshie.progression.Progression;
 import joshie.progression.api.IField;
 import joshie.progression.api.IItemFilter;
 import joshie.progression.gui.newversion.GuiItemFilterEditor;
-import joshie.progression.helpers.ListHelper;
+import joshie.progression.helpers.CollectionHelper;
 import joshie.progression.json.Theme;
 import net.minecraft.item.ItemStack;
 
@@ -46,7 +46,7 @@ public class FilterBase implements IItemFilter {
 
     @Override
     public void remove(List list) {
-        ListHelper.remove(GuiItemFilterEditor.INSTANCE.field.getFilters(), this);
+        GuiItemFilterEditor.INSTANCE.field.remove(this);
         GuiItemFilterEditor.INSTANCE.initGui();
     }
 

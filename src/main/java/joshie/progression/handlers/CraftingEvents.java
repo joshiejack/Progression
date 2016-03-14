@@ -1,6 +1,7 @@
 package joshie.progression.handlers;
 
 import java.util.Collection;
+import java.util.Set;
 
 import joshie.progression.Progression;
 import joshie.progression.api.ActionEvent.CanObtainFromActionEvent;
@@ -10,9 +11,9 @@ import joshie.progression.crafting.ActionType;
 import joshie.progression.crafting.Crafter;
 import joshie.progression.crafting.CraftingRegistry;
 import joshie.progression.criteria.Criteria;
-import joshie.progression.gui.GuiCriteriaEditor;
-import joshie.progression.helpers.MCClientHelper;
+import joshie.progression.gui.newversion.GuiCriteriaEditor;
 import joshie.progression.helpers.CraftingHelper;
+import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
@@ -60,11 +61,11 @@ public class CraftingEvents {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (!checkAndCancelEvent(event)) {
-            Collection<ICriteria> requirements = CraftingRegistry.getCraftingCriteria(event.entityPlayer.getCurrentEquippedItem());
+            Collection<ICriteria> requirements = CraftingRegistry.getRequirements(event.entityPlayer.getCurrentEquippedItem());
             if (requirements.size() > 0) {
                 if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
                     for (ICriteria c : requirements) {
-                        GuiCriteriaEditor.INSTANCE.selected = (Criteria) c;
+                        GuiCriteriaEditor.INSTANCE.criteria = (Criteria) c;
                         break;
                     }
                 } else event.entityPlayer.openGui(Progression.instance, 1, null, 0, 0, 0);
@@ -76,9 +77,10 @@ public class CraftingEvents {
     public void onItemTooltipEvent(ItemTooltipEvent event) {
         Crafter crafter = CraftingRegistry.getCrafterFromPlayer(MCClientHelper.getPlayer());
         if (!crafter.canCraftItem(ActionType.CRAFTING, event.itemStack)) {
+            //TODO: Readd tooltips for things you can't craft
             boolean hasStuff = false;
             for (ActionType type : ActionType.values()) {
-                Collection<ICriteria> requirements = CraftingRegistry.getCraftingCriteria(type, event.itemStack);
+                Set<ICriteria> requirements = CraftingRegistry.getRequirements(type, event.itemStack);
                 if (requirements.size() > 0) {
                     if (!hasStuff) {
                         event.toolTip.add("Currently Locked");

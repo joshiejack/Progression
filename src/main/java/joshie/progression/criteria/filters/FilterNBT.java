@@ -6,6 +6,8 @@ import joshie.progression.gui.fields.ISetterCallback;
 import joshie.progression.gui.fields.TextField;
 import joshie.progression.helpers.JSONHelper;
 import joshie.progression.helpers.StackHelper;
+import joshie.progression.lib.SafeStack;
+import joshie.progression.lib.SafeStack.SafeStackNBTOnly;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 

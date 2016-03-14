@@ -1,22 +1,15 @@
 package joshie.progression.handlers;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
-import joshie.progression.api.ICriteria;
-import joshie.progression.crafting.ActionType;
 import joshie.progression.crafting.CraftingRegistry;
 import joshie.progression.criteria.Criteria;
-import joshie.progression.criteria.Reward;
-import joshie.progression.criteria.Tab;
 import joshie.progression.json.DefaultSettings;
 import joshie.progression.json.JSONLoader;
-import joshie.progression.lib.SafeStack;
 import joshie.progression.network.PacketHandler;
 import joshie.progression.network.PacketSyncJSONToClient;
 import joshie.progression.network.PacketSyncJSONToClient.Section;
@@ -66,15 +59,7 @@ public class RemappingHandler {
         //Create a a new unlocker
         criteriaToUnlocks = HashMultimap.create(); //Reset all data
         APIHandler.resetAPIHandler(); //Reset tabs and criteria maps
-        EventsManager.activeRewards = new HashSet(); //Reset active rewards
-        EventsManager.activeTriggers = new HashSet(); //Reset active triggers
-        CraftingRegistry.conditions = new HashMap(); //Reset all the data in the crafting registry
-        CraftingRegistry.usage = new HashMap(); //Reset all the data in the crafting registry
-        for (ActionType type : ActionType.values()) {
-            Multimap<SafeStack, ICriteria> conditions = HashMultimap.create();
-            Multimap<SafeStack, ICriteria> usage = HashMultimap.create();
-            CraftingRegistry.conditions.put(type, conditions);
-            CraftingRegistry.usage.put(type, usage);
-        }
+        EventsManager.create();
+        CraftingRegistry.create();
     }
 }

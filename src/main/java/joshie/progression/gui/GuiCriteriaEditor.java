@@ -18,7 +18,7 @@ import joshie.progression.gui.fields.FieldHelper;
 import joshie.progression.gui.fields.FieldHelper.IntegerFieldHelper;
 import joshie.progression.handlers.EventsManager;
 import joshie.progression.helpers.MCClientHelper;
-import joshie.progression.helpers.ListHelper;
+import joshie.progression.helpers.CollectionHelper;
 import joshie.progression.lib.ProgressionInfo;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.item.ItemStack;

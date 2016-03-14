@@ -81,7 +81,6 @@ public class ActionCompleteCriteria extends AbstractAction implements IButtonAct
     public void writeToJson(JsonObject data) {
         super.writeToJson(data);
         if (criteriaID != null) {
-            System.out.println("WRITING CRITERIAID AS: " + criteriaID);
             JSONHelper.setString(data, "criteriaID", criteriaID, "");
         }
     }

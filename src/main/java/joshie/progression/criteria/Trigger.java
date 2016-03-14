@@ -9,7 +9,7 @@ import joshie.progression.api.ITriggerType;
 import joshie.progression.gui.TriggerEditorElement;
 import joshie.progression.gui.newversion.overlays.IDrawable;
 import joshie.progression.handlers.EventsManager;
-import joshie.progression.helpers.ListHelper;
+import joshie.progression.helpers.CollectionHelper;
 import joshie.progression.json.Theme;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -66,8 +66,8 @@ public class Trigger implements IDrawable, ICancelable {
     @Override
     public void remove(List list) {
         EventsManager.onTriggerRemoved(this);
-        ListHelper.remove(list, this); //Remove from temporary list    
-        ListHelper.remove(criteria.triggers, this); //Remove from real list
+        CollectionHelper.remove(list, this); //Remove from temporary list    
+        CollectionHelper.remove(criteria.triggers, this); //Remove from real list
     }
     
     @Override

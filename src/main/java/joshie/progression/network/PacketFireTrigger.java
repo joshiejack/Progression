@@ -71,7 +71,6 @@ public class PacketFireTrigger extends PenguinPacket {
                         ByteBufUtils.writeUTF8String(buf, (String) object);
                         break;
                     case CRITERIA:
-                        System.out.println("SENDING A CRITERIA OBJECT");
                         ByteBufUtils.writeUTF8String(buf, ((Criteria) object).uniqueName);
                         break;
                     case BLOCK:

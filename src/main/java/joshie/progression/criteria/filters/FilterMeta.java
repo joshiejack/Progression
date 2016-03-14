@@ -4,6 +4,8 @@ import com.google.gson.JsonObject;
 
 import joshie.progression.gui.fields.TextField;
 import joshie.progression.helpers.JSONHelper;
+import joshie.progression.lib.SafeStack;
+import joshie.progression.lib.SafeStack.SafeStackDamageOnly;
 import net.minecraft.item.ItemStack;
 
 public class FilterMeta extends FilterBase {
@@ -23,7 +25,7 @@ public class FilterMeta extends FilterBase {
     public void writeToJSON(JsonObject data) {
         JSONHelper.setInteger(data, "damage", damage, 0);
     }
-
+    
     @Override
     public boolean matches(ItemStack check) {
     	return check.getItemDamage() == damage || damage == Short.MAX_VALUE;

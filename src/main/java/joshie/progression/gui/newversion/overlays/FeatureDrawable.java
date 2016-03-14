@@ -181,7 +181,6 @@ public class FeatureDrawable extends FeatureAbstract {
             int mouseOffsetX = mouseX - offsetX - xPos;
             int mouseOffsetY = mouseY - offsetY;
             if (mouseOffsetX >= 15 && mouseOffsetX <= 70 && mouseOffsetY >= 10 && mouseOffsetY <= 65) {
-                System.out.println("LOADING");
                 newDrawable.init(offset.getGui());
                 newDrawable.setVisibility(true);
                 return true;

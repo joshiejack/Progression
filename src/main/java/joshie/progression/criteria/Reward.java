@@ -6,7 +6,7 @@ import joshie.progression.api.IField;
 import joshie.progression.api.IRewardType;
 import joshie.progression.gui.newversion.overlays.IDrawable;
 import joshie.progression.handlers.EventsManager;
-import joshie.progression.helpers.ListHelper;
+import joshie.progression.helpers.CollectionHelper;
 import joshie.progression.json.Theme;
 
 public class Reward implements IDrawable {
@@ -39,8 +39,8 @@ public class Reward implements IDrawable {
     @Override
     public void remove(List list) {
         EventsManager.onRewardRemoved(this);
-        ListHelper.remove(list, this); //Remove from temporary list    
-        ListHelper.remove(criteria.rewards, this); //Remove from real list
+        CollectionHelper.remove(list, this); //Remove from temporary list    
+        CollectionHelper.remove(criteria.rewards, this); //Remove from real list
     }
 
     @Override

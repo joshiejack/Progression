@@ -47,7 +47,7 @@ public class FilterOre extends FilterBase implements ISetterCallback {
         else {
             int[] ores = OreDictionary.getOreIDs(check);
             for (int i : ores) {
-                cache.put(key, OreDictionary.getOreName(i));
+                cache.get(key).add(OreDictionary.getOreName(i));
             }
 
             names = cache.get(key);

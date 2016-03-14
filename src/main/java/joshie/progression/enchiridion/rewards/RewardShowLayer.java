@@ -80,7 +80,6 @@ public class RewardShowLayer extends RewardBase {
         if (hideByDefault) pageData.removeTag("" + layer);
         else pageData.setBoolean("" + layer, true);
         
-        System.out.println("REWARD GIVEN");
         ProgressionAPI.player.setCustomData(uuid, "enchiridion.hidden", tag);
     }
 

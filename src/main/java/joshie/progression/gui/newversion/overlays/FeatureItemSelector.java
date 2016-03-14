@@ -11,15 +11,14 @@ import joshie.progression.gui.editors.EditText.ITextEditable;
 import joshie.progression.gui.editors.IItemSelectable;
 import joshie.progression.helpers.ItemHelper;
 import joshie.progression.helpers.MCClientHelper;
-import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
 public class FeatureItemSelector extends FeatureAbstract implements ITextEditable {
     public static FeatureItemSelector INSTANCE = new FeatureItemSelector();
     private IItemSelectable selectable = null;
+    private IItemSelectorFilter filter = null;
     private ArrayList<ItemStack> sorted;
     private String search = "";
-    private boolean blocksOnly;
     private Type type;
     private int position;
 
@@ -39,10 +38,10 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
         }
     }
 
-    public void select(boolean blocksOnly, IItemSelectable selectable, Type type) {
+    public void select(IItemSelectorFilter filter, IItemSelectable selectable, Type type) {
         ItemHelper.addInventory();
         TextEditor.INSTANCE.setEditable(this);
-        this.blocksOnly = blocksOnly;
+        this.filter = filter;
         this.selectable = selectable;
         this.type = type;
         updateSearch();
@@ -67,26 +66,18 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
         return false;
     }
 
-    private void attemptToAddBlock(ItemStack stack) {
-        Block block = null;
-        int meta = 0;
-
-        try {
-            block = Block.getBlockFromItem(stack.getItem());
-            meta = stack.getItemDamage();
-        } catch (Exception e) {
-            e.printStackTrace();
+    private void attemptToAdd(ItemStack stack) {
+        if (filter.isAcceptable(stack)) {
+            sorted.add(stack);
         }
-
-        if (block != null) sorted.add(stack);
     }
 
     public void updateSearch() {
         if (search == null || search.equals("")) {
-            if (blocksOnly) {
+            if (filter != null) {
                 sorted = new ArrayList();
                 for (ItemStack stack : ItemHelper.getAllItems()) {
-                    attemptToAddBlock(stack);
+                    attemptToAdd(stack);
                 }
             } else sorted = new ArrayList(ItemHelper.getAllItems());
         } else {
@@ -96,8 +87,8 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
                 if (stack != null && stack.getItem() != null) {
                     try {
                         if (stack.getDisplayName().toLowerCase().contains(search.toLowerCase())) {
-                            if (blocksOnly) {
-                                attemptToAddBlock(stack);
+                            if (filter != null) {
+                                attemptToAdd(stack);
                             } else sorted.add(stack);
                         }
                     } catch (Exception e) {}
@@ -166,7 +157,7 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
         offset.drawGradient(-1, 25 + type.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 15, theme.blackBarGradient1, theme.blackBarGradient2, theme.blackBarBorder);
         offset.drawRectangle(-1, 40 + type.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 73, theme.blackBarUnderLine, theme.blackBarUnderLineBorder);
 
-        String text = blocksOnly ? Progression.translate("selector.blocks") : Progression.translate("selector.items");
+        String text = filter != null ? Progression.translate("selector." + filter.getName()) : Progression.translate("selector.items");
         offset.drawText(text, 5, 29 + type.yOffset, theme.blackBarFontColor);
         offset.drawRectangle(285 - offsetX, 27 + type.yOffset, 200, 12, theme.blackBarUnderLine, theme.blackBarUnderLineBorder);
         offset.drawText(TextEditor.INSTANCE.getText(this), 290, 29 + type.yOffset, theme.blackBarFontColor);

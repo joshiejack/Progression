@@ -2,10 +2,13 @@ package joshie.progression.helpers;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
 import joshie.progression.api.IItemFilter;
+import joshie.progression.lib.SafeStack;
+import joshie.progression.lib.SafeStack.SafeStackDamage;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -80,5 +83,18 @@ public class ItemHelper {
         
         //In theory if set up correctly this should be no issue
         return null;
+    }
+    
+    public static List<ItemStack> getAllMatchingItems(List<IItemFilter> filters) {
+        ArrayList<ItemStack> stacks = new ArrayList();
+        for (ItemStack stack: getAllItems()) {
+            for (IItemFilter filter: filters) {
+                if (filter.matches(stack)) {
+                    stacks.add(stack.copy());
+                }
+            }
+        }
+        
+        return stacks;
     }
 }

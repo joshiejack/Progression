@@ -20,14 +20,15 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
-public class RewardItem extends RewardBaseItemFilter {
+//TODO!!!!!!!!!!!
+public class RewardPotion extends RewardBaseItemFilter {
     private static final ItemStack BROKEN = new ItemStack(Items.baked_potato);
     public List<IItemFilter> filters = new ArrayList();
     public int stackSize = 1;
     private ItemStack preview;
     private int ticker;
 
-    public RewardItem() {
+    public RewardPotion() {
         super("item", 0xFFE599FF);
         list.add(new TextField("stackSize", this));
     }

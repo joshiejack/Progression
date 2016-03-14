@@ -226,7 +226,7 @@ public abstract class GuiCore extends GuiScreen {
         drawRect(left, bottom - 1, right, bottom, border);
     }
     
-    //Gradient rect, For tooltip useage so leave alone
+    //Gradient rect, For tooltip usage so leave alone
     @Override
     public void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
         super.drawGradientRect(left, top, right, bottom, startColor, endColor);

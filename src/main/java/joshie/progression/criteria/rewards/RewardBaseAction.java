@@ -1,47 +1,33 @@
 package joshie.progression.criteria.rewards;
 
-import com.google.gson.JsonObject;
-import joshie.progression.Progression;
-import joshie.progression.api.EventBusType;
-import joshie.progression.crafting.ActionType;
-import joshie.progression.crafting.CraftingRegistry;
-import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
-import joshie.progression.gui.fields.BooleanField;
-import joshie.progression.gui.fields.IItemSetterCallback;
-import joshie.progression.gui.fields.ItemField;
-import joshie.progression.gui.fields.TextField;
-import joshie.progression.helpers.JSONHelper;
-import joshie.progression.jei.JEISupport;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
-
 import java.util.List;
 import java.util.UUID;
 
-public abstract class RewardBaseAction extends RewardBase implements IItemSetterCallback {
-    public ItemStack stack = new ItemStack(Blocks.furnace);
+import com.google.gson.JsonObject;
+
+import joshie.progression.Progression;
+import joshie.progression.api.EventBusType;
+import joshie.progression.api.IItemFilter;
+import joshie.progression.crafting.ActionType;
+import joshie.progression.crafting.CraftingRegistry;
+import joshie.progression.gui.fields.BooleanField;
+import joshie.progression.gui.fields.IItemFilterSetterCallback;
+import joshie.progression.helpers.JSONHelper;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
+
+public abstract class RewardBaseAction extends RewardBaseItemFilter implements IItemFilterSetterCallback {
     public ActionType type = ActionType.CRAFTING;
-    public String orename = "IGNORE";
-    public boolean matchDamage = true;
-    public boolean matchNBT = false;
     public boolean usage = true;
     public boolean crafting = true;
-    public String modid = "IGNORE";
-    
+
     /** Moving actions to be seperated from one another **/
     public RewardBaseAction(String name, int color) {
         super(name, color);
-        ItemField field = new ItemField("stack", this, 80, 34, 1.4F, 67, 100, 33, 58, Type.REWARD);     
-        list.add(new BooleanField("matchDamage", this));
-        list.add(new BooleanField("matchNBT", this));
-        list.add(new TextField("orename", this));
         list.add(new BooleanField("usage", this));
         list.add(new BooleanField("crafting", this));
-        list.add(new TextField("modid", this));
-        list.add(field);
     }
-    
+
     @Override
     public EventBusType getEventBus() {
         return EventBusType.FORGE;
@@ -49,30 +35,23 @@ public abstract class RewardBaseAction extends RewardBase implements IItemSetter
 
     @Override
     public void readFromJSON(JsonObject data) {
-        stack = JSONHelper.getItemStack(data, "item", stack);
-        matchDamage = JSONHelper.getBoolean(data, "matchDamage", matchDamage);
-        matchNBT = JSONHelper.getBoolean(data, "matchNBT", matchNBT);
+        super.readFromJSON(data);
         crafting = JSONHelper.getBoolean(data, "disableCrafting", crafting);
         usage = JSONHelper.getBoolean(data, "disableUsage", usage);
-        modid = JSONHelper.getString(data, "modid", modid);
-
         if (Progression.JEI_LOADED) {
             boolean hide = JSONHelper.getBoolean(data, "hideFromNEI", false);
             if (hide) {
                 isAdded = false;
-                JEISupport.helpers.getItemBlacklist().addItemToBlacklist(stack);
+                //JEISupport.helpers.getItemBlacklist().addItemToBlacklist(stack);
             }
         }
     }
 
     @Override
     public void writeToJSON(JsonObject data) {
-        JSONHelper.setItemStack(data, "item", stack);
-        JSONHelper.setBoolean(data, "matchDamage", matchDamage, true);
-        JSONHelper.setBoolean(data, "matchNBT", matchNBT, false);
+        super.writeToJSON(data);
         JSONHelper.setBoolean(data, "disableCrafting", crafting, true);
         JSONHelper.setBoolean(data, "disableUsage", usage, true);
-        JSONHelper.setString(data, "modid", modid, "IGNORE");
     }
 
     private boolean isAdded = true;
@@ -80,38 +59,32 @@ public abstract class RewardBaseAction extends RewardBase implements IItemSetter
     @Override
     public void reward(UUID uuid) {
         if (Progression.JEI_LOADED && !isAdded) {
-        	JEISupport.itemRegistry.getItemList().add(stack);
+            //JEISupport.itemRegistry.getItemList().add(stack);
             isAdded = true;
         }
     }
 
     @Override
     public void onAdded() {
-        CraftingRegistry.addRequirement(type, modid, stack, orename, matchDamage, matchNBT, usage, crafting, criteria);
+        CraftingRegistry.addRequirement(type, criteria, filters, usage, crafting);
     }
 
     @Override
     public void onRemoved() {
-        CraftingRegistry.remove(type, modid, stack, orename, matchDamage, matchNBT, usage, crafting, criteria);
+        CraftingRegistry.removeRequirement(type, criteria, filters, usage, crafting);
     }
 
     @Override
-    public ItemStack getIcon() {
-        return stack;
-    }
-
-    @Override
-    public void setItem(String fieldName, ItemStack stack) {
-        if (fieldName.equals("stack")) {
-            onRemoved();
-            this.stack = stack;
-            onAdded();
-        }
+    public void setFilter(String fieldName, List<IItemFilter> list) {
+        onRemoved();
+        filters = list;
+        onAdded();
     }
 
     @Override
     public void addTooltip(List list) {
         list.add(EnumChatFormatting.WHITE + "Allow " + type.getDisplayName());
+        ItemStack stack = preview == null ? BROKEN : preview;
         list.add(stack.getDisplayName());
     }
 }

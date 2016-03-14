@@ -1,5 +1,7 @@
 package joshie.progression.handlers;
 
+import java.util.HashSet;
+
 import joshie.progression.api.EventBusType;
 import joshie.progression.api.IRewardType;
 import joshie.progression.api.ITriggerType;
@@ -8,11 +10,15 @@ import joshie.progression.criteria.Trigger;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.EventBus;
 
-import java.util.HashSet;
-
 public class EventsManager {
-    public static HashSet<Trigger> activeTriggers;
-    public static HashSet<Reward> activeRewards;
+    private static HashSet<Trigger> activeTriggers;
+    private static HashSet<Reward> activeRewards;
+    
+
+    public static void create() {
+        activeRewards = new HashSet(); //Reset active rewards
+        activeTriggers = new HashSet(); //Reset active triggers
+    }
 
     public static EventBus getBus(EventBusType bus) {
         if (bus == EventBusType.FORGE) {

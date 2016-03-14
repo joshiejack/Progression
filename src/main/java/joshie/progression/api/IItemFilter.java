@@ -1,5 +1,6 @@
 package joshie.progression.api;
 
+import joshie.progression.lib.SafeStack;
 import net.minecraft.item.ItemStack;
 
 public interface IItemFilter extends IFilter {

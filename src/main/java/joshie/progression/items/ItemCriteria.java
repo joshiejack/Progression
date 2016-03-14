@@ -4,8 +4,8 @@ import java.util.List;
 
 import joshie.progression.Progression;
 import joshie.progression.crafting.Crafter;
-import joshie.progression.crafting.CraftingRegistry;
 import joshie.progression.crafting.CraftingUnclaimed;
+import joshie.progression.crafting.CraftingRegistry;
 import joshie.progression.criteria.Criteria;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.PlayerHelper;
@@ -31,8 +31,6 @@ public class ItemCriteria extends Item {
     public static final int CRITERIA = 0;
     public static final int CLAIM = 1;
     public static final int BOOK = 2;
-    //private IIcon padlock;
-    //private IIcon book;
 
     public ItemCriteria() {
         final Item item = this;

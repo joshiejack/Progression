@@ -1,6 +1,5 @@
 package joshie.progression.handlers;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.UUID;
@@ -39,7 +38,6 @@ import joshie.progression.network.PacketHandler;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.relauncher.Side;
@@ -271,27 +269,10 @@ public class APIHandler implements IProgressionAPI {
         trigger.addCondition(newCondition);
         return newCondition;
     }
-    
-    /** Load in the setup method in enumhelper **/
-    private static Method setup = null;
-    static {
-        try {
-            setup = EnumHelper.class.getDeclaredMethod("setup");
-            setup.setAccessible(true); //if security settings allow this
-        } catch (Exception e) {}
-    }
-    
-    @SuppressWarnings("rawtypes")
-    private static Class[][] actionType = {
-        {ActionType.class}
-    };
-
+        
     @Override
     public void registerActionType(String name) {
-        try {
-            setup.invoke(null);
-            EnumHelper.addEnum(actionType, ActionType.class, name);
-        } catch (Exception e) {}
+        new ActionType(name.toUpperCase()); //WOOT!
     }
 
     public static Criteria getCriteriaFromName(String name) {
