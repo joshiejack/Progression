@@ -14,15 +14,22 @@ import joshie.progression.gui.newversion.overlays.FeatureItemPreview;
 import joshie.progression.helpers.CollectionHelper;
 
 public class ItemFilterField extends AbstractField {
+    private String[] accepted;
     private Field field;
 
-    public ItemFilterField(String fieldName, Object object) {
+    public ItemFilterField(String fieldName, Object object, String... accepted) {
         super(fieldName);
         this.object = object;
+        this.accepted = accepted;
 
         try {
             field = object.getClass().getField(fieldName);
         } catch (Exception e) {}
+    }
+    
+    @Override
+    public String getFieldName() {
+        return field.getName();
     }
 
     @Override
@@ -33,6 +40,17 @@ public class ItemFilterField extends AbstractField {
     @Override
     public void draw(DrawFeatureHelper helper, int renderX, int renderY, int color, int yPos) {
         helper.drawSplitText(renderX, renderY, "Item Editor", 4, yPos, 105, color, 0.75F);
+    }
+    
+    public boolean isAccepted(IItemFilter filter) {
+        if (accepted == null || accepted.length == 0) return true;
+        else {
+            for (String string: accepted) {
+                if (string.equalsIgnoreCase(filter.getName())) return true;
+            }
+            
+            return false;
+        }
     }
 
     @Override

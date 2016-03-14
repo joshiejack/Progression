@@ -100,4 +100,7 @@ public abstract class RewardBase implements IRewardType {
     public NBTTagCompound getDefaultTags(NBTTagCompound tag) {
         return null;
     }
+    
+    @Override
+    public void addFieldTooltip(String fieldName, List<String> tooltip) {}
 }

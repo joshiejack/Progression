@@ -6,6 +6,7 @@ import joshie.progression.gui.editors.IItemSelectable;
 import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
+import joshie.progression.gui.newversion.overlays.IItemSelectorFilter;
 import net.minecraft.item.ItemStack;
 
 public class ItemField extends AbstractField implements IItemSelectable {
@@ -19,8 +20,9 @@ public class ItemField extends AbstractField implements IItemSelectable {
     protected final int mouseY1;
     protected final int mouseY2;
     protected final Type type;
+    protected final IItemSelectorFilter filter;
     
-    public ItemField(String fieldName, Object object, int x, int y, float scale, int mouseX1, int mouseX2, int mouseY1, int mouseY2, Type type) {
+    public ItemField(String fieldName, Object object, int x, int y, float scale, int mouseX1, int mouseX2, int mouseY1, int mouseY2, Type type, IItemSelectorFilter... filters) {
         super(fieldName);
         this.x = x;
         this.y = y;
@@ -30,6 +32,8 @@ public class ItemField extends AbstractField implements IItemSelectable {
         this.mouseY1 = mouseY1;
         this.mouseY2 = mouseY2;
         this.type = type;
+        if (filters == null || filters.length == 0) filter = null;
+        else filter = filters[0];
         
         try {
             this.field = object.getClass().getField(fieldName);
@@ -41,10 +45,15 @@ public class ItemField extends AbstractField implements IItemSelectable {
     public void click() {}
     
     @Override
+    public String getFieldName() {
+        return field.getName();
+    }
+    
+    @Override
     public boolean attemptClick(int mouseX, int mouseY) {
         boolean clicked = mouseX >= mouseX1 && mouseX <= mouseX2 && mouseY >= mouseY1 && mouseY <= mouseY2;
         if (clicked) {
-            FeatureItemSelector.INSTANCE.select(false, this, type);
+            FeatureItemSelector.INSTANCE.select(filter, this, type);
             return true;
         } else return false;
     }

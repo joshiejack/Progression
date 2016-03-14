@@ -1,5 +1,6 @@
 package joshie.progression.gui.newversion.overlays;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import joshie.progression.api.ICancelable;
@@ -50,6 +51,9 @@ public class FeatureDrawable extends FeatureAbstract {
                         if (mouseX >= 1 && mouseX <= 84) {
                             if (mouseY >= yPos && mouseY < yPos + 6) {
                                 color = Theme.INSTANCE.optionsFontColorHover;
+                                List<String> tooltip = new ArrayList();
+                                drawing.addFieldTooltip(t.getFieldName(), tooltip);
+                                if (!tooltip.isEmpty()) FeatureTooltip.INSTANCE.addTooltip(tooltip);
                             }
                         }
                     }

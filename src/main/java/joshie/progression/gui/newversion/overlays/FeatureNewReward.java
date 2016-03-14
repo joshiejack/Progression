@@ -26,11 +26,11 @@ public class FeatureNewReward extends FeatureNew {
                 }
             }
 
-            yPos++;
+            xPos++;
 
-            if (yPos > 6) {
-                xPos++;
-                yPos = 0;
+            if (xPos > 1) {
+                yPos++;
+                xPos = 0;
             }
         }
 
@@ -49,13 +49,13 @@ public class FeatureNewReward extends FeatureNew {
                 }
             }
 
-            draw.drawText(reward.getLocalisedName(), (xPos * 100) + 155, 46 + (yPos * 12), color);
+            offset.drawText(reward.getLocalisedName(), (xPos * 100) + 155, 46 + (yPos * 12), color);
 
-            yPos++;
+            xPos++;
 
-            if (yPos > 6) {
-                xPos++;
-                yPos = 0;
+            if (xPos > 1) {
+                yPos++;
+                xPos = 0;
             }
         }
     }

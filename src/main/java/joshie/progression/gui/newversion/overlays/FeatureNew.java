@@ -28,9 +28,9 @@ public abstract class FeatureNew extends FeatureAbstract {
     @Override
     public void drawFeature(int mouseX, int mouseY) {
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-        draw.drawRectangle(-GuiCriteriaEditor.INSTANCE.offsetX + 150, 30, 200, 100, theme.newBox1, theme.newBox2);
-        draw.drawGradient(-GuiCriteriaEditor.INSTANCE.offsetX + 150, 30, 200, 15, theme.newTriggerGradient1, theme.newTriggerGradient2, theme.newTriggerBorder);
-        draw.drawText(Progression.translate("new." + text), -GuiCriteriaEditor.INSTANCE.offsetX + 155, 34, theme.newTriggerFont);
+        offset.drawRectangle(150, 30, 200, 150, theme.newBox1, theme.newBox2);
+        offset.drawGradient(150, 30, 200, 15, theme.newTriggerGradient1, theme.newTriggerGradient2, theme.newTriggerBorder);
+        offset.drawText(Progression.translate("new." + text), 155, 34, theme.newTriggerFont);
         drawForeground(mouseX, mouseY);
     }
 

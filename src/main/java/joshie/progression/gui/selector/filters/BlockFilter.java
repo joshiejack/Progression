@@ -1,10 +1,14 @@
 package joshie.progression.gui.selector.filters;
 
+import java.util.ArrayList;
+
 import joshie.progression.gui.newversion.overlays.IItemSelectorFilter;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
 public class BlockFilter implements IItemSelectorFilter {
+    public static final IItemSelectorFilter INSTANCE = new BlockFilter();
+
     @Override
     public String getName() {
         return "block";
@@ -25,4 +29,6 @@ public class BlockFilter implements IItemSelectorFilter {
         return block != null;
     }
 
+    @Override
+    public void addExtraItems(ArrayList<ItemStack> list) {}
 }

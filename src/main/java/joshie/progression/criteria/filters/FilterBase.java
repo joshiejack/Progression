@@ -85,4 +85,7 @@ public class FilterBase implements IItemFilter {
     public boolean matches(ItemStack stack) {
         return false;
     }
+    
+    @Override
+    public void addFieldTooltip(String fieldName, List<String> tooltip) {}
 }

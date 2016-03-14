@@ -16,6 +16,7 @@ public class FeatureNewItemFilter extends FeatureNew {
         int yPos = 0;
         int xPos = 0;
         for (IItemFilter filter : APIHandler.itemFilterTypes.values()) {
+            if (!GuiItemFilterEditor.INSTANCE.field.isAccepted(filter)) continue;
             if (mouseX >= (xPos * 100) + 155 && mouseX <= (xPos * 100) + 255) {
                 if (mouseY >= 46 + (yPos * 12) && mouseY < 46 + (yPos * 12) + 12) {
                     try {
@@ -28,11 +29,11 @@ public class FeatureNewItemFilter extends FeatureNew {
                 }
             }
 
-            yPos++;
+            xPos++;
 
-            if (yPos > 6) {
-                xPos++;
-                yPos = 0;
+            if (xPos > 1) {
+                yPos++;
+                xPos = 0;
             }
         }
 
@@ -44,6 +45,7 @@ public class FeatureNewItemFilter extends FeatureNew {
         int yPos = 0;
         int xPos = 0;
         for (IItemFilter filter : APIHandler.itemFilterTypes.values()) {
+            if (!GuiItemFilterEditor.INSTANCE.field.isAccepted(filter)) continue;
             int color = theme.newTriggerFont;
             if (mouseX >= (xPos * 100) + 155 && mouseX <= (xPos * 100) + 255) {
                 if (mouseY >= 46 + (yPos * 12) && mouseY < 46 + (yPos * 12) + 12) {
@@ -51,13 +53,13 @@ public class FeatureNewItemFilter extends FeatureNew {
                 }
             }
 
-            draw.drawText(filter.getLocalisedName(), (xPos * 100) + 155, 46 + (yPos * 12), color);
+            offset.drawText(filter.getLocalisedName(), (xPos * 100) + 155, 46 + (yPos * 12), color);
 
-            yPos++;
+            xPos++;
 
-            if (yPos > 6) {
-                xPos++;
-                yPos = 0;
+            if (xPos > 1) {
+                yPos++;
+                xPos = 0;
             }
         }
     }

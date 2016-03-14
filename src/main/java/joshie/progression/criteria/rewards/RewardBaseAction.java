@@ -12,6 +12,8 @@ import joshie.progression.crafting.ActionType;
 import joshie.progression.crafting.CraftingRegistry;
 import joshie.progression.gui.fields.BooleanField;
 import joshie.progression.gui.fields.IItemFilterSetterCallback;
+import joshie.progression.gui.fields.ItemFilterField;
+import joshie.progression.gui.fields.ItemFilterFieldPreview;
 import joshie.progression.helpers.JSONHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
@@ -26,6 +28,8 @@ public abstract class RewardBaseAction extends RewardBaseItemFilter implements I
         super(name, color);
         list.add(new BooleanField("usage", this));
         list.add(new BooleanField("crafting", this));
+        list.add(new ItemFilterField("filters", this));
+        list.add(new ItemFilterFieldPreview("filters", this, false, 25, 30, 26, 70, 25, 75, 2.8F));
     }
 
     @Override

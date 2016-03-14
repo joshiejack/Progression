@@ -1,5 +1,6 @@
 package joshie.progression.api;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.google.gson.JsonObject;
@@ -65,4 +66,6 @@ public interface ITriggerType extends IFieldProvider {
     public boolean isCancelable();
 
     public void setCanceling(boolean b);
+
+    public void addFieldTooltip(String fieldName, List<String> tooltip);
 }

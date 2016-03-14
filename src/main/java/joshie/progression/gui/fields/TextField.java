@@ -16,6 +16,11 @@ public class TextField extends AbstractField {
     public TextField(String name, Object object) {
         this(name, name, object);
     }
+    
+    @Override
+    public String getFieldName() {
+        return data.getFieldName();
+    }
 
     @Override
     public void click() {

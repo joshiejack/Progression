@@ -17,8 +17,8 @@ public class ItemFilterFieldPreview extends ItemFilterField implements IField {
     private ItemStack stack;
     private int ticker;
 
-    public ItemFilterFieldPreview(String fieldName, Object object, boolean blocksOnly, int x, int y, int mouseX1, int mouseX2, int mouseY1, int mouseY2, float scale) {
-        super(fieldName, object);
+    public ItemFilterFieldPreview(String fieldName, Object object, boolean blocksOnly, int x, int y, int mouseX1, int mouseX2, int mouseY1, int mouseY2, float scale, String...accepted) {
+        super(fieldName, object, accepted);
         this.blocksOnly = blocksOnly;
         this.x = x;
         this.y = y;
@@ -36,7 +36,7 @@ public class ItemFilterFieldPreview extends ItemFilterField implements IField {
     
     public ItemStack getStack() {
         if (ticker >= 200 || ticker == 0) {
-            stack = ItemHelper.getRandomItem(getFilters(), blocksOnly);
+            stack = ItemHelper.getRandomItem(getFilters());
             ticker = 1;
         }
         

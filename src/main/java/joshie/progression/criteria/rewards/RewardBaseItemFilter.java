@@ -14,15 +14,14 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 public abstract class RewardBaseItemFilter extends RewardBase {
-    public static final ItemStack BROKEN = new ItemStack(Items.baked_potato);
+    public ItemStack BROKEN;
     public List<IItemFilter> filters = new ArrayList();
     protected ItemStack preview;
     protected int ticker;
 
     public RewardBaseItemFilter(String name, int color) {
         super(name, color);
-        list.add(new ItemFilterField("filters", this));
-        list.add(new ItemFilterFieldPreview("filters", this, false, 25, 30, 26, 70, 25, 75, 2.8F));
+        BROKEN = new ItemStack(Items.baked_potato);
     }
 
     @Override
@@ -38,7 +37,7 @@ public abstract class RewardBaseItemFilter extends RewardBase {
     @Override
     public ItemStack getIcon() {
         if (ticker == 0 || ticker >= 200) {
-            preview = ItemHelper.getRandomItem(filters, false);
+            preview = ItemHelper.getRandomItem(filters);
             ticker = 1;
         }
         

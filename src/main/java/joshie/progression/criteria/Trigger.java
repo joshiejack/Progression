@@ -129,4 +129,9 @@ public class Trigger implements IDrawable, ICancelable {
     public void setCanceling(boolean isCanceld) {
         triggerType.setCanceling(isCanceld);
     }
+    
+    @Override
+    public void addFieldTooltip(String fieldName, List<String> tooltip) {
+        triggerType.addFieldTooltip(fieldName, tooltip);
+    }
 }

@@ -38,6 +38,7 @@ progression.reward.livingDrop=Entity Drops
 progression.reward.harvestDrop=Block Drops
 progression.reward.breakBlock=Break Block
 progression.reward.clear=Take Item
+progression.reward.potioneffect=Potion Effect
 progression.reward.layer.show=Book: Layer
 
 #Actions
@@ -57,6 +58,7 @@ progression.filter.item.modid=Mod
 progression.filter.item.itemStack=Item Stacks
 progression.filter.item.metadata=Metadata
 progression.filter.item.oreDictionary=Ore Dictionary
+progression.filter.item.potioneffect=Potion Effect
 
 achievement.criteria=Criteria Complete
 progression.name.display=Name

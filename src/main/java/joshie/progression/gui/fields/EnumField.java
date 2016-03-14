@@ -28,6 +28,11 @@ public class EnumField extends AbstractField {
     public void setField(Object next) throws IllegalArgumentException, IllegalAccessException {
         field.set(object, next);
     }
+    
+    @Override
+    public String getFieldName() {
+        return field.getName();
+    }
 
     @Override
     public void click() {

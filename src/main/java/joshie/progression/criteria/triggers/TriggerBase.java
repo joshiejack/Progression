@@ -127,4 +127,7 @@ public abstract class TriggerBase implements ITriggerType {
     public void setCanceling(boolean cancel) {
         this.cancel = cancel;
     }
+    
+    @Override
+    public void addFieldTooltip(String fieldName, List<String> tooltip) {}
 }

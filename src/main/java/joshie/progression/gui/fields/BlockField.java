@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
+import joshie.progression.gui.selector.filters.BlockFilter;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
@@ -36,7 +37,7 @@ public class BlockField extends ItemField {
     public boolean attemptClick(int mouseX, int mouseY) {
         boolean clicked = mouseX >= mouseX1 && mouseX <= mouseX2 && mouseY >= mouseY1 && mouseY <= mouseY2;
         if (clicked) {
-            FeatureItemSelector.INSTANCE.select(true, this, type);
+            FeatureItemSelector.INSTANCE.select(BlockFilter.INSTANCE, this, type);
             return true;
         } else return false;
     }   

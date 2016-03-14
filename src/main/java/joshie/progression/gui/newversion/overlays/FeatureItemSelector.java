@@ -67,29 +67,33 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
     }
 
     private void attemptToAdd(ItemStack stack) {
-        if (filter.isAcceptable(stack)) {
-            sorted.add(stack);
+        if ((filter == null) || (filter != null && filter.isAcceptable(stack))) {
+            //if (!sorted.contains(stack)) {
+                sorted.add(stack);
+            //}
         }
+    }
+
+    public ArrayList<ItemStack> getAllItems() {
+        ArrayList<ItemStack> list = ItemHelper.getAllItems();
+        if (filter != null) filter.addExtraItems(list);
+        return list;
     }
 
     public void updateSearch() {
         if (search == null || search.equals("")) {
-            if (filter != null) {
-                sorted = new ArrayList();
-                for (ItemStack stack : ItemHelper.getAllItems()) {
-                    attemptToAdd(stack);
-                }
-            } else sorted = new ArrayList(ItemHelper.getAllItems());
+            sorted = new ArrayList();
+            for (ItemStack stack : getAllItems()) {
+                attemptToAdd(stack);
+            }
         } else {
             position = 0;
             sorted = new ArrayList();
-            for (ItemStack stack : ItemHelper.getAllItems()) {
+            for (ItemStack stack : getAllItems()) {
                 if (stack != null && stack.getItem() != null) {
                     try {
                         if (stack.getDisplayName().toLowerCase().contains(search.toLowerCase())) {
-                            if (filter != null) {
-                                attemptToAdd(stack);
-                            } else sorted.add(stack);
+                            attemptToAdd(stack);
                         }
                     } catch (Exception e) {}
                 }

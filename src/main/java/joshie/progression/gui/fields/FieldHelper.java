@@ -65,6 +65,10 @@ public class FieldHelper implements ITextEditable {
             f.set(o, o2);
         } catch (Exception e) { }
     }
+    
+    public String getFieldName() {
+        return f.getName();
+    }
 
     @Override
     public String getTextField() {

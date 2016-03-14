@@ -77,4 +77,9 @@ public class Reward implements IDrawable {
     public void drawDisplay(int mouseX, int mouseY) {
         reward.drawDisplay(mouseX, mouseY);
     }
+
+    @Override
+    public void addFieldTooltip(String fieldName, List<String> tooltip) {
+        reward.addFieldTooltip(fieldName, tooltip);
+    }
 }

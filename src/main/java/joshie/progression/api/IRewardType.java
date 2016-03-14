@@ -68,4 +68,7 @@ public interface IRewardType extends IFieldProvider {
     
     /** Called to get the default tags for players **/
     public NBTTagCompound getDefaultTags(NBTTagCompound tag);
+
+    /** Add tooltip for the fields when hovering **/
+    public void addFieldTooltip(String fieldName, List<String> tooltip);
 }

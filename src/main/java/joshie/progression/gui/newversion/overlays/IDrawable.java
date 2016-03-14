@@ -35,4 +35,7 @@ public interface IDrawable {
 
     /** Draw this drawble in display mode **/
     public void drawDisplay(int mouseX, int mouseY);
+
+    /** Add tooltips **/
+    public void addFieldTooltip(String fieldName, List<String> tooltip);
 }

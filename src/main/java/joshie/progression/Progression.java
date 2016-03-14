@@ -28,6 +28,7 @@ import joshie.progression.criteria.filters.FilterMeta;
 import joshie.progression.criteria.filters.FilterMod;
 import joshie.progression.criteria.filters.FilterNBT;
 import joshie.progression.criteria.filters.FilterOre;
+import joshie.progression.criteria.filters.FilterPotionEffect;
 import joshie.progression.criteria.rewards.RewardBreakBlock;
 import joshie.progression.criteria.rewards.RewardClear;
 import joshie.progression.criteria.rewards.RewardCommand;
@@ -39,6 +40,7 @@ import joshie.progression.criteria.rewards.RewardHarvestDrop;
 import joshie.progression.criteria.rewards.RewardItem;
 import joshie.progression.criteria.rewards.RewardLivingDrop;
 import joshie.progression.criteria.rewards.RewardPoints;
+import joshie.progression.criteria.rewards.RewardPotion;
 import joshie.progression.criteria.rewards.RewardResearch;
 import joshie.progression.criteria.rewards.RewardSpeed;
 import joshie.progression.criteria.rewards.RewardTime;
@@ -161,6 +163,7 @@ public class Progression {
         ProgressionAPI.registry.registerItemFilter(new FilterNBT());
         ProgressionAPI.registry.registerItemFilter(new FilterMod());
         ProgressionAPI.registry.registerItemFilter(new FilterOre());
+        ProgressionAPI.registry.registerItemFilter(new FilterPotionEffect());
 
         ProgressionAPI.registry.registerConditionType(new ConditionBiomeType());
         ProgressionAPI.registry.registerConditionType(new ConditionRandom());
@@ -182,6 +185,7 @@ public class Progression {
         ProgressionAPI.registry.registerRewardType(new RewardHarvestDrop());
         ProgressionAPI.registry.registerRewardType(new RewardLivingDrop());
         ProgressionAPI.registry.registerRewardType(new RewardClear());
+        ProgressionAPI.registry.registerRewardType(new RewardPotion());
 
         ProgressionAPI.registry.registerTriggerType(new TriggerBreakBlock());
         ProgressionAPI.registry.registerTriggerType(new TriggerCrafting());

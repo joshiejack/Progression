@@ -40,6 +40,11 @@ public class BooleanField extends AbstractField {
     public BooleanField(String name, Object object) {
         this(name, name, object);
     }
+    
+    @Override
+    public String getFieldName() {
+        return field.getName();
+    }
 
     @Override
     public void click() {

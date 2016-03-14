@@ -48,7 +48,7 @@ public class FeatureNewTrigger extends FeatureNew {
                 }
             }
 
-            draw.drawText(trigger.getLocalisedName(), (xPos * 100) + 155, 46 + (yPos * 12), color);
+            offset.drawText(trigger.getLocalisedName(), (xPos * 100) + 155, 46 + (yPos * 12), color);
 
             yPos++;
 

@@ -43,6 +43,11 @@ public class EntityField extends AbstractField implements IEntitySelectable {
             this.object = object;
         } catch (Exception e) {}
     }
+    
+    @Override
+    public String getFieldName() {
+        return field.getName();
+    }
 
     @Override
     public void click() {}
