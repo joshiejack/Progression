@@ -7,12 +7,7 @@ import static joshie.progression.player.DataStats.SpeedType.WATER;
 import java.util.List;
 import java.util.UUID;
 
-import com.google.gson.JsonObject;
-
 import joshie.progression.api.EventBusType;
-import joshie.progression.gui.fields.BooleanField;
-import joshie.progression.gui.fields.TextField;
-import joshie.progression.helpers.JSONHelper;
 import joshie.progression.player.DataStats.SpeedType;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,10 +25,10 @@ public class RewardSpeed extends RewardBase {
 
     public RewardSpeed() {
         super(new ItemStack(Items.potionitem, 1, 8194), "speed", 0xFFFFBF00);
-        list.add(new TextField("speed", this));
-        list.add(new BooleanField("land", this));
-        list.add(new BooleanField("air", this));
-        list.add(new BooleanField("water", this));
+        //list.add(new TextField("speed", this));
+        //list.add(new BooleanField("land", this));
+        //list.add(new BooleanField("air", this));
+        //list.add(new BooleanField("water", this));
     }
 
     @SubscribeEvent
@@ -54,22 +49,6 @@ public class RewardSpeed extends RewardBase {
     @Override
     public EventBusType getEventBus() {
         return EventBusType.FORGE;
-    }
-
-    @Override
-    public void readFromJSON(JsonObject data) {
-        speed = JSONHelper.getFloat(data, "speed", speed);
-        land = JSONHelper.getBoolean(data, "land", land);
-        land = JSONHelper.getBoolean(data, "air", air);
-        water = JSONHelper.getBoolean(data, "water", water);
-    }
-
-    @Override
-    public void writeToJSON(JsonObject data) {
-        JSONHelper.setFloat(data, "speed", speed, 0.1F);
-        JSONHelper.setBoolean(data, "land", land, true);
-        JSONHelper.setBoolean(data, "air", air, true);
-        JSONHelper.setBoolean(data, "water", water, false);
     }
 
     @Override

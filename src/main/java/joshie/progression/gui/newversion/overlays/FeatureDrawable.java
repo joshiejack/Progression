@@ -1,10 +1,21 @@
 package joshie.progression.gui.newversion.overlays;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import joshie.progression.Progression;
 import joshie.progression.api.ICancelable;
 import joshie.progression.api.IField;
+import joshie.progression.api.IFieldProvider;
+import joshie.progression.api.ISpecialItemFilter;
+import joshie.progression.api.gui.ICustomDrawGuiDisplay;
+import joshie.progression.api.gui.ICustomDrawGuiEditor;
+import joshie.progression.api.gui.ISpecialFieldProvider;
+import joshie.progression.gui.fields.BooleanField;
+import joshie.progression.gui.fields.ItemFilterField;
+import joshie.progression.gui.fields.TextField;
+import joshie.progression.helpers.CollectionHelper;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.json.Theme;
 import joshie.progression.lib.ProgressionInfo;
@@ -14,9 +25,10 @@ public class FeatureDrawable extends FeatureAbstract {
     private List<IDrawable> drawable;
     private IGuiFeature newDrawable;
     private int crossX1, crossX2, crossY1, crossY2;
+    private int gradient1, gradient2, fontColor;
     private int offsetY;
 
-    public FeatureDrawable(List<IDrawable> drawable, int offsetY, int x1, int x2, int y1, int y2, IGuiFeature newDrawable) {
+    public FeatureDrawable(List<IDrawable> drawable, int offsetY, int x1, int x2, int y1, int y2, IGuiFeature newDrawable, int gradient1, int gradient2, int fontColor) {
         this.drawable = drawable;
         this.offsetY = offsetY;
         this.crossX1 = x1;
@@ -24,10 +36,39 @@ public class FeatureDrawable extends FeatureAbstract {
         this.crossY1 = y1;
         this.crossY2 = y2;
         this.newDrawable = newDrawable;
+        this.gradient1 = gradient1;
+        this.gradient2 = gradient2;
+        this.fontColor = fontColor;
     }
-    
+
     private int ticker = 0;
-    
+
+    private List<IField> getFields(IFieldProvider provider) {
+        List<IField> fields = new ArrayList();
+        addFieldsViaReflection(provider, fields);
+        if (provider instanceof ISpecialFieldProvider) {
+            ISpecialFieldProvider special = (ISpecialFieldProvider) provider;
+            special.addSpecialFields(fields);
+        }
+
+        return fields;
+    }
+
+    private void addFieldsViaReflection(IFieldProvider provider, List<IField> fields) {
+        for (Field field : provider.getClass().getFields()) {
+            if (field.getType() == boolean.class) fields.add(new BooleanField(field.getName(), provider));
+            if (field.getType() == String.class) fields.add(new TextField(field.getName(), provider));
+            if (field.getType() == int.class) fields.add(new TextField(field.getName(), provider));
+            if (field.getType() == float.class) fields.add(new TextField(field.getName(), provider));
+            if (field.getGenericType().toString().equals("java.util.List<" + ProgressionInfo.ITEMFILTER + ">")) {
+                if (provider instanceof ISpecialItemFilter) {
+                    fields.add(new ItemFilterField(field.getName(), ((ISpecialItemFilter) provider).getSpecialFilter()));
+                } else fields.add(new ItemFilterField(field.getName(), provider));
+            }
+            //TODO: Add entity filter fields if (field.getGenericType().toString().equals("java.util.List<" + ProgressionInfo.ENTITYFILTER + ">")) writeEntityFilters(json, field, object);
+        }
+    }
+
     private void drawingDraw(IDrawable drawing, DrawFeatureHelper helper, int renderX, int renderY, int mouseX, int mouseY) {
         //For updating the render ticker
         ticker++;
@@ -36,48 +77,61 @@ public class FeatureDrawable extends FeatureAbstract {
             ticker = 1;
         }
 
-        ICancelable cancelable = drawing instanceof ICancelable ? ((ICancelable)drawing) : null;
+        ICancelable cancelable = drawing instanceof ICancelable ? ((ICancelable) drawing) : null;
         int width = MCClientHelper.isInEditMode() ? 99 : 79;
-        helper.drawGradient(renderX, renderY, 1, 2, width, 15, drawing.getColor(), drawing.getGradient1(), drawing.getGradient2());
-        helper.drawText(renderX, renderY, drawing.getLocalisedName(), 6, 6, drawing.getFontColor());
+        helper.drawGradient(renderX, renderY, 1, 2, width, 15, drawing.getColor(), gradient1, gradient2);
+        helper.drawText(renderX, renderY, drawing.getLocalisedName(), 6, 6, fontColor);
         if (MCClientHelper.isInEditMode()) {
-            if (cancelable == null || !cancelable.isCanceling()) {
-                int yStart = cancelable == null || !cancelable.isCancelable() ? 18 : 24;
-                int index = 0;
-                for (IField t : drawing.getFields()) {
-                    int color = Theme.INSTANCE.optionsFontColor;
-                    int yPos = yStart + (index * 6);
-                    if (MCClientHelper.canEdit()) {
-                        if (mouseX >= 1 && mouseX <= 84) {
-                            if (mouseY >= yPos && mouseY < yPos + 6) {
-                                color = Theme.INSTANCE.optionsFontColorHover;
-                                List<String> tooltip = new ArrayList();
-                                drawing.addFieldTooltip(t.getFieldName(), tooltip);
-                                if (!tooltip.isEmpty()) FeatureTooltip.INSTANCE.addTooltip(tooltip);
+            ICustomDrawGuiEditor editor = drawing instanceof ICustomDrawGuiEditor ? ((ICustomDrawGuiEditor) drawing) : null;
+            if (editor == null || (editor != null && !editor.hideDefaultEditor())) {
+                if (cancelable == null || !cancelable.isCanceling()) {
+                    int yStart = cancelable == null || !cancelable.isCancelable() ? 18 : 24;
+                    int index = 0;
+                    for (IField t : getFields(drawing.getProvider())) {
+                        int color = Theme.INSTANCE.optionsFontColor;
+                        int yPos = yStart + (index * 6);
+                        if (MCClientHelper.canEdit()) {
+                            if (mouseX >= 1 && mouseX <= 84) {
+                                if (mouseY >= yPos && mouseY < yPos + 6) {
+                                    color = Theme.INSTANCE.optionsFontColorHover;
+                                    List<String> tooltip = new ArrayList();
+                                    for (int i = 0; i < 5; i++) {
+                                        String untranslated = "tooltip." + drawing.getUnlocalisedName() + "." + t.getFieldName() + "." + i;
+                                        String translated = Progression.translate(untranslated);
+                                        if (!untranslated.equals(translated)) {
+                                            FeatureTooltip.INSTANCE.addTooltip(translated);
+                                        }
+                                    }
+                                }
                             }
                         }
+
+                        t.draw(helper, renderX, renderY, color, yPos);
+                        index++;
                     }
-
-                    t.draw(helper, renderX, renderY, color, yPos);
-                    index++;
                 }
-            }
 
-            if (cancelable != null && cancelable.isCancelable()) {
-                int color = Theme.INSTANCE.optionsFontColor;
-                if (MCClientHelper.canEdit()) {
-                    if (mouseX >= 1 && mouseX <= 84) {
-                        if (mouseY >= 18 && mouseY < 24) {
-                            color = Theme.INSTANCE.optionsFontColorHover;
+                if (cancelable != null && cancelable.isCancelable()) {
+                    int color = Theme.INSTANCE.optionsFontColor;
+                    if (MCClientHelper.canEdit()) {
+                        if (mouseX >= 1 && mouseX <= 84) {
+                            if (mouseY >= 18 && mouseY < 24) {
+                                color = Theme.INSTANCE.optionsFontColorHover;
+                            }
                         }
-                    }
 
-                    helper.drawSplitText(renderX, renderY, "cancel: " + cancelable.isCanceling(), 4, 18, 105, color, 0.75F);
+                        helper.drawSplitText(renderX, renderY, "cancel: " + cancelable.isCanceling(), 4, 18, 105, color, 0.75F);
+                    }
                 }
+
+                if (editor != null) editor.drawEditor(offset, renderX, renderY, mouseX, mouseY);
             }
         } else {
-            helper.drawSplitText(renderX, renderY, drawing.getDescription(), 6, 20, 80, helper.getTheme().triggerFontColor);
-            drawing.drawDisplay(mouseX, mouseY);
+            ICustomDrawGuiDisplay display = drawing instanceof ICustomDrawGuiDisplay ? ((ICustomDrawGuiDisplay) drawing) : null;
+            if (display == null) {
+                helper.drawSplitText(renderX, renderY, drawing.getDescription(), 6, 20, 80, fontColor);
+                //Draw Shit
+            } else display.drawDisplay(offset, renderX, renderY, mouseX, mouseY);
         }
     }
 
@@ -120,37 +174,42 @@ public class FeatureDrawable extends FeatureAbstract {
             offset.drawTexture(xPos, offsetY, ProgressionInfo.textures, 15, 10, crossX, crossY, 55, 55);
         }
     }
-    
-    private boolean drawingMouseClicked(IDrawable drawing, int mouseX, int mouseY, int button) {
-        ICancelable cancelable = drawing instanceof ICancelable ? ((ICancelable)drawing) : null;
-        if (MCClientHelper.canEdit()) {
-            if (cancelable == null || !cancelable.isCanceling()) {
-                int yStart = cancelable == null || !cancelable.isCancelable() ? 18 : 24;
-                int index = 0;
-                for (IField t : drawing.getFields()) {
-                    if (t.attemptClick(mouseX, mouseY)) {
-                        return true;
-                    }
 
-                    int color = Theme.INSTANCE.optionsFontColor;
-                    int yPos = yStart + (index * 6);
-                    if (mouseX >= 1 && mouseX <= 99) {
-                        if (mouseY >= yPos && mouseY < yPos + 6) {
-                            t.click();
+    private boolean drawingMouseClicked(IDrawable drawing, int mouseX, int mouseY, int button) {
+        ICancelable cancelable = drawing instanceof ICancelable ? ((ICancelable) drawing) : null;
+        if (MCClientHelper.canEdit()) {
+            ICustomDrawGuiEditor editor = drawing instanceof ICustomDrawGuiEditor ? ((ICustomDrawGuiEditor) drawing) : null;
+            if (editor == null || (editor != null && !editor.hideDefaultEditor())) {
+                if (cancelable == null || !cancelable.isCanceling()) {
+                    int yStart = cancelable == null || !cancelable.isCancelable() ? 18 : 24;
+                    int index = 0;
+                    for (IField t : getFields(drawing.getProvider())) {
+                        if (t.attemptClick(mouseX, mouseY)) {
                             return true;
                         }
-                    }
 
-                    index++;
-                }
-            }
+                        int color = Theme.INSTANCE.optionsFontColor;
+                        int yPos = yStart + (index * 6);
+                        if (mouseX >= 1 && mouseX <= 99) {
+                            if (mouseY >= yPos && mouseY < yPos + 6) {
+                                t.click();
+                                return true;
+                            }
+                        }
 
-            if (cancelable != null && cancelable.isCancelable()) {
-                if (mouseX >= 1 && mouseX <= 84) {
-                    if (mouseY >= 18 && mouseY < 24) {
-                        cancelable.setCanceling(!cancelable.isCanceling());
+                        index++;
                     }
                 }
+
+                if (cancelable != null && cancelable.isCancelable()) {
+                    if (mouseX >= 1 && mouseX <= 84) {
+                        if (mouseY >= 18 && mouseY < 24) {
+                            cancelable.setCanceling(!cancelable.isCanceling());
+                        }
+                    }
+                }
+
+                if (editor != null && editor.mouseClicked(mouseX, mouseY)) return true;
             }
         }
 
@@ -170,7 +229,7 @@ public class FeatureDrawable extends FeatureAbstract {
             if (MCClientHelper.isInEditMode()) {
                 //Delete Button
                 if (mouseOffsetX >= 87 && mouseOffsetX <= 97 && mouseOffsetY >= 4 && mouseOffsetY <= 14) {
-                    drawing.remove(drawable);
+                    CollectionHelper.removeAndUpdate(drawable, drawing);
                     return true;
                 }
             }

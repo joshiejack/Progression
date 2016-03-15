@@ -3,8 +3,6 @@ package joshie.progression.criteria.rewards;
 import java.util.List;
 import java.util.UUID;
 
-import com.google.gson.JsonObject;
-
 import joshie.progression.Progression;
 import joshie.progression.api.EventBusType;
 import joshie.progression.api.IItemFilter;
@@ -14,48 +12,26 @@ import joshie.progression.gui.fields.BooleanField;
 import joshie.progression.gui.fields.IItemFilterSetterCallback;
 import joshie.progression.gui.fields.ItemFilterField;
 import joshie.progression.gui.fields.ItemFilterFieldPreview;
-import joshie.progression.helpers.JSONHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
 public abstract class RewardBaseAction extends RewardBaseItemFilter implements IItemFilterSetterCallback {
-    public ActionType type = ActionType.CRAFTING;
-    public boolean usage = true;
-    public boolean crafting = true;
+    protected ActionType type = ActionType.CRAFTING;
+    public boolean disableUsage = true;
+    public boolean disableCrafting = true;
 
     /** Moving actions to be seperated from one another **/
     public RewardBaseAction(String name, int color) {
         super(name, color);
-        list.add(new BooleanField("usage", this));
-        list.add(new BooleanField("crafting", this));
+        list.add(new BooleanField("disableUsage", this));
+        list.add(new BooleanField("disableCrafting", this));
         list.add(new ItemFilterField("filters", this));
-        list.add(new ItemFilterFieldPreview("filters", this, false, 25, 30, 26, 70, 25, 75, 2.8F));
+        list.add(new ItemFilterFieldPreview("filters", this, 25, 30, 26, 70, 25, 75, 2.8F));
     }
 
     @Override
     public EventBusType getEventBus() {
         return EventBusType.FORGE;
-    }
-
-    @Override
-    public void readFromJSON(JsonObject data) {
-        super.readFromJSON(data);
-        crafting = JSONHelper.getBoolean(data, "disableCrafting", crafting);
-        usage = JSONHelper.getBoolean(data, "disableUsage", usage);
-        if (Progression.JEI_LOADED) {
-            boolean hide = JSONHelper.getBoolean(data, "hideFromNEI", false);
-            if (hide) {
-                isAdded = false;
-                //JEISupport.helpers.getItemBlacklist().addItemToBlacklist(stack);
-            }
-        }
-    }
-
-    @Override
-    public void writeToJSON(JsonObject data) {
-        super.writeToJSON(data);
-        JSONHelper.setBoolean(data, "disableCrafting", crafting, true);
-        JSONHelper.setBoolean(data, "disableUsage", usage, true);
     }
 
     private boolean isAdded = true;
@@ -70,12 +46,12 @@ public abstract class RewardBaseAction extends RewardBaseItemFilter implements I
 
     @Override
     public void onAdded() {
-        CraftingRegistry.addRequirement(type, criteria, filters, usage, crafting);
+        CraftingRegistry.addRequirement(type, criteria, filters, disableUsage, disableCrafting);
     }
 
     @Override
     public void onRemoved() {
-        CraftingRegistry.removeRequirement(type, criteria, filters, usage, crafting);
+        CraftingRegistry.removeRequirement(type, criteria, filters, disableUsage, disableCrafting);
     }
 
     @Override

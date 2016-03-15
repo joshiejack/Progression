@@ -13,6 +13,7 @@ import joshie.progression.api.IFilter;
 import joshie.progression.api.IItemFilter;
 import joshie.progression.api.IProgressionAPI;
 import joshie.progression.api.IRewardType;
+import joshie.progression.api.ISpecialJSON;
 import joshie.progression.api.ITriggerData;
 import joshie.progression.api.ITriggerType;
 import joshie.progression.crafting.ActionType;
@@ -58,6 +59,16 @@ public class APIHandler implements IProgressionAPI {
     @SideOnly(Side.CLIENT)
     private static HashMap<String, Criteria> criteriaClient;
     private static HashMap<String, Criteria> criteriaServer;
+    
+
+    public static Object getDefault(Object object) {
+        if (object instanceof ITriggerType) return triggerTypes.get(((ITriggerType)object).getUnlocalisedName());
+        if (object instanceof IRewardType) return rewardTypes.get(((IRewardType)object).getUnlocalisedName());
+        if (object instanceof IConditionType) return conditionTypes.get(((IConditionType)object).getUnlocalisedName());
+        if (object instanceof IItemFilter) return itemFilterTypes.get(((IItemFilter)object).getUnlocalisedName());
+        if (object instanceof IEntityFilter) return entityFilterTypes.get(((IEntityFilter)object).getUnlocalisedName());
+        return null;
+    }
     
 
     public static void resetAPIHandler() {
@@ -126,13 +137,13 @@ public class APIHandler implements IProgressionAPI {
 
     @Override
     public IItemFilter registerItemFilter(IItemFilter filter) {
-        itemFilterTypes.put(filter.getName(), filter);
+        itemFilterTypes.put(filter.getUnlocalisedName(), filter);
         return filter;
     }
     
     @Override
 	public IEntityFilter registerEntityFilter(IEntityFilter filter) {
-    	entityFilterTypes.put(filter.getName(), filter);
+    	entityFilterTypes.put(filter.getUnlocalisedName(), filter);
         return filter;
 	}
 
@@ -177,7 +188,15 @@ public class APIHandler implements IProgressionAPI {
         } catch (Exception e) {}
 
         Trigger trigger = new Trigger(criteria, newTriggerType);
-        trigger.getType().readFromJSON(data);
+        ITriggerType triggerType = trigger.getType();
+        boolean specialOnly = false;
+        if (triggerType instanceof ISpecialJSON) {
+            ISpecialJSON special = ((ISpecialJSON)triggerType);
+            special.readFromJSON(data);
+            specialOnly = special.onlySpecial();
+        }
+        
+        if (!specialOnly) JSONHelper.readVariables(data, triggerType);
         EventsManager.onTriggerAdded(trigger);
         criteria.addTriggers(trigger);
         return trigger;
@@ -206,7 +225,15 @@ public class APIHandler implements IProgressionAPI {
         }
 
         Reward reward = new Reward(criteria, newRewardType, optional);
-        reward.getType().readFromJSON(data);
+        IRewardType rewardType = reward.getType();
+        boolean specialOnly = false;
+        if (rewardType instanceof ISpecialJSON) {
+            ISpecialJSON special = ((ISpecialJSON)rewardType);
+            special.readFromJSON(data);
+            specialOnly = special.onlySpecial();
+        }
+        
+        if (!specialOnly) JSONHelper.readVariables(data, rewardType);
         EventsManager.onRewardAdded(reward);
         criteria.addRewards(reward);
         return reward;

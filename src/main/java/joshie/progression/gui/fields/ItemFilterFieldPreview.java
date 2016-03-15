@@ -6,7 +6,6 @@ import joshie.progression.helpers.ItemHelper;
 import net.minecraft.item.ItemStack;
 
 public class ItemFilterFieldPreview extends ItemFilterField implements IField {
-    private final boolean blocksOnly;
     private final int x;
     private final int y;
     private final float scale;
@@ -17,9 +16,8 @@ public class ItemFilterFieldPreview extends ItemFilterField implements IField {
     private ItemStack stack;
     private int ticker;
 
-    public ItemFilterFieldPreview(String fieldName, Object object, boolean blocksOnly, int x, int y, int mouseX1, int mouseX2, int mouseY1, int mouseY2, float scale, String...accepted) {
+    public ItemFilterFieldPreview(String fieldName, Object object, int x, int y, int mouseX1, int mouseX2, int mouseY1, int mouseY2, float scale, String...accepted) {
         super(fieldName, object, accepted);
-        this.blocksOnly = blocksOnly;
         this.x = x;
         this.y = y;
         this.scale = scale;

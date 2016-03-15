@@ -1,13 +1,9 @@
 package joshie.progression.criteria;
 
-import java.util.List;
-
-import joshie.progression.api.IField;
+import joshie.progression.Progression;
+import joshie.progression.api.IFieldProvider;
 import joshie.progression.api.IRewardType;
 import joshie.progression.gui.newversion.overlays.IDrawable;
-import joshie.progression.handlers.EventsManager;
-import joshie.progression.helpers.CollectionHelper;
-import joshie.progression.json.Theme;
 
 public class Reward implements IDrawable {
     private Criteria criteria;
@@ -32,15 +28,8 @@ public class Reward implements IDrawable {
     }
     
     @Override
-    public List<IField> getFields() {
-        return reward.getFields();
-    }
-
-    @Override
-    public void remove(List list) {
-        EventsManager.onRewardRemoved(this);
-        CollectionHelper.remove(list, this); //Remove from temporary list    
-        CollectionHelper.remove(criteria.rewards, this); //Remove from real list
+    public IFieldProvider getProvider() {
+        return reward;
     }
 
     @Override
@@ -49,23 +38,8 @@ public class Reward implements IDrawable {
     }
 
     @Override
-    public int getGradient1() {
-        return Theme.INSTANCE.rewardBoxGradient1;
-    }
-
-    @Override
-    public int getGradient2() {
-        return Theme.INSTANCE.rewardBoxGradient2;
-    }
-
-    @Override
-    public int getFontColor() {
-        return Theme.INSTANCE.rewardBoxFont;
-    }
-
-    @Override
     public String getLocalisedName() {
-        return reward.getLocalisedName();
+        return Progression.translate("reward." + reward.getUnlocalisedName());
     }
 
     @Override
@@ -74,12 +48,7 @@ public class Reward implements IDrawable {
     }
 
     @Override
-    public void drawDisplay(int mouseX, int mouseY) {
-        reward.drawDisplay(mouseX, mouseY);
-    }
-
-    @Override
-    public void addFieldTooltip(String fieldName, List<String> tooltip) {
-        reward.addFieldTooltip(fieldName, tooltip);
+    public String getUnlocalisedName() {
+        return reward.getUnlocalisedName();
     }
 }

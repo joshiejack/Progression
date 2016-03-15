@@ -17,6 +17,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import joshie.progression.Progression;
+import joshie.progression.api.IRewardType;
+import joshie.progression.api.ISpecialJSON;
+import joshie.progression.api.ITriggerType;
 import joshie.progression.criteria.Condition;
 import joshie.progression.criteria.Criteria;
 import joshie.progression.criteria.Reward;
@@ -24,6 +27,7 @@ import joshie.progression.criteria.Tab;
 import joshie.progression.criteria.Trigger;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.handlers.RemappingHandler;
+import joshie.progression.helpers.JSONHelper;
 import joshie.progression.helpers.StackHelper;
 import joshie.progression.lib.Exceptions.CriteriaNotFoundException;
 import joshie.progression.lib.ProgressionInfo;
@@ -345,7 +349,15 @@ public class JSONLoader {
                         }
 
                         JsonObject triggerData = new JsonObject();
-                        trigger.getType().writeToJSON(triggerData);
+                        ITriggerType triggerType = trigger.getType();
+                        boolean specialOnly = false;
+                        if (triggerType instanceof ISpecialJSON) {
+                            ISpecialJSON special = ((ISpecialJSON)triggerType);
+                            special.writeToJSON(triggerData);
+                            specialOnly = special.onlySpecial();
+                        }
+                        
+                        if (!specialOnly) JSONHelper.writeVariables(triggerData, triggerType);
                         DataTrigger dTrigger = new DataTrigger(trigger.getType().getUnlocalisedName(), triggerData, theConditions);
                         theTriggers.add(dTrigger);
                     }
@@ -354,7 +366,15 @@ public class JSONLoader {
                 if (c.rewards.size() > 0) {
                     for (Reward reward : c.rewards) {
                         JsonObject rewardData = new JsonObject();
-                        reward.getType().writeToJSON(rewardData);
+                        IRewardType rewardType = reward.getType();
+                        boolean specialOnly = false;
+                        if (rewardType instanceof ISpecialJSON) {
+                            ISpecialJSON special = ((ISpecialJSON)rewardType);
+                            special.writeToJSON(rewardData);
+                            specialOnly = special.onlySpecial();
+                        }
+                        
+                        if (!specialOnly) JSONHelper.writeVariables(rewardData, rewardType);
                         if (reward.optional) {
                             rewardData.addProperty("optional", true);
                         }

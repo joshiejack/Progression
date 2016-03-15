@@ -5,13 +5,10 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import com.google.gson.JsonObject;
-
 import joshie.progression.api.IEntityFilter;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.gui.GuiCriteriaEditor;
 import joshie.progression.helpers.EntityHelper;
-import joshie.progression.helpers.JSONHelper;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -25,9 +22,6 @@ public class TriggerKill extends TriggerBaseCounter {
 
     public TriggerKill() {
         super("kill", 0xFF000000);
-
-        //editList.add(new EntityField("entity", this, 50, 105, 1, 84, 27, 65, Type.TRIGGER));
-        //displayList.add(new EntityField("entity", this, 40, 120, 1, 84, 27, 65, Type.TRIGGER));
     }
 
     @SubscribeEvent
@@ -36,18 +30,6 @@ public class TriggerKill extends TriggerBaseCounter {
         if (source instanceof EntityPlayer && source instanceof EntityLivingBase) {
             ProgressionAPI.registry.fireTrigger((EntityPlayer) source, getUnlocalisedName(), source);
         }
-    }
-
-    @Override
-    public void readFromJSON(JsonObject data) {
-        super.readFromJSON(data);
-        filters = JSONHelper.getEntityFilters(data, "filters");
-    }
-
-    @Override
-    public void writeToJSON(JsonObject data) {
-        super.writeToJSON(data);
-        JSONHelper.setEntityFilters(data, "filters", filters);
     }
 
     @Override

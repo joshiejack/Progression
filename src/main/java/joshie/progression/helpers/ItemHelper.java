@@ -69,6 +69,12 @@ public class ItemHelper {
     public static ItemStack getRandomItem(List<IItemFilter> filters) {
         return getRandomItem(filters, null);
     }
+    
+    public static ItemStack getRandomItemOfSize(List<IItemFilter> filters, int stackSize) {
+        ItemStack item = getRandomItem(filters, null).copy();
+        item.stackSize = stackSize;
+        return item;
+    }
 
     public static ItemStack getRandomItem(List<IItemFilter> filters, IItemSelectorFilter selector) {
         ArrayList<IItemFilter> shuffledFilters = new ArrayList(filters);

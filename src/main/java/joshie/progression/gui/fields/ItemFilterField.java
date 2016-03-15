@@ -24,9 +24,15 @@ public class ItemFilterField extends AbstractField {
 
         try {
             field = object.getClass().getField(fieldName);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            try {
+                field = object.getClass().getSuperclass().getField(fieldName);
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+        }
     }
-    
+
     @Override
     public String getFieldName() {
         return field.getName();
@@ -41,14 +47,14 @@ public class ItemFilterField extends AbstractField {
     public void draw(DrawFeatureHelper helper, int renderX, int renderY, int color, int yPos) {
         helper.drawSplitText(renderX, renderY, "Item Editor", 4, yPos, 105, color, 0.75F);
     }
-    
+
     public boolean isAccepted(IItemFilter filter) {
         if (accepted == null || accepted.length == 0) return true;
         else {
-            for (String string: accepted) {
-                if (string.equalsIgnoreCase(filter.getName())) return true;
+            for (String string : accepted) {
+                if (string.equalsIgnoreCase(filter.getUnlocalisedName())) return true;
             }
-            
+
             return false;
         }
     }
@@ -73,7 +79,7 @@ public class ItemFilterField extends AbstractField {
     public void setFilters(List<IItemFilter> filters) {
         try {
             if (object instanceof IItemFilterSetterCallback) {
-                ((IItemFilterSetterCallback)object).setFilter(field.getName(), filters);
+                ((IItemFilterSetterCallback) object).setFilter(field.getName(), filters);
             } else field.set(object, filters);
         } catch (Exception e) {}
     }
@@ -91,7 +97,7 @@ public class ItemFilterField extends AbstractField {
         List<IItemFilter> filters = getFilters();
         filters.add(filter);
         if (object instanceof IItemFilterSetterCallback) {
-            ((IItemFilterSetterCallback)object).setFilter(field.getName(), filters);
+            ((IItemFilterSetterCallback) object).setFilter(field.getName(), filters);
         }
     }
 
@@ -99,7 +105,7 @@ public class ItemFilterField extends AbstractField {
         List<IItemFilter> filters = getFilters();
         CollectionHelper.remove(filters, filter);
         if (object instanceof IItemFilterSetterCallback) {
-            ((IItemFilterSetterCallback)object).setFilter(field.getName(), filters);
+            ((IItemFilterSetterCallback) object).setFilter(field.getName(), filters);
         }
     }
 }

@@ -3,11 +3,8 @@ package joshie.progression.criteria.rewards;
 import java.util.List;
 import java.util.UUID;
 
-import com.google.gson.JsonObject;
-
 import joshie.progression.api.EventBusType;
 import joshie.progression.gui.fields.TextField;
-import joshie.progression.helpers.JSONHelper;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -41,16 +38,6 @@ public class RewardFallDamage extends RewardBase {
                 event.distance = event.distance - maxAbsorbed;
             }
         }
-    }
-
-    @Override
-    public void readFromJSON(JsonObject data) {
-        absorption = JSONHelper.getInteger(data, "maxAbsorption", absorption);
-    }
-
-    @Override
-    public void writeToJSON(JsonObject data) {
-        JSONHelper.setInteger(data, "maxAbsorption", absorption, 1);
     }
 
     @Override

@@ -3,50 +3,25 @@ package joshie.progression.criteria.rewards;
 import java.util.List;
 import java.util.UUID;
 
-import com.google.gson.JsonObject;
-
-import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
-import joshie.progression.gui.fields.BooleanField;
-import joshie.progression.gui.fields.ItemAmountField;
-import joshie.progression.gui.fields.ItemField;
-import joshie.progression.gui.fields.TextField;
-import joshie.progression.helpers.JSONHelper;
+import joshie.progression.api.IItemFilter;
+import joshie.progression.gui.fields.ItemFilterFieldPreview;
 import joshie.progression.helpers.PlayerHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
-public class RewardClear extends RewardBase {
-    public ItemStack stack = new ItemStack(Items.diamond);
-    public String orename = "IGNORE";
-    public boolean matchDamage = true;
-    public boolean matchNBT = false;
-
+public class RewardClear extends RewardBaseItemFilter {
+    public int toTake = 1;
+    
     public RewardClear() {
         super("clear", 0xFF69008C);
-        ItemField field = new ItemField("stack", this, 50, 40, 2F, 10, 100, 30, 100, Type.REWARD);
-        list.add(new TextField("orename", this));
-        list.add(new BooleanField("matchDamage", this));
-        list.add(new BooleanField("matchNBT", this));
-        list.add(new ItemAmountField("stack", "stack", field));
-        list.add(field);
-    }
-
-    @Override
-    public void readFromJSON(JsonObject data) {
-        stack = JSONHelper.getItemStack(data, "item", stack);
-    }
-
-    @Override
-    public void writeToJSON(JsonObject data) {
-        JSONHelper.setItemStack(data, "item", stack);
+        //list.add(new TextField("toTake", this));
+        list.add(new ItemFilterFieldPreview("filters", this, 50, 40, 10, 100, 30, 100, 2F));
     }
 
     @Override
     public void reward(UUID uuid) {
-        int toTake = stack.stackSize;
         int taken = 0;
         
         List<EntityPlayerMP> players = PlayerHelper.getPlayersFromUUID(uuid);
@@ -59,11 +34,11 @@ public class RewardClear extends RewardBase {
 
                     if (check != null) {
                         for (int j = 0; j < check.stackSize && taken < toTake; j++) {
-                            if (check.getItem() == stack.getItem()) {
-                                if (matchDamage && stack.getItemDamage() != check.getItemDamage()) continue;
-                                if (matchNBT && stack.getTagCompound() != check.getTagCompound()) continue;
-                                decrease++;
-                                taken++;
+                            for (IItemFilter filter: filters) {
+                                if (filter.matches(check)) {
+                                    decrease++;
+                                    taken++;
+                                }
                             }
                         }
 
@@ -75,13 +50,9 @@ public class RewardClear extends RewardBase {
     }
 
     @Override
-    public ItemStack getIcon() {
-        return stack;
-    }
-
-    @Override
     public void addTooltip(List list) {
         list.add(EnumChatFormatting.WHITE + "Remove Item");
+        ItemStack stack = preview == null ? BROKEN : preview;
         list.add(stack.getDisplayName() + " x" + stack.stackSize);
     }
 }

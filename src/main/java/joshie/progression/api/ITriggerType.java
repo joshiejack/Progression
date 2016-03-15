@@ -6,6 +6,7 @@ import java.util.UUID;
 import com.google.gson.JsonObject;
 
 import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -68,4 +69,6 @@ public interface ITriggerType extends IFieldProvider {
     public void setCanceling(boolean b);
 
     public void addFieldTooltip(String fieldName, List<String> tooltip);
+
+    public ItemStack getIcon();
 }

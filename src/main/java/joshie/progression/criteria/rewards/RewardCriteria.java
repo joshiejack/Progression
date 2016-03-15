@@ -3,42 +3,27 @@ package joshie.progression.criteria.rewards;
 import java.util.List;
 import java.util.UUID;
 
-import com.google.gson.JsonObject;
-
 import joshie.progression.criteria.Criteria;
 import joshie.progression.gui.fields.BooleanField;
 import joshie.progression.gui.fields.IGetterCallback;
 import joshie.progression.gui.fields.ISetterCallback;
 import joshie.progression.gui.fields.TextField;
 import joshie.progression.handlers.APIHandler;
-import joshie.progression.helpers.JSONHelper;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
 public class RewardCriteria extends RewardBase implements IGetterCallback, ISetterCallback {
-    public String displayName = "";
     public String criteriaID = "";
     public boolean remove = false;
-    public Criteria criteria = null;
+    public String displayName = "";
+    private Criteria criteria = null;
 
     public RewardCriteria() {
         super(new ItemStack(Items.golden_apple), "criteria", 0xFF99B3FF);
         list.add(new TextField("displayName", this));
         list.add(new BooleanField("remove", this));
-    }
-
-    @Override
-    public void readFromJSON(JsonObject data) {
-        criteriaID = JSONHelper.getString(data, "criteriaID", criteriaID);
-        remove = JSONHelper.getBoolean(data, "remove", remove);
-    }
-
-    @Override
-    public void writeToJSON(JsonObject data) {
-        JSONHelper.setString(data, "criteriaID", criteriaID, "");
-        JSONHelper.setBoolean(data, "remove", remove, false);
     }
 
     public Criteria getAssignedCriteria() {

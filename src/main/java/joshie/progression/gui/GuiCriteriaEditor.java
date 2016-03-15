@@ -16,13 +16,10 @@ import joshie.progression.gui.editors.SelectItem;
 import joshie.progression.gui.editors.SelectItem.Type;
 import joshie.progression.gui.fields.FieldHelper;
 import joshie.progression.gui.fields.FieldHelper.IntegerFieldHelper;
-import joshie.progression.handlers.EventsManager;
 import joshie.progression.helpers.MCClientHelper;
-import joshie.progression.helpers.CollectionHelper;
 import joshie.progression.lib.ProgressionInfo;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
 public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
     public static final GuiCriteriaEditor INSTANCE = new GuiCriteriaEditor();
@@ -74,13 +71,7 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
 
         if (MCClientHelper.canEdit()) {
             int crossY = 64;
-            if (!NewTrigger.INSTANCE.isVisible() && !NewReward.INSTANCE.isVisible()) {
-                if (mouseX >= 15 + 100 * xCoord && mouseX <= 15 + 100 * xCoord + 55) {
-                    if (mouseY >= 49 && mouseY <= 49 + 55) {
-                        crossY = 119;
-                    }
-                }
-            }
+            
 
             GL11.glColor4f(1F, 1F, 1F, 1F);
             MCClientHelper.getMinecraft().getTextureManager().bindTexture(ProgressionInfo.textures);
@@ -222,14 +213,7 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
         }
 
         if (MCClientHelper.canEdit()) {
-            mouseX = GuiCriteriaEditor.INSTANCE.mouseX - offsetX;
-            mouseY = GuiCriteriaEditor.INSTANCE.mouseY;
-            if (mouseX >= 15 + 100 * xCoord && mouseX <= 15 + 100 * xCoord + 55) {
-                if (mouseY >= 49 && mouseY <= 49 + 55) {
-                    NewTrigger.INSTANCE.select(selected);
-                    hasClicked = true;
-                }
-            }
+            
 
             //Rewards
             /*List<Reward> rewards = selected.rewards;
@@ -251,12 +235,7 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
                 xCoord++;
             } */
 
-            if (mouseX >= 15 + 100 * xCoord && mouseX <= 15 + 100 * xCoord + 55) {
-                if (mouseY >= 144 && mouseY <= 144 + 55) {
-                    NewReward.INSTANCE.select(selected);
-                    hasClicked = true;
-                }
-            }
+            
         }
 
         return hasClicked;

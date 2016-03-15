@@ -14,8 +14,8 @@ public class TriggerBreakBlock extends TriggerBaseBlock {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onEvent(BreakEvent event) {
-    	Block block = event.state.getBlock();
-    	int meta = block.getMetaFromState(event.state);
+        Block block = event.state.getBlock();
+        int meta = block.getMetaFromState(event.state);
         if (ProgressionAPI.registry.fireTrigger(event.getPlayer(), getUnlocalisedName(), block, meta) == Result.DENY) {
             event.setCanceled(true);
         }

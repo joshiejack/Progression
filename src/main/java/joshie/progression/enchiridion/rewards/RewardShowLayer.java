@@ -1,21 +1,18 @@
 package joshie.progression.enchiridion.rewards;
 
-import java.util.List;
 import java.util.UUID;
-
-import com.google.gson.JsonObject;
 
 import joshie.enchiridion.api.event.FeatureVisibleEvent;
 import joshie.progression.api.EventBusType;
+import joshie.progression.api.IStoreNBTData;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.criteria.rewards.RewardBase;
 import joshie.progression.gui.fields.BooleanField;
 import joshie.progression.gui.fields.TextField;
-import joshie.progression.helpers.JSONHelper;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class RewardShowLayer extends RewardBase {
+public class RewardShowLayer extends RewardBase implements IStoreNBTData {
     public boolean hideByDefault = true;
     public String bookid = "";
     public int page = 1;
@@ -81,24 +78,5 @@ public class RewardShowLayer extends RewardBase {
         else pageData.setBoolean("" + layer, true);
         
         ProgressionAPI.player.setCustomData(uuid, "enchiridion.hidden", tag);
-    }
-
-    @Override
-    public void addTooltip(List list) {}
-
-    @Override
-    public void readFromJSON(JsonObject object) {
-        hideByDefault = JSONHelper.getBoolean(object, "hideByDefault", true);
-        bookid = JSONHelper.getString(object, "bookid", "");
-        page = JSONHelper.getInteger(object, "page", 1);
-        layer = JSONHelper.getInteger(object, "layer", 0);
-    }
-
-    @Override
-    public void writeToJSON(JsonObject object) {
-        JSONHelper.setBoolean(object, "hideByDefault", hideByDefault, true);
-        JSONHelper.setString(object, "bookid", bookid, "");
-        JSONHelper.setInteger(object, "page", page, 1);
-        JSONHelper.setInteger(object, "layer", layer, 1);
     }
 }

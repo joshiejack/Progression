@@ -12,11 +12,7 @@ import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public interface IConditionType {       
-    /** Returns the unlocalised name of this condition
-     *  This name is what is us in the json **/
-    public String getUnlocalisedName();
-    
+public interface IConditionType extends IFieldProvider {          
     /** Returns the localised name of this condition**/
     public String getLocalisedName();
     

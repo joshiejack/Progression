@@ -1,5 +1,6 @@
 package joshie.progression.gui.newversion.overlays;
 
+import joshie.progression.Progression;
 import joshie.progression.api.IRewardType;
 import joshie.progression.gui.newversion.GuiCriteriaEditor;
 import joshie.progression.handlers.APIHandler;
@@ -49,7 +50,7 @@ public class FeatureNewReward extends FeatureNew {
                 }
             }
 
-            offset.drawText(reward.getLocalisedName(), (xPos * 100) + 155, 46 + (yPos * 12), color);
+            offset.drawText(Progression.translate("reward." + reward.getUnlocalisedName()), (xPos * 100) + 155, 46 + (yPos * 12), color);
 
             xPos++;
 

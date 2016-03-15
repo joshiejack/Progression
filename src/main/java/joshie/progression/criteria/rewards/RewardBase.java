@@ -10,8 +10,6 @@ import joshie.progression.api.IRewardType;
 import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.StatCollector;
 
 public abstract class RewardBase implements IRewardType {
     protected List<IField> list = new ArrayList();
@@ -33,15 +31,10 @@ public abstract class RewardBase implements IRewardType {
     }
 
     @Override
-    public List<IField> getFields() {
-        return list;
-    }
-
-    @Override
     public ItemStack getIcon() {
         return stack;
     }
-
+    
     @Override
     public void markCriteria(ICriteria criteria) {
         this.criteria = criteria;
@@ -50,11 +43,6 @@ public abstract class RewardBase implements IRewardType {
     @Override
     public String getUnlocalisedName() {
         return name;
-    }
-
-    @Override
-    public String getLocalisedName() {
-        return StatCollector.translateToLocal("progression.reward." + getUnlocalisedName());
     }
 
     @Override
@@ -90,16 +78,9 @@ public abstract class RewardBase implements IRewardType {
     public String getDescription() {
         return "MISSING DESCRIPTION";
     }
-
+    
     @Override
-    public String getNBTKey() {
-        return null;
-    }
-
-    @Override
-    public NBTTagCompound getDefaultTags(NBTTagCompound tag) {
-        return null;
-    }
+    public void addTooltip(List list) {}
     
     @Override
     public void addFieldTooltip(String fieldName, List<String> tooltip) {}

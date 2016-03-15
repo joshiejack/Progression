@@ -1,7 +1,9 @@
 package joshie.progression.criteria.conditions;
 
+import java.util.List;
 import java.util.UUID;
 
+import joshie.progression.api.IField;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 

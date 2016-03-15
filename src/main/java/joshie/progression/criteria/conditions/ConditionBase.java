@@ -6,7 +6,7 @@ import java.util.List;
 import com.google.gson.JsonObject;
 
 import joshie.progression.api.IConditionType;
-import joshie.progression.gui.fields.AbstractField;
+import joshie.progression.api.IField;
 import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.json.Theme;
@@ -14,7 +14,7 @@ import net.minecraft.util.StatCollector;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
 public abstract class ConditionBase implements IConditionType {
-    protected List<AbstractField> list = new ArrayList();
+    protected List<IField> list = new ArrayList();
     private String name;
     private int color;
 
@@ -48,7 +48,7 @@ public abstract class ConditionBase implements IConditionType {
     public Result onClicked(int mouseX, int mouseY) {
         if (MCClientHelper.canEdit()) {
             int index = 0;
-            for (AbstractField t : list) {
+            for (IField t : list) {
                 int color = Theme.INSTANCE.optionsFontColor;
                 int yPos = 25 + (index * 8);
                 if (mouseX >= 1 && mouseX <= 84) {
@@ -72,7 +72,7 @@ public abstract class ConditionBase implements IConditionType {
     @Override
     public void drawEditor(DrawFeatureHelper helper, int renderX, int renderY, int mouseX, int mouseY) {
         int index = 0;
-        for (AbstractField t : list) {
+        for (IField t : list) {
             int color = Theme.INSTANCE.optionsFontColor;
             int yPos = 25 + (index * 8);
             if (MCClientHelper.canEdit()) {

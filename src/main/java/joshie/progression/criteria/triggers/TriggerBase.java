@@ -12,12 +12,11 @@ import joshie.progression.api.ICriteria;
 import joshie.progression.api.IField;
 import joshie.progression.api.ITriggerData;
 import joshie.progression.api.ITriggerType;
-import joshie.progression.gui.fields.AbstractField;
 import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.JSONHelper;
-import joshie.progression.helpers.MCClientHelper;
-import joshie.progression.json.Theme;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
 public abstract class TriggerBase implements ITriggerType {
@@ -87,16 +86,9 @@ public abstract class TriggerBase implements ITriggerType {
     public void writeToJSON(JsonObject data) {
         if (cancelable) JSONHelper.setBoolean(data, "cancel", cancel, false);
     }
-    
-    @Override
-    public List<IField> getFields() {
-        return list;
-    }
 
     @Override
     public Result onClicked(int mouseX, int mouseY) {
-        
-
         return Result.DEFAULT;
     }
     
@@ -126,6 +118,11 @@ public abstract class TriggerBase implements ITriggerType {
     @Override
     public void setCanceling(boolean cancel) {
         this.cancel = cancel;
+    }
+    
+    @Override
+    public ItemStack getIcon() {
+        return new ItemStack(Items.furnace_minecart);
     }
     
     @Override

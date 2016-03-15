@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import com.google.common.collect.Maps;
 
+import joshie.progression.api.IStoreNBTData;
 import joshie.progression.criteria.Criteria;
 import joshie.progression.criteria.Reward;
 import joshie.progression.criteria.Tab;
@@ -44,8 +45,9 @@ public class PlayerSavedData extends WorldSavedData {
             for (Tab tab: APIHandler.getTabs().values()) {
                 for (Criteria c: tab.getCriteria()) {
                     for (Reward r: c.rewards) {
-                        if (r.getType() != null) {
-                            data.getAbilities().setCustomData(r.getType().getNBTKey(), r.getType().getDefaultTags(new NBTTagCompound()));
+                        if (r.getType() != null && r.getType() instanceof IStoreNBTData) {
+                            IStoreNBTData storage = (IStoreNBTData) r.getType();
+                            data.getAbilities().setCustomData(storage.getNBTKey(), storage.getDefaultTags(new NBTTagCompound()));
                         }
                     }
                 }

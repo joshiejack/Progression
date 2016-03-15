@@ -2,37 +2,21 @@ package joshie.progression.criteria.triggers;
 
 import java.util.UUID;
 
-import com.google.gson.JsonObject;
-
-import joshie.progression.api.EventBusType;
+import joshie.progression.api.IItemFilter;
 import joshie.progression.api.ITriggerData;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.criteria.triggers.data.DataCrafting;
-import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
-import joshie.progression.gui.fields.BooleanField;
-import joshie.progression.gui.fields.ItemField;
-import joshie.progression.gui.fields.TextField;
-import joshie.progression.helpers.JSONHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class TriggerObtain extends TriggerBase {
-    public ItemStack stack = new ItemStack(Blocks.crafting_table);
-    public boolean matchDamage = true;
-    public boolean matchNBT = false;
+public class TriggerObtain extends TriggerBaseItemFilter {
     public int itemAmount = 1;
     public boolean consume = false;
 
     public TriggerObtain() {
         super("obtain", 0xFFFFFF00, "crafting");
-        list.add(new BooleanField("matchDamage", this));
-        list.add(new BooleanField("matchNBT", this));
-        list.add(new TextField("itemAmount", this));
-        list.add(new BooleanField("consume", this));
-        list.add(new ItemField("stack", this, 76, 44, 1.4F, 77, 100, 43, 69, Type.TRIGGER));
     }
 
     private boolean fired = false;
@@ -48,27 +32,9 @@ public class TriggerObtain extends TriggerBase {
                     ProgressionAPI.registry.fireTrigger(event.entityPlayer, getUnlocalisedName(), stack, event.entityPlayer, i);
                 }
             }
-            
+
             fired = !fired;
         }
-    }
-
-    @Override
-    public void readFromJSON(JsonObject data) {
-        stack = JSONHelper.getItemStack(data, "item", new ItemStack(Blocks.crafting_table));
-        matchDamage = JSONHelper.getBoolean(data, "matchDamage", matchDamage);
-        matchNBT = JSONHelper.getBoolean(data, "matchNBT", matchNBT);
-        itemAmount = JSONHelper.getInteger(data, "itemAmount", itemAmount);
-        consume = JSONHelper.getBoolean(data, "consume", consume);
-    }
-
-    @Override
-    public void writeToJSON(JsonObject data) {
-        JSONHelper.setItemStack(data, "item", stack);
-        JSONHelper.setBoolean(data, "matchDamage", matchDamage, true);
-        JSONHelper.setBoolean(data, "matchNBT", matchNBT, false);
-        JSONHelper.setInteger(data, "itemAmount", itemAmount, 1);
-        JSONHelper.setBoolean(data, "consume", consume, false);
     }
 
     @Override
@@ -81,17 +47,19 @@ public class TriggerObtain extends TriggerBase {
     public boolean onFired(UUID uuid, ITriggerData existing, Object... additional) {
         DataCrafting data = (DataCrafting) existing;
         ItemStack crafted = (ItemStack) additional[0];
-        if (stack == null || crafted == null) return true;
-        if (stack.getItem() == crafted.getItem()) {
-            if (matchDamage && stack.getItemDamage() != crafted.getItemDamage()) return true;
-            if (matchNBT && stack.getTagCompound() != crafted.getTagCompound()) return true;
-            data.amountCrafted += crafted.stackSize;
-            data.timesCrafted++;
+        if (filters == null || crafted == null) return true;
+        for (IItemFilter filter : filters) {
+            if (filter.matches(crafted)) {
+                data.amountCrafted += crafted.stackSize;
+                data.timesCrafted++;
 
-            if (consume) {
-                EntityPlayer player = (EntityPlayer) additional[1];
-                int slot = (Integer) additional[2];
-                player.inventory.decrStackSize(slot, stack.stackSize);
+                if (consume) {
+                    EntityPlayer player = (EntityPlayer) additional[1];
+                    int slot = (Integer) additional[2];
+                    player.inventory.decrStackSize(slot, crafted.stackSize);
+                }
+
+                return true;
             }
         }
 

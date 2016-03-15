@@ -3,21 +3,16 @@ package joshie.progression.criteria.rewards;
 import java.util.List;
 import java.util.UUID;
 
-import com.google.gson.JsonObject;
-
 import joshie.enchiridion.helpers.MCClientHelper;
-import joshie.progression.gui.fields.BooleanField;
-import joshie.progression.gui.fields.ItemFilterField;
-import joshie.progression.gui.fields.TextField;
+import joshie.progression.api.ISpecialItemFilter;
 import joshie.progression.helpers.ItemHelper;
-import joshie.progression.helpers.JSONHelper;
 import joshie.progression.helpers.PlayerHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 
-public class RewardPotion extends RewardBaseItemFilter {
+public class RewardPotion extends RewardBaseItemFilter implements ISpecialItemFilter {
     public boolean randomVanilla = false;
     public int customid = -1;
     public int duration = 200;
@@ -26,33 +21,18 @@ public class RewardPotion extends RewardBaseItemFilter {
 
     public RewardPotion() {
         super("potioneffect", 0xFF2C7373);
-        list.add(new TextField("customid", this));
-        list.add(new TextField("duration", this));
-        list.add(new TextField("amplifier", this));
-        list.add(new BooleanField("particles", this));
-        list.add(new BooleanField("randomVanilla", this));
-        list.add(new ItemFilterField("filters", this, "potioneffect"));
+        //list.add(new TextField("customid", this));
+        //list.add(new TextField("duration", this));
+        //list.add(new TextField("amplifier", this));
+        //list.add(new BooleanField("particles", this));
+        //list.add(new BooleanField("randomVanilla", this));
+        //list.add(new ItemFilterField("filters", this, "potioneffect"));
         BROKEN = new ItemStack(Items.potionitem, 1, 0);
     }
-
+    
     @Override
-    public void readFromJSON(JsonObject data) {
-        super.readFromJSON(data);
-        randomVanilla = JSONHelper.getBoolean(data, "randomVanilla", false);
-        duration = JSONHelper.getInteger(data, "customid", -1);
-        duration = JSONHelper.getInteger(data, "duration", 200);
-        amplifier = JSONHelper.getInteger(data, "amplifier", 0);
-        particles = JSONHelper.getBoolean(data, "particles", false);
-    }
-
-    @Override
-    public void writeToJSON(JsonObject data) {
-        super.writeToJSON(data);
-        JSONHelper.setBoolean(data, "randomVanilla", randomVanilla, false);
-        JSONHelper.setInteger(data, "customid", duration, -1);
-        JSONHelper.setInteger(data, "duration", duration, 200);
-        JSONHelper.setInteger(data, "amplifier", amplifier, 0);
-        JSONHelper.setBoolean(data, "particles", particles, false);
+    public String getSpecialFilter() {
+        return "potioneffect";
     }
 
     @Override

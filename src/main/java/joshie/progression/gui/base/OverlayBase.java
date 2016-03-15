@@ -3,8 +3,6 @@ package joshie.progression.gui.base;
 import joshie.progression.gui.GuiCriteriaEditor;
 import joshie.progression.gui.GuiTriggerEditor;
 import joshie.progression.gui.NewCondition;
-import joshie.progression.gui.NewReward;
-import joshie.progression.gui.NewTrigger;
 import joshie.progression.gui.editors.EditText;
 import joshie.progression.gui.editors.SelectEntity;
 import joshie.progression.gui.editors.SelectItem;
@@ -41,8 +39,6 @@ public class OverlayBase implements IRenderOverlay {
         EditText.INSTANCE.clear();
         SelectEntity.INSTANCE.clear();
         NewCondition.INSTANCE.clear();
-        NewTrigger.INSTANCE.clear();
-        NewReward.INSTANCE.clear();
         return true;
     }
 

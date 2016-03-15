@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import joshie.progression.api.ICancelable;
-import joshie.progression.api.IField;
+import joshie.progression.api.IFieldProvider;
 import joshie.progression.api.ITriggerType;
 import joshie.progression.gui.TriggerEditorElement;
 import joshie.progression.gui.newversion.overlays.IDrawable;
 import joshie.progression.handlers.EventsManager;
 import joshie.progression.helpers.CollectionHelper;
-import joshie.progression.json.Theme;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -62,13 +61,6 @@ public class Trigger implements IDrawable, ICancelable {
     public List<Condition> getConditions() {
         return conditions;
     }
-
-    @Override
-    public void remove(List list) {
-        EventsManager.onTriggerRemoved(this);
-        CollectionHelper.remove(list, this); //Remove from temporary list    
-        CollectionHelper.remove(criteria.triggers, this); //Remove from real list
-    }
     
     @Override
     public void update() {
@@ -78,21 +70,6 @@ public class Trigger implements IDrawable, ICancelable {
     @Override
     public int getColor() {
         return triggerType.getColor();
-    }
-    
-    @Override
-    public int getGradient1() {
-        return Theme.INSTANCE.triggerGradient1;
-    }
-    
-    @Override
-    public int getGradient2() {
-        return Theme.INSTANCE.triggerGradient2;
-    }
-    
-    @Override
-    public int getFontColor() {
-        return Theme.INSTANCE.triggerFontColor;
     }
     
     @Override
@@ -106,13 +83,8 @@ public class Trigger implements IDrawable, ICancelable {
     }
 
     @Override
-    public void drawDisplay(int mouseX, int mouseY) {
-        triggerType.drawDisplay(mouseX, mouseY);
-    }
-
-    @Override
-    public List<IField> getFields() {
-        return triggerType.getFields();
+    public IFieldProvider getProvider() {
+        return triggerType;
     }
 
     @Override
@@ -129,9 +101,9 @@ public class Trigger implements IDrawable, ICancelable {
     public void setCanceling(boolean isCanceld) {
         triggerType.setCanceling(isCanceld);
     }
-    
+
     @Override
-    public void addFieldTooltip(String fieldName, List<String> tooltip) {
-        triggerType.addFieldTooltip(fieldName, tooltip);
+    public String getUnlocalisedName() {
+        return triggerType.getUnlocalisedName();
     }
 }
