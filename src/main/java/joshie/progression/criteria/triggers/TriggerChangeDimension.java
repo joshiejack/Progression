@@ -2,8 +2,8 @@ package joshie.progression.criteria.triggers;
 
 import joshie.progression.api.IHasEventBus;
 import joshie.progression.api.ProgressionAPI;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.EventBus;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
@@ -15,7 +15,7 @@ public class TriggerChangeDimension extends TriggerBaseCounter implements IHasEv
     public int to = -1;
 
     public TriggerChangeDimension() {
-        super("changeDimension", 0xFF000000);
+        super(new ItemStack(Blocks.portal), "changeDimension", 0xFF000000);
     }
     
     @SubscribeEvent(priority = EventPriority.LOWEST)

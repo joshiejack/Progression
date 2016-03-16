@@ -85,7 +85,7 @@ public class JSONHelper {
     }
 
     public static Item getItem(JsonObject data, String string, Item default_) {
-        if (data.get(string) != null) {
+        if (data.get(string + ":path") != null) {
             ResourceLocation deflt = Item.itemRegistry.getNameForObject(default_);
             String domain = getString(data, string + ":domain", deflt.getResourceDomain());
             String path = getString(data, string + ":path", deflt.getResourcePath());
@@ -97,7 +97,7 @@ public class JSONHelper {
     }
 
     public static Block getBlock(JsonObject data, String string, Block default_) {
-        if (data.get(string) != null) {
+        if (data.get(string + ":path") != null) {
             ResourceLocation deflt = Block.blockRegistry.getNameForObject(default_);
             String domain = getString(data, string + ":domain", deflt.getResourceDomain());
             String path = getString(data, string + ":path", deflt.getResourcePath());
@@ -170,9 +170,12 @@ public class JSONHelper {
     }
 
     public static void setBlock(JsonObject data, String string, Block block, Block dflt) {
+        System.out.println("SETTING BLOCK");
         if (block != null && block != dflt) {
             ResourceLocation location = Block.blockRegistry.getNameForObject(block);
             ResourceLocation deflt = Block.blockRegistry.getNameForObject(dflt);
+            
+            System.out.println("SAVING:" + string + " - " + location.getResourcePath());
             setString(data, string + ":domain", location.getResourceDomain(), deflt.getResourceDomain());
             setString(data, string + ":path", location.getResourcePath(), deflt.getResourcePath());
         }

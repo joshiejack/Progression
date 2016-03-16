@@ -9,6 +9,8 @@ import joshie.progression.helpers.EntityHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -17,7 +19,7 @@ public class TriggerKill extends TriggerBaseCounterVaries {
     private transient EntityLivingBase entity;
 
     public TriggerKill() {
-        super("kill", 0xFF000000);
+        super(new ItemStack(Items.iron_sword), "kill", 0xFF000000);
     }
 
     @SubscribeEvent

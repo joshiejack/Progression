@@ -1,13 +1,14 @@
 package joshie.progression.criteria.triggers;
 
 import joshie.progression.api.ProgressionAPI;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class TriggerObtain extends TriggerBaseBoolean {
     public TriggerObtain() {
-        super("openContainer", 0xFFFFFF00);
+        super(new ItemStack(Blocks.chest), "openContainer", 0xFFFFFF00);
     }
 
     private boolean fired = false;

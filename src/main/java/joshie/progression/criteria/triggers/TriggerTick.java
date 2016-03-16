@@ -1,13 +1,15 @@
 package joshie.progression.criteria.triggers;
 
 import joshie.progression.api.ProgressionAPI;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
 public class TriggerTick extends TriggerBaseBoolean {
     public TriggerTick() {
-        super("tick", 0xFFA300D9);
+        super(new ItemStack(Items.clock), "tick", 0xFFA300D9);
     }
 
     @SubscribeEvent

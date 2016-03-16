@@ -4,8 +4,13 @@ import java.util.UUID;
 
 import joshie.progression.api.ITriggerData;
 import joshie.progression.criteria.triggers.data.DataBoolean;
+import net.minecraft.item.ItemStack;
 
 public abstract class TriggerBaseBoolean extends TriggerBase {
+    public TriggerBaseBoolean(ItemStack stack, String name, int color) {
+        super(stack, name, color, "boolean");
+    }
+    
     public TriggerBaseBoolean(String name, int color) {
         super(name, color, "boolean");
     }

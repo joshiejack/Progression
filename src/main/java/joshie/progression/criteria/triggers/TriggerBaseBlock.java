@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 
 public class TriggerBaseBlock extends TriggerBaseItemFilter implements ICancelable, IBlocksOnly {
     public boolean cancel = false;
-
+    
     public TriggerBaseBlock(String unlocalised, int color) {
         super(unlocalised, color);
     }

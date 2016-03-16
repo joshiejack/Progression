@@ -10,6 +10,8 @@ import joshie.progression.api.ProgressionAPI;
 import joshie.progression.criteria.triggers.data.DataBoolean;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -25,7 +27,7 @@ public class TriggerChat extends TriggerBaseBoolean implements ISetterCallback, 
     public boolean cancel = false;
 
     public TriggerChat() {
-        super("chat", 0xFFCC6600);
+        super(new ItemStack(Blocks.wool), "chat", 0xFFCC6600);
     }
 
     @Override

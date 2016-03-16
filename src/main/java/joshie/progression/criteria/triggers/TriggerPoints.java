@@ -5,6 +5,8 @@ import java.util.UUID;
 import joshie.progression.api.ITriggerData;
 import joshie.progression.criteria.triggers.data.DataBoolean;
 import joshie.progression.player.PlayerTracker;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.EventBus;
 
 public class TriggerPoints extends TriggerBaseBoolean {
@@ -16,7 +18,7 @@ public class TriggerPoints extends TriggerBaseBoolean {
     public boolean lesserThan = false;
 
     public TriggerPoints() {
-        super("points", 0xFFB2B200);
+        super(new ItemStack(Items.potionitem), "points", 0xFFB2B200);
     }
     
     @Override

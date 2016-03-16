@@ -2,6 +2,8 @@ package joshie.progression.criteria.triggers;
 
 import joshie.progression.api.IHasEventBus;
 import joshie.progression.api.ProgressionAPI;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Achievement;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.AchievementEvent;
@@ -12,7 +14,7 @@ public class TriggerAchievement extends TriggerBaseBoolean implements IHasEventB
     public String id = "openInventory";
 
     public TriggerAchievement() {
-        super("achievement", 0xFF00D9D9);
+        super(new ItemStack(Items.book), "achievement", 0xFF00D9D9);
     }
     
     @Override

@@ -4,13 +4,15 @@ import java.util.UUID;
 
 import joshie.progression.api.ITriggerData;
 import joshie.progression.player.PlayerTracker;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 
 public class TriggerBoolean extends TriggerBaseBoolean {
     public String variable = "default";
     public boolean isTrue = true;
 
     public TriggerBoolean() {
-        super("boolean", 0xFF26C9FF);
+        super(new ItemStack(Items.redstone), "boolean", 0xFF26C9FF);
     }
 
     @Override

@@ -3,6 +3,8 @@ package joshie.progression.api;
 import java.util.List;
 import java.util.UUID;
 
+import net.minecraft.item.ItemStack;
+
 public interface ITriggerType extends IFieldProvider, IHasEventBus {
     /** Return the list this trigger is saving it's conditions to **/
     public List<IConditionType> getConditions();
@@ -23,4 +25,7 @@ public interface ITriggerType extends IFieldProvider, IHasEventBus {
     
     /** Called to determine if this trigger has been completed as of yet **/
     public boolean isCompleted(ITriggerData triggerData);
+
+    /** Returns an icon representation for this trigger **/
+    public ItemStack getIcon();
 }

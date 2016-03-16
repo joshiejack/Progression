@@ -42,6 +42,7 @@ public class Criteria implements ICriteria {
         this.allTasks = true;
         this.allRewards = true;
         this.rewardsGiven = 1;
+        this.displayName = "banana";
     }
 
     public void init(ICriteria[] prereqs, ICriteria[] theConflicts, String displayName, boolean isVisible, boolean mustClaim, boolean achievement, int repeatable, ItemStack icon, boolean allRequired, int tasksRequired, boolean infinite, boolean allRewards, int rewardsGiven, int x, int y) {

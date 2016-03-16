@@ -14,13 +14,15 @@ import joshie.progression.Progression;
 public class GuiSimpleEditorPoints extends GuiSimpleEditorAbstract {
     public static final GuiSimpleEditorPoints INSTANCE = new GuiSimpleEditorPoints();
     private HashMap<String, ITextEditable> fieldCache = new HashMap();
-    private static FeaturePoints points = null;
+    private String[] fieldNameCache;
+    private static ISimpleEditorFieldProvider provider = null;
 
     protected GuiSimpleEditorPoints() {}
 
-    public IBookEditorOverlay setPoints(FeaturePoints points) {
-        this.points = points;
+    public IBookEditorOverlay setFeature(ISimpleEditorFieldProvider points) {
+        this.provider = points;
         this.fieldCache = new HashMap();
+        this.fieldNameCache = null;
         return this;
     }
 
@@ -48,8 +50,7 @@ public class GuiSimpleEditorPoints extends GuiSimpleEditorAbstract {
 
         //Draw the extra information for the actions
         drawBoxLabel("Extra Fields", yPos + 20);
-        String[] fields = new String[] { "description", "variable", "wholeNumber" };
-        for (String f : fields) {
+        for (String f : getFieldNames()) {
             drawBorderedRectangle(2, yPos + 30, 83, yPos + 37, 0xFF312921, 0xFF191511);
             String name = Progression.translate("button.action.field." + f);
             drawSplitScaledString("[b]" + name + "[/b]", 4, yPos + 32, 0xFFFFFFFF, 0.5F);
@@ -82,6 +83,18 @@ public class GuiSimpleEditorPoints extends GuiSimpleEditorAbstract {
 
         return PenguinFont.INSTANCE.splitStringWidth(text, 155);
     }
+    
+    public String[] getFieldNames() {
+        if (fieldNameCache != null) return fieldNameCache;
+        fieldNameCache = new String[provider.getClass().getFields().length];
+        int i = 0;
+        for (Field field : provider.getClass().getFields()) {
+            fieldNameCache[i] = field.getName();
+            i++;
+        }
+        
+        return fieldNameCache;
+    }
 
     @Override
     public boolean mouseClicked(int mouseX, int mouseY) {
@@ -89,8 +102,7 @@ public class GuiSimpleEditorPoints extends GuiSimpleEditorAbstract {
         int yPos = -11;
         //Draw the extra information for the actions
         drawBoxLabel("Extra Fields", yPos + 20);
-        String[] fields = new String[] { "description", "variable", "wholeNumber" };
-        for (String f : fields) {
+        for (String f : getFieldNames()) {
             ITextEditable editable = null;
             if (!fieldCache.containsKey(f)) {
                 editable = new WrappedEditable(f);
@@ -123,10 +135,10 @@ public class GuiSimpleEditorPoints extends GuiSimpleEditorAbstract {
         public String getTextField() {
             if (temporaryField == null) {
                 try {
-                    Field f = points.getClass().getField(fieldName);
+                    Field f = provider.getClass().getField(fieldName);
                     if (fieldName.equals("pageNumber")) {
-                        temporaryField = "" + (f.getInt(points) + 1);
-                    } else temporaryField = "" + f.get(points);
+                        temporaryField = "" + (f.getInt(provider) + 1);
+                    } else temporaryField = "" + f.get(provider);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -142,7 +154,7 @@ public class GuiSimpleEditorPoints extends GuiSimpleEditorAbstract {
             temporaryField = text;
 
             try {
-                Field f = points.getClass().getField(fieldName);
+                Field f = provider.getClass().getField(fieldName);
                 if (f.getType() == int.class) {
                     try {
                         Integer number = Integer.parseInt(temporaryField);
@@ -150,14 +162,17 @@ public class GuiSimpleEditorPoints extends GuiSimpleEditorAbstract {
                             number -= 1;
                         }
 
-                        f.set(points, number);
+                        f.set(provider, number);
                     } catch (Exception e) {
-                        f.set(points, 0);
+                        f.set(provider, 0);
                     }
-                } else f.set(points, text);
+                } else f.set(provider, text);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            
+            //After all is done update the provider
+            provider.onFieldsSet();
         }
     }
 }

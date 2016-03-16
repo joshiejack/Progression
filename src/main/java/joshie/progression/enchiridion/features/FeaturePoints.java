@@ -7,24 +7,31 @@ import joshie.enchiridion.gui.book.features.FeatureAbstract;
 import joshie.enchiridion.helpers.MCClientHelper;
 import joshie.progression.player.PlayerTracker;
 
-public class FeaturePoints extends FeatureAbstract {
+public class FeaturePoints extends FeatureAbstract implements ISimpleEditorFieldProvider {
     private transient double cachedWidth = 0;
     public transient int wrap = 50;
+    private transient IFeatureProvider provider;
     public float size = 1F;
-    public boolean wholeNumber = true;
     public String description = "[amount] Gold";
     public String variable = "gold";
 
     public FeaturePoints() {}
+
     public FeaturePoints(String desc, String var) {
         description = desc;
         variable = var;
     }
-    
+
     @Override
     public void update(IFeatureProvider position) {
+        provider = position;
         cachedWidth = position.getWidth();
         wrap = Math.max(50, (int) (cachedWidth / size) + 4);
+    }
+
+    @Override
+    public void onFieldsSet() {
+        update(provider);
     }
 
     @Override
@@ -34,20 +41,25 @@ public class FeaturePoints extends FeatureAbstract {
         return text;
     }
 
+    public String amountAsString(double amount) {
+        if (amount == (long) amount) return String.format("%d", (long) amount);
+        else return String.format("%s", amount);
+    }
+
     @Override
     public void draw(int xPos, int yPos, double width, double height, boolean isMouseHovering) {
         if (variable != null) {
             double amount = PlayerTracker.getClientPlayer().getAbilities().getPoints("points:" + variable);
-            EnchiridionAPI.draw.drawSplitScaledString(description.replace("[amount]", "" + (wholeNumber ? (int)amount : amount)), xPos, yPos, wrap, 0x555555, size);
+            EnchiridionAPI.draw.drawSplitScaledString(description.replace("[amount]", amountAsString(amount)), xPos, yPos, wrap, 0x555555, size);
         }
     }
-    
+
     @Override
     public boolean getAndSetEditMode() {
-        GuiSimpleEditor.INSTANCE.setEditor(GuiSimpleEditorPoints.INSTANCE.setPoints(this));     
+        GuiSimpleEditor.INSTANCE.setEditor(GuiSimpleEditorPoints.INSTANCE.setFeature(this));
         return true;
     }
-    
+
     @Override
     public void keyTyped(char character, int key) {
         if (MCClientHelper.isShiftPressed()) {
