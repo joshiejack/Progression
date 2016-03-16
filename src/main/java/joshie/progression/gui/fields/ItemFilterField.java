@@ -7,6 +7,7 @@ import java.util.List;
 import joshie.enchiridion.helpers.MCClientHelper;
 import joshie.progression.Progression;
 import joshie.progression.api.IItemFilter;
+import joshie.progression.api.ISetterCallback;
 import joshie.progression.gui.newversion.GuiCriteriaEditor;
 import joshie.progression.gui.newversion.GuiItemFilterEditor;
 import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
@@ -27,9 +28,7 @@ public class ItemFilterField extends AbstractField {
         } catch (Exception e) {
             try {
                 field = object.getClass().getSuperclass().getField(fieldName);
-            } catch (Exception e1) {
-                e1.printStackTrace();
-            }
+            } catch (Exception e1) {}
         }
     }
 
@@ -78,8 +77,8 @@ public class ItemFilterField extends AbstractField {
 
     public void setFilters(List<IItemFilter> filters) {
         try {
-            if (object instanceof IItemFilterSetterCallback) {
-                ((IItemFilterSetterCallback) object).setFilter(field.getName(), filters);
+            if (object instanceof ISetterCallback) {
+                ((ISetterCallback) object).setField(field.getName(), filters);
             } else field.set(object, filters);
         } catch (Exception e) {}
     }
@@ -96,16 +95,16 @@ public class ItemFilterField extends AbstractField {
     public void add(IItemFilter filter) {
         List<IItemFilter> filters = getFilters();
         filters.add(filter);
-        if (object instanceof IItemFilterSetterCallback) {
-            ((IItemFilterSetterCallback) object).setFilter(field.getName(), filters);
+        if (object instanceof ISetterCallback) {
+            ((ISetterCallback) object).setField(field.getName(), filters);
         }
     }
 
     public void remove(IItemFilter filter) {
         List<IItemFilter> filters = getFilters();
         CollectionHelper.remove(filters, filter);
-        if (object instanceof IItemFilterSetterCallback) {
-            ((IItemFilterSetterCallback) object).setFilter(field.getName(), filters);
+        if (object instanceof ISetterCallback) {
+            ((ISetterCallback) object).setField(field.getName(), filters);
         }
     }
 }

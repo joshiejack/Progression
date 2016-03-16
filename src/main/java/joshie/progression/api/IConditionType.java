@@ -2,8 +2,6 @@ package joshie.progression.api;
 
 import java.util.UUID;
 
-import com.google.gson.JsonObject;
-
 import joshie.progression.gui.base.DrawHelper;
 import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,12 +22,6 @@ public interface IConditionType extends IFieldProvider {
      * @param player    the player (may be null, if the player is offline)
      * @param uuid      the uuid of the player **/
     public boolean isSatisfied(World world, EntityPlayer player, UUID uuid);
-
-    /** Read this condition in from json **/
-    public void readFromJSON(JsonObject object);
-    
-    /** Write this condition to json **/
-    public void writeToJSON(JsonObject object);
 
     /** Draw this condition in the gui editor, use {@link DrawHelper}  */
     @SideOnly(Side.CLIENT)

@@ -4,13 +4,12 @@ import java.util.UUID;
 
 import com.google.gson.JsonObject;
 
-import joshie.progression.gui.fields.BooleanField;
-import joshie.progression.gui.fields.TextField;
+import joshie.progression.api.ISpecialJSON;
 import joshie.progression.helpers.JSONHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
-public class ConditionCoordinates extends ConditionBase {
+public class ConditionCoordinates extends ConditionBase implements ISpecialJSON {
     public boolean checkDimension = false; //Whether we check the dimension
     public boolean checkX = true; //Whether we check the x coordinate
     public boolean checkY = true; //Whether we check the y coordinate
@@ -22,17 +21,6 @@ public class ConditionCoordinates extends ConditionBase {
 
     public ConditionCoordinates() {
         super("coordinates", 0xFF000000);
-        list.add(new BooleanField("checkDimension", this));
-        list.add(new BooleanField("checkX", this));
-        list.add(new BooleanField("checkY", this));
-        list.add(new BooleanField("checkZ", this));
-        list.add(new TextField("radius", this));
-        list.add(new TextField("dimension", this));
-        list.add(new TextField("x", this));
-        list.add(new TextField("y", this));
-        list.add(new TextField("z", this));
-        list.add(new BooleanField("greaterThan", this));
-        list.add(new BooleanField("lessThan", this));
     }
 
     @Override
@@ -88,6 +76,11 @@ public class ConditionCoordinates extends ConditionBase {
         }
 
         return xMatches && yMatches && zMatches;
+    }
+
+    @Override
+    public boolean onlySpecial() {
+        return true;
     }
 
     @Override

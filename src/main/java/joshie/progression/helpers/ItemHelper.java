@@ -54,6 +54,10 @@ public class ItemHelper {
             }
         }
     }
+    
+    public static Block getBlock(ItemStack check) {
+        return isBlock(check) ? Block.getBlockFromItem(check.getItem()) : null;
+    }
 
     private static boolean isBlock(ItemStack stack) {
         Block block = null;

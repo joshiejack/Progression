@@ -9,15 +9,16 @@ import joshie.progression.api.gui.ISpecialFieldProvider;
 import joshie.progression.gui.fields.ItemField;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
 import joshie.progression.gui.selector.filters.BlockFilter;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
+import joshie.progression.helpers.ItemHelper;
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
-public class FilterItem extends FilterBase implements IItemGetterCallback, ISetterCallback, ISpecialFieldProvider {
-    public Item item = Items.beef;
+public class FilterBlock extends FilterBase implements IItemGetterCallback, ISetterCallback, ISpecialFieldProvider {
+    public Block block = Blocks.sandstone;
 
-    public FilterItem() {
-        super("itemOnly", 0xFFCCCCCC);
+    public FilterBlock() {
+        super("blockOnly", 0xFFCCCCCC);
     }
 
     @Override
@@ -27,17 +28,17 @@ public class FilterItem extends FilterBase implements IItemGetterCallback, ISett
 
     @Override
     public boolean matches(ItemStack check) {
-        return item == check.getItem();
+        return ItemHelper.getBlock(check) == block;
     }
 
     @Override
     public ItemStack getItem(String fieldName) {
-        return new ItemStack(item);
+        return new ItemStack(block);
     }
 
     @Override
     public boolean setField(String fieldName, Object stack) {
-        item = ((ItemStack) stack).getItem();
+        block = ItemHelper.getBlock(((ItemStack) stack));
 
         return true;
     }

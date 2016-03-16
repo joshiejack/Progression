@@ -46,11 +46,18 @@ public class PlayerDataServer extends PlayerDataCommon {
 		markDirty();
 	}
 	
-    public void addPoints(String name, int amount) {
-        int newStat = abilities.getPoints(name) + amount;
+    public void addPoints(String name, double amount) {
+        double newStat = abilities.getPoints(name) + amount;
         abilities.setResearchPoints(name, newStat);
         PacketHandler.sendToTeam(new PacketSyncAbilities(abilities), team);
         ProgressionAPI.registry.fireTrigger(uuid, "points", name, newStat);
+        markDirty();
+    }
+    
+    public void setPoints(String name, double amount) {
+        abilities.setResearchPoints(name, amount);
+        PacketHandler.sendToTeam(new PacketSyncAbilities(abilities), team);
+        ProgressionAPI.registry.fireTrigger(uuid, "boolean", name, amount);
         markDirty();
     }
 	

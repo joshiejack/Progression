@@ -11,8 +11,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 
 public class TriggerCrafting extends TriggerBaseItemFilter {
-    public int times = 1;
-    public int amount = 1;
+    public int timesCrafted = 1;
 
     public TriggerCrafting() {
         super("crafting", 0xFF663300, "crafting");
@@ -26,7 +25,7 @@ public class TriggerCrafting extends TriggerBaseItemFilter {
     @Override
     public boolean isCompleted(ITriggerData existing) {
         DataCrafting data = (DataCrafting) existing;
-        return data.amountCrafted >= amount && data.timesCrafted >= times;
+        return data.amountCrafted >= amount && data.timesCrafted >= amount;
     }
 
     @Override

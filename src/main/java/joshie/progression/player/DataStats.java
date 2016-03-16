@@ -19,7 +19,7 @@ public class DataStats {
     }
 
     private HashMap<String, NBTTagCompound> customData = new HashMap();
-    private HashMap<String, Integer> points = new HashMap();
+    private HashMap<String, Double> points = new HashMap();
     private float airSpeed = 1F;
     private float landSpeed = 1F;
     private float waterSpeed = 1F;
@@ -53,8 +53,8 @@ public class DataStats {
         this.fallDamage = fallDamage;
     }
 
-    public int getPoints(String name) {
-        int amount = 0;
+    public double getPoints(String name) {
+        double amount = 0;
         if (points.containsKey(name)) {
             amount = points.get(name);
         } else points.put(name, amount);
@@ -62,7 +62,7 @@ public class DataStats {
         return amount;
     }
 
-    void setResearchPoints(String name, int points) {
+    void setResearchPoints(String name, double points) {
         this.points.put(name, points);
     }
 
@@ -93,7 +93,7 @@ public class DataStats {
         buf.writeInt(fallDamage);
         buf.writeInt(points.size());
         for (String key : points.keySet()) {
-            buf.writeInt(points.get(key));
+            buf.writeDouble(points.get(key));
             ByteBufUtils.writeUTF8String(buf, key);
         }
 
@@ -112,7 +112,7 @@ public class DataStats {
         fallDamage = buf.readInt();
         int size = buf.readInt();
         for (int i = 0; i < size; i++) {
-            int value = buf.readInt();
+            double value = buf.readDouble();
             String key = ByteBufUtils.readUTF8String(buf);
             points.put(key, value);
         }

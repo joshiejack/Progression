@@ -6,7 +6,29 @@ import com.google.gson.JsonObject;
  *  to have special cased loading and saving of JSON data,
  *  public variables will still be loaded by default.
  *  private variables and transient are totally ignored
- *  Will only read in booleans, integers, floats and Strings */
+ *  Default things capable of being read
+ *   ---------------------
+ *      ==== Stuff
+ *      +    Enum Classes
+ *      ---------------------
+ *      ==== Types
+ *      +    boolean
+ *      +    integer
+ *      +    double
+ *      +    float
+ *      ---------------------
+ *      ==== Classes
+ *      +    String
+ *      +    Item
+ *      +    Block
+ *      +    ItemStack
+ *      +    NBTTagCompound
+ *       ---------------------
+ *      ==== Lists of (i.e. List<IItemFilter>)
+ *      +    IItemFilter
+ *      +    IEntityFilter
+ * 
+ *       */
 public interface ISpecialJSON {   
     /** If this is true, default reading will not be performed,
      *  and only these methods will be used to read / write extra data.*/

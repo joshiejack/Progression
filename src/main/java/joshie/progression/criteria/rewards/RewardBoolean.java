@@ -8,25 +8,25 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
-public class RewardPoints extends RewardBase {
+public class RewardBoolean extends RewardBase {
     public String variable = "default";
-    public String display = "[amount] Gold";
-    public int amount = 1;
+    public String display = "Free Research:\nDefault";
+    public boolean value = true;
 
-    public RewardPoints() {
-        super(new ItemStack(Items.potionitem), "points", 0xFF002DB2);
+    public RewardBoolean() {
+        super(new ItemStack(Items.potionitem), "boolean", 0xFF99B3FF);
     }
 
     @Override
     public void reward(UUID uuid) {
-        PlayerTracker.getServerPlayer(uuid).addPoints("points:" + variable, amount);
+        PlayerTracker.getServerPlayer(uuid).addPoints("boolean:" + variable, value == true ? 1D : 0D);
     }
 
     @Override
     public void addTooltip(List list) {
         String[] tooltip = display.split("/n");
         for (String string : tooltip) {
-            list.add(EnumChatFormatting.WHITE + string.replace("[amount]", "" + amount));
+            list.add(EnumChatFormatting.WHITE + string);
         }
     }
 }

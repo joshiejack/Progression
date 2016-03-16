@@ -40,7 +40,7 @@ public interface IRewardType extends IFieldProvider {
     public void drawEditor(DrawFeatureHelper helper, int renderX, int renderY, int mouseX, int mouseY);
 
     /** Called to update drawing for this render **/
-    public void update();
+    public void updateDraw();
 
     public String getDescription();
 

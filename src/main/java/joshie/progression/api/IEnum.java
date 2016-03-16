@@ -1,4 +1,4 @@
-package joshie.progression.gui.fields;
+package joshie.progression.api;
 
 public interface IEnum {
     public Enum next();

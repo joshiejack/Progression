@@ -2,6 +2,7 @@ package joshie.progression.gui.fields;
 
 import java.lang.reflect.Field;
 
+import joshie.progression.api.IEnum;
 import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 
 public class EnumField extends AbstractField {

@@ -2,6 +2,8 @@ package joshie.progression.gui.fields;
 
 import java.lang.reflect.Field;
 
+import joshie.progression.api.IGetterCallback;
+import joshie.progression.api.ISetterCallback;
 import joshie.progression.gui.editors.EditText.ITextEditable;
 import joshie.progression.gui.newversion.overlays.TextEditor;
 import net.minecraft.item.ItemStack;
@@ -14,10 +16,10 @@ public class FieldHelper implements ITextEditable {
 
     public FieldHelper(String f, Object o) {
         this.o = o;
-        
+
         try {
             this.f = o.getClass().getField(f);
-        } catch (Exception e) { }
+        } catch (Exception e) {}
     }
 
     public void select() {
@@ -27,7 +29,7 @@ public class FieldHelper implements ITextEditable {
     public String getText() {
         return TextEditor.INSTANCE.getText(this);
     }
-    
+
     public float getFloat() {
         try {
             return (Float) f.get(o);
@@ -63,9 +65,9 @@ public class FieldHelper implements ITextEditable {
     public void set(Object o2) {
         try {
             f.set(o, o2);
-        } catch (Exception e) { }
+        } catch (Exception e) {}
     }
-    
+
     public String getFieldName() {
         return f.getName();
     }
@@ -74,16 +76,16 @@ public class FieldHelper implements ITextEditable {
     public String getTextField() {
         String ret = null;
         if (o instanceof IGetterCallback) {
-            ret = ((IGetterCallback)o).getField(f.getName());
+            ret = ((IGetterCallback) o).getField(f.getName());
         }
-        
-        return ret != null? ret: getString();
+
+        return ret != null ? ret : getString();
     }
 
     @Override
     public void setTextField(String str) {
         if (o instanceof ISetterCallback) {
-            if(!((ISetterCallback)o).setField(f.getName(), str)) {
+            if (!((ISetterCallback) o).setField(f.getName(), str)) {
                 set(str);
             }
         } else set(str);
@@ -154,7 +156,7 @@ public class FieldHelper implements ITextEditable {
             } catch (Exception e) {}
         }
     }
-    
+
     public static class FloatFieldHelper extends IntegerFieldHelper {
         public FloatFieldHelper(String f, Object o) {
             super(f, o);
@@ -183,41 +185,41 @@ public class FieldHelper implements ITextEditable {
             } catch (Exception e) {}
         }
     }
-    
+
     public static class ItemAmountFieldHelper extends IntegerFieldHelper {
         public ItemAmountFieldHelper(String f, ItemField item) {
             super(f, item);
         }
-        
+
         @Override
         public String getTextField() {
             if (textField == null) {
-                textField = "" + ((ItemField)o).getStack().stackSize;
+                textField = "" + ((ItemField) o).getStack().stackSize;
             }
 
             return textField;
         }
-        
+
         @Override
         public void setTextField(String str) {
             if (str.contains("-")) {
                 str = str.replace("-", "");
             }
-            
+
             super.setTextField(str);
         }
-        
+
         @Override
         public void setNumber(int parseInt) {
             if (parseInt < 1) {
                 parseInt = 1;
                 textField = "1";
             }
-            
+
             super.setNumber(parseInt);
-            ItemStack stack = ((ItemField)o).getStack();
+            ItemStack stack = ((ItemField) o).getStack();
             stack.stackSize = parseInt;
-            ((ItemField)o).setItemStack(stack);
+            ((ItemField) o).setItemStack(stack);
         }
     }
 }

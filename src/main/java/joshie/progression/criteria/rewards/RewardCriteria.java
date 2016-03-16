@@ -3,11 +3,9 @@ package joshie.progression.criteria.rewards;
 import java.util.List;
 import java.util.UUID;
 
+import joshie.progression.api.IGetterCallback;
+import joshie.progression.api.ISetterCallback;
 import joshie.progression.criteria.Criteria;
-import joshie.progression.gui.fields.BooleanField;
-import joshie.progression.gui.fields.IGetterCallback;
-import joshie.progression.gui.fields.ISetterCallback;
-import joshie.progression.gui.fields.TextField;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.init.Items;
@@ -15,15 +13,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
 public class RewardCriteria extends RewardBase implements IGetterCallback, ISetterCallback {
-    public String criteriaID = "";
-    public boolean remove = false;
-    public String displayName = "";
     private Criteria criteria = null;
+    private String criteriaID = "";
+    public String displayName = "";
+    public boolean remove = false;
 
     public RewardCriteria() {
         super(new ItemStack(Items.golden_apple), "criteria", 0xFF99B3FF);
-        list.add(new TextField("displayName", this));
-        list.add(new BooleanField("remove", this));
     }
 
     public Criteria getAssignedCriteria() {
@@ -51,7 +47,8 @@ public class RewardCriteria extends RewardBase implements IGetterCallback, ISett
     }
 
     @Override
-    public boolean setField(String fieldName, String fieldValue) {
+    public boolean setField(String fieldName, Object object) {
+        String fieldValue = (String) object;
         if (fieldName.equals("displayName")) {
             displayName = fieldValue;
 

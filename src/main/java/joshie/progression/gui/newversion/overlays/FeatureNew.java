@@ -4,15 +4,18 @@ import org.lwjgl.opengl.GL11;
 
 import joshie.progression.Progression;
 import joshie.progression.criteria.Criteria;
+import joshie.progression.criteria.Trigger;
+import joshie.progression.gui.newversion.GuiConditionEditor;
 import joshie.progression.gui.newversion.GuiCore;
 import joshie.progression.gui.newversion.GuiCriteriaEditor;
 
 public abstract class FeatureNew extends FeatureAbstract {
     public static boolean IS_OPEN = false;
     protected Criteria criteria;
-    
+    protected Trigger trigger;
+
     public String text;
-    
+
     public FeatureNew(String text) {
         this.text = text;
     }
@@ -22,9 +25,10 @@ public abstract class FeatureNew extends FeatureAbstract {
         super.init(core);
         setVisibility(false);
         criteria = GuiCriteriaEditor.INSTANCE.criteria;
+        trigger = GuiConditionEditor.INSTANCE.trigger;
         return this;
     }
-    
+
     @Override
     public void drawFeature(int mouseX, int mouseY) {
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
@@ -35,7 +39,7 @@ public abstract class FeatureNew extends FeatureAbstract {
     }
 
     protected void drawForeground(int mouseX, int mouseY) {}
-    
+
     @Override
     public void setVisibility(boolean value) {
         super.setVisibility(value);

@@ -16,7 +16,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class TriggerKill extends TriggerBaseCounter {
+public class TriggerKill extends TriggerBaseCounterVaries {
     public List<IEntityFilter> filters = new ArrayList();
     private transient EntityLivingBase entity;
 
@@ -43,7 +43,7 @@ public class TriggerKill extends TriggerBaseCounter {
     }
 
     @Override
-    public void update() {
+    public void updateDraw() {
         entity = EntityHelper.getRandomEntityForFilters(filters);
     }
 

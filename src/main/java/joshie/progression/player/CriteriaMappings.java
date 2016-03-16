@@ -13,6 +13,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 import joshie.progression.Progression;
+import joshie.progression.api.ICancelable;
 import joshie.progression.api.ITriggerData;
 import joshie.progression.criteria.Condition;
 import joshie.progression.criteria.Criteria;
@@ -207,8 +208,11 @@ public class CriteriaMappings {
         //Fire the trigger
         Collections.shuffle(toTrigger);
         for (Trigger trigger : toTrigger) {
-            if (!trigger.getType().onFired(uuid, getTriggerData(trigger), data)) //Fire the new data
-            return Result.DENY;
+            if (trigger.getProvider() instanceof ICancelable) {
+                if (((ICancelable) trigger.getProvider()).isCanceling()) return Result.DENY;
+            }
+            
+            if (!trigger.getType().onFired(uuid, getTriggerData(trigger), data)) return Result.DENY;
         }
 
         //Next step, now that the triggers have been fire, we need to go through them again

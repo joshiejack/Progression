@@ -1,7 +1,7 @@
 package joshie.progression.handlers;
 
 import joshie.progression.gui.GuiTreeEditor;
-import joshie.progression.gui.GuiTriggerEditor;
+import joshie.progression.gui.newversion.GuiConditionEditor;
 import joshie.progression.gui.newversion.GuiCriteriaEditor;
 import joshie.progression.gui.newversion.GuiItemFilterEditor;
 import joshie.progression.lib.GuiIDs;
@@ -18,7 +18,7 @@ public class GUIHandler implements IGuiHandler {
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         if (ID == GuiIDs.CRITERIA) return GuiCriteriaEditor.INSTANCE;
-        else if (ID == 2) return GuiTriggerEditor.INSTANCE;
+        else if (ID == GuiIDs.CONDITION) return GuiConditionEditor.INSTANCE;
         else if (ID == GuiIDs.ITEM) return GuiItemFilterEditor.INSTANCE;
         else if (ID == GuiIDs.TREE) return GuiTreeEditor.INSTANCE;
         else return null;

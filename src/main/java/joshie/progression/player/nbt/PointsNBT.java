@@ -27,7 +27,7 @@ public class PointsNBT implements IMapHelper {
 
     @Override
     public Object readValue(NBTTagCompound tag) {
-        return (Integer)tag.getInteger("Count");
+        return (Double)tag.getDouble("Count");
     }
 
     @Override
@@ -37,6 +37,6 @@ public class PointsNBT implements IMapHelper {
 
     @Override
     public void writeValue(NBTTagCompound tag, Object o) {
-        tag.setInteger("Count", (Integer)o);
+        tag.setDouble("Count", (Double)o);
     }
 }

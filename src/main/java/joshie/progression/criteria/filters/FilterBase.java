@@ -43,7 +43,7 @@ public class FilterBase implements IItemFilter {
     }
     
     @Override
-    public void update() {}
+    public void updateDraw() {}
 
     @Override
     public int getColor() {

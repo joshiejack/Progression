@@ -3,6 +3,7 @@ package joshie.progression.criteria.rewards;
 import java.util.ArrayList;
 import java.util.List;
 
+import joshie.progression.Progression;
 import joshie.progression.api.EventBusType;
 import joshie.progression.api.ICriteria;
 import joshie.progression.api.IField;
@@ -34,7 +35,7 @@ public abstract class RewardBase implements IRewardType {
     public ItemStack getIcon() {
         return stack;
     }
-    
+
     @Override
     public void markCriteria(ICriteria criteria) {
         this.criteria = criteria;
@@ -43,6 +44,11 @@ public abstract class RewardBase implements IRewardType {
     @Override
     public String getUnlocalisedName() {
         return name;
+    }
+
+    @Override
+    public String getLocalisedName() {
+        return Progression.translate("reward." + getUnlocalisedName());
     }
 
     @Override
@@ -66,7 +72,7 @@ public abstract class RewardBase implements IRewardType {
     public void onRemoved() {}
 
     @Override
-    public void update() {}
+    public void updateDraw() {}
 
     @Override
     public void drawDisplay(int mouseX, int mouseY) {}
@@ -78,10 +84,10 @@ public abstract class RewardBase implements IRewardType {
     public String getDescription() {
         return "MISSING DESCRIPTION";
     }
-    
+
     @Override
     public void addTooltip(List list) {}
-    
+
     @Override
     public void addFieldTooltip(String fieldName, List<String> tooltip) {}
 }

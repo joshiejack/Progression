@@ -16,7 +16,7 @@ import net.minecraft.item.ItemStack;
 public class FeatureItemSelector extends FeatureAbstract implements ITextEditable {
     public static FeatureItemSelector INSTANCE = new FeatureItemSelector();
     private IItemSelectable selectable = null;
-    private IItemSelectorFilter filter = null;
+    private IItemSelectorFilter[] filters = null;
     private ArrayList<ItemStack> sorted;
     private String search = "";
     private Type type;
@@ -38,10 +38,10 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
         }
     }
 
-    public void select(IItemSelectorFilter filter, IItemSelectable selectable, Type type) {
+    public void select(IItemSelectorFilter[] filters, IItemSelectable selectable, Type type) {
         ItemHelper.addInventory();
         TextEditor.INSTANCE.setEditable(this);
-        this.filter = filter;
+        this.filters = filters;
         this.selectable = selectable;
         this.type = type;
         updateSearch();
@@ -66,17 +66,34 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
         return false;
     }
 
+    public boolean passesFilters(ItemStack stack) {
+        if (filters != null) {
+            for (IItemSelectorFilter filter : filters) {
+                if (filter.isAcceptable(stack)) return true;
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
     private void attemptToAdd(ItemStack stack) {
-        if ((filter == null) || (filter != null && filter.isAcceptable(stack))) {
-            //if (!sorted.contains(stack)) {
+        if (passesFilters(stack)) {
+            if (!sorted.contains(stack)) {
                 sorted.add(stack);
-            //}
+            }
         }
     }
 
     public ArrayList<ItemStack> getAllItems() {
         ArrayList<ItemStack> list = ItemHelper.getAllItems();
-        if (filter != null) filter.addExtraItems(list);
+        if (filters != null) {
+            for (IItemSelectorFilter filter : filters) {
+                filter.addExtraItems(list);
+            }
+        }
+
         return list;
     }
 
@@ -160,9 +177,8 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
         mouseY -= type.yOffset;
         offset.drawGradient(-1, 25 + type.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 15, theme.blackBarGradient1, theme.blackBarGradient2, theme.blackBarBorder);
         offset.drawRectangle(-1, 40 + type.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 73, theme.blackBarUnderLine, theme.blackBarUnderLineBorder);
-
-        String text = filter != null ? Progression.translate("selector." + filter.getName()) : Progression.translate("selector.items");
-        offset.drawText(text, 5, 29 + type.yOffset, theme.blackBarFontColor);
+        
+        offset.drawText(Progression.translate("selector.items"), 5, 29 + type.yOffset, theme.blackBarFontColor);
         offset.drawRectangle(285 - offsetX, 27 + type.yOffset, 200, 12, theme.blackBarUnderLine, theme.blackBarUnderLineBorder);
         offset.drawText(TextEditor.INSTANCE.getText(this), 290, 29 + type.yOffset, theme.blackBarFontColor);
 

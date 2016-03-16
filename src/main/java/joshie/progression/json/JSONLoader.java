@@ -17,9 +17,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import joshie.progression.Progression;
-import joshie.progression.api.IRewardType;
-import joshie.progression.api.ISpecialJSON;
-import joshie.progression.api.ITriggerType;
 import joshie.progression.criteria.Condition;
 import joshie.progression.criteria.Criteria;
 import joshie.progression.criteria.Reward;
@@ -39,6 +36,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class JSONLoader {
     public static Gson gson;
+
     static {
         GsonBuilder builder = new GsonBuilder().setPrettyPrinting();
         gson = builder.create();
@@ -146,14 +144,14 @@ public class JSONLoader {
             loadJSON(true, tab);
 
             if (create) {
-            	if (Options.debugMode) Progression.logger.log(Level.INFO, "Writing to the file is being done at setTabsAndCriteriaFromString");
+                if (Options.debugMode) Progression.logger.log(Level.INFO, "Writing to the file is being done at setTabsAndCriteriaFromString");
                 //Attempt to write
                 File file = new File("config" + File.separator + ProgressionInfo.MODPATH + File.separator + serverName + File.separator + "criteria.json");
                 Writer writer = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
                 writer.write(json);
                 writer.close();
             }
-            
+
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -162,10 +160,10 @@ public class JSONLoader {
     }
 
     public static void loadJSON(boolean isClientside, DefaultSettings settings) {
-    	if (Options.debugMode) {
-    		Progression.logger.log(Level.INFO, "Reloaded JSON at " + System.currentTimeMillis() + " " + isClientside);
-    	}
-    	
+        if (Options.debugMode) {
+            Progression.logger.log(Level.INFO, "Reloaded JSON at " + System.currentTimeMillis() + " " + isClientside);
+        }
+
         Options.settings = settings;
         for (DataTab data : settings.tabs) {
             ItemStack stack = null;
@@ -184,7 +182,7 @@ public class JSONLoader {
             for (DataCriteria criteria : data.criteria) {
                 APIHandler.newCriteria(iTab, criteria.uniqueName, isClientside);
             }
-            
+
             /** Step 2 : Register all the conditions and triggers for this criteria **/
             for (DataCriteria criteria : data.criteria) {
                 Criteria theCriteria = APIHandler.getCriteriaFromName(criteria.uniqueName);
@@ -266,7 +264,7 @@ public class JSONLoader {
                 if (repeatable <= 1) {
                     repeatable = 1;
                 }
-                
+
                 theCriteria.init(thePrereqs, theConflicts, display, isVisible, mustClaim, achievement, repeatable, icon, allRequired, tasksRequired, infinite, allRewards, rewardsGiven);
 
                 if (isClientside) {
@@ -279,19 +277,19 @@ public class JSONLoader {
     public static void saveJSON(DefaultSettings toSave) {
         File file = new File("config" + File.separator + ProgressionInfo.MODPATH + File.separator + serverName + File.separator + "criteria.json");
         try {
-        	if (Options.debugMode) Progression.logger.log(Level.INFO, "Writing to the file is being done at saveJSON");
+            if (Options.debugMode) Progression.logger.log(Level.INFO, "Writing to the file is being done at saveJSON");
             Writer writer = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
             writer.write(gson.toJson(toSave));
             writer.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         if (Options.debugMode) Progression.logger.log(Level.INFO, "Saved JSON at " + System.currentTimeMillis());
     }
 
     public static void saveData() {
-    	if (Options.debugMode) Progression.logger.log(Level.INFO, "Begin logging");
+        if (Options.debugMode) Progression.logger.log(Level.INFO, "Begin logging");
         HashSet<String> tabNames = new HashSet();
         Collection<Tab> allTabs = APIHandler.getTabs().values();
         HashSet<String> names = new HashSet();
@@ -342,22 +340,14 @@ public class JSONLoader {
                                     conditionData.addProperty("inverted", true);
                                 }
 
-                                condition.getType().writeToJSON(conditionData);
+                                JSONHelper.writeJSON(conditionData, condition.getType());
                                 DataGeneric dCondition = new DataGeneric(condition.getType().getUnlocalisedName(), conditionData);
                                 theConditions.add(dCondition);
                             }
                         }
 
                         JsonObject triggerData = new JsonObject();
-                        ITriggerType triggerType = trigger.getType();
-                        boolean specialOnly = false;
-                        if (triggerType instanceof ISpecialJSON) {
-                            ISpecialJSON special = ((ISpecialJSON)triggerType);
-                            special.writeToJSON(triggerData);
-                            specialOnly = special.onlySpecial();
-                        }
-                        
-                        if (!specialOnly) JSONHelper.writeVariables(triggerData, triggerType);
+                        JSONHelper.writeJSON(triggerData, trigger.getType());
                         DataTrigger dTrigger = new DataTrigger(trigger.getType().getUnlocalisedName(), triggerData, theConditions);
                         theTriggers.add(dTrigger);
                     }
@@ -366,19 +356,7 @@ public class JSONLoader {
                 if (c.rewards.size() > 0) {
                     for (Reward reward : c.rewards) {
                         JsonObject rewardData = new JsonObject();
-                        IRewardType rewardType = reward.getType();
-                        boolean specialOnly = false;
-                        if (rewardType instanceof ISpecialJSON) {
-                            ISpecialJSON special = ((ISpecialJSON)rewardType);
-                            special.writeToJSON(rewardData);
-                            specialOnly = special.onlySpecial();
-                        }
-                        
-                        if (!specialOnly) JSONHelper.writeVariables(rewardData, rewardType);
-                        if (reward.optional) {
-                            rewardData.addProperty("optional", true);
-                        }
-
+                        JSONHelper.writeJSON(rewardData, reward.getType());
                         DataGeneric dReward = new DataGeneric(reward.getType().getUnlocalisedName(), rewardData);
                         theRewards.add(dReward);
                     }

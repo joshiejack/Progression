@@ -21,18 +21,12 @@ public class RewardPotion extends RewardBaseItemFilter implements ISpecialItemFi
 
     public RewardPotion() {
         super("potioneffect", 0xFF2C7373);
-        //list.add(new TextField("customid", this));
-        //list.add(new TextField("duration", this));
-        //list.add(new TextField("amplifier", this));
-        //list.add(new BooleanField("particles", this));
-        //list.add(new BooleanField("randomVanilla", this));
-        //list.add(new ItemFilterField("filters", this, "potioneffect"));
         BROKEN = new ItemStack(Items.potionitem, 1, 0);
     }
     
     @Override
-    public String getSpecialFilter() {
-        return "potioneffect";
+    public String[] getSpecialFilters() {
+        return new String[]  { "potioneffect" };
     }
 
     @Override

@@ -2,15 +2,16 @@ package joshie.progression.criteria.conditions;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.google.gson.JsonObject;
+import java.util.UUID;
 
 import joshie.progression.api.IConditionType;
 import joshie.progression.api.IField;
 import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.json.Theme;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
 public abstract class ConditionBase implements IConditionType {
@@ -32,17 +33,14 @@ public abstract class ConditionBase implements IConditionType {
     public String getLocalisedName() {
         return StatCollector.translateToLocal("progression.condition." + getUnlocalisedName());
     }
-
+    
     @Override
     public int getColor() {
         return color;
     }
-
+    
     @Override
-    public void readFromJSON(JsonObject data) {}
-
-    @Override
-    public void writeToJSON(JsonObject data) {}
+    public void updateDraw(){} //Do nothing yo
 
     @Override
     public Result onClicked(int mouseX, int mouseY) {
@@ -86,5 +84,15 @@ public abstract class ConditionBase implements IConditionType {
             t.draw(helper, renderX, renderY, color, yPos);
             index++;
         }
+    }
+
+    @Override
+    public String getDescription() {
+        return "";
+    }
+
+    @Override
+    public boolean isSatisfied(World world, EntityPlayer player, UUID uuid) {
+        return false;
     }
 }

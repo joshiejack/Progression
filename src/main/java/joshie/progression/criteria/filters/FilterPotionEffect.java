@@ -7,7 +7,8 @@ import java.util.Set;
 
 import com.google.gson.JsonObject;
 
-import joshie.progression.gui.fields.IItemSetterCallback;
+import joshie.progression.api.IInitAfterRead;
+import joshie.progression.api.ISetterCallback;
 import joshie.progression.gui.fields.ItemField;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
 import joshie.progression.gui.selector.filters.PotionFilter;
@@ -16,7 +17,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 
-public class FilterPotionEffect extends FilterBase implements IItemSetterCallback {
+public class FilterPotionEffect extends FilterBase implements ISetterCallback, IInitAfterRead {
     private static final List<PotionEffect> EMPTY = new ArrayList();
     public int potionid = 16385; //Splash Potion of Regen, 33 seconds
     public ItemStack item;
@@ -29,8 +30,7 @@ public class FilterPotionEffect extends FilterBase implements IItemSetterCallbac
     }
 
     @Override
-    public void readFromJSON(JsonObject data) {
-        potionid = JSONHelper.getInteger(data, "potionid", 16385);
+    public void init() {
         setupEffectsItemsIDs();
     }
 
@@ -38,41 +38,46 @@ public class FilterPotionEffect extends FilterBase implements IItemSetterCallbac
     public void writeToJSON(JsonObject data) {
         JSONHelper.setInteger(data, "potionid", potionid, 16385);
     }
-    
+
     private List<PotionEffect> getEffects(int metadata) {
         List<PotionEffect> effects = Items.potionitem.getEffects(metadata);
         return effects != null ? effects : EMPTY;
     }
-    
+
     private Set<Integer> getIds(List<PotionEffect> list) {
         Set<Integer> ids = new HashSet();
-        for (PotionEffect check: list) ids.add(check.getPotionID());
+        for (PotionEffect check : list)
+            ids.add(check.getPotionID());
         return ids;
     }
-    
+
     private void setupEffectsItemsIDs() {
-        if (effects == null) effects = getEffects(potionid);
-        if (ids == null) ids = getIds(effects);
-        if (item == null) item = new ItemStack(Items.potionitem, 1, potionid);
+        effects = getEffects(potionid);
+        ids = getIds(effects);
+        item = new ItemStack(Items.potionitem, 1, potionid);
     }
-    
+
     @Override
     public boolean matches(ItemStack check) {
-        if (check.getItem() != Items.potionitem) return false;        
+        if (check.getItem() != Items.potionitem) return false;
         Set<Integer> checkids = getIds(getEffects(check.getItemDamage()));
-        setupEffectsItemsIDs();
-        for (Integer id: getIds(effects)) {
+        if (effects == null) setupEffectsItemsIDs();
+        for (Integer id : getIds(effects)) {
             if (checkids.contains(id)) return true;
         }
-        
+
         return false;
     }
 
     @Override
-    public void setItem(String fieldName, ItemStack stack) {
-        potionid = stack.getItemDamage();
-        effects = getEffects(potionid);
-        ids = getIds(effects);
-        item = new ItemStack(Items.potionitem, 1, potionid);
+    public boolean setField(String fieldName, Object object) {
+        if (fieldName.equals("stack")) {
+            ItemStack stack = (ItemStack) object;
+            potionid = stack.getItemDamage();
+            setupEffectsItemsIDs();
+            return true;
+        }
+
+        return false;
     }
 }

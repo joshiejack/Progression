@@ -2,6 +2,8 @@ package joshie.progression.gui.fields;
 
 import java.lang.reflect.Field;
 
+import joshie.progression.api.IItemGetterCallback;
+import joshie.progression.api.ISetterCallback;
 import joshie.progression.gui.editors.IItemSelectable;
 import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector;
@@ -20,7 +22,7 @@ public class ItemField extends AbstractField implements IItemSelectable {
     protected final int mouseY1;
     protected final int mouseY2;
     protected final Type type;
-    protected final IItemSelectorFilter filter;
+    protected final IItemSelectorFilter[] filters;
     
     public ItemField(String fieldName, Object object, int x, int y, float scale, int mouseX1, int mouseX2, int mouseY1, int mouseY2, Type type, IItemSelectorFilter... filters) {
         super(fieldName);
@@ -32,8 +34,8 @@ public class ItemField extends AbstractField implements IItemSelectable {
         this.mouseY1 = mouseY1;
         this.mouseY2 = mouseY2;
         this.type = type;
-        if (filters == null || filters.length == 0) filter = null;
-        else filter = filters[0];
+        if (filters == null || filters.length == 0) this.filters = null;
+        else this.filters = filters;
         
         try {
             this.field = object.getClass().getField(fieldName);
@@ -53,7 +55,7 @@ public class ItemField extends AbstractField implements IItemSelectable {
     public boolean attemptClick(int mouseX, int mouseY) {
         boolean clicked = mouseX >= mouseX1 && mouseX <= mouseX2 && mouseY >= mouseY1 && mouseY <= mouseY2;
         if (clicked) {
-            FeatureItemSelector.INSTANCE.select(filter, this, type);
+            FeatureItemSelector.INSTANCE.select(filters, this, type);
             return true;
         } else return false;
     }
@@ -86,8 +88,8 @@ public class ItemField extends AbstractField implements IItemSelectable {
     @Override
     public void setItemStack(ItemStack stack) {
         try {
-            if (object instanceof IItemSetterCallback) {
-                ((IItemSetterCallback)object).setItem(field.getName(), stack);
+            if (object instanceof ISetterCallback) {
+                ((ISetterCallback)object).setField(field.getName(), stack);
             } else field.set(object, stack);
         } catch (Exception e) {}
     }

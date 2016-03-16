@@ -3,44 +3,36 @@ package joshie.progression.criteria.filters;
 import java.util.Set;
 
 import com.google.common.collect.HashMultimap;
-import com.google.gson.JsonObject;
 
-import joshie.progression.gui.fields.ISetterCallback;
-import joshie.progression.gui.fields.TextField;
-import joshie.progression.helpers.JSONHelper;
+import joshie.progression.api.IInitAfterRead;
+import joshie.progression.api.ISetterCallback;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class FilterOre extends FilterBase implements ISetterCallback {
-    public static HashMultimap<String, String> cache = HashMultimap.create();
+public class FilterOre extends FilterBase implements ISetterCallback, IInitAfterRead {
+    private static HashMultimap<String, String> cache = HashMultimap.create();
+    private String checkName;
+    private boolean matchBoth;
+    private boolean matchFront;
+    private boolean matchBack;
+    
     public String oreName = "ingotIron";
-    public String checkName;
-    public boolean matchBoth;
-    public boolean matchFront;
-    public boolean matchBack;
 
     public FilterOre() {
         super("oreDictionary", 0xFFB25900);
-        list.add(new TextField("oreName", this));
     }
 
     @Override
-    public void readFromJSON(JsonObject data) {
-        oreName = JSONHelper.getString(data, "oreName", "ingotIron");
+    public void init() {
         setField("oreName", oreName);
-    }
-
-    @Override
-    public void writeToJSON(JsonObject data) {
-        JSONHelper.setString(data, "oreName", oreName, "ingotIron");
     }
 
     @Override
     public boolean matches(ItemStack check) {
         //Build the key
         String key = Item.itemRegistry.getNameForObject(check.getItem()) + " " + check.getItemDamage();
-        
+
         Set<String> names = null;
         //Attempt to get the ore names from the cache
         if (cache.containsKey(key)) names = cache.get(key);
@@ -64,7 +56,8 @@ public class FilterOre extends FilterBase implements ISetterCallback {
     }
 
     @Override
-    public boolean setField(String fieldName, String fieldValue) {
+    public boolean setField(String fieldName, Object object) {
+        String fieldValue = (String) object;
         oreName = fieldValue;
         if (oreName.startsWith("*")) matchFront = true;
         else matchFront = false;

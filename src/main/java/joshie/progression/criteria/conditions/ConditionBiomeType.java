@@ -6,29 +6,20 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-import joshie.progression.gui.fields.ISetterCallback;
-import joshie.progression.gui.fields.TextField;
+import joshie.progression.api.ISetterCallback;
+import joshie.progression.api.ISpecialJSON;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 
-public class ConditionBiomeType extends ConditionBase implements ISetterCallback {
+public class ConditionBiomeType extends ConditionBase implements ISetterCallback, ISpecialJSON {
     private Type[] theBiomeTypes = new Type[] { Type.FOREST };
     public String biomeTypes = "forest";
 
     public ConditionBiomeType() {
         super("biomeType", 0xFF00B200);
-        list.add(new TextField("biomeTypes", this));
-    }
-
-    private Type getBiomeType(String string) {
-        for (Type t : Type.values()) {
-            if (t.name().equalsIgnoreCase(string)) return t;
-        }
-
-        return Type.FOREST;
     }
 
     @Override
@@ -45,12 +36,17 @@ public class ConditionBiomeType extends ConditionBase implements ISetterCallback
     }
 
     @Override
+    public boolean onlySpecial() {
+        return true;
+    }
+
+    @Override
     public void readFromJSON(JsonObject data) {
         ConditionBiomeType condition = new ConditionBiomeType();
         JsonArray array = data.get("types").getAsJsonArray();
         Type[] types = new Type[array.size()];
         for (int i = 0; i < types.length; i++) {
-            types[i] = getBiomeType(array.get(i).getAsString());
+            types[i] = Type.getType(array.get(i).getAsString());
         }
 
         theBiomeTypes = types;
@@ -66,24 +62,15 @@ public class ConditionBiomeType extends ConditionBase implements ISetterCallback
         data.add("types", array);
     }
 
-    public Type getTypeFromName(String name) {
-        for (Type type : Type.values()) {
-            if (type.name().equalsIgnoreCase(name)) {
-                return type;
-            }
-        }
-
-        return Type.FOREST;
-    }
-
     @Override
-    public boolean setField(String fieldName, String fieldValue) {
+    public boolean setField(String fieldName, Object object) {
+        String fieldValue = (String) object;
         String[] split = fieldValue.split(",");
         StringBuilder fullString = new StringBuilder();
         try {
             Type[] types = new Type[split.length];
             for (int i = 0; i < types.length; i++) {
-                types[i] = getTypeFromName(split[i].trim());
+                types[i] = Type.getType(split[i].trim());
             }
 
             theBiomeTypes = types;

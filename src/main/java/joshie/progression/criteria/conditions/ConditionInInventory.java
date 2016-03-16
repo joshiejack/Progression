@@ -1,39 +1,35 @@
 package joshie.progression.criteria.conditions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-import com.google.gson.JsonObject;
-
-import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
-import joshie.progression.gui.fields.BooleanField;
-import joshie.progression.gui.fields.EnumField;
-import joshie.progression.gui.fields.IEnum;
+import joshie.progression.api.IEnum;
+import joshie.progression.api.IField;
+import joshie.progression.api.IItemFilter;
+import joshie.progression.api.gui.ISpecialFieldProvider;
 import joshie.progression.gui.fields.ItemField;
-import joshie.progression.gui.fields.TextField;
-import joshie.progression.helpers.JSONHelper;
+import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class ConditionInInventory extends ConditionBase implements IEnum {
+public class ConditionInInventory extends ConditionBase implements IEnum, ISpecialFieldProvider {
     private static enum CheckSlots {
         HELD, ARMOR, HOTBAR, INVENTORY;
     }
 
-    public ItemStack stack = new ItemStack(Blocks.crafting_table);
-    public boolean matchDamage = true;
-    public boolean matchNBT = false;
+    public List<IItemFilter> filters = new ArrayList();
     public int itemAmount = 1;
     public CheckSlots slotType = CheckSlots.INVENTORY;
 
     public ConditionInInventory() {
         super("ininventory", 0xFF660000);
-        list.add(new BooleanField("matchDamage", this));
-        list.add(new BooleanField("matchNBT", this));
-        list.add(new TextField("itemAmount", this));
-        list.add(new EnumField("slotType", this));
-        list.add(new ItemField("stack", this, 25, 60, 3F, 27, 69, 62, 107, Type.TRIGGER));
+    }
+
+    @Override
+    public void addSpecialFields(List<IField> fields) {
+        fields.add(new ItemField("stack", this, 25, 60, 3F, 27, 69, 62, 107, Type.TRIGGER));
     }
 
     @Override
@@ -46,40 +42,9 @@ public class ConditionInInventory extends ConditionBase implements IEnum {
         return CheckSlots.values()[0];
     }
 
-    private CheckSlots getTypeFromString(String name) {
-        for (CheckSlots s : CheckSlots.values()) {
-            if (s.name().equalsIgnoreCase(name)) {
-                return s;
-            }
-        }
-
-        return CheckSlots.INVENTORY;
-    }
-
-    @Override
-    public void readFromJSON(JsonObject data) {
-        stack = JSONHelper.getItemStack(data, "item", stack);
-        matchDamage = JSONHelper.getBoolean(data, "matchDamage", matchDamage);
-        matchNBT = JSONHelper.getBoolean(data, "matchNBT", matchNBT);
-        itemAmount = JSONHelper.getInteger(data, "itemAmount", itemAmount);
-        slotType = getTypeFromString(JSONHelper.getString(data, "checkType", slotType.name().toLowerCase()));
-    }
-
-    @Override
-    public void writeToJSON(JsonObject data) {
-        JSONHelper.setItemStack(data, "item", stack);
-        JSONHelper.setBoolean(data, "matchDamage", matchDamage, true);
-        JSONHelper.setBoolean(data, "matchNBT", matchNBT, false);
-        JSONHelper.setInteger(data, "itemAmount", itemAmount, 1);
-        JSONHelper.setString(data, "checkType", slotType.name().toLowerCase(), CheckSlots.INVENTORY.name().toLowerCase());
-    }
-
     private boolean matches(ItemStack check) {
-        if (check == null) return false;
-        if (stack.getItem() == check.getItem()) {
-            if (matchDamage) if (stack.getItemDamage() != check.getItemDamage()) return false;
-            if (matchNBT) if (stack.getTagCompound() != check.getTagCompound()) return false;
-            return true;
+        for (IItemFilter filter : filters) {
+            if (filter.matches(check)) return true;
         }
 
         return false;

@@ -1,4 +1,4 @@
-package joshie.progression.gui.fields;
+package joshie.progression.api;
 
 import net.minecraft.item.ItemStack;
 

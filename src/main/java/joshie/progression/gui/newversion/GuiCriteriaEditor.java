@@ -43,9 +43,9 @@ public class GuiCriteriaEditor extends GuiCore implements IBarProvider {
     @Override
     public void initGuiData() {
         //Setup the features
-        features.add(new FeatureBarsX2(this, "requirements", "results"));
         features.add(new FeatureDrawable(new ArrayList(criteria.triggers), 45, 201, 201, 64, 119, FeatureNewTrigger.INSTANCE, theme.triggerGradient1, theme.triggerGradient2, theme.triggerFontColor));
         features.add(new FeatureDrawable(new ArrayList(criteria.rewards), 140, 0, 55, 201, 201, FeatureNewReward.INSTANCE, theme.rewardBoxGradient1, theme.rewardBoxGradient2, theme.rewardBoxFont));
+        features.add(new FeatureBarsX2(this, "requirements", "results"));
         features.add(FeatureItemSelector.INSTANCE); //Add the item selector
         features.add(FeatureNewTrigger.INSTANCE); //Add new trigger popup
         features.add(FeatureNewReward.INSTANCE); //Add new reward popup

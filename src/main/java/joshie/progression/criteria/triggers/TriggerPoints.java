@@ -8,29 +8,36 @@ import joshie.progression.criteria.triggers.data.DataBoolean;
 import joshie.progression.player.PlayerTracker;
 
 public class TriggerPoints extends TriggerBaseBoolean {
-    public String name = "research";
-    public int amount = 1;
+    public String variable = "research";
+    public double amount = 1D;
     public boolean consume = true;
+    public boolean greaterThan = true;
+    public boolean isEqualTo = true;
+    public boolean lesserThan = false;
 
     public TriggerPoints() {
-        super("points", 0xFFB2B200);
+        super("points", 0xFFB2B200, EventBusType.NONE);
     }
 
-    @Override
-    public EventBusType getEventBus() {
-        return EventBusType.NONE;
+    private boolean isValidValue(double total) {
+        if (greaterThan && total > amount) return true;
+        if (isEqualTo && total == amount) return true;
+        if (lesserThan && total < amount) return true;
+
+        //FALSE BABY!!!
+        return false;
     }
 
     @Override
     public boolean onFired(UUID uuid, ITriggerData iTriggerData, Object... data) {
-        int total = PlayerTracker.getServerPlayer(uuid).getAbilities().getPoints(name);
-        if (total >= amount) {
+        double total = PlayerTracker.getServerPlayer(uuid).getAbilities().getPoints("points:" + variable);
+        if (isValidValue(total)) {
             ((DataBoolean) iTriggerData).completed = true;
             if (consume) {
-                PlayerTracker.getServerPlayer(uuid).addPoints(name, -amount);
+                PlayerTracker.getServerPlayer(uuid).addPoints(variable, -amount);
             }
         }
-        
+
         return true;
     }
 }
