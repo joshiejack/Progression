@@ -6,7 +6,7 @@ import java.util.List;
 
 import joshie.progression.api.IConditionType;
 import joshie.progression.api.IFieldProvider;
-import joshie.progression.api.IItemFilter;
+import joshie.progression.api.IFilter;
 import joshie.progression.api.IRewardType;
 import joshie.progression.api.ITriggerType;
 import joshie.progression.gui.newversion.GuiConditionEditor;
@@ -35,8 +35,8 @@ public class CollectionHelper {
             EventsManager.onTriggerRemoved((ITriggerType) drawing);
             CollectionHelper.remove(GuiCriteriaEditor.INSTANCE.getCriteria().getTriggers(), (ITriggerType) drawing);
             GuiCriteriaEditor.INSTANCE.initGui();
-        } else if (drawing instanceof IItemFilter) {
-            GuiItemFilterEditor.INSTANCE.field.remove((IItemFilter) drawing);
+        } else if (drawing instanceof IFilter) {
+            GuiItemFilterEditor.INSTANCE.field.remove((IFilter) drawing);
             GuiItemFilterEditor.INSTANCE.initGui();
         } else if (drawing instanceof IConditionType) {
             CollectionHelper.remove(GuiConditionEditor.INSTANCE.getTrigger().getConditions(), (IConditionType) drawing);

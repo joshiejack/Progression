@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 
-import joshie.progression.api.IItemFilter;
+import joshie.progression.api.IFilter;
 import joshie.progression.gui.GuiCriteriaEditor;
 import joshie.progression.gui.newversion.GuiItemFilterEditor;
 import joshie.progression.helpers.ItemHelper;
@@ -56,7 +56,7 @@ public class FeatureItemPreview extends FeatureAbstract {
         sorted = new ArrayList();
         for (ItemStack stack: ItemHelper.getCreativeItems()) {
             int matches = 0;
-            for (IItemFilter filter: GuiItemFilterEditor.INSTANCE.field.getFilters()) {
+            for (IFilter filter: GuiItemFilterEditor.INSTANCE.field.getFilters()) {
                 if (filter.matches(stack)) {
                     if (blocksOnly) attemptToAddBlock(stack);
                     else sorted.add(stack);

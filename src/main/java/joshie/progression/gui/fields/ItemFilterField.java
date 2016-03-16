@@ -7,7 +7,7 @@ import java.util.List;
 import joshie.enchiridion.helpers.MCClientHelper;
 import joshie.progression.Progression;
 import joshie.progression.api.IBlocksOnly;
-import joshie.progression.api.IItemFilter;
+import joshie.progression.api.IFilter;
 import joshie.progression.api.ISetterCallback;
 import joshie.progression.gui.newversion.GuiCriteriaEditor;
 import joshie.progression.gui.newversion.GuiItemFilterEditor;
@@ -50,7 +50,7 @@ public class ItemFilterField extends AbstractField {
         helper.drawSplitText(renderX, renderY, "Item Editor", 4, yPos, 105, color, 0.75F);
     }
 
-    public boolean isAccepted(IItemFilter filter) {
+    public boolean isAccepted(IFilter filter) {
         if (object instanceof IBlocksOnly) {
             if (!filter.getUnlocalisedName().startsWith("block")) return false;
         }
@@ -82,7 +82,7 @@ public class ItemFilterField extends AbstractField {
         return false;
     }
 
-    public void setFilters(List<IItemFilter> filters) {
+    public void setFilters(List<IFilter> filters) {
         try {
             if (object instanceof ISetterCallback) {
                 ((ISetterCallback) object).setField(field.getName(), filters);
@@ -90,25 +90,25 @@ public class ItemFilterField extends AbstractField {
         } catch (Exception e) {}
     }
 
-    public List<IItemFilter> getFilters() {
+    public List<IFilter> getFilters() {
         try {
-            return (List<IItemFilter>) field.get(object);
+            return (List<IFilter>) field.get(object);
         } catch (Exception e) {}
 
         //Return a blank list yo!
         return new ArrayList();
     }
 
-    public void add(IItemFilter filter) {
-        List<IItemFilter> filters = getFilters();
+    public void add(IFilter filter) {
+        List<IFilter> filters = getFilters();
         filters.add(filter);
         if (object instanceof ISetterCallback) {
             ((ISetterCallback) object).setField(field.getName(), filters);
         }
     }
 
-    public void remove(IItemFilter filter) {
-        List<IItemFilter> filters = getFilters();
+    public void remove(IFilter filter) {
+        List<IFilter> filters = getFilters();
         CollectionHelper.remove(filters, filter);
         if (object instanceof ISetterCallback) {
             ((ISetterCallback) object).setField(field.getName(), filters);

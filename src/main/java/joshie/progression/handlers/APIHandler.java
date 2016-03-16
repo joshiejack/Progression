@@ -9,9 +9,8 @@ import com.google.gson.JsonObject;
 import joshie.progression.api.IConditionType;
 import joshie.progression.api.ICriteria;
 import joshie.progression.api.ICustomDataBuilder;
-import joshie.progression.api.IEntityFilter;
 import joshie.progression.api.IFieldProvider;
-import joshie.progression.api.IItemFilter;
+import joshie.progression.api.IFilter;
 import joshie.progression.api.IProgressionAPI;
 import joshie.progression.api.IRewardType;
 import joshie.progression.api.ITab;
@@ -41,8 +40,7 @@ public class APIHandler implements IProgressionAPI {
     public static final HashMap<String, ITriggerType> triggerTypes = new HashMap();
     public static final HashMap<String, IRewardType> rewardTypes = new HashMap();
     public static final HashMap<String, IConditionType> conditionTypes = new HashMap();
-    public static final HashMap<String, IItemFilter> itemFilterTypes = new HashMap();
-    public static final HashMap<String, IEntityFilter> entityFilterTypes = new HashMap();
+    public static final HashMap<String, IFilter> itemFilterTypes = new HashMap();
 
     //These four maps are registries for fetching the various types
     @SideOnly(Side.CLIENT)
@@ -56,8 +54,7 @@ public class APIHandler implements IProgressionAPI {
         if (provider instanceof ITriggerType) return triggerTypes.get(provider.getUnlocalisedName());
         if (provider instanceof IRewardType) return rewardTypes.get(provider.getUnlocalisedName());
         if (provider instanceof IConditionType) return conditionTypes.get(provider.getUnlocalisedName());
-        if (provider instanceof IItemFilter) return itemFilterTypes.get(provider.getUnlocalisedName());
-        if (provider instanceof IEntityFilter) return entityFilterTypes.get(provider.getUnlocalisedName());
+        if (provider instanceof IFilter) return itemFilterTypes.get(provider.getUnlocalisedName());
 
         //WHAT
         return null;
@@ -128,14 +125,8 @@ public class APIHandler implements IProgressionAPI {
     }
 
     @Override
-    public IItemFilter registerItemFilter(IItemFilter filter) {
+    public IFilter registerItemFilter(IFilter filter) {
         itemFilterTypes.put(filter.getUnlocalisedName(), filter);
-        return filter;
-    }
-
-    @Override
-    public IEntityFilter registerEntityFilter(IEntityFilter filter) {
-        entityFilterTypes.put(filter.getUnlocalisedName(), filter);
         return filter;
     }
 
@@ -201,16 +192,12 @@ public class APIHandler implements IProgressionAPI {
         return newRewardType;
     }
 
-    public static IItemFilter newItemFilter(String typeName, JsonObject typeData) {
-        return (IItemFilter) newFilter(true, typeName, typeData);
+    public static IFilter newItemFilter(String typeName, JsonObject typeData) {
+        return (IFilter) newFilter(true, typeName, typeData);
     }
 
-    public static IEntityFilter newEntityFilter(String typeName, JsonObject typeData) {
-        return (IEntityFilter) newFilter(true, typeName, typeData);
-    }
-
-    private static IFieldProvider newFilter(boolean isItemFilter, String typeName, JsonObject typeData) {
-        IFieldProvider type = isItemFilter ? itemFilterTypes.get(typeName) : entityFilterTypes.get(typeName);
+    private static IFilter newFilter(boolean isItemFilter, String typeName, JsonObject typeData) {
+        IFilter type = itemFilterTypes.get(typeName);
         if (type != null) {
             try {
                 type = type.getClass().newInstance();

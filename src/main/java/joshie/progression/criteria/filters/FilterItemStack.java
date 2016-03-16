@@ -9,7 +9,7 @@ import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
-public class FilterItemStack extends FilterBase implements ISpecialFieldProvider {
+public class FilterItemStack extends FilterBaseItem implements ISpecialFieldProvider {
     public ItemStack stack = new ItemStack(Items.arrow);
     public boolean matchDamage = true;
     public boolean matchNBT = false;

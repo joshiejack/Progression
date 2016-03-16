@@ -2,7 +2,7 @@ package joshie.progression.criteria.filters;
 
 import net.minecraft.item.ItemStack;
 
-public class FilterItemMeta extends FilterBase {
+public class FilterItemMeta extends FilterBaseItem {
     public int damage = 0;
 
     public FilterItemMeta() {

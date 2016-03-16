@@ -1,10 +1,10 @@
 package joshie.progression.criteria.filters;
 
 import joshie.progression.Progression;
-import joshie.progression.api.IItemFilter;
+import joshie.progression.api.IFilter;
 import net.minecraft.item.ItemStack;
 
-public abstract class FilterBase implements IItemFilter {
+public abstract class FilterBase implements IFilter {
     private int color;
     private String name;
 
@@ -37,7 +37,7 @@ public abstract class FilterBase implements IItemFilter {
     }
 
     @Override
-    public boolean matches(ItemStack stack) {
+    public boolean matches(Object object) {
         return false;
     }
 }

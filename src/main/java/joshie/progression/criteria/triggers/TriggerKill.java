@@ -3,7 +3,7 @@ package joshie.progression.criteria.triggers;
 import java.util.ArrayList;
 import java.util.List;
 
-import joshie.progression.api.IEntityFilter;
+import joshie.progression.api.IFilter;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.helpers.EntityHelper;
 import net.minecraft.entity.Entity;
@@ -13,7 +13,7 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class TriggerKill extends TriggerBaseCounterVaries {
-    public List<IEntityFilter> filters = new ArrayList();
+    public List<IFilter> filters = new ArrayList();
     private transient EntityLivingBase entity;
 
     public TriggerKill() {
@@ -31,7 +31,7 @@ public class TriggerKill extends TriggerBaseCounterVaries {
     @Override
     protected boolean canIncrease(Object... data) {
         EntityLivingBase entity = (EntityLivingBase) data[0];
-        for (IEntityFilter filter : filters) {
+        for (IFilter filter : filters) {
             if (filter.matches(entity)) return true;
         }
 

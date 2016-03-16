@@ -2,7 +2,6 @@ package joshie.progression.criteria.filters;
 
 import joshie.progression.helpers.ItemHelper;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 
 public abstract class FilterBaseBlock extends FilterBase {
@@ -13,7 +12,9 @@ public abstract class FilterBaseBlock extends FilterBase {
     }
 
     @Override
-    public boolean matches(ItemStack check) {
+    public boolean matches(Object object) {
+        if (!(object instanceof ItemStack)) return false;
+        ItemStack check = (ItemStack) object;
         Block block = ItemHelper.getBlock(check);
         return block == null ? false : matches(block, block.getMetaFromState(block.getStateFromMeta(check.getItemDamage())));
     }

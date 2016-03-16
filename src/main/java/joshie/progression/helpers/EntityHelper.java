@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import joshie.progression.api.IEntityFilter;
+import joshie.progression.api.IFilter;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
@@ -48,12 +48,12 @@ public class EntityHelper {
         return entities;
     }
     
-    public static EntityLivingBase getRandomEntityForFilters(List<IEntityFilter> filters) {
-    	ArrayList<IEntityFilter> shuffledFilters = new ArrayList(filters);
+    public static EntityLivingBase getRandomEntityForFilters(List<IFilter> filters) {
+    	ArrayList<IFilter> shuffledFilters = new ArrayList(filters);
     	Collections.shuffle(shuffledEntityCache);
     	Collections.shuffle(shuffledFilters);
     	for (EntityLivingBase entity: getEntities()) {
-    		for (IEntityFilter filter: shuffledFilters) {
+    		for (IFilter filter: shuffledFilters) {
     			if (filter.matches(entity)) return entity;
     		}
     	}

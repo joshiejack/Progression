@@ -3,10 +3,10 @@ package joshie.progression.criteria.triggers;
 import java.util.ArrayList;
 import java.util.List;
 
-import joshie.progression.api.IItemFilter;
+import joshie.progression.api.IFilter;
 
 public abstract class TriggerBaseItemFilter extends TriggerBaseCounter {
-    public List<IItemFilter> filters = new ArrayList();
+    public List<IFilter> filters = new ArrayList();
 
     public TriggerBaseItemFilter(String name, int color) {
         super(name, color);

@@ -6,7 +6,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import joshie.progression.api.ICriteria;
-import joshie.progression.api.IItemFilter;
+import joshie.progression.api.IFilter;
 import joshie.progression.json.Options;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,9 +23,9 @@ public class CrafterHuman extends Crafter {
 
     @Override
     public boolean canUseItemForCrafting(ActionType type, ItemStack stack) {
-        Set<IItemFilter> filters = CraftingRegistry.getFiltersForStack(type, stack, true);
-        List<IItemFilter> matched = new ArrayList();
-        for (IItemFilter filter : filters) {
+        Set<IFilter> filters = CraftingRegistry.getFiltersForStack(type, stack, true);
+        List<IFilter> matched = new ArrayList();
+        for (IFilter filter : filters) {
             if (filter.matches(stack)) {
                 matched.add(filter); //Add all matches so we can check all criteria
             }
@@ -33,7 +33,7 @@ public class CrafterHuman extends Crafter {
 
         if (matched.size() == 0) return !Options.settings.disableUsageUntilRewardAdded;
         Set<ICriteria> completed = PlayerTracker.getPlayerData(uuid).getMappings().getCompletedCriteria().keySet();
-        for (IItemFilter filter : matched) {
+        for (IFilter filter : matched) {
             ICriteria criteria = CraftingRegistry.getCriteriaForFilter(type, filter, true);
             if (criteria != null && completed.contains(criteria)) return true;
         }
@@ -43,10 +43,10 @@ public class CrafterHuman extends Crafter {
 
     @Override
     public boolean canCraftItem(ActionType type, ItemStack stack) {
-        Set<IItemFilter> filters = CraftingRegistry.getFiltersForStack(type, stack, false);
+        Set<IFilter> filters = CraftingRegistry.getFiltersForStack(type, stack, false);
         
-        List<IItemFilter> matched = new ArrayList();
-        for (IItemFilter filter : filters) {
+        List<IFilter> matched = new ArrayList();
+        for (IFilter filter : filters) {
             if (filter.matches(stack)) {
                 matched.add(filter); //Add all matches so we can check all criteria
             }
@@ -54,7 +54,7 @@ public class CrafterHuman extends Crafter {
 
         if (matched.size() == 0) return !Options.settings.disableCraftingUntilRewardAdded;
         Set<ICriteria> completed = PlayerTracker.getPlayerData(uuid).getMappings().getCompletedCriteria().keySet();
-        for (IItemFilter filter : matched) {
+        for (IFilter filter : matched) {
             ICriteria criteria = CraftingRegistry.getCriteriaForFilter(type, filter, false);
             if (criteria != null && completed.contains(criteria)) return true;
         }

@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import joshie.progression.api.IItemFilter;
+import joshie.progression.api.IFilter;
 import joshie.progression.gui.newversion.overlays.IItemSelectorFilter;
 import joshie.progression.gui.selector.filters.BlockFilter;
 import net.minecraft.block.Block;
@@ -71,28 +71,28 @@ public class ItemHelper {
         return block != null;
     }
 
-    public static ItemStack getRandomItem(List<IItemFilter> filters) {
+    public static ItemStack getRandomItem(List<IFilter> filters) {
         return getRandomItem(filters, null);
     }
 
-    public static ItemStack getRandomItemOfSize(List<IItemFilter> filters, int stackSize) {
+    public static ItemStack getRandomItemOfSize(List<IFilter> filters, int stackSize) {
         ItemStack item = getRandomItem(filters, null).copy();
         item.stackSize = stackSize;
         return item;
     }
 
-    public static ItemStack getRandomBlock(List<IItemFilter> filters) {
+    public static ItemStack getRandomBlock(List<IFilter> filters) {
         return getRandomItem(filters, BlockFilter.INSTANCE);
     }
 
-    public static ItemStack getRandomItem(List<IItemFilter> filters, IItemSelectorFilter selector) {
-        ArrayList<IItemFilter> shuffledFilters = new ArrayList(filters);
+    public static ItemStack getRandomItem(List<IFilter> filters, IItemSelectorFilter selector) {
+        ArrayList<IFilter> shuffledFilters = new ArrayList(filters);
         if (shuffledItemsCache == null) shuffledItemsCache = new ArrayList(getCreativeItems());
         Collections.shuffle(shuffledItemsCache);
         Collections.shuffle(shuffledFilters);
         for (ItemStack stack : shuffledItemsCache) {
             if (selector != null && !selector.isAcceptable(stack)) continue;
-            for (IItemFilter filter : shuffledFilters) {
+            for (IFilter filter : shuffledFilters) {
                 if (filter.matches(stack)) return stack;
             }
         }
@@ -101,10 +101,10 @@ public class ItemHelper {
         return null;
     }
 
-    public static List<ItemStack> getAllMatchingItems(List<IItemFilter> filters) {
+    public static List<ItemStack> getAllMatchingItems(List<IFilter> filters) {
         ArrayList<ItemStack> stacks = new ArrayList();
         for (ItemStack stack : getAllItems()) {
-            for (IItemFilter filter : filters) {
+            for (IFilter filter : filters) {
                 if (filter.matches(stack)) {
                     stacks.add(stack.copy());
                 }

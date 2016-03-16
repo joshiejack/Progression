@@ -3,7 +3,7 @@ package joshie.progression.criteria.rewards;
 import java.util.List;
 import java.util.UUID;
 
-import joshie.progression.api.IItemFilter;
+import joshie.progression.api.IFilter;
 import joshie.progression.gui.fields.ItemFilterFieldPreview;
 import joshie.progression.helpers.PlayerHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,7 +33,7 @@ public class RewardClear extends RewardBaseItemFilter {
 
                     if (check != null) {
                         for (int j = 0; j < check.stackSize && taken < toTake; j++) {
-                            for (IItemFilter filter: filters) {
+                            for (IFilter filter: filters) {
                                 if (filter.matches(check)) {
                                     decrease++;
                                     taken++;

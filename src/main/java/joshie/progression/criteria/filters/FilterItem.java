@@ -13,7 +13,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-public class FilterItem extends FilterBase implements IItemGetterCallback, ISetterCallback, ISpecialFieldProvider {
+public class FilterItem extends FilterBaseItem implements IItemGetterCallback, ISetterCallback, ISpecialFieldProvider {
     public Item item = Items.beef;
 
     public FilterItem() {

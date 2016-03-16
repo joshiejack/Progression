@@ -9,7 +9,7 @@ import joshie.enchiridion.helpers.MCClientHelper;
 import joshie.progression.Progression;
 import joshie.progression.api.IField;
 import joshie.progression.api.IHasEventBus;
-import joshie.progression.api.IItemFilter;
+import joshie.progression.api.IFilter;
 import joshie.progression.api.ISetterCallback;
 import joshie.progression.api.gui.ISpecialFieldProvider;
 import joshie.progression.crafting.ActionType;
@@ -66,7 +66,7 @@ public abstract class RewardBaseAction extends RewardBaseItemFilter implements I
             GuiItemFilterEditor.INSTANCE.switching = true;
             
             onRemoved();
-            filters = (List<IItemFilter>) object;
+            filters = (List<IFilter>) object;
             onAdded();
             
             //Reopen the gui

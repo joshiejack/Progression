@@ -74,12 +74,11 @@ public class FeatureDrawable extends FeatureAbstract {
             if (field.getType() == int.class) fields.add(new TextField(field.getName(), provider));
             if (field.getType() == float.class) fields.add(new TextField(field.getName(), provider));
             if (field.getType() == double.class) fields.add(new TextField(field.getName(), provider));
-            if (field.getGenericType().toString().equals("java.util.List<" + ProgressionInfo.ITEMFILTER + ">")) {
+            if (field.getGenericType().toString().equals("java.util.List<" + ProgressionInfo.FILTER + ">")) {
                 if (provider instanceof ISpecialItemFilter) {
                     fields.add(new ItemFilterField(field.getName(), provider, ((ISpecialItemFilter) provider).getSpecialFilters()));
                 } else fields.add(new ItemFilterField(field.getName(), provider));
             }
-            //TODO: Add entity filter fields if (field.getGenericType().toString().equals("java.util.List<" + ProgressionInfo.ENTITYFILTER + ">")) writeEntityFilters(json, field, object);
         }
     }
 

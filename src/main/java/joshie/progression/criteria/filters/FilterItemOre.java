@@ -10,7 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class FilterItemOre extends FilterBase implements ISetterCallback, IInitAfterRead {
+public class FilterItemOre extends FilterBaseItem implements ISetterCallback, IInitAfterRead {
     private static HashMultimap<String, String> cache = HashMultimap.create();
     private String checkName = "oreIron";
     private boolean matchBoth;

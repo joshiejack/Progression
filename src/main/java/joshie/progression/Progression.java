@@ -18,9 +18,13 @@ import joshie.progression.commands.CommandManager;
 import joshie.progression.commands.CommandReload;
 import joshie.progression.commands.CommandReset;
 import joshie.progression.criteria.conditions.ConditionBiomeType;
+import joshie.progression.criteria.conditions.ConditionBoolean;
 import joshie.progression.criteria.conditions.ConditionCoordinates;
 import joshie.progression.criteria.conditions.ConditionDaytime;
+import joshie.progression.criteria.conditions.ConditionHasCriteria;
+import joshie.progression.criteria.conditions.ConditionHasPotionEffect;
 import joshie.progression.criteria.conditions.ConditionInInventory;
+import joshie.progression.criteria.conditions.ConditionPoints;
 import joshie.progression.criteria.conditions.ConditionRandom;
 import joshie.progression.criteria.filters.FilterBlock;
 import joshie.progression.criteria.filters.FilterBlockMod;
@@ -183,6 +187,10 @@ public class Progression {
         ProgressionAPI.registry.registerConditionType(new ConditionCoordinates());
         ProgressionAPI.registry.registerConditionType(new ConditionDaytime());
         ProgressionAPI.registry.registerConditionType(new ConditionInInventory());
+        ProgressionAPI.registry.registerConditionType(new ConditionHasPotionEffect());
+        ProgressionAPI.registry.registerConditionType(new ConditionHasCriteria());
+        ProgressionAPI.registry.registerConditionType(new ConditionBoolean());
+        ProgressionAPI.registry.registerConditionType(new ConditionPoints());
         
         ProgressionAPI.registry.registerRewardType(new RewardCommand());
         ProgressionAPI.registry.registerRewardType(new RewardCriteria());

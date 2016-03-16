@@ -42,10 +42,7 @@ public interface IProgressionAPI {
 	public IRewardType registerRewardType(IRewardType reward);
 	
 	/** Register a filter type with the registry **/
-	public IItemFilter registerItemFilter(IItemFilter filter);
-	
-	/** Register a filter type with the registry **/
-	public IEntityFilter registerEntityFilter(IEntityFilter filter);
+	public IFilter registerItemFilter(IFilter filter);
 	
 	/** Register a new crafting type **/
 	public void registerActionType(String unlocalised);

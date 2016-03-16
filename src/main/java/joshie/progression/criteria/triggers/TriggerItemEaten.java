@@ -3,7 +3,7 @@ package joshie.progression.criteria.triggers;
 import java.util.List;
 
 import joshie.progression.api.IField;
-import joshie.progression.api.IItemFilter;
+import joshie.progression.api.IFilter;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.gui.ISpecialFieldProvider;
 import joshie.progression.gui.fields.ItemFilterFieldPreview;
@@ -29,7 +29,7 @@ public class TriggerItemEaten extends TriggerBaseItemFilter implements ISpecialF
     @Override
     protected boolean canIncrease(Object... data) {
         ItemStack item = (ItemStack) data[0];
-        for (IItemFilter filter : filters) {
+        for (IFilter filter : filters) {
             if (filter.matches((ItemStack) data[0])) return true;
         }
 

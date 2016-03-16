@@ -2,7 +2,7 @@ package joshie.progression.criteria.triggers;
 
 import java.util.UUID;
 
-import joshie.progression.api.IItemFilter;
+import joshie.progression.api.IFilter;
 import joshie.progression.api.ITriggerData;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.criteria.triggers.data.DataCrafting;
@@ -32,7 +32,7 @@ public class TriggerCrafting extends TriggerBaseItemFilter {
     public boolean onFired(UUID uuid, ITriggerData existing, Object... additional) {
         DataCrafting data = (DataCrafting) existing;
         ItemStack crafted = (ItemStack) (additional[0]);
-        for (IItemFilter filter : filters) {
+        for (IFilter filter : filters) {
             if (filter.matches(crafted)) {
                 data.amountCrafted += crafted.stackSize;
                 data.timesCrafted++;

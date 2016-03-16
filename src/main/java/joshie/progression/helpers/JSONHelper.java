@@ -7,10 +7,9 @@ import java.util.List;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import joshie.progression.api.IEntityFilter;
 import joshie.progression.api.IFieldProvider;
 import joshie.progression.api.IInitAfterRead;
-import joshie.progression.api.IItemFilter;
+import joshie.progression.api.IFilter;
 import joshie.progression.api.ISpecialJSON;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.lib.ProgressionInfo;
@@ -185,15 +184,15 @@ public class JSONHelper {
         }
     }
 
-    public static List<IItemFilter> getItemFilters(JsonObject data, String name) {
-        ArrayList<IItemFilter> filters = new ArrayList();
+    public static List<IFilter> getItemFilters(JsonObject data, String name) {
+        ArrayList<IFilter> filters = new ArrayList();
         if (data.get(name) == null) return filters;
         JsonArray array = data.get(name).getAsJsonArray();
         for (int i = 0; i < array.size(); i++) {
             JsonObject object = array.get(i).getAsJsonObject();
             String typeName = object.get("type").getAsString();
             JsonObject typeData = object.get("data").getAsJsonObject();
-            IItemFilter filter = APIHandler.newItemFilter(typeName, typeData);
+            IFilter filter = APIHandler.newItemFilter(typeName, typeData);
             if (filter != null) {
                 filters.add(filter);
             }
@@ -202,41 +201,9 @@ public class JSONHelper {
         return filters;
     }
 
-    public static void setItemFilters(JsonObject data, String name, List<IItemFilter> filters) {
+    public static void setItemFilters(JsonObject data, String name, List<IFilter> filters) {
         JsonArray array = new JsonArray();
-        for (IItemFilter filter : filters) {
-            if (filter == null) continue;
-            JsonObject object = new JsonObject();
-            object.addProperty("type", filter.getUnlocalisedName());
-            JsonObject typeData = new JsonObject();
-            writeJSON(typeData, filter);
-            object.add("data", typeData);
-            array.add(object);
-        }
-
-        data.add(name, array);
-    }
-
-    public static List<IEntityFilter> getEntityFilters(JsonObject data, String name) {
-        ArrayList<IEntityFilter> filters = new ArrayList();
-        if (data.get(name) == null) return filters;
-        JsonArray array = data.get(name).getAsJsonArray();
-        for (int i = 0; i < array.size(); i++) {
-            JsonObject object = array.get(i).getAsJsonObject();
-            String typeName = object.get("type").getAsString();
-            JsonObject typeData = object.get("data").getAsJsonObject();
-            IEntityFilter filter = APIHandler.newEntityFilter(typeName, typeData);
-            if (filter != null) {
-                filters.add(filter);
-            }
-        }
-
-        return filters;
-    }
-
-    public static void setEntityFilters(JsonObject data, String name, List<IEntityFilter> filters) {
-        JsonArray array = new JsonArray();
-        for (IEntityFilter filter : filters) {
+        for (IFilter filter : filters) {
             if (filter == null) continue;
             JsonObject object = new JsonObject();
             object.addProperty("type", filter.getUnlocalisedName());
@@ -277,10 +244,6 @@ public class JSONHelper {
         field.set(object, getItemFilters(json, field.getName()));
     }
 
-    private static void readEntityFilters(JsonObject json, Field field, IFieldProvider object) throws IllegalArgumentException, IllegalAccessException {
-        field.set(object, getEntityFilters(json, field.getName()));
-    }
-
     private static void readItemStack(JsonObject json, Field field, IFieldProvider object, ItemStack dflt) throws IllegalArgumentException, IllegalAccessException {
         field.set(object, getItemStack(json, field.getName(), dflt));
     }
@@ -311,8 +274,7 @@ public class JSONHelper {
                 if (field.getType() == Block.class) readBlock(json, field, provider, (Block) defaultValue);
                 if (field.getType() == Item.class) readItem(json, field, provider, (Item) defaultValue);
                 if (field.getType() == NBTTagCompound.class) readNBT(json, field, provider, (NBTTagCompound) defaultValue);
-                if (field.getGenericType().toString().equals("java.util.List<" + ProgressionInfo.ITEMFILTER + ">")) readItemFilters(json, field, provider);
-                if (field.getGenericType().toString().equals("java.util.List<" + ProgressionInfo.ENTITYFILTER + ">")) readEntityFilters(json, field, provider);
+                if (field.getGenericType().toString().equals("java.util.List<" + ProgressionInfo.FILTER + ">")) readItemFilters(json, field, provider);
             }
         } catch (Exception e) {}
     }
@@ -342,11 +304,7 @@ public class JSONHelper {
     }
 
     private static void writeItemFilters(JsonObject json, Field field, Object object) throws IllegalArgumentException, IllegalAccessException {
-        setItemFilters(json, field.getName(), (List<IItemFilter>) field.get(object));
-    }
-
-    private static void writeEntityFilters(JsonObject json, Field field, Object object) throws IllegalArgumentException, IllegalAccessException {
-        setEntityFilters(json, field.getName(), (List<IEntityFilter>) field.get(object));
+        setItemFilters(json, field.getName(), (List<IFilter>) field.get(object));
     }
 
     private static void writeItemStack(JsonObject json, Field field, Object object, ItemStack dflt) throws IllegalArgumentException, IllegalAccessException {
@@ -379,8 +337,7 @@ public class JSONHelper {
                 if (field.getType() == Block.class) writeBlock(json, field, object, (Block) defaultValue);
                 if (field.getType() == Item.class) writeItem(json, field, object, (Item) defaultValue);
                 if (field.getType() == NBTTagCompound.class) writeNBT(json, field, object, (NBTTagCompound) defaultValue);
-                if (field.getGenericType().toString().equals("java.util.List<" + ProgressionInfo.ITEMFILTER + ">")) writeItemFilters(json, field, object);
-                if (field.getGenericType().toString().equals("java.util.List<" + ProgressionInfo.ENTITYFILTER + ">")) writeEntityFilters(json, field, object);
+                if (field.getGenericType().toString().equals("java.util.List<" + ProgressionInfo.FILTER + ">")) writeItemFilters(json, field, object);
             }
         } catch (Exception e) {}
     }

@@ -1,6 +1,7 @@
 package joshie.progression.criteria.filters;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -16,7 +17,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 
-public class FilterPotionEffect extends FilterBase implements ISetterCallback, IInitAfterRead, ISpecialFieldProvider {
+public class FilterPotionEffect extends FilterBaseItem implements ISetterCallback, IInitAfterRead, ISpecialFieldProvider {
     private static final List<PotionEffect> EMPTY = new ArrayList();
     public int potionid = 16385; //Splash Potion of Regen, 33 seconds
     public ItemStack item;
@@ -43,7 +44,7 @@ public class FilterPotionEffect extends FilterBase implements ISetterCallback, I
         return effects != null ? effects : EMPTY;
     }
 
-    private Set<Integer> getIds(List<PotionEffect> list) {
+    private Set<Integer> getIds(Collection<PotionEffect> list) {
         Set<Integer> ids = new HashSet();
         for (PotionEffect check : list)
             ids.add(check.getPotionID());
@@ -57,15 +58,28 @@ public class FilterPotionEffect extends FilterBase implements ISetterCallback, I
     }
 
     @Override
-    public boolean matches(ItemStack check) {
-        if (check.getItem() != Items.potionitem) return false;
-        Set<Integer> checkids = getIds(getEffects(check.getItemDamage()));
+    public boolean matches(Object object) {
+        if (object instanceof Collection) {
+            return matches((Collection<PotionEffect>) object);
+        }
+
+        return super.matches(object);
+    }
+
+    public boolean matches(Collection<PotionEffect> effects) {
+        Set<Integer> checkids = getIds(effects);
         if (effects == null) setupEffectsItemsIDs();
         for (Integer id : getIds(effects)) {
             if (checkids.contains(id)) return true;
         }
 
         return false;
+    }
+
+    @Override
+    public boolean matches(ItemStack check) {
+        if (check.getItem() != Items.potionitem) return false;
+        return matches(getEffects(check.getItemDamage()));
     }
 
     @Override

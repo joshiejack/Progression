@@ -2,7 +2,7 @@ package joshie.progression.criteria.triggers;
 
 import joshie.progression.api.IBlocksOnly;
 import joshie.progression.api.ICancelable;
-import joshie.progression.api.IItemFilter;
+import joshie.progression.api.IFilter;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
@@ -17,7 +17,7 @@ public class TriggerBaseBlock extends TriggerBaseItemFilter implements ICancelab
     protected boolean canIncrease(Object... data) {
         Block theBlock = (Block) data[0];
         int theMeta = (Integer) data[1];
-        for (IItemFilter filter : filters) {
+        for (IFilter filter : filters) {
             if (filter.matches(new ItemStack(theBlock, theMeta))) return true;
         }
 
