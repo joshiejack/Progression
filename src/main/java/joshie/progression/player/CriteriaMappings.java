@@ -210,10 +210,13 @@ public class CriteriaMappings {
         Collections.shuffle(toTrigger);
         for (ITriggerType trigger : toTrigger) {
             if (trigger instanceof ICancelable) {
-                if (((ICancelable) trigger).isCanceling()) return Result.DENY;
+                boolean isCancelingEnabled = (((ICancelable) trigger).isCanceling());
+                if ((trigger.onFired(uuid, getTriggerData(trigger), data))) {
+                     if (isCancelingEnabled) return Result.DENY;
+                }
+            } else if (!trigger.onFired(uuid, getTriggerData(trigger), data)) {
+                return Result.DENY;
             }
-
-            if (!trigger.onFired(uuid, getTriggerData(trigger), data)) return Result.DENY;
         }
 
         //Next step, now that the triggers have been fire, we need to go through them again

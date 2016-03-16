@@ -45,6 +45,7 @@ import joshie.progression.criteria.rewards.RewardFurnace;
 import joshie.progression.criteria.rewards.RewardHarvestDrop;
 import joshie.progression.criteria.rewards.RewardItem;
 import joshie.progression.criteria.rewards.RewardLivingDrop;
+import joshie.progression.criteria.rewards.RewardPlaceBlock;
 import joshie.progression.criteria.rewards.RewardPoints;
 import joshie.progression.criteria.rewards.RewardPotion;
 import joshie.progression.criteria.rewards.RewardSpeed;
@@ -53,6 +54,7 @@ import joshie.progression.criteria.triggers.TriggerAchievement;
 import joshie.progression.criteria.triggers.TriggerBoolean;
 import joshie.progression.criteria.triggers.TriggerBreakBlock;
 import joshie.progression.criteria.triggers.TriggerChangeDimension;
+import joshie.progression.criteria.triggers.TriggerChat;
 import joshie.progression.criteria.triggers.TriggerClickBlock;
 import joshie.progression.criteria.triggers.TriggerCrafting;
 import joshie.progression.criteria.triggers.TriggerItemEaten;
@@ -196,6 +198,7 @@ public class Progression {
         ProgressionAPI.registry.registerRewardType(new RewardLivingDrop());
         ProgressionAPI.registry.registerRewardType(new RewardClear());
         ProgressionAPI.registry.registerRewardType(new RewardPotion());
+        ProgressionAPI.registry.registerRewardType(new RewardPlaceBlock());
 
         ProgressionAPI.registry.registerTriggerType(new TriggerBreakBlock());
         ProgressionAPI.registry.registerTriggerType(new TriggerCrafting());
@@ -209,6 +212,7 @@ public class Progression {
         ProgressionAPI.registry.registerTriggerType(new TriggerChangeDimension());
         ProgressionAPI.registry.registerTriggerType(new TriggerAchievement());
         ProgressionAPI.registry.registerTriggerType(new TriggerTick());
+        ProgressionAPI.registry.registerTriggerType(new TriggerChat());
 
         CommandManager.INSTANCE.registerCommand(new CommandHelp());
         CommandManager.INSTANCE.registerCommand(new CommandEdit());

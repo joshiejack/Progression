@@ -3,6 +3,7 @@ Progression 0.5.0
   Rewrote the guis, to have two modes edit and display modes
   Changed items to use filters instead of selecting all individually
   Added Support for displaying criteria, and claiming rewards with Enchiridion Books (And more)
+  Added Chat Trigger
   Added Potion Effect Reward
 
 Progression 0.4.1

@@ -2,7 +2,7 @@
 progression.tasks=Tasks
 progression.new.trigger=Add New Task
 progression.trigger.breakBlock=Break Block
-progression.trigger.obtain=Obtain
+progression.trigger.openContainer=Open Inventory
 progression.trigger.clickBlock=Click Block
 progression.trigger.changeDimension=Dimension
 progression.trigger.kill=Kill
@@ -13,6 +13,7 @@ progression.trigger.boolean=True/False
 progression.trigger.onEaten=On Eaten
 progression.trigger.achievement=Achievement
 progression.trigger.tick=On Second
+progression.trigger.chat=On Chat
 
 #Conditions
 progression.condition.daytime=Is Daytime?

@@ -7,6 +7,7 @@ import java.util.List;
 
 import joshie.progression.api.IItemFilter;
 import joshie.progression.gui.newversion.overlays.IItemSelectorFilter;
+import joshie.progression.gui.selector.filters.BlockFilter;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -54,7 +55,7 @@ public class ItemHelper {
             }
         }
     }
-    
+
     public static Block getBlock(ItemStack check) {
         return isBlock(check) ? Block.getBlockFromItem(check.getItem()) : null;
     }
@@ -73,11 +74,15 @@ public class ItemHelper {
     public static ItemStack getRandomItem(List<IItemFilter> filters) {
         return getRandomItem(filters, null);
     }
-    
+
     public static ItemStack getRandomItemOfSize(List<IItemFilter> filters, int stackSize) {
         ItemStack item = getRandomItem(filters, null).copy();
         item.stackSize = stackSize;
         return item;
+    }
+
+    public static ItemStack getRandomBlock(List<IItemFilter> filters) {
+        return getRandomItem(filters, BlockFilter.INSTANCE);
     }
 
     public static ItemStack getRandomItem(List<IItemFilter> filters, IItemSelectorFilter selector) {

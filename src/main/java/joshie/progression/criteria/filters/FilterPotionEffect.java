@@ -70,7 +70,7 @@ public class FilterPotionEffect extends FilterBase implements ISetterCallback, I
 
     @Override
     public boolean setField(String fieldName, Object object) {
-        if (fieldName.equals("stack")) {
+        if (fieldName.equals("item")) {
             ItemStack stack = (ItemStack) object;
             potionid = stack.getItemDamage();
             setupEffectsItemsIDs();

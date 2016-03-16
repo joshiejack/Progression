@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import joshie.progression.Progression;
-import joshie.progression.api.ICancelable;
 import joshie.progression.api.IEnum;
 import joshie.progression.api.IField;
 import joshie.progression.api.IFieldProvider;
@@ -61,7 +60,7 @@ public class FeatureDrawable extends FeatureAbstract {
                 ISpecialFieldProvider special = (ISpecialFieldProvider) provider;
                 special.addSpecialFields(fields);
             }
-            
+
             fieldsMap.put(provider, fields);
             return fields;
         }
@@ -92,51 +91,35 @@ public class FeatureDrawable extends FeatureAbstract {
             ticker = 1;
         }
 
-        ICancelable cancelable = drawing instanceof ICancelable ? ((ICancelable) drawing) : null;
         int width = MCClientHelper.isInEditMode() ? 99 : 79;
         helper.drawGradient(renderX, renderY, 1, 2, width, 15, drawing.getColor(), gradient1, gradient2);
         helper.drawText(renderX, renderY, drawing.getLocalisedName(), 6, 6, fontColor);
         if (MCClientHelper.isInEditMode()) {
             ICustomDrawGuiEditor editor = drawing instanceof ICustomDrawGuiEditor ? ((ICustomDrawGuiEditor) drawing) : null;
             if (editor == null || (editor != null && !editor.hideDefaultEditor())) {
-                if (cancelable == null || !cancelable.isCanceling()) {
-                    int yStart = cancelable == null ? 18 : 24;
-                    int index = 0;
-                    for (IField t : getFields(drawing)) {
-                        int color = Theme.INSTANCE.optionsFontColor;
-                        int yPos = yStart + (index * 6);
-                        if (MCClientHelper.canEdit()) {
-                            if (mouseX >= 1 && mouseX <= 84) {
-                                if (mouseY >= yPos && mouseY < yPos + 6) {
-                                    color = Theme.INSTANCE.optionsFontColorHover;
-                                    List<String> tooltip = new ArrayList();
-                                    for (int i = 0; i < 5; i++) {
-                                        String untranslated = "tooltip." + drawing.getUnlocalisedName() + "." + t.getFieldName() + "." + i;
-                                        String translated = Progression.translate(untranslated);
-                                        if (!("progression." + untranslated).equals(translated)) {
-                                            FeatureTooltip.INSTANCE.addTooltip(translated);
-                                        }
+                int yStart = 18;
+                int index = 0;
+                for (IField t : getFields(drawing)) {
+                    int color = Theme.INSTANCE.optionsFontColor;
+                    int yPos = yStart + (index * 6);
+                    if (MCClientHelper.canEdit()) {
+                        if (mouseX >= 1 && mouseX <= 84) {
+                            if (mouseY >= yPos && mouseY < yPos + 6) {
+                                color = Theme.INSTANCE.optionsFontColorHover;
+                                List<String> tooltip = new ArrayList();
+                                for (int i = 0; i < 5; i++) {
+                                    String untranslated = "tooltip." + drawing.getUnlocalisedName() + "." + t.getFieldName() + "." + i;
+                                    String translated = Progression.translate(untranslated);
+                                    if (!("progression." + untranslated).equals(translated)) {
+                                        FeatureTooltip.INSTANCE.addTooltip(translated);
                                     }
                                 }
                             }
                         }
-
-                        t.draw(helper, renderX, renderY, color, yPos);
-                        index++;
                     }
-                }
 
-                if (cancelable != null) {
-                    int color = Theme.INSTANCE.optionsFontColor;
-                    if (MCClientHelper.canEdit()) {
-                        if (mouseX >= 1 && mouseX <= 84) {
-                            if (mouseY >= 18 && mouseY < 24) {
-                                color = Theme.INSTANCE.optionsFontColorHover;
-                            }
-                        }
-
-                        helper.drawSplitText(renderX, renderY, "cancel: " + cancelable.isCanceling(), 4, 18, 105, color, 0.75F);
-                    }
+                    t.draw(helper, renderX, renderY, color, yPos);
+                    index++;
                 }
 
                 if (editor != null) editor.drawEditor(offset, renderX, renderY, mouseX, mouseY);
@@ -202,41 +185,30 @@ public class FeatureDrawable extends FeatureAbstract {
     }
 
     private boolean drawingMouseClicked(IFieldProvider provider, int mouseX, int mouseY, int button) {
-        ICancelable cancelable = provider instanceof ICancelable ? ((ICancelable) provider) : null;
         if (MCClientHelper.canEdit()) {
             ICustomDrawGuiEditor editor = provider instanceof ICustomDrawGuiEditor ? ((ICustomDrawGuiEditor) provider) : null;
             if (editor == null || (editor != null && !editor.hideDefaultEditor())) {
-                if (cancelable == null || !cancelable.isCanceling()) {
-                    int yStart = cancelable == null ? 18 : 24;
-                    int index = 0;
-                    for (IField t : getFields(provider)) {
-                        if (t.attemptClick(mouseX, mouseY)) {
+                int yStart = 18;
+                int index = 0;
+                for (IField t : getFields(provider)) {
+                    if (t.attemptClick(mouseX, mouseY)) {
+                        return true;
+                    }
+
+                    int color = Theme.INSTANCE.optionsFontColor;
+                    int yPos = yStart + (index * 6);
+                    if (mouseX >= 1 && mouseX <= 99) {
+                        if (mouseY >= yPos && mouseY < yPos + 6) {
+                            t.click();
                             return true;
                         }
-
-                        int color = Theme.INSTANCE.optionsFontColor;
-                        int yPos = yStart + (index * 6);
-                        if (mouseX >= 1 && mouseX <= 99) {
-                            if (mouseY >= yPos && mouseY < yPos + 6) {
-                                t.click();
-                                return true;
-                            }
-                        }
-
-                        index++;
                     }
-                }
 
-                if (cancelable != null) {
-                    if (mouseX >= 1 && mouseX <= 84) {
-                        if (mouseY >= 18 && mouseY < 24) {
-                            cancelable.setCanceling(!cancelable.isCanceling());
-                        }
-                    }
+                    index++;
                 }
-
-                if (editor != null && editor.mouseClicked(mouseX, mouseY)) return true;
             }
+
+            if (editor != null && editor.mouseClicked(mouseX, mouseY)) return true;
         }
 
         return false;

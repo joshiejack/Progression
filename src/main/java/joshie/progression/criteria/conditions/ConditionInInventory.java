@@ -5,31 +5,22 @@ import java.util.List;
 import java.util.UUID;
 
 import joshie.progression.api.IEnum;
-import joshie.progression.api.IField;
 import joshie.progression.api.IItemFilter;
-import joshie.progression.api.gui.ISpecialFieldProvider;
-import joshie.progression.gui.fields.ItemField;
-import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class ConditionInInventory extends ConditionBase implements IEnum, ISpecialFieldProvider {
+public class ConditionInInventory extends ConditionBase implements IEnum {
     private static enum CheckSlots {
         HELD, ARMOR, HOTBAR, INVENTORY;
     }
 
     public List<IItemFilter> filters = new ArrayList();
-    public int itemAmount = 1;
+    public int amount = 1;
     public CheckSlots slotType = CheckSlots.INVENTORY;
 
     public ConditionInInventory() {
         super("ininventory", 0xFF660000);
-    }
-
-    @Override
-    public void addSpecialFields(List<IField> fields) {
-        fields.add(new ItemField("stack", this, 25, 60, 3F, 27, 69, 62, 107, Type.TRIGGER));
     }
 
     @Override
@@ -75,19 +66,19 @@ public class ConditionInInventory extends ConditionBase implements IEnum, ISpeci
     public boolean isSatisfied(World world, EntityPlayer player, UUID uuid) {
         if (player == null) return false;
         if (slotType == CheckSlots.HELD) {
-            if (matches(player.getCurrentEquippedItem())) return player.getCurrentEquippedItem().stackSize >= itemAmount;
+            if (matches(player.getCurrentEquippedItem())) return player.getCurrentEquippedItem().stackSize >= amount;
         } else if (slotType == CheckSlots.ARMOR) {
             for (ItemStack armor : player.inventory.armorInventory) {
                 if (armor != null) {
-                    if (matches(armor)) return armor.stackSize >= itemAmount;
+                    if (matches(armor)) return armor.stackSize >= amount;
                 }
             }
 
             return false;
         } else if (slotType == CheckSlots.HOTBAR) {
-            return getAmount(player, 9) >= itemAmount;
+            return getAmount(player, 9) >= amount;
         } else if (slotType == CheckSlots.INVENTORY) {
-            return getAmount(player, 36) >= itemAmount;
+            return getAmount(player, 36) >= amount;
         }
 
         return false;
