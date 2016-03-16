@@ -3,13 +3,9 @@ package joshie.progression.criteria.triggers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
-
 import joshie.progression.api.IEntityFilter;
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.gui.GuiCriteriaEditor;
 import joshie.progression.helpers.EntityHelper;
-import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -57,14 +53,15 @@ public class TriggerKill extends TriggerBaseCounterVaries {
         return amount + " x " + name;
     }
 
+    /*
     @Override
     public void drawDisplay(int mouseX, int mouseY) {
         try {
             int max = 36;
             double numberToUse = (double) (entity.width >= entity.height ? entity.width : entity.height);
             int scale = (int) (numberToUse != 0 ? max / numberToUse : max);
-            GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+            glClear(GL_DEPTH_BUFFER_BIT);
             GuiInventory.drawEntityOnScreen(ProgressionAPI.draw.getXPosition() + 37 + GuiCriteriaEditor.INSTANCE.offsetX, GuiCriteriaEditor.INSTANCE.y + 117, scale, 25F, -5F, entity);
         } catch (Exception e) {}
-    }
+    } */
 }

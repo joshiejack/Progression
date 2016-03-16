@@ -13,8 +13,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class RewardLivingDrop extends RewardBaseAction {
     public RewardLivingDrop() {
-        super("livingDrop", 0xFF00B22D);
-        this.type = ActionType.ENTITYDROP;
+        super("livingDrop", 0xFF00B22D, ActionType.ENTITYDROP);
     }
 
     @SubscribeEvent

@@ -2,13 +2,13 @@ package joshie.progression.criteria.triggers;
 
 import java.util.UUID;
 
-import joshie.progression.api.EventBusType;
 import joshie.progression.api.ITriggerData;
 import joshie.progression.criteria.triggers.data.DataBoolean;
 import joshie.progression.player.PlayerTracker;
+import net.minecraftforge.fml.common.eventhandler.EventBus;
 
 public class TriggerPoints extends TriggerBaseBoolean {
-    public String variable = "research";
+    public String variable = "gold";
     public double amount = 1D;
     public boolean consume = true;
     public boolean greaterThan = true;
@@ -16,7 +16,12 @@ public class TriggerPoints extends TriggerBaseBoolean {
     public boolean lesserThan = false;
 
     public TriggerPoints() {
-        super("points", 0xFFB2B200, EventBusType.NONE);
+        super("points", 0xFFB2B200);
+    }
+    
+    @Override
+    public EventBus getEventBus() {
+        return null;
     }
 
     private boolean isValidValue(double total) {

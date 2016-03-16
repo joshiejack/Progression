@@ -7,7 +7,6 @@ import java.util.UUID;
 
 import joshie.progression.api.ICriteria;
 import joshie.progression.api.IItemFilter;
-import joshie.progression.criteria.Criteria;
 import joshie.progression.json.Options;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,7 +32,7 @@ public class CrafterHuman extends Crafter {
         }
 
         if (matched.size() == 0) return !Options.settings.disableUsageUntilRewardAdded;
-        Set<Criteria> completed = PlayerTracker.getPlayerData(uuid).getMappings().getCompletedCriteria().keySet();
+        Set<ICriteria> completed = PlayerTracker.getPlayerData(uuid).getMappings().getCompletedCriteria().keySet();
         for (IItemFilter filter : matched) {
             ICriteria criteria = CraftingRegistry.getCriteriaForFilter(type, filter, true);
             if (criteria != null && completed.contains(criteria)) return true;
@@ -54,7 +53,7 @@ public class CrafterHuman extends Crafter {
         }
 
         if (matched.size() == 0) return !Options.settings.disableCraftingUntilRewardAdded;
-        Set<Criteria> completed = PlayerTracker.getPlayerData(uuid).getMappings().getCompletedCriteria().keySet();
+        Set<ICriteria> completed = PlayerTracker.getPlayerData(uuid).getMappings().getCompletedCriteria().keySet();
         for (IItemFilter filter : matched) {
             ICriteria criteria = CraftingRegistry.getCriteriaForFilter(type, filter, false);
             if (criteria != null && completed.contains(criteria)) return true;

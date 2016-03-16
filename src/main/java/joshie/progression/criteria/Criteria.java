@@ -6,19 +6,20 @@ import java.util.Collections;
 import java.util.List;
 
 import joshie.progression.api.ICriteria;
-import joshie.progression.gui.TreeEditorElement;
+import joshie.progression.api.IRewardType;
+import joshie.progression.api.ITab;
+import joshie.progression.api.ITriggerType;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
 public class Criteria implements ICriteria {
     /** All the data for this **/
-    public List<Trigger> triggers = new ArrayList();
-    public List<Reward> rewards = new ArrayList();
-    public List<Criteria> prereqs = new ArrayList();
-    public List<Criteria> conflicts = new ArrayList();
-    public TreeEditorElement treeEditor;
+    public List<ITriggerType> triggers = new ArrayList();
+    public List<IRewardType> rewards = new ArrayList();
+    public List<ICriteria> prereqs = new ArrayList();
+    public List<ICriteria> conflicts = new ArrayList();
 
-    public Tab tab;
+    public ITab tab;
     public String uniqueName;
     public int isRepeatable = 1;
     public boolean infinite = false;
@@ -31,8 +32,9 @@ public class Criteria implements ICriteria {
     public boolean mustClaim = false;
     public boolean achievement = true;
     public ItemStack stack = new ItemStack(Blocks.stone);
+    public int x, y;
 
-    public Criteria(Tab tab, String uniqueName, boolean isClientside) {
+    public Criteria(ITab tab, String uniqueName, boolean isClientside) {
         this.tab = tab;
         this.uniqueName = uniqueName;
         this.isRepeatable = 1;
@@ -40,13 +42,9 @@ public class Criteria implements ICriteria {
         this.allTasks = true;
         this.allRewards = true;
         this.rewardsGiven = 1;
-
-        if (isClientside) {
-            this.treeEditor = new TreeEditorElement(this);
-        }
     }
 
-    public void init(Criteria[] prereqs, Criteria[] theConflicts, String displayName, boolean isVisible, boolean mustClaim, boolean achievement, int repeatable, ItemStack icon, boolean allRequired, int tasksRequired, boolean infinite, boolean allRewards, int rewardsGiven) {
+    public void init(ICriteria[] prereqs, ICriteria[] theConflicts, String displayName, boolean isVisible, boolean mustClaim, boolean achievement, int repeatable, ItemStack icon, boolean allRequired, int tasksRequired, boolean infinite, boolean allRewards, int rewardsGiven, int x, int y) {
         this.displayName = displayName;
         this.isVisible = isVisible;
         this.mustClaim = mustClaim;
@@ -58,31 +56,34 @@ public class Criteria implements ICriteria {
         this.infinite = infinite;
         this.allRewards = allRewards;
         this.rewardsGiven = rewardsGiven;
+        this.x = x;
+        this.y = y;
+        
         addRequirements(prereqs);
         addConflicts(theConflicts);
     }
 
-    public void addTriggers(Trigger... triggers) {
-        this.triggers.addAll(Arrays.asList((Trigger[]) triggers));
+    public void addTriggers(ITriggerType... triggers) {
+        this.triggers.addAll(Arrays.asList((ITriggerType[]) triggers));
         this.triggers.removeAll(Collections.singleton(null));
     }
 
-    public void addRewards(Reward... rewards) {
-        this.rewards.addAll(Arrays.asList((Reward[]) rewards));
+    public void addRewards(IRewardType... rewards) {
+        this.rewards.addAll(Arrays.asList((IRewardType[]) rewards));
         this.rewards.removeAll(Collections.singleton(null));
-        for (Reward reward : rewards) {
+        for (IRewardType reward : rewards) {
             if (reward != null) {
-                reward.getType().onAdded();
+                reward.onAdded();
             }
         }
     }
 
-    public void addRequirements(Criteria... prereqs) {
-        this.prereqs.addAll(Arrays.asList((Criteria[]) prereqs));
+    public void addRequirements(ICriteria... prereqs) {
+        this.prereqs.addAll(Arrays.asList((ICriteria[]) prereqs));
     }
 
-    public void addConflicts(Criteria... conflicts) {
-        this.conflicts.addAll(Arrays.asList((Criteria[]) conflicts));
+    public void addConflicts(ICriteria... conflicts) {
+        this.conflicts.addAll(Arrays.asList((ICriteria[]) conflicts));
     }
 
     public void addTooltip(List<String> toolTip) {
@@ -102,10 +103,116 @@ public class Criteria implements ICriteria {
         if (this == obj) return true;
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
-        Criteria other = (Criteria) obj;
+        ICriteria other = (ICriteria) obj;
         if (uniqueName == null) {
-            if (other.uniqueName != null) return false;
-        } else if (!uniqueName.equals(other.uniqueName)) return false;
+            if (other.getUniqueName() != null) return false;
+        } else if (!uniqueName.equals(other.getUniqueName())) return false;
         return true;
+    }
+
+    @Override
+    public List<ITriggerType> getTriggers() {
+        return triggers;
+    }
+
+    @Override
+    public List<IRewardType> getRewards() {
+        return rewards;
+    }
+
+    @Override
+    public String getUniqueName() {
+        return uniqueName;
+    }
+
+    @Override
+    public int getTasksRequired() {
+        return tasksRequired;
+    }
+
+    @Override
+    public boolean getIfRequiresAllTasks() {
+        return allTasks;
+    }
+
+    @Override
+    public boolean requiresClaiming() {
+        return mustClaim;
+    }
+
+    @Override
+    public boolean displayAchievement() {
+        return achievement;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    @Override
+    public ItemStack getIcon() {
+        return stack;
+    }
+
+    @Override
+    public boolean canRepeatInfinite() {
+        return infinite;
+    }
+
+    @Override
+    public int getRepeatAmount() {
+        return isRepeatable;
+    }
+
+    @Override
+    public List<ICriteria> getConflicts() {
+        return conflicts;
+    }
+
+    @Override
+    public ITab getTab() {
+        return tab;
+    }
+
+    @Override
+    public List<ICriteria> getPreReqs() {
+        return prereqs;
+    }
+
+    @Override
+    public int getAmountOfRewards() {
+        return rewardsGiven;
+    }
+
+    @Override
+    public boolean givesAllRewards() {
+        return allRewards;
+    }
+
+    @Override
+    public int getX() {
+        return x;
+    }
+
+    @Override
+    public int getY() {
+        return y;
+    }
+
+    @Override
+    public boolean isVisible() {
+        return isVisible;
+    }
+
+    @Override
+    public void setVisiblity(boolean b) {
+        this.isVisible = b;
+    }
+
+    @Override
+    public void setCoordinates(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 }

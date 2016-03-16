@@ -9,13 +9,15 @@ import java.util.HashMap;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
 
 import joshie.progression.Progression;
 import joshie.progression.api.IField;
 import joshie.progression.gui.newversion.overlays.FeatureBackground;
 import joshie.progression.gui.newversion.overlays.FeatureFooter;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector;
+import joshie.progression.gui.newversion.overlays.FeatureNew;
+import joshie.progression.gui.newversion.overlays.FeatureNewCondition;
+import joshie.progression.gui.newversion.overlays.FeatureNewItemFilter;
 import joshie.progression.gui.newversion.overlays.FeatureNewReward;
 import joshie.progression.gui.newversion.overlays.FeatureNewTrigger;
 import joshie.progression.gui.newversion.overlays.FeatureTooltip;
@@ -49,7 +51,7 @@ public abstract class GuiCore extends GuiScreen {
     public int screenTop; // Top of the screen :D
     public int screenWidth; //Width of the screen
     public boolean switching = false;
-    
+
     public abstract int getPreviousGuiID();
 
     @Override
@@ -60,7 +62,7 @@ public abstract class GuiCore extends GuiScreen {
         theme = Theme.INSTANCE;
         if (offsetCache.containsKey(getKey())) {
             offsetX = offsetCache.get(getKey());
-        } else  offsetX = 0;
+        } else offsetX = 0;
 
         features.clear(); // Clear out the features
         features.add(new FeatureBackground()); // Readd the background
@@ -73,12 +75,14 @@ public abstract class GuiCore extends GuiScreen {
             feature.init(this);
         }
     }
-    
+
     public void clearEditors() {
         FeatureItemSelector.INSTANCE.clearEditable();
         TextEditor.INSTANCE.clearEditable();
         FeatureNewTrigger.INSTANCE.setVisibility(false);
         FeatureNewReward.INSTANCE.setVisibility(false);
+        FeatureNewItemFilter.INSTANCE.setVisibility(false);
+        FeatureNewCondition.INSTANCE.setVisibility(false);
     }
 
     public void initGuiData() {}
@@ -110,37 +114,41 @@ public abstract class GuiCore extends GuiScreen {
                 feature.draw(cursorX, cursorY - screenTop);
             }
         }
-        
+
         drawGuiForeground(mouseX, mouseY - screenTop);
-        
+
         //Draw the tooltip in the right place
         FeatureTooltip.INSTANCE.drawFeature(cursorX, cursorY);
     }
-    
+
     public abstract void drawGuiForeground(int cursorX, int cursorY);
 
     @Override
     protected void mouseClicked(int x, int y, int button) throws IOException {
-        for (IGuiFeature feature : features) {
-            if (feature.isVisible()) { //Don't process hidden features
-                if (feature.mouseClicked(mouseX, mouseY - screenTop, button)) {
-                    return; // Don't continue if a mouse click was processed
+        if (button == 0) {
+            for (IGuiFeature feature : features) {
+                if (feature.isVisible()) { //Don't process hidden features
+                    if (feature.mouseClicked(mouseX, mouseY - screenTop, button)) {
+                        return; // Don't continue if a mouse click was processed
+                    }
                 }
             }
         }
-        
-        if(guiMouseClicked(mouseX, mouseY - screenTop, button)) {
+
+        if (guiMouseClicked(mouseX, mouseY - screenTop, button)) {
             return;
         }
-        
+
         if (button == 1) {
-            switching = true;
-            mc.thePlayer.openGui(Progression.instance, getPreviousGuiID(), mc.theWorld, 0, 0, 0);
+            if (!FeatureNew.IS_OPEN) {
+                switching = true;
+                mc.thePlayer.openGui(Progression.instance, getPreviousGuiID(), mc.theWorld, 0, 0, 0);
+            }
         }
-        
-       clearEditors();
+
+        clearEditors();
     }
-    
+
     public abstract boolean guiMouseClicked(int mouseX, int mouseY, int button);
 
     @Override
@@ -155,7 +163,7 @@ public abstract class GuiCore extends GuiScreen {
         } else if (key == 205) {
             scroll(-jump);
         }
-        
+
         TextEditor.INSTANCE.keyTyped(character, key);
         super.keyTyped(character, key);
     }
@@ -177,7 +185,7 @@ public abstract class GuiCore extends GuiScreen {
                     }
                 }
             }
-            
+
             if (!scrolled) {
                 if (!down) {
                     scroll(20);
@@ -188,7 +196,7 @@ public abstract class GuiCore extends GuiScreen {
         }
         super.handleMouseInput();
     }
-    
+
     public Object getKey() {
         return this;
     }
@@ -199,7 +207,7 @@ public abstract class GuiCore extends GuiScreen {
         if (offsetX >= 0) {
             offsetX = 0;
         }
-        
+
         offsetCache.put(getKey(), offsetX);
     }
 
@@ -225,7 +233,7 @@ public abstract class GuiCore extends GuiScreen {
         drawRect(left, top, right, top + 1, border);
         drawRect(left, bottom - 1, right, bottom, border);
     }
-    
+
     //Gradient rect, For tooltip usage so leave alone
     @Override
     public void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
@@ -235,26 +243,26 @@ public abstract class GuiCore extends GuiScreen {
     public void drawStack(ItemStack stack, int x, int y, float scale) {
         RenderItemHelper.drawStack(stack, x, y + screenTop, scale);
     }
-    
+
     public void drawText(String text, int left, int top, int color) {
         drawText(text, left, top, color, 1F);
     }
-    
+
     public void drawText(String text, int left, int top, int color, float scale) {
         fontRendererObj.drawString(text, (int) (left / scale), (int) ((top + screenTop) / scale), color);
     }
-    
+
     public void drawSplitText(String text, int left, int top, int width, int color) {
         drawSplitText(text, left, top, width, color, 1F);
     }
-    
+
     public void drawSplitText(String text, int left, int top, int width, int color, float scale) {
         GlStateManager.pushMatrix();
         GlStateManager.scale(scale, scale, scale);
         fontRendererObj.drawSplitString(text, (int) (left / scale), (int) ((top + screenTop) / scale), width, color);
         GlStateManager.popMatrix();
     }
-    
+
     public void drawTexture(ResourceLocation resource, int left, int top, int u, int v, int width, int height) {
         GlStateManager.color(1F, 1F, 1F); //Fix Colours
         mc.getTextureManager().bindTexture(resource);

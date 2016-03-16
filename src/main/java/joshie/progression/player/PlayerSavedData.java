@@ -6,10 +6,10 @@ import java.util.UUID;
 
 import com.google.common.collect.Maps;
 
+import joshie.progression.api.ICriteria;
+import joshie.progression.api.IRewardType;
 import joshie.progression.api.IStoreNBTData;
-import joshie.progression.criteria.Criteria;
-import joshie.progression.criteria.Reward;
-import joshie.progression.criteria.Tab;
+import joshie.progression.api.ITab;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.player.PlayerTeam.TeamType;
 import net.minecraft.nbt.NBTTagCompound;
@@ -42,11 +42,11 @@ public class PlayerSavedData extends WorldSavedData {
             this.markDirty();
             //If this team never existed before
             //Loop through all the rewards loaded and init them with player data
-            for (Tab tab: APIHandler.getTabs().values()) {
-                for (Criteria c: tab.getCriteria()) {
-                    for (Reward r: c.rewards) {
-                        if (r.getType() != null && r.getType() instanceof IStoreNBTData) {
-                            IStoreNBTData storage = (IStoreNBTData) r.getType();
+            for (ITab tab : APIHandler.getTabs().values()) {
+                for (ICriteria criteria : tab.getCriteria()) {
+                    for (IRewardType reward : criteria.getRewards()) {
+                        if (reward instanceof IStoreNBTData) {
+                            IStoreNBTData storage = (IStoreNBTData) reward;
                             data.getAbilities().setCustomData(storage.getNBTKey(), storage.getDefaultTags(new NBTTagCompound()));
                         }
                     }

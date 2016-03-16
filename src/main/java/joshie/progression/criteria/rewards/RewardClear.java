@@ -16,7 +16,6 @@ public class RewardClear extends RewardBaseItemFilter {
     
     public RewardClear() {
         super("clear", 0xFF69008C);
-        //list.add(new TextField("toTake", this));
         list.add(new ItemFilterFieldPreview("filters", this, 50, 40, 10, 100, 30, 100, 2F));
     }
 

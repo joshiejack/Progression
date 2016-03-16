@@ -10,17 +10,21 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class FilterOre extends FilterBase implements ISetterCallback, IInitAfterRead {
+public class FilterItemOre extends FilterBase implements ISetterCallback, IInitAfterRead {
     private static HashMultimap<String, String> cache = HashMultimap.create();
-    private String checkName;
+    private String checkName = "oreIron";
     private boolean matchBoth;
     private boolean matchFront;
     private boolean matchBack;
     
-    public String oreName = "ingotIron";
+    public String oreName = "oreIron";
 
-    public FilterOre() {
+    public FilterItemOre() {
         super("oreDictionary", 0xFFB25900);
+    }
+    
+    public FilterItemOre(String string, int color) {
+        super(string, color);
     }
 
     @Override

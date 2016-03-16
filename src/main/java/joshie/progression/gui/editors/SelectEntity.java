@@ -11,6 +11,7 @@ import joshie.progression.gui.editors.SelectItem.Type;
 import joshie.progression.helpers.EntityHelper;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
@@ -110,7 +111,7 @@ public class SelectEntity extends TextEditable implements IRenderOverlay {
 
     @Override
     public void draw(int x, int y) {
-        GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+        GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
 
         if (selectable != null) {
             if (sorted == null) {
@@ -133,8 +134,8 @@ public class SelectEntity extends TextEditable implements IRenderOverlay {
             int k = 0;
             for (int i = position; i < position + (fullWidth * 4); i++) {
                 if (i >= 0 && i < sorted.size()) {
-                    GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-                    GL11.glColor4f(1F, 1F, 1F, 1F);
+                    GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
+                    GlStateManager.color(1F, 1F, 1F, 1F);
                     try {
                         GuiInventory.drawEntityOnScreen(offX + 24 + (j * 32), yPos + 105 + (k * 32) + type.yOffset, EntityHelper.getSizeForEntity(sorted.get(i)), 25F, -5F, sorted.get(i));
                     } catch (Exception e) {}

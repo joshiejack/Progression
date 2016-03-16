@@ -1,6 +1,5 @@
 package joshie.progression.criteria.triggers;
 
-import joshie.progression.api.EventBusType;
 import joshie.progression.api.ProgressionAPI;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;

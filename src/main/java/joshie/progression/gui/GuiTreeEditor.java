@@ -4,14 +4,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import joshie.progression.criteria.Criteria;
-import joshie.progression.criteria.Tab;
+import joshie.progression.api.ICriteria;
+import joshie.progression.api.ITab;
 import joshie.progression.gui.base.GuiBase;
 import joshie.progression.gui.buttons.ButtonNewCriteria;
 import joshie.progression.gui.buttons.ButtonTab;
@@ -20,19 +21,21 @@ import joshie.progression.gui.editors.SelectItem;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.json.Options;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 public class GuiTreeEditor extends GuiBase {
     public static final GuiTreeEditor INSTANCE = new GuiTreeEditor();
+    private HashMap<ICriteria, TreeEditorElement> elements;
     public String currentTabName;
-    public Tab currentTab;
+    public ITab currentTab;
 
     private static class SortIndex implements Comparator {
         @Override
         public int compare(Object o1, Object o2) {
-            Tab tab1 = ((Tab) o1);
-            Tab tab2 = ((Tab) o2);
+            ITab tab1 = ((ITab) o1);
+            ITab tab2 = ((ITab) o2);
             if (tab1.getSortIndex() == tab2.getSortIndex()) {
                 return tab1.getDisplayName().compareTo(tab2.getDisplayName());
             }
@@ -55,10 +58,10 @@ public class GuiTreeEditor extends GuiBase {
         }
 
         //Sort tabs alphabetically or by sort index
-        ArrayList<Tab> tabs = new ArrayList(APIHandler.getTabs().values());
+        ArrayList<ITab> tabs = new ArrayList(APIHandler.getTabs().values());
         Collections.sort(tabs, new SortIndex());
 
-        for (Tab tab : tabs) {
+        for (ITab tab : tabs) {
             if (tab.isVisible() || MCClientHelper.canEdit()) {
                 if (number <= 8) {
                     buttonList.add(new ButtonTab(tab, 0, pos));
@@ -80,7 +83,7 @@ public class GuiTreeEditor extends GuiBase {
 
         currentTab = APIHandler.getTabFromName(currentTabName);
         if (currentTab == null) {
-            for (Tab tab : APIHandler.getTabs().values()) {
+            for (ITab tab : APIHandler.getTabs().values()) {
                 currentTab = tab;
                 break;
             }
@@ -93,31 +96,48 @@ public class GuiTreeEditor extends GuiBase {
         }
 
         currentTabName = currentTab.getUniqueName();
+
+        //Rebuild
+        elements = new HashMap();
+        for (ICriteria criteria : currentTab.getCriteria()) {
+            elements.put(criteria, new TreeEditorElement(criteria));
+        }
+    }
+
+    public TreeEditorElement getElement(ICriteria criteria) {
+        return elements.get(criteria);
+    }
+
+    public void addCriteria(ICriteria criteria, int x, int y, int offsetX) {
+        elements.put(criteria, new TreeEditorElement(criteria));
+        getElement(criteria).draw(x, y, offsetX);
+        getElement(criteria).click(x, y, false);
     }
 
     @Override
     public void drawForeground() {
         if (currentTab == null) initGui();
-        for (Criteria criteria : currentTab.getCriteria()) {
-            if (criteria.treeEditor.isCriteriaVisible() || MCClientHelper.canEdit()) {
-                TreeEditorElement editor = criteria.treeEditor;
-                List<Criteria> prereqs = criteria.prereqs;
-                for (Criteria c : prereqs) {
-                    int y1 = c.treeEditor.getY();
+        if (!MCClientHelper.isInEditMode() && !currentTab.isVisible()) return;
+        for (ICriteria criteria : currentTab.getCriteria()) {
+            if (getElement(criteria).isCriteriaVisible() || MCClientHelper.canEdit()) {
+                TreeEditorElement editor = getElement(criteria);
+                List<ICriteria> prereqs = criteria.getPreReqs();
+                for (ICriteria c : prereqs) {
+                    int y1 = getElement(c).getY();
                     int y2 = editor.getY();
-                    int x1 = c.treeEditor.getX();
+                    int x1 = getElement(c).getX();
                     int x2 = editor.getX();
 
                     int width = 0;
-                    int textWidth = mc.fontRendererObj.getStringWidth(c.displayName);
-                    int iconWidth = 9 + (c.rewards.size() * 12);
+                    int textWidth = mc.fontRendererObj.getStringWidth(c.getDisplayName());
+                    int iconWidth = 9 + (c.getRewards().size() * 12);
                     if (textWidth >= iconWidth) {
                         width = textWidth + 9;
                     } else width = iconWidth;
 
                     width -= 3;
 
-                    if (c.tab == criteria.tab) {
+                    if (c.getTab() == criteria.getTab()) {
                         drawLine(offsetX + width + x1, y + 12 + y1 - 1, offsetX + 5 + x2, y + 12 + y2 - 1, 1, theme.connectLineColor1);
                         drawLine(offsetX + width + x1, y + 12 + y1 + 1, offsetX + 5 + x2, y + 12 + y2 + 1, 1, theme.connectLineColor2); //#636C69
                         drawLine(offsetX + width + x1, y + 12 + y1, offsetX + 5 + x2, y + 12 + y2, 1, theme.connectLineColor3);
@@ -126,24 +146,24 @@ public class GuiTreeEditor extends GuiBase {
             }
         }
 
-        GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-        for (Criteria criteria : currentTab.getCriteria()) {
-            if (criteria.treeEditor.isCriteriaVisible() || MCClientHelper.canEdit()) {
-                criteria.treeEditor.draw(0, y, offsetX);
+        GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
+        for (ICriteria criteria : currentTab.getCriteria()) {
+            if (getElement(criteria).isCriteriaVisible() || MCClientHelper.canEdit()) {
+                getElement(criteria).draw(0, y, offsetX);
             }
         }
 
         TreeEditorSelection.INSTANCE.draw();
     }
 
-    public Tab previousTab = null;
+    public ITab previousTab = null;
 
     @Override
     protected void keyTyped(char character, int key) throws IOException {
-        Criteria toRemove = null;
-        for (Criteria criteria : currentTab.getCriteria()) {
-            if (criteria.treeEditor.isCriteriaVisible() || MCClientHelper.canEdit()) {
-                if (criteria.treeEditor.keyTyped(character, key)) {
+        ICriteria toRemove = null;
+        for (ICriteria criteria : currentTab.getCriteria()) {
+            if (getElement(criteria).isCriteriaVisible() || MCClientHelper.canEdit()) {
+                if (getElement(criteria).keyTyped(character, key)) {
                     toRemove = criteria;
                     break;
                 }
@@ -151,7 +171,7 @@ public class GuiTreeEditor extends GuiBase {
         }
 
         if (toRemove != null) {
-            APIHandler.removeCriteria(toRemove.uniqueName, false);
+            APIHandler.removeCriteria(toRemove.getUniqueName(), false);
         }
 
         if (MCClientHelper.canEdit()) {
@@ -175,18 +195,16 @@ public class GuiTreeEditor extends GuiBase {
 
     @Override
     public void mouseReleased(int x, int y, int button) {
-        for (Criteria criteria : currentTab.getCriteria()) {
-            criteria.treeEditor.release(mouseX, mouseY);
+        for (ICriteria criteria : currentTab.getCriteria()) {
+            getElement(criteria).release(mouseX, mouseY);
         }
 
-        if (button == 0) {
-            isDragging = false;
-        }
+        isDragging = false;
     }
 
     public long lastClick;
     public int lastType;
-    public Criteria lastClicked = null;
+    public ICriteria lastClicked = null;
     public int drag = 0;
     public boolean isDragging = false;
 
@@ -205,15 +223,15 @@ public class GuiTreeEditor extends GuiBase {
         }
 
         super.mouseClicked(par1, par2, par3);
-        for (Criteria criteria : currentTab.getCriteria()) {
-            if (criteria.treeEditor.isCriteriaVisible() || MCClientHelper.canEdit()) {
-                if (criteria.treeEditor.click(mouseX, mouseY, isDoubleClick)) {
+        for (ICriteria criteria : currentTab.getCriteria()) {
+            if (getElement(criteria).isCriteriaVisible() || MCClientHelper.canEdit()) {
+                if (getElement(criteria).click(mouseX, mouseY, isDoubleClick)) {
                     lastClicked = criteria;
                 }
             }
         }
 
-        if (lastClicked == null && selected == null){
+        if (lastClicked == null && selected == null) {
             isDragging = true;
             drag = mouseX;
         }
@@ -232,11 +250,13 @@ public class GuiTreeEditor extends GuiBase {
             }
         }
 
-        for (Criteria criteria : currentTab.getCriteria()) {
-            criteria.treeEditor.follow(mouseX, mouseY);
-            int wheel = Mouse.getDWheel();
-            if (wheel != 0) {
-                criteria.treeEditor.scroll(wheel < 0);
+        if (lastClicked != null) {
+            for (ICriteria criteria : currentTab.getCriteria()) {
+                getElement(criteria).follow(mouseX, mouseY);
+                int wheel = Mouse.getDWheel();
+                if (wheel != 0) {
+                    getElement(criteria).scroll(wheel < 0);
+                }
             }
         }
     }

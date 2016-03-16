@@ -10,6 +10,7 @@ import joshie.progression.gui.newversion.GuiItemFilterEditor;
 import joshie.progression.helpers.ItemHelper;
 import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 
 public class FeatureItemPreview extends FeatureAbstract {
@@ -27,6 +28,7 @@ public class FeatureItemPreview extends FeatureAbstract {
 
     @Override
     public boolean scroll(int mouseX, int mouseY, boolean scrolledDown) {
+        if (FeatureItemSelector.INSTANCE.isVisible()) return false;
         mouseY -= 95;
         if (mouseY >= 40 && mouseY <= 110) {
             int width = (int) ((double) (screenWidth - 10) / 16.133333334D) * 4;
@@ -67,7 +69,7 @@ public class FeatureItemPreview extends FeatureAbstract {
     @Override
     public void drawFeature(int mouseX, int mouseY) {
         if (FeatureItemSelector.INSTANCE.isVisible()) return;
-        GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+        GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
         if (sorted == null) {
             updateSearch();
         }

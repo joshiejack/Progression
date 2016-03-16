@@ -11,8 +11,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class RewardHarvestDrop extends RewardBaseAction {
     public RewardHarvestDrop() {
-        super("harvestDrop", 0xFF555555);
-        this.type = ActionType.HARVESTDROP;
+        super("harvestDrop", 0xFF555555, ActionType.HARVESTDROP);
     }
 
     @SubscribeEvent

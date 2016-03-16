@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import joshie.progression.Progression;
-import joshie.progression.api.EventBusType;
 import joshie.progression.api.ICriteria;
 import joshie.progression.api.IField;
 import joshie.progression.api.IRewardType;
-import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
@@ -37,7 +35,7 @@ public abstract class RewardBase implements IRewardType {
     }
 
     @Override
-    public void markCriteria(ICriteria criteria) {
+    public void setCriteria(ICriteria criteria) {
         this.criteria = criteria;
     }
 
@@ -57,15 +55,6 @@ public abstract class RewardBase implements IRewardType {
     }
 
     @Override
-    public EventBusType[] getEventBusTypes() {
-        return new EventBusType[] { getEventBus() };
-    }
-
-    protected EventBusType getEventBus() {
-        return EventBusType.NONE;
-    }
-
-    @Override
     public void onAdded() {}
 
     @Override
@@ -75,19 +64,10 @@ public abstract class RewardBase implements IRewardType {
     public void updateDraw() {}
 
     @Override
-    public void drawDisplay(int mouseX, int mouseY) {}
-
-    @Override
-    public void drawEditor(DrawFeatureHelper helper, int renderX, int renderY, int mouseX, int mouseY) {}
-
-    @Override
     public String getDescription() {
         return "MISSING DESCRIPTION";
     }
 
     @Override
     public void addTooltip(List list) {}
-
-    @Override
-    public void addFieldTooltip(String fieldName, List<String> tooltip) {}
 }

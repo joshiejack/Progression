@@ -1,5 +1,7 @@
 package joshie.progression.gui.base;
 
+import static joshie.progression.network.core.PacketPart.SEND_SIZE;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -13,15 +15,17 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import joshie.progression.Progression;
-import joshie.progression.criteria.Criteria;
+import joshie.progression.api.ICriteria;
 import joshie.progression.gui.editors.EditText;
 import joshie.progression.gui.editors.SelectItem;
+import joshie.progression.gui.newversion.GuiCriteriaEditor;
 import joshie.progression.helpers.MCClientHelper;
+import joshie.progression.helpers.SplitHelper;
 import joshie.progression.json.JSONLoader;
 import joshie.progression.json.Options;
 import joshie.progression.json.Theme;
 import joshie.progression.network.PacketHandler;
-import joshie.progression.network.PacketReload;
+import joshie.progression.network.PacketSyncJSONToServer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
@@ -40,13 +44,15 @@ public abstract class GuiBase extends GuiScreen {
     public ArrayList<String> tooltip;
     public int ySize = 240;
     public Theme theme = null;
-    public Criteria selected = null;
-    public Criteria previous = null;
+    public ICriteria selected = null;
+    public ICriteria previous = null;
+    public boolean switching = false;
     public int y;
 
     @Override
     public void initGui() {
         super.initGui();
+        switching = false;
         y = (height - ySize) / 2;
         Keyboard.enableRepeatEvents(true);
         res = new ScaledResolution(mc);
@@ -62,10 +68,17 @@ public abstract class GuiBase extends GuiScreen {
     @Override
     public void onGuiClosed() {
         Keyboard.enableRepeatEvents(false);
-        if (MCClientHelper.getPlayer().capabilities.isCreativeMode) {
-        	if (Options.debugMode) Progression.logger.log(Level.INFO, "Saving JSON Data");
-        	//JSONLoader.saveData(); 
-        	SaveTicker.LAST_TICK = 500;
+        if (MCClientHelper.isInEditMode() && !switching) {
+            if (Options.debugMode) {
+                Progression.logger.log(Level.INFO, "Saving JSON Data");
+            }
+
+            JSONLoader.saveData(); //Save the data clientside
+            String json = JSONLoader.getClientTabJsonData();
+            int length = SplitHelper.splitStringEvery(json, 5000).length;
+            PacketHandler.sendToServer(new PacketSyncJSONToServer(SEND_SIZE, "", length, System.currentTimeMillis()));
+            //Send the packet to the server about the new json
+            GuiCriteriaEditor.INSTANCE.clearEditors();
         }
     }
 

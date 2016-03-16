@@ -1,15 +1,23 @@
 package joshie.progression.criteria.triggers;
 
+import joshie.progression.api.IHasEventBus;
 import joshie.progression.api.ProgressionAPI;
 import net.minecraft.block.Block;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class TriggerBreakBlock extends TriggerBaseBlock {
+public class TriggerBreakBlock extends TriggerBaseBlock implements IHasEventBus {
     public TriggerBreakBlock() {
         super("breakBlock", 0xFFCCCCCC);
+    }
+    
+    @Override
+    public EventBus getEventBus() {
+        return MinecraftForge.EVENT_BUS;
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)

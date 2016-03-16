@@ -2,12 +2,9 @@ package joshie.progression;
 
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.gui.base.DrawHelper;
-import joshie.progression.gui.base.SaveTicker;
 import joshie.progression.helpers.RenderItemHelper;
 import joshie.progression.items.RenderItemCriteria;
-import joshie.progression.json.Options;
 import joshie.progression.lib.ProgressionInfo;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
@@ -18,10 +15,6 @@ public class ClientProxy extends CommonProxy {
 	
     @Override
     public void initClient() {
-        if (Options.editor || Progression.JEI_LOADED) {
-            MinecraftForge.EVENT_BUS.register(new SaveTicker());
-        }
-
         ProgressionAPI.draw = DrawHelper.INSTANCE;
         MinecraftForge.EVENT_BUS.register(new RenderItemCriteria());
     }

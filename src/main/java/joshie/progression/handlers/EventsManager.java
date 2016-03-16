@@ -2,108 +2,90 @@ package joshie.progression.handlers;
 
 import java.util.HashSet;
 
-import joshie.progression.api.EventBusType;
+import joshie.progression.api.IHasEventBus;
 import joshie.progression.api.IRewardType;
 import joshie.progression.api.ITriggerType;
-import joshie.progression.criteria.Reward;
-import joshie.progression.criteria.Trigger;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.EventBus;
 
 public class EventsManager {
-    private static HashSet<Trigger> activeTriggers;
-    private static HashSet<Reward> activeRewards;
-    
+    private static HashSet<ITriggerType> activeTriggers;
+    private static HashSet<IRewardType> activeRewards;
 
     public static void create() {
         activeRewards = new HashSet(); //Reset active rewards
         activeTriggers = new HashSet(); //Reset active triggers
     }
 
-    public static EventBus getBus(EventBusType bus) {
-        if (bus == EventBusType.FORGE) {
-            return MinecraftForge.EVENT_BUS;
-        } else if (bus == EventBusType.ORE) {
-            return MinecraftForge.ORE_GEN_BUS;
-        } else if (bus == EventBusType.TERRAIN) {
-            return MinecraftForge.TERRAIN_GEN_BUS;
-        } else return null;
-    }
-
-    public static void onTriggerAdded(Trigger trigger) {
+    public static void onTriggerAdded(ITriggerType trigger) {
         activeTriggers.add(trigger); //Add the new trigger
         HashSet activeTriggerTypes = new HashSet();
-        for (Trigger existing : activeTriggers) { //Grab a list of all the triggers that should be registered
-            activeTriggerTypes.add(existing.getType().getUnlocalisedName());
+        for (ITriggerType existing : activeTriggers) { //Grab a list of all the triggers that should be registered
+            activeTriggerTypes.add(existing.getUnlocalisedName());
         }
 
         for (ITriggerType type : APIHandler.triggerTypes.values()) { //Loop through all trigger types
             if (activeTriggerTypes.contains(type.getUnlocalisedName())) { //If we haven't added this type to active triggers yet add it
                 try {
-                    EventBusType[] buses = type.getEventBusTypes();
-                    for (EventBusType bus : buses) {
-                        EventBus theBus = getBus(bus);
-                        if (theBus != null) theBus.register(type);
+                    if (type instanceof IHasEventBus) {
+                        EventBus bus = ((IHasEventBus) type).getEventBus();
+                        if (bus != null) bus.register(type);
                     }
                 } catch (Exception e) {}
             }
         }
     }
 
-    public static void onTriggerRemoved(Trigger trigger) {
+    public static void onTriggerRemoved(ITriggerType trigger) {
         activeTriggers.remove(trigger); //Add the new trigger
         HashSet activeTriggerTypes = new HashSet();
-        for (Trigger existing : activeTriggers) { //Grab a list of all the triggers that should be registered
-            activeTriggerTypes.add(existing.getType().getUnlocalisedName());
+        for (ITriggerType existing : activeTriggers) { //Grab a list of all the triggers that should be registered
+            activeTriggerTypes.add(existing.getUnlocalisedName());
         }
 
         for (ITriggerType type : APIHandler.triggerTypes.values()) { //Loop through all trigger types
             if (!activeTriggerTypes.contains(type.getUnlocalisedName())) { //If this trigger type is no longer in the active ones, unregister it
                 try {
-                    EventBusType[] buses = type.getEventBusTypes();
-                    for (EventBusType bus : buses) {
-                        EventBus theBus = getBus(bus);
-                        if (theBus != null) theBus.unregister(type);
+                    if (type instanceof IHasEventBus) {
+                        EventBus bus = ((IHasEventBus) type).getEventBus();
+                        if (bus != null) bus.unregister(type);
                     }
                 } catch (Exception e) {}
             }
         }
     }
 
-    public static void onRewardAdded(Reward reward) {
+    public static void onRewardAdded(IRewardType reward) {
         activeRewards.add(reward); //Add the new reward
         HashSet activeRewardTypes = new HashSet();
-        for (Reward existing : activeRewards) { //Grab a list of all the rewards that should be registered
-            activeRewardTypes.add(existing.getType().getUnlocalisedName());
+        for (IRewardType existing : activeRewards) { //Grab a list of all the rewards that should be registered
+            activeRewardTypes.add(existing.getUnlocalisedName());
         }
 
         for (IRewardType type : APIHandler.rewardTypes.values()) { //Loop through all reward types
             if (activeRewardTypes.contains(type.getUnlocalisedName())) { //If we haven't added this type to active rewards yet add it
                 try {
-                    EventBusType[] buses = type.getEventBusTypes();
-                    for (EventBusType bus : buses) {
-                        EventBus theBus = getBus(bus);
-                        if (theBus != null) theBus.register(type);
+                    if (type instanceof IHasEventBus) {
+                        EventBus bus = ((IHasEventBus) type).getEventBus();
+                        if (bus != null) bus.register(type);
                     }
                 } catch (Exception e) {}
             }
         }
     }
 
-    public static void onRewardRemoved(Reward reward) {
+    public static void onRewardRemoved(IRewardType reward) {
         activeRewards.remove(reward); //Add the new reward
         HashSet activeRewardTypes = new HashSet();
-        for (Reward existing : activeRewards) { //Grab a list of all the rewards that should be registered
-            activeRewardTypes.add(existing.getType().getUnlocalisedName());
+        for (IRewardType existing : activeRewards) { //Grab a list of all the rewards that should be registered
+            activeRewardTypes.add(existing.getUnlocalisedName());
         }
 
         for (IRewardType type : APIHandler.rewardTypes.values()) { //Loop through all reward types
             if (!activeRewardTypes.contains(type.getUnlocalisedName())) { //If this reward type is no longer in the active ones, unregister it
                 try {
-                    EventBusType[] buses = type.getEventBusTypes();
-                    for (EventBusType bus : buses) {
-                        EventBus theBus = getBus(bus);
-                        if (theBus != null) theBus.unregister(type);
+                    if (type instanceof IHasEventBus) {
+                        EventBus bus = ((IHasEventBus) type).getEventBus();
+                        if (bus != null) bus.unregister(type);
                     }
                 } catch (Exception e) {}
             }

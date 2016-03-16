@@ -241,7 +241,7 @@ public class JSONHelper {
             JsonObject object = new JsonObject();
             object.addProperty("type", filter.getUnlocalisedName());
             JsonObject typeData = new JsonObject();
-            filter.writeToJSON(typeData);
+            writeJSON(typeData, filter);
             object.add("data", typeData);
             array.add(object);
         }

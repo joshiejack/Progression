@@ -9,21 +9,23 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import joshie.progression.Progression;
-import joshie.progression.criteria.Criteria;
-import joshie.progression.criteria.Reward;
+import joshie.progression.api.ICriteria;
+import joshie.progression.api.IRewardType;
+import joshie.progression.gui.newversion.GuiCriteriaEditor;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.RenderItemHelper;
 import joshie.progression.json.Theme;
 import joshie.progression.lib.ProgressionInfo;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
 public class TreeEditorElement {
     private static final GuiTreeEditor gui = GuiTreeEditor.INSTANCE;
-    private final Criteria criteria;
+    private final ICriteria criteria;
     private boolean isSelected;
     private boolean isHeld;
     private int prevX;
@@ -34,29 +36,21 @@ public class TreeEditorElement {
     protected int bottom;
     protected int width = 200;
     protected int height = 25;
-    
-    private int x;
-    private int y;
 
-    public TreeEditorElement(Criteria criteria) {
+    public TreeEditorElement(ICriteria criteria) {
         this.criteria = criteria;
     }
 
     public int getX() {
-        return x;
+        return criteria.getX();
     }
 
     public int getY() {
-        return y;
-    }
-
-    public void setCoordinates(int x, int y) {
-        this.x = x;
-        this.y = y;
+        return criteria.getY();
     }
 
     private int getWidthFromRewards() {
-        int size = criteria.rewards.size();
+        int size = criteria.getRewards().size();
         if (size == 1) {
             return 21; //12 Bigger 1 * 12 + 9
         } else if (size == 2) {
@@ -71,16 +65,16 @@ public class TreeEditorElement {
     }
 
     private void recalculate(int x) {
-        int textWidth = gui.mc.fontRendererObj.getStringWidth(criteria.displayName);
-        int iconWidth = 9 + (criteria.rewards.size() * 12);
+        int textWidth = gui.mc.fontRendererObj.getStringWidth(criteria.getDisplayName());
+        int iconWidth = 9 + (criteria.getRewards().size() * 12);
         if (textWidth >= iconWidth) {
             width = textWidth + 9;
         } else width = iconWidth;
 
-        left = this.x + x;
-        right = (int) (this.x + width) + x;
-        top = this.y;
-        bottom = (int) (this.y + height);
+        left = criteria.getX() + x;
+        right = (int) (criteria.getX() + width) + x;
+        top = criteria.getY();
+        bottom = (int) (criteria.getY() + height);
     }
 
     public void draw(int x, int y, int offsetX) {
@@ -88,20 +82,20 @@ public class TreeEditorElement {
     }
 
     public boolean isCriteriaVisible() {
-        if (criteria.isVisible) return true;
-        else return PlayerTracker.getClientPlayer().getMappings().getCompletedCriteria().keySet().containsAll(criteria.prereqs);
+        if (criteria.isVisible()) return true;
+        else return PlayerTracker.getClientPlayer().getMappings().getCompletedCriteria().keySet().containsAll(criteria.getPreReqs());
     }
 
-    public boolean isCriteriaCompleteable(Criteria criteria) {
-        HashMap<Criteria, Integer> completedMap = PlayerTracker.getClientPlayer().getMappings().getCompletedCriteria();
+    public boolean isCriteriaCompleteable(ICriteria criteria) {
+        HashMap<ICriteria, Integer> completedMap = PlayerTracker.getClientPlayer().getMappings().getCompletedCriteria();
         boolean completeable = true;
         //Check the conflicts of this criteria
-        for (Criteria conflicts : criteria.conflicts) {
+        for (ICriteria conflicts : criteria.getConflicts()) {
             if (completedMap.containsKey(conflicts)) return false;
         }
 
         //Check the requirements, if they aren't completable return false
-        for (Criteria requirements : criteria.prereqs) {
+        for (ICriteria requirements : criteria.getPreReqs()) {
             if (requirements.equals(criteria)) return false;
             if (!isCriteriaCompleteable(requirements)) return false;
         }
@@ -114,12 +108,12 @@ public class TreeEditorElement {
         if (highlight != 0) {
             GuiTreeEditor.INSTANCE.drawRectWithBorder(x + left, y + top, x + right, y + bottom, Theme.INSTANCE.invisible, highlight);
         } else {
-            HashMap<Criteria, Integer> completedMap = PlayerTracker.getClientPlayer().getMappings().getCompletedCriteria();
+            HashMap<ICriteria, Integer> completedMap = PlayerTracker.getClientPlayer().getMappings().getCompletedCriteria();
             boolean isCompleted = completedMap.containsKey(criteria);
             boolean anyConflicts = false;
             boolean allRequires = false;
             int requires = 0;
-            for (Criteria c : criteria.conflicts) {
+            for (ICriteria c : criteria.getConflicts()) {
                 if (completedMap.containsKey(c)) {
                     anyConflicts = true;
                     break;
@@ -127,13 +121,13 @@ public class TreeEditorElement {
             }
 
             if (!anyConflicts) {
-                for (Criteria c : criteria.prereqs) {
+                for (ICriteria c : criteria.getPreReqs()) {
                     if (completedMap.containsKey(c)) {
                         requires++;
                     }
                 }
 
-                allRequires = criteria.prereqs.size() == requires;
+                allRequires = criteria.getPreReqs().size() == requires;
             }
 
             boolean available = allRequires && !anyConflicts;
@@ -143,9 +137,9 @@ public class TreeEditorElement {
             if (isCompleted) textureY = 25;
             else if (available) textureY = 50;
 
-            GL11.glEnable(GL11.GL_BLEND);
-            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-            if (!criteria.isVisible) {
+            GlStateManager.enableBlend();
+            //GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            if (!criteria.isVisible()) {
                 if (MCClientHelper.canEdit()) {
                     textureX = 100;
                 } else {
@@ -155,8 +149,8 @@ public class TreeEditorElement {
                 }
             }
 
-            if (isSelected || (isCompleted && criteria.mustClaim)) textureY = 100;
-            Criteria selected = GuiTreeEditor.INSTANCE.lastClicked;
+            if (isSelected || (isCompleted && criteria.requiresClaiming())) textureY = 100;
+            ICriteria selected = GuiTreeEditor.INSTANCE.lastClicked;
             if (!isCompleted) {
                 if (!isCriteriaCompleteable(criteria)) {
                     textureY = 75;
@@ -164,12 +158,12 @@ public class TreeEditorElement {
             }
 
             if (selected != null) {
-                if (selected.conflicts.contains(criteria)) {
+                if (selected.getConflicts().contains(criteria)) {
                     textureY = 75;
                 }
             }
 
-            GL11.glColor4f(1F, 1F, 1F, 1F);
+            GlStateManager.color(1F, 1F, 1F, 1F);
             gui.mc.getTextureManager().bindTexture(ProgressionInfo.textures);
             gui.drawTexturedModalRect(x + left, y + top, textureX, textureY, 10, 25);
             for (int i = 0; i < width - 20; i++) {
@@ -179,13 +173,13 @@ public class TreeEditorElement {
             gui.drawTexturedModalRect(x + right - 10, y + top, textureX + 90, textureY, 10, 25);
 
             //gui.drawTexturedModalRect(x + left, y + top, textureX, textureY, 100, 25);
-            gui.mc.fontRendererObj.drawString(criteria.displayName, x + left + 4, y + top + 3, Theme.INSTANCE.criteriaDisplayNameColor);
+            gui.mc.fontRendererObj.drawString(criteria.getDisplayName(), x + left + 4, y + top + 3, Theme.INSTANCE.criteriaDisplayNameColor);
 
-            GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+            GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
             //Draw in the rewards
             int xOffset = 0;
-            for (Reward reward : criteria.rewards) {
-                ItemStack icon = reward.getType().getIcon();
+            for (IRewardType reward : criteria.getRewards()) {
+                ItemStack icon = reward.getIcon();
                 if (icon == null || icon.getItem() == null) continue; //Protection against null icons
                 RenderItemHelper.drawStack(icon, x + 4 + left + (xOffset * 12), y + top + 12, 0.75F);
                 xOffset++;
@@ -193,17 +187,17 @@ public class TreeEditorElement {
 
             int mouseX = GuiTreeEditor.INSTANCE.mouseX;
             int mouseY = GuiTreeEditor.INSTANCE.mouseY;
-            GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+            GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
             xOffset = 0;
             boolean hoveredReward = false;
-            for (Reward reward : criteria.rewards) {
+            for (IRewardType reward : criteria.getRewards()) {
                 int x1 = 3 + left + (xOffset * 12);
                 int x2 = x1 + 11;
                 int y1 = bottom - 13;
                 int y2 = y1 + 12;
                 if (isOver(mouseX, mouseY, x1, x2, y1, y2)) {
                     List list = new ArrayList();
-                    reward.getType().addTooltip(list);
+                    reward.addTooltip(list);
                     GuiTreeEditor.INSTANCE.addTooltip(list);
                     hoveredReward = true;
                 }
@@ -223,9 +217,9 @@ public class TreeEditorElement {
                         list.add("I + Click to Hide/Unhide");
                     }
 
-                    for (Criteria c : criteria.prereqs) {
-                        if (c.tab != criteria.tab) {
-                            list.add(EnumChatFormatting.RED + "Requires: " + c.displayName + " from the \"" + c.tab.getDisplayName() + "\" tab");
+                    for (ICriteria c : criteria.getPreReqs()) {
+                        if (c.getTab() != criteria.getTab()) {
+                            list.add(EnumChatFormatting.RED + "Requires: " + c.getDisplayName() + " from the \"" + c.getTab().getDisplayName() + "\" tab");
                         }
                     }
 
@@ -253,7 +247,7 @@ public class TreeEditorElement {
         GuiTreeEditor.INSTANCE.previous = criteria;
     }
 
-    private Criteria getPrevious() {
+    private ICriteria getPrevious() {
         return GuiTreeEditor.INSTANCE.previous;
     }
 
@@ -261,10 +255,10 @@ public class TreeEditorElement {
         return x >= left && x <= right && y >= top && y <= bottom;
     }
 
-    private void remove(List<Criteria> list, Criteria criteria) {
-        Iterator<Criteria> it = list.iterator();
+    private void remove(List<ICriteria> list, ICriteria criteria) {
+        Iterator<ICriteria> it = list.iterator();
         while (it.hasNext()) {
-            Criteria c = it.next();
+            ICriteria c = it.next();
             if (c.equals(criteria)) {
                 it.remove();
                 break;
@@ -279,45 +273,45 @@ public class TreeEditorElement {
 
         return false;
     }
-    
-    public boolean isAssignableTo(Criteria to, Criteria from) {
+
+    public boolean isAssignableTo(ICriteria to, ICriteria from) {
         if (to.equals(from)) return false; //If they are the same criteria we can't assign them
-        if (from.prereqs.contains(to)) return false; //If the criteria we are trying to assign has this one in it, we can't
+        if (from.getPreReqs().contains(to)) return false; //If the criteria we are trying to assign has this one in it, we can't
         //We need to check down the chain to stop the assignments
-        
+
         return true;
     }
 
     public boolean click(int x, int y, boolean isDouble) {
         if (isOver(x, y)) {
             if (noOtherSelected()) {
-                Criteria previous = getPrevious();
+                ICriteria previous = getPrevious();
                 if (previous != null && MCClientHelper.canEdit()) {
-                    List<Criteria> list = null;
+                    List<ICriteria> list = null;
                     boolean isConflict = false;
                     if (GuiScreen.isShiftKeyDown()) {
-                        list = previous.prereqs;
-                        if (previous.conflicts.contains(criteria)) {
+                        list = previous.getPreReqs();
+                        if (previous.getConflicts().contains(criteria)) {
                             list = null;
                         }
                     } else if (GuiScreen.isCtrlKeyDown()) {
-                        list = previous.conflicts;
+                        list = previous.getConflicts();
                         isConflict = true;
                     }
-                    
+
                     if (!isAssignableTo(previous, criteria)) list = null;
-                    
+
                     if (list != null) {
                         if (list.contains(criteria)) {
                             remove(list, criteria);
                             if (isConflict) {
-                                remove(criteria.conflicts, previous);
+                                remove(criteria.getConflicts(), previous);
                             }
                         } else {
                             //Now that it's been added, move everything
                             list.add(criteria);
                             if (isConflict) {
-                                criteria.conflicts.add(previous);
+                                criteria.getConflicts().add(previous);
                             }
                         }
 
@@ -327,7 +321,7 @@ public class TreeEditorElement {
 
                 if (MCClientHelper.canEdit()) {
                     if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
-                        criteria.isVisible = !criteria.isVisible;
+                        criteria.setVisiblity(!criteria.isVisible());
                         return true;
                     }
                 }
@@ -336,8 +330,9 @@ public class TreeEditorElement {
                     isHeld = false;
                     isSelected = false;
 
-                    GuiCriteriaEditor.INSTANCE.selected = criteria;
+                    GuiCriteriaEditor.INSTANCE.setCriteria(criteria);
                     joshie.progression.gui.newversion.GuiCriteriaEditor.INSTANCE.setCriteria(criteria);
+                    GuiTreeEditor.INSTANCE.switching = true; //Switching to open criteria so don't save this data
                     MCClientHelper.getPlayer().openGui(Progression.instance, 1, null, 0, 0, 0);
 
                     return true;
@@ -372,8 +367,7 @@ public class TreeEditorElement {
 
     public void follow(int x, int y) {
         if (isHeld && MCClientHelper.canEdit()) {
-            this.x += x - prevX;
-            this.y += y - prevY;
+            criteria.setCoordinates(criteria.getX() + x - prevX, criteria.getY() + y - prevY);
             prevX = x;
             prevY = y;
         }

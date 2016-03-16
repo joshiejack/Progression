@@ -1,8 +1,5 @@
 package joshie.progression.handlers;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
@@ -14,7 +11,6 @@ import joshie.progression.api.ICriteria;
 import joshie.progression.crafting.ActionType;
 import joshie.progression.crafting.Crafter;
 import joshie.progression.crafting.CraftingRegistry;
-import joshie.progression.criteria.Criteria;
 import joshie.progression.gui.newversion.GuiCriteriaEditor;
 import joshie.progression.helpers.CraftingHelper;
 import joshie.progression.helpers.MCClientHelper;
@@ -69,42 +65,18 @@ public class CraftingEvents {
             if (requirements.size() > 0) {
                 if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
                     for (ICriteria c : requirements) {
-                        GuiCriteriaEditor.INSTANCE.criteria = (Criteria) c;
+                        GuiCriteriaEditor.INSTANCE.setCriteria(c);
                         break;
                     }
                 } else event.entityPlayer.openGui(Progression.instance, 1, null, 0, 0, 0);
             }
         }
     }
-    
+
     static java.util.List<Crafter> fooList = new ArrayList<Crafter>();
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onItemTooltipEvent(ItemTooltipEvent event) {
-        
-        
-        try {
-            Field field = this.getClass().getDeclaredField("fooList");
-            
-            Type type = field.getGenericType();
-            System.out.println("type: " + type);
-            if (type instanceof ParameterizedType) {
-                ParameterizedType pt = (ParameterizedType) type;
-                System.out.println("raw type: " + pt.getRawType());
-                System.out.println("owner type: " + pt.getOwnerType());
-                System.out.println("actual type args:");
-                for (Type t : pt.getActualTypeArguments()) {
-                    System.out.println("    " + t);
-                }
-            }
-      
-            System.out.println();
-      
-            Object obj = field.get(this);
-            System.out.println("obj: " + obj);
-            System.out.println("obj class: " + obj.getClass());
-        } catch (Exception e) {}
-        
         Crafter crafter = CraftingRegistry.getCrafterFromPlayer(MCClientHelper.getPlayer());
         if (!crafter.canCraftItem(ActionType.CRAFTING, event.itemStack)) {
             //TODO: Readd tooltips for things you can't craft
@@ -119,7 +91,7 @@ public class CraftingEvents {
 
                     event.toolTip.add(EnumChatFormatting.WHITE + type.getDisplayName());
                     for (ICriteria c : requirements) {
-                        ((Criteria) c).addTooltip(event.toolTip);
+                        ((ICriteria) c).addTooltip(event.toolTip);
                     }
                 }
             }

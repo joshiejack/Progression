@@ -3,17 +3,19 @@ package joshie.progression.criteria.rewards;
 import java.util.List;
 import java.util.UUID;
 
-import joshie.progression.api.EventBusType;
+import joshie.progression.api.IHasEventBus;
 import joshie.progression.gui.fields.TextField;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
+import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class RewardFallDamage extends RewardBase {
+public class RewardFallDamage extends RewardBase implements IHasEventBus {
     public int absorption = 1;
 
     public RewardFallDamage() {
@@ -22,8 +24,8 @@ public class RewardFallDamage extends RewardBase {
     }
 
     @Override
-    public EventBusType getEventBus() {
-        return EventBusType.FORGE;
+    public EventBus getEventBus() {
+        return MinecraftForge.EVENT_BUS;
     }
 
     @SubscribeEvent

@@ -6,8 +6,8 @@ import java.util.List;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
+import joshie.progression.api.ICriteria;
 import joshie.progression.crafting.CraftingRegistry;
-import joshie.progression.criteria.Criteria;
 import joshie.progression.json.DefaultSettings;
 import joshie.progression.json.JSONLoader;
 import joshie.progression.network.PacketHandler;
@@ -18,7 +18,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 
 public class RemappingHandler {
-    public static Multimap<Criteria, Criteria> criteriaToUnlocks; //A list of the critera completing this one unlocks
+    public static Multimap<ICriteria, ICriteria> criteriaToUnlocks; //A list of the critera completing this one unlocks
     
     public static String getHostName() {
         String hostname = MinecraftServer.getServer().isDedicatedServer()? MinecraftServer.getServer().getHostname(): "ssp";  
@@ -43,12 +43,12 @@ public class RemappingHandler {
         JSONLoader.loadJSON(false, settings); //This fills out all the data once again
 
         //Now that mappings have been synced to the client reload the unlocks list
-        Collection<Criteria> allCriteria = APIHandler.getCriteria().values();
-        for (Criteria criteria : allCriteria) { //Remap criteria to unlocks
+        Collection<ICriteria> allCriteria = APIHandler.getCriteria().values();
+        for (ICriteria criteria : allCriteria) { //Remap criteria to unlocks
             //We do not give a damn about whether this is available or not
             //The unlocking of criteria should happen no matter what
-            List<Criteria> requirements = criteria.prereqs;
-            for (Criteria require : requirements) {
+            List<ICriteria> requirements = criteria.getPreReqs();
+            for (ICriteria require : requirements) {
                 criteriaToUnlocks.get(require).add(criteria);
             }
         }

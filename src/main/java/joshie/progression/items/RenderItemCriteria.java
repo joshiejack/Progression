@@ -3,7 +3,7 @@ package joshie.progression.items;
 import java.util.List;
 
 import joshie.progression.ClientProxy;
-import joshie.progression.criteria.Criteria;
+import joshie.progression.api.ICriteria;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -29,9 +29,9 @@ public class RenderItemCriteria implements ISmartItemModel {
 	@Override
 	public IBakedModel handleItemState(ItemStack stack) {
 		if (mesher == null) mesher  = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
-		Criteria criteria = ItemCriteria.getCriteriaFromStack(stack);
-		if (criteria != null && criteria.stack.getItem() != stack.getItem()) {
-			return mesher.getItemModel(criteria.stack);
+		ICriteria criteria = ItemCriteria.getCriteriaFromStack(stack);
+		if (criteria != null && criteria.getIcon().getItem() != stack.getItem()) {
+			return mesher.getItemModel(criteria.getIcon());
 		}
 		
 		return mesher.getItemModel(broken);

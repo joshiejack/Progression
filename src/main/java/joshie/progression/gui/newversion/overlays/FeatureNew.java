@@ -3,16 +3,17 @@ package joshie.progression.gui.newversion.overlays;
 import org.lwjgl.opengl.GL11;
 
 import joshie.progression.Progression;
-import joshie.progression.criteria.Criteria;
-import joshie.progression.criteria.Trigger;
+import joshie.progression.api.ICriteria;
+import joshie.progression.api.ITriggerType;
 import joshie.progression.gui.newversion.GuiConditionEditor;
 import joshie.progression.gui.newversion.GuiCore;
 import joshie.progression.gui.newversion.GuiCriteriaEditor;
+import net.minecraft.client.renderer.GlStateManager;
 
 public abstract class FeatureNew extends FeatureAbstract {
     public static boolean IS_OPEN = false;
-    protected Criteria criteria;
-    protected Trigger trigger;
+    protected ICriteria criteria;
+    protected ITriggerType trigger;
 
     public String text;
 
@@ -24,14 +25,14 @@ public abstract class FeatureNew extends FeatureAbstract {
     public FeatureAbstract init(GuiCore core) {
         super.init(core);
         setVisibility(false);
-        criteria = GuiCriteriaEditor.INSTANCE.criteria;
-        trigger = GuiConditionEditor.INSTANCE.trigger;
+        criteria = GuiCriteriaEditor.INSTANCE.getCriteria();
+        trigger = GuiConditionEditor.INSTANCE.getTrigger();
         return this;
     }
 
     @Override
     public void drawFeature(int mouseX, int mouseY) {
-        GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+        GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
         offset.drawRectangle(150, 30, 200, 150, theme.newBox1, theme.newBox2);
         offset.drawGradient(150, 30, 200, 15, theme.newTriggerGradient1, theme.newTriggerGradient2, theme.newTriggerBorder);
         offset.drawText(Progression.translate("new." + text), 155, 34, theme.newTriggerFont);

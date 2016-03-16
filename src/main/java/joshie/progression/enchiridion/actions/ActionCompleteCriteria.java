@@ -3,21 +3,21 @@ package joshie.progression.enchiridion.actions;
 import com.google.gson.JsonObject;
 
 import joshie.enchiridion.api.book.IButtonAction;
+import joshie.progression.api.ICriteria;
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.criteria.Criteria;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.JSONHelper;
 
 public class ActionCompleteCriteria extends AbstractAction implements IButtonAction {
     public transient String displayName;
     public transient String criteriaID;
-    public transient Criteria criteria;
+    public transient ICriteria criteria;
 
     public ActionCompleteCriteria() {
         super("criteria.complete");
     }
 
-    public ActionCompleteCriteria(String displayName, String criteriaID, Criteria criteria) {
+    public ActionCompleteCriteria(String displayName, String criteriaID, ICriteria criteria) {
         super("criteria.complete");
         this.displayName = displayName;
         this.criteriaID = criteriaID;
@@ -45,17 +45,17 @@ public class ActionCompleteCriteria extends AbstractAction implements IButtonAct
         return new ActionCompleteCriteria("New Criteria", "", null);
     }
 
-    private Criteria getCriteria() {
+    private ICriteria getCriteria() {
         if (criteria != null) {
-            if (criteria.displayName.equals(displayName)) return criteria;
+            if (criteria.getDisplayName().equals(displayName)) return criteria;
         }
 
         //Attempt to grab the criteria based on the displayname
-        for (Criteria c : APIHandler.getCriteria().values()) {
-            String display = c.displayName;
-            if (c.displayName.equals(displayName)) {
+        for (ICriteria c : APIHandler.getCriteria().values()) {
+            String display = c.getDisplayName();
+            if (c.getDisplayName().equals(displayName)) {
                 criteria = c;
-                criteriaID = c.uniqueName;
+                criteriaID = c.getUniqueName();
                 return criteria;
             }
         }
@@ -65,7 +65,7 @@ public class ActionCompleteCriteria extends AbstractAction implements IButtonAct
 
     @Override
     public void performAction() {
-        Criteria criteria = getCriteria();
+        ICriteria criteria = getCriteria();
         if (criteria != null) {
             ProgressionAPI.registry.fireTriggerClientside("forced-complete", getCriteria());
         }

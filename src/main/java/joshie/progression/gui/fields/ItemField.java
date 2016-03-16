@@ -2,6 +2,7 @@ package joshie.progression.gui.fields;
 
 import java.lang.reflect.Field;
 
+import joshie.progression.api.IBlocksOnly;
 import joshie.progression.api.IItemGetterCallback;
 import joshie.progression.api.ISetterCallback;
 import joshie.progression.gui.editors.IItemSelectable;
@@ -9,6 +10,7 @@ import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
 import joshie.progression.gui.newversion.overlays.IItemSelectorFilter;
+import joshie.progression.gui.selector.filters.BlockFilter;
 import net.minecraft.item.ItemStack;
 
 public class ItemField extends AbstractField implements IItemSelectable {
@@ -23,7 +25,7 @@ public class ItemField extends AbstractField implements IItemSelectable {
     protected final int mouseY2;
     protected final Type type;
     protected final IItemSelectorFilter[] filters;
-    
+
     public ItemField(String fieldName, Object object, int x, int y, float scale, int mouseX1, int mouseX2, int mouseY1, int mouseY2, Type type, IItemSelectorFilter... filters) {
         super(fieldName);
         this.x = x;
@@ -34,9 +36,11 @@ public class ItemField extends AbstractField implements IItemSelectable {
         this.mouseY1 = mouseY1;
         this.mouseY2 = mouseY2;
         this.type = type;
-        if (filters == null || filters.length == 0) this.filters = null;
+        if (object instanceof IBlocksOnly) {
+            this.filters = new IItemSelectorFilter[] { BlockFilter.INSTANCE };
+        } else if (filters == null || filters.length == 0) this.filters = null;
         else this.filters = filters;
-        
+
         try {
             this.field = object.getClass().getField(fieldName);
             this.object = object;
@@ -45,12 +49,12 @@ public class ItemField extends AbstractField implements IItemSelectable {
 
     @Override
     public void click() {}
-    
+
     @Override
     public String getFieldName() {
         return field.getName();
     }
-    
+
     @Override
     public boolean attemptClick(int mouseX, int mouseY) {
         boolean clicked = mouseX >= mouseX1 && mouseX <= mouseX2 && mouseY >= mouseY1 && mouseY <= mouseY2;
@@ -59,23 +63,27 @@ public class ItemField extends AbstractField implements IItemSelectable {
             return true;
         } else return false;
     }
-    
+
     public ItemStack getStack() {
         try {
             if (object instanceof IItemGetterCallback) {
-                ItemStack ret = ((IItemGetterCallback)object).getItem(field.getName());
+                ItemStack ret = ((IItemGetterCallback) object).getItem(field.getName());
                 if (ret != null) return ret;
             }
-            
+
             return (ItemStack) field.get(object);
-        } catch (Exception e) { return null; }
+        } catch (Exception e) {
+            return null;
+        }
     }
-    
+
     @Override
     public String getField() {
         try {
             return getStack().getDisplayName();
-        } catch (Exception e) { return ""; } 
+        } catch (Exception e) {
+            return "";
+        }
     }
 
     @Override
@@ -89,11 +97,11 @@ public class ItemField extends AbstractField implements IItemSelectable {
     public void setItemStack(ItemStack stack) {
         try {
             if (object instanceof ISetterCallback) {
-                ((ISetterCallback)object).setField(field.getName(), stack);
+                ((ISetterCallback) object).setField(field.getName(), stack);
             } else field.set(object, stack);
         } catch (Exception e) {}
     }
-    
+
     @Override
     public void setObject(Object object) {
         this.object = object;

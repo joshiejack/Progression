@@ -13,6 +13,7 @@ import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import joshie.progression.helpers.EntityHelper;
 import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
@@ -79,8 +80,8 @@ public class EntityField extends AbstractField implements IEntitySelectable {
         try {
             Entity entity = EntityList.createEntityByName(getEntity(), MCClientHelper.getPlayer().worldObj);
             yPos = GuiCriteriaEditor.INSTANCE.y + y;
-            GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-            GL11.glColor4f(1F, 1F, 1F, 1F);
+            GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
+            GlStateManager.color(1F, 1F, 1F, 1F);
             GuiInventory.drawEntityOnScreen(ProgressionAPI.draw.getXPosition() + x + GuiCriteriaEditor.INSTANCE.offsetX, yPos, EntityHelper.getSizeForString(getEntity()), 25F, -5F, (EntityLivingBase) entity);
         } catch (Exception e) {}
     }

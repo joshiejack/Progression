@@ -14,8 +14,6 @@ public class RewardTime extends RewardBase {
 
     public RewardTime() {
         super(new ItemStack(Items.clock), "time", 0xFF26C9FF);
-        //list.add(new BooleanField("type", this, "add", "set"));
-        //list.add(new TextField("time", this));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package joshie.progression.criteria.rewards;
 
+import joshie.progression.api.IBlocksOnly;
 import joshie.progression.crafting.ActionType;
 import joshie.progression.handlers.CraftingEvents;
 import joshie.progression.helpers.BlockActionHelper;
@@ -9,10 +10,9 @@ import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class RewardBreakBlock extends RewardBaseAction {
+public class RewardBreakBlock extends RewardBaseAction implements IBlocksOnly {
     public RewardBreakBlock() {
-        super("breakBlock", 0xFF74246D);
-        this.type = ActionType.BREAKBLOCK;
+        super("breakBlock", 0xFF74246D, ActionType.BREAKBLOCK);
     }
 
     @SubscribeEvent

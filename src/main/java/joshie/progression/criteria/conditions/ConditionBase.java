@@ -1,98 +1,55 @@
 package joshie.progression.criteria.conditions;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 import joshie.progression.api.IConditionType;
-import joshie.progression.api.IField;
-import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
-import joshie.progression.helpers.MCClientHelper;
-import joshie.progression.json.Theme;
-import net.minecraft.entity.player.EntityPlayer;
+import joshie.progression.api.ITriggerType;
 import net.minecraft.util.StatCollector;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
 public abstract class ConditionBase implements IConditionType {
-    protected List<IField> list = new ArrayList();
-    private String name;
+    public boolean inverted = false; //Data for all conditions
+    private ITriggerType trigger;
+    private String unlocalized;
     private int color;
 
     public ConditionBase(String name, int color) {
-        this.name = name;
+        this.unlocalized = name;
         this.color = color;
     }
 
     @Override
+    public boolean isInverted() {
+        return inverted;
+    }
+
+    @Override
     public String getUnlocalisedName() {
-        return name;
+        return unlocalized;
     }
 
     @Override
     public String getLocalisedName() {
         return StatCollector.translateToLocal("progression.condition." + getUnlocalisedName());
     }
-    
+
     @Override
     public int getColor() {
         return color;
     }
-    
-    @Override
-    public void updateDraw(){} //Do nothing yo
 
     @Override
-    public Result onClicked(int mouseX, int mouseY) {
-        if (MCClientHelper.canEdit()) {
-            int index = 0;
-            for (IField t : list) {
-                int color = Theme.INSTANCE.optionsFontColor;
-                int yPos = 25 + (index * 8);
-                if (mouseX >= 1 && mouseX <= 84) {
-                    if (mouseY >= yPos && mouseY < yPos + 8) {
-                        t.click();
-                        return Result.ALLOW;
-                    }
-                }
-
-                if (t.attemptClick(mouseX, mouseY)) {
-                    return Result.ALLOW;
-                }
-
-                index++;
-            }
-        }
-
-        return Result.DEFAULT;
-    }
-
-    @Override
-    public void drawEditor(DrawFeatureHelper helper, int renderX, int renderY, int mouseX, int mouseY) {
-        int index = 0;
-        for (IField t : list) {
-            int color = Theme.INSTANCE.optionsFontColor;
-            int yPos = 25 + (index * 8);
-            if (MCClientHelper.canEdit()) {
-                if (mouseX >= 1 && mouseX <= 84) {
-                    if (mouseY >= yPos && mouseY < yPos + 8) {
-                        color = Theme.INSTANCE.optionsFontColorHover;
-                    }
-                }
-            }
-
-            t.draw(helper, renderX, renderY, color, yPos);
-            index++;
-        }
-    }
+    public void updateDraw() {} //Do nothing yo
 
     @Override
     public String getDescription() {
         return "";
     }
+    
+    @Override
+    public void setTrigger(ITriggerType trigger) {
+        this.trigger = trigger;
+    }
 
     @Override
-    public boolean isSatisfied(World world, EntityPlayer player, UUID uuid) {
-        return false;
+    public ITriggerType getTrigger() {
+        return trigger;
     }
 }

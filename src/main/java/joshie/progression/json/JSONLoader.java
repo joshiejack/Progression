@@ -17,11 +17,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import joshie.progression.Progression;
-import joshie.progression.criteria.Condition;
-import joshie.progression.criteria.Criteria;
-import joshie.progression.criteria.Reward;
-import joshie.progression.criteria.Tab;
-import joshie.progression.criteria.Trigger;
+import joshie.progression.api.IConditionType;
+import joshie.progression.api.ICriteria;
+import joshie.progression.api.IRewardType;
+import joshie.progression.api.ITab;
+import joshie.progression.api.ITriggerType;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.handlers.RemappingHandler;
 import joshie.progression.helpers.JSONHelper;
@@ -33,6 +33,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import scala.swing.Action.Trigger;
 
 public class JSONLoader {
     public static Gson gson;
@@ -175,7 +176,7 @@ public class JSONLoader {
                 stack = new ItemStack(Items.book);
             }
 
-            Tab iTab = APIHandler.newTab(data.uniqueName);
+            ITab iTab = APIHandler.newTab(data.uniqueName);
             iTab.setDisplayName(data.displayName).setVisibility(data.isVisible).setStack(stack).setSortIndex(data.sortIndex);
 
             /** Step 1: we create add all instances of criteria to the registry **/
@@ -185,7 +186,7 @@ public class JSONLoader {
 
             /** Step 2 : Register all the conditions and triggers for this criteria **/
             for (DataCriteria criteria : data.criteria) {
-                Criteria theCriteria = APIHandler.getCriteriaFromName(criteria.uniqueName);
+                ICriteria theCriteria = APIHandler.getCriteriaFromName(criteria.uniqueName);
                 if (theCriteria == null) {
                     throw new CriteriaNotFoundException(criteria.uniqueName);
                 }
@@ -194,47 +195,41 @@ public class JSONLoader {
                     Trigger[] triggerz = new Trigger[criteria.triggers.size()];
                     for (int j = 0; j < triggerz.length; j++) {
                         DataTrigger trigger = criteria.triggers.get(j);
-                        Trigger iTrigger = APIHandler.newTrigger(theCriteria, trigger.type, trigger.data);
+                        ITriggerType iTrigger = APIHandler.newTrigger(theCriteria, trigger.type, trigger.data);
                         if (trigger.conditions != null) {
-                            Condition[] conditionz = new Condition[trigger.conditions.size()];
-                            for (int i = 0; i < conditionz.length; i++) {
-                                DataGeneric condition = trigger.conditions.get(i);
-                                conditionz[i] = APIHandler.newCondition(iTrigger, condition.type, condition.data);
+                            for (DataGeneric generic : trigger.conditions) {
+                                APIHandler.newCondition(iTrigger, generic.type, generic.data);
                             }
                         }
-
-                        triggerz[j] = iTrigger;
                     }
                 }
 
                 //Add the Rewards
                 if (criteria.rewards != null) {
-                    Reward[] rewardz = new Reward[criteria.rewards.size()];
-                    for (int k = 0; k < criteria.rewards.size(); k++) {
-                        DataGeneric reward = criteria.rewards.get(k);
-                        rewardz[k] = APIHandler.newReward(theCriteria, reward.type, reward.data);
+                    for (DataGeneric reward : criteria.rewards) {
+                        APIHandler.newReward(theCriteria, reward.type, reward.data);
                     }
                 }
             }
 
             /** Step 3, nAdd the extra data **/
             for (DataCriteria criteria : data.criteria) {
-                Criteria theCriteria = APIHandler.getCriteriaFromName(criteria.uniqueName);
+                ICriteria theCriteria = APIHandler.getCriteriaFromName(criteria.uniqueName);
                 if (theCriteria == null) {
                     Progression.logger.log(org.apache.logging.log4j.Level.WARN, "Criteria was not found, do not report this.");
                     throw new CriteriaNotFoundException(criteria.uniqueName);
                 }
 
-                Criteria[] thePrereqs = new Criteria[0];
+                ICriteria[] thePrereqs = new ICriteria[0];
                 if (criteria.prereqs != null) {
-                    thePrereqs = new Criteria[criteria.prereqs.length];
+                    thePrereqs = new ICriteria[criteria.prereqs.length];
                     for (int i = 0; i < thePrereqs.length; i++)
                         thePrereqs[i] = APIHandler.getCriteriaFromName(criteria.prereqs[i]);
                 }
 
-                Criteria[] theConflicts = new Criteria[0];
+                ICriteria[] theConflicts = new ICriteria[0];
                 if (criteria.conflicts != null) {
-                    theConflicts = new Criteria[criteria.conflicts.length];
+                    theConflicts = new ICriteria[criteria.conflicts.length];
                     for (int i = 0; i < theConflicts.length; i++)
                         theConflicts[i] = APIHandler.getCriteriaFromName(criteria.conflicts[i]);
                 }
@@ -265,11 +260,7 @@ public class JSONLoader {
                     repeatable = 1;
                 }
 
-                theCriteria.init(thePrereqs, theConflicts, display, isVisible, mustClaim, achievement, repeatable, icon, allRequired, tasksRequired, infinite, allRewards, rewardsGiven);
-
-                if (isClientside) {
-                    theCriteria.treeEditor.setCoordinates(x, y);
-                }
+                theCriteria.init(thePrereqs, theConflicts, display, isVisible, mustClaim, achievement, repeatable, icon, allRequired, tasksRequired, infinite, allRewards, rewardsGiven, x, y);
             }
         }
     }
@@ -291,10 +282,10 @@ public class JSONLoader {
     public static void saveData() {
         if (Options.debugMode) Progression.logger.log(Level.INFO, "Begin logging");
         HashSet<String> tabNames = new HashSet();
-        Collection<Tab> allTabs = APIHandler.getTabs().values();
+        Collection<ITab> allTabs = APIHandler.getTabs().values();
         HashSet<String> names = new HashSet();
         DefaultSettings forJSONTabs = new DefaultSettings();
-        for (Tab tab : allTabs) {
+        for (ITab tab : allTabs) {
             ArrayList<DataCriteria> list = new ArrayList();
             if (!tabNames.add(tab.getUniqueName())) continue;
             DataTab tabData = new DataTab();
@@ -303,61 +294,57 @@ public class JSONLoader {
             tabData.sortIndex = tab.getSortIndex();
             tabData.isVisible = tab.isVisible();
             tabData.stack = StackHelper.getStringFromStack(tab.getStack());
-            for (Criteria c : tab.getCriteria()) {
-                if (!names.add(c.uniqueName)) continue;
-                if (c.treeEditor == null) continue;
-                DataCriteria data = new DataCriteria();
-                data.x = c.treeEditor.getX();
-                data.y = c.treeEditor.getY();
-                data.isVisible = c.isVisible;
-                data.mustClaim = c.mustClaim;
-                data.displayAchievement = c.achievement;
-                data.repeatable = c.isRepeatable;
-                data.infinite = c.infinite;
-                data.displayName = c.displayName;
-                data.tasksRequired = c.tasksRequired;
-                data.allTasks = c.allTasks;
-                data.rewardsGiven = c.rewardsGiven;
-                data.allRewards = c.allRewards;
-                if (Options.debugMode) Progression.logger.log(Level.INFO, "Saved the display name " + c.displayName);
-                data.uniqueName = c.uniqueName;
-                data.displayStack = StackHelper.getStringFromStack(c.stack);
-                List<Trigger> triggers = c.triggers;
-                List<Reward> rewards = c.rewards;
-                List<Criteria> prereqs = c.prereqs;
-                List<Criteria> conflicts = c.conflicts;
+            for (ICriteria c : tab.getCriteria()) {
+                if (!names.add(c.getUniqueName())) continue;
+                if (c.getIcon() == null) continue;
+                DataCriteria data = new DataCriteria();          
+                data.x = c.getX();
+                data.y = c.getY();
+                data.isVisible = c.isVisible();
+                data.mustClaim = c.requiresClaiming();
+                data.displayAchievement = c.displayAchievement();
+                data.repeatable = c.getRepeatAmount();
+                data.infinite = c.canRepeatInfinite();
+                data.displayName = c.getDisplayName();
+                data.tasksRequired = c.getTasksRequired();
+                data.allTasks = c.getIfRequiresAllTasks();
+                data.rewardsGiven = c.getAmountOfRewards();
+                data.allRewards = c.givesAllRewards();
+                if (Options.debugMode) Progression.logger.log(Level.INFO, "Saved the display name " + c.getDisplayName());
+                data.uniqueName = c.getUniqueName();
+                data.displayStack = StackHelper.getStringFromStack(c.getIcon());
+                List<ITriggerType> triggers = c.getTriggers();
+                List<IRewardType> rewards = c.getRewards();
+                List<ICriteria> prereqs = c.getPreReqs();
+                List<ICriteria> conflicts = c.getConflicts();
 
                 ArrayList<DataTrigger> theTriggers = new ArrayList();
                 ArrayList<DataGeneric> theRewards = new ArrayList();
-                if (c.triggers.size() > 0) {
-                    for (Trigger trigger : c.triggers) {
+                if (triggers.size() > 0) {
+                    for (ITriggerType trigger : triggers) {
                         ArrayList<DataGeneric> theConditions = null;
                         if (trigger.getConditions().size() > 0) {
                             theConditions = new ArrayList();
-                            for (Condition condition : trigger.getConditions()) {
+                            for (IConditionType condition : trigger.getConditions()) {
                                 JsonObject conditionData = new JsonObject();
-                                if (condition.inverted) {
-                                    conditionData.addProperty("inverted", true);
-                                }
-
-                                JSONHelper.writeJSON(conditionData, condition.getType());
-                                DataGeneric dCondition = new DataGeneric(condition.getType().getUnlocalisedName(), conditionData);
+                                JSONHelper.writeJSON(conditionData, condition);
+                                DataGeneric dCondition = new DataGeneric(condition.getUnlocalisedName(), conditionData);
                                 theConditions.add(dCondition);
                             }
                         }
 
                         JsonObject triggerData = new JsonObject();
-                        JSONHelper.writeJSON(triggerData, trigger.getType());
-                        DataTrigger dTrigger = new DataTrigger(trigger.getType().getUnlocalisedName(), triggerData, theConditions);
+                        JSONHelper.writeJSON(triggerData, trigger);
+                        DataTrigger dTrigger = new DataTrigger(trigger.getUnlocalisedName(), triggerData, theConditions);
                         theTriggers.add(dTrigger);
                     }
                 }
 
-                if (c.rewards.size() > 0) {
-                    for (Reward reward : c.rewards) {
+                if (rewards.size() > 0) {
+                    for (IRewardType reward : rewards) {
                         JsonObject rewardData = new JsonObject();
-                        JSONHelper.writeJSON(rewardData, reward.getType());
-                        DataGeneric dReward = new DataGeneric(reward.getType().getUnlocalisedName(), rewardData);
+                        JSONHelper.writeJSON(rewardData, reward);
+                        DataGeneric dReward = new DataGeneric(reward.getUnlocalisedName(), rewardData);
                         theRewards.add(dReward);
                     }
                 }
@@ -365,9 +352,9 @@ public class JSONLoader {
                 String[] thePrereqs = new String[prereqs.size()];
                 String[] theConflicts = new String[conflicts.size()];
                 for (int i = 0; i < thePrereqs.length; i++)
-                    thePrereqs[i] = prereqs.get(i).uniqueName;
+                    thePrereqs[i] = prereqs.get(i).getUniqueName();
                 for (int i = 0; i < theConflicts.length; i++)
-                    theConflicts[i] = conflicts.get(i).uniqueName;
+                    theConflicts[i] = conflicts.get(i).getUniqueName();
                 if (theTriggers.size() > 0) data.triggers = theTriggers;
                 if (theRewards.size() > 0) data.rewards = theRewards;
                 if (thePrereqs.length > 0) data.prereqs = thePrereqs;

@@ -3,10 +3,10 @@ package joshie.progression.items;
 import java.util.List;
 
 import joshie.progression.Progression;
+import joshie.progression.api.ICriteria;
 import joshie.progression.crafting.Crafter;
-import joshie.progression.crafting.CraftingUnclaimed;
 import joshie.progression.crafting.CraftingRegistry;
-import joshie.progression.criteria.Criteria;
+import joshie.progression.crafting.CraftingUnclaimed;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.network.PacketClaimed;
@@ -63,7 +63,7 @@ public class ItemCriteria extends Item {
         setCreativeTab(tab);
     }
 
-    public static Criteria getCriteriaFromStack(ItemStack stack) {
+    public static ICriteria getCriteriaFromStack(ItemStack stack) {
         if (!stack.hasTagCompound()) return null;
         return APIHandler.getCriteriaFromName(stack.getTagCompound().getString("Criteria"));
     }
@@ -76,8 +76,8 @@ public class ItemCriteria extends Item {
             return "Progression Book";
         }
 
-        Criteria criteria = getCriteriaFromStack(stack);
-        return criteria == null ? "BROKEN ITEM" : criteria.displayName;
+        ICriteria criteria = getCriteriaFromStack(stack);
+        return criteria == null ? "BROKEN ITEM" : criteria.getDisplayName();
     }
 
     @Override
@@ -103,7 +103,7 @@ public class ItemCriteria extends Item {
         if (stack.getItemDamage() == BOOK) {
             player.openGui(Progression.instance, 0, null, 0, 0, 0);
         } else if (!world.isRemote) {
-            Criteria criteria = getCriteriaFromStack(stack);
+            ICriteria criteria = getCriteriaFromStack(stack);
             if (criteria != null) {
                 Result completed = PlayerTracker.getServerPlayer(PlayerHelper.getUUIDForPlayer(player)).getMappings().fireAllTriggers("forced-complete", criteria);
                 if (!player.capabilities.isCreativeMode && completed == Result.ALLOW) {
@@ -131,10 +131,10 @@ public class ItemCriteria extends Item {
     public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
         list.add(new ItemStack(item, 1, CLAIM));
         list.add(new ItemStack(item, 1, BOOK));
-        for (Criteria c : APIHandler.getCriteria().values()) {
+        for (ICriteria c : APIHandler.getCriteria().values()) {
             ItemStack stack = new ItemStack(item);
             stack.setTagCompound(new NBTTagCompound());
-            stack.getTagCompound().setString("Criteria", c.uniqueName);
+            stack.getTagCompound().setString("Criteria", c.getUniqueName());
             list.add(stack);
         }
     }

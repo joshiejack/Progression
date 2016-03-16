@@ -2,7 +2,7 @@ package joshie.progression.gui.newversion;
 
 import java.util.ArrayList;
 
-import joshie.progression.criteria.Trigger;
+import joshie.progression.api.ITriggerType;
 import joshie.progression.gui.newversion.overlays.FeatureBarsX1;
 import joshie.progression.gui.newversion.overlays.FeatureDrawable;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector;
@@ -13,12 +13,16 @@ import joshie.progression.lib.GuiIDs;
 
 public class GuiConditionEditor extends GuiCore implements IBarProvider {
     public static final GuiConditionEditor INSTANCE = new GuiConditionEditor();
-    public Trigger trigger;
+    private ITriggerType trigger;
 
     private GuiConditionEditor() {}
 
-    public void setTrigger(Trigger trigger) {
+    public void setTrigger(ITriggerType trigger) {
         this.trigger = trigger;
+    }
+    
+    public ITriggerType getTrigger() {
+        return trigger;
     }
 
     @Override

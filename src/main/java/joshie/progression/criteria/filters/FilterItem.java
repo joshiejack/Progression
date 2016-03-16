@@ -22,7 +22,7 @@ public class FilterItem extends FilterBase implements IItemGetterCallback, ISett
 
     @Override
     public void addSpecialFields(List<IField> fields) {
-        fields.add(new ItemField("block", this, 25, 25, 3F, 26, 70, 25, 75, Type.TRIGGER, BlockFilter.INSTANCE));
+        fields.add(new ItemField("item", this, 25, 25, 3F, 26, 70, 25, 75, Type.TRIGGER));
     }
 
     @Override

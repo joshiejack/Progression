@@ -3,6 +3,7 @@ package joshie.progression.gui.fields;
 import joshie.progression.api.IField;
 import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import joshie.progression.helpers.ItemHelper;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 public class ItemFilterFieldPreview extends ItemFilterField implements IField {
@@ -32,6 +33,8 @@ public class ItemFilterFieldPreview extends ItemFilterField implements IField {
         return "";
     }
     
+    private static final ItemStack BROKEN = new ItemStack(Items.baked_potato);
+    
     public ItemStack getStack() {
         if (ticker >= 200 || ticker == 0) {
             stack = ItemHelper.getRandomItem(getFilters());
@@ -40,7 +43,7 @@ public class ItemFilterFieldPreview extends ItemFilterField implements IField {
         
         ticker++;
         
-        return stack;
+        return stack != null ? stack: BROKEN;
     }
 
     @Override

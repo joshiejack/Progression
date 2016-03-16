@@ -3,10 +3,12 @@ package joshie.progression.gui.buttons;
 import java.util.ArrayList;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import joshie.progression.criteria.Criteria;
-import joshie.progression.criteria.Tab;
+import joshie.progression.Progression;
+import joshie.progression.api.ICriteria;
+import joshie.progression.api.ITab;
 import joshie.progression.gui.GuiTreeEditor;
 import joshie.progression.gui.editors.EditText;
 import joshie.progression.gui.editors.EditText.ITextEditable;
@@ -16,17 +18,19 @@ import joshie.progression.gui.editors.SelectItem.Type;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.RenderItemHelper;
+import joshie.progression.lib.GuiIDs;
 import joshie.progression.lib.ProgressionInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
 public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelectable {
-    private Tab tab;
+    private ITab tab;
 
-    public ButtonTab(Tab tab, int x, int y) {
+    public ButtonTab(ITab tab, int x, int y) {
         super(0, x, y, 25, 25, "");
         this.tab = tab;
     }
@@ -35,7 +39,7 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
     public void drawButton(Minecraft mc, int x, int y) {
         boolean hovering = hovered = x >= xPosition && y >= yPosition && x < xPosition + width && y < yPosition + height;
         int k = getHoverState(hovering);
-        GL11.glColor4f(1F, 1F, 1F, 1F);
+        GlStateManager.color(1F, 1F, 1F, 1F);
         mc.getTextureManager().bindTexture(ProgressionInfo.textures);
         int yTexture = GuiTreeEditor.INSTANCE.currentTab == tab ? 25 : 0;
         RenderHelper.disableStandardItemLighting();
@@ -72,17 +76,22 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
 
     @Override
     public void onClicked() {
+        GuiTreeEditor.INSTANCE.switching = true; ///Don't save yet
+        MCClientHelper.getPlayer().closeScreen(); //Close everything first
         //If the tab is already selected, then we should edit it instead        
+        int x = Mouse.getX();
+        int y = Mouse.getY();
+        
         if (MCClientHelper.canEdit()) {
             if (Keyboard.isKeyDown(Keyboard.KEY_DELETE)) {
-                Tab newTab = GuiTreeEditor.INSTANCE.currentTab;
+                ITab newTab = GuiTreeEditor.INSTANCE.currentTab;
                 if (tab == GuiTreeEditor.INSTANCE.currentTab) {
                     newTab = GuiTreeEditor.INSTANCE.previousTab;
                 }
 
                 if (newTab != null) {
                     if (!APIHandler.getTabs().containsKey(newTab.getUniqueName())) {
-                        for (Tab tab : APIHandler.getTabs().values()) {
+                        for (ITab tab : APIHandler.getTabs().values()) {
                             newTab = tab;
                             break;
                         }
@@ -93,12 +102,12 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
                 GuiTreeEditor.INSTANCE.previous = null;
                 GuiTreeEditor.INSTANCE.lastClicked = null;
                 GuiTreeEditor.INSTANCE.currentTab = newTab;
-                for (Criteria c : tab.getCriteria()) {
-                    APIHandler.removeCriteria(c.uniqueName, true);
+                for (ICriteria c : tab.getCriteria()) {
+                    APIHandler.removeCriteria(c.getUniqueName(), true);
                 }
 
-                APIHandler.getTabs().remove(tab.getUniqueName());
-                GuiTreeEditor.INSTANCE.initGui();
+                APIHandler.getTabs().remove(tab.getUniqueName()); //Reopen after removing
+                MCClientHelper.getPlayer().openGui(Progression.instance, GuiIDs.TREE, MCClientHelper.getWorld(), 0, 0, 0);
                 return;
             }
 
@@ -114,7 +123,11 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
 
         GuiTreeEditor.INSTANCE.previousTab = GuiTreeEditor.INSTANCE.currentTab;
         GuiTreeEditor.INSTANCE.currentTab = tab;
-        GuiTreeEditor.INSTANCE.currentTabName = tab.getUniqueName();
+        GuiTreeEditor.INSTANCE.currentTabName = tab.getUniqueName(); //Reopen the gui
+        MCClientHelper.getPlayer().openGui(Progression.instance, GuiIDs.TREE, MCClientHelper.getWorld(), 0, 0, 0);
+        
+        //Woo
+        Mouse.setCursorPosition(x, y);
     }
 
     @Override

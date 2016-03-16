@@ -6,12 +6,15 @@ import java.util.List;
 
 import joshie.enchiridion.helpers.MCClientHelper;
 import joshie.progression.Progression;
+import joshie.progression.api.IBlocksOnly;
 import joshie.progression.api.IItemFilter;
 import joshie.progression.api.ISetterCallback;
 import joshie.progression.gui.newversion.GuiCriteriaEditor;
 import joshie.progression.gui.newversion.GuiItemFilterEditor;
 import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import joshie.progression.gui.newversion.overlays.FeatureItemPreview;
+import joshie.progression.gui.newversion.overlays.IItemSelectorFilter;
+import joshie.progression.gui.selector.filters.BlockFilter;
 import joshie.progression.helpers.CollectionHelper;
 
 public class ItemFilterField extends AbstractField {
@@ -48,8 +51,12 @@ public class ItemFilterField extends AbstractField {
     }
 
     public boolean isAccepted(IItemFilter filter) {
+        if (object instanceof IBlocksOnly) {
+            if (!filter.getUnlocalisedName().startsWith("block")) return false;
+        }
+        
         if (accepted == null || accepted.length == 0) return true;
-        else {
+        else {           
             for (String string : accepted) {
                 if (string.equalsIgnoreCase(filter.getUnlocalisedName())) return true;
             }

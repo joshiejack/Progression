@@ -2,10 +2,10 @@ package joshie.progression.criteria.filters;
 
 import net.minecraft.item.ItemStack;
 
-public class FilterMeta extends FilterBase {
+public class FilterItemMeta extends FilterBase {
     public int damage = 0;
 
-    public FilterMeta() {
+    public FilterItemMeta() {
         super("metadata", 0xFFFF73FF);
     }
 

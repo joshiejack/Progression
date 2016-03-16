@@ -1,12 +1,12 @@
 package joshie.progression.criteria.triggers;
 
+import joshie.progression.api.IBlocksOnly;
 import joshie.progression.api.ICancelable;
 import joshie.progression.api.IItemFilter;
-import joshie.progression.api.ISpecialItemFilter;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
-public class TriggerBaseBlock extends TriggerBaseItemFilter implements ICancelable, ISpecialItemFilter {
+public class TriggerBaseBlock extends TriggerBaseItemFilter implements ICancelable, IBlocksOnly {
     public boolean cancel = false;
 
     public TriggerBaseBlock(String unlocalised, int color) {
@@ -32,10 +32,5 @@ public class TriggerBaseBlock extends TriggerBaseItemFilter implements ICancelab
     @Override
     public void setCanceling(boolean isCanceled) {
         this.cancel = isCanceled;
-    }
-
-    @Override
-    public String[] getSpecialFilters() {
-        return new String[] { "blockStack", "blockOnly", "metadata" };
     }
 }

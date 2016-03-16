@@ -1,16 +1,23 @@
 package joshie.progression.criteria.triggers;
 
-import joshie.progression.api.EventBusType;
+import joshie.progression.api.IHasEventBus;
 import joshie.progression.api.ProgressionAPI;
 import net.minecraft.stats.Achievement;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.AchievementEvent;
+import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class TriggerAchievement extends TriggerBaseBoolean {
+public class TriggerAchievement extends TriggerBaseBoolean implements IHasEventBus {
     public String id = "openInventory";
 
     public TriggerAchievement() {
-        super("achievement", 0xFF00D9D9, EventBusType.FORGE);
+        super("achievement", 0xFF00D9D9);
+    }
+    
+    @Override
+    public EventBus getEventBus() {
+        return MinecraftForge.EVENT_BUS;
     }
 
     @SubscribeEvent

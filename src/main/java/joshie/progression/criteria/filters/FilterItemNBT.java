@@ -5,11 +5,11 @@ import joshie.progression.helpers.StackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class FilterNBT extends FilterBase implements ISetterCallback {
+public class FilterItemNBT extends FilterBase implements ISetterCallback {
     public NBTTagCompound tagValue = new NBTTagCompound();
     public String tagText = "";
 
-    public FilterNBT() {
+    public FilterItemNBT() {
         super("nbtString", 0xFF00B2B2);
     }
 

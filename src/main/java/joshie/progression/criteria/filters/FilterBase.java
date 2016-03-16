@@ -1,20 +1,12 @@
 package joshie.progression.criteria.filters;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.google.gson.JsonObject;
-
 import joshie.progression.Progression;
-import joshie.progression.api.IField;
-import joshie.progression.api.IFieldProvider;
 import joshie.progression.api.IItemFilter;
 import net.minecraft.item.ItemStack;
 
-public class FilterBase implements IItemFilter {
-    protected List<IField> list = new ArrayList();
+public abstract class FilterBase implements IItemFilter {
     private int color;
-    protected String name;
+    private String name;
 
     public FilterBase(String name, int color) {
         this.name = name;
@@ -25,23 +17,12 @@ public class FilterBase implements IItemFilter {
     public String getUnlocalisedName() {
         return name;
     }
-    
+
     @Override
     public String getLocalisedName() {
         return Progression.translate("filter.item." + getUnlocalisedName());
     }
 
-    @Override
-    public void readFromJSON(JsonObject data) {}
-
-    @Override
-    public void writeToJSON(JsonObject data) {}
-    
-    @Override
-    public IFieldProvider getProvider() {
-        return this;
-    }
-    
     @Override
     public void updateDraw() {}
 

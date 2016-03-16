@@ -2,7 +2,6 @@ package joshie.progression.criteria.triggers;
 
 import java.util.UUID;
 
-import joshie.progression.api.EventBusType;
 import joshie.progression.api.ITriggerData;
 import joshie.progression.player.PlayerTracker;
 
@@ -11,7 +10,7 @@ public class TriggerBoolean extends TriggerBaseBoolean {
     public boolean isTrue = true;
 
     public TriggerBoolean() {
-        super("boolean", 0xFF26C9FF, EventBusType.NONE);
+        super("boolean", 0xFF26C9FF);
     }
 
     @Override

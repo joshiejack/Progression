@@ -12,7 +12,7 @@ public class FeatureNewItemFilter extends FeatureNew {
     }
 
     @Override
-    public boolean mouseClicked(int mouseX, int mouseY, int button) {
+    public boolean mouseClicked(int mouseX, int mouseY, int button) {       
         int yPos = 0;
         int xPos = 0;
         for (IItemFilter filter : APIHandler.itemFilterTypes.values()) {

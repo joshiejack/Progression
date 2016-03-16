@@ -2,16 +2,15 @@ package joshie.progression.gui.buttons;
 
 import java.util.ArrayList;
 
-import org.lwjgl.opengl.GL11;
-
-import joshie.progression.criteria.Criteria;
-import joshie.progression.criteria.Tab;
+import joshie.progression.api.ICriteria;
+import joshie.progression.api.ITab;
 import joshie.progression.gui.GuiTreeEditor;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.json.Theme;
 import joshie.progression.lib.ProgressionInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
@@ -25,7 +24,7 @@ public class ButtonNewCriteria extends ButtonBase {
     public void drawButton(Minecraft mc, int x, int y) {
         boolean hovering = hovered = x >= xPosition && y >= yPosition && x < xPosition + width && y < yPosition + height;
         int k = getHoverState(hovering);
-        GL11.glColor4f(1F, 1F, 1F, 1F);
+        GlStateManager.color(1F, 1F, 1F, 1F);
         mc.getTextureManager().bindTexture(ProgressionInfo.textures);
         int yTexture = k == 2 ? 25 : 0;
         drawTexturedModalRect(xPosition, yPosition, 231, yTexture, 25, 25);
@@ -49,14 +48,13 @@ public class ButtonNewCriteria extends ButtonBase {
             GuiTreeEditor.INSTANCE.selected = null;
             GuiTreeEditor.INSTANCE.lastClicked = null;
             GuiTreeEditor.INSTANCE.isDragging = false;
-            Tab currentTab = GuiTreeEditor.INSTANCE.currentTab;
+            ITab currentTab = GuiTreeEditor.INSTANCE.currentTab;
             int mouseX = GuiTreeEditor.INSTANCE.mouseX;
             int mouseY = GuiTreeEditor.INSTANCE.mouseY;
             int offsetX = GuiTreeEditor.INSTANCE.offsetX;
-            Criteria criteria = APIHandler.newCriteria(currentTab, APIHandler.getNextUnique(), true);
-            criteria.treeEditor.setCoordinates(mouseX - 50 - offsetX, mouseY - 10);
-            criteria.treeEditor.draw(mouseX - 50, mouseY - 10, offsetX);
-            criteria.treeEditor.click(mouseX - 50, mouseY - 10, false);
+            ICriteria criteria = APIHandler.newCriteria(currentTab, APIHandler.getNextUnique(), true);
+            criteria.setCoordinates(mouseX - 50 - offsetX, mouseY - 10);
+            GuiTreeEditor.INSTANCE.addCriteria(criteria, mouseX - 50, mouseY - 10, offsetX);
         }
     }
 }

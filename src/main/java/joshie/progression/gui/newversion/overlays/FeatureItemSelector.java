@@ -11,6 +11,7 @@ import joshie.progression.gui.editors.EditText.ITextEditable;
 import joshie.progression.gui.editors.IItemSelectable;
 import joshie.progression.helpers.ItemHelper;
 import joshie.progression.helpers.MCClientHelper;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 
 public class FeatureItemSelector extends FeatureAbstract implements ITextEditable {
@@ -168,7 +169,7 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
 
     @Override
     public void drawFeature(int mouseX, int mouseY) {
-        GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+        GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
         if (sorted == null) {
             updateSearch();
         }

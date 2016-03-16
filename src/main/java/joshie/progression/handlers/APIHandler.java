@@ -7,27 +7,19 @@ import java.util.UUID;
 import com.google.gson.JsonObject;
 
 import joshie.progression.api.IConditionType;
+import joshie.progression.api.ICriteria;
 import joshie.progression.api.ICustomDataBuilder;
 import joshie.progression.api.IEntityFilter;
 import joshie.progression.api.IFieldProvider;
-import joshie.progression.api.IFilter;
 import joshie.progression.api.IItemFilter;
 import joshie.progression.api.IProgressionAPI;
 import joshie.progression.api.IRewardType;
+import joshie.progression.api.ITab;
 import joshie.progression.api.ITriggerData;
 import joshie.progression.api.ITriggerType;
 import joshie.progression.crafting.ActionType;
-import joshie.progression.criteria.Condition;
 import joshie.progression.criteria.Criteria;
-import joshie.progression.criteria.Reward;
-import joshie.progression.criteria.Tab;
-import joshie.progression.criteria.Trigger;
-import joshie.progression.criteria.rewards.RewardBaseAction;
-import joshie.progression.criteria.rewards.RewardBreakBlock;
-import joshie.progression.criteria.rewards.RewardCrafting;
-import joshie.progression.criteria.rewards.RewardFurnace;
-import joshie.progression.criteria.rewards.RewardHarvestDrop;
-import joshie.progression.criteria.rewards.RewardLivingDrop;
+import joshie.progression.criteria.Cunt;
 import joshie.progression.criteria.triggers.data.DataBoolean;
 import joshie.progression.criteria.triggers.data.DataCount;
 import joshie.progression.criteria.triggers.data.DataCrafting;
@@ -54,11 +46,11 @@ public class APIHandler implements IProgressionAPI {
 
     //These four maps are registries for fetching the various types
     @SideOnly(Side.CLIENT)
-    private static HashMap<String, Tab> tabsClient;
-    private static HashMap<String, Tab> tabsServer;
+    private static HashMap<String, ITab> tabsClient;
+    private static HashMap<String, ITab> tabsServer;
     @SideOnly(Side.CLIENT)
-    private static HashMap<String, Criteria> criteriaClient;
-    private static HashMap<String, Criteria> criteriaServer;
+    private static HashMap<String, ICriteria> criteriaClient;
+    private static HashMap<String, ICriteria> criteriaServer;
 
     public static IFieldProvider getDefault(IFieldProvider provider) {
         if (provider instanceof ITriggerType) return triggerTypes.get(provider.getUnlocalisedName());
@@ -81,11 +73,11 @@ public class APIHandler implements IProgressionAPI {
         }
     }
 
-    public static HashMap<String, Criteria> getCriteria() {
+    public static HashMap<String, ICriteria> getCriteria() {
         return isClientSide() ? criteriaClient : criteriaServer;
     }
 
-    public static HashMap<String, Tab> getTabs() {
+    public static HashMap<String, ITab> getTabs() {
         return isClientSide() ? tabsClient : tabsServer;
     }
 
@@ -147,37 +139,34 @@ public class APIHandler implements IProgressionAPI {
         return filter;
     }
 
-    public static Criteria newCriteria(Tab tab, String name, boolean isClientside) {
-        Criteria theCriteria = new Criteria(tab, name, isClientside);
-        tab.addCriteria(theCriteria);
+    public static ICriteria newCriteria(ITab tab, String name, boolean isClientside) {
+        ICriteria theCriteria = new Criteria(tab, name, isClientside);
+        tab.getCriteria().add(theCriteria);
         getCriteria().put(name, theCriteria);
         return theCriteria;
     }
 
-    public static Tab newTab(String name) {
-        Tab iTab = new Tab().setUniqueName(name);
+    public static ITab newTab(String name) {
+        ITab iTab = new Cunt().setUniqueName(name);
         getTabs().put(name, iTab);
         return iTab;
     }
 
-    public static Condition newCondition(Trigger trigger, String type, JsonObject data) {
+    public static IConditionType newCondition(ITriggerType trigger, String type, JsonObject data) {
         IConditionType oldConditionType = conditionTypes.get(type);
         if (oldConditionType == null) return null;
         IConditionType newConditionType = oldConditionType;
 
-        boolean inverted = data.get("inverted") != null ? data.get("inverted").getAsBoolean() : false;
-
         try {
             newConditionType = oldConditionType.getClass().newInstance();
+            newConditionType.setTrigger(trigger);
+            JSONHelper.readJSON(data, newConditionType);
+            trigger.getConditions().add(newConditionType);
         } catch (Exception e) {}
-
-        Condition condition = new Condition(trigger.getCriteria(), trigger, newConditionType, inverted);
-        JSONHelper.readJSON(data, condition.getProvider());
-        trigger.addCondition(condition);
-        return condition;
+        return newConditionType;
     }
 
-    public static Trigger newTrigger(Criteria criteria, String type, JsonObject data) {
+    public static ITriggerType newTrigger(ICriteria criteria, String type, JsonObject data) {
         ITriggerType oldTriggerType = triggerTypes.get(type);
         if (oldTriggerType == null) return null;
 
@@ -185,16 +174,16 @@ public class APIHandler implements IProgressionAPI {
 
         try {
             newTriggerType = oldTriggerType.getClass().newInstance();
+            newTriggerType.setCriteria(criteria);
+            JSONHelper.readJSON(data, newTriggerType);
+            EventsManager.onTriggerAdded(newTriggerType);
+            criteria.getTriggers().add(newTriggerType);
         } catch (Exception e) {}
 
-        Trigger trigger = new Trigger(criteria, newTriggerType);
-        JSONHelper.readJSON(data, trigger.getProvider());
-        EventsManager.onTriggerAdded(trigger);
-        criteria.addTriggers(trigger);
-        return trigger;
+        return newTriggerType;
     }
 
-    public static Reward newReward(Criteria criteria, String type, JsonObject data) {
+    public static IRewardType newReward(ICriteria criteria, String type, JsonObject data) {
         IRewardType oldRewardType = rewardTypes.get(type);
         if (oldRewardType == null) return null;
 
@@ -202,25 +191,14 @@ public class APIHandler implements IProgressionAPI {
         boolean optional = data.get("optional") != null ? data.get("optional").getAsBoolean() : false;
 
         try {
-            newRewardType = oldRewardType.getClass().newInstance();
+            newRewardType = oldRewardType.getClass().newInstance(); //Create a new instance of the reward
+            newRewardType.setCriteria(criteria); //Let the reward know which criteria is attached to
+            JSONHelper.readJSON(data, newRewardType);
+            EventsManager.onRewardAdded(newRewardType);
+            criteria.getRewards().add(newRewardType);
         } catch (Exception e) {}
 
-        /** SPECIAL CASE SWITCHING OF OLD REWARDS TO NEW **/
-        if (newRewardType instanceof RewardBaseAction && JSONHelper.getExists(data, "craftingType")) {
-            //If we are trying to create the old reward actions
-            if (JSONHelper.getString(data, "craftingType", "").equals("breakblock")) newRewardType = new RewardBreakBlock();
-            if (JSONHelper.getString(data, "craftingType", "").equals("entitydrop")) newRewardType = new RewardLivingDrop();
-            if (JSONHelper.getString(data, "craftingType", "").equals("harvestdrop")) newRewardType = new RewardHarvestDrop();
-            if (JSONHelper.getString(data, "craftingType", "").equals("crafting")) newRewardType = new RewardCrafting();
-            if (JSONHelper.getString(data, "craftingType", "").equals("repair")) newRewardType = new RewardCrafting();
-            if (JSONHelper.getString(data, "craftingType", "").equals("furnace")) newRewardType = new RewardFurnace();
-        }
-
-        Reward reward = new Reward(criteria, newRewardType, optional);
-        JSONHelper.readJSON(data, reward.getProvider());
-        EventsManager.onRewardAdded(reward);
-        criteria.addRewards(reward);
-        return reward;
+        return newRewardType;
     }
 
     public static IItemFilter newItemFilter(String typeName, JsonObject typeData) {
@@ -231,8 +209,8 @@ public class APIHandler implements IProgressionAPI {
         return (IEntityFilter) newFilter(true, typeName, typeData);
     }
 
-    private static IFilter newFilter(boolean isItemFilter, String typeName, JsonObject typeData) {
-        IFilter type = isItemFilter ? itemFilterTypes.get(typeName) : entityFilterTypes.get(typeName);
+    private static IFieldProvider newFilter(boolean isItemFilter, String typeName, JsonObject typeData) {
+        IFieldProvider type = isItemFilter ? itemFilterTypes.get(typeName) : entityFilterTypes.get(typeName);
         if (type != null) {
             try {
                 type = type.getClass().newInstance();
@@ -243,44 +221,42 @@ public class APIHandler implements IProgressionAPI {
         return type;
     }
 
-    public static Trigger cloneTrigger(Criteria criteria, ITriggerType oldTriggerType) {
+    public static ITriggerType cloneTrigger(ICriteria criteria, ITriggerType oldTriggerType) {
         ITriggerType newTriggerType = oldTriggerType;
 
         try {
             newTriggerType = oldTriggerType.getClass().newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            newTriggerType.setCriteria(criteria);
+            EventsManager.onTriggerAdded(newTriggerType);
+            criteria.getTriggers().add(newTriggerType);
+        } catch (Exception e) {}
 
-        Trigger newTrigger = new Trigger(criteria, newTriggerType);
-        EventsManager.onTriggerAdded(newTrigger);
-        criteria.addTriggers(newTrigger);
-        return newTrigger;
+        return newTriggerType;
     }
 
-    public static Reward cloneReward(Criteria criteria, IRewardType oldRewardType) {
+    public static IRewardType cloneReward(ICriteria criteria, IRewardType oldRewardType) {
         IRewardType newRewardType = oldRewardType;
 
         try {
             newRewardType = oldRewardType.getClass().newInstance();
+            newRewardType.setCriteria(criteria);
+            EventsManager.onRewardAdded(newRewardType);
+            criteria.getRewards().add(newRewardType);
         } catch (Exception e) {}
 
-        Reward newReward = new Reward(criteria, newRewardType, false);
-        EventsManager.onRewardAdded(newReward);
-        criteria.addRewards(newReward);
-        return newReward;
+        return newRewardType;
     }
 
-    public static Condition cloneCondition(Trigger trigger, IConditionType oldConditionType) {
+    public static IConditionType cloneCondition(ITriggerType trigger, IConditionType oldConditionType) {
         IConditionType newConditionType = oldConditionType;
 
         try {
             newConditionType = oldConditionType.getClass().newInstance();
+            newConditionType.setTrigger(trigger);
+            trigger.getConditions().add(newConditionType);
         } catch (Exception e) {}
 
-        Condition newCondition = new Condition(trigger.getCriteria(), trigger, newConditionType, false);
-        trigger.addCondition(newCondition);
-        return newCondition;
+        return newConditionType;
     }
 
     @Override
@@ -288,21 +264,21 @@ public class APIHandler implements IProgressionAPI {
         new ActionType(name.toUpperCase()); //WOOT!
     }
 
-    public static Criteria getCriteriaFromName(String name) {
+    public static ICriteria getCriteriaFromName(String name) {
         return getCriteria().get(name);
     }
 
-    public static Tab getTabFromName(String name) {
+    public static ITab getTabFromName(String name) {
         return getTabs().get(name);
     }
 
     public static void removeCriteria(String unique, boolean skipTab) {
-        Criteria c = getCriteria().get(unique);
+        ICriteria c = getCriteria().get(unique);
         //Remove the criteria from the tab
         if (!skipTab) {
-            Iterator<Criteria> itC = c.tab.getCriteria().iterator();
+            Iterator<ICriteria> itC = c.getTab().getCriteria().iterator();
             while (itC.hasNext()) {
-                Criteria ic = itC.next();
+                ICriteria ic = itC.next();
                 if (ic.equals(c)) {
                     itC.remove();
                 }
@@ -310,10 +286,10 @@ public class APIHandler implements IProgressionAPI {
         }
 
         //Remove this from all the conflict lists
-        for (Criteria conflict : c.conflicts) {
-            Iterator<Criteria> it = conflict.conflicts.iterator();
+        for (ICriteria conflict : c.getConflicts()) {
+            Iterator<ICriteria> it = conflict.getConflicts().iterator();
             while (it.hasNext()) {
-                Criteria ct = it.next();
+                ICriteria ct = it.next();
                 if (ct.equals(c)) {
                     it.remove();
                 }
@@ -321,10 +297,10 @@ public class APIHandler implements IProgressionAPI {
         }
 
         //Remove this from all the requirement lists
-        for (Criteria require : getCriteria().values()) {
-            Iterator<Criteria> it = require.prereqs.iterator();
+        for (ICriteria require : getCriteria().values()) {
+            Iterator<ICriteria> it = require.getPreReqs().iterator();
             while (it.hasNext()) {
-                Criteria ct = it.next();
+                ICriteria ct = it.next();
                 if (ct.equals(c)) {
                     it.remove();
                 }
@@ -332,13 +308,13 @@ public class APIHandler implements IProgressionAPI {
         }
 
         //Remove all rewards associated with this criteria
-        for (Reward reward : c.rewards) {
+        for (IRewardType reward : c.getRewards()) {
             EventsManager.onRewardRemoved(reward);
-            reward.getType().onRemoved();
+            reward.onRemoved();
         }
 
         //Remove all triggers associated with this criteria
-        for (Trigger trigger : c.triggers) {
+        for (ITriggerType trigger : c.getTriggers()) {
             EventsManager.onTriggerRemoved(trigger);
         }
 

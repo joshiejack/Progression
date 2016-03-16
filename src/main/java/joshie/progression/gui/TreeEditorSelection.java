@@ -6,6 +6,7 @@ import joshie.progression.gui.editors.SelectItem;
 import joshie.progression.gui.editors.TextEditable;
 import joshie.progression.helpers.RenderItemHelper;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 
 public class TreeEditorSelection extends TextEditable {
     public static TreeEditorSelection INSTANCE = new TreeEditorSelection();
@@ -42,15 +43,15 @@ public class TreeEditorSelection extends TextEditable {
     }
 
     public void draw() {
-        GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+        GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
         if (SelectItem.INSTANCE.selectable != null) {
             if (SelectItem.INSTANCE.sorted == null) {
                 SelectItem.INSTANCE.updateSearch();
             }
-            
+
             int y = GuiTreeEditor.INSTANCE.y;
 
-            int offsetX = GuiCriteriaEditor.INSTANCE.offsetX;
+            int offsetX = GuiTreeEditor.INSTANCE.offsetX;
             ScaledResolution res = GuiTreeEditor.INSTANCE.res;
             int fullWidth = res.getScaledWidth() - 10;
 
@@ -70,7 +71,7 @@ public class TreeEditorSelection extends TextEditable {
             //width * 4 to width *10
             for (int i = SelectItem.INSTANCE.position; i < SelectItem.INSTANCE.position + (width * 10); i++) {
                 if (i >= 0 && i < SelectItem.INSTANCE.sorted.size()) {
-                	RenderItemHelper.drawStack(SelectItem.INSTANCE.sorted.get(i), -offsetX + 32 + (j * 16), y + 45 + (k * 16), 1F);
+                    RenderItemHelper.drawStack(SelectItem.INSTANCE.sorted.get(i), -offsetX + 32 + (j * 16), y + 45 + (k * 16), 1F);
 
                     j++;
 

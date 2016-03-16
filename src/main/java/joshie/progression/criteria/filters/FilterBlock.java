@@ -14,8 +14,8 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
-public class FilterBlock extends FilterBase implements IItemGetterCallback, ISetterCallback, ISpecialFieldProvider {
-    public Block block = Blocks.sandstone;
+public class FilterBlock extends FilterBaseBlock implements IItemGetterCallback, ISetterCallback, ISpecialFieldProvider {
+    public Block filterBlock = Blocks.sandstone;
 
     public FilterBlock() {
         super("blockOnly", 0xFFCCCCCC);
@@ -23,22 +23,24 @@ public class FilterBlock extends FilterBase implements IItemGetterCallback, ISet
 
     @Override
     public void addSpecialFields(List<IField> fields) {
-        fields.add(new ItemField("block", this, 25, 25, 3F, 26, 70, 25, 75, Type.TRIGGER, BlockFilter.INSTANCE));
+        fields.add(new ItemField("filterBlock", this, 25, 25, 3F, 26, 70, 25, 75, Type.TRIGGER, BlockFilter.INSTANCE));
     }
 
     @Override
-    public boolean matches(ItemStack check) {
-        return ItemHelper.getBlock(check) == block;
+    protected boolean matches(Block block, int meta) {
+        return filterBlock == block;
     }
 
     @Override
     public ItemStack getItem(String fieldName) {
-        return new ItemStack(block);
+        return new ItemStack(filterBlock);
     }
 
     @Override
     public boolean setField(String fieldName, Object stack) {
-        block = ItemHelper.getBlock(((ItemStack) stack));
+        try {
+            filterBlock = ItemHelper.getBlock(((ItemStack) stack));
+        } catch (Exception e) {}
 
         return true;
     }

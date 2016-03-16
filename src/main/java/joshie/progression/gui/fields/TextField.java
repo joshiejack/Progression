@@ -34,7 +34,7 @@ public class TextField extends AbstractField {
 
     @Override
     public void draw(DrawFeatureHelper helper, int renderX, int renderY, int color, int yPos) {
-        helper.drawSplitText(renderX, renderY, name + ": " + data.getText(), 4, yPos, 105, color, 0.75F);
+        helper.drawSplitText(renderX, renderY, name + ": " + data.getText(), 4, yPos, 125, color, 0.75F);
     }
 
     public static FieldHelper getField(String name, Object object) {
@@ -45,7 +45,7 @@ public class TextField extends AbstractField {
             if (className.equalsIgnoreCase("float")) return new FloatFieldHelper(name, object);
             if (className.equalsIgnoreCase("int")) return new IntegerFieldHelper(name, object);
             if (className.equalsIgnoreCase("string")) return new FieldHelper(name, object);
-        } catch (Exception e) {}
+        } catch (Exception e) { e.printStackTrace(); }
 
         return null;
     }

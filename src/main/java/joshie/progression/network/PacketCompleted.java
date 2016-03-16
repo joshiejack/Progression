@@ -1,7 +1,7 @@
 package joshie.progression.network;
 
 import io.netty.buffer.ByteBuf;
-import joshie.progression.criteria.Criteria;
+import joshie.progression.api.ICriteria;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.network.core.PenguinPacket;
 import net.minecraft.client.Minecraft;
@@ -14,17 +14,17 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class PacketCompleted extends PenguinPacket {
-    private Criteria criteria;
+    private ICriteria criteria;
 
     public PacketCompleted() {}
 
-    public PacketCompleted(Criteria criteria) {
+    public PacketCompleted(ICriteria criteria) {
         this.criteria = criteria;
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        ByteBufUtils.writeUTF8String(buf, criteria.uniqueName);
+        ByteBufUtils.writeUTF8String(buf, criteria.getUniqueName());
     }
 
     @Override
@@ -43,17 +43,17 @@ public class PacketCompleted extends PenguinPacket {
 	}
     
     public static class DummyAchievement extends Achievement {
-        private final Criteria criteria;
+        private final ICriteria criteria;
         
-        public DummyAchievement(Criteria criteria) {
-            super("criteria", "criteria", 0, 0, criteria.stack, null);
+        public DummyAchievement(ICriteria criteria) {
+            super("criteria", "criteria", 0, 0, criteria.getIcon(), null);
             this.criteria = criteria;
         }
 
         @Override
         @SideOnly(Side.CLIENT)
         public String getDescription() {
-            return criteria.displayName;
+            return criteria.getDisplayName();
         }
     }
 }

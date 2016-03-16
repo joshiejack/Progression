@@ -4,7 +4,6 @@ import joshie.progression.crafting.ActionType;
 
 public class RewardFurnace extends RewardBaseAction {
     public RewardFurnace() {
-        super("furnace", 0xFFAAAAAA);
-        this.type = ActionType.FURNACE;
+        super("furnace", 0xFFAAAAAA, ActionType.FURNACE);
     }
 }

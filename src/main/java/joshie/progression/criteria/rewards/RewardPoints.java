@@ -9,7 +9,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
 public class RewardPoints extends RewardBase {
-    public String variable = "default";
+    public ItemStack icon = new ItemStack(Items.gold_ingot);
+    public String variable = "gold";
     public String display = "[amount] Gold";
     public int amount = 1;
 

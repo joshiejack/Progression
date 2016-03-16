@@ -4,20 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import joshie.progression.Progression;
-import joshie.progression.api.EventBusType;
+import joshie.progression.api.IConditionType;
 import joshie.progression.api.ICriteria;
-import joshie.progression.api.IField;
 import joshie.progression.api.ITriggerData;
 import joshie.progression.api.ITriggerType;
-import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import joshie.progression.handlers.APIHandler;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.EventBus;
 
 public abstract class TriggerBase implements ITriggerType {
-    protected List<IField> list = new ArrayList();
-    protected ICriteria criteria;
+    private List<IConditionType> conditions = new ArrayList();
+    private ICriteria criteria;
     private String name;
     private int color;
     private String data;
@@ -29,12 +26,22 @@ public abstract class TriggerBase implements ITriggerType {
     }
 
     @Override
+    public List<IConditionType> getConditions() {
+        return conditions;
+    }
+    
+    @Override
+    public ICriteria getCriteria() {
+        return criteria;
+    }
+
+    @Override
     public ITriggerData newData() {
         return APIHandler.newData(data);
     }
 
     @Override
-    public void markCriteria(ICriteria criteria) {
+    public void setCriteria(ICriteria criteria) {
         this.criteria = criteria;
     }
 
@@ -57,37 +64,12 @@ public abstract class TriggerBase implements ITriggerType {
     public void updateDraw() {}
 
     @Override
-    public EventBusType[] getEventBusTypes() {
-        return new EventBusType[] { getEventBus() };
-    }
-
-    protected EventBusType getEventBus() {
-        return EventBusType.FORGE;
-    }
-
-    @Override
-    public Result onClicked(int mouseX, int mouseY) {
-        return Result.DEFAULT;
-    }
-
-    @Override
-    public void drawDisplay(int mouseX, int mouseY) {}
-
-    @Override
-    public void drawEditor(DrawFeatureHelper helper, int renderX, int renderY, int mouseX, int mouseY) {
-
-    }
-
-    @Override
     public String getDescription() {
         return "MISSING DESCRIPTION";
     }
-
+    
     @Override
-    public ItemStack getIcon() {
-        return new ItemStack(Items.furnace_minecart);
+    public EventBus getEventBus() {
+        return MinecraftForge.EVENT_BUS;
     }
-
-    @Override
-    public void addFieldTooltip(String fieldName, List<String> tooltip) {}
 }

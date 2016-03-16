@@ -20,7 +20,7 @@ public class FilterItemStack extends FilterBase implements ISpecialFieldProvider
 
     @Override
     public void addSpecialFields(List<IField> fields) {
-        fields.add(new ItemField("stack", this, 76, 44, 1.4F, 77, 100, 43, 68, Type.TRIGGER));
+        fields.add(new ItemField("stack", this, 30, 35, 1.4F, 77, 100, 43, 68, Type.TRIGGER));
     }
 
     @Override

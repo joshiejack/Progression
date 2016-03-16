@@ -10,6 +10,7 @@ import joshie.progression.gui.base.IRenderOverlay;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.ItemHelper;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 
 public class SelectItem extends TextEditable implements IRenderOverlay {
@@ -135,7 +136,7 @@ public class SelectItem extends TextEditable implements IRenderOverlay {
 
     @Override
     public void draw(int x, int y) {
-        GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+        GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
 
         if (selectable != null) {
             if (sorted == null) {

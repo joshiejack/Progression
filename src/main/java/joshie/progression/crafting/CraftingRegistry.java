@@ -19,10 +19,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
 public class CraftingRegistry {
-    private static HashMap<ActionType, HashMultimap<Item, IItemFilter>> itemToFiltersMapCrafting;
-    private static HashMap<ActionType, HashMultimap<Item, IItemFilter>> itemToFiltersMapUsage;
-    private static HashMap<ActionType, HashMap<IItemFilter, ICriteria>> filterToCriteriaMapCrafting;
-    private static HashMap<ActionType, HashMap<IItemFilter, ICriteria>> filterToCriteriaMapUsage;
+    private static volatile HashMap<ActionType, HashMultimap<Item, IItemFilter>> itemToFiltersMapCrafting;
+    private static volatile HashMap<ActionType, HashMultimap<Item, IItemFilter>> itemToFiltersMapUsage;
+    private static volatile HashMap<ActionType, HashMap<IItemFilter, ICriteria>> filterToCriteriaMapCrafting;
+    private static volatile HashMap<ActionType, HashMap<IItemFilter, ICriteria>> filterToCriteriaMapUsage;
 
     public static void create() {
         itemToFiltersMapCrafting = new HashMap();

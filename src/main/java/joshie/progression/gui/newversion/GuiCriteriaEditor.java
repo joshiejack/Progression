@@ -3,7 +3,7 @@ package joshie.progression.gui.newversion;
 import java.util.ArrayList;
 
 import joshie.progression.Progression;
-import joshie.progression.criteria.Criteria;
+import joshie.progression.api.ICriteria;
 import joshie.progression.gui.fields.BooleanField;
 import joshie.progression.gui.fields.BooleanFieldHideable;
 import joshie.progression.gui.fields.TextField;
@@ -22,19 +22,23 @@ import net.minecraft.util.EnumChatFormatting;
 
 public class GuiCriteriaEditor extends GuiCore implements IBarProvider {
     public static final GuiCriteriaEditor INSTANCE = new GuiCriteriaEditor();
-    public Criteria criteria;
+    private ICriteria criteria;
 
     private GuiCriteriaEditor() {}
 
-    public void setCriteria(Criteria criteria) {
+    public void setCriteria(ICriteria criteria) {
         this.criteria = criteria;
+    }
+
+    public ICriteria getCriteria() {
+        return criteria;
     }
 
     @Override
     public Object getKey() {
         return criteria;
     }
-    
+
     @Override
     public int getPreviousGuiID() {
         return GuiIDs.TREE;
@@ -43,8 +47,8 @@ public class GuiCriteriaEditor extends GuiCore implements IBarProvider {
     @Override
     public void initGuiData() {
         //Setup the features
-        features.add(new FeatureDrawable(new ArrayList(criteria.triggers), 45, 201, 201, 64, 119, FeatureNewTrigger.INSTANCE, theme.triggerGradient1, theme.triggerGradient2, theme.triggerFontColor));
-        features.add(new FeatureDrawable(new ArrayList(criteria.rewards), 140, 0, 55, 201, 201, FeatureNewReward.INSTANCE, theme.rewardBoxGradient1, theme.rewardBoxGradient2, theme.rewardBoxFont));
+        features.add(new FeatureDrawable(new ArrayList(criteria.getTriggers()), 45, 201, 201, 64, 119, FeatureNewTrigger.INSTANCE, theme.triggerGradient1, theme.triggerGradient2, theme.triggerFontColor));
+        features.add(new FeatureDrawable(new ArrayList(criteria.getRewards()), 140, 0, 55, 201, 201, FeatureNewReward.INSTANCE, theme.rewardBoxGradient1, theme.rewardBoxGradient2, theme.rewardBoxFont));
         features.add(new FeatureBarsX2(this, "requirements", "results"));
         features.add(FeatureItemSelector.INSTANCE); //Add the item selector
         features.add(FeatureNewTrigger.INSTANCE); //Add new trigger popup
@@ -62,7 +66,7 @@ public class GuiCriteriaEditor extends GuiCore implements IBarProvider {
 
     @Override
     public void drawGuiForeground(int mouseX, int mouseY) {
-        drawStack(criteria.stack, 1, 4, 1F);
+        drawStack(criteria.getIcon(), 1, 4, 1F);
         String unformatted = fields.get("name").getField();
         String displayName = MCClientHelper.isInEditMode() ? Progression.translate("name.display") + ": " + unformatted : unformatted;
         drawText(displayName, 21, 9, theme.criteriaEditDisplayNameColor);
@@ -95,7 +99,7 @@ public class GuiCriteriaEditor extends GuiCore implements IBarProvider {
             }
         }
     }
-    
+
     @Override
     public boolean guiMouseClicked(int mouseX, int mouseY, int button) {
         if (mouseY >= 8 && mouseY <= 18) {
@@ -117,7 +121,7 @@ public class GuiCriteriaEditor extends GuiCore implements IBarProvider {
                 return true;
             }
         }
-        
+
         return false;
     }
 

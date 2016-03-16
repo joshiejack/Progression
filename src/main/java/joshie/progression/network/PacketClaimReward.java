@@ -5,21 +5,21 @@ import java.util.List;
 
 import io.netty.buffer.ByteBuf;
 import joshie.enchiridion.helpers.UUIDHelper;
-import joshie.progression.criteria.Criteria;
-import joshie.progression.criteria.Reward;
+import joshie.progression.api.ICriteria;
+import joshie.progression.api.IRewardType;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.network.core.PenguinPacket;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 public class PacketClaimReward extends PenguinPacket {
-    private Criteria criteria;
+    private ICriteria criteria;
     private int rewardId;
     private boolean randomReward;
 
     public PacketClaimReward() {}
 
-    public PacketClaimReward(Criteria criteria, int rewardId, boolean randomReward) {
+    public PacketClaimReward(ICriteria criteria, int rewardId, boolean randomReward) {
         this.criteria = criteria;
         this.rewardId = rewardId;
         this.randomReward = randomReward;
@@ -27,7 +27,7 @@ public class PacketClaimReward extends PenguinPacket {
 
     @Override
     public void toBytes(ByteBuf buf) {
-        ByteBufUtils.writeUTF8String(buf, criteria.uniqueName);
+        ByteBufUtils.writeUTF8String(buf, criteria.getUniqueName());
         buf.writeInt(rewardId);
         buf.writeBoolean(randomReward);
     }
@@ -41,7 +41,7 @@ public class PacketClaimReward extends PenguinPacket {
 
     @Override
     public void handlePacket(EntityPlayer player) {
-        List<Reward> rewards = criteria.rewards;
+        List<IRewardType> rewards = criteria.getRewards();
         if (rewards != null && rewards.size() > 0) {
             if (randomReward) Collections.shuffle(rewards);
             int selected = 0;
@@ -52,8 +52,8 @@ public class PacketClaimReward extends PenguinPacket {
                     break;
                 }
             }
-            
-            rewards.get(selected).getType().reward(UUIDHelper.getPlayerUUID(player));
+
+            rewards.get(selected).reward(UUIDHelper.getPlayerUUID(player));
         }
     }
 }

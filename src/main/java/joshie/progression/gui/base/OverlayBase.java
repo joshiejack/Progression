@@ -1,20 +1,15 @@
 package joshie.progression.gui.base;
 
 import joshie.progression.gui.GuiCriteriaEditor;
-import joshie.progression.gui.GuiTriggerEditor;
-import joshie.progression.gui.NewCondition;
 import joshie.progression.gui.editors.EditText;
-import joshie.progression.gui.editors.SelectEntity;
-import joshie.progression.gui.editors.SelectItem;
 import joshie.progression.json.Theme;
 import net.minecraft.item.ItemStack;
 
 public class OverlayBase implements IRenderOverlay {
     protected static Theme theme = Theme.INSTANCE;
-    
+
     public OverlayBase() {
         GuiCriteriaEditor.registerOverlay(this);
-        GuiTriggerEditor.registerOverlay(this);
     }
 
     public void drawBox(int x, int y, int width, int height, int color, int border) {
@@ -35,10 +30,7 @@ public class OverlayBase implements IRenderOverlay {
 
     //Resets
     public boolean reset() {
-        SelectItem.INSTANCE.clear();
         EditText.INSTANCE.clear();
-        SelectEntity.INSTANCE.clear();
-        NewCondition.INSTANCE.clear();
         return true;
     }
 

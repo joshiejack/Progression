@@ -7,17 +7,19 @@ import static joshie.progression.player.DataStats.SpeedType.WATER;
 import java.util.List;
 import java.util.UUID;
 
-import joshie.progression.api.EventBusType;
+import joshie.progression.api.IHasEventBus;
 import joshie.progression.player.DataStats.SpeedType;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class RewardSpeed extends RewardBase {
+public class RewardSpeed extends RewardBase implements IHasEventBus {
     public float speed = 0.1F;
     public boolean land = true;
     public boolean air = false;
@@ -25,10 +27,6 @@ public class RewardSpeed extends RewardBase {
 
     public RewardSpeed() {
         super(new ItemStack(Items.potionitem, 1, 8194), "speed", 0xFFFFBF00);
-        //list.add(new TextField("speed", this));
-        //list.add(new BooleanField("land", this));
-        //list.add(new BooleanField("air", this));
-        //list.add(new BooleanField("water", this));
     }
 
     @SubscribeEvent
@@ -47,8 +45,8 @@ public class RewardSpeed extends RewardBase {
     }
 
     @Override
-    public EventBusType getEventBus() {
-        return EventBusType.FORGE;
+    public EventBus getEventBus() {
+        return MinecraftForge.EVENT_BUS;
     }
 
     @Override

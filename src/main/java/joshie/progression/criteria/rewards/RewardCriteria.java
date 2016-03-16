@@ -3,9 +3,9 @@ package joshie.progression.criteria.rewards;
 import java.util.List;
 import java.util.UUID;
 
+import joshie.progression.api.ICriteria;
 import joshie.progression.api.IGetterCallback;
 import joshie.progression.api.ISetterCallback;
-import joshie.progression.criteria.Criteria;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.init.Items;
@@ -13,7 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
 public class RewardCriteria extends RewardBase implements IGetterCallback, ISetterCallback {
-    private Criteria criteria = null;
+    private ICriteria criteria = null;
     private String criteriaID = "";
     public String displayName = "";
     public boolean remove = false;
@@ -22,7 +22,7 @@ public class RewardCriteria extends RewardBase implements IGetterCallback, ISett
         super(new ItemStack(Items.golden_apple), "criteria", 0xFF99B3FF);
     }
 
-    public Criteria getAssignedCriteria() {
+    public ICriteria getAssignedCriteria() {
         return APIHandler.getCriteriaFromName(criteriaID);
     }
 
@@ -32,7 +32,7 @@ public class RewardCriteria extends RewardBase implements IGetterCallback, ISett
         if (criteria == null) return; //Do not give the reward
         if (remove) {
             PlayerTracker.getServerPlayer(uuid).getMappings().fireAllTriggers("forced-remove", criteria);
-        } else PlayerTracker.getServerPlayer(uuid).getMappings().fireAllTriggers("forced-complete", criteria, criteria.rewards);
+        } else PlayerTracker.getServerPlayer(uuid).getMappings().fireAllTriggers("forced-complete", criteria, criteria.getRewards());
     }
 
     @Override
@@ -53,11 +53,11 @@ public class RewardCriteria extends RewardBase implements IGetterCallback, ISett
             displayName = fieldValue;
 
             try {
-                for (Criteria c : APIHandler.getCriteria().values()) {
-                    String display = c.displayName;
-                    if (c.displayName.equals(displayName)) {
+                for (ICriteria c : APIHandler.getCriteria().values()) {
+                    String display = c.getDisplayName();
+                    if (c.getDisplayName().equals(displayName)) {
                         criteria = c;
-                        criteriaID = c.uniqueName;
+                        criteriaID = c.getUniqueName();
                         return true;
                     }
                 }
@@ -76,8 +76,8 @@ public class RewardCriteria extends RewardBase implements IGetterCallback, ISett
 
         if (criteria != null) {
             if (remove) {
-                list.add("Remove " + criteria.displayName);
-            } else list.add("Add " + criteria.displayName);
+                list.add("Remove " + criteria.getDisplayName());
+            } else list.add("Add " + criteria.getDisplayName());
         }
     }
 }

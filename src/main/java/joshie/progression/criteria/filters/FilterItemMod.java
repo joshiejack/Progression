@@ -3,10 +3,10 @@ package joshie.progression.criteria.filters;
 import joshie.progression.helpers.StackHelper;
 import net.minecraft.item.ItemStack;
 
-public class FilterMod extends FilterBase {
+public class FilterItemMod extends FilterBase {
     public String modid = "minecraft";
 
-    public FilterMod() {
+    public FilterItemMod() {
         super("modid", 0xFFFF8000);
     }
 
