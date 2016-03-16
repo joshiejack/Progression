@@ -31,11 +31,13 @@ public class RewardItem extends RewardBaseItemFilter implements ISpecialFieldPro
 
     @Override
     public void reward(UUID uuid) {
-        EntityPlayer player = PlayerHelper.getPlayerFromUUID(uuid);
-        if (player != null) {
-            ItemStack stack = ItemHelper.getRandomItemOfSize(filters, stackSize);
-            PacketHandler.sendToClient(new PacketRewardItem(stack.copy()), (EntityPlayerMP) player);
-            SpawnItemHelper.addToPlayerInventory(player, stack.copy());
+        List<EntityPlayerMP> players = PlayerHelper.getPlayersFromUUID(uuid);
+        for (EntityPlayerMP player : players) {
+            if (player != null) {
+                ItemStack stack = ItemHelper.getRandomItemOfSize(filters, stackSize);
+                PacketHandler.sendToClient(new PacketRewardItem(stack.copy()), (EntityPlayerMP) player);
+                SpawnItemHelper.addToPlayerInventory(player, stack.copy());
+            }
         }
     }
 

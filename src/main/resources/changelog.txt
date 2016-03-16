@@ -4,6 +4,8 @@ Progression 0.5.0
   Changed items to use filters instead of selecting all individually
   Added Support for displaying criteria, and claiming rewards with Enchiridion Books (And more)
   Added Chat Trigger
+  Added Teleport Player Reward
+  Added Place Block Reward
   Added Potion Effect Reward
 
 Progression 0.4.1

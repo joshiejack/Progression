@@ -49,6 +49,7 @@ import joshie.progression.criteria.rewards.RewardPlaceBlock;
 import joshie.progression.criteria.rewards.RewardPoints;
 import joshie.progression.criteria.rewards.RewardPotion;
 import joshie.progression.criteria.rewards.RewardSpeed;
+import joshie.progression.criteria.rewards.RewardTeleport;
 import joshie.progression.criteria.rewards.RewardTime;
 import joshie.progression.criteria.triggers.TriggerAchievement;
 import joshie.progression.criteria.triggers.TriggerBoolean;
@@ -199,6 +200,7 @@ public class Progression {
         ProgressionAPI.registry.registerRewardType(new RewardClear());
         ProgressionAPI.registry.registerRewardType(new RewardPotion());
         ProgressionAPI.registry.registerRewardType(new RewardPlaceBlock());
+        ProgressionAPI.registry.registerRewardType(new RewardTeleport());
 
         ProgressionAPI.registry.registerTriggerType(new TriggerBreakBlock());
         ProgressionAPI.registry.registerTriggerType(new TriggerCrafting());

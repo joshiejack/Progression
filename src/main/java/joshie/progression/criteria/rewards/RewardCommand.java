@@ -7,6 +7,7 @@ import joshie.progression.gui.fields.TextField;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.lib.FakeOp;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
@@ -22,10 +23,12 @@ public class RewardCommand extends RewardBase {
 
     @Override
     public void reward(UUID uuid) {
-        EntityPlayer player = PlayerHelper.getPlayerFromUUID(uuid);
-        if (player != null) {
-            String newCommand = command.replace("@u", player.getDisplayNameString());
-            MinecraftServer.getServer().getCommandManager().executeCommand(FakeOp.getInstance(), newCommand);
+        List<EntityPlayerMP> players = PlayerHelper.getPlayersFromUUID(uuid);
+        for (EntityPlayerMP player : players) {
+            if (player != null) {
+                String newCommand = command.replace("@u", player.getDisplayNameString());
+                MinecraftServer.getServer().getCommandManager().executeCommand(FakeOp.getInstance(), newCommand);
+            }
         }
     }
 
