@@ -31,9 +31,9 @@ public class FeatureItemPreview extends FeatureAbstract {
         if (FeatureItemSelector.INSTANCE.isVisible()) return false;
         mouseY -= 95;
         if (mouseY >= 40 && mouseY <= 110) {
-            int width = (int) ((double) (screenWidth - 10) / 16.133333334D) * 4;
-            if (scrolledDown) position = Math.min(sorted.size() - 200, position + width);
-            else position = Math.max(0, position - width);
+            int width = (int) ((double) (screenWidth - 10) / filter.getScale()) * 4;
+            if (scrolledDown) position = Math.min(sorted.size() - filter.getChange(), position + filter.getChange());
+            else position = Math.max(0, position - filter.getChange());
             return true;
         }
 

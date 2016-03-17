@@ -35,8 +35,10 @@ public class RewardItem extends RewardBaseItemFilter implements ISpecialFieldPro
         for (EntityPlayerMP player : players) {
             if (player != null) {
                 ItemStack stack = ItemHelper.getRandomItemOfSize(filters, stackSize);
-                PacketHandler.sendToClient(new PacketRewardItem(stack.copy()), (EntityPlayerMP) player);
-                SpawnItemHelper.addToPlayerInventory(player, stack.copy());
+                if (stack != null) {
+                    PacketHandler.sendToClient(new PacketRewardItem(stack.copy()), (EntityPlayerMP) player);
+                    SpawnItemHelper.addToPlayerInventory(player, stack.copy());
+                }
             }
         }
     }

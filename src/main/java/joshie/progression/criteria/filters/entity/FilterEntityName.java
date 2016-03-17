@@ -22,10 +22,6 @@ public class FilterEntityName extends FilterBaseEntity implements ISetterCallbac
         super("entityName", 0xFFB25900);
     }
 
-    public FilterEntityName(String string, int color) {
-        super(string, color);
-    }
-
     @Override
     public void init() {
         setField("entityName", entityName);

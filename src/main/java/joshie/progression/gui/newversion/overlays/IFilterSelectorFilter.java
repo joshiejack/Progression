@@ -21,4 +21,6 @@ public interface IFilterSelectorFilter {
     public boolean mouseClicked(int mouseX, int mouseY, int j, int k);
 
     public double getScale();
+
+    public int getChange();
 }

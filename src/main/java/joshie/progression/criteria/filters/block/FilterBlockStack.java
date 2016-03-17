@@ -42,6 +42,7 @@ public class FilterBlockStack extends FilterBaseBlock implements ISpecialFieldPr
             try {
                 filterBlock = ItemHelper.getBlock((ItemStack) object);
                 filterMeta = filterBlock.getMetaFromState(filterBlock.getStateFromMeta(((ItemStack) object).getItemDamage()));
+                stack = (ItemStack) object;
             } catch (Exception e) {
                 e.printStackTrace();
             }

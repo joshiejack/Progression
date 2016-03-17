@@ -80,48 +80,16 @@ public class ConditionCoordinates extends ConditionBase implements ISpecialJSON 
 
     @Override
     public boolean onlySpecial() {
-        return true;
+        return false;
     }
 
     @Override
     public void readFromJSON(JsonObject data) {
-        checkDimension = false;
-        checkX = false;
-        checkY = false;
-        checkZ = false;
-
-        if (JSONHelper.getExists(data, "dimension")) {
-            checkDimension = true;
-            dimension = JSONHelper.getInteger(data, "dimension", dimension);
-        }
-
-        if (JSONHelper.getExists(data, "x")) {
-            checkX = true;
-            x = JSONHelper.getInteger(data, "x", x);
-        }
-
-        if (JSONHelper.getExists(data, "y")) {
-            checkY = true;
-            y = JSONHelper.getInteger(data, "y", y);
-        }
-
-        if (JSONHelper.getExists(data, "z")) {
-            checkZ = true;
-            z = JSONHelper.getInteger(data, "z", z);
-        }
-
-        greaterThan = JSONHelper.getBoolean(data, "greaterThan", greaterThan);
-        lessThan = JSONHelper.getBoolean(data, "lessThan", lessThan);
+        
     }
 
     @Override
     public void writeToJSON(JsonObject data) {
-        if (checkDimension) JSONHelper.setInteger(data, "dimension", dimension, 0);
-        if (checkX) JSONHelper.setInteger(data, "x", x, 0);
-        if (checkY) JSONHelper.setInteger(data, "y", y, 0);
-        if (checkZ) JSONHelper.setInteger(data, "z", z, 0);
-        JSONHelper.setInteger(data, "radius", radius, 0);
-        JSONHelper.setBoolean(data, "greaterThan", greaterThan, false);
-        JSONHelper.setBoolean(data, "lessThan", lessThan, false);
+        
     }
 }

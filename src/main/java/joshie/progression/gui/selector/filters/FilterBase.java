@@ -11,6 +11,11 @@ import net.minecraft.item.ItemStack;
 
 public abstract class FilterBase implements IFilterSelectorFilter {
     @Override
+    public int getChange() {
+        return 200;
+    }
+    
+    @Override
     public double getScale() {
         return 16.133333334D;
     }

@@ -72,7 +72,7 @@ public class EntityHelper {
         ArrayList<IFilter> shuffledFilters = new ArrayList(filters);
         Collections.shuffle(shuffledEntityCache);
         Collections.shuffle(shuffledFilters);
-        for (EntityLivingBase entity : getEntities()) {
+        for (EntityLivingBase entity : shuffledEntityCache) {
             for (IFilter filter : shuffledFilters) {
                 if (filter.matches(entity)) return entity;
             }

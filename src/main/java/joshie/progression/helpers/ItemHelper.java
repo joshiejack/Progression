@@ -76,7 +76,9 @@ public class ItemHelper {
     }
 
     public static ItemStack getRandomItemOfSize(List<IFilter> filters, int stackSize) {
-        ItemStack item = getRandomItem(filters, null).copy();
+        ItemStack item = getRandomItem(filters, null);
+        if (item == null) return null;
+        else item = item.copy();
         item.stackSize = stackSize;
         return item;
     }

@@ -32,6 +32,7 @@ import joshie.progression.criteria.filters.block.FilterBlockOre;
 import joshie.progression.criteria.filters.block.FilterBlockStack;
 import joshie.progression.criteria.filters.block.FilterBlockState;
 import joshie.progression.criteria.filters.entity.FilterEntityName;
+import joshie.progression.criteria.filters.entity.FilterSkeletonType;
 import joshie.progression.criteria.filters.item.FilterItem;
 import joshie.progression.criteria.filters.item.FilterItemMeta;
 import joshie.progression.criteria.filters.item.FilterItemMod;
@@ -39,6 +40,7 @@ import joshie.progression.criteria.filters.item.FilterItemNBT;
 import joshie.progression.criteria.filters.item.FilterItemOre;
 import joshie.progression.criteria.filters.item.FilterItemStack;
 import joshie.progression.criteria.filters.location.FilterPlayerLocation;
+import joshie.progression.criteria.filters.location.FilterRandomAround;
 import joshie.progression.criteria.filters.potion.FilterPotionEffect;
 import joshie.progression.criteria.rewards.RewardBoolean;
 import joshie.progression.criteria.rewards.RewardBreakBlock;
@@ -192,9 +194,11 @@ public class Progression {
         
         //Entity Filters
         ProgressionAPI.registry.registerItemFilter(new FilterEntityName());
+        ProgressionAPI.registry.registerItemFilter(new FilterSkeletonType());
         
         //Location Filters
         ProgressionAPI.registry.registerItemFilter(new FilterPlayerLocation());
+        ProgressionAPI.registry.registerItemFilter(new FilterRandomAround());
 
         ProgressionAPI.registry.registerConditionType(new ConditionBiomeType());
         ProgressionAPI.registry.registerConditionType(new ConditionRandom());
