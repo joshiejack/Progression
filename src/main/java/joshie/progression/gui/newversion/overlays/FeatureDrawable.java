@@ -9,7 +9,6 @@ import joshie.progression.Progression;
 import joshie.progression.api.IEnum;
 import joshie.progression.api.IField;
 import joshie.progression.api.IFieldProvider;
-import joshie.progression.api.ISpecialItemFilter;
 import joshie.progression.api.ITriggerType;
 import joshie.progression.api.gui.ICustomDrawGuiDisplay;
 import joshie.progression.api.gui.ICustomDrawGuiEditor;
@@ -75,9 +74,7 @@ public class FeatureDrawable extends FeatureAbstract {
             if (field.getType() == float.class) fields.add(new TextField(field.getName(), provider));
             if (field.getType() == double.class) fields.add(new TextField(field.getName(), provider));
             if (field.getGenericType().toString().equals("java.util.List<" + ProgressionInfo.FILTER + ">")) {
-                if (provider instanceof ISpecialItemFilter) {
-                    fields.add(new ItemFilterField(field.getName(), provider, ((ISpecialItemFilter) provider).getSpecialFilters()));
-                } else fields.add(new ItemFilterField(field.getName(), provider));
+                fields.add(new ItemFilterField(field.getName(), provider));
             }
         }
     }

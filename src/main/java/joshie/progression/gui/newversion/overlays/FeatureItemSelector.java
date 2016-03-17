@@ -9,16 +9,15 @@ import joshie.progression.gui.GuiCriteriaEditor;
 import joshie.progression.gui.GuiTreeEditor;
 import joshie.progression.gui.editors.EditText.ITextEditable;
 import joshie.progression.gui.editors.IItemSelectable;
+import joshie.progression.gui.selector.filters.ItemFilter;
 import joshie.progression.helpers.ItemHelper;
-import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.item.ItemStack;
 
 public class FeatureItemSelector extends FeatureAbstract implements ITextEditable {
     public static FeatureItemSelector INSTANCE = new FeatureItemSelector();
     private IItemSelectable selectable = null;
-    private IItemSelectorFilter[] filters = null;
-    private ArrayList<ItemStack> sorted;
+    private IFilterSelectorFilter filter = null;
+    private ArrayList<Object> sorted;
     private String search = "";
     private Type type;
     private int position;
@@ -39,12 +38,13 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
         }
     }
 
-    public void select(IItemSelectorFilter[] filters, IItemSelectable selectable, Type type) {
+    public void select(IFilterSelectorFilter filter, IItemSelectable selectable, Type type) {
         ItemHelper.addInventory();
         TextEditor.INSTANCE.setEditable(this);
-        this.filters = filters;
+        this.filter = filter;
         this.selectable = selectable;
         this.type = type;
+        if (this.filter == null) this.filter = ItemFilter.INSTANCE;
         updateSearch();
     }
 
@@ -67,19 +67,15 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
         return false;
     }
 
-    public boolean passesFilters(ItemStack stack) {
-        if (filters != null) {
-            for (IItemSelectorFilter filter : filters) {
-                if (filter.isAcceptable(stack)) return true;
-            }
-
-            return false;
+    public boolean passesFilters(Object stack) {
+        if (filter != null) {
+            return (filter.isAcceptable(stack));
         }
 
         return true;
     }
 
-    private void attemptToAdd(ItemStack stack) {
+    private void attemptToAdd(Object stack) {
         if (passesFilters(stack)) {
             if (!sorted.contains(stack)) {
                 sorted.add(stack);
@@ -87,33 +83,24 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
         }
     }
 
-    public ArrayList<ItemStack> getAllItems() {
-        ArrayList<ItemStack> list = ItemHelper.getAllItems();
-        if (filters != null) {
-            for (IItemSelectorFilter filter : filters) {
-                filter.addExtraItems(list);
-            }
-        }
-
-        return list;
+    public ArrayList<Object> getAllItems() {
+        return (ArrayList<Object>) filter.getAllItems();
     }
 
     public void updateSearch() {
         if (search == null || search.equals("")) {
             sorted = new ArrayList();
-            for (ItemStack stack : getAllItems()) {
+            for (Object stack : getAllItems()) {
                 attemptToAdd(stack);
             }
         } else {
             position = 0;
             sorted = new ArrayList();
-            for (ItemStack stack : getAllItems()) {
-                if (stack != null && stack.getItem() != null) {
-                    try {
-                        if (stack.getDisplayName().toLowerCase().contains(search.toLowerCase())) {
-                            attemptToAdd(stack);
-                        }
-                    } catch (Exception e) {}
+            for (Object stack : getAllItems()) {
+                if (stack != null) {
+                    if (filter.searchMatches(stack, search.toLowerCase())) {
+                        attemptToAdd(stack);
+                    }
                 }
             }
         }
@@ -147,12 +134,10 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
         int k = 0;
         for (int i = position; i < position + (width * 4); i++) {
             if (i >= 0 && i < sorted.size()) {
-                if (mouseX >= 8 + (j * 16) && mouseX <= 8 + (j * 16) + 16) {
-                    if (mouseY >= 45 + (k * 16) && mouseY <= 45 + (k * 16) + 16) {
-                        selectable.setItemStack(sorted.get(i).copy());
-                        selectable = null; //Clear out the selectable
-                        return true;
-                    }
+                if (filter.mouseClicked(mouseX, mouseY, j, k)) {
+                    selectable.setObject(sorted.get(i));
+                    selectable = null;
+                    return true;
                 }
 
                 j++;
@@ -168,7 +153,7 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
     }
 
     @Override
-    public void drawFeature(int mouseX, int mouseY) {
+    public void drawFeature(int mouseX, int mouseY) {       
         GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
         if (sorted == null) {
             updateSearch();
@@ -178,7 +163,7 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
         mouseY -= type.yOffset;
         offset.drawGradient(-1, 25 + type.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 15, theme.blackBarGradient1, theme.blackBarGradient2, theme.blackBarBorder);
         offset.drawRectangle(-1, 40 + type.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 73, theme.blackBarUnderLine, theme.blackBarUnderLineBorder);
-        
+
         offset.drawText(Progression.translate("selector.items"), 5, 29 + type.yOffset, theme.blackBarFontColor);
         offset.drawRectangle(285 - offsetX, 27 + type.yOffset, 200, 12, theme.blackBarUnderLine, theme.blackBarUnderLineBorder);
         offset.drawText(TextEditor.INSTANCE.getText(this), 290, 29 + type.yOffset, theme.blackBarFontColor);
@@ -188,13 +173,7 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
         int k = 0;
         for (int i = position; i < position + (width * 4); i++) {
             if (i >= 0 && i < sorted.size()) {
-                ItemStack stack = sorted.get(i);
-                offset.drawStack(stack, -offsetX + 8 + (j * 16), type.yOffset + 45 + (k * 16), 1F);
-                if (mouseX >= 8 + (j * 16) && mouseX < 8 + (j * 16) + 16) {
-                    if (mouseY >= 45 + (k * 16) && mouseY < 45 + (k * 16) + 16) {
-                        FeatureTooltip.INSTANCE.addTooltip(stack.getTooltip(MCClientHelper.getPlayer(), false));
-                    }
-                }
+                filter.draw(offset, sorted.get(i), offsetX, j, type.yOffset, k, mouseX, mouseY);
 
                 j++;
 

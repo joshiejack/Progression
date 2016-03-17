@@ -4,14 +4,12 @@ import java.io.IOException;
 
 import joshie.progression.gui.base.GuiOffset;
 import joshie.progression.gui.base.IRenderOverlay;
-import joshie.progression.gui.editors.IItemSelectable;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.lib.ProgressionInfo;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.item.ItemStack;
 
-public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
+public class GuiCriteriaEditor extends GuiOffset {
     public static final GuiCriteriaEditor INSTANCE = new GuiCriteriaEditor();
 
     public static void registerOverlay(IRenderOverlay overlay) {
@@ -82,10 +80,5 @@ public class GuiCriteriaEditor extends GuiOffset implements IItemSelectable {
         }
 
         super.mouseClicked(x, y, button);
-    }
-
-    @Override
-    public void setItemStack(ItemStack stack) {
-        
     }
 }

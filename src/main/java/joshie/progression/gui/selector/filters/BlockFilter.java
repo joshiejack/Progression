@@ -1,21 +1,28 @@
 package joshie.progression.gui.selector.filters;
 
-import java.util.ArrayList;
+import java.util.List;
 
-import joshie.progression.gui.newversion.overlays.IItemSelectorFilter;
+import joshie.progression.api.IFilter.FilterType;
+import joshie.progression.gui.newversion.overlays.IFilterSelectorFilter;
+import joshie.progression.helpers.ItemHelper;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
-public class BlockFilter implements IItemSelectorFilter {
-    public static final IItemSelectorFilter INSTANCE = new BlockFilter();
-
+public class BlockFilter extends ItemFilter {
+    public static final IFilterSelectorFilter INSTANCE = new BlockFilter();
+    
     @Override
-    public String getName() {
-        return "block";
+    public List<ItemStack> getAllItems() {
+        return ItemHelper.getAllItems();
+    }
+    
+    @Override
+    public FilterType getType() {
+        return FilterType.BLOCK;
     }
 
     @Override
-    public boolean isAcceptable(ItemStack stack) {
+    public boolean isAcceptedItem(ItemStack stack) {
         Block block = null;
         int meta = 0;
 
@@ -28,7 +35,4 @@ public class BlockFilter implements IItemSelectorFilter {
 
         return block != null;
     }
-
-    @Override
-    public void addExtraItems(ArrayList<ItemStack> list) {}
 }

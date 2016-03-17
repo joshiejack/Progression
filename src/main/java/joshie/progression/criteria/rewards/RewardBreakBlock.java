@@ -1,7 +1,9 @@
 package joshie.progression.criteria.rewards;
 
-import joshie.progression.api.IBlocksOnly;
+import joshie.progression.api.ISpecialFilters;
 import joshie.progression.crafting.ActionType;
+import joshie.progression.gui.newversion.overlays.IFilterSelectorFilter;
+import joshie.progression.gui.selector.filters.BlockFilter;
 import joshie.progression.handlers.CraftingEvents;
 import joshie.progression.helpers.BlockActionHelper;
 import net.minecraft.block.Block;
@@ -10,7 +12,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class RewardBreakBlock extends RewardBaseAction implements IBlocksOnly {
+public class RewardBreakBlock extends RewardBaseAction implements ISpecialFilters {
     public RewardBreakBlock() {
         super("breakBlock", 0xFF74246D, ActionType.BREAKBLOCK);
     }
@@ -34,5 +36,10 @@ public class RewardBreakBlock extends RewardBaseAction implements IBlocksOnly {
                 event.setCanceled(true);
             }
         }
+    }
+
+    @Override
+    public IFilterSelectorFilter getFilterForField(String fieldName) {
+        return BlockFilter.INSTANCE;
     }
 }

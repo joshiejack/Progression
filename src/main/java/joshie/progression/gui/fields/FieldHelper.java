@@ -219,7 +219,7 @@ public class FieldHelper implements ITextEditable {
             super.setNumber(parseInt);
             ItemStack stack = ((ItemField) o).getStack();
             stack.stackSize = parseInt;
-            ((ItemField) o).setItemStack(stack);
+            ((ItemField) o).setObject(stack.copy());
         }
     }
 }

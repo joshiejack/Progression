@@ -10,10 +10,13 @@ import joshie.progression.api.IFilter;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntitySkeleton;
+import net.minecraft.entity.passive.EntityRabbit;
 
 public class EntityHelper {
     private static ArrayList<EntityLivingBase> shuffledEntityCache = new ArrayList();
     private static final HashMap<String, Integer> scalings = new HashMap();
+
     static {
         scalings.put("EnderDragon", 5);
         scalings.put("Giant", 3);
@@ -40,6 +43,23 @@ public class EntityHelper {
             if (entity instanceof EntityLivingBase) {
                 entities.add((EntityLivingBase) entity);
                 shuffledEntityCache.add((EntityLivingBase) entity);
+                //Special case addition of entities
+                //Wither Skeleton
+                if (entity.getClass() == EntitySkeleton.class) {
+                    entity = EntityList.createEntityByName(name, MCClientHelper.getWorld());
+                    ((EntitySkeleton) entity).setSkeletonType(1);
+                    entities.add((EntityLivingBase) entity);
+                    shuffledEntityCache.add((EntityLivingBase) entity);
+                }
+                
+                if (entity instanceof EntityRabbit) {
+                    for (int i = 0; i < 6; i++) {
+                        entity = EntityList.createEntityByName(name, MCClientHelper.getWorld());
+                        ((EntityRabbit)entity).setRabbitType(i);
+                        entities.add((EntityLivingBase) entity);
+                        shuffledEntityCache.add((EntityLivingBase) entity);
+                    }
+                }
             }
         }
     }
@@ -47,18 +67,22 @@ public class EntityHelper {
     public static ArrayList<EntityLivingBase> getEntities() {
         return entities;
     }
-    
+
     public static EntityLivingBase getRandomEntityForFilters(List<IFilter> filters) {
-    	ArrayList<IFilter> shuffledFilters = new ArrayList(filters);
-    	Collections.shuffle(shuffledEntityCache);
-    	Collections.shuffle(shuffledFilters);
-    	for (EntityLivingBase entity: getEntities()) {
-    		for (IFilter filter: shuffledFilters) {
-    			if (filter.matches(entity)) return entity;
-    		}
-    	}
-    	
-    	//In theory if set up correctly this should be no issue
-    	return null;
+        ArrayList<IFilter> shuffledFilters = new ArrayList(filters);
+        Collections.shuffle(shuffledEntityCache);
+        Collections.shuffle(shuffledFilters);
+        for (EntityLivingBase entity : getEntities()) {
+            for (IFilter filter : shuffledFilters) {
+                if (filter.matches(entity)) return entity;
+            }
+        }
+
+        //In theory if set up correctly this should be no issue
+        return null;
+    }
+
+    public static String getNameForEntity(EntityLivingBase living) {
+        return EntityList.getEntityString(living);
     }
 }

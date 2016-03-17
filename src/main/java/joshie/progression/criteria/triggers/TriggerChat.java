@@ -52,7 +52,6 @@ public class TriggerChat extends TriggerBaseBoolean implements ISetterCallback, 
             for (String s : event.parameters)
                 string.append(s + " ");
             String command = event.command.getCommandName() + " " + string.toString().trim();
-            System.out.println("Checking for denial!!!");
             if (ProgressionAPI.registry.fireTrigger((EntityPlayer) event.sender.getCommandSenderEntity(), getUnlocalisedName(), command) == Result.DENY) {
                 event.setCanceled(true);
             }
@@ -63,16 +62,12 @@ public class TriggerChat extends TriggerBaseBoolean implements ISetterCallback, 
     public boolean onFired(UUID uuid, ITriggerData iTriggerData, Object... data) {
         DataBoolean triggerData = ((DataBoolean) iTriggerData);
         triggerData.completed = isTrue(data);
-        System.out.println(triggerData.completed);
         return triggerData.completed;
     }
 
     @Override
     protected boolean isTrue(Object... data) {
         String command = (String) data[0];
-        System.out.println(command);
-        System.out.println("NO REACH");
-        System.out.println(matchString);
         if (matchBoth && matchString.contains(command)) return true;
         else if (matchFront && !matchBack && matchString.endsWith(command)) return true;
         else if (!matchFront && matchBack && matchString.startsWith(command)) return true;

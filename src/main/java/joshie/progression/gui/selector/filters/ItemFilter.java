@@ -5,11 +5,10 @@ import java.util.List;
 import joshie.progression.api.IFilter.FilterType;
 import joshie.progression.gui.newversion.overlays.IFilterSelectorFilter;
 import joshie.progression.helpers.ItemHelper;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
-public class PotionFilter extends ItemFilter {
-    public static final IFilterSelectorFilter INSTANCE = new PotionFilter();
+public class ItemFilter extends FilterBase {
+    public static final IFilterSelectorFilter INSTANCE = new ItemFilter();
     
     @Override
     public List<ItemStack> getAllItems() {
@@ -18,11 +17,15 @@ public class PotionFilter extends ItemFilter {
 
     @Override
     public FilterType getType() {
-        return FilterType.POTIONEFFECT;
+        return FilterType.ITEM;
     }
 
     @Override
-    public boolean isAcceptedItem(ItemStack stack) {
-        return stack.getItem() == Items.potionitem && stack.getItemDamage() != 0;
+    public boolean isAcceptable(Object object) {
+        return object instanceof ItemStack ? isAcceptedItem((ItemStack) object) : false;
+    }
+
+    public boolean isAcceptedItem(ItemStack object) {
+        return true;
     }
 }

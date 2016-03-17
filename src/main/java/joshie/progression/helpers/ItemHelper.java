@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import joshie.progression.api.IFilter;
-import joshie.progression.gui.newversion.overlays.IItemSelectorFilter;
+import joshie.progression.gui.newversion.overlays.IFilterSelectorFilter;
 import joshie.progression.gui.selector.filters.BlockFilter;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -85,7 +85,7 @@ public class ItemHelper {
         return getRandomItem(filters, BlockFilter.INSTANCE);
     }
 
-    public static ItemStack getRandomItem(List<IFilter> filters, IItemSelectorFilter selector) {
+    public static ItemStack getRandomItem(List<IFilter> filters, IFilterSelectorFilter selector) {
         ArrayList<IFilter> shuffledFilters = new ArrayList(filters);
         if (shuffledItemsCache == null) shuffledItemsCache = new ArrayList(getCreativeItems());
         Collections.shuffle(shuffledItemsCache);
@@ -101,14 +101,21 @@ public class ItemHelper {
         return null;
     }
 
-    public static List<ItemStack> getAllMatchingItems(List<IFilter> filters) {
+    public static List<ItemStack> getAllMatchingItems(IFilter filter) {
         ArrayList<ItemStack> stacks = new ArrayList();
         for (ItemStack stack : getAllItems()) {
-            for (IFilter filter : filters) {
-                if (filter.matches(stack)) {
-                    stacks.add(stack.copy());
-                }
+            if (filter.matches(stack)) {
+                stacks.add(stack.copy());
             }
+        }
+
+        return stacks;
+    }
+
+    public static List<ItemStack> getAllMatchingItems(List<IFilter> filters) {
+        ArrayList<ItemStack> stacks = new ArrayList();
+        for (IFilter filter : filters) {
+            stacks.addAll(filter.getMatches(null));
         }
 
         return stacks;

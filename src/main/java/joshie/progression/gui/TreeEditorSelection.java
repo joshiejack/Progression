@@ -25,7 +25,7 @@ public class TreeEditorSelection extends TextEditable {
             if (i >= 0 && i < SelectItem.INSTANCE.sorted.size()) {
                 if (mouseX >= 32 + (j * 16) && mouseX <= 32 + (j * 16) + 16) {
                     if (mouseY >= 45 + (k * 16) && mouseY <= 45 + (k * 16) + 16) {
-                        SelectItem.INSTANCE.selectable.setItemStack(SelectItem.INSTANCE.sorted.get(i).copy());
+                        SelectItem.INSTANCE.selectable.setObject(SelectItem.INSTANCE.sorted.get(i).copy());
                         return true;
                     }
                 }

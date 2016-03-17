@@ -1,14 +1,24 @@
-package joshie.progression.criteria.filters;
+package joshie.progression.criteria.filters.block;
 
+import java.util.List;
+
+import joshie.progression.criteria.filters.FilterBase;
 import joshie.progression.helpers.ItemHelper;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
 public abstract class FilterBaseBlock extends FilterBase {
-    public int meta = 0;
-
     public FilterBaseBlock(String string, int color) {
         super(string, color);
+    }
+
+    @Override
+    public List<ItemStack> getMatches(Object object) {
+        return getMatches();
+    }
+
+    public List<ItemStack> getMatches() {
+        return ItemHelper.getAllMatchingItems(this);
     }
 
     @Override
@@ -17,6 +27,11 @@ public abstract class FilterBaseBlock extends FilterBase {
         ItemStack check = (ItemStack) object;
         Block block = ItemHelper.getBlock(check);
         return block == null ? false : matches(block, block.getMetaFromState(block.getStateFromMeta(check.getItemDamage())));
+    }
+
+    @Override
+    public FilterType getType() {
+        return FilterType.BLOCK;
     }
 
     protected abstract boolean matches(Block block, int metadata);

@@ -1,4 +1,4 @@
-package joshie.progression.criteria.filters;
+package joshie.progression.criteria.filters.item;
 
 import joshie.progression.helpers.StackHelper;
 import net.minecraft.item.ItemStack;

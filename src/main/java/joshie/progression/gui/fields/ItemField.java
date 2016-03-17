@@ -2,16 +2,15 @@ package joshie.progression.gui.fields;
 
 import java.lang.reflect.Field;
 
-import joshie.progression.api.IBlocksOnly;
 import joshie.progression.api.IItemGetterCallback;
 import joshie.progression.api.ISetterCallback;
+import joshie.progression.api.ISpecialFilters;
 import joshie.progression.gui.editors.IItemSelectable;
 import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector;
-import joshie.progression.gui.newversion.overlays.FeatureTooltip;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
-import joshie.progression.gui.newversion.overlays.IItemSelectorFilter;
-import joshie.progression.gui.selector.filters.BlockFilter;
+import joshie.progression.gui.newversion.overlays.FeatureTooltip;
+import joshie.progression.gui.newversion.overlays.IFilterSelectorFilter;
 import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.item.ItemStack;
 
@@ -26,9 +25,9 @@ public class ItemField extends AbstractField implements IItemSelectable {
     protected final int mouseY1;
     protected final int mouseY2;
     protected final Type type;
-    protected final IItemSelectorFilter[] filters;
+    protected final IFilterSelectorFilter filter;
 
-    public ItemField(String fieldName, Object object, int x, int y, float scale, int mouseX1, int mouseX2, int mouseY1, int mouseY2, Type type, IItemSelectorFilter... filters) {
+    public ItemField(String fieldName, Object object, int x, int y, float scale, int mouseX1, int mouseX2, int mouseY1, int mouseY2, Type type, IFilterSelectorFilter filter) {
         super(fieldName);
         this.x = x;
         this.y = y;
@@ -38,10 +37,9 @@ public class ItemField extends AbstractField implements IItemSelectable {
         this.mouseY1 = mouseY1;
         this.mouseY2 = mouseY2;
         this.type = type;
-        if (object instanceof IBlocksOnly) {
-            this.filters = new IItemSelectorFilter[] { BlockFilter.INSTANCE };
-        } else if (filters == null || filters.length == 0) this.filters = null;
-        else this.filters = filters;
+        if (object instanceof ISpecialFilters) {
+            this.filter = ((ISpecialFilters) object).getFilterForField(fieldName);
+        } else this.filter = filter;
 
         try {
             this.field = object.getClass().getField(fieldName);
@@ -61,7 +59,7 @@ public class ItemField extends AbstractField implements IItemSelectable {
     public boolean attemptClick(int mouseX, int mouseY) {
         boolean clicked = mouseX >= mouseX1 && mouseX <= mouseX2 && mouseY >= mouseY1 && mouseY <= mouseY2;
         if (clicked) {
-            FeatureItemSelector.INSTANCE.select(filters, this, type);
+            FeatureItemSelector.INSTANCE.select(filter, this, type);
             return true;
         } else return false;
     }
@@ -98,16 +96,14 @@ public class ItemField extends AbstractField implements IItemSelectable {
     }
 
     @Override
-    public void setItemStack(ItemStack stack) {
-        try {
-            if (object instanceof ISetterCallback) {
-                ((ISetterCallback) object).setField(field.getName(), stack);
-            } else field.set(object, stack);
-        } catch (Exception e) {}
-    }
-
-    @Override
     public void setObject(Object object) {
-        this.object = object;
+        if (object instanceof ItemStack) {
+            try {
+                ItemStack stack = ((ItemStack) object).copy();
+                if (this.object instanceof ISetterCallback) {
+                    ((ISetterCallback) this.object).setField(field.getName(), stack);
+                } else field.set(this.object, stack);
+            } catch (Exception e) { e.printStackTrace(); }
+        }
     }
 }

@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.UUID;
 
 import joshie.enchiridion.helpers.MCClientHelper;
-import joshie.progression.api.ISpecialItemFilter;
+import joshie.progression.api.ISpecialFilters;
+import joshie.progression.gui.newversion.overlays.IFilterSelectorFilter;
+import joshie.progression.gui.selector.filters.PotionFilter;
 import joshie.progression.helpers.ItemHelper;
 import joshie.progression.helpers.PlayerHelper;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -12,7 +14,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 
-public class RewardPotion extends RewardBaseItemFilter implements ISpecialItemFilter {
+public class RewardPotion extends RewardBaseItemFilter implements ISpecialFilters {
     public boolean randomVanilla = false;
     public int customid = -1;
     public int duration = 200;
@@ -25,8 +27,8 @@ public class RewardPotion extends RewardBaseItemFilter implements ISpecialItemFi
     }
 
     @Override
-    public String[] getSpecialFilters() {
-        return new String[] { "potioneffect" };
+    public IFilterSelectorFilter getFilterForField(String fieldName) {
+        return PotionFilter.INSTANCE;
     }
 
     @Override

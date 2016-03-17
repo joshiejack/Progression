@@ -7,8 +7,8 @@ import org.lwjgl.opengl.GL11;
 import joshie.progression.gui.GuiCriteriaEditor;
 import joshie.progression.gui.GuiTreeEditor;
 import joshie.progression.gui.base.IRenderOverlay;
-import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.ItemHelper;
+import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
@@ -116,7 +116,7 @@ public class SelectItem extends TextEditable implements IRenderOverlay {
             if (i >= 0 && i < sorted.size()) {
                 if (mouseX >= 8 + (j * 16) && mouseX <= 8 + (j * 16) + 16) {
                     if (mouseY >= 45 + (k * 16) && mouseY <= 45 + (k * 16) + 16) {
-                        selectable.setItemStack(sorted.get(i).copy());
+                        selectable.setObject(sorted.get(i).copy());
                         clear();
                         return true;
                     }

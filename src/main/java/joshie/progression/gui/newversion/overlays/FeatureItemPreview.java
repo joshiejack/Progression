@@ -6,23 +6,23 @@ import org.lwjgl.opengl.GL11;
 
 import joshie.progression.api.IFilter;
 import joshie.progression.gui.GuiCriteriaEditor;
+import joshie.progression.gui.editors.SelectItem.Type;
 import joshie.progression.gui.newversion.GuiItemFilterEditor;
-import joshie.progression.helpers.ItemHelper;
-import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 
 public class FeatureItemPreview extends FeatureAbstract {
     public static FeatureItemPreview INSTANCE = new FeatureItemPreview();
-    private ArrayList<ItemStack> sorted;
+    private IFilterSelectorFilter filter;
+    private ArrayList<Object> sorted;
     private boolean blocksOnly;
     private int position;
 
     public FeatureItemPreview() {}
 
-    public void select(boolean blocksOnly) {
-        this.blocksOnly = blocksOnly;
+    public void select(IFilterSelectorFilter filter) {
+        this.filter = filter;
         updateSearch();
     }
 
@@ -54,12 +54,11 @@ public class FeatureItemPreview extends FeatureAbstract {
 
     public void updateSearch() {
         sorted = new ArrayList();
-        for (ItemStack stack: ItemHelper.getCreativeItems()) {
+        for (Object stack: filter.getAllItems()) {
             int matches = 0;
             for (IFilter filter: GuiItemFilterEditor.INSTANCE.field.getFilters()) {
                 if (filter.matches(stack)) {
-                    if (blocksOnly) attemptToAddBlock(stack);
-                    else sorted.add(stack);
+                    sorted.add(stack);
                     matches++;
                 }
             }
@@ -77,18 +76,12 @@ public class FeatureItemPreview extends FeatureAbstract {
         int offsetX = GuiCriteriaEditor.INSTANCE.offsetX;
         mouseY -= 95;
 
-        int width = (int) ((double) (screenWidth - 10) / 16.133333334D);
+        int width = (int) ((double) (screenWidth - 10) / filter.getScale());
         int j = 0;
         int k = 0;
         for (int i = position; i < position + (width * 4); i++) {
             if (i >= 0 && i < sorted.size()) {
-                ItemStack stack = sorted.get(i);
-                offset.drawStack(stack, -offsetX + 8 + (j * 16), 95 + 45 + (k * 16), 1F);
-                if (mouseX >= 8 + (j * 16) && mouseX < 8 + (j * 16) + 16) {
-                    if (mouseY >= 45 + (k * 16) && mouseY < 45 + (k * 16) + 16) {
-                        FeatureTooltip.INSTANCE.addTooltip(stack.getTooltip(MCClientHelper.getPlayer(), false));
-                    }
-                }
+                filter.draw(offset, sorted.get(i), offsetX, j, Type.TRIGGER.yOffset, k, mouseX, mouseY);
 
                 j++;
 

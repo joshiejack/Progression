@@ -8,8 +8,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import joshie.progression.api.IFieldProvider;
-import joshie.progression.api.IInitAfterRead;
 import joshie.progression.api.IFilter;
+import joshie.progression.api.IInitAfterRead;
 import joshie.progression.api.ISpecialJSON;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.lib.ProgressionInfo;
@@ -78,7 +78,7 @@ public class JSONHelper {
         if (data.get(string) != null) {
             String name = data.get(string).getAsString();
             ItemStack stack = StackHelper.getStackFromString(name);
-            ItemStack ret = stack == null ? default_ : stack;
+            return stack == null ? default_ : stack;
         }
 
         return default_;
@@ -155,8 +155,9 @@ public class JSONHelper {
     }
 
     public static void setItemStack(JsonObject data, String string, ItemStack value, ItemStack dflt) {
-        if (value != null && !(dflt != null && value.getItem() == dflt.getItem() && value.getItemDamage() == dflt.getItemDamage())) {
-            data.addProperty(string, StackHelper.getStringFromStack(value));
+        if (value != null && !(value.getItem() == dflt.getItem() && value.getItemDamage() == dflt.getItemDamage())) {
+            String name = StackHelper.getStringFromStack(value);
+            data.addProperty(string, name);
         }
     }
 
@@ -170,12 +171,10 @@ public class JSONHelper {
     }
 
     public static void setBlock(JsonObject data, String string, Block block, Block dflt) {
-        System.out.println("SETTING BLOCK");
         if (block != null && block != dflt) {
             ResourceLocation location = Block.blockRegistry.getNameForObject(block);
             ResourceLocation deflt = Block.blockRegistry.getNameForObject(dflt);
-            
-            System.out.println("SAVING:" + string + " - " + location.getResourcePath());
+
             setString(data, string + ":domain", location.getResourceDomain(), deflt.getResourceDomain());
             setString(data, string + ":path", location.getResourcePath(), deflt.getResourcePath());
         }

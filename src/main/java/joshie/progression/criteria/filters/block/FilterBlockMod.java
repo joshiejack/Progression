@@ -1,4 +1,4 @@
-package joshie.progression.criteria.filters;
+package joshie.progression.criteria.filters.block;
 
 import joshie.progression.helpers.StackHelper;
 import net.minecraft.block.Block;

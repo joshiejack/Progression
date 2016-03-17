@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.UUID;
 
 import joshie.progression.api.IFilter;
-import joshie.progression.api.ISpecialItemFilter;
+import joshie.progression.api.ISpecialFilters;
+import joshie.progression.gui.newversion.overlays.IFilterSelectorFilter;
+import joshie.progression.gui.selector.filters.PotionFilter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
-public class ConditionHasPotionEffect extends ConditionBase implements ISpecialItemFilter {
+public class ConditionHasPotionEffect extends ConditionBase implements ISpecialFilters {
     public List<IFilter> filters = new ArrayList();
 
     public ConditionHasPotionEffect() {
@@ -17,8 +19,8 @@ public class ConditionHasPotionEffect extends ConditionBase implements ISpecialI
     }
 
     @Override
-    public String[] getSpecialFilters() {
-        return new String[] { "potioneffect" };
+    public IFilterSelectorFilter getFilterForField(String fieldName) {
+        return PotionFilter.INSTANCE;
     }
 
     @Override

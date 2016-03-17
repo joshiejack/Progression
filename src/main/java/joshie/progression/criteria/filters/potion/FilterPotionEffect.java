@@ -1,4 +1,4 @@
-package joshie.progression.criteria.filters;
+package joshie.progression.criteria.filters.potion;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,6 +10,7 @@ import joshie.progression.api.IField;
 import joshie.progression.api.IInitAfterRead;
 import joshie.progression.api.ISetterCallback;
 import joshie.progression.api.gui.ISpecialFieldProvider;
+import joshie.progression.criteria.filters.item.FilterBaseItem;
 import joshie.progression.gui.fields.ItemField;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
 import joshie.progression.gui.selector.filters.PotionFilter;
@@ -27,6 +28,11 @@ public class FilterPotionEffect extends FilterBaseItem implements ISetterCallbac
     public FilterPotionEffect() {
         super("potioneffect", 0xFFFF73FF);
 
+    }
+
+    @Override
+    public FilterType getType() {
+        return FilterType.POTIONEFFECT;
     }
 
     @Override

@@ -6,25 +6,24 @@ import java.util.List;
 
 import joshie.enchiridion.helpers.MCClientHelper;
 import joshie.progression.Progression;
-import joshie.progression.api.IBlocksOnly;
 import joshie.progression.api.IFilter;
 import joshie.progression.api.ISetterCallback;
+import joshie.progression.api.ISpecialFilters;
 import joshie.progression.gui.newversion.GuiCriteriaEditor;
 import joshie.progression.gui.newversion.GuiItemFilterEditor;
 import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import joshie.progression.gui.newversion.overlays.FeatureItemPreview;
-import joshie.progression.gui.newversion.overlays.IItemSelectorFilter;
-import joshie.progression.gui.selector.filters.BlockFilter;
+import joshie.progression.gui.newversion.overlays.IFilterSelectorFilter;
+import joshie.progression.gui.selector.filters.ItemFilter;
 import joshie.progression.helpers.CollectionHelper;
 
 public class ItemFilterField extends AbstractField {
-    private String[] accepted;
+    private IFilterSelectorFilter selector;
     private Field field;
 
-    public ItemFilterField(String fieldName, Object object, String... accepted) {
+    public ItemFilterField(String fieldName, Object object) {
         super(fieldName);
         this.object = object;
-        this.accepted = accepted;
 
         try {
             field = object.getClass().getField(fieldName);
@@ -33,6 +32,10 @@ public class ItemFilterField extends AbstractField {
                 field = object.getClass().getSuperclass().getField(fieldName);
             } catch (Exception e1) {}
         }
+
+        if (object instanceof ISpecialFilters) {
+            selector = ((ISpecialFilters) object).getFilterForField(getFieldName());
+        } else selector = ItemFilter.INSTANCE;
     }
 
     @Override
@@ -51,25 +54,20 @@ public class ItemFilterField extends AbstractField {
     }
 
     public boolean isAccepted(IFilter filter) {
-        if (object instanceof IBlocksOnly) {
-            if (!filter.getUnlocalisedName().startsWith("block")) return false;
-        }
-        
-        if (accepted == null || accepted.length == 0) return true;
-        else {           
-            for (String string : accepted) {
-                if (string.equalsIgnoreCase(filter.getUnlocalisedName())) return true;
+        if (object instanceof ISpecialFilters) {
+            if (selector != null) {
+                if (filter.getType() != selector.getType()) return false;
             }
-
-            return false;
         }
+
+        return true;
     }
 
     @Override
     public void click() {
         try {
             GuiItemFilterEditor.INSTANCE.setFilterSet(this); //Adjust this filter object
-            FeatureItemPreview.INSTANCE.select(false); //Allow for selection of multiple items 
+            FeatureItemPreview.INSTANCE.select(selector); //Allow for selection of multiple items 
             GuiCriteriaEditor.INSTANCE.switching = true; //Don't save if we're switching guis
             MCClientHelper.getPlayer().openGui(Progression.instance, 3, MCClientHelper.getWorld(), 0, 0, 0);
         } catch (Exception e) {

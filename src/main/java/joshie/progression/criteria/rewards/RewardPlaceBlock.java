@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.UUID;
 
 import joshie.progression.Progression;
-import joshie.progression.api.IBlocksOnly;
+import joshie.progression.api.ISpecialFilters;
 import joshie.progression.api.IField;
 import joshie.progression.api.gui.ISpecialFieldProvider;
 import joshie.progression.gui.fields.ItemFilterFieldPreview;
+import joshie.progression.gui.newversion.overlays.IFilterSelectorFilter;
+import joshie.progression.gui.selector.filters.BlockFilter;
 import joshie.progression.helpers.ItemHelper;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
@@ -16,7 +18,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 
-public class RewardPlaceBlock extends RewardBaseItemFilter implements ISpecialFieldProvider, IBlocksOnly {
+public class RewardPlaceBlock extends RewardBaseItemFilter implements ISpecialFieldProvider, ISpecialFilters {
     public int dimension = 0;
     public int x = 0;
     public int y = 64;
@@ -45,5 +47,10 @@ public class RewardPlaceBlock extends RewardBaseItemFilter implements ISpecialFi
     public void addTooltip(List list) {
         list.add(EnumChatFormatting.WHITE + Progression.translate("block.place"));
         list.add(getIcon().getDisplayName());
+    }
+
+    @Override
+    public IFilterSelectorFilter getFilterForField(String fieldName) {
+        return BlockFilter.INSTANCE;
     }
 }

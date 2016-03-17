@@ -5,7 +5,6 @@ import java.util.List;
 
 import joshie.progression.api.IFilter;
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.helpers.EntityHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,7 +15,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class TriggerKill extends TriggerBaseCounterVaries {
     public List<IFilter> filters = new ArrayList();
-    private transient EntityLivingBase entity;
 
     public TriggerKill() {
         super(new ItemStack(Items.iron_sword), "kill", 0xFF000000);
@@ -42,14 +40,14 @@ public class TriggerKill extends TriggerBaseCounterVaries {
 
     @Override
     public void updateDraw() {
-        entity = EntityHelper.getRandomEntityForFilters(filters);
+        //entity = EntityHelper.getRandomEntityForFilters(filters);
     }
 
     @Override
     public String getDescription() {
         String name = "INVALID";
         try {
-            name = entity.getName();
+            //name = entity.getName();
         } catch (Exception e) {}
 
         return amount + " x " + name;

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
 
 import joshie.progression.Progression;
 import joshie.progression.api.ICriteria;
@@ -81,7 +80,7 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
         //If the tab is already selected, then we should edit it instead        
         int x = Mouse.getX();
         int y = Mouse.getY();
-        
+
         if (MCClientHelper.canEdit()) {
             if (Keyboard.isKeyDown(Keyboard.KEY_DELETE)) {
                 ITab newTab = GuiTreeEditor.INSTANCE.currentTab;
@@ -125,7 +124,7 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
         GuiTreeEditor.INSTANCE.currentTab = tab;
         GuiTreeEditor.INSTANCE.currentTabName = tab.getUniqueName(); //Reopen the gui
         MCClientHelper.getPlayer().openGui(Progression.instance, GuiIDs.TREE, MCClientHelper.getWorld(), 0, 0, 0);
-        
+
         //Woo
         Mouse.setCursorPosition(x, y);
     }
@@ -154,7 +153,9 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
     }
 
     @Override
-    public void setItemStack(ItemStack stack) {
-        tab.setStack(stack);
+    public void setObject(Object stack) {
+        if (stack instanceof ItemStack) {
+            tab.setStack(((ItemStack) stack).copy());
+        }
     }
 }
