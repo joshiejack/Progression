@@ -7,7 +7,7 @@ import joshie.progression.api.ICriteria;
 import joshie.progression.api.ITab;
 import net.minecraft.item.ItemStack;
 
-public class Cunt implements ITab {
+public class Tab implements ITab {
     private String uniqueName;
     private String displayName;
     private boolean isVisible;
@@ -16,17 +16,17 @@ public class Cunt implements ITab {
     
     private List<ICriteria> criteria = new ArrayList();
     
-    public Cunt setUniqueName(String unique) {
+    public Tab setUniqueName(String unique) {
         this.uniqueName = unique;
         return this;
     }
 
-    public Cunt setDisplayName(String name) {
+    public Tab setDisplayName(String name) {
         this.displayName = name;
         return this;
     }
 
-    public Cunt addCriteria(ICriteria... critera) {        
+    public Tab addCriteria(ICriteria... critera) {        
         for (ICriteria c: critera) {
             criteria.add(c);
         }
@@ -34,17 +34,17 @@ public class Cunt implements ITab {
         return this;
     }
     
-    public Cunt setVisibility(boolean visibility) {
+    public Tab setVisibility(boolean visibility) {
         this.isVisible = visibility;
         return this;
     }
     
-    public Cunt setStack(ItemStack stack) {
+    public Tab setStack(ItemStack stack) {
         this.stack = stack;
         return this;
     }
     
-    public Cunt setSortIndex(int index) {
+    public Tab setSortIndex(int index) {
         this.sortIndex = index;
         return this;
     }

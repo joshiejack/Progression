@@ -41,6 +41,8 @@ progression.reward.breakBlock=Break Block
 progression.reward.clear=Take Item
 progression.reward.potioneffect=Potion Effect
 progression.reward.layer.show=Book: Layer
+progression.reward.teleport=Teleport
+progression.reward.placeBlock=Place Block
 
 #Actions
 progression.action.crafting=Crafting

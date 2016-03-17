@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import joshie.progression.Progression;
 import joshie.progression.helpers.PlayerHelper;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -36,6 +35,7 @@ public class RewardTeleport extends RewardBase {
     public void reward(UUID uuid) {
         List<EntityPlayerMP> players = PlayerHelper.getPlayersFromUUID(uuid);
         World world = DimensionManager.getWorld(dimension);
+        if (world == null) return; //Don't teleport to dimensions that don't exist
         for (EntityPlayerMP player : players) {
             if (player.dimension != dimension) {
                 int oldDim = player.dimension;

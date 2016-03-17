@@ -19,6 +19,7 @@ public class PacketSyncJSONToServer extends PacketSyncStringArray {
     private long timestamp;
 
     public PacketSyncJSONToServer() {}
+
     public PacketSyncJSONToServer(PacketPart part, long timestamp) {
         super(part);
         this.timestamp = timestamp;
@@ -28,7 +29,7 @@ public class PacketSyncJSONToServer extends PacketSyncStringArray {
         super(part, text, index);
         this.timestamp = timestamp;
     }
-    
+
     @Override
     public void toBytes(ByteBuf to) {
         to.writeLong(timestamp);
@@ -59,10 +60,12 @@ public class PacketSyncJSONToServer extends PacketSyncStringArray {
     @Override
     public void receivedDataRequest(EntityPlayer player) {
         //Grab the data and send it
-        String json = JSONLoader.getClientTabJsonData();
-        String[] client = SplitHelper.splitStringEvery(json, 5000);
-        for (int i = 0; i < client.length; i++) {
-            PacketHandler.sendToServer(new PacketSyncJSONToServer(SEND_DATA, client[i], i, timestamp));
+        if (Options.editor) {
+            String json = JSONLoader.getClientTabJsonData();
+            String[] client = SplitHelper.splitStringEvery(json, 5000);
+            for (int i = 0; i < client.length; i++) {
+                PacketHandler.sendToServer(new PacketSyncJSONToServer(SEND_DATA, client[i], i, timestamp));
+            }
         }
     }
 
@@ -83,7 +86,7 @@ public class PacketSyncJSONToServer extends PacketSyncStringArray {
                 for (String s : server) {
                     builder.append(s);
                 }
-                
+
                 String json = builder.toString();
                 DefaultSettings settings = JSONLoader.gson.fromJson(json, DefaultSettings.class);
                 JSONLoader.serverHashcode = (int) timestamp; //For resyncing purposes < and v

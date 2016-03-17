@@ -32,19 +32,19 @@ public class PacketCompleted extends PenguinPacket {
         criteria = APIHandler.getCriteriaFromName(ByteBufUtils.readUTF8String(buf));
     }
 
-	@Override
-	public void handlePacket(EntityPlayer player) {
-	    if (criteria != null) {
-    		GuiAchievement gui = Minecraft.getMinecraft().guiAchievement;
+    @Override
+    public void handlePacket(EntityPlayer player) {
+        if (criteria != null) {
+            GuiAchievement gui = Minecraft.getMinecraft().guiAchievement;
             gui.displayAchievement(new DummyAchievement(criteria));
             ReflectionHelper.setPrivateValue(GuiAchievement.class, gui, Minecraft.getSystemTime(), "notificationTime", "field_146263_l");
             ReflectionHelper.setPrivateValue(GuiAchievement.class, gui, false, "permanentNotification", "field_146262_n");
-	    }
-	}
-    
+        }
+    }
+
     public static class DummyAchievement extends Achievement {
         private final ICriteria criteria;
-        
+
         public DummyAchievement(ICriteria criteria) {
             super("criteria", "criteria", 0, 0, criteria.getIcon(), null);
             this.criteria = criteria;
@@ -54,6 +54,11 @@ public class PacketCompleted extends PenguinPacket {
         @SideOnly(Side.CLIENT)
         public String getDescription() {
             return criteria.getDisplayName();
+        }
+
+        @Override
+        public boolean getSpecial() {
+            return true;
         }
     }
 }

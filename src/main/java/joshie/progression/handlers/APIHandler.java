@@ -18,7 +18,7 @@ import joshie.progression.api.ITriggerData;
 import joshie.progression.api.ITriggerType;
 import joshie.progression.crafting.ActionType;
 import joshie.progression.criteria.Criteria;
-import joshie.progression.criteria.Cunt;
+import joshie.progression.criteria.Tab;
 import joshie.progression.criteria.triggers.data.DataBoolean;
 import joshie.progression.criteria.triggers.data.DataCount;
 import joshie.progression.criteria.triggers.data.DataCrafting;
@@ -138,7 +138,7 @@ public class APIHandler implements IProgressionAPI {
     }
 
     public static ITab newTab(String name) {
-        ITab iTab = new Cunt().setUniqueName(name);
+        ITab iTab = new Tab().setUniqueName(name);
         getTabs().put(name, iTab);
         return iTab;
     }
