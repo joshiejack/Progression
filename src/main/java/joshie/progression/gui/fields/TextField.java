@@ -33,7 +33,7 @@ public class TextField extends AbstractField {
     }
 
     @Override
-    public void draw(DrawFeatureHelper helper, int renderX, int renderY, int color, int yPos) {
+    public void draw(DrawFeatureHelper helper, int renderX, int renderY, int color, int yPos, int mouseX, int mouseY) {
         helper.drawSplitText(renderX, renderY, name + ": " + data.getText(), 4, yPos, 125, color, 0.75F);
     }
 

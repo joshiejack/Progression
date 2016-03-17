@@ -117,7 +117,7 @@ public class FeatureDrawable extends FeatureAbstract {
                         }
                     }
 
-                    t.draw(helper, renderX, renderY, color, yPos);
+                    t.draw(helper, renderX, renderY, color, yPos, mouseX, mouseY);
                     index++;
                 }
 

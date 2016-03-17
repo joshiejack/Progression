@@ -8,9 +8,11 @@ import joshie.progression.api.ISetterCallback;
 import joshie.progression.gui.editors.IItemSelectable;
 import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector;
+import joshie.progression.gui.newversion.overlays.FeatureTooltip;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
 import joshie.progression.gui.newversion.overlays.IItemSelectorFilter;
 import joshie.progression.gui.selector.filters.BlockFilter;
+import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.item.ItemStack;
 
 public class ItemField extends AbstractField implements IItemSelectable {
@@ -87,8 +89,10 @@ public class ItemField extends AbstractField implements IItemSelectable {
     }
 
     @Override
-    public void draw(DrawFeatureHelper helper, int renderX, int renderY, int color, int yPos) {
+    public void draw(DrawFeatureHelper helper, int renderX, int renderY, int color, int yPos, int mouseX, int mouseY) {
         try {
+            boolean clicked = mouseX >= mouseX1 && mouseX <= mouseX2 && mouseY >= mouseY1 && mouseY <= mouseY2;
+            if (clicked) FeatureTooltip.INSTANCE.addTooltip(getStack().getTooltip(MCClientHelper.getPlayer(), false));
             helper.drawStack(renderX, renderY, getStack(), x, y, scale);
         } catch (Exception e) {}
     }

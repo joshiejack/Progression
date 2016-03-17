@@ -26,7 +26,7 @@ public class TriggerKill extends TriggerBaseCounterVaries {
     public void onEvent(LivingDeathEvent event) {
         Entity source = event.source.getSourceOfDamage();
         if (source instanceof EntityPlayer && source instanceof EntityLivingBase) {
-            ProgressionAPI.registry.fireTrigger((EntityPlayer) source, getUnlocalisedName(), source);
+            ProgressionAPI.registry.fireTrigger((EntityPlayer) source, getUnlocalisedName(), event.entityLiving);
         }
     }
 

@@ -2,7 +2,9 @@ package joshie.progression.gui.fields;
 
 import joshie.progression.api.IField;
 import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
+import joshie.progression.gui.newversion.overlays.FeatureTooltip;
 import joshie.progression.helpers.ItemHelper;
+import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
@@ -47,8 +49,10 @@ public class ItemFilterFieldPreview extends ItemFilterField implements IField {
     }
 
     @Override
-    public void draw(DrawFeatureHelper helper, int renderX, int renderY, int color, int yPos) {
+    public void draw(DrawFeatureHelper helper, int renderX, int renderY, int color, int yPos, int mouseX, int mouseY) {
         try {
+            boolean clicked = mouseX >= mouseX1 && mouseX <= mouseX2 && mouseY >= mouseY1 && mouseY <= mouseY2;
+            if (clicked) FeatureTooltip.INSTANCE.addTooltip(getStack().getTooltip(MCClientHelper.getPlayer(), false));
             helper.drawStack(renderX, renderY, getStack(), x, y, scale);
         } catch (Exception e) { e.printStackTrace(); }
     }

@@ -76,7 +76,7 @@ public class EntityField extends AbstractField implements IEntitySelectable {
     }
 
     @Override
-    public void draw(DrawFeatureHelper helper, int renderX, int renderY, int color, int yPos) {
+    public void draw(DrawFeatureHelper helper, int renderX, int renderY, int color, int yPos, int mouseX, int mouseY) {
         try {
             Entity entity = EntityList.createEntityByName(getEntity(), MCClientHelper.getPlayer().worldObj);
             yPos = GuiCriteriaEditor.INSTANCE.y + y;

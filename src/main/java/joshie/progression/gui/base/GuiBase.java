@@ -62,7 +62,7 @@ public abstract class GuiBase extends GuiScreen {
 
     @Override
     protected void actionPerformed(GuiButton button) {}
-    
+
     private static int GUI_CLOSED;
 
     @Override
@@ -161,7 +161,13 @@ public abstract class GuiBase extends GuiScreen {
     }
 
     public void addTooltip(List<String> list) {
-        tooltip.addAll(list);
+        HashSet<String> set = new HashSet();
+        for (String s : list)
+            set.add(s);
+        for (String s : tooltip)
+            set.add(s);
+
+        tooltip = new ArrayList(set);
     }
 
     private void drawTooltip(List<String> list, int x, int y) {
