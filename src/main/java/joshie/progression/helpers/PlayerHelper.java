@@ -54,7 +54,7 @@ public class PlayerHelper {
     public static List<EntityPlayerMP> getPlayersFromUUID(UUID uuid) {
         List<EntityPlayerMP> list = new ArrayList();
         PlayerTeam team = PlayerTracker.getServerPlayer(uuid).getTeam();
-        for (EntityPlayer player : (List<EntityPlayerMP>) FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList) {
+        for (EntityPlayerMP player : getAllPlayers()) {
             /** Add the Owner **/
             if (getUUIDForPlayer(player).equals(team.getOwner())) {
                 list.add((EntityPlayerMP) player);
@@ -73,7 +73,7 @@ public class PlayerHelper {
 
     public static EntityPlayer getPlayerFromUUID(UUID uuid) {
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) return MCClientHelper.getPlayer();
-        for (EntityPlayer player : (List<EntityPlayerMP>) FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList) {
+        for (EntityPlayerMP player : getAllPlayers()) {
             if (getUUIDForPlayer(player).equals(uuid)) {
                 return (EntityPlayerMP) player;
             }

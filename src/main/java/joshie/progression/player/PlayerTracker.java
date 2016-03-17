@@ -28,7 +28,11 @@ public class PlayerTracker {
     public static PlayerDataServer getServerPlayer(EntityPlayer player) {
         return getServerPlayer(PlayerHelper.getUUIDForPlayer(player));
     }
-
+    
+    public static boolean reset(String username) {
+        return Progression.data.reset(username);
+    }
+    
     public static PlayerDataServer getServerPlayer(UUID uuid) {
         return Progression.data.getServerPlayer(uuid);
     }
