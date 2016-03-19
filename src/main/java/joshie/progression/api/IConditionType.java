@@ -2,6 +2,7 @@ package joshie.progression.api;
 
 import java.util.UUID;
 
+import joshie.progression.api.fields.IFieldProvider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 

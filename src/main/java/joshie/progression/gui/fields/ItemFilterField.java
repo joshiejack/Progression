@@ -9,11 +9,11 @@ import joshie.progression.Progression;
 import joshie.progression.api.IFilter;
 import joshie.progression.api.ISetterCallback;
 import joshie.progression.api.ISpecialFilters;
+import joshie.progression.api.filters.IFilterSelectorFilter;
 import joshie.progression.gui.newversion.GuiCriteriaEditor;
 import joshie.progression.gui.newversion.GuiItemFilterEditor;
 import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import joshie.progression.gui.newversion.overlays.FeatureItemPreview;
-import joshie.progression.gui.newversion.overlays.IFilterSelectorFilter;
 import joshie.progression.gui.selector.filters.ItemFilter;
 import joshie.progression.helpers.CollectionHelper;
 

@@ -1,6 +1,7 @@
 package joshie.progression.gui.fields;
 
-import joshie.progression.api.IField;
+import joshie.progression.api.IStackSizeable;
+import joshie.progression.api.fields.IField;
 import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import joshie.progression.gui.newversion.overlays.FeatureTooltip;
 import joshie.progression.helpers.ItemHelper;
@@ -19,15 +20,15 @@ public class ItemFilterFieldPreview extends ItemFilterField implements IField {
     private ItemStack stack;
     private int ticker;
 
-    public ItemFilterFieldPreview(String fieldName, Object object, int x, int y, int mouseX1, int mouseX2, int mouseY1, int mouseY2, float scale) {
+    public ItemFilterFieldPreview(String fieldName, Object object, int x, int y, float scale) {
         super(fieldName, object);
         this.x = x;
         this.y = y;
         this.scale = scale;
-        this.mouseX1 = mouseX1;
-        this.mouseX2 = mouseX2;
-        this.mouseY1 = mouseY1;
-        this.mouseY2 = mouseY2;
+        this.mouseX1 = x;
+        this.mouseX2 = (int) (x + 14 * scale);
+        this.mouseY1 = y - 2;
+        this.mouseY2 = (int) (y + 15 * scale);
     }
 
     @Override
@@ -40,6 +41,10 @@ public class ItemFilterFieldPreview extends ItemFilterField implements IField {
     public ItemStack getStack() {
         if (ticker >= 200 || ticker == 0) {
             stack = ItemHelper.getRandomItem(getFilters());
+            if (object instanceof IStackSizeable) {
+                stack.stackSize = ((IStackSizeable)object).getStackSize();
+            }
+            
             ticker = 1;
         }
 

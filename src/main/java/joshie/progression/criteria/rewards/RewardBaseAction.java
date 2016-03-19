@@ -6,11 +6,12 @@ import java.util.UUID;
 import org.lwjgl.input.Mouse;
 
 import joshie.progression.Progression;
-import joshie.progression.api.IField;
 import joshie.progression.api.IFilter;
 import joshie.progression.api.IHasEventBus;
 import joshie.progression.api.ISetterCallback;
-import joshie.progression.api.gui.ISpecialFieldProvider;
+import joshie.progression.api.fields.IField;
+import joshie.progression.api.fields.ISpecialFieldProvider;
+import joshie.progression.api.fields.ISpecialFieldProvider.DisplayMode;
 import joshie.progression.crafting.ActionType;
 import joshie.progression.crafting.CraftingRegistry;
 import joshie.progression.gui.fields.ItemFilterFieldPreview;
@@ -34,15 +35,20 @@ public abstract class RewardBaseAction extends RewardBaseItemFilter implements I
     }
 
     @Override
-    public void addSpecialFields(List<IField> fields) {
-        fields.add(new ItemFilterFieldPreview("filters", this, 25, 30, 26, 70, 25, 75, 2.8F));
+    public boolean shouldReflectionSkipField(String name) {
+        return name.equals("filters");
+    }
+
+    @Override
+    public void addSpecialFields(List<IField> fields, DisplayMode mode) {
+        if (mode == DisplayMode.EDIT) fields.add(new ItemFilterFieldPreview("filters", this, 25, 30, 2.8F));
     }
 
     @Override
     public EventBus getEventBus() {
         return MinecraftForge.EVENT_BUS;
     }
-    
+
     @Override
     public void reward(UUID uuid) {}
 
@@ -64,13 +70,13 @@ public abstract class RewardBaseAction extends RewardBaseItemFilter implements I
             int y = Mouse.getY();
             MCClientHelper.getPlayer().closeScreen();
             GuiItemFilterEditor.INSTANCE.switching = true;
-            
+
             onRemoved();
             filters = (List<IFilter>) object;
             onAdded();
-            
+
             //Reopen the gui
-            
+
             MCClientHelper.getPlayer().openGui(Progression.instance, GuiIDs.ITEM, MCClientHelper.getWorld(), 0, 0, 0);
             Mouse.setCursorPosition(x, y);
             return true;

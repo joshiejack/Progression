@@ -4,6 +4,8 @@ progression.new.trigger=Add New Task
 progression.trigger.breakBlock=Break Block
 progression.trigger.openContainer=Open Inventory
 progression.trigger.clickBlock=Click Block
+progression.trigger.clickBlock.cancel=Clicking any of these blocks will not work
+progression.trigger.clickBlock.description=Click on any of the blocks displayed %s times
 progression.trigger.changeDimension=Dimension
 progression.trigger.kill=Kill
 progression.trigger.crafting=Crafting
@@ -30,6 +32,7 @@ progression.reward.time=Time
 progression.reward.criteria=Criteria
 progression.reward.speed=Speed
 progression.reward.item=Give Item
+progression.reward.item.display=Receive Item
 progression.reward.command=Command
 progression.reward.points=Points
 progression.reward.boolean=True/False
@@ -67,6 +70,8 @@ progression.filter.item.blockStack=Block Stacks
 progression.filter.item.blockState=Block State
 progression.filter.item.blockOre=Block Ore
 progression.filter.item.blockMod=Block Mod
+
+progression.display.condition=View Conditions
 
 achievement.criteria=Criteria Complete
 progression.name.display=Name

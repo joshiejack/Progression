@@ -1,4 +1,4 @@
-package joshie.progression.api;
+package joshie.progression.api.fields;
 
 import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 

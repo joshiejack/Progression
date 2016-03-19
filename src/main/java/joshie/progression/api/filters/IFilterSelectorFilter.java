@@ -1,9 +1,10 @@
-package joshie.progression.gui.newversion.overlays;
+package joshie.progression.api.filters;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import joshie.progression.api.IFilter.FilterType;
+import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 
 public interface IFilterSelectorFilter {
     /** Returns the filter type **/

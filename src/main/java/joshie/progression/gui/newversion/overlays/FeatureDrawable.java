@@ -7,12 +7,13 @@ import java.util.List;
 
 import joshie.progression.Progression;
 import joshie.progression.api.IEnum;
-import joshie.progression.api.IField;
-import joshie.progression.api.IFieldProvider;
 import joshie.progression.api.ITriggerType;
+import joshie.progression.api.fields.IField;
+import joshie.progression.api.fields.IFieldProvider;
+import joshie.progression.api.fields.ISpecialFieldProvider;
+import joshie.progression.api.fields.ISpecialFieldProvider.DisplayMode;
 import joshie.progression.api.gui.ICustomDrawGuiDisplay;
 import joshie.progression.api.gui.ICustomDrawGuiEditor;
-import joshie.progression.api.gui.ISpecialFieldProvider;
 import joshie.progression.gui.fields.BooleanField;
 import joshie.progression.gui.fields.EnumField;
 import joshie.progression.gui.fields.ItemFilterField;
@@ -50,14 +51,15 @@ public class FeatureDrawable extends FeatureAbstract {
 
     private int ticker = 0;
 
-    private List<IField> getFields(IFieldProvider provider) {
+    private List<IField> getFields(IFieldProvider provider, DisplayMode mode) {
         if (fieldsMap.containsKey(provider)) return fieldsMap.get(provider);
         else {
             List<IField> fields = new ArrayList();
-            addFieldsViaReflection(provider, fields);
+            if (mode == DisplayMode.EDIT) addFieldsViaReflection(provider, fields);
+            boolean hideitemfields = false;
             if (provider instanceof ISpecialFieldProvider) {
                 ISpecialFieldProvider special = (ISpecialFieldProvider) provider;
-                special.addSpecialFields(fields);
+                special.addSpecialFields(fields, mode);
             }
 
             fieldsMap.put(provider, fields);
@@ -67,6 +69,10 @@ public class FeatureDrawable extends FeatureAbstract {
 
     private void addFieldsViaReflection(IFieldProvider provider, List<IField> fields) {
         for (Field field : provider.getClass().getFields()) {
+            if (provider instanceof ISpecialFieldProvider) {
+                if (((ISpecialFieldProvider) provider).shouldReflectionSkipField(field.getName())) continue;
+            }
+
             if (field.getClass().isEnum()) fields.add(new EnumField(field.getName(), (IEnum) provider));
             if (field.getType() == boolean.class) fields.add(new BooleanField(field.getName(), provider));
             if (field.getType() == String.class) fields.add(new TextField(field.getName(), provider));
@@ -87,45 +93,46 @@ public class FeatureDrawable extends FeatureAbstract {
             ticker = 1;
         }
 
-        int width = MCClientHelper.isInEditMode() ? 99 : 79;
+        int width = MCClientHelper.isInEditMode() ? 99 : 99;
         helper.drawGradient(renderX, renderY, 1, 2, width, 15, drawing.getColor(), gradient1, gradient2);
         helper.drawText(renderX, renderY, drawing.getLocalisedName(), 6, 6, fontColor);
-        if (MCClientHelper.isInEditMode()) {
-            ICustomDrawGuiEditor editor = drawing instanceof ICustomDrawGuiEditor ? ((ICustomDrawGuiEditor) drawing) : null;
-            if (editor == null || (editor != null && !editor.hideDefaultEditor())) {
-                int yStart = 18;
-                int index = 0;
-                for (IField t : getFields(drawing)) {
-                    int color = Theme.INSTANCE.optionsFontColor;
-                    int yPos = yStart + (index * 6);
-                    if (MCClientHelper.canEdit()) {
-                        if (mouseX >= 1 && mouseX <= 84) {
-                            if (mouseY >= yPos && mouseY < yPos + 6) {
-                                color = Theme.INSTANCE.optionsFontColorHover;
-                                List<String> tooltip = new ArrayList();
-                                for (int i = 0; i < 5; i++) {
-                                    String untranslated = "tooltip." + drawing.getUnlocalisedName() + "." + t.getFieldName() + "." + i;
-                                    String translated = Progression.translate(untranslated);
-                                    if (!("progression." + untranslated).equals(translated)) {
-                                        FeatureTooltip.INSTANCE.addTooltip(translated);
-                                    }
+
+        ICustomDrawGuiEditor editor = drawing instanceof ICustomDrawGuiEditor ? ((ICustomDrawGuiEditor) drawing) : null;
+        if (editor == null || (editor != null && !editor.hideDefaultEditor())) {
+            DisplayMode mode = MCClientHelper.isInEditMode() ? DisplayMode.EDIT : DisplayMode.DISPLAY;
+            int yStart = 18;
+            int index = 0;
+            for (IField t : getFields(drawing, mode)) {
+                int color = Theme.INSTANCE.optionsFontColor;
+                int yPos = yStart + (index * 6);
+                if (MCClientHelper.canEdit()) {
+                    if (mouseX >= 1 && mouseX <= 84) {
+                        if (mouseY >= yPos && mouseY < yPos + 6) {
+                            if (mode == DisplayMode.EDIT) color = Theme.INSTANCE.optionsFontColorHover;
+                            List<String> tooltip = new ArrayList();
+                            for (int i = 0; i < 5; i++) {
+                                String untranslated = mode.name().toLowerCase() + ".tooltip." + drawing.getUnlocalisedName() + "." + t.getFieldName() + "." + i;
+                                String translated = Progression.translate(untranslated);
+                                if (!("progression." + untranslated).equals(translated)) {
+                                    FeatureTooltip.INSTANCE.addTooltip(translated);
                                 }
                             }
                         }
                     }
-
-                    t.draw(helper, renderX, renderY, color, yPos, mouseX, mouseY);
-                    index++;
                 }
 
-                if (editor != null) editor.drawEditor(offset, renderX, renderY, mouseX, mouseY);
+                t.draw(helper, renderX, renderY, color, yPos, mouseX, mouseY);
+                index++;
             }
-        } else {
-            ICustomDrawGuiDisplay display = drawing instanceof ICustomDrawGuiDisplay ? ((ICustomDrawGuiDisplay) drawing) : null;
-            if (display == null) {
-                helper.drawSplitText(renderX, renderY, drawing.getDescription(), 6, 20, 80, fontColor);
-                //Draw Shit
-            } else display.drawDisplay(offset, renderX, renderY, mouseX, mouseY);
+
+            if (editor != null) editor.drawEditor(offset, renderX, renderY, mouseX, mouseY);
+            if (mode == DisplayMode.DISPLAY) {
+                ICustomDrawGuiDisplay display = drawing instanceof ICustomDrawGuiDisplay ? ((ICustomDrawGuiDisplay) drawing) : null;
+                if (display == null) {
+                    helper.drawSplitText(renderX, renderY, drawing.getDescription(), 6, 20, 125, fontColor, 0.75F);
+                    //Draw Shit
+                } else display.drawDisplay(offset, renderX, renderY, mouseX, mouseY);
+            }
         }
     }
 
@@ -186,7 +193,7 @@ public class FeatureDrawable extends FeatureAbstract {
             if (editor == null || (editor != null && !editor.hideDefaultEditor())) {
                 int yStart = 18;
                 int index = 0;
-                for (IField t : getFields(provider)) {
+                for (IField t : getFields(provider, DisplayMode.EDIT)) {
                     if (t.attemptClick(mouseX, mouseY)) {
                         return true;
                     }

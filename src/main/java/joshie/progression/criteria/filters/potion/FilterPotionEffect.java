@@ -6,10 +6,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import joshie.progression.api.IField;
 import joshie.progression.api.IInitAfterRead;
 import joshie.progression.api.ISetterCallback;
-import joshie.progression.api.gui.ISpecialFieldProvider;
+import joshie.progression.api.fields.IField;
+import joshie.progression.api.fields.ISpecialFieldProvider;
+import joshie.progression.api.fields.ISpecialFieldProvider.DisplayMode;
 import joshie.progression.criteria.filters.item.FilterBaseItem;
 import joshie.progression.gui.fields.ItemField;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
@@ -21,7 +22,7 @@ import net.minecraft.potion.PotionEffect;
 public class FilterPotionEffect extends FilterBaseItem implements ISetterCallback, IInitAfterRead, ISpecialFieldProvider {
     private static final List<PotionEffect> EMPTY = new ArrayList();
     public int potionid = 16385; //Splash Potion of Regen, 33 seconds
-    public ItemStack item;
+    public ItemStack stack;
     private List<PotionEffect> effects;
     private Set<Integer> ids;
 
@@ -36,8 +37,13 @@ public class FilterPotionEffect extends FilterBaseItem implements ISetterCallbac
     }
 
     @Override
-    public void addSpecialFields(List<IField> fields) {
-        fields.add(new ItemField("item", this, 25, 25, 3F, 26, 70, 25, 75, Type.TRIGGER, PotionFilter.INSTANCE));
+    public boolean shouldReflectionSkipField(String name) {
+        return name.equals("stack");
+    }
+
+    @Override
+    public void addSpecialFields(List<IField> fields, DisplayMode mode) {
+        if (mode == DisplayMode.EDIT) fields.add(new ItemField("stack", this, 25, 25, 3F, 26, 70, 25, 75, Type.TRIGGER, PotionFilter.INSTANCE));
     }
 
     @Override
@@ -60,7 +66,7 @@ public class FilterPotionEffect extends FilterBaseItem implements ISetterCallbac
     private void setupEffectsItemsIDs() {
         effects = getEffects(potionid);
         ids = getIds(effects);
-        item = new ItemStack(Items.potionitem, 1, potionid);
+        stack = new ItemStack(Items.potionitem, 1, potionid);
     }
 
     @Override

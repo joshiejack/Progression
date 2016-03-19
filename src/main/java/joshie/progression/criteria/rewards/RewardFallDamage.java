@@ -20,7 +20,6 @@ public class RewardFallDamage extends RewardBase implements IHasEventBus {
 
     public RewardFallDamage() {
         super(new ItemStack(Items.feather), "fallDamage", 0xFF661A00);
-        list.add(new TextField("absorption", this));
     }
 
     @Override

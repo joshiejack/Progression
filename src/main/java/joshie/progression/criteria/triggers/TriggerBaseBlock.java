@@ -1,10 +1,10 @@
 package joshie.progression.criteria.triggers;
 
-import joshie.progression.api.ISpecialFilters;
-import joshie.progression.gui.newversion.overlays.IFilterSelectorFilter;
-import joshie.progression.gui.selector.filters.BlockFilter;
 import joshie.progression.api.ICancelable;
 import joshie.progression.api.IFilter;
+import joshie.progression.api.ISpecialFilters;
+import joshie.progression.api.ProgressionAPI;
+import joshie.progression.api.filters.IFilterSelectorFilter;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
@@ -38,6 +38,6 @@ public class TriggerBaseBlock extends TriggerBaseItemFilter implements ICancelab
     
     @Override
     public IFilterSelectorFilter getFilterForField(String fieldName) {
-        return BlockFilter.INSTANCE;
+        return ProgressionAPI.filters.getBlockFilter();
     }
 }

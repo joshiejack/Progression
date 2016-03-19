@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import joshie.progression.api.IFilter.FilterType;
-import joshie.progression.gui.newversion.overlays.IFilterSelectorFilter;
+import joshie.progression.api.filters.IFilterSelectorFilter;
 import joshie.progression.lib.WorldLocation;
 
 public class LocationFilter extends FilterBase {

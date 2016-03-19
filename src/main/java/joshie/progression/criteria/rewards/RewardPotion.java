@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import joshie.enchiridion.helpers.MCClientHelper;
 import joshie.progression.api.ISpecialFilters;
-import joshie.progression.gui.newversion.overlays.IFilterSelectorFilter;
+import joshie.progression.api.filters.IFilterSelectorFilter;
 import joshie.progression.gui.selector.filters.PotionFilter;
 import joshie.progression.helpers.ItemHelper;
 import joshie.progression.helpers.PlayerHelper;

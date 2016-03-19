@@ -2,10 +2,10 @@ package joshie.progression.criteria.triggers;
 
 import java.util.List;
 
-import joshie.progression.api.IField;
 import joshie.progression.api.IFilter;
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.gui.ISpecialFieldProvider;
+import joshie.progression.api.fields.IField;
+import joshie.progression.api.fields.ISpecialFieldProvider;
 import joshie.progression.gui.fields.ItemFilterFieldPreview;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
@@ -20,10 +20,15 @@ public class TriggerItemEaten extends TriggerBaseItemFilter implements ISpecialF
     public void onEvent(PlayerUseItemEvent.Finish event) {
         ProgressionAPI.registry.fireTrigger(event.entityPlayer, getUnlocalisedName(), event.item);
     }
+    
+    @Override
+    public boolean shouldReflectionSkipField(String name) {
+        return name.equals("filters");
+    }
 
     @Override
-    public void addSpecialFields(List<IField> fields) {
-        fields.add(new ItemFilterFieldPreview("filters", this, 25, 30, 26, 70, 25, 75, 2.8F));
+    public void addSpecialFields(List<IField> fields, DisplayMode mode) {
+        fields.add(new ItemFilterFieldPreview("filters", this, 25, 30, 2.8F));
     }
 
     @Override

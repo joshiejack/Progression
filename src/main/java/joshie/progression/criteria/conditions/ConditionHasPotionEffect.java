@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import joshie.progression.api.IFilter;
 import joshie.progression.api.ISpecialFilters;
-import joshie.progression.gui.newversion.overlays.IFilterSelectorFilter;
+import joshie.progression.api.filters.IFilterSelectorFilter;
 import joshie.progression.gui.selector.filters.PotionFilter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;

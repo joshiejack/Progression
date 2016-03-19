@@ -5,12 +5,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import joshie.progression.api.IField;
 import joshie.progression.api.IFilter;
 import joshie.progression.api.ISetterCallback;
 import joshie.progression.api.ISpecialFilters;
-import joshie.progression.api.gui.ISpecialFieldProvider;
-import joshie.progression.gui.newversion.overlays.IFilterSelectorFilter;
+import joshie.progression.api.fields.IField;
+import joshie.progression.api.fields.ISpecialFieldProvider;
+import joshie.progression.api.filters.IFilterSelectorFilter;
 import joshie.progression.gui.selector.filters.EntityFilter;
 import joshie.progression.gui.selector.filters.LocationFilter;
 import joshie.progression.helpers.EntityHelper;
@@ -25,7 +25,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 
-public class RewardSpawnEntity extends RewardBase implements ISpecialFieldProvider, ISpecialFilters, ISetterCallback {
+public class RewardSpawnEntity extends RewardBase implements ISpecialFilters, ISetterCallback {
     public List<IFilter> locations = new ArrayList();
     public List<IFilter> entities = new ArrayList();
     public NBTTagCompound tagValue = new NBTTagCompound();
@@ -36,12 +36,7 @@ public class RewardSpawnEntity extends RewardBase implements ISpecialFieldProvid
     public RewardSpawnEntity() {
         super("entity", 0xFFE599FF);
     }
-
-    @Override
-    public void addSpecialFields(List<IField> fields) {
-        //fields.add(new ItemFilterFieldPreview("filters", this, 25, 30, 26, 70, 25, 75, 2.8F));
-    }
-
+    
     @Override
     public void reward(UUID uuid) {
         List<EntityPlayerMP> players = PlayerHelper.getPlayersFromUUID(uuid);

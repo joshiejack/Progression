@@ -2,6 +2,8 @@ package joshie.progression.api;
 
 import java.util.List;
 
+import joshie.progression.api.fields.IFieldProvider;
+
 public interface IFilter extends IFieldProvider {
     /** Return true if the pass in object, matches this filter.
      *  Keep in mind this can pass in entities, itemstack,

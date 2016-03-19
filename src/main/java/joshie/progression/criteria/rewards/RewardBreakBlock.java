@@ -1,8 +1,8 @@
 package joshie.progression.criteria.rewards;
 
 import joshie.progression.api.ISpecialFilters;
+import joshie.progression.api.filters.IFilterSelectorFilter;
 import joshie.progression.crafting.ActionType;
-import joshie.progression.gui.newversion.overlays.IFilterSelectorFilter;
 import joshie.progression.gui.selector.filters.BlockFilter;
 import joshie.progression.handlers.CraftingEvents;
 import joshie.progression.helpers.BlockActionHelper;

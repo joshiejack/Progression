@@ -3,6 +3,7 @@ package joshie.progression.api;
 import java.util.List;
 import java.util.UUID;
 
+import joshie.progression.api.fields.IFieldProvider;
 import net.minecraft.item.ItemStack;
 
 public interface ITriggerType extends IFieldProvider, IHasEventBus {

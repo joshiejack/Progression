@@ -5,13 +5,12 @@ import java.util.List;
 
 import joshie.progression.Progression;
 import joshie.progression.api.ICriteria;
-import joshie.progression.api.IField;
 import joshie.progression.api.IRewardType;
+import joshie.progression.api.fields.IField;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
 public abstract class RewardBase implements IRewardType {
-    protected List<IField> list = new ArrayList();
     protected ICriteria criteria;
     private String name;
     private int color;

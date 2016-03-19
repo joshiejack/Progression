@@ -11,7 +11,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import joshie.progression.Progression;
-import joshie.progression.api.IField;
+import joshie.progression.api.fields.IField;
 import joshie.progression.gui.newversion.overlays.FeatureBackground;
 import joshie.progression.gui.newversion.overlays.FeatureFooter;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector;

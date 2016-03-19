@@ -5,12 +5,12 @@ import java.lang.reflect.Field;
 import joshie.progression.api.IItemGetterCallback;
 import joshie.progression.api.ISetterCallback;
 import joshie.progression.api.ISpecialFilters;
+import joshie.progression.api.filters.IFilterSelectorFilter;
 import joshie.progression.gui.editors.IItemSelectable;
 import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
 import joshie.progression.gui.newversion.overlays.FeatureTooltip;
-import joshie.progression.gui.newversion.overlays.IFilterSelectorFilter;
 import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.item.ItemStack;
 
@@ -32,10 +32,10 @@ public class ItemField extends AbstractField implements IItemSelectable {
         this.x = x;
         this.y = y;
         this.scale = scale;
-        this.mouseX1 = mouseX1;
-        this.mouseX2 = mouseX2;
-        this.mouseY1 = mouseY1;
-        this.mouseY2 = mouseY2;
+        this.mouseX1 = x;
+        this.mouseX2 = (int) (x + 14 * scale);
+        this.mouseY1 = y - 2;
+        this.mouseY2 = (int) (y + 15 * scale);
         this.type = type;
         if (object instanceof ISpecialFilters) {
             this.filter = ((ISpecialFilters) object).getFilterForField(fieldName);

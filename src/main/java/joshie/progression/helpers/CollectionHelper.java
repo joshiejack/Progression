@@ -5,10 +5,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import joshie.progression.api.IConditionType;
-import joshie.progression.api.IFieldProvider;
 import joshie.progression.api.IFilter;
 import joshie.progression.api.IRewardType;
 import joshie.progression.api.ITriggerType;
+import joshie.progression.api.fields.IFieldProvider;
 import joshie.progression.gui.newversion.GuiConditionEditor;
 import joshie.progression.gui.newversion.GuiCriteriaEditor;
 import joshie.progression.gui.newversion.GuiItemFilterEditor;

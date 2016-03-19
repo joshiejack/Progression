@@ -2,10 +2,11 @@ package joshie.progression.criteria.filters.block;
 
 import java.util.List;
 
-import joshie.progression.api.IField;
 import joshie.progression.api.IInitAfterRead;
 import joshie.progression.api.ISetterCallback;
-import joshie.progression.api.gui.ISpecialFieldProvider;
+import joshie.progression.api.fields.IField;
+import joshie.progression.api.fields.ISpecialFieldProvider;
+import joshie.progression.api.fields.ISpecialFieldProvider.DisplayMode;
 import joshie.progression.gui.fields.ItemField;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
 import joshie.progression.gui.selector.filters.BlockFilter;
@@ -25,8 +26,15 @@ public class FilterBlockStack extends FilterBaseBlock implements ISpecialFieldPr
     }
 
     @Override
-    public void addSpecialFields(List<IField> fields) {
-        fields.add(new ItemField("stack", this, 30, 35, 2.4F, 77, 100, 43, 68, Type.TRIGGER, BlockFilter.INSTANCE));
+    public boolean shouldReflectionSkipField(String name) {
+        return name.equals("stack");
+    }
+
+    @Override
+    public void addSpecialFields(List<IField> fields, DisplayMode mode) {
+        if (mode == DisplayMode.EDIT) {
+            fields.add(new ItemField("stack", this, 30, 35, 2.4F, 77, 100, 43, 68, Type.TRIGGER, BlockFilter.INSTANCE));
+        }
     }
 
     @Override

@@ -17,6 +17,7 @@ import joshie.progression.commands.CommandHelp;
 import joshie.progression.commands.CommandManager;
 import joshie.progression.commands.CommandReload;
 import joshie.progression.commands.CommandReset;
+import joshie.progression.criteria.conditions.ConditionAchievement;
 import joshie.progression.criteria.conditions.ConditionBiomeType;
 import joshie.progression.criteria.conditions.ConditionBoolean;
 import joshie.progression.criteria.conditions.ConditionCoordinates;
@@ -74,6 +75,8 @@ import joshie.progression.criteria.triggers.TriggerObtain;
 import joshie.progression.criteria.triggers.TriggerPoints;
 import joshie.progression.criteria.triggers.TriggerTick;
 import joshie.progression.enchiridion.EnchiridionSupport;
+import joshie.progression.gui.fields.FieldRegistry;
+import joshie.progression.gui.selector.filters.FilterSelectorHelper;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.handlers.CraftingEvents;
 import joshie.progression.handlers.EventsHandler;
@@ -162,6 +165,8 @@ public class Progression {
         JEI_LOADED = Loader.isModLoaded("JEI");
         ProgressionAPI.registry = new APIHandler();
         ProgressionAPI.player = new PlayerHandler();
+        ProgressionAPI.filters = new FilterSelectorHelper();
+        ProgressionAPI.fields = new FieldRegistry();
         MinecraftForge.EVENT_BUS.register(new PlayerTracker());
         MinecraftForge.EVENT_BUS.register(CommandManager.INSTANCE);
         MinecraftForge.EVENT_BUS.register(new EventsHandler());
@@ -209,6 +214,7 @@ public class Progression {
         ProgressionAPI.registry.registerConditionType(new ConditionHasCriteria());
         ProgressionAPI.registry.registerConditionType(new ConditionBoolean());
         ProgressionAPI.registry.registerConditionType(new ConditionPoints());
+        ProgressionAPI.registry.registerConditionType(new ConditionAchievement());
         
         ProgressionAPI.registry.registerRewardType(new RewardCommand());
         ProgressionAPI.registry.registerRewardType(new RewardCriteria());
@@ -309,4 +315,8 @@ public class Progression {
 	public static String translate(String string) {
 		return StatCollector.translateToLocal("progression." + string);
 	}
+
+    public static String format(String string, Object... object) {
+        return StatCollector.translateToLocalFormatted("progression." + string, object);
+    }
 }

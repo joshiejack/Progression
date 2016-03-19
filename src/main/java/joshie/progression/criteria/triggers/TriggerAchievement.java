@@ -29,6 +29,6 @@ public class TriggerAchievement extends TriggerBaseBoolean implements IHasEventB
 
     @Override
     protected boolean isTrue(Object... data) {
-        return ((Achievement) data[0]).statId.equals(id);
+        return ((Achievement) data[0]).statId.equals("achievement." + id);
     }
 }

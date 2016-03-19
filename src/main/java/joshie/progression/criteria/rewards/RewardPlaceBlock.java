@@ -5,10 +5,11 @@ import java.util.UUID;
 
 import joshie.progression.Progression;
 import joshie.progression.api.ISpecialFilters;
-import joshie.progression.api.IField;
-import joshie.progression.api.gui.ISpecialFieldProvider;
+import joshie.progression.api.fields.IField;
+import joshie.progression.api.fields.ISpecialFieldProvider;
+import joshie.progression.api.fields.ISpecialFieldProvider.DisplayMode;
+import joshie.progression.api.filters.IFilterSelectorFilter;
 import joshie.progression.gui.fields.ItemFilterFieldPreview;
-import joshie.progression.gui.newversion.overlays.IFilterSelectorFilter;
 import joshie.progression.gui.selector.filters.BlockFilter;
 import joshie.progression.helpers.ItemHelper;
 import net.minecraft.block.Block;
@@ -29,8 +30,13 @@ public class RewardPlaceBlock extends RewardBaseItemFilter implements ISpecialFi
     }
 
     @Override
-    public void addSpecialFields(List<IField> fields) {
-        fields.add(new ItemFilterFieldPreview("filters", this, 25, 30, 26, 70, 25, 75, 2.8F));
+    public boolean shouldReflectionSkipField(String name) {
+        return name.equals("filters");
+    }
+
+    @Override
+    public void addSpecialFields(List<IField> fields, DisplayMode mode) {
+        if (mode == DisplayMode.EDIT) fields.add(new ItemFilterFieldPreview("filters", this, 25, 30, 2.8F));
     }
 
     @Override

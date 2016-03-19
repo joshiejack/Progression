@@ -2,10 +2,10 @@ package joshie.progression.criteria.filters.block;
 
 import java.util.List;
 
-import joshie.progression.api.IField;
 import joshie.progression.api.IItemGetterCallback;
 import joshie.progression.api.ISetterCallback;
-import joshie.progression.api.gui.ISpecialFieldProvider;
+import joshie.progression.api.fields.IField;
+import joshie.progression.api.fields.ISpecialFieldProvider;
 import joshie.progression.gui.fields.ItemField;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
 import joshie.progression.gui.selector.filters.BlockFilter;
@@ -22,8 +22,15 @@ public class FilterBlock extends FilterBaseBlock implements IItemGetterCallback,
     }
 
     @Override
-    public void addSpecialFields(List<IField> fields) {
-        fields.add(new ItemField("filterBlock", this, 25, 25, 3F, 26, 70, 25, 75, Type.TRIGGER, BlockFilter.INSTANCE));
+    public boolean shouldReflectionSkipField(String name) {
+        return true;
+    }
+
+    @Override
+    public void addSpecialFields(List<IField> fields, DisplayMode mode) {
+        if (mode == DisplayMode.EDIT) {
+            fields.add(new ItemField("filterBlock", this, 25, 25, 3F, 26, 70, 25, 75, Type.TRIGGER, BlockFilter.INSTANCE));
+        }
     }
 
     @Override

@@ -1,4 +1,4 @@
-package joshie.progression.api;
+package joshie.progression.api.fields;
 
 public interface IFieldProvider {
     /** Return an unlocalised name **/

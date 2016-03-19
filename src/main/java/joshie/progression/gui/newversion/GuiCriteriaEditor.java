@@ -58,11 +58,14 @@ public class GuiCriteriaEditor extends GuiCore implements IBarProvider {
         //Create Fields
         fields.clear(); //Reset the fields
         fields.put("name", new TextField("displayName", criteria));
-        fields.put("popup", new BooleanField("achievement", criteria));
-        fields.put("allTasks", new BooleanFieldHideable("allTasks", criteria));
-        fields.put("infinite", new BooleanFieldHideable("infinite", criteria));
-        fields.put("tasksRequired", new TextFieldHideable((BooleanFieldHideable) fields.get("allTasks"), "tasksRequired", criteria));
-        fields.put("repeatAmount", new TextFieldHideable((BooleanFieldHideable) fields.get("infinite"), "isRepeatable", criteria));
+
+        if (MCClientHelper.isInEditMode()) {
+            fields.put("popup", new BooleanField("achievement", criteria));
+            fields.put("allTasks", new BooleanFieldHideable("allTasks", criteria));
+            fields.put("infinite", new BooleanFieldHideable("infinite", criteria));
+            fields.put("tasksRequired", new TextFieldHideable((BooleanFieldHideable) fields.get("allTasks"), "tasksRequired", criteria));
+            fields.put("repeatAmount", new TextFieldHideable((BooleanFieldHideable) fields.get("infinite"), "isRepeatable", criteria));
+        }
     }
 
     @Override
@@ -71,55 +74,60 @@ public class GuiCriteriaEditor extends GuiCore implements IBarProvider {
         String unformatted = fields.get("name").getField();
         String displayName = MCClientHelper.isInEditMode() ? Progression.translate("name.display") + ": " + unformatted : unformatted;
         drawText(displayName, 21, 9, theme.criteriaEditDisplayNameColor);
-        drawText(Progression.translate("tasks") + ": " + fields.get("tasksRequired").getField() + fields.get("allTasks").getField(), screenWidth - 240, 9, theme.criteriaEditDisplayNameColor);
-        drawText(Progression.translate("popup") + ": " + fields.get("popup").getField(), screenWidth - 170, 9, theme.criteriaEditDisplayNameColor);
-        String repeatAmount = fields.get("repeatAmount").getField();
-        drawText(Progression.translate("repeat") + ": " + (repeatAmount.equals("") ? fields.get("infinite").getField() : repeatAmount + "x"), screenWidth - 90, 9, theme.criteriaEditDisplayNameColor);
-        if (mouseY >= 8 && mouseY <= 18) {
-            int rightAdjustedMouse = screenWidth - mouseX;
-            if (rightAdjustedMouse >= 175 && rightAdjustedMouse <= 240) {
-                FeatureTooltip.INSTANCE.addTooltip(EnumChatFormatting.BOLD + "Tasks Required");
-                FeatureTooltip.INSTANCE.addTooltip("  Number of tasks required to");
-                FeatureTooltip.INSTANCE.addTooltip("  complete this criteria.");
-                FeatureTooltip.INSTANCE.addTooltip("  ");
-                if (fields.get("allTasks").getField().equals("")) FeatureTooltip.INSTANCE.addTooltip(EnumChatFormatting.ITALIC + "  Right click to make all required");
-                else FeatureTooltip.INSTANCE.addTooltip(EnumChatFormatting.ITALIC + "  Right click to edit amount");
-            } else if (rightAdjustedMouse >= 100 && rightAdjustedMouse <= 170) {
-                FeatureTooltip.INSTANCE.addTooltip(EnumChatFormatting.BOLD + "Popup Displayed");
-                FeatureTooltip.INSTANCE.addTooltip("  Whether an achievement style");
-                FeatureTooltip.INSTANCE.addTooltip("  popup will appear for this");
-                FeatureTooltip.INSTANCE.addTooltip("  criteria or not.");
-            } else if (rightAdjustedMouse >= 10 && rightAdjustedMouse <= 90) {
-                FeatureTooltip.INSTANCE.addTooltip(EnumChatFormatting.BOLD + "Repeatability");
-                FeatureTooltip.INSTANCE.addTooltip("  How many times this criteria");
-                FeatureTooltip.INSTANCE.addTooltip("  can be completed to obtain");
-                FeatureTooltip.INSTANCE.addTooltip("  the rewards given.");
-                FeatureTooltip.INSTANCE.addTooltip("  ");
-                if (fields.get("infinite").getField().equals("")) FeatureTooltip.INSTANCE.addTooltip(EnumChatFormatting.ITALIC + "  Right click for infinite");
-                else FeatureTooltip.INSTANCE.addTooltip(EnumChatFormatting.ITALIC + "  Right click to edit numbers");
+
+        if (MCClientHelper.isInEditMode()) {
+            drawText(Progression.translate("tasks") + ": " + fields.get("tasksRequired").getField() + fields.get("allTasks").getField(), screenWidth - 240, 9, theme.criteriaEditDisplayNameColor);
+            drawText(Progression.translate("popup") + ": " + fields.get("popup").getField(), screenWidth - 170, 9, theme.criteriaEditDisplayNameColor);
+            String repeatAmount = fields.get("repeatAmount").getField();
+            drawText(Progression.translate("repeat") + ": " + (repeatAmount.equals("") ? fields.get("infinite").getField() : repeatAmount + "x"), screenWidth - 90, 9, theme.criteriaEditDisplayNameColor);
+            if (mouseY >= 8 && mouseY <= 18) {
+                int rightAdjustedMouse = screenWidth - mouseX;
+                if (rightAdjustedMouse >= 175 && rightAdjustedMouse <= 240) {
+                    FeatureTooltip.INSTANCE.addTooltip(EnumChatFormatting.BOLD + "Tasks Required");
+                    FeatureTooltip.INSTANCE.addTooltip("  Number of tasks required to");
+                    FeatureTooltip.INSTANCE.addTooltip("  complete this criteria.");
+                    FeatureTooltip.INSTANCE.addTooltip("  ");
+                    if (fields.get("allTasks").getField().equals("")) FeatureTooltip.INSTANCE.addTooltip(EnumChatFormatting.ITALIC + "  Right click to make all required");
+                    else FeatureTooltip.INSTANCE.addTooltip(EnumChatFormatting.ITALIC + "  Right click to edit amount");
+                } else if (rightAdjustedMouse >= 100 && rightAdjustedMouse <= 170) {
+                    FeatureTooltip.INSTANCE.addTooltip(EnumChatFormatting.BOLD + "Popup Displayed");
+                    FeatureTooltip.INSTANCE.addTooltip("  Whether an achievement style");
+                    FeatureTooltip.INSTANCE.addTooltip("  popup will appear for this");
+                    FeatureTooltip.INSTANCE.addTooltip("  criteria or not.");
+                } else if (rightAdjustedMouse >= 10 && rightAdjustedMouse <= 90) {
+                    FeatureTooltip.INSTANCE.addTooltip(EnumChatFormatting.BOLD + "Repeatability");
+                    FeatureTooltip.INSTANCE.addTooltip("  How many times this criteria");
+                    FeatureTooltip.INSTANCE.addTooltip("  can be completed to obtain");
+                    FeatureTooltip.INSTANCE.addTooltip("  the rewards given.");
+                    FeatureTooltip.INSTANCE.addTooltip("  ");
+                    if (fields.get("infinite").getField().equals("")) FeatureTooltip.INSTANCE.addTooltip(EnumChatFormatting.ITALIC + "  Right click for infinite");
+                    else FeatureTooltip.INSTANCE.addTooltip(EnumChatFormatting.ITALIC + "  Right click to edit numbers");
+                }
             }
         }
     }
 
     @Override
     public boolean guiMouseClicked(int mouseX, int mouseY, int button) {
-        if (mouseY >= 8 && mouseY <= 18) {
-            int rightAdjustedMouse = screenWidth - mouseX;
-            if (rightAdjustedMouse >= 175 && rightAdjustedMouse <= 240) {
-                if (button == 1) {
-                    fields.get("allTasks").click();
-                    TextEditor.INSTANCE.clearEditable();
-                } else fields.get("tasksRequired").click();
-                return true;
-            } else if (rightAdjustedMouse >= 100 && rightAdjustedMouse <= 170) {
-                fields.get("popup").click();
-                return true;
-            } else if (rightAdjustedMouse >= 10 && rightAdjustedMouse <= 90) {
-                if (button == 1) {
-                    fields.get("infinite").click();
-                    TextEditor.INSTANCE.clearEditable();
-                } else fields.get("repeatAmount").click();
-                return true;
+        if (MCClientHelper.isInEditMode()) {
+            if (mouseY >= 8 && mouseY <= 18) {
+                int rightAdjustedMouse = screenWidth - mouseX;
+                if (rightAdjustedMouse >= 175 && rightAdjustedMouse <= 240) {
+                    if (button == 1) {
+                        fields.get("allTasks").click();
+                        TextEditor.INSTANCE.clearEditable();
+                    } else fields.get("tasksRequired").click();
+                    return true;
+                } else if (rightAdjustedMouse >= 100 && rightAdjustedMouse <= 170) {
+                    fields.get("popup").click();
+                    return true;
+                } else if (rightAdjustedMouse >= 10 && rightAdjustedMouse <= 90) {
+                    if (button == 1) {
+                        fields.get("infinite").click();
+                        TextEditor.INSTANCE.clearEditable();
+                    } else fields.get("repeatAmount").click();
+                    return true;
+                }
             }
         }
 

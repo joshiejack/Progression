@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.lwjgl.opengl.GL11;
 
 import joshie.progression.Progression;
+import joshie.progression.api.filters.IFilterSelectorFilter;
 import joshie.progression.gui.GuiCriteriaEditor;
 import joshie.progression.gui.GuiTreeEditor;
 import joshie.progression.gui.editors.EditText.ITextEditable;

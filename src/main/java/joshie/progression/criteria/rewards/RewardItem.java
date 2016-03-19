@@ -4,29 +4,57 @@ import java.util.List;
 import java.util.UUID;
 
 import joshie.progression.Progression;
-import joshie.progression.api.IField;
-import joshie.progression.api.gui.ISpecialFieldProvider;
+import joshie.progression.api.IStackSizeable;
+import joshie.progression.api.fields.IField;
+import joshie.progression.api.fields.ISpecialFieldProvider;
 import joshie.progression.gui.fields.ItemFilterFieldPreview;
 import joshie.progression.helpers.ItemHelper;
+import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.helpers.SpawnItemHelper;
 import joshie.progression.network.PacketHandler;
 import joshie.progression.network.PacketRewardItem;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
-public class RewardItem extends RewardBaseItemFilter implements ISpecialFieldProvider {
+public class RewardItem extends RewardBaseItemFilter implements ISpecialFieldProvider, IStackSizeable {
     public int stackSize = 1;
 
     public RewardItem() {
         super("item", 0xFFE599FF);
     }
+    
+    @Override
+    public int getStackSize() {
+        return stackSize;
+    }
 
     @Override
-    public void addSpecialFields(List<IField> fields) {
-        fields.add(new ItemFilterFieldPreview("filters", this, 25, 30, 26, 70, 25, 75, 2.8F));
+    public boolean shouldReflectionSkipField(String name) {
+        return name.equals("filters");
+    }
+
+    @Override
+    public void addSpecialFields(List<IField> fields, DisplayMode mode) {
+        if (mode == DisplayMode.EDIT) fields.add(new ItemFilterFieldPreview("filters", this, 25, 30, 2.8F));
+        else fields.add(new ItemFilterFieldPreview("filters", this, 25, 25, 2.8F));
+    }
+    
+    @Override
+    public String getLocalisedName() {
+        return MCClientHelper.isInEditMode() ? Progression.translate("reward." + getUnlocalisedName()) : Progression.translate("reward." + getUnlocalisedName() + ".display");
+    }
+    
+    @Override
+    public String getDescription() {
+        return "";
+    }
+    
+    @Override
+    public void addTooltip(List list) {
+        list.add(EnumChatFormatting.WHITE + Progression.translate("item.free"));
+        list.add(getIcon().getDisplayName() + " x" + stackSize);
     }
 
     @Override
@@ -41,11 +69,5 @@ public class RewardItem extends RewardBaseItemFilter implements ISpecialFieldPro
                 }
             }
         }
-    }
-
-    @Override
-    public void addTooltip(List list) {
-        list.add(EnumChatFormatting.WHITE + Progression.translate("item.free"));
-        list.add(getIcon().getDisplayName() + " x" + stackSize);
     }
 }

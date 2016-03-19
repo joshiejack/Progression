@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import joshie.progression.api.IFilter;
-import joshie.progression.gui.newversion.overlays.IFilterSelectorFilter;
+import joshie.progression.api.filters.IFilterSelectorFilter;
 import joshie.progression.gui.selector.filters.BlockFilter;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;

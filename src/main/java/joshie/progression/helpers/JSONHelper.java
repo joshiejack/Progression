@@ -7,10 +7,10 @@ import java.util.List;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import joshie.progression.api.IFieldProvider;
 import joshie.progression.api.IFilter;
 import joshie.progression.api.IInitAfterRead;
 import joshie.progression.api.ISpecialJSON;
+import joshie.progression.api.fields.IFieldProvider;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.lib.ProgressionInfo;
 import net.minecraft.block.Block;

@@ -3,9 +3,9 @@ package joshie.progression.gui.selector.filters;
 import java.util.List;
 
 import joshie.progression.api.IFilter.FilterType;
+import joshie.progression.api.filters.IFilterSelectorFilter;
 import joshie.progression.gui.newversion.GuiItemFilterEditor;
 import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
-import joshie.progression.gui.newversion.overlays.IFilterSelectorFilter;
 import joshie.progression.helpers.EntityHelper;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.Entity;

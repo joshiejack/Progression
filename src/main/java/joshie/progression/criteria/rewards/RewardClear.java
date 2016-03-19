@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.UUID;
 
 import joshie.progression.api.IFilter;
+import joshie.progression.api.fields.IField;
+import joshie.progression.api.fields.ISpecialFieldProvider;
+import joshie.progression.api.fields.ISpecialFieldProvider.DisplayMode;
 import joshie.progression.gui.fields.ItemFilterFieldPreview;
 import joshie.progression.helpers.PlayerHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,18 +14,27 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
-public class RewardClear extends RewardBaseItemFilter {
+public class RewardClear extends RewardBaseItemFilter implements ISpecialFieldProvider {
     public int toTake = 1;
-    
+
     public RewardClear() {
         super("clear", 0xFF69008C);
-        list.add(new ItemFilterFieldPreview("filters", this, 50, 40, 10, 100, 30, 100, 2F));
+    }
+
+    @Override
+    public boolean shouldReflectionSkipField(String name) {
+        return name.equals("filters");
+    }
+
+    @Override
+    public void addSpecialFields(List<IField> fields, DisplayMode mode) {
+        if (mode == DisplayMode.EDIT) fields.add(new ItemFilterFieldPreview("filters", this, 25, 30, 2.8F));
     }
 
     @Override
     public void reward(UUID uuid) {
         int taken = 0;
-        
+
         List<EntityPlayerMP> players = PlayerHelper.getPlayersFromUUID(uuid);
         for (int k = 0; k < players.size() && taken < toTake; k++) {
             EntityPlayer player = players.get(k);
@@ -33,7 +45,7 @@ public class RewardClear extends RewardBaseItemFilter {
 
                     if (check != null) {
                         for (int j = 0; j < check.stackSize && taken < toTake; j++) {
-                            for (IFilter filter: filters) {
+                            for (IFilter filter : filters) {
                                 if (filter.matches(check)) {
                                     decrease++;
                                     taken++;
