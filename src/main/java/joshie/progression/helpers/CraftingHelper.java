@@ -54,4 +54,10 @@ public class CraftingHelper {
                 
         return false;
     }
+
+    public static ItemStack getCraftingResult(ActionType crafting, EntityPlayer player, ItemStack result) {
+        if (result == null) return null;
+        if (!CraftingHelper.canCraftItem(ActionType.CRAFTING, player, result)) return null;
+        return result;
+    }
 }

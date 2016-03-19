@@ -5,17 +5,17 @@ import java.util.UUID;
 
 import org.lwjgl.input.Mouse;
 
-import joshie.enchiridion.helpers.MCClientHelper;
 import joshie.progression.Progression;
 import joshie.progression.api.IField;
-import joshie.progression.api.IHasEventBus;
 import joshie.progression.api.IFilter;
+import joshie.progression.api.IHasEventBus;
 import joshie.progression.api.ISetterCallback;
 import joshie.progression.api.gui.ISpecialFieldProvider;
 import joshie.progression.crafting.ActionType;
 import joshie.progression.crafting.CraftingRegistry;
 import joshie.progression.gui.fields.ItemFilterFieldPreview;
 import joshie.progression.gui.newversion.GuiItemFilterEditor;
+import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.lib.GuiIDs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;

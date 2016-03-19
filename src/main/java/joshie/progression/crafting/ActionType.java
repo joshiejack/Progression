@@ -11,6 +11,7 @@ public class ActionType {
     public static final ActionType BREAKBLOCK = new ActionType("BREAKBLOCK");
     public static final ActionType HARVESTDROP = new ActionType("HARVESTDROP");
     public static final ActionType ENTITYDROP = new ActionType("ENTITYDROP");
+    public static final ActionType ARCANE = new ActionType("ARCANE");
     private static HashMap<String, ActionType> registry;
 
     private final String name;

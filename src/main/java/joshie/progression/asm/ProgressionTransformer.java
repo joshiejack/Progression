@@ -21,6 +21,8 @@ public class ProgressionTransformer implements IFMLLoadingPlugin, IClassTransfor
         asm.add(new ASMTransferCrafting());
         asm.add(new ASMContainerPlayer());
         asm.add(new ASMContainerWorkbench());
+        asm.add(new ASMThaumcraft());
+        asm.add(new ASMTinkers());
     }
 
     @Override

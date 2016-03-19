@@ -44,7 +44,7 @@ public class CrafterHuman extends Crafter {
     @Override
     public boolean canCraftItem(ActionType type, ItemStack stack) {
         Set<IFilter> filters = CraftingRegistry.getFiltersForStack(type, stack, false);
-        
+               
         List<IFilter> matched = new ArrayList();
         for (IFilter filter : filters) {
             if (filter.matches(stack)) {

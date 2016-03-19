@@ -37,6 +37,7 @@ public class GuiConditionEditor extends GuiCore implements IBarProvider {
 
     @Override
     public void initGuiData() {
+        switching = false;
         //Setup the features
         features.add(new FeatureBarsX1(this, "conditions"));
         features.add(new FeatureDrawable(new ArrayList(trigger.getConditions()), 45, 201, 201, 64, 119, FeatureNewCondition.INSTANCE, theme.conditionGradient1, theme.conditionGradient2, theme.conditionFontColor));

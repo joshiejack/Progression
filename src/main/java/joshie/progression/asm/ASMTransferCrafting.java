@@ -15,6 +15,8 @@ import joshie.progression.lib.ProgressionInfo;
 public class ASMTransferCrafting extends AbstractASM {
     public static List accepted = new ArrayList();
     static {
+        accepted.add("slimeknights.tconstruct.tools.inventory.ContainerCraftingStation");
+        accepted.add("thaumcraft.common.container.ContainerArcaneWorkbench");
         accepted.add("net.minecraft.inventory.ContainerPlayer$1");
         accepted.add("net.minecraft.inventory.ContainerPlayer");
         accepted.add("net.minecraft.inventory.ContainerWorkbench");

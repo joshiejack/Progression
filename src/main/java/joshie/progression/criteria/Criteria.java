@@ -64,21 +64,6 @@ public class Criteria implements ICriteria {
         addConflicts(theConflicts);
     }
 
-    public void addTriggers(ITriggerType... triggers) {
-        this.triggers.addAll(Arrays.asList((ITriggerType[]) triggers));
-        this.triggers.removeAll(Collections.singleton(null));
-    }
-
-    public void addRewards(IRewardType... rewards) {
-        this.rewards.addAll(Arrays.asList((IRewardType[]) rewards));
-        this.rewards.removeAll(Collections.singleton(null));
-        for (IRewardType reward : rewards) {
-            if (reward != null) {
-                reward.onAdded();
-            }
-        }
-    }
-
     public void addRequirements(ICriteria... prereqs) {
         this.prereqs.addAll(Arrays.asList((ICriteria[]) prereqs));
     }

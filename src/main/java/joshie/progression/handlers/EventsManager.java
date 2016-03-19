@@ -71,6 +71,8 @@ public class EventsManager {
                 } catch (Exception e) {}
             }
         }
+        
+        reward.onAdded();
     }
 
     public static void onRewardRemoved(IRewardType reward) {
@@ -90,5 +92,7 @@ public class EventsManager {
                 } catch (Exception e) {}
             }
         }
+        
+        reward.onRemoved();
     }
 }

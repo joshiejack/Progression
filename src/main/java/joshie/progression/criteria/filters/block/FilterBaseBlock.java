@@ -26,7 +26,13 @@ public abstract class FilterBaseBlock extends FilterBase {
         if (!(object instanceof ItemStack)) return false;
         ItemStack check = (ItemStack) object;
         Block block = ItemHelper.getBlock(check);
-        return block == null ? false : matches(block, block.getMetaFromState(block.getStateFromMeta(check.getItemDamage())));
+        int meta = 0;
+        
+        try {
+            meta = block.getMetaFromState(block.getStateFromMeta(check.getItemDamage()));
+        } catch (Exception e) { return false; }
+        
+        return block == null ? false : matches(block, meta);
     }
 
     @Override

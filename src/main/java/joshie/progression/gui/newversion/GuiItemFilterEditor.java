@@ -33,6 +33,7 @@ public class GuiItemFilterEditor extends GuiCore implements IBarProvider {
 
     @Override
     public void initGuiData() {
+        switching = false;
         //Setup the features
         features.add(new FeatureBarsX2(this, "filters", "preview"));
         features.add(new FeatureDrawable(new ArrayList(field.getFilters()), 45, 201, 201, 64, 119, FeatureNewItemFilter.INSTANCE, theme.triggerGradient1, theme.triggerGradient2, theme.triggerFontColor));
