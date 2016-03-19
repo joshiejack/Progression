@@ -30,10 +30,8 @@ public class ConditionAchievement extends ConditionBase implements IInitAfterRea
         name = (String) object;
         
         for (Achievement a: AchievementList.achievementList) {
-            System.out.println(a.statId);
             if (a.statId.equals("achievement." + name)) {
                 achievement = a;
-                System.out.println("ACHIEVEMENT FOUND");
                 return true;
             }
         }

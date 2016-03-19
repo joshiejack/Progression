@@ -16,7 +16,6 @@ public class ProgressionTransformer implements IFMLLoadingPlugin, IClassTransfor
     public static List<AbstractASM> asm = new ArrayList();
 
     static {
-        asm.add(new ASMTileEntity());
         asm.add(new ASMFurnace());
         asm.add(new ASMTransferCrafting());
         asm.add(new ASMContainerPlayer());

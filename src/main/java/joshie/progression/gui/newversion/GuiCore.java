@@ -158,10 +158,12 @@ public abstract class GuiCore extends GuiScreen {
             jump = 50; //Shift Jump
         }
 
-        if (key == 203) {
-            scroll(jump);
-        } else if (key == 205) {
-            scroll(-jump);
+        if (!TextEditor.INSTANCE.isEditing()) {
+            if (key == 203) {
+                scroll(jump);
+            } else if (key == 205) {
+                scroll(-jump);
+            }
         }
 
         TextEditor.INSTANCE.keyTyped(character, key);

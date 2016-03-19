@@ -42,7 +42,7 @@ public class Criteria implements ICriteria {
         this.allTasks = true;
         this.allRewards = true;
         this.rewardsGiven = 1;
-        this.displayName = "banana";
+        this.displayName = "New Criteria";
     }
 
     public void init(ICriteria[] prereqs, ICriteria[] theConflicts, String displayName, boolean isVisible, boolean mustClaim, boolean achievement, int repeatable, ItemStack icon, boolean allRequired, int tasksRequired, boolean infinite, boolean allRewards, int rewardsGiven, int x, int y) {
@@ -200,5 +200,10 @@ public class Criteria implements ICriteria {
     public void setCoordinates(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+
+    @Override
+    public void setIcon(ItemStack icon) {
+        stack = icon;
     }
 }

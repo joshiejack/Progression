@@ -38,6 +38,7 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
     public void drawButton(Minecraft mc, int x, int y) {
         boolean hovering = hovered = x >= xPosition && y >= yPosition && x < xPosition + width && y < yPosition + height;
         int k = getHoverState(hovering);
+        GlStateManager.enableBlend();
         GlStateManager.color(1F, 1F, 1F, 1F);
         mc.getTextureManager().bindTexture(ProgressionInfo.textures);
         int yTexture = GuiTreeEditor.INSTANCE.currentTab == tab ? 25 : 0;

@@ -51,7 +51,6 @@ public class RewardSpawnEntity extends RewardBase implements ISpecialFilters, IS
                         EntityLivingBase entity = EntityHelper.getRandomEntityForFilters(entities);
                         EntityLivingBase clone = (EntityLivingBase) EntityList.createEntityByName(EntityHelper.getNameForEntity(entity), player.worldObj);
                         if (clone instanceof EntityLiving) {
-                            System.out.println("DOING THE SPAWN STUFF");
                             ((EntityLiving) clone).onInitialSpawn(player.worldObj.getDifficultyForLocation(new BlockPos(clone)), (IEntityLivingData) null);
                         }
 

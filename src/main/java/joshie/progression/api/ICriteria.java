@@ -55,4 +55,6 @@ public interface ICriteria {
     public void setCoordinates(int x, int y);
 
     public void addTooltip(List<String> toolTip);
+
+    public void setIcon(ItemStack icon);
 }

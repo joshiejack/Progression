@@ -3,11 +3,11 @@ package joshie.progression.criteria.rewards;
 import java.util.List;
 import java.util.UUID;
 
-import joshie.enchiridion.helpers.MCClientHelper;
 import joshie.progression.api.ISpecialFilters;
 import joshie.progression.api.filters.IFilterSelectorFilter;
 import joshie.progression.gui.selector.filters.PotionFilter;
 import joshie.progression.helpers.ItemHelper;
+import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.PlayerHelper;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;

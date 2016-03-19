@@ -4,7 +4,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import joshie.enchiridion.helpers.MCClientHelper;
 import joshie.progression.Progression;
 import joshie.progression.api.IFilter;
 import joshie.progression.api.ISetterCallback;
@@ -16,6 +15,7 @@ import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import joshie.progression.gui.newversion.overlays.FeatureItemPreview;
 import joshie.progression.gui.selector.filters.ItemFilter;
 import joshie.progression.helpers.CollectionHelper;
+import joshie.progression.helpers.MCClientHelper;
 
 public class ItemFilterField extends AbstractField {
     private IFilterSelectorFilter selector;

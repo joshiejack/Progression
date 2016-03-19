@@ -160,7 +160,6 @@ public class Progression {
         }
         
         Options.init(new Configuration(new File(dir, "options.cfg")));
-
         RemappingHandler.resetRegistries();
         JEI_LOADED = Loader.isModLoaded("JEI");
         ProgressionAPI.registry = new APIHandler();

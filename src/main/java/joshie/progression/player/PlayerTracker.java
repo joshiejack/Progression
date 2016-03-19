@@ -1,6 +1,7 @@
 package joshie.progression.player;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.UUID;
 
 import com.google.common.collect.Maps;
@@ -19,6 +20,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class PlayerTracker {
     private static final HashMap<TileEntity, UUID> owners = Maps.newHashMap();
+    private static final HashSet<TileEntity> loaded = new HashSet();
 
     @SideOnly(Side.CLIENT)
     public static PlayerDataClient getClientPlayer() {
@@ -28,17 +30,17 @@ public class PlayerTracker {
     public static PlayerDataServer getServerPlayer(EntityPlayer player) {
         return getServerPlayer(PlayerHelper.getUUIDForPlayer(player));
     }
-    
+
     public static boolean reset(String username) {
         return Progression.data.reset(username);
     }
-    
+
     public static PlayerDataServer getServerPlayer(UUID uuid) {
         return Progression.data.getServerPlayer(uuid);
     }
-    
+
     public static PlayerDataCommon getPlayerData(UUID uuid) {
-        return FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT? getClientPlayer() : getServerPlayer(uuid);
+        return FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT ? getClientPlayer() : getServerPlayer(uuid);
     }
 
     public static PlayerDataCommon getPlayerData(EntityPlayer player) {
@@ -46,44 +48,36 @@ public class PlayerTracker {
     }
 
     public static UUID getTileOwner(TileEntity tile) {
-        return owners.get(tile);
+        UUID uuid = owners.get(tile);
+        if (uuid == null && !loaded.contains(tile)) {
+            //Attempt to load it from the tile
+            if (tile.getTileData().hasKey("Progression")) {
+                String id = tile.getTileData().getCompoundTag("Progression").getString("Owner");
+                uuid = UUID.fromString(id);
+                if (uuid != null) {
+                    owners.put(tile, uuid);
+                }
+            }
+            
+            loaded.add(tile);
+        }
+
+        return uuid;
     }
 
     public static void setTileOwner(TileEntity tile, UUID owner) {
         owners.put(tile, owner);
+        NBTTagCompound tag = new NBTTagCompound();
+        tag.setString("Owner", owner.toString());
+        tile.getTileData().setTag("Progression", tag);
+        tile.markDirty();
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onBlockPlaced(PlaceEvent event) {
         TileEntity tile = event.world.getTileEntity(event.pos);
-        if (event.player != null) {
+        if (event.player != null && tile != null) {
             setTileOwner(tile, PlayerHelper.getUUIDForPlayer(event.player));
         }
     }
-
-    //Called VIA ASM to READ Additional TileData
-    public static void readFromNBT(TileEntity tile, NBTTagCompound nbt) {
-        UUID uuid = null;
-        if (nbt.hasKey(MOST)) {
-            uuid = new UUID(nbt.getLong(MOST), nbt.getLong(LEAST));
-        }
-
-        //Place the owner of this tile entity in the map
-        if (uuid != null) {
-            PlayerTracker.setTileOwner(tile, uuid);
-        }
-    }
-
-    //Called VIA ASM to SAVE Additional TileData
-    public static void writeToNBT(TileEntity tile, NBTTagCompound nbt) {
-        if (tile.getWorld() == null) return; //Don't continue if the world is null
-        UUID uuid = PlayerTracker.getTileOwner(tile);
-        if (uuid != null) {
-            nbt.setLong(MOST, uuid.getMostSignificantBits());
-            nbt.setLong(LEAST, uuid.getLeastSignificantBits());
-        }
-    }
-
-    private static final String MOST = "Crafting-Machine-Owner-Most";
-    private static final String LEAST = "Crafting-Machine-Owner-Least";
 }

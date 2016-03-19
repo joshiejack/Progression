@@ -182,6 +182,7 @@ public class FeatureDrawable extends FeatureAbstract {
                 crossY = crossY2;
             }
 
+            GlStateManager.enableBlend();
             GlStateManager.color(1F, 1F, 1F);
             offset.drawTexture(xPos, offsetY, ProgressionInfo.textures, 15, 10, crossX, crossY, 55, 55);
         }
