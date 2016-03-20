@@ -49,7 +49,7 @@ public class FeaturePoints extends FeatureAbstract implements ISimpleEditorField
     @Override
     public void draw(int xPos, int yPos, double width, double height, boolean isMouseHovering) {
         if (variable != null) {
-            double amount = PlayerTracker.getClientPlayer().getAbilities().getPoints("points:" + variable);
+            double amount = PlayerTracker.getClientPlayer().getPoints().getDouble(variable);
             EnchiridionAPI.draw.drawSplitScaledString(description.replace("[amount]", amountAsString(amount)), xPos, yPos, wrap, 0x555555, size);
         }
     }

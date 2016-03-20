@@ -29,7 +29,9 @@ import joshie.progression.network.PacketCompleted;
 import joshie.progression.network.PacketHandler;
 import joshie.progression.network.PacketSyncAbilities;
 import joshie.progression.network.PacketSyncCriteria;
+import joshie.progression.network.PacketSyncCustomData;
 import joshie.progression.network.PacketSyncImpossible;
+import joshie.progression.network.PacketSyncPoints;
 import joshie.progression.network.PacketSyncTeam;
 import joshie.progression.network.PacketSyncTriggers;
 import joshie.progression.network.PacketSyncTriggers.SyncPair;
@@ -68,6 +70,8 @@ public class CriteriaMappings {
 
         PacketHandler.sendToClient(new PacketSyncTeam(master.getTeam()), player);
         PacketHandler.sendToClient(new PacketSyncAbilities(master.getAbilities()), player);
+        PacketHandler.sendToClient(new PacketSyncCustomData(master.getCustomStats()), player);
+        PacketHandler.sendToClient(new PacketSyncPoints(master.getPoints()), player);
         SyncPair[] values = new SyncPair[APIHandler.getCriteria().size()];
         int pos = 0;
         for (ICriteria criteria : APIHandler.getCriteria().values()) {
@@ -203,6 +207,7 @@ public class CriteriaMappings {
 
     /** Called to fire a trigger type, Triggers are only ever called on criteria that is activated **/
     public Result fireAllTriggers(String type, Object... data) {
+        System.out.println("FIRING TRIGGER");
         if (activeTriggers == null) return Result.DEFAULT; //If the remapping hasn't occured yet, say goodbye!
         //If the trigger is a forced removal, then force remve it
         if (type.equals("forced-remove")) {

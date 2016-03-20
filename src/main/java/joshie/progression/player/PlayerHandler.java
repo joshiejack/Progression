@@ -9,12 +9,12 @@ import net.minecraft.nbt.NBTTagCompound;
 public class PlayerHandler implements IPlayerData {
     @Override
     public NBTTagCompound getCustomData(EntityPlayer player, String key) {
-        return PlayerTracker.getPlayerData(player).getAbilities().getCustomData(key);
+        return PlayerTracker.getPlayerData(player).getCustomStats().getCustomData(key);
     }
 
     @Override
     public NBTTagCompound getCustomData(UUID uuid, String key) {
-        return PlayerTracker.getPlayerData(uuid).getAbilities().getCustomData(key);
+        return PlayerTracker.getPlayerData(uuid).getCustomStats().getCustomData(key);
     }
 
     @Override

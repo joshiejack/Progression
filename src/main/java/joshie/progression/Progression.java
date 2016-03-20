@@ -60,6 +60,7 @@ import joshie.progression.criteria.rewards.RewardPotion;
 import joshie.progression.criteria.rewards.RewardShowTab;
 import joshie.progression.criteria.rewards.RewardSpawnEntity;
 import joshie.progression.criteria.rewards.RewardSpeed;
+import joshie.progression.criteria.rewards.RewardStepAssist;
 import joshie.progression.criteria.rewards.RewardTeleport;
 import joshie.progression.criteria.rewards.RewardTime;
 import joshie.progression.criteria.triggers.TriggerAchievement;
@@ -98,9 +99,11 @@ import joshie.progression.network.PacketReset;
 import joshie.progression.network.PacketRewardItem;
 import joshie.progression.network.PacketSyncAbilities;
 import joshie.progression.network.PacketSyncCriteria;
+import joshie.progression.network.PacketSyncCustomData;
 import joshie.progression.network.PacketSyncImpossible;
 import joshie.progression.network.PacketSyncJSONToClient;
 import joshie.progression.network.PacketSyncJSONToServer;
+import joshie.progression.network.PacketSyncPoints;
 import joshie.progression.network.PacketSyncTeam;
 import joshie.progression.network.PacketSyncTriggers;
 import joshie.progression.player.PlayerHandler;
@@ -237,6 +240,7 @@ public class Progression {
         ProgressionAPI.registry.registerRewardType(new RewardTeleport());
         ProgressionAPI.registry.registerRewardType(new RewardSpawnEntity());
         ProgressionAPI.registry.registerRewardType(new RewardShowTab());
+        ProgressionAPI.registry.registerRewardType(new RewardStepAssist());
 
         ProgressionAPI.registry.registerTriggerType(new TriggerBreakBlock());
         ProgressionAPI.registry.registerTriggerType(new TriggerCrafting());
@@ -261,6 +265,8 @@ public class Progression {
         PacketHandler.registerPacket(PacketSyncCriteria.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketSyncImpossible.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketSyncAbilities.class, Side.CLIENT);
+        PacketHandler.registerPacket(PacketSyncPoints.class, Side.CLIENT);
+        PacketHandler.registerPacket(PacketSyncCustomData.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketRewardItem.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketClaimed.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketCompleted.class, Side.CLIENT);

@@ -60,10 +60,12 @@ public class PlayerHelper {
                 list.add((EntityPlayerMP) player);
             }
 
-            /** Add the Team Members **/
-            for (UUID member : team.getMembers()) {
-                if (getUUIDForPlayer(player).equals(member)) {
-                    list.add((EntityPlayerMP) player);
+            if (team.giveMultipleRewards()) {
+                /** Add the Team Members **/
+                for (UUID member : team.getMembers()) {
+                    if (getUUIDForPlayer(player).equals(member)) {
+                        list.add((EntityPlayerMP) player);
+                    }
                 }
             }
         }

@@ -1,15 +1,15 @@
 package joshie.progression.criteria.rewards;
 
-import static joshie.progression.player.DataStats.SpeedType.AIR;
-import static joshie.progression.player.DataStats.SpeedType.LAND;
-import static joshie.progression.player.DataStats.SpeedType.WATER;
+import static joshie.progression.player.data.AbilityStats.SpeedType.AIR;
+import static joshie.progression.player.data.AbilityStats.SpeedType.LAND;
+import static joshie.progression.player.data.AbilityStats.SpeedType.WATER;
 
 import java.util.List;
 import java.util.UUID;
 
 import joshie.progression.api.IHasEventBus;
-import joshie.progression.player.DataStats.SpeedType;
 import joshie.progression.player.PlayerTracker;
+import joshie.progression.player.data.AbilityStats.SpeedType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;

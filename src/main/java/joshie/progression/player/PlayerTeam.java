@@ -30,6 +30,8 @@ public class PlayerTeam implements ITextEditable {
     private TeamType type;
     private UUID owner;
     private boolean isActive = true;
+    private boolean multipleRewards = false;
+    private boolean isPublic = false;
     private String name;
 
     public PlayerTeam() {}
@@ -53,6 +55,24 @@ public class PlayerTeam implements ITextEditable {
 
     public UUID getOwner() {
         return owner;
+    }
+    
+    public boolean giveMultipleRewards() {
+        return multipleRewards;
+    }
+    
+    public boolean isPublic() {
+        return isPublic;
+    }
+    
+    public void toggleMultiple() {
+        multipleRewards = !multipleRewards;
+        syncChanges(Side.CLIENT);
+    }
+    
+    public void toggleIsPublic() {
+        isPublic = !isPublic;
+        syncChanges(Side.CLIENT);
     }
 
     public boolean isOwner(EntityPlayer player) {
@@ -110,6 +130,8 @@ public class PlayerTeam implements ITextEditable {
 
     public void readFromNBT(NBTTagCompound tag) {
         name = tag.getString("Name");
+        isPublic = tag.getBoolean("IsPublic");
+        multipleRewards = tag.getBoolean("MultipleRewards");
         type = tag.getBoolean("IsSingleTeam") ? TeamType.SINGLE : TeamType.TEAM;
         if (tag.hasKey("Owner")) owner = UUID.fromString(tag.getString("Owner"));
         else if (tag.hasKey("UUID-Most")) owner = new UUID(tag.getLong("UUID-Most"), tag.getLong("UUID-Least"));
@@ -124,6 +146,8 @@ public class PlayerTeam implements ITextEditable {
 
     public void writeToNBT(NBTTagCompound tag) {
         tag.setString("Name", name);
+        tag.setBoolean("IsPublic", isPublic);
+        tag.setBoolean("MultipleRewards", multipleRewards);
         tag.setBoolean("IsSingleTeam", type == TeamType.SINGLE);
         tag.setString("Owner", owner.toString());
         tag.setBoolean("IsActive", isActive);

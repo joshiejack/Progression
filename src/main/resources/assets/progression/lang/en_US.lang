@@ -2,7 +2,7 @@
 progression.tasks=Tasks
 progression.new.trigger=Add New Task
 progression.trigger.breakBlock=Break Block
-progression.trigger.openContainer=Open Inventory
+progression.trigger.openContainer=Gui Change
 progression.trigger.clickBlock=Click Block
 progression.trigger.clickBlock.cancel=Clicking any of these blocks will not work
 progression.trigger.clickBlock.description=Click on any of the blocks displayed %s times

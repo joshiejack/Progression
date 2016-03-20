@@ -19,7 +19,7 @@ public class RewardBoolean extends RewardBase {
 
     @Override
     public void reward(UUID uuid) {
-        PlayerTracker.getServerPlayer(uuid).addPoints("boolean:" + variable, value == true ? 1D : 0D);
+        PlayerTracker.getServerPlayer(uuid).setBoolean(variable, value);
     }
 
     @Override

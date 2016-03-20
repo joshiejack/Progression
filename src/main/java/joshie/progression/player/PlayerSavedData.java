@@ -125,7 +125,7 @@ public class PlayerSavedData extends WorldSavedData {
                     for (IRewardType reward : criteria.getRewards()) {
                         if (reward instanceof IStoreNBTData) {
                             IStoreNBTData storage = (IStoreNBTData) reward;
-                            data.getAbilities().setCustomData(storage.getNBTKey(), storage.getDefaultTags(new NBTTagCompound()));
+                            data.getCustomStats().setCustomData(storage.getNBTKey(), storage.getDefaultTags(new NBTTagCompound()));
                         }
                     }
                 }

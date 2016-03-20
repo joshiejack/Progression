@@ -17,8 +17,7 @@ public class TriggerBoolean extends TriggerBaseBoolean {
 
     @Override
     public boolean onFired(UUID uuid, ITriggerData iTriggerData, Object... data) {
-        double value = PlayerTracker.getServerPlayer(uuid).getAbilities().getPoints("boolean:" + variable);
-        boolean check = value == 1D ? true : false;
+        boolean check = PlayerTracker.getServerPlayer(uuid).getPoints().getBoolean(variable);
         if (check == isTrue) {
             markTrue(iTriggerData);
         }

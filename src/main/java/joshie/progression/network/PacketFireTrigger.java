@@ -176,12 +176,12 @@ public class PacketFireTrigger extends PenguinPacket {
     public static HashMap<String, ICustomDataBuilder> handlers = new HashMap();
 
     @Override
-    public void handlePacket(EntityPlayer player) {
+    public void handlePacket(EntityPlayer player) {       
         ICustomDataBuilder builder = handlers.get(type);
         if (builder != null) {
             data = builder.getObjects(player, type, data);
         }
-        
+                
         ProgressionAPI.registry.fireTrigger(player, type, data);
     }
 }

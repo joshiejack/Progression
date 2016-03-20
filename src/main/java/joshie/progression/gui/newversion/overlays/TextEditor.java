@@ -26,7 +26,6 @@ public class TextEditor {
     }
 
     public void clearEditable() {
-        System.out.println("CALLED clear");
         this.isTextEditing = false;
         this.editable = null;
         this.position = 0;

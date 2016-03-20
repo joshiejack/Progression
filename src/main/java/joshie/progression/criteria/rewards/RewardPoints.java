@@ -20,7 +20,7 @@ public class RewardPoints extends RewardBase {
 
     @Override
     public void reward(UUID uuid) {
-        PlayerTracker.getServerPlayer(uuid).addPoints("points:" + variable, amount);
+        PlayerTracker.getServerPlayer(uuid).addDouble("points:" + variable, amount);
     }
 
     @Override

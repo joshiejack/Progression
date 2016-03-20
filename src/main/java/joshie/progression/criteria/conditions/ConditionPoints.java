@@ -28,6 +28,6 @@ public class ConditionPoints extends ConditionBase {
 
     @Override
     public boolean isSatisfied(World world, EntityPlayer player, UUID uuid) {
-        return isValidValue(PlayerTracker.getServerPlayer(uuid).getAbilities().getPoints("points:" + variable));
+        return isValidValue(PlayerTracker.getServerPlayer(uuid).getPoints().getDouble(variable));
     }
 }

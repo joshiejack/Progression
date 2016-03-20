@@ -37,11 +37,11 @@ public class TriggerPoints extends TriggerBaseBoolean {
 
     @Override
     public boolean onFired(UUID uuid, ITriggerData iTriggerData, Object... data) {
-        double total = PlayerTracker.getServerPlayer(uuid).getAbilities().getPoints("points:" + variable);
+        double total = PlayerTracker.getServerPlayer(uuid).getPoints().getDouble(variable);
         if (isValidValue(total)) {
             ((DataBoolean) iTriggerData).completed = true;
             if (consume) {
-                PlayerTracker.getServerPlayer(uuid).addPoints(variable, -amount);
+                PlayerTracker.getServerPlayer(uuid).addDouble(variable, -amount);
             }
         }
 

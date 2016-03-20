@@ -16,8 +16,7 @@ public class ConditionBoolean extends ConditionBase {
 
     @Override
     public boolean isSatisfied(World world, EntityPlayer player, UUID uuid) {
-        double value = PlayerTracker.getServerPlayer(uuid).getAbilities().getPoints("boolean:" + variable);
-        boolean check = value == 1D ? true : false;
+        boolean check = PlayerTracker.getServerPlayer(uuid).getPoints().getBoolean(variable);
         if (check == isTrue) {
             return true;
         }
