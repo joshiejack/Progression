@@ -162,6 +162,10 @@ public class TreeEditorElement {
                     textureY = 75;
                 }
             }
+            
+            if (PlayerTracker.getClientPlayer().getMappings().isImpossible(criteria)) {
+                textureY = 75;
+            }
 
             GlStateManager.color(1F, 1F, 1F, 1F);
             gui.mc.getTextureManager().bindTexture(ProgressionInfo.textures);

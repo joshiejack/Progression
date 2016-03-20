@@ -15,8 +15,9 @@ import net.minecraft.util.EnumChatFormatting;
 public class RewardCriteria extends RewardBase implements IGetterCallback, ISetterCallback {
     private ICriteria criteria = null;
     private String criteriaID = "";
+    public boolean remove = true;
+    public boolean possibility = false;
     public String displayName = "";
-    public boolean remove = false;
 
     public RewardCriteria() {
         super(new ItemStack(Items.golden_apple), "criteria", 0xFF99B3FF);
@@ -28,20 +29,21 @@ public class RewardCriteria extends RewardBase implements IGetterCallback, ISett
 
     @Override
     public void reward(UUID uuid) {
-        criteria = getAssignedCriteria();
+        setField("displayName", displayName);
         if (criteria == null) return; //Do not give the reward
         if (remove) {
             PlayerTracker.getServerPlayer(uuid).getMappings().fireAllTriggers("forced-remove", criteria);
         } else PlayerTracker.getServerPlayer(uuid).getMappings().fireAllTriggers("forced-complete", criteria, criteria.getRewards());
+
+        if (possibility) {
+            PlayerTracker.getServerPlayer(uuid).getMappings().switchPossibility(criteria);
+        }
     }
 
     @Override
     public String getField(String fieldName) {
-        if (fieldName.equals(displayName)) {
-            if (criteria == null) {
-                criteria = APIHandler.getCriteriaFromName(criteriaID);
-            }
-
+        if (fieldName.equals("displayName")) {
+            setField("displayName", displayName);
             return criteria != null ? EnumChatFormatting.GREEN + displayName : EnumChatFormatting.RED + displayName;
         } else return null;
     }
@@ -53,6 +55,7 @@ public class RewardCriteria extends RewardBase implements IGetterCallback, ISett
             displayName = fieldValue;
 
             try {
+                criteria = null;
                 for (ICriteria c : APIHandler.getCriteria().values()) {
                     String display = c.getDisplayName();
                     if (c.getDisplayName().equals(displayName)) {
@@ -71,7 +74,7 @@ public class RewardCriteria extends RewardBase implements IGetterCallback, ISett
     @Override
     public void addTooltip(List list) {
         if (criteria == null) {
-            criteria = getAssignedCriteria();
+            setField("displayName", displayName);
         }
 
         if (criteria != null) {

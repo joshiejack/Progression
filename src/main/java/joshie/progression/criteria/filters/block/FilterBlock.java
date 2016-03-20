@@ -29,7 +29,7 @@ public class FilterBlock extends FilterBaseBlock implements IItemGetterCallback,
     @Override
     public void addSpecialFields(List<IField> fields, DisplayMode mode) {
         if (mode == DisplayMode.EDIT) {
-            fields.add(new ItemField("filterBlock", this, 25, 25, 3F, 26, 70, 25, 75, Type.TRIGGER, BlockFilter.INSTANCE));
+            fields.add(new ItemField("filterBlock", this, 25, 25, 3F, Type.TRIGGER, BlockFilter.INSTANCE));
         }
     }
 

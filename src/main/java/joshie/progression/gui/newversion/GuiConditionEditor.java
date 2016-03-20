@@ -2,6 +2,7 @@ package joshie.progression.gui.newversion;
 
 import java.util.ArrayList;
 
+import joshie.progression.Progression;
 import joshie.progression.api.ITriggerType;
 import joshie.progression.gui.newversion.overlays.FeatureBarsX1;
 import joshie.progression.gui.newversion.overlays.FeatureDrawable;
@@ -10,6 +11,7 @@ import joshie.progression.gui.newversion.overlays.FeatureNewCondition;
 import joshie.progression.gui.newversion.overlays.FeatureNewReward;
 import joshie.progression.gui.newversion.overlays.IBarProvider;
 import joshie.progression.lib.GuiIDs;
+import net.minecraft.util.EnumChatFormatting;
 
 public class GuiConditionEditor extends GuiCore implements IBarProvider {
     public static final GuiConditionEditor INSTANCE = new GuiConditionEditor();
@@ -40,7 +42,7 @@ public class GuiConditionEditor extends GuiCore implements IBarProvider {
         switching = false;
         //Setup the features
         features.add(new FeatureBarsX1(this, "conditions"));
-        features.add(new FeatureDrawable(new ArrayList(trigger.getConditions()), 45, 201, 201, 64, 119, FeatureNewCondition.INSTANCE, theme.conditionGradient1, theme.conditionGradient2, theme.conditionFontColor));
+        features.add(new FeatureDrawable(EnumChatFormatting.BOLD + Progression.translate("new.condition"), new ArrayList(trigger.getConditions()), 45, 201, 201, 64, 119, FeatureNewCondition.INSTANCE, theme.conditionGradient1, theme.conditionGradient2, theme.conditionFontColor));
         //features.add(new FeatureDrawable(new ArrayList(criteria.rewards), 140, 0, 55, 201, 201, FeatureNewReward.INSTANCE, theme.rewardBoxGradient1, theme.rewardBoxGradient2, theme.rewardBoxFont));
         features.add(FeatureItemSelector.INSTANCE); //Add the item selector
         features.add(FeatureNewCondition.INSTANCE); //Add new trigger popup
@@ -48,10 +50,10 @@ public class GuiConditionEditor extends GuiCore implements IBarProvider {
     }
 
     @Override
-    public void drawGuiForeground(int mouseX, int mouseY) {}
+    public void drawGuiForeground(boolean overlayvisible, int mouseX, int mouseY) {}
 
     @Override
-    public boolean guiMouseClicked(int mouseX, int mouseY, int button) {
+    public boolean guiMouseClicked(boolean overlayvisible, int mouseX, int mouseY, int button) {
         return false;
     }
 

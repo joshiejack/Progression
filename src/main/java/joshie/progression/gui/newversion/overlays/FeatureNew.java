@@ -29,6 +29,11 @@ public abstract class FeatureNew extends FeatureAbstract {
         trigger = GuiConditionEditor.INSTANCE.getTrigger();
         return this;
     }
+    
+    @Override
+    public boolean isOverlay() {
+        return true;
+    }
 
     @Override
     public void drawFeature(int mouseX, int mouseY) {

@@ -14,6 +14,7 @@ import joshie.progression.Progression;
 import joshie.progression.api.fields.IField;
 import joshie.progression.gui.newversion.overlays.FeatureBackground;
 import joshie.progression.gui.newversion.overlays.FeatureFooter;
+import joshie.progression.gui.newversion.overlays.FeatureFullTextEditor;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector;
 import joshie.progression.gui.newversion.overlays.FeatureNew;
 import joshie.progression.gui.newversion.overlays.FeatureNewCondition;
@@ -78,6 +79,7 @@ public abstract class GuiCore extends GuiScreen {
 
     public void clearEditors() {
         FeatureItemSelector.INSTANCE.clearEditable();
+        FeatureFullTextEditor.INSTANCE.clearEditable();
         TextEditor.INSTANCE.clearEditable();
         FeatureNewTrigger.INSTANCE.setVisibility(false);
         FeatureNewReward.INSTANCE.setVisibility(false);
@@ -109,33 +111,45 @@ public abstract class GuiCore extends GuiScreen {
         lastResource = null; //Reset the lastResource
         FeatureTooltip.INSTANCE.clear();
         screenTop = (height - ySize) / 2;
+        boolean overlayvisible = false;
         for (IGuiFeature feature : features) {
-            if (feature.isVisible()) { //Only draw visible stuff
+            if (feature.isVisible() && !feature.isOverlay()) { //Only draw visible stuff
+                feature.draw(cursorX, cursorY - screenTop);
+            }
+            
+            if (feature.isVisible() && feature.isOverlay()) overlayvisible = true;
+        }
+
+        drawGuiForeground(overlayvisible, mouseX, mouseY - screenTop);
+        
+        for (IGuiFeature feature : features) {
+            if (feature.isVisible() && feature.isOverlay()) { //Only new Stuff
                 feature.draw(cursorX, cursorY - screenTop);
             }
         }
-
-        drawGuiForeground(mouseX, mouseY - screenTop);
 
         //Draw the tooltip in the right place
         FeatureTooltip.INSTANCE.drawFeature(cursorX, cursorY);
     }
 
-    public abstract void drawGuiForeground(int cursorX, int cursorY);
+    public abstract void drawGuiForeground(boolean overlayvisible, int cursorX, int cursorY);
 
     @Override
     protected void mouseClicked(int x, int y, int button) throws IOException {
+        boolean overlayvisible = false;
         if (button == 0) {
             for (IGuiFeature feature : features) {
                 if (feature.isVisible()) { //Don't process hidden features
                     if (feature.mouseClicked(mouseX, mouseY - screenTop, button)) {
                         return; // Don't continue if a mouse click was processed
                     }
+                    
+                    if (feature.isOverlay()) overlayvisible = true;
                 }
             }
         }
 
-        if (guiMouseClicked(mouseX, mouseY - screenTop, button)) {
+        if (guiMouseClicked(overlayvisible, mouseX, mouseY - screenTop, button)) {
             return;
         }
 
@@ -149,7 +163,7 @@ public abstract class GuiCore extends GuiScreen {
         clearEditors();
     }
 
-    public abstract boolean guiMouseClicked(int mouseX, int mouseY, int button);
+    public abstract boolean guiMouseClicked(boolean overlayvisible, int mouseX, int mouseY, int button);
 
     @Override
     protected void keyTyped(char character, int key) throws IOException {

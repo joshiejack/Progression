@@ -10,4 +10,5 @@ public interface IGuiFeature {
     public boolean isVisible();
     public boolean scroll(int mouseX, int mouseY, boolean down);
     public void setVisibility(boolean isVisible);
+    public boolean isOverlay();
 }

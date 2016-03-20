@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 import joshie.progression.gui.GuiCriteriaEditor;
 import joshie.progression.gui.GuiTreeEditor;
 import joshie.progression.gui.base.IRenderOverlay;
+import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
 import joshie.progression.helpers.ItemHelper;
 import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.client.gui.ScaledResolution;
@@ -25,16 +26,6 @@ public class SelectItem extends TextEditable implements IRenderOverlay {
 
     public IItemSelectable getEditable() {
         return selectable;
-    }
-
-    public static enum Type {
-        REWARD(0), TRIGGER(95), TREE(0);
-
-        public int yOffset;
-
-        private Type(int offset) {
-            this.yOffset = offset;
-        }
     }
 
     public void select(IItemSelectable selectable, Type type) {

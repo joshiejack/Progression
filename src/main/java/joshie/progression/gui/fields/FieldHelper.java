@@ -2,32 +2,34 @@ package joshie.progression.gui.fields;
 
 import java.lang.reflect.Field;
 
-import joshie.progression.api.IGetterCallback;
 import joshie.progression.api.ISetterCallback;
 import joshie.progression.gui.editors.EditText.ITextEditable;
-import joshie.progression.gui.newversion.overlays.TextEditor;
+import joshie.progression.gui.newversion.overlays.FeatureFullTextEditor;
+import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
 import net.minecraft.item.ItemStack;
 
 public class FieldHelper implements ITextEditable {
+    public Type type;
     public Object o;
     public Field f;
 
     public FieldHelper() {}
 
-    public FieldHelper(String f, Object o) {
+    public FieldHelper(String f, Object o, Type type) {
         this.o = o;
 
         try {
             this.f = o.getClass().getField(f);
+            this.type = type;
         } catch (Exception e) {}
     }
 
     public void select() {
-        TextEditor.INSTANCE.setEditable(this);
+        FeatureFullTextEditor.INSTANCE.select(this, type);
     }
 
     public String getText() {
-        return TextEditor.INSTANCE.getText(this);
+        return FeatureFullTextEditor.INSTANCE.getText(this);
     }
 
     public float getFloat() {
@@ -74,12 +76,7 @@ public class FieldHelper implements ITextEditable {
 
     @Override
     public String getTextField() {
-        String ret = null;
-        if (o instanceof IGetterCallback) {
-            ret = ((IGetterCallback) o).getField(f.getName());
-        }
-
-        return ret != null ? ret : getString();
+        return getString();
     }
 
     @Override
@@ -96,8 +93,8 @@ public class FieldHelper implements ITextEditable {
 
         public IntegerFieldHelper() {}
 
-        public IntegerFieldHelper(String f, Object o) {
-            super(f, o);
+        public IntegerFieldHelper(String f, Object o, Type type) {
+            super(f, o, type);
         }
 
         @Override
@@ -129,8 +126,8 @@ public class FieldHelper implements ITextEditable {
     }
 
     public static class DoubleFieldHelper extends IntegerFieldHelper {
-        public DoubleFieldHelper(String f, Object o) {
-            super(f, o);
+        public DoubleFieldHelper(String f, Object o, Type type) {
+            super(f, o, type);
         }
 
         @Override
@@ -158,8 +155,8 @@ public class FieldHelper implements ITextEditable {
     }
 
     public static class FloatFieldHelper extends IntegerFieldHelper {
-        public FloatFieldHelper(String f, Object o) {
-            super(f, o);
+        public FloatFieldHelper(String f, Object o, Type type) {
+            super(f, o, type);
         }
 
         @Override
@@ -187,8 +184,8 @@ public class FieldHelper implements ITextEditable {
     }
 
     public static class ItemAmountFieldHelper extends IntegerFieldHelper {
-        public ItemAmountFieldHelper(String f, ItemField item) {
-            super(f, item);
+        public ItemAmountFieldHelper(String f, ItemField item, Type type) {
+            super(f, item, type);
         }
 
         @Override

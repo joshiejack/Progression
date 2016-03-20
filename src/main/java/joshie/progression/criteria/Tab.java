@@ -5,7 +5,10 @@ import java.util.List;
 
 import joshie.progression.api.ICriteria;
 import joshie.progression.api.ITab;
+import joshie.progression.api.TabVisibleEvent;
+import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
 
 public class Tab implements ITab {
     private String uniqueName;
@@ -62,6 +65,7 @@ public class Tab implements ITab {
         return criteria;
     }
 
+    @Override
     public boolean isVisible() {
         return isVisible;
     }

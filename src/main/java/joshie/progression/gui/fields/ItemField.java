@@ -27,7 +27,7 @@ public class ItemField extends AbstractField implements IItemSelectable {
     protected final Type type;
     protected final IFilterSelectorFilter filter;
 
-    public ItemField(String fieldName, Object object, int x, int y, float scale, int mouseX1, int mouseX2, int mouseY1, int mouseY2, Type type, IFilterSelectorFilter filter) {
+    public ItemField(String fieldName, Object object, int x, int y, float scale, Type type, IFilterSelectorFilter filter) {
         super(fieldName);
         this.x = x;
         this.y = y;

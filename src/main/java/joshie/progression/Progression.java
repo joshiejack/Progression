@@ -57,6 +57,7 @@ import joshie.progression.criteria.rewards.RewardLivingDrop;
 import joshie.progression.criteria.rewards.RewardPlaceBlock;
 import joshie.progression.criteria.rewards.RewardPoints;
 import joshie.progression.criteria.rewards.RewardPotion;
+import joshie.progression.criteria.rewards.RewardShowTab;
 import joshie.progression.criteria.rewards.RewardSpawnEntity;
 import joshie.progression.criteria.rewards.RewardSpeed;
 import joshie.progression.criteria.rewards.RewardTeleport;
@@ -97,6 +98,7 @@ import joshie.progression.network.PacketReset;
 import joshie.progression.network.PacketRewardItem;
 import joshie.progression.network.PacketSyncAbilities;
 import joshie.progression.network.PacketSyncCriteria;
+import joshie.progression.network.PacketSyncImpossible;
 import joshie.progression.network.PacketSyncJSONToClient;
 import joshie.progression.network.PacketSyncJSONToServer;
 import joshie.progression.network.PacketSyncTriggers;
@@ -233,6 +235,7 @@ public class Progression {
         ProgressionAPI.registry.registerRewardType(new RewardPlaceBlock());
         ProgressionAPI.registry.registerRewardType(new RewardTeleport());
         ProgressionAPI.registry.registerRewardType(new RewardSpawnEntity());
+        ProgressionAPI.registry.registerRewardType(new RewardShowTab());
 
         ProgressionAPI.registry.registerTriggerType(new TriggerBreakBlock());
         ProgressionAPI.registry.registerTriggerType(new TriggerCrafting());
@@ -255,6 +258,7 @@ public class Progression {
 
         PacketHandler.registerPacket(PacketSyncTriggers.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketSyncCriteria.class, Side.CLIENT);
+        PacketHandler.registerPacket(PacketSyncImpossible.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketSyncAbilities.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketRewardItem.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketClaimed.class, Side.CLIENT);

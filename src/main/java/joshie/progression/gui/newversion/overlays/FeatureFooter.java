@@ -9,4 +9,9 @@ public class FeatureFooter extends FeatureAbstract {
 		offset.drawText(Progression.translate("footer.line1"), 9, 218, theme.scrollTextFontColor);
         offset.drawText(Progression.translate("footer.line2"), 9, 228, theme.scrollTextFontColor);
 	}
+
+    @Override
+    public boolean isOverlay() {
+        return false;
+    }
 }

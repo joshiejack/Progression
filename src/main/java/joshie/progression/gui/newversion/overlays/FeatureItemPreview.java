@@ -7,8 +7,8 @@ import org.lwjgl.opengl.GL11;
 import joshie.progression.api.IFilter;
 import joshie.progression.api.filters.IFilterSelectorFilter;
 import joshie.progression.gui.GuiCriteriaEditor;
-import joshie.progression.gui.editors.SelectItem.Type;
 import joshie.progression.gui.newversion.GuiItemFilterEditor;
+import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
@@ -92,5 +92,10 @@ public class FeatureItemPreview extends FeatureAbstract {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean isOverlay() {
+        return false;
     }
 }

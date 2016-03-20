@@ -2,6 +2,7 @@ package joshie.progression.gui.newversion;
 
 import java.util.ArrayList;
 
+import joshie.progression.Progression;
 import joshie.progression.gui.fields.ItemFilterField;
 import joshie.progression.gui.newversion.overlays.FeatureBarsX2;
 import joshie.progression.gui.newversion.overlays.FeatureDrawable;
@@ -10,6 +11,7 @@ import joshie.progression.gui.newversion.overlays.FeatureItemSelector;
 import joshie.progression.gui.newversion.overlays.FeatureNewItemFilter;
 import joshie.progression.gui.newversion.overlays.IBarProvider;
 import joshie.progression.lib.GuiIDs;
+import net.minecraft.util.EnumChatFormatting;
 
 public class GuiItemFilterEditor extends GuiCore implements IBarProvider {
     public static final GuiItemFilterEditor INSTANCE = new GuiItemFilterEditor();
@@ -36,7 +38,7 @@ public class GuiItemFilterEditor extends GuiCore implements IBarProvider {
         switching = false;
         //Setup the features
         features.add(new FeatureBarsX2(this, "filters", "preview"));
-        features.add(new FeatureDrawable(new ArrayList(field.getFilters()), 45, 201, 201, 64, 119, FeatureNewItemFilter.INSTANCE, theme.triggerGradient1, theme.triggerGradient2, theme.triggerFontColor));
+        features.add(new FeatureDrawable(EnumChatFormatting.BOLD + Progression.translate("new.filter"), new ArrayList(field.getFilters()), 45, 201, 201, 64, 119, FeatureNewItemFilter.INSTANCE, theme.triggerGradient1, theme.triggerGradient2, theme.triggerFontColor));
         features.add(FeatureItemPreview.INSTANCE);
         features.add(FeatureItemSelector.INSTANCE); //Add the item selector
         features.add(FeatureNewItemFilter.INSTANCE); //Add new item filter screen
@@ -44,12 +46,12 @@ public class GuiItemFilterEditor extends GuiCore implements IBarProvider {
     }
 
     @Override
-    public void drawGuiForeground(int mouseX, int mouseY) {
+    public void drawGuiForeground(boolean overlayvisible, int mouseX, int mouseY) {
         FeatureItemPreview.INSTANCE.updateSearch();
     }
     
     @Override
-    public boolean guiMouseClicked(int mouseX, int mouseY, int button) {
+    public boolean guiMouseClicked(boolean overlayvisible, int mouseX, int mouseY, int button) {
         return false;
     }
 

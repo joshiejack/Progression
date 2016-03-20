@@ -5,4 +5,9 @@ public class FeatureBackground extends FeatureAbstract {
 	public void drawFeature(int mouseX, int mouseY) {
 		offset.drawRectangle(-5, 0, screenWidth + 10, guiHeight, theme.backgroundColor, theme.backgroundBorder);
 	}
+
+    @Override
+    public boolean isOverlay() {
+        return false;
+    }
 }

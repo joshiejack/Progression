@@ -43,7 +43,7 @@ public class FilterPotionEffect extends FilterBaseItem implements ISetterCallbac
 
     @Override
     public void addSpecialFields(List<IField> fields, DisplayMode mode) {
-        if (mode == DisplayMode.EDIT) fields.add(new ItemField("stack", this, 25, 25, 3F, 26, 70, 25, 75, Type.TRIGGER, PotionFilter.INSTANCE));
+        if (mode == DisplayMode.EDIT) fields.add(new ItemField("stack", this, 25, 25, 3F, Type.TRIGGER, PotionFilter.INSTANCE));
     }
 
     @Override

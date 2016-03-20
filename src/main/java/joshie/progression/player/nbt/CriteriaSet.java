@@ -6,8 +6,8 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
-public class UnclaimedNBT extends AbstractUniqueNBT {
-    public static final UnclaimedNBT INSTANCE = new UnclaimedNBT();
+public class CriteriaSet extends AbstractUniqueNBT {
+    public static final CriteriaSet INSTANCE = new CriteriaSet();
 
     @Override
     public NBTBase write(Object s) {

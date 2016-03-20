@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -161,7 +162,7 @@ public abstract class GuiBase extends GuiScreen {
     }
 
     public void addTooltip(List<String> list) {
-        HashSet<String> set = new HashSet();
+        LinkedHashSet<String> set = new LinkedHashSet();
         for (String s : list)
             set.add(s);
         for (String s : tooltip)

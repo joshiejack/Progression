@@ -33,7 +33,7 @@ public class FilterBlockStack extends FilterBaseBlock implements ISpecialFieldPr
     @Override
     public void addSpecialFields(List<IField> fields, DisplayMode mode) {
         if (mode == DisplayMode.EDIT) {
-            fields.add(new ItemField("stack", this, 30, 35, 2.4F, 77, 100, 43, 68, Type.TRIGGER, BlockFilter.INSTANCE));
+            fields.add(new ItemField("stack", this, 30, 35, 2.4F, Type.TRIGGER, BlockFilter.INSTANCE));
         }
     }
 

@@ -23,4 +23,9 @@ public class FeatureBarsX1 extends FeatureAbstract {
 		offset.drawRectangle(-1, 40, screenWidth, 1, provider.getColorForBar(BAR1_UNDERLINE), theme.invisible);
         offset.drawText(Progression.translate(bar1), 9, 29, provider.getColorForBar(BAR1_FONT)); //Removing the offsetX in order to reposition everything back at 0
 	}
+
+    @Override
+    public boolean isOverlay() {
+        return false;
+    }
 }

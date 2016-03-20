@@ -13,7 +13,7 @@ import joshie.progression.gui.editors.EditText;
 import joshie.progression.gui.editors.EditText.ITextEditable;
 import joshie.progression.gui.editors.IItemSelectable;
 import joshie.progression.gui.editors.SelectItem;
-import joshie.progression.gui.editors.SelectItem.Type;
+import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.RenderItemHelper;

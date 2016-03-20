@@ -29,7 +29,7 @@ public class FilterItem extends FilterBaseItem implements IItemGetterCallback, I
 
     @Override
     public void addSpecialFields(List<IField> fields, DisplayMode mode) {
-        if (mode == DisplayMode.EDIT) fields.add(new ItemField("item", this, 25, 25, 3F, 26, 70, 25, 75, Type.TRIGGER, ItemFilter.INSTANCE));
+        if (mode == DisplayMode.EDIT) fields.add(new ItemField("item", this, 25, 25, 3F, Type.TRIGGER, ItemFilter.INSTANCE));
     }
 
     @Override

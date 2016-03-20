@@ -18,17 +18,11 @@ public class TextEditor {
     public void setEditable(ITextEditable editable) {
         this.isTextEditing = true;
         this.editable = editable;
-        Integer last = cachedPosition.get(editable);
-        int lastPosition = 0;
-        if (last != null) {
-            lastPosition = last;
-        }
-        
-        if (editable != null && editable.getTextField() != null) {
+       // i//f (editable != null && editable.getTextField() != null) {
             int maximumLength = editable.getTextField().length();
-            if (last == null) lastPosition = maximumLength;
-            this.position = Math.max(0, Math.min(maximumLength, lastPosition));
-        }
+            //if (last == null) lastPosition = maximumLength;
+            this.position = editable.getTextField().length();
+       // }
     }
 
     public void clearEditable() {

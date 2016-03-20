@@ -28,7 +28,7 @@ public class FilterItemStack extends FilterBaseItem implements ISpecialFieldProv
     @Override
     public void addSpecialFields(List<IField> fields, DisplayMode mode) {
         if (mode == DisplayMode.EDIT)
-        fields.add(new ItemField("stack", this, 30, 35, 1.4F, 77, 100, 43, 68, Type.TRIGGER, ItemFilter.INSTANCE));
+        fields.add(new ItemField("stack", this, 30, 35, 1.4F, Type.TRIGGER, ItemFilter.INSTANCE));
     }
 
     @Override

@@ -102,4 +102,9 @@ public class FeatureTooltip extends FeatureAbstract {
             GlStateManager.enableRescaleNormal();
         }
     }
+
+    @Override
+    public boolean isOverlay() {
+        return true;
+    }
 }

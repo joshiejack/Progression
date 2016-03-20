@@ -13,6 +13,7 @@ import org.lwjgl.opengl.GL11;
 
 import joshie.progression.api.ICriteria;
 import joshie.progression.api.ITab;
+import joshie.progression.api.TabVisibleEvent;
 import joshie.progression.gui.base.GuiBase;
 import joshie.progression.gui.buttons.ButtonNewCriteria;
 import joshie.progression.gui.buttons.ButtonTab;
@@ -24,6 +25,7 @@ import joshie.progression.json.Options;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
 
 public class GuiTreeEditor extends GuiBase {
     public static final GuiTreeEditor INSTANCE = new GuiTreeEditor();
@@ -62,7 +64,7 @@ public class GuiTreeEditor extends GuiBase {
         Collections.sort(tabs, new SortIndex());
 
         for (ITab tab : tabs) {
-            if (tab.isVisible() || MCClientHelper.canEdit()) {
+            if (isTabVisible(tab) || MCClientHelper.canEdit()) {
                 if (number <= 8) {
                     buttonList.add(new ButtonTab(tab, 0, pos));
                 } else buttonList.add(new ButtonTab(tab, res.getScaledWidth() - 25, pos));
@@ -113,11 +115,17 @@ public class GuiTreeEditor extends GuiBase {
         getElement(criteria).draw(x, y, offsetX);
         getElement(criteria).click(x, y, false);
     }
+    
+    public static boolean isTabVisible(ITab tab) {
+        TabVisibleEvent event = new TabVisibleEvent(MCClientHelper.getPlayer(), tab.getUniqueName());
+        if(MinecraftForge.EVENT_BUS.post(event)) return false;
+        return tab.isVisible();
+    }
 
     @Override
     public void drawForeground() {
         if (currentTab == null) initGui();
-        if (!MCClientHelper.isInEditMode() && !currentTab.isVisible()) return;
+        if (!MCClientHelper.isInEditMode() && !isTabVisible(currentTab)) return;
         for (ICriteria criteria : currentTab.getCriteria()) {
             if (getElement(criteria).isCriteriaVisible() || MCClientHelper.canEdit()) {
                 TreeEditorElement editor = getElement(criteria);

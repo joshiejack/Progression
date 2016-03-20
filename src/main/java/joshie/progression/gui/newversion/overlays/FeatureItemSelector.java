@@ -185,4 +185,9 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
             }
         }
     }
+
+    @Override
+    public boolean isOverlay() {
+        return true;
+    }
 }

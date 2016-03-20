@@ -7,6 +7,7 @@ import java.util.List;
 
 import joshie.progression.Progression;
 import joshie.progression.api.IEnum;
+import joshie.progression.api.IRewardType;
 import joshie.progression.api.ITriggerType;
 import joshie.progression.api.fields.IField;
 import joshie.progression.api.fields.IFieldProvider;
@@ -20,6 +21,7 @@ import joshie.progression.gui.fields.ItemFilterField;
 import joshie.progression.gui.fields.TextField;
 import joshie.progression.gui.newversion.GuiConditionEditor;
 import joshie.progression.gui.newversion.GuiCriteriaEditor;
+import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
 import joshie.progression.helpers.CollectionHelper;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.json.Theme;
@@ -34,8 +36,10 @@ public class FeatureDrawable extends FeatureAbstract {
     private int crossX1, crossX2, crossY1, crossY2;
     private int gradient1, gradient2, fontColor;
     private int offsetY;
+    private String text;
 
-    public FeatureDrawable(List<IFieldProvider> drawable, int offsetY, int x1, int x2, int y1, int y2, IGuiFeature newDrawable, int gradient1, int gradient2, int fontColor) {
+    public FeatureDrawable(String text, List<IFieldProvider> drawable, int offsetY, int x1, int x2, int y1, int y2, IGuiFeature newDrawable, int gradient1, int gradient2, int fontColor) {
+        this.text = text;
         this.drawable = drawable;
         this.offsetY = offsetY;
         this.crossX1 = x1;
@@ -68,17 +72,20 @@ public class FeatureDrawable extends FeatureAbstract {
     }
 
     private void addFieldsViaReflection(IFieldProvider provider, List<IField> fields) {
+        Type type = provider instanceof IRewardType ? Type.REWARD : Type.TRIGGER;
         for (Field field : provider.getClass().getFields()) {
             if (provider instanceof ISpecialFieldProvider) {
                 if (((ISpecialFieldProvider) provider).shouldReflectionSkipField(field.getName())) continue;
             }
+            
+            
 
             if (field.getClass().isEnum()) fields.add(new EnumField(field.getName(), (IEnum) provider));
             if (field.getType() == boolean.class) fields.add(new BooleanField(field.getName(), provider));
-            if (field.getType() == String.class) fields.add(new TextField(field.getName(), provider));
-            if (field.getType() == int.class) fields.add(new TextField(field.getName(), provider));
-            if (field.getType() == float.class) fields.add(new TextField(field.getName(), provider));
-            if (field.getType() == double.class) fields.add(new TextField(field.getName(), provider));
+            if (field.getType() == String.class) fields.add(new TextField(field.getName(), provider, type));
+            if (field.getType() == int.class) fields.add(new TextField(field.getName(), provider, type));
+            if (field.getType() == float.class) fields.add(new TextField(field.getName(), provider, type));
+            if (field.getType() == double.class) fields.add(new TextField(field.getName(), provider, type));
             if (field.getGenericType().toString().equals("java.util.List<" + ProgressionInfo.FILTER + ">")) {
                 fields.add(new ItemFilterField(field.getName(), provider));
             }
@@ -178,6 +185,7 @@ public class FeatureDrawable extends FeatureAbstract {
             int crossX = crossX1;
             int crossY = crossY1;
             if (mouseOffsetX >= 15 && mouseOffsetX <= 70 && mouseOffsetY >= 10 && mouseOffsetY <= 65) {
+                FeatureTooltip.INSTANCE.addTooltip(text);
                 crossX = crossX2;
                 crossY = crossY2;
             }
@@ -265,6 +273,11 @@ public class FeatureDrawable extends FeatureAbstract {
             }
         }
 
+        return false;
+    }
+
+    @Override
+    public boolean isOverlay() {
         return false;
     }
 }
