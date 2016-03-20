@@ -52,6 +52,7 @@ public abstract class GuiCore extends GuiScreen {
     public int screenTop; // Top of the screen :D
     public int screenWidth; //Width of the screen
     public boolean switching = false;
+    public boolean scrollingEnabled = true;
 
     public abstract int getPreviousGuiID();
 
@@ -116,12 +117,12 @@ public abstract class GuiCore extends GuiScreen {
             if (feature.isVisible() && !feature.isOverlay()) { //Only draw visible stuff
                 feature.draw(cursorX, cursorY - screenTop);
             }
-            
+
             if (feature.isVisible() && feature.isOverlay()) overlayvisible = true;
         }
 
         drawGuiForeground(overlayvisible, mouseX, mouseY - screenTop);
-        
+
         for (IGuiFeature feature : features) {
             if (feature.isVisible() && feature.isOverlay()) { //Only new Stuff
                 feature.draw(cursorX, cursorY - screenTop);
@@ -143,7 +144,7 @@ public abstract class GuiCore extends GuiScreen {
                     if (feature.mouseClicked(mouseX, mouseY - screenTop, button)) {
                         return; // Don't continue if a mouse click was processed
                     }
-                    
+
                     if (feature.isOverlay()) overlayvisible = true;
                 }
             }
@@ -219,12 +220,14 @@ public abstract class GuiCore extends GuiScreen {
 
     // Scrolling Helpers
     public void scroll(int amount) {
-        offsetX += amount;
-        if (offsetX >= 0) {
-            offsetX = 0;
-        }
+        if (scrollingEnabled) {
+            offsetX += amount;
+            if (offsetX >= 0) {
+                offsetX = 0;
+            }
 
-        offsetCache.put(getKey(), offsetX);
+            offsetCache.put(getKey(), offsetX);
+        }
     }
 
     // Helper Drawing functions
@@ -263,9 +266,19 @@ public abstract class GuiCore extends GuiScreen {
     public void drawText(String text, int left, int top, int color) {
         drawText(text, left, top, color, 1F);
     }
+    
+    public void drawRightAlignedText(String text, int left, int top, int color) {
+        drawRightAlignedText(text, left, top, color, 1F);
+    }
 
     public void drawText(String text, int left, int top, int color, float scale) {
         fontRendererObj.drawString(text, (int) (left / scale), (int) ((top + screenTop) / scale), color);
+    }
+    
+    public void drawRightAlignedText(String text, int left, int top, int color, float scale) {
+        fontRendererObj.setBidiFlag(true);
+        fontRendererObj.drawString(text, (int) (left / scale), (int) ((top + screenTop) / scale), color);
+        fontRendererObj.setBidiFlag(false);
     }
 
     public void drawSplitText(String text, int left, int top, int width, int color) {

@@ -101,6 +101,7 @@ import joshie.progression.network.PacketSyncCriteria;
 import joshie.progression.network.PacketSyncImpossible;
 import joshie.progression.network.PacketSyncJSONToClient;
 import joshie.progression.network.PacketSyncJSONToServer;
+import joshie.progression.network.PacketSyncTeam;
 import joshie.progression.network.PacketSyncTriggers;
 import joshie.progression.player.PlayerHandler;
 import joshie.progression.player.PlayerSavedData;
@@ -265,6 +266,7 @@ public class Progression {
         PacketHandler.registerPacket(PacketCompleted.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketOpenEditor.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketFireTrigger.class, Side.SERVER);
+        PacketHandler.registerPacket(PacketSyncTeam.class);
         PacketHandler.registerPacket(PacketReload.class);
         PacketHandler.registerPacket(PacketReset.class);
         PacketHandler.registerPacket(PacketSyncJSONToClient.class);

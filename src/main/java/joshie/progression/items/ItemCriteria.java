@@ -9,6 +9,7 @@ import joshie.progression.crafting.CraftingRegistry;
 import joshie.progression.crafting.CraftingUnclaimed;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.PlayerHelper;
+import joshie.progression.lib.GuiIDs;
 import joshie.progression.network.PacketClaimed;
 import joshie.progression.network.PacketHandler;
 import joshie.progression.player.PlayerTracker;
@@ -20,6 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
@@ -101,7 +103,8 @@ public class ItemCriteria extends Item {
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
         if (stack.getItemDamage() == BOOK) {
-            player.openGui(Progression.instance, 0, null, 0, 0, 0);
+            int guiid = player.isSneaking() ? GuiIDs.GROUP : GuiIDs.TREE;
+            player.openGui(Progression.instance, guiid, null, 0, 0, 0);
         } else if (!world.isRemote) {
             ICriteria criteria = getCriteriaFromStack(stack);
             if (criteria != null) {
@@ -121,9 +124,13 @@ public class ItemCriteria extends Item {
         if (stack.getItemDamage() == CLAIM) {
             list.add("Right click me on tiles");
             list.add("to claim them as yours");
-        } else if (stack.getItemDamage() == BOOK && player.capabilities.isCreativeMode) {
-            list.add("Right click me to open");
-            list.add("'Progression editor'");
+        } else if (stack.getItemDamage() == BOOK) {
+            list.add(EnumChatFormatting.ITALIC + "Hold Shift to Edit Team");
+            if (player.capabilities.isCreativeMode) {
+                list.add("");
+                list.add("Right click me to open");
+                list.add("'Progression editor'");
+            }
         }
     }
 

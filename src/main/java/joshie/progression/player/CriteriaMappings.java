@@ -30,6 +30,7 @@ import joshie.progression.network.PacketHandler;
 import joshie.progression.network.PacketSyncAbilities;
 import joshie.progression.network.PacketSyncCriteria;
 import joshie.progression.network.PacketSyncImpossible;
+import joshie.progression.network.PacketSyncTeam;
 import joshie.progression.network.PacketSyncTriggers;
 import joshie.progression.network.PacketSyncTriggers.SyncPair;
 import joshie.progression.player.nbt.CriteriaNBT;
@@ -65,6 +66,7 @@ public class CriteriaMappings {
     public void syncToClient(EntityPlayerMP player) {
         //remap(); //Remap the data, before the client gets sent the data
 
+        PacketHandler.sendToClient(new PacketSyncTeam(master.getTeam()), player);
         PacketHandler.sendToClient(new PacketSyncAbilities(master.getAbilities()), player);
         SyncPair[] values = new SyncPair[APIHandler.getCriteria().size()];
         int pos = 0;

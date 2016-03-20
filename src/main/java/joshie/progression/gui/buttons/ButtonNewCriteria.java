@@ -32,8 +32,8 @@ public class ButtonNewCriteria extends ButtonBase {
         if (k == 2) {
             ArrayList<String> name = new ArrayList();
             name.add(EnumChatFormatting.WHITE + "New");
-            name.add(EnumChatFormatting.GRAY + "Click and Drag for Criteria");
-            name.add(EnumChatFormatting.GRAY + "Shift Click for a Tab");
+            name.add(EnumChatFormatting.GRAY + "Click for a New Criteria");
+            name.add(EnumChatFormatting.GRAY + "Shift Click for a New Tab");
             GuiTreeEditor.INSTANCE.addTooltip(name);
         }
     }

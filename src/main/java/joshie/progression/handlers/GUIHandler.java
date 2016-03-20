@@ -3,6 +3,7 @@ package joshie.progression.handlers;
 import joshie.progression.gui.GuiTreeEditor;
 import joshie.progression.gui.newversion.GuiConditionEditor;
 import joshie.progression.gui.newversion.GuiCriteriaEditor;
+import joshie.progression.gui.newversion.GuiGroupEditor;
 import joshie.progression.gui.newversion.GuiItemFilterEditor;
 import joshie.progression.lib.GuiIDs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,6 +22,7 @@ public class GUIHandler implements IGuiHandler {
         else if (ID == GuiIDs.CONDITION) return GuiConditionEditor.INSTANCE;
         else if (ID == GuiIDs.ITEM) return GuiItemFilterEditor.INSTANCE;
         else if (ID == GuiIDs.TREE) return GuiTreeEditor.INSTANCE;
+        else if (ID == GuiIDs.GROUP) return GuiGroupEditor.INSTANCE;
         else return null;
     }
 }

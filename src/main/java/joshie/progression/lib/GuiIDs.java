@@ -5,4 +5,5 @@ public class GuiIDs {
     public static final int CRITERIA = 1;
     public static final int CONDITION = 2;
     public static final int ITEM = 3;
+    public static final int GROUP = 4;
 }

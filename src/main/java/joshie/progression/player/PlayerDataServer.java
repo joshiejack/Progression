@@ -7,9 +7,9 @@ import joshie.progression.network.PacketHandler;
 import joshie.progression.network.PacketSyncAbilities;
 import joshie.progression.player.DataStats.SpeedType;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class PlayerDataServer extends PlayerDataCommon {
-    private final PlayerTeam team;
 	private final UUID uuid;
 	
 	public PlayerDataServer(PlayerTeam team) {
@@ -18,9 +18,13 @@ public class PlayerDataServer extends PlayerDataCommon {
 		this.mappings.setMaster(this);
 	}
 	
-	public PlayerTeam getTeam() {
-	    return team;
-	}
+	@Override
+    public void setTeam(PlayerTeam team) {
+        NBTTagCompound data = new NBTTagCompound();
+        team.writeToNBT(data);
+        this.team.readFromNBT(data);
+        this.team.syncChanges(Side.SERVER);
+    }
 	
 	public UUID getUUID() {
 		return uuid;
