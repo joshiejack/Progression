@@ -2,9 +2,10 @@ package joshie.progression.gui.fields;
 
 import java.lang.reflect.Field;
 
-import joshie.progression.api.IItemGetterCallback;
 import joshie.progression.api.ISetterCallback;
 import joshie.progression.api.ISpecialFilters;
+import joshie.progression.api.fields.IInit;
+import joshie.progression.api.fields.IItemGetterCallback;
 import joshie.progression.api.filters.IFilterSelectorFilter;
 import joshie.progression.gui.editors.IItemSelectable;
 import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
@@ -103,7 +104,14 @@ public class ItemField extends AbstractField implements IItemSelectable {
                 if (this.object instanceof ISetterCallback) {
                     ((ISetterCallback) this.object).setField(field.getName(), stack);
                 } else field.set(this.object, stack);
-            } catch (Exception e) { e.printStackTrace(); }
+
+                //Init the object after we've set it
+                if (this.object instanceof IInit) {
+                    ((IInit) this.object).init();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

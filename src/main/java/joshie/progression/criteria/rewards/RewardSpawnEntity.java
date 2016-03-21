@@ -6,10 +6,8 @@ import java.util.List;
 import java.util.UUID;
 
 import joshie.progression.api.IFilter;
-import joshie.progression.api.ISetterCallback;
 import joshie.progression.api.ISpecialFilters;
-import joshie.progression.api.fields.IField;
-import joshie.progression.api.fields.ISpecialFieldProvider;
+import joshie.progression.api.fields.IInit;
 import joshie.progression.api.filters.IFilterSelectorFilter;
 import joshie.progression.gui.selector.filters.EntityFilter;
 import joshie.progression.gui.selector.filters.LocationFilter;
@@ -25,16 +23,20 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 
-public class RewardSpawnEntity extends RewardBase implements ISpecialFilters, ISetterCallback {
+public class RewardSpawnEntity extends RewardBase implements ISpecialFilters, IInit {
     public List<IFilter> locations = new ArrayList();
     public List<IFilter> entities = new ArrayList();
     public NBTTagCompound tagValue = new NBTTagCompound();
     public String tagText = "";
     public int spawnNumber = 1;
-    public boolean armour = true;
 
     public RewardSpawnEntity() {
         super("entity", 0xFFE599FF);
+    }
+    
+    @Override
+    public void init() {
+        tagValue = StackHelper.getTag(new String[] { tagText }, 0);
     }
     
     @Override
@@ -78,17 +80,5 @@ public class RewardSpawnEntity extends RewardBase implements ISpecialFilters, IS
         if (fieldName.equals("entities")) return EntityFilter.INSTANCE;
 
         return null;
-    }
-
-    @Override
-    public boolean setField(String fieldName, Object object) {
-        if (fieldName.equals("tagText")) {
-            String fieldValue = (String) object;
-            tagValue = StackHelper.getTag(new String[] { fieldValue }, 0);
-            tagText = fieldValue; //Temporary fieldr
-            return true;
-        }
-
-        return false;
     }
 }

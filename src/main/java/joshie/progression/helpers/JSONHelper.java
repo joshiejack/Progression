@@ -8,7 +8,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import joshie.progression.api.IFilter;
-import joshie.progression.api.IInitAfterRead;
 import joshie.progression.api.ISpecialJSON;
 import joshie.progression.api.fields.IFieldProvider;
 import joshie.progression.handlers.APIHandler;
@@ -194,7 +193,7 @@ public class JSONHelper {
             JsonObject object = array.get(i).getAsJsonObject();
             String typeName = object.get("type").getAsString();
             JsonObject typeData = object.get("data").getAsJsonObject();
-            IFilter filter = APIHandler.newItemFilter(typeName, typeData);
+            IFilter filter = APIHandler.newFilter(typeName, typeData);
             if (filter != null) {
                 filters.add(filter);
             }
@@ -353,9 +352,6 @@ public class JSONHelper {
         }
 
         if (!specialOnly) JSONHelper.readVariables(data, provider);
-        if (provider instanceof IInitAfterRead) {
-            ((IInitAfterRead) provider).init();
-        }
     }
 
     public static void writeJSON(JsonObject data, IFieldProvider provider) {

@@ -4,12 +4,11 @@ import java.util.Set;
 
 import com.google.common.collect.HashMultimap;
 
-import joshie.progression.api.IInitAfterRead;
-import joshie.progression.api.ISetterCallback;
+import joshie.progression.api.fields.IInit;
 import joshie.progression.helpers.EntityHelper;
 import net.minecraft.entity.EntityLivingBase;
 
-public class FilterEntityName extends FilterBaseEntity implements ISetterCallback, IInitAfterRead {
+public class FilterEntityName extends FilterBaseEntity implements IInit {
     private static HashMultimap<Integer, String> cache = HashMultimap.create();
     private String checkName = "Pig";
     private boolean matchBoth;
@@ -24,7 +23,12 @@ public class FilterEntityName extends FilterBaseEntity implements ISetterCallbac
 
     @Override
     public void init() {
-        setField("entityName", entityName);
+        if (entityName.startsWith("*")) matchFront = true;
+        else matchFront = false;
+        if (entityName.endsWith("*")) matchBack = true;
+        else matchBack = false;
+        matchBoth = matchFront && matchBack;
+        checkName = entityName.replaceAll("\\*", "");
     }
 
     @Override
@@ -45,18 +49,5 @@ public class FilterEntityName extends FilterBaseEntity implements ISetterCallbac
         }
 
         return false;
-    }
-
-    @Override
-    public boolean setField(String fieldName, Object object) {
-        String fieldValue = (String) object;
-        entityName = fieldValue;
-        if (entityName.startsWith("*")) matchFront = true;
-        else matchFront = false;
-        if (entityName.endsWith("*")) matchBack = true;
-        else matchBack = false;
-        matchBoth = matchFront && matchBack;
-        checkName = entityName.replaceAll("\\*", "");
-        return true;
     }
 }

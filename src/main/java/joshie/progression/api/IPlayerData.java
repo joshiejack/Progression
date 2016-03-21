@@ -6,7 +6,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
 public interface IPlayerData {
+    /** Returns the tag compound with this string id **/
     public NBTTagCompound getCustomData(EntityPlayer player, String string);
+    
+    /** Returns the tag compound with this string id **/
     public NBTTagCompound getCustomData(UUID uuid, String string);
     
     /** Only call me serverside **/

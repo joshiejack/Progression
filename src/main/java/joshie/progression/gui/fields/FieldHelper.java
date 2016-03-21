@@ -3,6 +3,7 @@ package joshie.progression.gui.fields;
 import java.lang.reflect.Field;
 
 import joshie.progression.api.ISetterCallback;
+import joshie.progression.api.fields.IInit;
 import joshie.progression.gui.editors.EditText.ITextEditable;
 import joshie.progression.gui.newversion.overlays.FeatureFullTextEditor;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
@@ -67,6 +68,11 @@ public class FieldHelper implements ITextEditable {
     public void set(Object o2) {
         try {
             f.set(o, o2);
+
+            //Init the object after we've set it
+            if (o instanceof IInit) {
+                ((IInit) o).init();
+            }
         } catch (Exception e) {}
     }
 

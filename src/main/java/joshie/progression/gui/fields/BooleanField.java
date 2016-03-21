@@ -2,7 +2,7 @@ package joshie.progression.gui.fields;
 
 import java.lang.reflect.Field;
 
-import joshie.progression.api.ProgressionAPI;
+import joshie.progression.api.fields.IInit;
 import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 
 public class BooleanField extends AbstractField {
@@ -35,12 +35,16 @@ public class BooleanField extends AbstractField {
 
     public void setBoolean(boolean bool) throws IllegalArgumentException, IllegalAccessException {
         field.set(object, bool);
+        //Init the object after we've set it
+        if (object instanceof IInit) {
+            ((IInit) object).init();
+        }
     }
 
     public BooleanField(String name, Object object) {
         this(name, name, object);
     }
-    
+
     @Override
     public String getFieldName() {
         return field.getName();
@@ -52,12 +56,14 @@ public class BooleanField extends AbstractField {
             setBoolean(!getBoolean());
         } catch (Exception e) {}
     }
-    
+
     @Override
     public String getField() {
         try {
             return "" + getBoolean();
-        } catch (Exception e) { return "" + false; }
+        } catch (Exception e) {
+            return "" + false;
+        }
     }
 
     @Override

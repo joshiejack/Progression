@@ -8,7 +8,7 @@ import joshie.progression.api.ISetterCallback;
 import joshie.progression.api.IStoreNBTData;
 import joshie.progression.api.ITab;
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.TabVisibleEvent;
+import joshie.progression.api.event.TabVisibleEvent;
 import joshie.progression.handlers.APIHandler;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;

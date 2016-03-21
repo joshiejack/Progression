@@ -6,11 +6,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import joshie.progression.api.IInitAfterRead;
-import joshie.progression.api.ISetterCallback;
 import joshie.progression.api.fields.IField;
+import joshie.progression.api.fields.IInit;
 import joshie.progression.api.fields.ISpecialFieldProvider;
-import joshie.progression.api.fields.ISpecialFieldProvider.DisplayMode;
 import joshie.progression.criteria.filters.item.FilterBaseItem;
 import joshie.progression.gui.fields.ItemField;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
@@ -19,7 +17,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 
-public class FilterPotionEffect extends FilterBaseItem implements ISetterCallback, IInitAfterRead, ISpecialFieldProvider {
+public class FilterPotionEffect extends FilterBaseItem implements IInit, ISpecialFieldProvider {
     private static final List<PotionEffect> EMPTY = new ArrayList();
     public int potionid = 16385; //Splash Potion of Regen, 33 seconds
     public ItemStack stack;
@@ -48,6 +46,7 @@ public class FilterPotionEffect extends FilterBaseItem implements ISetterCallbac
 
     @Override
     public void init() {
+        potionid = stack.getItemDamage();
         setupEffectsItemsIDs();
     }
 
@@ -92,17 +91,5 @@ public class FilterPotionEffect extends FilterBaseItem implements ISetterCallbac
     public boolean matches(ItemStack check) {
         if (check.getItem() != Items.potionitem) return false;
         return matches(getEffects(check.getItemDamage()));
-    }
-
-    @Override
-    public boolean setField(String fieldName, Object object) {
-        if (fieldName.equals("item")) {
-            ItemStack stack = (ItemStack) object;
-            potionid = stack.getItemDamage();
-            setupEffectsItemsIDs();
-            return true;
-        }
-
-        return false;
     }
 }

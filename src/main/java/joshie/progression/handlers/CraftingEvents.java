@@ -5,9 +5,9 @@ import java.util.Collection;
 import java.util.Set;
 
 import joshie.progression.Progression;
-import joshie.progression.api.ActionEvent.CanObtainFromActionEvent;
-import joshie.progression.api.ActionEvent.CanUseToPeformActionEvent;
 import joshie.progression.api.ICriteria;
+import joshie.progression.api.event.ActionEvent.CanObtainFromActionEvent;
+import joshie.progression.api.event.ActionEvent.CanUseToPeformActionEvent;
 import joshie.progression.crafting.ActionType;
 import joshie.progression.crafting.Crafter;
 import joshie.progression.crafting.CraftingRegistry;

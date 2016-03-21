@@ -2,9 +2,9 @@ package joshie.progression.criteria.filters.block;
 
 import java.util.List;
 
-import joshie.progression.api.IItemGetterCallback;
 import joshie.progression.api.ISetterCallback;
 import joshie.progression.api.fields.IField;
+import joshie.progression.api.fields.IItemGetterCallback;
 import joshie.progression.api.fields.ISpecialFieldProvider;
 import joshie.progression.gui.fields.ItemField;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;

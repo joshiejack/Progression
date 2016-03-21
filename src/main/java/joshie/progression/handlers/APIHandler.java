@@ -16,12 +16,14 @@ import joshie.progression.api.ITab;
 import joshie.progression.api.ITriggerData;
 import joshie.progression.api.ITriggerType;
 import joshie.progression.api.fields.IFieldProvider;
+import joshie.progression.api.fields.IInit;
 import joshie.progression.crafting.ActionType;
 import joshie.progression.criteria.Criteria;
 import joshie.progression.criteria.Tab;
 import joshie.progression.criteria.triggers.data.DataBoolean;
 import joshie.progression.criteria.triggers.data.DataCount;
 import joshie.progression.criteria.triggers.data.DataCrafting;
+import joshie.progression.gui.fields.ItemFilterField;
 import joshie.progression.helpers.CraftingHelper;
 import joshie.progression.helpers.JSONHelper;
 import joshie.progression.helpers.PlayerHelper;
@@ -192,11 +194,8 @@ public class APIHandler implements IProgressionAPI {
         return newRewardType;
     }
 
-    public static IFilter newItemFilter(String typeName, JsonObject typeData) {
-        return (IFilter) newFilter(true, typeName, typeData);
-    }
 
-    private static IFilter newFilter(boolean isItemFilter, String typeName, JsonObject typeData) {
+   public static IFilter newFilter(String typeName, JsonObject typeData) {
         IFilter type = itemFilterTypes.get(typeName);
         if (type != null) {
             try {
@@ -216,6 +215,7 @@ public class APIHandler implements IProgressionAPI {
             newTriggerType.setCriteria(criteria);
             EventsManager.onTriggerAdded(newTriggerType);
             criteria.getTriggers().add(newTriggerType);
+            if (newTriggerType instanceof IInit) ((IInit)newTriggerType).init();
         } catch (Exception e) {}
 
         return newTriggerType;
@@ -229,6 +229,7 @@ public class APIHandler implements IProgressionAPI {
             newRewardType.setCriteria(criteria);
             EventsManager.onRewardAdded(newRewardType);
             criteria.getRewards().add(newRewardType);
+            if (newRewardType instanceof IInit) ((IInit)newRewardType).init();
         } catch (Exception e) {}
 
         return newRewardType;
@@ -241,9 +242,19 @@ public class APIHandler implements IProgressionAPI {
             newConditionType = oldConditionType.getClass().newInstance();
             newConditionType.setTrigger(trigger);
             trigger.getConditions().add(newConditionType);
+            if (newConditionType instanceof IInit) ((IInit)newConditionType).init();
         } catch (Exception e) {}
 
         return newConditionType;
+    }
+    
+
+    public static void cloneFilter(ItemFilterField field, IFilter filter) {
+        try {
+            IFilter newFilter = filter.getClass().newInstance();
+            if (newFilter instanceof IInit) ((IInit)newFilter).init();
+            field.add(newFilter);
+        } catch (Exception e) {}
     }
 
     @Override

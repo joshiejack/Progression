@@ -1,7 +1,7 @@
 package joshie.progression.helpers;
 
-import joshie.progression.api.ActionEvent.CanObtainFromActionEvent;
-import joshie.progression.api.ActionEvent.CanUseToPeformActionEvent;
+import joshie.progression.api.event.ActionEvent.CanObtainFromActionEvent;
+import joshie.progression.api.event.ActionEvent.CanUseToPeformActionEvent;
 import joshie.progression.crafting.ActionType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

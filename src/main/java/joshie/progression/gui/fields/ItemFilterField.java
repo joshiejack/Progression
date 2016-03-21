@@ -8,6 +8,7 @@ import joshie.progression.Progression;
 import joshie.progression.api.IFilter;
 import joshie.progression.api.ISetterCallback;
 import joshie.progression.api.ISpecialFilters;
+import joshie.progression.api.fields.IInit;
 import joshie.progression.api.filters.IFilterSelectorFilter;
 import joshie.progression.gui.newversion.GuiCriteriaEditor;
 import joshie.progression.gui.newversion.GuiItemFilterEditor;
@@ -85,6 +86,11 @@ public class ItemFilterField extends AbstractField {
             if (object instanceof ISetterCallback) {
                 ((ISetterCallback) object).setField(field.getName(), filters);
             } else field.set(object, filters);
+
+            //Init the object after we've set it
+            if (object instanceof IInit) {
+                ((IInit) object).init();
+            }
         } catch (Exception e) {}
     }
 

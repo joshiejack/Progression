@@ -1,5 +1,6 @@
-package joshie.progression.api;
+package joshie.progression.api.event;
 
+import joshie.progression.api.IProgressionAPI;
 import joshie.progression.crafting.ActionType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

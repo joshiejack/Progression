@@ -4,13 +4,12 @@ import java.util.Set;
 
 import com.google.common.collect.HashMultimap;
 
-import joshie.progression.api.IInitAfterRead;
-import joshie.progression.api.ISetterCallback;
+import joshie.progression.api.fields.IInit;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class FilterItemOre extends FilterBaseItem implements ISetterCallback, IInitAfterRead {
+public class FilterItemOre extends FilterBaseItem implements IInit {
     private static HashMultimap<String, String> cache = HashMultimap.create();
     private String checkName = "oreIron";
     private boolean matchBoth;
@@ -26,10 +25,15 @@ public class FilterItemOre extends FilterBaseItem implements ISetterCallback, II
     public FilterItemOre(String string, int color) {
         super(string, color);
     }
-
+   
     @Override
     public void init() {
-        setField("oreName", oreName);
+        if (oreName.startsWith("*")) matchFront = true;
+        else matchFront = false;
+        if (oreName.endsWith("*")) matchBack = true;
+        else matchBack = false;
+        matchBoth = matchFront && matchBack;
+        checkName = oreName.replaceAll("\\*", "");
     }
 
     @Override
@@ -57,18 +61,5 @@ public class FilterItemOre extends FilterBaseItem implements ISetterCallback, II
         }
 
         return false;
-    }
-
-    @Override
-    public boolean setField(String fieldName, Object object) {
-        String fieldValue = (String) object;
-        oreName = fieldValue;
-        if (oreName.startsWith("*")) matchFront = true;
-        else matchFront = false;
-        if (oreName.endsWith("*")) matchBack = true;
-        else matchBack = false;
-        matchBoth = matchFront && matchBack;
-        checkName = oreName.replaceAll("\\*", "");
-        return true;
     }
 }

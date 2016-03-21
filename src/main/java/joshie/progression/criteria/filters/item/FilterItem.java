@@ -2,14 +2,12 @@ package joshie.progression.criteria.filters.item;
 
 import java.util.List;
 
-import joshie.progression.api.IItemGetterCallback;
 import joshie.progression.api.ISetterCallback;
 import joshie.progression.api.fields.IField;
+import joshie.progression.api.fields.IItemGetterCallback;
 import joshie.progression.api.fields.ISpecialFieldProvider;
-import joshie.progression.api.fields.ISpecialFieldProvider.DisplayMode;
 import joshie.progression.gui.fields.ItemField;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
-import joshie.progression.gui.selector.filters.BlockFilter;
 import joshie.progression.gui.selector.filters.ItemFilter;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -45,7 +43,6 @@ public class FilterItem extends FilterBaseItem implements IItemGetterCallback, I
     @Override
     public boolean setField(String fieldName, Object stack) {
         item = ((ItemStack) stack).getItem();
-
         return true;
     }
 }

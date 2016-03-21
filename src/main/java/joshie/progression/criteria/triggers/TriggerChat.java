@@ -3,10 +3,9 @@ package joshie.progression.criteria.triggers;
 import java.util.UUID;
 
 import joshie.progression.api.ICancelable;
-import joshie.progression.api.IInitAfterRead;
-import joshie.progression.api.ISetterCallback;
 import joshie.progression.api.ITriggerData;
 import joshie.progression.api.ProgressionAPI;
+import joshie.progression.api.fields.IInit;
 import joshie.progression.criteria.triggers.data.DataBoolean;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,7 +16,7 @@ import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class TriggerChat extends TriggerBaseBoolean implements ISetterCallback, IInitAfterRead, ICancelable {
+public class TriggerChat extends TriggerBaseBoolean implements IInit, ICancelable {
     private String matchString;
     private boolean matchBoth;
     private boolean matchFront;
@@ -32,7 +31,12 @@ public class TriggerChat extends TriggerBaseBoolean implements ISetterCallback, 
 
     @Override
     public void init() {
-        setField("toMatch", toMatch);
+        if (toMatch.startsWith("*")) matchFront = true;
+        else matchFront = false;
+        if (toMatch.endsWith("*")) matchBack = true;
+        else matchBack = false;
+        matchBoth = matchFront && matchBack;
+        matchString = toMatch.replaceAll("\\*", "");
     }
 
     @Override
@@ -73,18 +77,5 @@ public class TriggerChat extends TriggerBaseBoolean implements ISetterCallback, 
         else if (!matchFront && matchBack && matchString.startsWith(command)) return true;
         else if (matchString.equals(command)) return true;
         else return false;
-    }
-
-    @Override
-    public boolean setField(String fieldName, Object object) {
-        String fieldValue = (String) object;
-        toMatch = fieldValue;
-        if (toMatch.startsWith("*")) matchFront = true;
-        else matchFront = false;
-        if (toMatch.endsWith("*")) matchBack = true;
-        else matchBack = false;
-        matchBoth = matchFront && matchBack;
-        matchString = toMatch.replaceAll("\\*", "");
-        return true;
     }
 }

@@ -1,7 +1,7 @@
 package joshie.progression.gui.fields;
 
-import joshie.progression.api.IStackSizeable;
 import joshie.progression.api.fields.IField;
+import joshie.progression.api.fields.IStackSizeable;
 import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import joshie.progression.gui.newversion.overlays.FeatureTooltip;
 import joshie.progression.helpers.ItemHelper;

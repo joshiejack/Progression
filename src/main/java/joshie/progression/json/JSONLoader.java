@@ -19,9 +19,12 @@ import com.google.gson.JsonObject;
 import joshie.progression.Progression;
 import joshie.progression.api.IConditionType;
 import joshie.progression.api.ICriteria;
+import joshie.progression.api.IFilter;
 import joshie.progression.api.IRewardType;
 import joshie.progression.api.ITab;
 import joshie.progression.api.ITriggerType;
+import joshie.progression.api.fields.IHasFilters;
+import joshie.progression.api.fields.IInit;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.handlers.RemappingHandler;
 import joshie.progression.helpers.JSONHelper;
@@ -261,6 +264,38 @@ public class JSONLoader {
                 }
 
                 theCriteria.init(thePrereqs, theConflicts, display, isVisible, mustClaim, achievement, repeatable, icon, allRequired, tasksRequired, infinite, allRewards, rewardsGiven, x, y);
+            }
+        }
+        
+        //Now that everything has been loaded in, we should go and init all the data
+        for (ITab tab : APIHandler.getTabs().values()) {
+            for (ICriteria criteria: tab.getCriteria()) {
+                for (ITriggerType trigger: criteria.getTriggers()) {
+                    if (trigger instanceof IInit) ((IInit)trigger).init();
+                    if (trigger instanceof IHasFilters) {
+                        for (IFilter filter: ((IHasFilters)trigger).getAllFilters()) {
+                            if (filter instanceof IInit) ((IInit)filter).init();
+                        }
+                    }
+                    
+                    for (IConditionType condition: trigger.getConditions()) {
+                        if (condition instanceof IInit) ((IInit)condition).init();
+                        if (condition instanceof IHasFilters) {
+                            for (IFilter filter: ((IHasFilters)condition).getAllFilters()) {
+                                if (filter instanceof IInit) ((IInit)filter).init();
+                            }
+                        }
+                    }
+                 }
+                
+                for (IRewardType reward: criteria.getRewards()) {
+                    if (reward instanceof IInit) ((IInit)reward).init();
+                    if (reward instanceof IHasFilters) {
+                        for (IFilter filter: ((IHasFilters)reward).getAllFilters()) {
+                            if (filter instanceof IInit) ((IInit)filter).init();
+                        }
+                    }
+                }
             }
         }
     }

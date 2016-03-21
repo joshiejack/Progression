@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.UUID;
 
 import joshie.progression.Progression;
-import joshie.progression.api.IStackSizeable;
 import joshie.progression.api.fields.IField;
 import joshie.progression.api.fields.ISpecialFieldProvider;
+import joshie.progression.api.fields.IStackSizeable;
 import joshie.progression.gui.fields.ItemFilterFieldPreview;
 import joshie.progression.helpers.ItemHelper;
 import joshie.progression.helpers.MCClientHelper;

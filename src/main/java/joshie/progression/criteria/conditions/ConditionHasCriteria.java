@@ -4,20 +4,34 @@ import java.util.UUID;
 
 import joshie.progression.api.ICriteria;
 import joshie.progression.api.IGetterCallback;
-import joshie.progression.api.ISetterCallback;
+import joshie.progression.api.fields.IInit;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
-public class ConditionHasCriteria extends ConditionBase implements IGetterCallback, ISetterCallback {
+public class ConditionHasCriteria extends ConditionBase implements IGetterCallback, IInit {
     private ICriteria criteria = null;
     private String criteriaID = "";
     public String displayName = "";
 
     public ConditionHasCriteria() {
         super("criteria", 0xFF00FFBF);
+    }
+    
+    @Override
+    public void init() {
+        try {
+            for (ICriteria c : APIHandler.getCriteria().values()) {
+                String display = c.getDisplayName();
+                if (c.getDisplayName().equals(displayName)) {
+                    criteria = c;
+                    criteriaID = c.getUniqueName();
+                    break;
+                }
+            }
+        } catch (Exception e) {}
     }
 
     public ICriteria getAssignedCriteria() {
@@ -43,27 +57,5 @@ public class ConditionHasCriteria extends ConditionBase implements IGetterCallba
 
             return criteria != null ? EnumChatFormatting.GREEN + displayName : EnumChatFormatting.RED + displayName;
         } else return null;
-    }
-
-    @Override
-    public boolean setField(String fieldName, Object object) {
-        String fieldValue = (String) object;
-        if (fieldName.equals("displayName")) {
-            displayName = fieldValue;
-
-            try {
-                for (ICriteria c : APIHandler.getCriteria().values()) {
-                    String display = c.getDisplayName();
-                    if (c.getDisplayName().equals(displayName)) {
-                        criteria = c;
-                        criteriaID = c.getUniqueName();
-                        return true;
-                    }
-                }
-            } catch (Exception e) {}
-        }
-
-        //FAILURE :D
-        return false;
     }
 }

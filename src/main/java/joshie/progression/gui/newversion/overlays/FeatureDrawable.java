@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import joshie.progression.Progression;
-import joshie.progression.api.IEnum;
 import joshie.progression.api.IRewardType;
 import joshie.progression.api.ITriggerType;
+import joshie.progression.api.fields.IEnum;
 import joshie.progression.api.fields.IField;
 import joshie.progression.api.fields.IFieldProvider;
 import joshie.progression.api.fields.ISpecialFieldProvider;

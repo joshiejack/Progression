@@ -2,7 +2,8 @@ package joshie.progression.gui.fields;
 
 import java.lang.reflect.Field;
 
-import joshie.progression.api.IEnum;
+import joshie.progression.api.fields.IEnum;
+import joshie.progression.api.fields.IInit;
 import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 
 public class EnumField extends AbstractField {
@@ -28,8 +29,13 @@ public class EnumField extends AbstractField {
 
     public void setField(Object next) throws IllegalArgumentException, IllegalAccessException {
         field.set(object, next);
+
+        //Init the object after we've set it
+        if (object instanceof IInit) {
+            ((IInit) object).init();
+        }
     }
-    
+
     @Override
     public String getFieldName() {
         return field.getName();
@@ -41,12 +47,14 @@ public class EnumField extends AbstractField {
             setField(object.next());
         } catch (Exception e) {}
     }
-    
+
     @Override
     public String getField() {
         try {
             return getName().toString().toLowerCase();
-        } catch (Exception e) { return ""; }
+        } catch (Exception e) {
+            return "";
+        }
     }
 
     @Override

@@ -13,7 +13,7 @@ import org.lwjgl.opengl.GL11;
 
 import joshie.progression.api.ICriteria;
 import joshie.progression.api.ITab;
-import joshie.progression.api.TabVisibleEvent;
+import joshie.progression.api.event.TabVisibleEvent;
 import joshie.progression.gui.base.GuiBase;
 import joshie.progression.gui.buttons.ButtonNewCriteria;
 import joshie.progression.gui.buttons.ButtonTab;
