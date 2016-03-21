@@ -19,7 +19,7 @@ public class ConditionHasCriteria extends ConditionBase implements IGetterCallba
     public ConditionHasCriteria() {
         super("criteria", 0xFF00FFBF);
     }
-    
+
     @Override
     public void init() {
         try {
@@ -50,12 +50,6 @@ public class ConditionHasCriteria extends ConditionBase implements IGetterCallba
 
     @Override
     public String getField(String fieldName) {
-        if (fieldName.equals(displayName)) {
-            if (criteria == null) {
-                criteria = APIHandler.getCriteriaFromName(criteriaID);
-            }
-
-            return criteria != null ? EnumChatFormatting.GREEN + displayName : EnumChatFormatting.RED + displayName;
-        } else return null;
+        return criteria != null ? EnumChatFormatting.GREEN + displayName : EnumChatFormatting.RED + displayName;
     }
 }

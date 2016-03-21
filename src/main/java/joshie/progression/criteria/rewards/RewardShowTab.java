@@ -4,11 +4,11 @@ import java.util.UUID;
 
 import joshie.progression.api.IGetterCallback;
 import joshie.progression.api.IHasEventBus;
-import joshie.progression.api.ISetterCallback;
 import joshie.progression.api.IStoreNBTData;
 import joshie.progression.api.ITab;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.event.TabVisibleEvent;
+import joshie.progression.api.fields.IInit;
 import joshie.progression.handlers.APIHandler;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
@@ -16,7 +16,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class RewardShowTab extends RewardBase implements IStoreNBTData, IHasEventBus, IGetterCallback, ISetterCallback {
+public class RewardShowTab extends RewardBase implements IStoreNBTData, IHasEventBus, IInit, IGetterCallback {
     public boolean hideByDefault = true;
     public String displayName = "";
     private String tabID = "";
@@ -29,6 +29,20 @@ public class RewardShowTab extends RewardBase implements IStoreNBTData, IHasEven
     @Override
     public EventBus getEventBus() {
         return MinecraftForge.EVENT_BUS;
+    }
+
+    @Override
+    public void init() {
+        try {
+            for (ITab t : APIHandler.getTabs().values()) {
+                String display = t.getDisplayName();
+                if (t.getDisplayName().equals(displayName)) {
+                    tab = t;
+                    tabID = t.getUniqueName();
+                    break;
+                }
+            }
+        } catch (Exception e) {}
     }
 
     public ITab getAssignedTab() {
@@ -53,7 +67,6 @@ public class RewardShowTab extends RewardBase implements IStoreNBTData, IHasEven
     @Override
     public NBTTagCompound getDefaultTags(NBTTagCompound tag) {
         if (hideByDefault) {
-            if (tab == null) setField("displayName", displayName);
             if (tab != null) {
                 tag.setBoolean(tab.getUniqueName(), true);
             }
@@ -64,37 +77,11 @@ public class RewardShowTab extends RewardBase implements IStoreNBTData, IHasEven
 
     @Override
     public String getField(String fieldName) {
-        if (fieldName.equals("displayName")) {
-            if (tab == null) setField("displayName", displayName);
-            return tab != null ? EnumChatFormatting.GREEN + displayName : EnumChatFormatting.RED + displayName;
-        } else return null;
-    }
-
-    @Override
-    public boolean setField(String fieldName, Object object) {
-        String fieldValue = (String) object;
-        if (fieldName.equals("displayName")) {
-            displayName = fieldValue;
-
-            try {
-                for (ITab t : APIHandler.getTabs().values()) {
-                    String display = t.getDisplayName();
-                    if (t.getDisplayName().equals(displayName)) {
-                        tab = t;
-                        tabID = t.getUniqueName();
-                        return true;
-                    }
-                }
-            } catch (Exception e) {}
-        }
-
-        //FAILURE :D
-        return false;
+        return tab != null ? EnumChatFormatting.GREEN + displayName : EnumChatFormatting.RED + displayName;
     }
 
     @Override
     public void reward(UUID uuid) {
-        setField("displayName", displayName);
         if (tab == null) return; //Do not give the reward
 
         NBTTagCompound tag = ProgressionAPI.player.getCustomData(uuid, "progression.tab.hidden");
