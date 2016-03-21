@@ -28,4 +28,9 @@ public class FilterSelectorHelper implements IFilterHelper {
     public IFilterSelectorFilter getItemStackFilter() {
         return ItemFilter.INSTANCE;
     }
+
+    @Override
+    public IFilterSelectorFilter getCraftingFilter() {
+        return ActionFilter.INSTANCE;
+    }
 }

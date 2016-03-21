@@ -64,6 +64,7 @@ import joshie.progression.criteria.triggers.TriggerLogin;
 import joshie.progression.criteria.triggers.TriggerObtain;
 import joshie.progression.criteria.triggers.TriggerPoints;
 import joshie.progression.criteria.triggers.TriggerTick;
+import joshie.progression.criteria.triggers.data.DataHelper;
 import joshie.progression.gui.fields.FieldRegistry;
 import joshie.progression.gui.selector.filters.FilterSelectorHelper;
 import joshie.progression.handlers.APIHandler;
@@ -110,6 +111,7 @@ public class PCommonProxy implements IGuiHandler {
         RemappingHandler.resetRegistries();
 
         //Create the API
+        ProgressionAPI.data = new DataHelper();
         ProgressionAPI.registry = new APIHandler();
         ProgressionAPI.player = new PlayerHandler();
         ProgressionAPI.filters = new FilterSelectorHelper();

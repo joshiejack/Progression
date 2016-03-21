@@ -1,18 +1,33 @@
 package joshie.progression.criteria.triggers;
 
+import java.util.List;
+
 import joshie.progression.api.ICancelable;
 import joshie.progression.api.IFilter;
 import joshie.progression.api.ISpecialFilters;
 import joshie.progression.api.ProgressionAPI;
+import joshie.progression.api.fields.IField;
+import joshie.progression.api.fields.ISpecialFieldProvider;
+import joshie.progression.api.fields.ISpecialFieldProvider.DisplayMode;
 import joshie.progression.api.filters.IFilterSelectorFilter;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
-public class TriggerBaseBlock extends TriggerBaseItemFilter implements ICancelable, ISpecialFilters {
+public class TriggerBaseBlock extends TriggerBaseItemFilter implements ICancelable, ISpecialFilters, ISpecialFieldProvider {
     public boolean cancel = false;
     
     public TriggerBaseBlock(String unlocalised, int color) {
         super(unlocalised, color);
+    }
+    
+    @Override
+    public boolean shouldReflectionSkipField(String name) {
+        return name.equals("filters");
+    }
+    
+    @Override
+    public void addSpecialFields(List<IField> fields, DisplayMode mode) {
+        if (mode == DisplayMode.EDIT) fields.add(ProgressionAPI.fields.getItemPreview(this, "filters", 30, 35, 1.9F));
     }
 
     @Override

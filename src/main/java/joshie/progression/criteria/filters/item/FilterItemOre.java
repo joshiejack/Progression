@@ -11,12 +11,12 @@ import net.minecraftforge.oredict.OreDictionary;
 
 public class FilterItemOre extends FilterBaseItem implements IInit {
     private static HashMultimap<String, String> cache = HashMultimap.create();
-    private String checkName = "oreIron";
+    private String checkName = "block";
     private boolean matchBoth;
     private boolean matchFront;
     private boolean matchBack;
     
-    public String oreName = "oreIron";
+    public String oreName = "block*";
 
     public FilterItemOre() {
         super("oreDictionary", 0xFFB25900);

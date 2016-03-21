@@ -37,11 +37,13 @@ public class RewardPotion extends RewardBaseItemFilter implements ISpecialFilter
         for (EntityPlayerMP player : players) {
             if (player != null) {
                 ItemStack stack = ItemHelper.getRandomItem(filters, null);
-                for (PotionEffect effect : Items.potionitem.getEffects(stack)) {
-                    if (randomVanilla) player.addPotionEffect(new PotionEffect(effect));
-                    else {
-                        int id = customid >= 0 ? customid : effect.getPotionID();
-                        player.addPotionEffect(new PotionEffect(id, duration, amplifier, false, particles));
+                if (stack != null) {
+                    for (PotionEffect effect : Items.potionitem.getEffects(stack)) {
+                        if (randomVanilla) player.addPotionEffect(new PotionEffect(effect));
+                        else {
+                            int id = customid >= 0 ? customid : effect.getPotionID();
+                            player.addPotionEffect(new PotionEffect(id, duration, amplifier, false, particles));
+                        }
                     }
                 }
             }

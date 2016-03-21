@@ -15,4 +15,7 @@ public interface IFilterHelper {
     
     /** Returns a filter selector that will select blocks and items **/
     public IFilterSelectorFilter getItemStackFilter();
+    
+    /** Returns a filter selector that will select actions **/
+    public IFilterSelectorFilter getCraftingFilter();
 }

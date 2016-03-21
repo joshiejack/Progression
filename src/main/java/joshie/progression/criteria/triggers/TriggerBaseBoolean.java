@@ -3,7 +3,7 @@ package joshie.progression.criteria.triggers;
 import java.util.UUID;
 
 import joshie.progression.api.ITriggerData;
-import joshie.progression.criteria.triggers.data.DataBoolean;
+import joshie.progression.api.ProgressionAPI;
 import net.minecraft.item.ItemStack;
 
 public abstract class TriggerBaseBoolean extends TriggerBase {
@@ -17,12 +17,12 @@ public abstract class TriggerBaseBoolean extends TriggerBase {
 
     @Override
     public boolean isCompleted(ITriggerData iTriggerData) {
-        return ((DataBoolean) iTriggerData).completed;
+        return ProgressionAPI.data.getBooleanData(iTriggerData);
     }
 
     @Override
     public boolean onFired(UUID uuid, ITriggerData iTriggerData, Object... data) {
-        ((DataBoolean) iTriggerData).completed = isTrue(data);
+        ProgressionAPI.data.setBooleanData(iTriggerData, isTrue(data));
         return true;
     }
 
@@ -31,6 +31,6 @@ public abstract class TriggerBaseBoolean extends TriggerBase {
     }
 
     protected void markTrue(ITriggerData iTriggerData) {
-        ((DataBoolean) iTriggerData).completed = true;
+        ProgressionAPI.data.setBooleanData(iTriggerData, true);
     }
 }

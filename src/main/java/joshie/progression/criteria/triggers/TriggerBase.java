@@ -8,7 +8,7 @@ import joshie.progression.api.IConditionType;
 import joshie.progression.api.ICriteria;
 import joshie.progression.api.ITriggerData;
 import joshie.progression.api.ITriggerType;
-import joshie.progression.handlers.APIHandler;
+import joshie.progression.api.ProgressionAPI;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -53,7 +53,7 @@ public abstract class TriggerBase implements ITriggerType {
 
     @Override
     public ITriggerData newData() {
-        return APIHandler.newData(data);
+        return ProgressionAPI.data.newData(data);
     }
 
     @Override

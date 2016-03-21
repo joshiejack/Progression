@@ -6,7 +6,6 @@ import joshie.progression.api.ICancelable;
 import joshie.progression.api.ITriggerData;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.fields.IInit;
-import joshie.progression.criteria.triggers.data.DataBoolean;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -64,9 +63,9 @@ public class TriggerChat extends TriggerBaseBoolean implements IInit, ICancelabl
 
     @Override
     public boolean onFired(UUID uuid, ITriggerData iTriggerData, Object... data) {
-        DataBoolean triggerData = ((DataBoolean) iTriggerData);
-        triggerData.completed = isTrue(data);
-        return triggerData.completed;
+        boolean isTrue = isTrue(data);
+        ProgressionAPI.data.setBooleanData(iTriggerData, isTrue);
+        return isTrue;
     }
 
     @Override

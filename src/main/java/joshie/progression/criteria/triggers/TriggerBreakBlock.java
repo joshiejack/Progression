@@ -1,7 +1,12 @@
 package joshie.progression.criteria.triggers;
 
+import java.util.List;
+
 import joshie.progression.api.IHasEventBus;
 import joshie.progression.api.ProgressionAPI;
+import joshie.progression.api.fields.IField;
+import joshie.progression.api.fields.ISpecialFieldProvider;
+import joshie.progression.api.fields.ISpecialFieldProvider.DisplayMode;
 import net.minecraft.block.Block;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
@@ -14,7 +19,7 @@ public class TriggerBreakBlock extends TriggerBaseBlock implements IHasEventBus 
     public TriggerBreakBlock() {
         super("breakBlock", 0xFFCCCCCC);
     }
-    
+
     @Override
     public EventBus getEventBus() {
         return MinecraftForge.EVENT_BUS;

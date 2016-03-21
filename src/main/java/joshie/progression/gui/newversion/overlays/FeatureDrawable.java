@@ -120,9 +120,9 @@ public class FeatureDrawable extends FeatureAbstract {
                             for (int i = 0; i < 5; i++) {
                                 String untranslated = mode.name().toLowerCase() + ".tooltip." + drawing.getUnlocalisedName() + "." + t.getFieldName() + "." + i;
                                 String translated = Progression.translate(untranslated);
-                                if (!("progression." + untranslated).equals(translated)) {
+                                //if (!("progression." + untranslated).equals(translated)) {
                                     FeatureTooltip.INSTANCE.addTooltip(translated);
-                                }
+                                //}
                             }
                         }
                     }
