@@ -6,11 +6,12 @@ import java.util.UUID;
 
 import joshie.progression.api.IFilter;
 import joshie.progression.api.fields.IEnum;
+import joshie.progression.api.fields.IHasFilters;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class ConditionInInventory extends ConditionBase implements IEnum {
+public class ConditionInInventory extends ConditionBase implements IEnum, IHasFilters {
     private static enum CheckSlots {
         HELD, ARMOR, HOTBAR, INVENTORY;
     }
@@ -82,5 +83,10 @@ public class ConditionInInventory extends ConditionBase implements IEnum {
         }
 
         return false;
+    }
+
+    @Override
+    public List<IFilter> getAllFilters() {
+        return filters;
     }
 }

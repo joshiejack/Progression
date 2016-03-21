@@ -38,7 +38,7 @@ public class FeatureDrawable extends FeatureAbstract {
     private int offsetY;
     private String text;
 
-    public FeatureDrawable(String text, List<IFieldProvider> drawable, int offsetY, int x1, int x2, int y1, int y2, IGuiFeature newDrawable, int gradient1, int gradient2, int fontColor) {
+    public FeatureDrawable(String text, List drawable, int offsetY, int x1, int x2, int y1, int y2, IGuiFeature newDrawable, int gradient1, int gradient2, int fontColor) {
         this.text = text;
         this.drawable = drawable;
         this.offsetY = offsetY;
@@ -112,7 +112,7 @@ public class FeatureDrawable extends FeatureAbstract {
             for (IField t : getFields(drawing, mode)) {
                 int color = Theme.INSTANCE.optionsFontColor;
                 int yPos = yStart + (index * 6);
-                if (MCClientHelper.canEdit()) {
+                if (MCClientHelper.isInEditMode()) {
                     if (mouseX >= 1 && mouseX <= 84) {
                         if (mouseY >= yPos && mouseY < yPos + 6) {
                             if (mode == DisplayMode.EDIT) color = Theme.INSTANCE.optionsFontColorHover;
@@ -197,7 +197,7 @@ public class FeatureDrawable extends FeatureAbstract {
     }
 
     private boolean drawingMouseClicked(IFieldProvider provider, int mouseX, int mouseY, int button) {
-        if (MCClientHelper.canEdit()) {
+        if (MCClientHelper.isInEditMode()) {
             ICustomDrawGuiEditor editor = provider instanceof ICustomDrawGuiEditor ? ((ICustomDrawGuiEditor) provider) : null;
             if (editor == null || (editor != null && !editor.hideDefaultEditor())) {
                 int yStart = 18;

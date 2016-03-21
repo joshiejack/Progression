@@ -254,7 +254,7 @@ public class APIHandler implements IProgressionAPI {
             IFilter newFilter = filter.getClass().newInstance();
             if (newFilter instanceof IInit) ((IInit)newFilter).init();
             field.add(newFilter);
-        } catch (Exception e) {}
+        } catch (Exception e) { e.printStackTrace(); }
     }
 
     @Override

@@ -51,7 +51,7 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
         } else RenderItemHelper.drawStack(tab.getStack(), xPosition + 7, yPosition + 5, 1F);
 
         boolean displayTooltip = false;
-        if (MCClientHelper.canEdit()) {
+        if (MCClientHelper.isInEditMode()) {
             displayTooltip = EditText.INSTANCE.getEditable() == this;
         }
 
@@ -59,7 +59,7 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
             ArrayList<String> name = new ArrayList();
             String hidden = tab.isVisible() ? "" : "(Hidden)";
             name.add(EditText.INSTANCE.getText(this) + hidden);
-            if (MCClientHelper.canEdit()) {
+            if (MCClientHelper.isInEditMode()) {
                 name.add(EnumChatFormatting.GRAY + "(Sort Index) " + tab.getSortIndex());
                 name.add(EnumChatFormatting.GRAY + "Shift + Click to rename");
                 name.add(EnumChatFormatting.GRAY + "Ctrl + Click to select item icon");
@@ -82,7 +82,7 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
         int x = Mouse.getX();
         int y = Mouse.getY();
 
-        if (MCClientHelper.canEdit()) {
+        if (MCClientHelper.isInEditMode()) {
             if (Keyboard.isKeyDown(Keyboard.KEY_DELETE)) {
                 ITab newTab = GuiTreeEditor.INSTANCE.currentTab;
                 if (tab == GuiTreeEditor.INSTANCE.currentTab) {
@@ -132,7 +132,7 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
 
     @Override
     public void onNotClicked() {
-        if (MCClientHelper.canEdit()) {
+        if (MCClientHelper.isInEditMode()) {
             if (EditText.INSTANCE.getEditable() == this) {
                 EditText.INSTANCE.clear();
             }

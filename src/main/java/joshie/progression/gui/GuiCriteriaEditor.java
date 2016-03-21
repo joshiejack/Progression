@@ -30,7 +30,7 @@ public class GuiCriteriaEditor extends GuiOffset {
 
         drawTexturedModalRect(fullWidth - 50, 15, 0, 0, 20, 25);
 
-        if (MCClientHelper.canEdit()) {
+        if (MCClientHelper.isInEditMode()) {
             int crossY = 64;
 
             GlStateManager.color(1F, 1F, 1F, 1F);

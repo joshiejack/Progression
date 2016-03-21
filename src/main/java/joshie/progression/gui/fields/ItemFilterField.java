@@ -109,6 +109,11 @@ public class ItemFilterField extends AbstractField {
         if (object instanceof ISetterCallback) {
             ((ISetterCallback) object).setField(field.getName(), filters);
         }
+
+        //Call this on init objects
+        if (object instanceof IInit) {
+            ((IInit) object).init();
+        }
     }
 
     public void remove(IFilter filter) {
@@ -116,6 +121,11 @@ public class ItemFilterField extends AbstractField {
         CollectionHelper.remove(filters, filter);
         if (object instanceof ISetterCallback) {
             ((ISetterCallback) object).setField(field.getName(), filters);
+        }
+
+        //Call this on init objects
+        if (object instanceof IInit) {
+            ((IInit) object).init();
         }
     }
 }

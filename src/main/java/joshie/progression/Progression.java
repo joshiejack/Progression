@@ -32,6 +32,7 @@ import joshie.progression.criteria.filters.block.FilterBlockMod;
 import joshie.progression.criteria.filters.block.FilterBlockOre;
 import joshie.progression.criteria.filters.block.FilterBlockStack;
 import joshie.progression.criteria.filters.block.FilterBlockState;
+import joshie.progression.criteria.filters.crafting.FilterExact;
 import joshie.progression.criteria.filters.entity.FilterEntityName;
 import joshie.progression.criteria.filters.entity.FilterSkeletonType;
 import joshie.progression.criteria.filters.item.FilterItem;
@@ -44,16 +45,12 @@ import joshie.progression.criteria.filters.location.FilterPlayerLocation;
 import joshie.progression.criteria.filters.location.FilterRandomAround;
 import joshie.progression.criteria.filters.potion.FilterPotionEffect;
 import joshie.progression.criteria.rewards.RewardBoolean;
-import joshie.progression.criteria.rewards.RewardBreakBlock;
 import joshie.progression.criteria.rewards.RewardClear;
 import joshie.progression.criteria.rewards.RewardCommand;
-import joshie.progression.criteria.rewards.RewardCrafting;
+import joshie.progression.criteria.rewards.RewardCraftability;
 import joshie.progression.criteria.rewards.RewardCriteria;
 import joshie.progression.criteria.rewards.RewardFallDamage;
-import joshie.progression.criteria.rewards.RewardFurnace;
-import joshie.progression.criteria.rewards.RewardHarvestDrop;
 import joshie.progression.criteria.rewards.RewardItem;
-import joshie.progression.criteria.rewards.RewardLivingDrop;
 import joshie.progression.criteria.rewards.RewardPlaceBlock;
 import joshie.progression.criteria.rewards.RewardPoints;
 import joshie.progression.criteria.rewards.RewardPotion;
@@ -209,6 +206,9 @@ public class Progression {
         //Location Filters
         ProgressionAPI.registry.registerItemFilter(new FilterPlayerLocation());
         ProgressionAPI.registry.registerItemFilter(new FilterRandomAround());
+        
+        //Crafting Filters
+        ProgressionAPI.registry.registerItemFilter(new FilterExact());
 
         ProgressionAPI.registry.registerConditionType(new ConditionBiomeType());
         ProgressionAPI.registry.registerConditionType(new ConditionRandom());
@@ -229,11 +229,12 @@ public class Progression {
         ProgressionAPI.registry.registerRewardType(new RewardPoints());
         ProgressionAPI.registry.registerRewardType(new RewardSpeed());
         ProgressionAPI.registry.registerRewardType(new RewardTime()); 
-        ProgressionAPI.registry.registerRewardType(new RewardBreakBlock()); 
-        ProgressionAPI.registry.registerRewardType(new RewardCrafting());
-        ProgressionAPI.registry.registerRewardType(new RewardFurnace());
-        ProgressionAPI.registry.registerRewardType(new RewardHarvestDrop());
-        ProgressionAPI.registry.registerRewardType(new RewardLivingDrop());
+        ProgressionAPI.registry.registerRewardType(new RewardCraftability());
+        //ProgressionAPI.registry.registerRewardType(new RewardBreakBlock()); 
+        //ProgressionAPI.registry.registerRewardType(new RewardCrafting());
+        //ProgressionAPI.registry.registerRewardType(new RewardFurnace());
+        //ProgressionAPI.registry.registerRewardType(new RewardHarvestDrop());
+        //ProgressionAPI.registry.registerRewardType(new RewardLivingDrop());
         ProgressionAPI.registry.registerRewardType(new RewardClear());
         ProgressionAPI.registry.registerRewardType(new RewardPotion());
         ProgressionAPI.registry.registerRewardType(new RewardPlaceBlock());

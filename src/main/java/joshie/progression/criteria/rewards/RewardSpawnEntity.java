@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import joshie.progression.api.IFilter;
 import joshie.progression.api.ISpecialFilters;
+import joshie.progression.api.fields.IHasFilters;
 import joshie.progression.api.fields.IInit;
 import joshie.progression.api.filters.IFilterSelectorFilter;
 import joshie.progression.gui.selector.filters.EntityFilter;
@@ -23,7 +24,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 
-public class RewardSpawnEntity extends RewardBase implements ISpecialFilters, IInit {
+public class RewardSpawnEntity extends RewardBase implements ISpecialFilters, IInit, IHasFilters {
     public List<IFilter> locations = new ArrayList();
     public List<IFilter> entities = new ArrayList();
     public NBTTagCompound tagValue = new NBTTagCompound();
@@ -37,6 +38,14 @@ public class RewardSpawnEntity extends RewardBase implements ISpecialFilters, II
     @Override
     public void init() {
         tagValue = StackHelper.getTag(new String[] { tagText }, 0);
+    }
+    
+    @Override
+    public List<IFilter> getAllFilters() {
+        ArrayList<IFilter> all = new ArrayList();
+        all.addAll(locations);
+        all.addAll(entities);
+        return all;
     }
     
     @Override

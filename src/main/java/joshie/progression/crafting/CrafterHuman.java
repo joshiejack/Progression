@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import joshie.progression.api.ICriteria;
 import joshie.progression.api.IFilter;
+import joshie.progression.crafting.CraftingRegistry.DisallowType;
 import joshie.progression.json.Options;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,7 +24,7 @@ public class CrafterHuman extends Crafter {
 
     @Override
     public boolean canUseItemForCrafting(ActionType type, ItemStack stack) {
-        Set<IFilter> filters = CraftingRegistry.getFiltersForStack(type, stack, true);
+        Set<IFilter> filters = CraftingRegistry.getFiltersForStack(type, stack, DisallowType.USEINCRAFTING);
         List<IFilter> matched = new ArrayList();
         for (IFilter filter : filters) {
             if (filter.matches(stack)) {
@@ -34,7 +35,7 @@ public class CrafterHuman extends Crafter {
         if (matched.size() == 0) return !Options.settings.disableUsageUntilRewardAdded;
         Set<ICriteria> completed = PlayerTracker.getPlayerData(uuid).getMappings().getCompletedCriteria().keySet();
         for (IFilter filter : matched) {
-            ICriteria criteria = CraftingRegistry.getCriteriaForFilter(type, filter, true);
+            ICriteria criteria = CraftingRegistry.getCriteriaForFilter(type, filter, DisallowType.USEINCRAFTING);
             if (criteria != null && completed.contains(criteria)) return true;
         }
         
@@ -43,7 +44,7 @@ public class CrafterHuman extends Crafter {
 
     @Override
     public boolean canCraftItem(ActionType type, ItemStack stack) {
-        Set<IFilter> filters = CraftingRegistry.getFiltersForStack(type, stack, false);
+        Set<IFilter> filters = CraftingRegistry.getFiltersForStack(type, stack, DisallowType.CRAFTING);
                
         List<IFilter> matched = new ArrayList();
         for (IFilter filter : filters) {
@@ -55,7 +56,7 @@ public class CrafterHuman extends Crafter {
         if (matched.size() == 0) return !Options.settings.disableCraftingUntilRewardAdded;
         Set<ICriteria> completed = PlayerTracker.getPlayerData(uuid).getMappings().getCompletedCriteria().keySet();
         for (IFilter filter : matched) {
-            ICriteria criteria = CraftingRegistry.getCriteriaForFilter(type, filter, false);
+            ICriteria criteria = CraftingRegistry.getCriteriaForFilter(type, filter, DisallowType.CRAFTING);
             if (criteria != null && completed.contains(criteria)) return true;
         }
         

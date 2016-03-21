@@ -2,6 +2,7 @@ package joshie.progression.criteria.rewards;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import joshie.progression.Progression;
 import joshie.progression.api.ICriteria;
@@ -58,6 +59,9 @@ public abstract class RewardBase implements IRewardType {
 
     @Override
     public void onRemoved() {}
+    
+    @Override
+    public void reward(UUID uuid) {}
 
     @Override
     public void updateDraw() {}

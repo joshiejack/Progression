@@ -38,6 +38,7 @@ public class ItemField extends AbstractField implements IItemSelectable {
         this.mouseY1 = y - 2;
         this.mouseY2 = (int) (y + 15 * scale);
         this.type = type;
+               
         if (object instanceof ISpecialFilters) {
             this.filter = ((ISpecialFilters) object).getFilterForField(fieldName);
         } else this.filter = filter;

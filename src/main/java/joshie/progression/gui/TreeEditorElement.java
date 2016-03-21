@@ -140,7 +140,7 @@ public class TreeEditorElement {
             GlStateManager.enableBlend();
             //GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
             if (!criteria.isVisible()) {
-                if (MCClientHelper.canEdit()) {
+                if (MCClientHelper.isInEditMode()) {
                     textureX = 100;
                 } else {
                     if (available || isCompleted) {
@@ -214,7 +214,7 @@ public class TreeEditorElement {
             if (!hoveredReward) { //If we weren't hovering over the reward, display the requirements
                 if (isOver(mouseX, mouseY)) {
                     List list = new ArrayList();
-                    if (MCClientHelper.canEdit()) {
+                    if (MCClientHelper.isInEditMode()) {
                         list.add("Double Click to edit "/* + (Hold shift for display mode) */);
                         list.add("Shift + Click to make something a requirement");
                         list.add("Ctrl + Click to make something conflict");
@@ -271,7 +271,7 @@ public class TreeEditorElement {
     }
 
     public boolean keyTyped(char character, int key) {
-        if (isSelected && MCClientHelper.canEdit()) {
+        if (isSelected && MCClientHelper.isInEditMode()) {
             return key == 211 || key == 14;
         }
 
@@ -290,7 +290,7 @@ public class TreeEditorElement {
         if (isOver(x, y)) {
             if (noOtherSelected()) {
                 ICriteria previous = getPrevious();
-                if (previous != null && MCClientHelper.canEdit()) {
+                if (previous != null && MCClientHelper.isInEditMode()) {
                     List<ICriteria> list = null;
                     boolean isConflict = false;
                     if (GuiScreen.isShiftKeyDown()) {
@@ -323,7 +323,7 @@ public class TreeEditorElement {
                     }
                 }
 
-                if (MCClientHelper.canEdit()) {
+                if (MCClientHelper.isInEditMode()) {
                     if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
                         criteria.setVisiblity(!criteria.isVisible());
                         return true;
@@ -370,7 +370,7 @@ public class TreeEditorElement {
     }
 
     public void follow(int x, int y) {
-        if (isHeld && MCClientHelper.canEdit()) {
+        if (isHeld && MCClientHelper.isInEditMode()) {
             criteria.setCoordinates(criteria.getX() + x - prevX, criteria.getY() + y - prevY);
             prevX = x;
             prevY = y;

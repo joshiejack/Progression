@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import joshie.progression.api.IFilter;
+import joshie.progression.api.fields.IHasFilters;
 import joshie.progression.helpers.ItemHelper;
 import net.minecraft.item.ItemStack;
 
-public abstract class TriggerBaseItemFilter extends TriggerBaseCounter {
+public abstract class TriggerBaseItemFilter extends TriggerBaseCounter implements IHasFilters {
     public List<IFilter> filters = new ArrayList();
     protected ItemStack BROKEN;
     protected ItemStack preview;
@@ -19,6 +20,11 @@ public abstract class TriggerBaseItemFilter extends TriggerBaseCounter {
 
     public TriggerBaseItemFilter(String name, int color, String data) {
         super(name, color, data);
+    }
+    
+    @Override
+    public List<IFilter> getAllFilters() {
+        return filters;
     }
     
     @Override

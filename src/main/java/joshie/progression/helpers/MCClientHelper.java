@@ -22,11 +22,7 @@ public class MCClientHelper {
         return getPlayer().worldObj;
     }
     
-    public static boolean canEdit() {
+    public static boolean isInEditMode() {
         return getPlayer().capabilities.isCreativeMode;
     }
-
-	public static boolean isInEditMode() {
-		return canEdit();
-	}
 }

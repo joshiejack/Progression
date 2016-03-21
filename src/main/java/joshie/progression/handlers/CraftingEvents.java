@@ -11,6 +11,7 @@ import joshie.progression.api.event.ActionEvent.CanUseToPeformActionEvent;
 import joshie.progression.crafting.ActionType;
 import joshie.progression.crafting.Crafter;
 import joshie.progression.crafting.CraftingRegistry;
+import joshie.progression.crafting.CraftingRegistry.DisallowType;
 import joshie.progression.gui.newversion.GuiCriteriaEditor;
 import joshie.progression.helpers.CraftingHelper;
 import joshie.progression.helpers.MCClientHelper;
@@ -61,7 +62,7 @@ public class CraftingEvents {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (!checkAndCancelEvent(event)) {
-            Collection<ICriteria> requirements = CraftingRegistry.getRequirements(event.entityPlayer.getCurrentEquippedItem());
+            Collection<ICriteria> requirements = CraftingRegistry.getRequirements(event.entityPlayer.getCurrentEquippedItem(), DisallowType.GENERALUSE);
             if (requirements.size() > 0) {
                 if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
                     for (ICriteria c : requirements) {
@@ -82,7 +83,7 @@ public class CraftingEvents {
             //TODO: Readd tooltips for things you can't craft
             boolean hasStuff = false;
             for (ActionType type : ActionType.values()) {
-                Set<ICriteria> requirements = CraftingRegistry.getRequirements(type, event.itemStack);
+                Set<ICriteria> requirements = CraftingRegistry.getRequirements(type, event.itemStack, DisallowType.CRAFTING);
                 if (requirements.size() > 0) {
                     if (!hasStuff) {
                         event.toolTip.add("Currently Locked");

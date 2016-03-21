@@ -19,14 +19,12 @@ import net.minecraft.potion.PotionEffect;
 
 public class FilterPotionEffect extends FilterBaseItem implements IInit, ISpecialFieldProvider {
     private static final List<PotionEffect> EMPTY = new ArrayList();
-    public int potionid = 16385; //Splash Potion of Regen, 33 seconds
-    public ItemStack stack;
+    public ItemStack stack = new ItemStack(Items.potionitem, 1, 16385); //Splash Potion of Regen, 33 seconds
     private List<PotionEffect> effects;
     private Set<Integer> ids;
 
     public FilterPotionEffect() {
         super("potioneffect", 0xFFFF73FF);
-
     }
 
     @Override
@@ -46,7 +44,6 @@ public class FilterPotionEffect extends FilterBaseItem implements IInit, ISpecia
 
     @Override
     public void init() {
-        potionid = stack.getItemDamage();
         setupEffectsItemsIDs();
     }
 
@@ -63,9 +60,8 @@ public class FilterPotionEffect extends FilterBaseItem implements IInit, ISpecia
     }
 
     private void setupEffectsItemsIDs() {
-        effects = getEffects(potionid);
+        effects = getEffects(stack.getItemDamage());
         ids = getIds(effects);
-        stack = new ItemStack(Items.potionitem, 1, potionid);
     }
 
     @Override
@@ -79,8 +75,8 @@ public class FilterPotionEffect extends FilterBaseItem implements IInit, ISpecia
 
     public boolean matches(Collection<PotionEffect> effects) {
         Set<Integer> checkids = getIds(effects);
-        if (effects == null) setupEffectsItemsIDs();
-        for (Integer id : getIds(effects)) {
+        if (this.effects == null) setupEffectsItemsIDs();
+        for (Integer id : ids) {
             if (checkids.contains(id)) return true;
         }
 

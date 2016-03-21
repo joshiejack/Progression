@@ -1,8 +1,12 @@
 package joshie.progression.gui.newversion.overlays;
 
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
 
 import org.lwjgl.opengl.GL11;
+
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 
 import joshie.progression.Progression;
 import joshie.progression.api.filters.IFilterSelectorFilter;
@@ -10,6 +14,7 @@ import joshie.progression.gui.GuiCriteriaEditor;
 import joshie.progression.gui.GuiTreeEditor;
 import joshie.progression.gui.editors.EditText.ITextEditable;
 import joshie.progression.gui.editors.IItemSelectable;
+import joshie.progression.gui.selector.filters.ActionFilter;
 import joshie.progression.gui.selector.filters.ItemFilter;
 import joshie.progression.helpers.ItemHelper;
 import net.minecraft.client.renderer.GlStateManager;
@@ -45,6 +50,7 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
         this.filter = filter;
         this.selectable = selectable;
         this.type = type;
+        System.out.println(filter);
         if (this.filter == null) this.filter = ItemFilter.INSTANCE;
         updateSearch();
     }
@@ -83,9 +89,20 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
             }
         }
     }
+    
+    private static Cache<Object, ArrayList<Object>> cacheList = CacheBuilder.newBuilder().maximumSize(64).build();
 
     public ArrayList<Object> getAllItems() {
-        return (ArrayList<Object>) filter.getAllItems();
+        try {
+            return cacheList.get(filter, new Callable<ArrayList<Object>>() {
+                @Override
+                public ArrayList<Object> call() throws Exception {
+                    return (ArrayList<Object>) filter.getAllItems();
+                }
+            });
+        } catch (Exception e) {
+            return (ArrayList<Object>) filter.getAllItems();
+        }
     }
 
     public void updateSearch() {

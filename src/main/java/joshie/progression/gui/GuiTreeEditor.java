@@ -53,7 +53,7 @@ public class GuiTreeEditor extends GuiBase {
         buttonList = new ArrayList(); //Recreate the button list, in order to reposition it
         int number = 0;
         int pos = y - 5;
-        if (MCClientHelper.canEdit()) {
+        if (MCClientHelper.isInEditMode()) {
             buttonList.add(new ButtonNewCriteria(pos));
             pos += 28;
             number++;
@@ -64,7 +64,7 @@ public class GuiTreeEditor extends GuiBase {
         Collections.sort(tabs, new SortIndex());
 
         for (ITab tab : tabs) {
-            if (isTabVisible(tab) || MCClientHelper.canEdit()) {
+            if (isTabVisible(tab) || MCClientHelper.isInEditMode()) {
                 if (number <= 8) {
                     buttonList.add(new ButtonTab(tab, 0, pos));
                 } else buttonList.add(new ButtonTab(tab, res.getScaledWidth() - 25, pos));
@@ -114,11 +114,12 @@ public class GuiTreeEditor extends GuiBase {
         elements.put(criteria, new TreeEditorElement(criteria));
         getElement(criteria).draw(x, y, offsetX);
         getElement(criteria).click(x, y, false);
+        lastClicked = criteria;
     }
-    
+
     public static boolean isTabVisible(ITab tab) {
         TabVisibleEvent event = new TabVisibleEvent(MCClientHelper.getPlayer(), tab.getUniqueName());
-        if(MinecraftForge.EVENT_BUS.post(event)) return false;
+        if (MinecraftForge.EVENT_BUS.post(event)) return false;
         return tab.isVisible();
     }
 
@@ -127,7 +128,7 @@ public class GuiTreeEditor extends GuiBase {
         if (currentTab == null) initGui();
         if (!MCClientHelper.isInEditMode() && !isTabVisible(currentTab)) return;
         for (ICriteria criteria : currentTab.getCriteria()) {
-            if (getElement(criteria).isCriteriaVisible() || MCClientHelper.canEdit()) {
+            if (getElement(criteria).isCriteriaVisible() || MCClientHelper.isInEditMode()) {
                 TreeEditorElement editor = getElement(criteria);
                 List<ICriteria> prereqs = criteria.getPreReqs();
                 for (ICriteria c : prereqs) {
@@ -156,7 +157,7 @@ public class GuiTreeEditor extends GuiBase {
 
         GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
         for (ICriteria criteria : currentTab.getCriteria()) {
-            if (getElement(criteria).isCriteriaVisible() || MCClientHelper.canEdit()) {
+            if (getElement(criteria).isCriteriaVisible() || MCClientHelper.isInEditMode()) {
                 getElement(criteria).draw(0, y, offsetX);
             }
         }
@@ -170,7 +171,7 @@ public class GuiTreeEditor extends GuiBase {
     protected void keyTyped(char character, int key) throws IOException {
         ICriteria toRemove = null;
         for (ICriteria criteria : currentTab.getCriteria()) {
-            if (getElement(criteria).isCriteriaVisible() || MCClientHelper.canEdit()) {
+            if (getElement(criteria).isCriteriaVisible() || MCClientHelper.isInEditMode()) {
                 if (getElement(criteria).keyTyped(character, key)) {
                     toRemove = criteria;
                     break;
@@ -182,7 +183,7 @@ public class GuiTreeEditor extends GuiBase {
             APIHandler.removeCriteria(toRemove.getUniqueName(), false);
         }
 
-        if (MCClientHelper.canEdit()) {
+        if (MCClientHelper.isInEditMode()) {
             EditText.INSTANCE.keyTyped(character, key);
 
             if (SelectItem.INSTANCE.getEditable() != null) {
@@ -217,31 +218,33 @@ public class GuiTreeEditor extends GuiBase {
     public boolean isDragging = false;
 
     @Override
-    protected void mouseClicked(int par1, int par2, int par3) throws IOException {
+    protected void mouseClicked(int par1, int par2, int button) throws IOException {
         if (currentTab == null) return;
         long thisClick = System.currentTimeMillis();
         long difference = thisClick - lastClick;
-        boolean isDoubleClick = par3 == 0 && lastType == 0 && difference <= 500;
+        boolean isDoubleClick = button == 0 && lastType == 0 && difference <= 500;
         lastClick = System.currentTimeMillis();
-        lastType = par3;
+        lastType = button;
 
         lastClicked = null;
         if (SelectItem.INSTANCE.getEditable() != null) {
             TreeEditorSelection.INSTANCE.mouseClicked(mouseX, mouseY);
         }
 
-        super.mouseClicked(par1, par2, par3);
-        for (ICriteria criteria : currentTab.getCriteria()) {
-            if (getElement(criteria).isCriteriaVisible() || MCClientHelper.canEdit()) {
-                if (getElement(criteria).click(mouseX, mouseY, isDoubleClick)) {
-                    lastClicked = criteria;
+        super.mouseClicked(par1, par2, button);
+        if (button == 0) {
+            for (ICriteria criteria : currentTab.getCriteria()) {
+                if (getElement(criteria).isCriteriaVisible() || MCClientHelper.isInEditMode()) {
+                    if (getElement(criteria).click(mouseX, mouseY, isDoubleClick)) {
+                        lastClicked = criteria;
+                    }
                 }
             }
-        }
-
-        if (lastClicked == null && selected == null) {
-            isDragging = true;
-            drag = mouseX;
+        } else {
+            if (lastClicked == null && selected == null) {
+                isDragging = true;
+                drag = mouseX;
+            }
         }
     }
 

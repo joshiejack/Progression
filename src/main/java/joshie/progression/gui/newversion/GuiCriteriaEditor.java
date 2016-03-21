@@ -54,8 +54,8 @@ public class GuiCriteriaEditor extends GuiCore implements IBarProvider, IItemSel
     public void initGuiData() {
         switching = false;
         //Setup the features
-        features.add(new FeatureDrawable(EnumChatFormatting.BOLD + Progression.translate("new.trigger"), new ArrayList(criteria.getTriggers()), 45, 201, 201, 64, 119, FeatureNewTrigger.INSTANCE, theme.triggerGradient1, theme.triggerGradient2, theme.triggerFontColor));
-        features.add(new FeatureDrawable(EnumChatFormatting.BOLD + Progression.translate("new.reward"), new ArrayList(criteria.getRewards()), 140, 0, 55, 201, 201, FeatureNewReward.INSTANCE, theme.rewardBoxGradient1, theme.rewardBoxGradient2, theme.rewardBoxFont));
+        features.add(new FeatureDrawable(EnumChatFormatting.BOLD + Progression.translate("new.trigger"), criteria.getTriggers(), 45, 201, 201, 64, 119, FeatureNewTrigger.INSTANCE, theme.triggerGradient1, theme.triggerGradient2, theme.triggerFontColor));
+        features.add(new FeatureDrawable(EnumChatFormatting.BOLD + Progression.translate("new.reward"), criteria.getRewards(), 140, 0, 55, 201, 201, FeatureNewReward.INSTANCE, theme.rewardBoxGradient1, theme.rewardBoxGradient2, theme.rewardBoxFont));
         features.add(new FeatureBarsX2(this, "requirements", "results"));
         features.add(FeatureFullTextEditor.INSTANCE); //Add the text selector
         features.add(FeatureItemSelector.INSTANCE); //Add the item selector

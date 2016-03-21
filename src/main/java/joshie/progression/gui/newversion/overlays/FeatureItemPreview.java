@@ -1,8 +1,12 @@
 package joshie.progression.gui.newversion.overlays;
 
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
 
 import org.lwjgl.opengl.GL11;
+
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 
 import joshie.progression.api.IFilter;
 import joshie.progression.api.filters.IFilterSelectorFilter;
@@ -52,10 +56,25 @@ public class FeatureItemPreview extends FeatureAbstract {
 
         if (block != null) sorted.add(stack);
     }
+    
+    private static Cache<Object, ArrayList<Object>> cacheList = CacheBuilder.newBuilder().maximumSize(64).build();
+
+    public ArrayList<Object> getAllItems() {
+        try {
+            return cacheList.get(filter, new Callable<ArrayList<Object>>() {
+                @Override
+                public ArrayList<Object> call() throws Exception {
+                    return (ArrayList<Object>) filter.getAllItems();
+                }
+            });
+        } catch (Exception e) {
+            return (ArrayList<Object>) filter.getAllItems();
+        }
+    }
 
     public void updateSearch() {
         sorted = new ArrayList();
-        for (Object stack: filter.getAllItems()) {
+        for (Object stack: getAllItems()) {
             int matches = 0;
             for (IFilter filter: GuiItemFilterEditor.INSTANCE.field.getFilters()) {
                 if (filter.matches(stack)) {

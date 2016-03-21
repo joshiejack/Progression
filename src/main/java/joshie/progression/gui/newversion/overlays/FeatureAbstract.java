@@ -23,6 +23,7 @@ public abstract class FeatureAbstract implements IGuiFeature {
 
     @Override
     public final void draw(int mouseX, int mouseY) {
+        if (draw == null || offset == null) return; //Avoid crashes
         draw.configure();
         offset.configure();
         theme = Theme.INSTANCE; // Grab that theme?

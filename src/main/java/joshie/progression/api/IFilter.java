@@ -19,6 +19,6 @@ public interface IFilter extends IFieldProvider {
     public FilterType getType();
     
     public static enum FilterType {
-        ITEM, BLOCK, POTIONEFFECT, ENTITY, LOCATION;
+        ITEM, BLOCK, POTIONEFFECT, ENTITY, LOCATION, CRAFTING;
     }
 }

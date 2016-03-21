@@ -27,6 +27,7 @@ public abstract class RewardBaseAction extends RewardBaseItemFilter implements I
     protected ActionType type = ActionType.CRAFTING;
     public boolean disableUsage = true;
     public boolean disableCrafting = true;
+    public boolean disableGeneral = true;
 
     /** Moving actions to be seperated from one another **/
     public RewardBaseAction(String name, int color, ActionType type) {
@@ -54,12 +55,12 @@ public abstract class RewardBaseAction extends RewardBaseItemFilter implements I
 
     @Override
     public void onAdded() {
-        CraftingRegistry.addRequirement(type, criteria, filters, disableUsage, disableCrafting);
+        CraftingRegistry.addRequirement(type, criteria, filters, disableUsage, disableCrafting, disableGeneral);
     }
 
     @Override
     public void onRemoved() {
-        CraftingRegistry.removeRequirement(type, criteria, filters, disableUsage, disableCrafting);
+        CraftingRegistry.removeRequirement(type, criteria, filters, disableUsage, disableCrafting, disableGeneral);
     }
 
     @Override

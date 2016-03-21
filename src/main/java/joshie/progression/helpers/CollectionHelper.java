@@ -30,17 +30,17 @@ public class CollectionHelper {
         if (drawing instanceof IRewardType) {
             EventsManager.onRewardRemoved((IRewardType) drawing);
             CollectionHelper.remove(GuiCriteriaEditor.INSTANCE.getCriteria().getRewards(), (IRewardType) drawing);
-            GuiCriteriaEditor.INSTANCE.initGui();
+            //GuiCriteriaEditor.INSTANCE.initGui();
         } else if (drawing instanceof ITriggerType) {
             EventsManager.onTriggerRemoved((ITriggerType) drawing);
             CollectionHelper.remove(GuiCriteriaEditor.INSTANCE.getCriteria().getTriggers(), (ITriggerType) drawing);
-            GuiCriteriaEditor.INSTANCE.initGui();
+            //GuiCriteriaEditor.INSTANCE.initGui();
         } else if (drawing instanceof IFilter) {
             GuiItemFilterEditor.INSTANCE.field.remove((IFilter) drawing);
-            GuiItemFilterEditor.INSTANCE.initGui();
+            //GuiItemFilterEditor.INSTANCE.initGui();
         } else if (drawing instanceof IConditionType) {
             CollectionHelper.remove(GuiConditionEditor.INSTANCE.getTrigger().getConditions(), (IConditionType) drawing);
-            GuiConditionEditor.INSTANCE.initGui();
+            //GuiConditionEditor.INSTANCE.initGui();
         }
 
         CollectionHelper.remove(drawable, drawing);
