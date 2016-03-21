@@ -32,7 +32,8 @@ import joshie.progression.criteria.filters.item.FilterItemMod;
 import joshie.progression.criteria.filters.item.FilterItemNBT;
 import joshie.progression.criteria.filters.item.FilterItemOre;
 import joshie.progression.criteria.filters.item.FilterItemStack;
-import joshie.progression.criteria.filters.location.FilterPlayerLocation;
+import joshie.progression.criteria.filters.location.FilterPlayerLocationAbove;
+import joshie.progression.criteria.filters.location.FilterPlayerLocationAround;
 import joshie.progression.criteria.filters.location.FilterRandomAround;
 import joshie.progression.criteria.filters.potion.FilterPotionEffect;
 import joshie.progression.criteria.rewards.RewardBoolean;
@@ -203,7 +204,8 @@ public class PCommonProxy implements IGuiHandler {
         ProgressionAPI.registry.registerItemFilter(new FilterSkeletonType());
 
         //Location Filters
-        ProgressionAPI.registry.registerItemFilter(new FilterPlayerLocation());
+        ProgressionAPI.registry.registerItemFilter(new FilterPlayerLocationAround());
+        ProgressionAPI.registry.registerItemFilter(new FilterPlayerLocationAbove());
         ProgressionAPI.registry.registerItemFilter(new FilterRandomAround());
 
         //Crafting Filters

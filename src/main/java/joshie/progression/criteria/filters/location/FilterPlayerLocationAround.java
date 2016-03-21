@@ -6,12 +6,12 @@ import java.util.List;
 import joshie.progression.lib.WorldLocation;
 import net.minecraft.entity.player.EntityPlayer;
 
-public class FilterPlayerLocation extends FilterLocationBase {
+public class FilterPlayerLocationAround extends FilterLocationBase {
     public int randomX = 32;
     public int randomY = 32;
     public int randomZ = 32;
 
-    public FilterPlayerLocation() {
+    public FilterPlayerLocationAround() {
         super("playerPos", 0xFFBBBBBB);
     }
 

@@ -30,5 +30,7 @@ public abstract class FilterLocationBase extends FilterBase {
         return FilterType.LOCATION;
     }
 
-    public abstract boolean matches(WorldLocation location);
+    public boolean matches(WorldLocation location) {
+        return true;
+    }
 }

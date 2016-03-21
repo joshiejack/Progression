@@ -75,7 +75,7 @@ public class FeatureItemPreview extends FeatureAbstract {
         sorted = new ArrayList();
         for (Object stack: getAllItems()) {
             int matches = 0;
-            for (IFilter filter: GuiItemFilterEditor.INSTANCE.field.getFilters()) {
+            for (IFilter filter: GuiItemFilterEditor.INSTANCE.getField().getFilters()) {
                 if (filter.matches(stack)) {
                     sorted.add(stack);
                     matches++;

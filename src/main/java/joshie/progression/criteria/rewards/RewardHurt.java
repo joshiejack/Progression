@@ -31,7 +31,7 @@ public class RewardHurt extends RewardBase implements IInit, IGetterCallback {
     
     @Override
     public String getField(String fieldName) {
-        return source != null ? EnumChatFormatting.GREEN + damagesource : EnumChatFormatting.RED + damagesource;
+        return fieldName.equals("damagesource") ? (source != null ? EnumChatFormatting.GREEN + damagesource : EnumChatFormatting.RED + damagesource) : "" + damage;
     }
         
     @Override

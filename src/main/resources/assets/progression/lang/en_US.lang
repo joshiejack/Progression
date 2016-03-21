@@ -96,6 +96,7 @@ progression.reward.layer.show=Book: Layer
 progression.reward.teleport=Teleport
 progression.reward.placeBlock=Place Block
 progression.reward.stepAssist=Step Assist
+progression.reward.hurt=Attack Player
 
 #Actions
 progression.action.crafting=Crafting

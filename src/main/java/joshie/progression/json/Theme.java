@@ -78,23 +78,11 @@ public class Theme {
     public int newBox1 = 0xDD000000;
     public int newBox2 = 0xFF000000;
 
-    public int newTriggerGradient1 = 0xFF0000D2;
-    public int newTriggerGradient2 = 0xFF000066;
-    public int newTriggerBorder = 0xFF000000;
-    public int newTriggerFont = 0xFFFFFFFF;
-    public int newTriggerFontHover = 0xFF2693FF;
-
-    public int newRewardGradient1 = 0xFFFF0000;
-    public int newRewardGradient2 = 0xFF660000;
-    public int newRewardBorder = 0xFF000000;
-    public int newRewardFont = 0xFFFFFFFF;
-    public int newRewardFontHover = 0xFFFF0000;
-
-    public int newConditionGradient1 = 0xFFFF8000;
-    public int newConditionGradient2 = 0xFF8C4600;
-    public int newConditionBorder = 0xFF000000;
-    public int newConditionFont = 0xFFFFFFFF;
-    public int newConditionFontHover = 0xFF2693FF;
+    public int newGradient1 = 0xFFFF8000;
+    public int newGradient2 = 0xFF8C4600;
+    public int newBorder = 0xFF000000;
+    public int newFont = 0xFFFFFFFF;
+    public int newFontHover = 0xFF2693FF;
 
     static {
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {

@@ -13,12 +13,16 @@ import net.minecraft.util.EnumChatFormatting;
 
 public class GuiItemFilterEditor extends GuiCore implements IBarProvider {
     public static final GuiItemFilterEditor INSTANCE = new GuiItemFilterEditor();
-    public ItemFilterField field;
+    private ItemFilterField field;
 
     private GuiItemFilterEditor() {}
 
     public void setFilterSet(ItemFilterField field) {
         this.field = field;
+    }
+    
+    public ItemFilterField getField() {
+        return field;
     }
 
     @Override
