@@ -24,6 +24,11 @@ progression.condition.biomeType=Biome Type
 progression.condition.chance=Chance
 progression.condition.ininventory=In Inventory
 progression.condition.coordinates=Coordinates
+progression.condition.potioneffect=Has Potion Effect
+progression.condition.boolean=Has True/False
+progression.condition.points=Has Points
+progression.condition.achievement=Has Achievement
+progression.condition.criteria=Has Criteria
 
 #Rewards
 progression.results=Rewards
@@ -37,16 +42,15 @@ progression.reward.item.display=Receive Item
 progression.reward.command=Command
 progression.reward.points=Points
 progression.reward.boolean=True/False
-progression.reward.crafting=Crafting
-progression.reward.furnace=Furnace
-progression.reward.livingDrop=Entity Drops
-progression.reward.harvestDrop=Block Drops
-progression.reward.breakBlock=Break Block
+progression.reward.crafting=Allow Action
+progression.reward.tab.show=Hide/Show Tab
+progression.reward.entity=Spawn Entity
 progression.reward.clear=Take Item
 progression.reward.potioneffect=Potion Effect
 progression.reward.layer.show=Book: Layer
 progression.reward.teleport=Teleport
 progression.reward.placeBlock=Place Block
+progression.reward.stepAssist=Step Assist
 
 #Actions
 progression.action.crafting=Crafting
@@ -59,18 +63,19 @@ progression.action.entitydrop=Entity Drop
 #Filters
 progression.filters=Filters
 progression.new.filter=Add New Filter
+progression.new.item=Add New Filter
 progression.filter.item.itemOnly=Item Only
 progression.filter.item.nbtString=NBT Match
 progression.filter.item.modid=Mod
 progression.filter.item.itemStack=Item Stacks
 progression.filter.item.metadata=Metadata
 progression.filter.item.oreDictionary=Ore Dictionary
-progression.filter.item.potioneffect=Potion Effect
-progression.filter.item.blockOnly=Block Only
-progression.filter.item.blockStack=Block Stacks
-progression.filter.item.blockState=Block State
-progression.filter.item.blockOre=Block Ore
-progression.filter.item.blockMod=Block Mod
+progression.filter.potioneffect.potioneffect=Potion Effect
+progression.filter.block.blockOnly=Block Only
+progression.filter.block.blockStack=Block Stacks
+progression.filter.block.blockState=Block State
+progression.filter.block.blockOre=Block Ore
+progression.filter.block.blockMod=Block Mod
 
 progression.display.condition=View Conditions
 

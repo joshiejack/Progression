@@ -1,11 +1,8 @@
 package joshie.progression.gui.selector.filters;
 
-import java.util.List;
-
 import joshie.progression.api.filters.IFilterSelectorFilter;
 import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import joshie.progression.gui.newversion.overlays.FeatureTooltip;
-import joshie.progression.helpers.ItemHelper;
 import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.item.ItemStack;
 

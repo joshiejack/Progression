@@ -12,6 +12,7 @@ public class FilterItemMod extends FilterBaseItem {
 
     @Override
     public boolean matches(ItemStack check) {
+        if (modid.equals("*")) return true;
         return StackHelper.getModFromItem(check.getItem()).equals(modid);
     }
 }

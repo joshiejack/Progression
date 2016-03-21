@@ -41,10 +41,12 @@ public class ItemFilterFieldPreview extends ItemFilterField implements IField {
     public ItemStack getStack() {
         if (ticker >= 200 || ticker == 0) {
             stack = ItemHelper.getRandomItem(getFilters());
-            if (object instanceof IStackSizeable) {
-                stack.stackSize = ((IStackSizeable)object).getStackSize();
+            if (stack != null) {
+                if (object instanceof IStackSizeable) {
+                    stack.stackSize = ((IStackSizeable) object).getStackSize();
+                }
             }
-            
+
             ticker = 1;
         }
 

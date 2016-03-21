@@ -2,6 +2,7 @@ package joshie.progression.criteria.filters.item;
 
 import java.util.List;
 
+import joshie.progression.PCommonProxy;
 import joshie.progression.api.fields.IField;
 import joshie.progression.api.fields.ISpecialFieldProvider;
 import joshie.progression.api.fields.ISpecialFieldProvider.DisplayMode;
@@ -12,7 +13,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 public class FilterItemStack extends FilterBaseItem implements ISpecialFieldProvider {
-    public ItemStack stack = new ItemStack(Items.arrow);
+    public ItemStack stack = new ItemStack(PCommonProxy.item);
     public boolean matchDamage = true;
     public boolean matchNBT = false;
 

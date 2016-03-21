@@ -10,7 +10,6 @@ import com.google.common.cache.CacheBuilder;
 
 import joshie.progression.api.IFilter;
 import joshie.progression.api.filters.IFilterSelectorFilter;
-import joshie.progression.gui.GuiCriteriaEditor;
 import joshie.progression.gui.newversion.GuiItemFilterEditor;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
 import net.minecraft.block.Block;

@@ -10,11 +10,10 @@ import com.google.common.cache.CacheBuilder;
 
 import joshie.progression.Progression;
 import joshie.progression.api.filters.IFilterSelectorFilter;
-import joshie.progression.gui.GuiCriteriaEditor;
 import joshie.progression.gui.GuiTreeEditor;
+import joshie.progression.gui.base.GuiOffset;
 import joshie.progression.gui.editors.EditText.ITextEditable;
 import joshie.progression.gui.editors.IItemSelectable;
-import joshie.progression.gui.selector.filters.ActionFilter;
 import joshie.progression.gui.selector.filters.ItemFilter;
 import joshie.progression.helpers.ItemHelper;
 import net.minecraft.client.renderer.GlStateManager;
@@ -176,7 +175,7 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
             updateSearch();
         }
 
-        int offsetX = GuiCriteriaEditor.INSTANCE.offsetX;
+        int offsetX = GuiOffset.INSTANCE.offsetX;
         mouseY -= type.yOffset;
         offset.drawGradient(-1, 25 + type.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 15, theme.blackBarGradient1, theme.blackBarGradient2, theme.blackBarBorder);
         offset.drawRectangle(-1, 40 + type.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 73, theme.blackBarUnderLine, theme.blackBarUnderLineBorder);

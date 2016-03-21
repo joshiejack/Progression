@@ -93,6 +93,9 @@ public abstract class GuiBase extends GuiScreen {
         super.drawScreen(mouseX, mouseY, partialTicks);
         GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
         drawTooltip(tooltip, mouseX, mouseY);
+        for (IRenderOverlay overlay: overlays) {
+            overlay.draw(0, 0);
+        }
     }
 
     public void drawBackground() {

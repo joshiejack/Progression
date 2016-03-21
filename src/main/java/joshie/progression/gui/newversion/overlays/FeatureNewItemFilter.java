@@ -15,6 +15,7 @@ public class FeatureNewItemFilter extends FeatureNew {
     public boolean mouseClicked(int mouseX, int mouseY, int button) {       
         int yPos = 0;
         int xPos = 0;
+        
         for (IFilter filter : APIHandler.itemFilterTypes.values()) {
             if (!GuiItemFilterEditor.INSTANCE.field.isAccepted(filter)) continue;
             if (mouseX >= (xPos * 100) + 155 && mouseX <= (xPos * 100) + 255) {

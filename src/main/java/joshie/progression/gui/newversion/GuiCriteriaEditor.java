@@ -1,7 +1,5 @@
 package joshie.progression.gui.newversion;
 
-import java.util.ArrayList;
-
 import joshie.progression.Progression;
 import joshie.progression.api.ICriteria;
 import joshie.progression.gui.editors.IItemSelectable;
@@ -14,7 +12,6 @@ import joshie.progression.gui.newversion.overlays.FeatureDrawable;
 import joshie.progression.gui.newversion.overlays.FeatureFullTextEditor;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
-import joshie.progression.gui.newversion.overlays.FeatureNew;
 import joshie.progression.gui.newversion.overlays.FeatureNewReward;
 import joshie.progression.gui.newversion.overlays.FeatureNewTrigger;
 import joshie.progression.gui.newversion.overlays.FeatureTooltip;

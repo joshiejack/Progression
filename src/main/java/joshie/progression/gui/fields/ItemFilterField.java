@@ -55,12 +55,7 @@ public class ItemFilterField extends AbstractField {
     }
 
     public boolean isAccepted(IFilter filter) {
-        if (object instanceof ISpecialFilters) {
-            if (selector != null) {
-                if (filter.getType() != selector.getType()) return false;
-            }
-        }
-
+        if (filter.getType() != selector.getType()) return false;
         return true;
     }
 

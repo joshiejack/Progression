@@ -1,7 +1,5 @@
 package joshie.progression.gui.newversion;
 
-import java.util.ArrayList;
-
 import joshie.progression.Progression;
 import joshie.progression.gui.fields.ItemFilterField;
 import joshie.progression.gui.newversion.overlays.FeatureBarsX2;

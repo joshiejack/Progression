@@ -1,7 +1,6 @@
 package joshie.progression.gui.newversion.overlays;
 
 import joshie.progression.gui.newversion.GuiCore;
-import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
 public interface IGuiFeature {
 	public IGuiFeature init(GuiCore gui);

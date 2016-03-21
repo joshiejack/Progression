@@ -3,7 +3,6 @@ package joshie.progression.gui.buttons;
 import java.util.ArrayList;
 
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 
 import joshie.progression.Progression;
 import joshie.progression.api.ICriteria;
@@ -76,11 +75,8 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
 
     @Override
     public void onClicked() {
-        GuiTreeEditor.INSTANCE.switching = true; ///Don't save yet
-        MCClientHelper.getPlayer().closeScreen(); //Close everything first
+        //MCClientHelper.getPlayer().closeScreen(); //Close everything first
         //If the tab is already selected, then we should edit it instead        
-        int x = Mouse.getX();
-        int y = Mouse.getY();
 
         if (MCClientHelper.isInEditMode()) {
             if (Keyboard.isKeyDown(Keyboard.KEY_DELETE)) {
@@ -124,10 +120,9 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
         GuiTreeEditor.INSTANCE.previousTab = GuiTreeEditor.INSTANCE.currentTab;
         GuiTreeEditor.INSTANCE.currentTab = tab;
         GuiTreeEditor.INSTANCE.currentTabName = tab.getUniqueName(); //Reopen the gui
-        MCClientHelper.getPlayer().openGui(Progression.instance, GuiIDs.TREE, MCClientHelper.getWorld(), 0, 0, 0);
-
-        //Woo
-        Mouse.setCursorPosition(x, y);
+        //MCClientHelper.getPlayer().openGui(Progression.instance, GuiIDs.TREE, MCClientHelper.getWorld(), 0, 0, 0);
+        //Rebuild
+        GuiTreeEditor.INSTANCE.rebuildCriteria();
     }
 
     @Override

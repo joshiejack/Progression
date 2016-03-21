@@ -12,6 +12,7 @@ public class FilterBlockMod extends FilterBaseBlock {
 
     @Override
     protected boolean matches(Block block, int meta) {
+        if (modid.equals("*")) return true;
         return StackHelper.getModFromBlock(block).equals(modid);
     }
 }

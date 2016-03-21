@@ -20,7 +20,7 @@ public abstract class FilterBase implements IFilter {
 
     @Override
     public String getLocalisedName() {
-        return Progression.translate("filter.item." + getUnlocalisedName());
+        return Progression.translate("filter." + getType().name().toLowerCase() + "." + getUnlocalisedName());
     }
 
     @Override

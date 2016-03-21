@@ -12,6 +12,7 @@ import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
 import joshie.progression.gui.newversion.overlays.FeatureTooltip;
+import joshie.progression.gui.selector.filters.ItemFilter;
 import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.item.ItemStack;
 
@@ -41,7 +42,7 @@ public class ItemField extends AbstractField implements IItemSelectable {
                
         if (object instanceof ISpecialFilters) {
             this.filter = ((ISpecialFilters) object).getFilterForField(fieldName);
-        } else this.filter = filter;
+        } else this.filter = ItemFilter.INSTANCE;
 
         try {
             this.field = object.getClass().getField(fieldName);

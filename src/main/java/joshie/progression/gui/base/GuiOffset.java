@@ -1,10 +1,11 @@
 package joshie.progression.gui.base;
 
-import joshie.progression.gui.GuiCriteriaEditor;
 import joshie.progression.helpers.RenderItemHelper;
 import net.minecraft.item.ItemStack;
 
-public abstract class GuiOffset extends GuiBase {    
+public class GuiOffset extends GuiBase {    
+    public static GuiOffset INSTANCE = new GuiOffset();
+    
     public void drawSplitText(String text, int xCoord, int yCoord, int width, int color) {
         mc.fontRendererObj.drawSplitString(text, offsetX + xCoord, y + yCoord, width, color);
     }
@@ -14,11 +15,11 @@ public abstract class GuiOffset extends GuiBase {
     }
 
     public void drawBox(int xCoord, int yCoord, int width, int height, int color, int border) {
-        GuiCriteriaEditor.INSTANCE.drawRectWithBorder(offsetX + xCoord, y + yCoord, offsetX + xCoord + width, y + yCoord + height, color, border);
+        drawRectWithBorder(offsetX + xCoord, y + yCoord, offsetX + xCoord + width, y + yCoord + height, color, border);
     }
 
     public void drawGradient(int xCoord, int yCoord, int width, int height, int color, int color2, int border) {
-        GuiCriteriaEditor.INSTANCE.drawGradientRectWithBorder(offsetX + xCoord, y + yCoord, offsetX + xCoord + width, y + yCoord + height, color, color2, border);
+        drawGradientRectWithBorder(offsetX + xCoord, y + yCoord, offsetX + xCoord + width, y + yCoord + height, color, color2, border);
     }
 
     public void drawStack(ItemStack stack, int xCoord, int yCoord, float scale) {
@@ -26,6 +27,12 @@ public abstract class GuiOffset extends GuiBase {
     }
 
     public void drawTexture(int xCoord, int yCoord, int u, int v, int width, int height) {
-        GuiCriteriaEditor.INSTANCE.drawTexturedModalRect(offsetX + xCoord, y + yCoord, u, v, width, height);
+        drawTexturedModalRect(offsetX + xCoord, y + yCoord, u, v, width, height);
+    }
+
+    @Override
+    public void drawForeground() {
+        // TODO Auto-generated method stub
+        
     }
 }

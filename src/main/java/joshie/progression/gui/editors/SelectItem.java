@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 
-import joshie.progression.gui.GuiCriteriaEditor;
 import joshie.progression.gui.GuiTreeEditor;
+import joshie.progression.gui.base.GuiOffset;
 import joshie.progression.gui.base.IRenderOverlay;
 import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
 import joshie.progression.helpers.ItemHelper;
@@ -30,6 +30,7 @@ public class SelectItem extends TextEditable implements IRenderOverlay {
 
     public void select(IItemSelectable selectable, Type type) {
         ItemHelper.addInventory();
+        System.out.println("SELECTED");
         
         if (reset()) {
             //Setup the info
@@ -87,6 +88,7 @@ public class SelectItem extends TextEditable implements IRenderOverlay {
 
     @Override
     public boolean isVisible() {
+        System.out.println(selectable);
         return selectable != null;
     }
 
@@ -98,7 +100,7 @@ public class SelectItem extends TextEditable implements IRenderOverlay {
 
         mouseY -= type.yOffset;
 
-        ScaledResolution res = GuiCriteriaEditor.INSTANCE.res;
+        ScaledResolution res = GuiOffset.INSTANCE.res;
         int fullWidth = res.getScaledWidth() - 10;
         int width = (int) ((double) fullWidth / 16.633333334D);
         int j = 0;
@@ -127,6 +129,7 @@ public class SelectItem extends TextEditable implements IRenderOverlay {
 
     @Override
     public void draw(int x, int y) {
+        
         GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
 
         if (selectable != null) {
@@ -134,19 +137,19 @@ public class SelectItem extends TextEditable implements IRenderOverlay {
                 updateSearch();
             }
 
-            int offsetX = GuiCriteriaEditor.INSTANCE.offsetX;
+            int offsetX = GuiOffset.INSTANCE.offsetX;
 
             drawGradient(-1, 25 + type.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 15, theme.blackBarGradient1, theme.blackBarGradient2, theme.blackBarBorder);
             drawBox(-1, 40 + type.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 73, theme.blackBarUnderLine, theme.blackBarUnderLineBorder);
 
-            ScaledResolution res = GuiCriteriaEditor.INSTANCE.res;
+            ScaledResolution res = GuiTreeEditor.INSTANCE.res;
             int fullWidth = res.getScaledWidth() - 10;
             drawText("Select Item - Click elsewhere to close", 5 - offsetX, 29 + type.yOffset, theme.blackBarFontColor);
             drawBox(285 - offsetX, 27 + type.yOffset, 200, 12, theme.blackBarUnderLine, theme.blackBarUnderLineBorder);
             drawText(getText(), 290 - offsetX, 29 + type.yOffset, theme.blackBarFontColor);
 
-            int mouseX = GuiCriteriaEditor.INSTANCE.mouseX;
-            int mouseY = GuiCriteriaEditor.INSTANCE.mouseY - type.yOffset;
+            int mouseX = GuiOffset.INSTANCE.mouseX;
+            int mouseY = GuiOffset.INSTANCE.mouseY - type.yOffset;
             int width = (int) ((double) fullWidth / 16.633333334D);
             int j = 0;
             int k = 0;
@@ -156,7 +159,7 @@ public class SelectItem extends TextEditable implements IRenderOverlay {
                     drawStack(stack, -offsetX + 8 + (j * 16), type.yOffset + 45 + (k * 16), 1F);
                     if (mouseX >= 8 + (j * 16) && mouseX < 8 + (j * 16) + 16) {
                         if (mouseY >= 45 + (k * 16) && mouseY < 45 + (k * 16) + 16) {
-                            GuiCriteriaEditor.INSTANCE.addTooltip(stack.getTooltip(MCClientHelper.getPlayer(), false));
+                            GuiOffset.INSTANCE.addTooltip(stack.getTooltip(MCClientHelper.getPlayer(), false));
                         }
                     }
 

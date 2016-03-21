@@ -1,7 +1,7 @@
 package joshie.progression.gui.selector.filters;
 
-import joshie.progression.api.filters.IFilterSelectorFilter;
 import joshie.progression.api.filters.IFilterHelper;
+import joshie.progression.api.filters.IFilterSelectorFilter;
 
 public class FilterSelectorHelper implements IFilterHelper {
     @Override

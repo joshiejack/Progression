@@ -98,7 +98,10 @@ public class GuiTreeEditor extends GuiBase {
         }
 
         currentTabName = currentTab.getUniqueName();
+        rebuildCriteria();
+    }
 
+    public void rebuildCriteria() {
         //Rebuild
         elements = new HashMap();
         for (ICriteria criteria : currentTab.getCriteria()) {
@@ -228,7 +231,9 @@ public class GuiTreeEditor extends GuiBase {
 
         lastClicked = null;
         if (SelectItem.INSTANCE.getEditable() != null) {
-            TreeEditorSelection.INSTANCE.mouseClicked(mouseX, mouseY);
+            if (!TreeEditorSelection.INSTANCE.mouseClicked(mouseX, mouseY)) {
+                SelectItem.INSTANCE.clear();
+            }
         }
 
         super.mouseClicked(par1, par2, button);

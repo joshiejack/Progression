@@ -12,8 +12,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.BossStatus;
-import net.minecraft.entity.boss.IBossDisplayData;
-import net.minecraft.util.IChatComponent;
 
 public class EntityFilter extends FilterBase {
     public static final IFilterSelectorFilter INSTANCE = new EntityFilter();
