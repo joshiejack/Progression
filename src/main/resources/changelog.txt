@@ -23,6 +23,7 @@ Progression 0.5.0
   Added Potion Effect Reward
   Added Hide/Show Tab Reward
   Added Step Assist Reward
+  Removed the Option to select the item you want to use to open editor (now just the progression book)
     Allows for Unlocking of Tabs with Criteria
     The normal invisibility is if you want a tab to be permanently invisible (for logic)
  The Criteria Reward can now make Criteria Impossible to complete, an example of use would be to remove crafting criteria and never be able to complete it again

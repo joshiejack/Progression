@@ -46,6 +46,14 @@ public class PlayerTracker {
     public static PlayerDataCommon getPlayerData(EntityPlayer player) {
         return getPlayerData(PlayerHelper.getUUIDForPlayer(player));
     }
+    
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onBlockPlaced(PlaceEvent event) {
+        TileEntity tile = event.world.getTileEntity(event.pos);
+        if (event.player != null && tile != null) {
+            setTileOwner(tile, PlayerHelper.getUUIDForPlayer(event.player));
+        }
+    }
 
     public static UUID getTileOwner(TileEntity tile) {
         UUID uuid = owners.get(tile);
@@ -71,13 +79,5 @@ public class PlayerTracker {
         tag.setString("Owner", owner.toString());
         tile.getTileData().setTag("Progression", tag);
         tile.markDirty();
-    }
-
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onBlockPlaced(PlaceEvent event) {
-        TileEntity tile = event.world.getTileEntity(event.pos);
-        if (event.player != null && tile != null) {
-            setTileOwner(tile, PlayerHelper.getUUIDForPlayer(event.player));
-        }
     }
 }

@@ -2,8 +2,8 @@ package joshie.progression.items;
 
 import java.util.List;
 
-import joshie.progression.ClientProxy;
-import joshie.progression.Progression;
+import joshie.progression.PClientProxy;
+import joshie.progression.PCommonProxy;
 import joshie.progression.api.ICriteria;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemModelMesher;
@@ -24,14 +24,14 @@ public class RenderItemCriteria implements ISmartItemModel {
 	
 	@SubscribeEvent
 	public void onCookery(ModelBakeEvent event) {
-		event.modelRegistry.putObject(ClientProxy.criteria, this);
+		event.modelRegistry.putObject(PClientProxy.criteria, this);
 	}
 
 	@Override
 	public IBakedModel handleItemState(ItemStack stack) {
 		if (mesher == null) mesher  = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
 		ICriteria criteria = ItemCriteria.getCriteriaFromStack(stack);
-		if (criteria != null && criteria.getIcon().getItem() != stack.getItem() && criteria.getIcon().getItem() != Progression.item) {
+		if (criteria != null && criteria.getIcon().getItem() != stack.getItem() && criteria.getIcon().getItem() != PCommonProxy.item) {
 			return mesher.getItemModel(criteria.getIcon());
 		}
 		

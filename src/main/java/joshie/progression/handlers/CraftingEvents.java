@@ -16,6 +16,7 @@ import joshie.progression.gui.newversion.GuiCriteriaEditor;
 import joshie.progression.helpers.CraftingHelper;
 import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
@@ -26,9 +27,15 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class CraftingEvents {
+    @SubscribeEvent
+    public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
+        RemappingHandler.onPlayerConnect((EntityPlayerMP) event.player);
+    }
+    
     @SubscribeEvent
     public void onAttemptToUseItemToPerformAction(CanUseToPeformActionEvent event) {
         if (event.stack == null) return;

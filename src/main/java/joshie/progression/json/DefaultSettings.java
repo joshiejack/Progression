@@ -15,7 +15,6 @@ public class DefaultSettings {
     public boolean disableUsageUntilRewardAdded = false;
     public boolean unclaimedTileCanCraftAnything = false;
     public boolean unclaimedTileCanUseAnythingForCrafting = false;
-    public String interfaceItem = "minecraft:book";
     public boolean displayRequirementsOnNEIClick = true;
 
     public DefaultSettings setDefaults() {
