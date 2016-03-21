@@ -2,8 +2,6 @@ package joshie.progression.network;
 
 import io.netty.buffer.ByteBuf;
 import joshie.progression.api.ICriteria;
-import joshie.progression.api.IRewardType;
-import joshie.progression.criteria.rewards.RewardBaseAction;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.network.core.PenguinPacket;
 import joshie.progression.player.PlayerTracker;
@@ -54,17 +52,5 @@ public class PacketSyncCriteria extends PenguinPacket {
     @Override
     public void handlePacket(EntityPlayer player) {
         PlayerTracker.getClientPlayer().getMappings().markCriteriaAsCompleted(overwrite, integers, criteria);
-        if (overwrite) {
-            for (ICriteria condition : APIHandler.getCriteria().values()) {
-                for (ICriteria unlocked : criteria) {
-                    if (unlocked == null) continue;
-                    for (IRewardType reward : unlocked.getRewards()) {
-                        if (reward instanceof RewardBaseAction) {
-                            reward.reward(PlayerTracker.getClientPlayer().getUUID());
-                        }
-                    }
-                }
-            }
-        }
     }
 }

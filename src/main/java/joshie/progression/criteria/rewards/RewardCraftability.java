@@ -8,7 +8,6 @@ import joshie.progression.api.IFilter;
 import joshie.progression.api.IHasEventBus;
 import joshie.progression.api.ISpecialFilters;
 import joshie.progression.api.fields.IField;
-import joshie.progression.api.fields.IInit;
 import joshie.progression.api.fields.ISpecialFieldProvider;
 import joshie.progression.api.filters.IFilterSelectorFilter;
 import joshie.progression.crafting.ActionType;
@@ -16,10 +15,9 @@ import joshie.progression.crafting.CraftingRegistry;
 import joshie.progression.gui.fields.ItemFilterFieldPreview;
 import joshie.progression.gui.selector.filters.ActionFilter;
 import joshie.progression.gui.selector.filters.ItemFilter;
-import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.item.ItemStack;
 
-public class RewardCraftability extends RewardBaseItemFilter implements IInit, ISpecialFieldProvider, ISpecialFilters {
+public class RewardCraftability extends RewardBaseItemFilter implements ISpecialFieldProvider, ISpecialFilters {
     public static HashSet<IHasEventBus> craftRegistry = new HashSet();
     public List<IFilter> actionfilters = new ArrayList();
     public boolean general = true;
@@ -27,28 +25,7 @@ public class RewardCraftability extends RewardBaseItemFilter implements IInit, I
     public boolean crafting = true;
 
     public RewardCraftability() {
-        super("craftability", 0xFFCCCCCC);
-    }
-
-    @Override
-    public void init() {
-        //Close the open gui so we avoid fucking with shit
-        if (MCClientHelper.getPlayer() != null) {
-            int x = 0;//Mouse.getX();
-            int y = 0;//Mouse.getY();
-            //MCClientHelper.getPlayer().closeScreen();
-            //GuiItemFilterEditor.INSTANCE.switching = true;
-
-            //Remove everything
-            //onRemoved();
-
-            //Readd everything
-            //onAdded();
-
-            //Reopen the gui
-            //MCClientHelper.getPlayer().openGui(Progression.instance, GuiIDs.ITEM, MCClientHelper.getWorld(), 0, 0, 0);
-            //Mouse.setCursorPosition(x, y);
-        }
+        super("crafting", 0xFFCCCCCC);
     }
 
     @Override
