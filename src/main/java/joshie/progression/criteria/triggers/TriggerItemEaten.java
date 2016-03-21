@@ -28,7 +28,7 @@ public class TriggerItemEaten extends TriggerBaseItemFilter implements ISpecialF
 
     @Override
     public void addSpecialFields(List<IField> fields, DisplayMode mode) {
-        fields.add(new ItemFilterFieldPreview("filters", this, 25, 30, 2.8F));
+        if (mode == DisplayMode.EDIT) fields.add(ProgressionAPI.fields.getItemPreview(this, "filters", 30, 35, 1.9F));
     }
 
     @Override

@@ -65,8 +65,18 @@ progression.edit.tooltip.kill.amount.1=Validated by the above values
 progression.edit.tooltip.kill.entities.0=Click to open the entity filtering
 progression.edit.tooltip.kill.entities.1=editor to pick the entities that qualify
 progression.trigger.login=Login
-progression.trigger.points=Points
+progression.edit.tooltip.login.greaterThan.0=If you need have logged in
+progression.edit.tooltip.login.greaterThan.1=more times than the amount listed
+progression.edit.tooltip.login.isEqualTo.0=If you need have logged in
+progression.edit.tooltip.login.isEqualTo.1=this exact amount of times listed
+progression.edit.tooltip.login.lesserThan.0=If you need have logged in
+progression.edit.tooltip.login.lesserThan.1=less times than the amount listed
+progression.edit.tooltip.login.amount.0=Amount of times logged in needed to activate
+progression.edit.tooltip.login.amount.1=Validated by the above values
 progression.trigger.onEaten=On Eaten
+progression.edit.tooltip.onEaten.amount.0=Number of times you need to have
+progression.edit.tooltip.onEaten.amount.1=eaten/consumed the displayed item
+progression.trigger.points=Points
 progression.trigger.tick=On Second
 
 
