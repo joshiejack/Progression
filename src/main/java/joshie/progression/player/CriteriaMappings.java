@@ -249,7 +249,7 @@ public class CriteriaMappings {
                 return Result.DENY;
             }
         }
-
+        
         //Next step, now that the triggers have been fire, we need to go through them again
         //Check if they have been satisfied, and if so, mark them as completed triggers
         HashSet<ITriggerType> toRemove = new HashSet();
@@ -432,6 +432,10 @@ public class CriteriaMappings {
 
             //If we are allowed to redo triggers, remove from completed
             completedTriggers.removeAll(criteria.getTriggers());
+            //Remove all data for the triggers too
+            for (ITriggerType trigger: criteria.getTriggers()) {
+                triggerData.remove(trigger);
+            }
         }
 
         if (available != null) {

@@ -27,6 +27,7 @@ public abstract class TriggerBaseCounter extends TriggerBase {
 
     @Override
     public boolean isCompleted(ITriggerData iTriggerData) {
+        System.out.println(((DataCount) iTriggerData));
         return ((DataCount) iTriggerData).count >= amount;
     }
 

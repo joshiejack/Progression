@@ -32,7 +32,7 @@ public class FilterEntityName extends FilterBaseEntity implements IInit {
     }
 
     @Override
-    protected boolean matches(EntityLivingBase entity) {
+    protected boolean matches(EntityLivingBase entity) {       
         int key = entity.getEntityId();
         Set<String> names = null;
         if (cache.containsKey(key)) names = cache.get(key);
@@ -47,7 +47,7 @@ public class FilterEntityName extends FilterBaseEntity implements IInit {
             else if (!matchFront && matchBack && itemName.toLowerCase().startsWith(checkName.toLowerCase())) return true;
             else if (itemName.toLowerCase().equals(checkName.toLowerCase())) return true;
         }
-
+        
         return false;
     }
 }

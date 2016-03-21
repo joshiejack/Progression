@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import joshie.progression.api.IFilter;
+import joshie.progression.api.ISpecialFilters;
 import joshie.progression.api.ProgressionAPI;
+import joshie.progression.api.fields.IHasFilters;
+import joshie.progression.api.filters.IFilterSelectorFilter;
+import joshie.progression.gui.selector.filters.EntityFilter;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,8 +17,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class TriggerKill extends TriggerBaseCounterVaries {
-    public List<IFilter> filters = new ArrayList();
+public class TriggerKill extends TriggerBaseCounterVaries implements IHasFilters, ISpecialFilters {
+    public List<IFilter> entities = new ArrayList();
 
     public TriggerKill() {
         super(new ItemStack(Items.iron_sword), "kill", 0xFF000000);
@@ -27,20 +31,25 @@ public class TriggerKill extends TriggerBaseCounterVaries {
             ProgressionAPI.registry.fireTrigger((EntityPlayer) source, getUnlocalisedName(), event.entityLiving);
         }
     }
+    
+    @Override
+    public IFilterSelectorFilter getFilterForField(String fieldName) {
+        return EntityFilter.INSTANCE;
+    }
+
+    @Override
+    public List<IFilter> getAllFilters() {
+        return entities;
+    }
 
     @Override
     protected boolean canIncrease(Object... data) {
         EntityLivingBase entity = (EntityLivingBase) data[0];
-        for (IFilter filter : filters) {
+        for (IFilter filter : entities) {
             if (filter.matches(entity)) return true;
         }
 
         return false;
-    }
-
-    @Override
-    public void updateDraw() {
-        //entity = EntityHelper.getRandomEntityForFilters(filters);
     }
 
     @Override
@@ -52,16 +61,4 @@ public class TriggerKill extends TriggerBaseCounterVaries {
 
         return amount + " x " + name;
     }
-
-    /*
-    @Override
-    public void drawDisplay(int mouseX, int mouseY) {
-        try {
-            int max = 36;
-            double numberToUse = (double) (entity.width >= entity.height ? entity.width : entity.height);
-            int scale = (int) (numberToUse != 0 ? max / numberToUse : max);
-            glClear(GL_DEPTH_BUFFER_BIT);
-            GuiInventory.drawEntityOnScreen(ProgressionAPI.draw.getXPosition() + 37 + GuiCriteriaEditor.INSTANCE.offsetX, GuiCriteriaEditor.INSTANCE.y + 117, scale, 25F, -5F, entity);
-        } catch (Exception e) {}
-    } */
 }

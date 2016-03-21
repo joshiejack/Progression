@@ -51,7 +51,7 @@ public class ItemFilterField extends AbstractField {
 
     @Override
     public void draw(DrawFeatureHelper helper, int renderX, int renderY, int color, int yPos, int mouseX, int mouseY) {
-        helper.drawSplitText(renderX, renderY, "Item Editor", 4, yPos, 105, color, 0.75F);
+        helper.drawSplitText(renderX, renderY, Progression.translate("filter." + selector.getType().name().toLowerCase()), 4, yPos, 105, color, 0.75F);
     }
 
     public boolean isAccepted(IFilter filter) {

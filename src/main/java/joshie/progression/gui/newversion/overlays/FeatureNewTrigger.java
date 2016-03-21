@@ -18,7 +18,7 @@ public class FeatureNewTrigger extends FeatureNew<ITriggerType> {
     }
 
     @Override
-    public void clone(ITriggerType t) {
+    public void clone(ITriggerType trigger) {
         APIHandler.cloneTrigger(criteria, trigger);
         //GuiCriteriaEditor.INSTANCE.initGui()
     }
