@@ -41,6 +41,7 @@ import joshie.progression.criteria.rewards.RewardCommand;
 import joshie.progression.criteria.rewards.RewardCraftability;
 import joshie.progression.criteria.rewards.RewardCriteria;
 import joshie.progression.criteria.rewards.RewardFallDamage;
+import joshie.progression.criteria.rewards.RewardHurt;
 import joshie.progression.criteria.rewards.RewardItem;
 import joshie.progression.criteria.rewards.RewardPlaceBlock;
 import joshie.progression.criteria.rewards.RewardPoints;
@@ -95,6 +96,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -158,7 +160,23 @@ public class PCommonProxy implements IGuiHandler {
         PacketHandler.registerPacket(PacketReset.class);
         PacketHandler.registerPacket(PacketSyncJSONToClient.class);
         PacketHandler.registerPacket(PacketSyncJSONToServer.class);
-        
+
+        //Register DamageSources
+        ProgressionAPI.registry.registerDamageSource(DamageSource.anvil);
+        ProgressionAPI.registry.registerDamageSource(DamageSource.cactus);
+        ProgressionAPI.registry.registerDamageSource(DamageSource.drown);
+        ProgressionAPI.registry.registerDamageSource(DamageSource.fall);
+        ProgressionAPI.registry.registerDamageSource(DamageSource.fallingBlock);
+        ProgressionAPI.registry.registerDamageSource(DamageSource.generic);
+        ProgressionAPI.registry.registerDamageSource(DamageSource.inFire);
+        ProgressionAPI.registry.registerDamageSource(DamageSource.inWall);
+        ProgressionAPI.registry.registerDamageSource(DamageSource.lava);
+        ProgressionAPI.registry.registerDamageSource(DamageSource.lightningBolt);
+        ProgressionAPI.registry.registerDamageSource(DamageSource.magic);
+        ProgressionAPI.registry.registerDamageSource(DamageSource.onFire);
+        ProgressionAPI.registry.registerDamageSource(DamageSource.outOfWorld);
+        ProgressionAPI.registry.registerDamageSource(DamageSource.starve);
+        ProgressionAPI.registry.registerDamageSource(DamageSource.wither);
     }
 
     private void registerFilters() {
@@ -238,6 +256,7 @@ public class PCommonProxy implements IGuiHandler {
         ProgressionAPI.registry.registerRewardType(new RewardSpawnEntity());
         ProgressionAPI.registry.registerRewardType(new RewardShowTab());
         ProgressionAPI.registry.registerRewardType(new RewardStepAssist());
+        ProgressionAPI.registry.registerRewardType(new RewardHurt());
     }
 
     public void initClient() {}

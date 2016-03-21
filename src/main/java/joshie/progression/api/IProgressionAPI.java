@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
 /** The registry is where you register new types of rewards, triggers and
@@ -46,6 +47,9 @@ public interface IProgressionAPI {
     
     /** Register a new crafting type **/
     public void registerActionType(String unlocalised);
+    
+    /** Register a damage source **/
+    public void registerDamageSource(DamageSource source);
     
     /** Convenience method for calling, which calls the crafting events
      *  @param     the type of action, either furnace or crafting normally, could be breakBlock

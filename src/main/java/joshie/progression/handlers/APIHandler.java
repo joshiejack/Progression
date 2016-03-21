@@ -20,6 +20,7 @@ import joshie.progression.api.fields.IInit;
 import joshie.progression.crafting.ActionType;
 import joshie.progression.criteria.Criteria;
 import joshie.progression.criteria.Tab;
+import joshie.progression.criteria.rewards.RewardHurt;
 import joshie.progression.criteria.triggers.data.DataBoolean;
 import joshie.progression.criteria.triggers.data.DataCount;
 import joshie.progression.criteria.triggers.data.DataCrafting;
@@ -32,6 +33,7 @@ import joshie.progression.network.PacketHandler;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.relauncher.Side;
@@ -130,6 +132,11 @@ public class APIHandler implements IProgressionAPI {
     public IFilter registerItemFilter(IFilter filter) {
         itemFilterTypes.put(filter.getUnlocalisedName(), filter);
         return filter;
+    }
+    
+    @Override
+    public void registerDamageSource(DamageSource source) {
+        RewardHurt.sources.put(source.damageType, source);
     }
 
     public static ICriteria newCriteria(ITab tab, String name, boolean isClientside) {
