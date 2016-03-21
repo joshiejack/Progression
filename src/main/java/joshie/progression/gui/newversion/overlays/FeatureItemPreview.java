@@ -93,7 +93,6 @@ public class FeatureItemPreview extends FeatureAbstract {
             updateSearch();
         }
 
-        int offsetX = GuiCriteriaEditor.INSTANCE.offsetX;
         mouseY -= 95;
 
         int width = (int) ((double) (screenWidth - 10) / filter.getScale());
@@ -101,7 +100,7 @@ public class FeatureItemPreview extends FeatureAbstract {
         int k = 0;
         for (int i = position; i < position + (width * 4); i++) {
             if (i >= 0 && i < sorted.size()) {
-                filter.draw(offset, sorted.get(i), offsetX, j, Type.TRIGGER.yOffset, k, mouseX, mouseY);
+                filter.draw(offset, sorted.get(i), 0, j, Type.TRIGGER.yOffset, k, mouseX, mouseY);
 
                 j++;
 

@@ -1,8 +1,6 @@
 package joshie.progression;
 
-import joshie.progression.api.ProgressionAPI;
 import joshie.progression.gui.GuiTreeEditor;
-import joshie.progression.gui.base.DrawHelper;
 import joshie.progression.gui.newversion.GuiConditionEditor;
 import joshie.progression.gui.newversion.GuiCriteriaEditor;
 import joshie.progression.gui.newversion.GuiGroupEditor;
@@ -23,7 +21,6 @@ public class PClientProxy extends PCommonProxy {
 	
     @Override
     public void initClient() {
-        ProgressionAPI.draw = DrawHelper.INSTANCE;
         MinecraftForge.EVENT_BUS.register(new RenderItemCriteria());
     }
     

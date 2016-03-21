@@ -26,6 +26,7 @@ import joshie.progression.api.ITriggerType;
 import joshie.progression.api.fields.IHasFilters;
 import joshie.progression.api.fields.IInit;
 import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.EventsManager;
 import joshie.progression.handlers.RemappingHandler;
 import joshie.progression.helpers.JSONHelper;
 import joshie.progression.helpers.StackHelper;
@@ -278,6 +279,8 @@ public class JSONLoader {
                         }
                     }
                     
+                    EventsManager.onTriggerAdded(trigger);
+                    
                     for (IConditionType condition: trigger.getConditions()) {
                         if (condition instanceof IInit) ((IInit)condition).init();
                         if (condition instanceof IHasFilters) {
@@ -295,6 +298,8 @@ public class JSONLoader {
                             if (filter instanceof IInit) ((IInit)filter).init();
                         }
                     }
+                    
+                    EventsManager.onRewardAdded(reward);
                 }
             }
         }

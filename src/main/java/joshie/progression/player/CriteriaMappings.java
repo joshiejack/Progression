@@ -207,7 +207,6 @@ public class CriteriaMappings {
 
     /** Called to fire a trigger type, Triggers are only ever called on criteria that is activated **/
     public Result fireAllTriggers(String type, Object... data) {
-        System.out.println("FIRING TRIGGER");
         if (activeTriggers == null) return Result.DEFAULT; //If the remapping hasn't occured yet, say goodbye!
         //If the trigger is a forced removal, then force remve it
         if (type.equals("forced-remove")) {

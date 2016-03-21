@@ -50,7 +50,6 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
         this.filter = filter;
         this.selectable = selectable;
         this.type = type;
-        System.out.println(filter);
         if (this.filter == null) this.filter = ItemFilter.INSTANCE;
         updateSearch();
     }

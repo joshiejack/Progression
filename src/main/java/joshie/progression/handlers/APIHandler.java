@@ -169,7 +169,6 @@ public class APIHandler implements IProgressionAPI {
             newTriggerType = oldTriggerType.getClass().newInstance();
             newTriggerType.setCriteria(criteria);
             JSONHelper.readJSON(data, newTriggerType);
-            EventsManager.onTriggerAdded(newTriggerType);
             criteria.getTriggers().add(newTriggerType);
         } catch (Exception e) {}
 
@@ -187,7 +186,6 @@ public class APIHandler implements IProgressionAPI {
             newRewardType = oldRewardType.getClass().newInstance(); //Create a new instance of the reward
             newRewardType.setCriteria(criteria); //Let the reward know which criteria is attached to
             JSONHelper.readJSON(data, newRewardType);
-            EventsManager.onRewardAdded(newRewardType);
             criteria.getRewards().add(newRewardType);
         } catch (Exception e) {}
 

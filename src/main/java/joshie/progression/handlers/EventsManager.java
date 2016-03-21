@@ -12,12 +12,37 @@ public class EventsManager {
     private static HashSet<IRewardType> activeRewards;
 
     public static void create() {
+        //Before we reset everything we should unregister them all
+        if (activeRewards != null) {
+            for (IRewardType type : activeRewards) {
+                try {
+                    if (type instanceof IHasEventBus) {
+                        EventBus bus = ((IHasEventBus) type).getEventBus();
+                        if (bus != null) bus.unregister(type);
+                    }
+                } catch (Exception e) {}
+            }
+        }
+
+        if (activeTriggers != null) {
+            for (ITriggerType type : activeTriggers) {
+                try {
+                    if (type instanceof IHasEventBus) {
+                        EventBus bus = ((IHasEventBus) type).getEventBus();
+                        if (bus != null) bus.unregister(type);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
         activeRewards = new HashSet(); //Reset active rewards
         activeTriggers = new HashSet(); //Reset active triggers
     }
 
     public static void onTriggerAdded(ITriggerType trigger) {
-        activeTriggers.add(trigger); //Add the new trigger
+        activeTriggers.add(APIHandler.triggerTypes.get(trigger.getUnlocalisedName())); //Add the new trigger
         HashSet activeTriggerTypes = new HashSet();
         for (ITriggerType existing : activeTriggers) { //Grab a list of all the triggers that should be registered
             activeTriggerTypes.add(existing.getUnlocalisedName());
@@ -36,7 +61,7 @@ public class EventsManager {
     }
 
     public static void onTriggerRemoved(ITriggerType trigger) {
-        activeTriggers.remove(trigger); //Add the new trigger
+        activeTriggers.remove(APIHandler.triggerTypes.get(trigger.getUnlocalisedName())); //Add the new trigger
         HashSet activeTriggerTypes = new HashSet();
         for (ITriggerType existing : activeTriggers) { //Grab a list of all the triggers that should be registered
             activeTriggerTypes.add(existing.getUnlocalisedName());
@@ -55,7 +80,7 @@ public class EventsManager {
     }
 
     public static void onRewardAdded(IRewardType reward) {
-        activeRewards.add(reward); //Add the new reward
+        activeRewards.add(APIHandler.rewardTypes.get(reward.getUnlocalisedName())); //Add the new reward
         HashSet activeRewardTypes = new HashSet();
         for (IRewardType existing : activeRewards) { //Grab a list of all the rewards that should be registered
             activeRewardTypes.add(existing.getUnlocalisedName());
@@ -71,12 +96,12 @@ public class EventsManager {
                 } catch (Exception e) {}
             }
         }
-        
+
         reward.onAdded();
     }
 
     public static void onRewardRemoved(IRewardType reward) {
-        activeRewards.remove(reward); //Add the new reward
+        activeRewards.remove(APIHandler.rewardTypes.get(reward.getUnlocalisedName())); //Add the new reward
         HashSet activeRewardTypes = new HashSet();
         for (IRewardType existing : activeRewards) { //Grab a list of all the rewards that should be registered
             activeRewardTypes.add(existing.getUnlocalisedName());
@@ -92,7 +117,7 @@ public class EventsManager {
                 } catch (Exception e) {}
             }
         }
-        
+
         reward.onRemoved();
     }
 }
