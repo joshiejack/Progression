@@ -1,5 +1,5 @@
 Progression 0.5.0
-  Updated to Minecraft 1.8.9
+  Updated to Minecraft 1.8.9 / Minecraft 1.9
   Rewrote the guis, to have two modes edit and display modes
   Changed items to use filters instead of selecting all individually
   Added Support for displaying criteria, and claiming rewards with Enchiridion Books (And more)
