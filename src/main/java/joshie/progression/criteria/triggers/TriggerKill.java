@@ -3,12 +3,12 @@ package joshie.progression.criteria.triggers;
 import java.util.ArrayList;
 import java.util.List;
 
-import joshie.progression.api.IFilter;
-import joshie.progression.api.ISpecialFilters;
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.fields.IHasFilters;
-import joshie.progression.api.filters.IFilterSelectorFilter;
-import joshie.progression.gui.selector.filters.EntityFilter;
+import joshie.progression.api.criteria.IProgressionFilter;
+import joshie.progression.api.criteria.IProgressionFilterSelector;
+import joshie.progression.api.special.IHasFilters;
+import joshie.progression.api.special.ISpecialFilters;
+import joshie.progression.gui.filters.FilterSelectorEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,7 +18,7 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class TriggerKill extends TriggerBaseCounterVaries implements IHasFilters, ISpecialFilters {
-    public List<IFilter> entities = new ArrayList();
+    public List<IProgressionFilter> entities = new ArrayList();
 
     public TriggerKill() {
         super(new ItemStack(Items.iron_sword), "kill", 0xFF000000);
@@ -33,19 +33,19 @@ public class TriggerKill extends TriggerBaseCounterVaries implements IHasFilters
     }
     
     @Override
-    public IFilterSelectorFilter getFilterForField(String fieldName) {
-        return EntityFilter.INSTANCE;
+    public IProgressionFilterSelector getFilterForField(String fieldName) {
+        return FilterSelectorEntity.INSTANCE;
     }
 
     @Override
-    public List<IFilter> getAllFilters() {
+    public List<IProgressionFilter> getAllFilters() {
         return entities;
     }
 
     @Override
     protected boolean canIncrease(Object... data) {
         EntityLivingBase entity = (EntityLivingBase) data[0];
-        for (IFilter filter : entities) {
+        for (IProgressionFilter filter : entities) {
             if (filter.matches(entity)) return true;
         }
 

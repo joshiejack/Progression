@@ -7,7 +7,7 @@ import static joshie.progression.player.data.AbilityStats.SpeedType.WATER;
 import java.util.List;
 import java.util.UUID;
 
-import joshie.progression.api.IHasEventBus;
+import joshie.progression.api.special.IHasEventBus;
 import joshie.progression.player.PlayerTracker;
 import joshie.progression.player.data.AbilityStats.SpeedType;
 import net.minecraft.entity.player.EntityPlayer;

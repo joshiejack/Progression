@@ -4,7 +4,6 @@ import java.util.List;
 
 import joshie.progression.criteria.filters.FilterBase;
 import joshie.progression.helpers.ItemHelper;
-import joshie.progression.lib.WorldLocation;
 import net.minecraft.item.ItemStack;
 
 public abstract class FilterBaseItem extends FilterBase {

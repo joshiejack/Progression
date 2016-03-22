@@ -3,9 +3,9 @@ package joshie.progression.criteria.rewards;
 import java.util.List;
 import java.util.UUID;
 
-import joshie.progression.api.ICriteria;
-import joshie.progression.api.IGetterCallback;
-import joshie.progression.api.fields.IInit;
+import joshie.progression.api.criteria.IProgressionCriteria;
+import joshie.progression.api.special.IGetterCallback;
+import joshie.progression.api.special.IInit;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.init.Items;
@@ -13,7 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
 public class RewardCriteria extends RewardBase implements IGetterCallback, IInit {
-    private ICriteria criteria = null;
+    private IProgressionCriteria criteria = null;
     private String criteriaID = "";
     public boolean remove = true;
     public boolean possibility = false;
@@ -26,7 +26,7 @@ public class RewardCriteria extends RewardBase implements IGetterCallback, IInit
     @Override
     public void init() {
         try {
-            for (ICriteria c : APIHandler.getCriteria().values()) {
+            for (IProgressionCriteria c : APIHandler.getCriteria().values()) {
                 String display = c.getDisplayName();
                 if (c.getDisplayName().equals(displayName)) {
                     criteria = c;

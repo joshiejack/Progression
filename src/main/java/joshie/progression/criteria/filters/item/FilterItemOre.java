@@ -4,7 +4,7 @@ import java.util.Set;
 
 import com.google.common.collect.HashMultimap;
 
-import joshie.progression.api.fields.IInit;
+import joshie.progression.api.special.IInit;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;

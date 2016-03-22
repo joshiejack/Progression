@@ -15,7 +15,7 @@ public class DefaultSettings {
     public boolean disableUsageUntilRewardAdded = false;
     public boolean unclaimedTileCanCraftAnything = false;
     public boolean unclaimedTileCanUseAnythingForCrafting = false;
-    public boolean displayRequirementsOnNEIClick = true;
+    public boolean craftAnythingCreative = false;
 
     public DefaultSettings setDefaults() {
         tabs.add(new DataTab("DEFAULT", "Default", 0, new ArrayList(), true, new ItemStack(Items.book)));

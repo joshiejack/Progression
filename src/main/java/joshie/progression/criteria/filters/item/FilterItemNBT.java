@@ -1,6 +1,6 @@
 package joshie.progression.criteria.filters.item;
 
-import joshie.progression.api.fields.IInit;
+import joshie.progression.api.special.IInit;
 import joshie.progression.helpers.StackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

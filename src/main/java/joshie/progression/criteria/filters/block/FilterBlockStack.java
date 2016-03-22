@@ -2,12 +2,12 @@ package joshie.progression.criteria.filters.block;
 
 import java.util.List;
 
-import joshie.progression.api.fields.IField;
-import joshie.progression.api.fields.IInit;
-import joshie.progression.api.fields.ISpecialFieldProvider;
+import joshie.progression.api.criteria.IProgressionField;
+import joshie.progression.api.special.IInit;
+import joshie.progression.api.special.ISpecialFieldProvider;
+import joshie.progression.gui.editors.FeatureItemSelector.Type;
 import joshie.progression.gui.fields.ItemField;
-import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
-import joshie.progression.gui.selector.filters.BlockFilter;
+import joshie.progression.gui.filters.FilterSelectorBlock;
 import joshie.progression.helpers.ItemHelper;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -37,9 +37,9 @@ public class FilterBlockStack extends FilterBaseBlock implements ISpecialFieldPr
     }
 
     @Override
-    public void addSpecialFields(List<IField> fields, DisplayMode mode) {
+    public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
         if (mode == DisplayMode.EDIT) {
-            fields.add(new ItemField("stack", this, 30, 35, 2.4F, Type.TRIGGER, BlockFilter.INSTANCE));
+            fields.add(new ItemField("stack", this, 30, 35, 2.4F, Type.TRIGGER, FilterSelectorBlock.INSTANCE));
         }
     }
 

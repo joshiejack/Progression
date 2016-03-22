@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.UUID;
 
 import joshie.progression.Progression;
-import joshie.progression.api.fields.IField;
-import joshie.progression.api.fields.ISpecialFieldProvider;
-import joshie.progression.api.fields.IStackSizeable;
+import joshie.progression.api.criteria.IProgressionField;
+import joshie.progression.api.special.ISpecialFieldProvider;
+import joshie.progression.api.special.IStackSizeable;
 import joshie.progression.gui.fields.ItemFilterFieldPreview;
 import joshie.progression.helpers.ItemHelper;
 import joshie.progression.helpers.MCClientHelper;
@@ -36,7 +36,7 @@ public class RewardItem extends RewardBaseItemFilter implements ISpecialFieldPro
     }
 
     @Override
-    public void addSpecialFields(List<IField> fields, DisplayMode mode) {
+    public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
         if (mode == DisplayMode.EDIT) fields.add(new ItemFilterFieldPreview("filters", this, 25, 30, 2.8F));
         else fields.add(new ItemFilterFieldPreview("filters", this, 25, 25, 2.8F));
     }

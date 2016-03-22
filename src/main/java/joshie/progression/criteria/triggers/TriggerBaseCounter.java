@@ -2,7 +2,7 @@ package joshie.progression.criteria.triggers;
 
 import java.util.UUID;
 
-import joshie.progression.api.ITriggerData;
+import joshie.progression.api.criteria.IProgressionTriggerData;
 import joshie.progression.criteria.triggers.data.DataCount;
 import net.minecraft.item.ItemStack;
 
@@ -26,13 +26,12 @@ public abstract class TriggerBaseCounter extends TriggerBase {
     }
 
     @Override
-    public boolean isCompleted(ITriggerData iTriggerData) {
-        System.out.println(((DataCount) iTriggerData));
+    public boolean isCompleted(IProgressionTriggerData iTriggerData) {
         return ((DataCount) iTriggerData).count >= amount;
     }
 
     @Override
-    public boolean onFired(UUID uuid, ITriggerData iTriggerData, Object... data) {
+    public boolean onFired(UUID uuid, IProgressionTriggerData iTriggerData, Object... data) {
         DataCount triggerData = (DataCount) iTriggerData;
         if (canIncrease(data)) {
             triggerData.count++;

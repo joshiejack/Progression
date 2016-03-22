@@ -13,7 +13,7 @@ public class CommandReset extends AbstractCommand {
 
     @Override
     public String getUsage() {
-        return "";
+        return "[username]";
     }
 
     @Override

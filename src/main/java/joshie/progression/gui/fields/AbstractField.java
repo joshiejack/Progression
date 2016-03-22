@@ -1,8 +1,8 @@
 package joshie.progression.gui.fields;
 
-import joshie.progression.api.fields.IField;
+import joshie.progression.api.criteria.IProgressionField;
 
-public abstract class AbstractField implements IField {
+public abstract class AbstractField implements IProgressionField {
     public String name;
     public Object object;
 

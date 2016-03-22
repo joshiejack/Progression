@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import joshie.progression.api.ICriteria;
-import joshie.progression.api.IFilter;
+import joshie.progression.api.criteria.IProgressionCriteria;
+import joshie.progression.api.criteria.IProgressionFilter;
 import joshie.progression.crafting.CraftingRegistry.DisallowType;
 import joshie.progression.json.Options;
 import joshie.progression.player.PlayerTracker;
@@ -24,18 +24,18 @@ public class CrafterHuman extends Crafter {
 
     @Override
     public boolean canUseItemForCrafting(ActionType type, ItemStack stack) {
-        Set<IFilter> filters = CraftingRegistry.getFiltersForStack(type, stack, DisallowType.USEINCRAFTING);
-        List<IFilter> matched = new ArrayList();
-        for (IFilter filter : filters) {
+        Set<IProgressionFilter> filters = CraftingRegistry.getFiltersForStack(type, stack, DisallowType.USEINCRAFTING);
+        List<IProgressionFilter> matched = new ArrayList();
+        for (IProgressionFilter filter : filters) {
             if (filter.matches(stack)) {
                 matched.add(filter); //Add all matches so we can check all criteria
             }
         }
 
         if (matched.size() == 0) return !Options.settings.disableUsageUntilRewardAdded;
-        Set<ICriteria> completed = PlayerTracker.getPlayerData(uuid).getMappings().getCompletedCriteria().keySet();
-        for (IFilter filter : matched) {
-            ICriteria criteria = CraftingRegistry.getCriteriaForFilter(type, filter, DisallowType.USEINCRAFTING);
+        Set<IProgressionCriteria> completed = PlayerTracker.getPlayerData(uuid).getMappings().getCompletedCriteria().keySet();
+        for (IProgressionFilter filter : matched) {
+            IProgressionCriteria criteria = CraftingRegistry.getCriteriaForFilter(type, filter, DisallowType.USEINCRAFTING);
             if (criteria != null && completed.contains(criteria)) return true;
         }
         
@@ -44,19 +44,19 @@ public class CrafterHuman extends Crafter {
 
     @Override
     public boolean canCraftItem(ActionType type, ItemStack stack) {
-        Set<IFilter> filters = CraftingRegistry.getFiltersForStack(type, stack, DisallowType.CRAFTING);
+        Set<IProgressionFilter> filters = CraftingRegistry.getFiltersForStack(type, stack, DisallowType.CRAFTING);
                
-        List<IFilter> matched = new ArrayList();
-        for (IFilter filter : filters) {
+        List<IProgressionFilter> matched = new ArrayList();
+        for (IProgressionFilter filter : filters) {
             if (filter.matches(stack)) {
                 matched.add(filter); //Add all matches so we can check all criteria
             }
         }
 
         if (matched.size() == 0) return !Options.settings.disableCraftingUntilRewardAdded;
-        Set<ICriteria> completed = PlayerTracker.getPlayerData(uuid).getMappings().getCompletedCriteria().keySet();
-        for (IFilter filter : matched) {
-            ICriteria criteria = CraftingRegistry.getCriteriaForFilter(type, filter, DisallowType.CRAFTING);
+        Set<IProgressionCriteria> completed = PlayerTracker.getPlayerData(uuid).getMappings().getCompletedCriteria().keySet();
+        for (IProgressionFilter filter : matched) {
+            IProgressionCriteria criteria = CraftingRegistry.getCriteriaForFilter(type, filter, DisallowType.CRAFTING);
             if (criteria != null && completed.contains(criteria)) return true;
         }
         

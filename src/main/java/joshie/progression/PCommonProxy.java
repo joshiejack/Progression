@@ -1,7 +1,5 @@
 package joshie.progression;
 
-import java.io.File;
-
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.commands.CommandEdit;
 import joshie.progression.commands.CommandHelp;
@@ -32,6 +30,7 @@ import joshie.progression.criteria.filters.item.FilterItemMod;
 import joshie.progression.criteria.filters.item.FilterItemNBT;
 import joshie.progression.criteria.filters.item.FilterItemOre;
 import joshie.progression.criteria.filters.item.FilterItemStack;
+import joshie.progression.criteria.filters.location.FilterRandomLocationDimension;
 import joshie.progression.criteria.filters.location.FilterPlayerLocationAbove;
 import joshie.progression.criteria.filters.location.FilterPlayerLocationAround;
 import joshie.progression.criteria.filters.location.FilterRandomAround;
@@ -68,7 +67,7 @@ import joshie.progression.criteria.triggers.TriggerPoints;
 import joshie.progression.criteria.triggers.TriggerTick;
 import joshie.progression.criteria.triggers.data.DataHelper;
 import joshie.progression.gui.fields.FieldRegistry;
-import joshie.progression.gui.selector.filters.FilterSelectorHelper;
+import joshie.progression.gui.filters.FilterSelectorHelper;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.handlers.CraftingEvents;
 import joshie.progression.handlers.RemappingHandler;
@@ -100,8 +99,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.network.IGuiHandler;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -110,7 +109,6 @@ public class PCommonProxy implements IGuiHandler {
     public static Item item;
 
     public void preInit() {
-        Options.init(new Configuration(new File(Progression.root, "options.cfg")));
         RemappingHandler.resetRegistries();
 
         //Create the API
@@ -178,38 +176,40 @@ public class PCommonProxy implements IGuiHandler {
         ProgressionAPI.registry.registerDamageSource(DamageSource.outOfWorld);
         ProgressionAPI.registry.registerDamageSource(DamageSource.starve);
         ProgressionAPI.registry.registerDamageSource(DamageSource.wither);
+        NetworkRegistry.INSTANCE.registerGuiHandler(Progression.instance, Progression.proxy);
     }
 
     private void registerFilters() {
         //Item Filters
-        ProgressionAPI.registry.registerItemFilter(new FilterItemStack());
-        ProgressionAPI.registry.registerItemFilter(new FilterItem());
-        ProgressionAPI.registry.registerItemFilter(new FilterItemMeta());
-        ProgressionAPI.registry.registerItemFilter(new FilterItemNBT());
-        ProgressionAPI.registry.registerItemFilter(new FilterItemMod());
-        ProgressionAPI.registry.registerItemFilter(new FilterItemOre());
+        ProgressionAPI.registry.registerFilter(new FilterItemStack());
+        ProgressionAPI.registry.registerFilter(new FilterItem());
+        ProgressionAPI.registry.registerFilter(new FilterItemMeta());
+        ProgressionAPI.registry.registerFilter(new FilterItemNBT());
+        ProgressionAPI.registry.registerFilter(new FilterItemMod());
+        ProgressionAPI.registry.registerFilter(new FilterItemOre());
 
         //Block Filters
-        ProgressionAPI.registry.registerItemFilter(new FilterBlockStack());
-        ProgressionAPI.registry.registerItemFilter(new FilterBlock());
-        ProgressionAPI.registry.registerItemFilter(new FilterBlockState());
-        ProgressionAPI.registry.registerItemFilter(new FilterBlockMod());
-        ProgressionAPI.registry.registerItemFilter(new FilterBlockOre());
+        ProgressionAPI.registry.registerFilter(new FilterBlockStack());
+        ProgressionAPI.registry.registerFilter(new FilterBlock());
+        ProgressionAPI.registry.registerFilter(new FilterBlockState());
+        ProgressionAPI.registry.registerFilter(new FilterBlockMod());
+        ProgressionAPI.registry.registerFilter(new FilterBlockOre());
 
         //Potion Filters
-        ProgressionAPI.registry.registerItemFilter(new FilterPotionEffect());
+        ProgressionAPI.registry.registerFilter(new FilterPotionEffect());
 
-        //Entity Filters
-        ProgressionAPI.registry.registerItemFilter(new FilterEntityName());
-        ProgressionAPI.registry.registerItemFilter(new FilterSkeletonType());
+        //Entity Filterss
+        ProgressionAPI.registry.registerFilter(new FilterEntityName());
+        ProgressionAPI.registry.registerFilter(new FilterSkeletonType());
 
         //Location Filters
-        ProgressionAPI.registry.registerItemFilter(new FilterPlayerLocationAround());
-        ProgressionAPI.registry.registerItemFilter(new FilterPlayerLocationAbove());
-        ProgressionAPI.registry.registerItemFilter(new FilterRandomAround());
+        ProgressionAPI.registry.registerFilter(new FilterPlayerLocationAround());
+        ProgressionAPI.registry.registerFilter(new FilterPlayerLocationAbove());
+        ProgressionAPI.registry.registerFilter(new FilterRandomLocationDimension());
+        ProgressionAPI.registry.registerFilter(new FilterRandomAround());
 
         //Crafting Filters
-        ProgressionAPI.registry.registerItemFilter(new FilterExact());
+        ProgressionAPI.registry.registerFilter(new FilterExact());
     }
     
     private void registerTriggers() {

@@ -4,19 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import joshie.progression.Progression;
-import joshie.progression.api.IConditionType;
-import joshie.progression.api.ICriteria;
-import joshie.progression.api.ITriggerData;
-import joshie.progression.api.ITriggerType;
 import joshie.progression.api.ProgressionAPI;
+import joshie.progression.api.criteria.IProgressionCondition;
+import joshie.progression.api.criteria.IProgressionCriteria;
+import joshie.progression.api.criteria.IProgressionTrigger;
+import joshie.progression.api.criteria.IProgressionTriggerData;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.EventBus;
 
-public abstract class TriggerBase implements ITriggerType {
-    private List<IConditionType> conditions = new ArrayList();
-    private ICriteria criteria;
+public abstract class TriggerBase implements IProgressionTrigger {
+    private List<IProgressionCondition> conditions = new ArrayList();
+    private IProgressionCriteria criteria;
     private String name;
     private int color;
     private String data;
@@ -42,22 +42,22 @@ public abstract class TriggerBase implements ITriggerType {
     }
 
     @Override
-    public List<IConditionType> getConditions() {
+    public List<IProgressionCondition> getConditions() {
         return conditions;
     }
     
     @Override
-    public ICriteria getCriteria() {
+    public IProgressionCriteria getCriteria() {
         return criteria;
     }
 
     @Override
-    public ITriggerData newData() {
+    public IProgressionTriggerData newData() {
         return ProgressionAPI.data.newData(data);
     }
 
     @Override
-    public void setCriteria(ICriteria criteria) {
+    public void setCriteria(IProgressionCriteria criteria) {
         this.criteria = criteria;
     }
 

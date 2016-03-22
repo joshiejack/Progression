@@ -1,10 +1,9 @@
 package joshie.progression.criteria.filters;
 
 import joshie.progression.Progression;
-import joshie.progression.api.IFilter;
-import net.minecraft.item.ItemStack;
+import joshie.progression.api.criteria.IProgressionFilter;
 
-public abstract class FilterBase implements IFilter {
+public abstract class FilterBase implements IProgressionFilter {
     private int color;
     private String name;
 

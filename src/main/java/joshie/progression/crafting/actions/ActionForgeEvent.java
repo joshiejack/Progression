@@ -1,6 +1,6 @@
 package joshie.progression.crafting.actions;
 
-import joshie.progression.api.IHasEventBus;
+import joshie.progression.api.special.IHasEventBus;
 import joshie.progression.crafting.ActionType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.EventBus;

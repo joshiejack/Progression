@@ -2,17 +2,17 @@ package joshie.progression.gui.fields;
 
 import java.lang.reflect.Field;
 
-import joshie.progression.api.ISetterCallback;
-import joshie.progression.api.ISpecialFilters;
-import joshie.progression.api.fields.IInit;
-import joshie.progression.api.fields.IItemGetterCallback;
-import joshie.progression.api.filters.IFilterSelectorFilter;
+import joshie.progression.api.criteria.IProgressionFilterSelector;
+import joshie.progression.api.special.IInit;
+import joshie.progression.api.special.IItemGetterCallback;
+import joshie.progression.api.special.ISetterCallback;
+import joshie.progression.api.special.ISpecialFilters;
+import joshie.progression.gui.core.DrawHelper;
+import joshie.progression.gui.core.FeatureTooltip;
+import joshie.progression.gui.editors.FeatureItemSelector;
 import joshie.progression.gui.editors.IItemSelectable;
-import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
-import joshie.progression.gui.newversion.overlays.FeatureItemSelector;
-import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
-import joshie.progression.gui.newversion.overlays.FeatureTooltip;
-import joshie.progression.gui.selector.filters.ItemFilter;
+import joshie.progression.gui.editors.FeatureItemSelector.Type;
+import joshie.progression.gui.filters.FilterSelectorItem;
 import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.item.ItemStack;
 
@@ -27,9 +27,9 @@ public class ItemField extends AbstractField implements IItemSelectable {
     protected final int mouseY1;
     protected final int mouseY2;
     protected final Type type;
-    protected final IFilterSelectorFilter filter;
+    protected final IProgressionFilterSelector filter;
 
-    public ItemField(String fieldName, Object object, int x, int y, float scale, Type type, IFilterSelectorFilter filter) {
+    public ItemField(String fieldName, Object object, int x, int y, float scale, Type type, IProgressionFilterSelector filter) {
         super(fieldName);
         this.x = x;
         this.y = y;
@@ -42,7 +42,7 @@ public class ItemField extends AbstractField implements IItemSelectable {
                
         if (object instanceof ISpecialFilters) {
             this.filter = ((ISpecialFilters) object).getFilterForField(fieldName);
-        } else this.filter = ItemFilter.INSTANCE;
+        } else this.filter = FilterSelectorItem.INSTANCE;
 
         try {
             this.field = object.getClass().getField(fieldName);
@@ -90,7 +90,7 @@ public class ItemField extends AbstractField implements IItemSelectable {
     }
 
     @Override
-    public void draw(DrawFeatureHelper helper, int renderX, int renderY, int color, int yPos, int mouseX, int mouseY) {
+    public void draw(DrawHelper helper, int renderX, int renderY, int color, int yPos, int mouseX, int mouseY) {
         try {
             boolean clicked = mouseX >= mouseX1 && mouseX <= mouseX2 && mouseY >= mouseY1 && mouseY <= mouseY2;
             if (clicked) FeatureTooltip.INSTANCE.addTooltip(getStack().getTooltip(MCClientHelper.getPlayer(), false));

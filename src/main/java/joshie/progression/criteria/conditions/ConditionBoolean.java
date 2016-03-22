@@ -2,7 +2,7 @@ package joshie.progression.criteria.conditions;
 
 import java.util.UUID;
 
-import joshie.progression.player.PlayerTracker;
+import joshie.progression.api.ProgressionAPI;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
@@ -16,7 +16,7 @@ public class ConditionBoolean extends ConditionBase {
 
     @Override
     public boolean isSatisfied(World world, EntityPlayer player, UUID uuid) {
-        boolean check = PlayerTracker.getServerPlayer(uuid).getPoints().getBoolean(variable);
+        boolean check = ProgressionAPI.player.getBoolean(uuid, variable);
         if (check == isTrue) {
             return true;
         }

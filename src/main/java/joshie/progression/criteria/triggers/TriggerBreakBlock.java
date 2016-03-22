@@ -1,12 +1,7 @@
 package joshie.progression.criteria.triggers;
 
-import java.util.List;
-
-import joshie.progression.api.IHasEventBus;
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.fields.IField;
-import joshie.progression.api.fields.ISpecialFieldProvider;
-import joshie.progression.api.fields.ISpecialFieldProvider.DisplayMode;
+import joshie.progression.api.special.IHasEventBus;
 import net.minecraft.block.Block;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;

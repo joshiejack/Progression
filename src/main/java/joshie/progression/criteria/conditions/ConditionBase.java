@@ -1,12 +1,12 @@
 package joshie.progression.criteria.conditions;
 
-import joshie.progression.api.IConditionType;
-import joshie.progression.api.ITriggerType;
+import joshie.progression.api.criteria.IProgressionCondition;
+import joshie.progression.api.criteria.IProgressionTrigger;
 import net.minecraft.util.StatCollector;
 
-public abstract class ConditionBase implements IConditionType {
+public abstract class ConditionBase implements IProgressionCondition {
     public boolean inverted = false; //Data for all conditions
-    private ITriggerType trigger;
+    private IProgressionTrigger trigger;
     private String unlocalized;
     private int color;
 
@@ -44,12 +44,12 @@ public abstract class ConditionBase implements IConditionType {
     }
     
     @Override
-    public void setTrigger(ITriggerType trigger) {
+    public void setTrigger(IProgressionTrigger trigger) {
         this.trigger = trigger;
     }
 
     @Override
-    public ITriggerType getTrigger() {
+    public IProgressionTrigger getTrigger() {
         return trigger;
     }
 }

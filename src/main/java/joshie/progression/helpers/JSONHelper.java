@@ -7,9 +7,9 @@ import java.util.List;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import joshie.progression.api.IFilter;
-import joshie.progression.api.ISpecialJSON;
-import joshie.progression.api.fields.IFieldProvider;
+import joshie.progression.api.criteria.IFieldProvider;
+import joshie.progression.api.criteria.IProgressionFilter;
+import joshie.progression.api.special.ISpecialJSON;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.lib.ProgressionInfo;
 import net.minecraft.block.Block;
@@ -19,10 +19,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
 public class JSONHelper {
-    public static boolean getExists(JsonObject data, String string) {
-        return data.get(string) != null;
-    }
-
     public static Enum getEnum(JsonObject data, String string, Enum default_) {
         if (data.get(string) != null) {
             try {
@@ -185,15 +181,15 @@ public class JSONHelper {
         }
     }
 
-    public static List<IFilter> getItemFilters(JsonObject data, String name) {
-        ArrayList<IFilter> filters = new ArrayList();
+    public static List<IProgressionFilter> getItemFilters(JsonObject data, String name) {
+        ArrayList<IProgressionFilter> filters = new ArrayList();
         if (data.get(name) == null) return filters;
         JsonArray array = data.get(name).getAsJsonArray();
         for (int i = 0; i < array.size(); i++) {
             JsonObject object = array.get(i).getAsJsonObject();
             String typeName = object.get("type").getAsString();
             JsonObject typeData = object.get("data").getAsJsonObject();
-            IFilter filter = APIHandler.newFilter(typeName, typeData);
+            IProgressionFilter filter = APIHandler.newFilter(typeName, typeData);
             if (filter != null) {
                 filters.add(filter);
             }
@@ -202,9 +198,9 @@ public class JSONHelper {
         return filters;
     }
 
-    public static void setItemFilters(JsonObject data, String name, List<IFilter> filters) {
+    public static void setItemFilters(JsonObject data, String name, List<IProgressionFilter> filters) {
         JsonArray array = new JsonArray();
-        for (IFilter filter : filters) {
+        for (IProgressionFilter filter : filters) {
             if (filter == null) continue;
             JsonObject object = new JsonObject();
             object.addProperty("type", filter.getUnlocalisedName());
@@ -305,7 +301,7 @@ public class JSONHelper {
     }
 
     private static void writeItemFilters(JsonObject json, Field field, Object object) throws IllegalArgumentException, IllegalAccessException {
-        setItemFilters(json, field.getName(), (List<IFilter>) field.get(object));
+        setItemFilters(json, field.getName(), (List<IProgressionFilter>) field.get(object));
     }
 
     private static void writeItemStack(JsonObject json, Field field, Object object, ItemStack dflt) throws IllegalArgumentException, IllegalAccessException {

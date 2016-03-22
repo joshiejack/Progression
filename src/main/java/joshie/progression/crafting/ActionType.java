@@ -3,13 +3,12 @@ package joshie.progression.crafting;
 import java.util.Collection;
 import java.util.HashMap;
 
-import joshie.progression.api.IHasEventBus;
+import joshie.progression.api.special.IHasEventBus;
 import joshie.progression.crafting.actions.ActionBreakBlock;
 import joshie.progression.crafting.actions.ActionHarvestDrop;
 import joshie.progression.crafting.actions.ActionLivingDrop;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 

@@ -1,6 +1,6 @@
 package joshie.progression.player.nbt;
 
-import joshie.progression.api.ICriteria;
+import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.handlers.APIHandler;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,7 +12,7 @@ public class CriteriaSet extends AbstractUniqueNBT {
     @Override
     public NBTBase write(Object s) {
         NBTTagCompound tag = new NBTTagCompound();
-        tag.setString("Criteria", ((ICriteria) s).getUniqueName());
+        tag.setString("Criteria", ((IProgressionCriteria) s).getUniqueName());
         return tag;
     }
 

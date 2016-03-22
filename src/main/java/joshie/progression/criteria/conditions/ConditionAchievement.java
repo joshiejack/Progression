@@ -2,7 +2,7 @@ package joshie.progression.criteria.conditions;
 
 import java.util.UUID;
 
-import joshie.progression.api.fields.IInit;
+import joshie.progression.api.special.IInit;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.stats.Achievement;

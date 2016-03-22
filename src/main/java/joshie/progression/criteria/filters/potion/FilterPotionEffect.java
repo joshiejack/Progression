@@ -6,13 +6,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import joshie.progression.api.fields.IField;
-import joshie.progression.api.fields.IInit;
-import joshie.progression.api.fields.ISpecialFieldProvider;
+import joshie.progression.api.criteria.IProgressionField;
+import joshie.progression.api.special.IInit;
+import joshie.progression.api.special.ISpecialFieldProvider;
 import joshie.progression.criteria.filters.item.FilterBaseItem;
+import joshie.progression.gui.editors.FeatureItemSelector.Type;
 import joshie.progression.gui.fields.ItemField;
-import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
-import joshie.progression.gui.selector.filters.PotionFilter;
+import joshie.progression.gui.filters.FilterSelectorPotion;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
@@ -38,8 +38,8 @@ public class FilterPotionEffect extends FilterBaseItem implements IInit, ISpecia
     }
 
     @Override
-    public void addSpecialFields(List<IField> fields, DisplayMode mode) {
-        if (mode == DisplayMode.EDIT) fields.add(new ItemField("stack", this, 25, 25, 3F, Type.TRIGGER, PotionFilter.INSTANCE));
+    public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
+        if (mode == DisplayMode.EDIT) fields.add(new ItemField("stack", this, 25, 25, 3F, Type.TRIGGER, FilterSelectorPotion.INSTANCE));
     }
 
     @Override

@@ -2,7 +2,7 @@ package joshie.progression.criteria.conditions;
 
 import java.util.UUID;
 
-import joshie.progression.player.PlayerTracker;
+import joshie.progression.api.ProgressionAPI;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
@@ -28,6 +28,6 @@ public class ConditionPoints extends ConditionBase {
 
     @Override
     public boolean isSatisfied(World world, EntityPlayer player, UUID uuid) {
-        return isValidValue(PlayerTracker.getServerPlayer(uuid).getPoints().getDouble(variable));
+        return isValidValue(ProgressionAPI.player.getDouble(uuid, variable));
     }
 }

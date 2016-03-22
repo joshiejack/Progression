@@ -1,18 +1,13 @@
 package joshie.progression.player;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import com.mojang.authlib.GameProfile;
-
-import joshie.progression.gui.editors.EditText.ITextEditable;
+import joshie.progression.gui.editors.ITextEditable;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.network.PacketHandler;
 import joshie.progression.network.PacketSyncTeam;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;

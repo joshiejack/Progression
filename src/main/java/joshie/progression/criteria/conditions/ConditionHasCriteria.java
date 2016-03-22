@@ -2,9 +2,9 @@ package joshie.progression.criteria.conditions;
 
 import java.util.UUID;
 
-import joshie.progression.api.ICriteria;
-import joshie.progression.api.IGetterCallback;
-import joshie.progression.api.fields.IInit;
+import joshie.progression.api.criteria.IProgressionCriteria;
+import joshie.progression.api.special.IGetterCallback;
+import joshie.progression.api.special.IInit;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,7 +12,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
 public class ConditionHasCriteria extends ConditionBase implements IGetterCallback, IInit {
-    private ICriteria criteria = null;
+    private IProgressionCriteria criteria = null;
     private String criteriaID = "";
     public String displayName = "";
 
@@ -23,7 +23,7 @@ public class ConditionHasCriteria extends ConditionBase implements IGetterCallba
     @Override
     public void init() {
         try {
-            for (ICriteria c : APIHandler.getCriteria().values()) {
+            for (IProgressionCriteria c : APIHandler.getCriteria().values()) {
                 String display = c.getDisplayName();
                 if (c.getDisplayName().equals(displayName)) {
                     criteria = c;
@@ -34,7 +34,7 @@ public class ConditionHasCriteria extends ConditionBase implements IGetterCallba
         } catch (Exception e) {}
     }
 
-    public ICriteria getAssignedCriteria() {
+    public IProgressionCriteria getAssignedCriteria() {
         return APIHandler.getCriteriaFromName(criteriaID);
     }
 

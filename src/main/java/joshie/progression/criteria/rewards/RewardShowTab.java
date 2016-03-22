@@ -2,13 +2,13 @@ package joshie.progression.criteria.rewards;
 
 import java.util.UUID;
 
-import joshie.progression.api.IGetterCallback;
-import joshie.progression.api.IHasEventBus;
-import joshie.progression.api.IStoreNBTData;
-import joshie.progression.api.ITab;
 import joshie.progression.api.ProgressionAPI;
+import joshie.progression.api.criteria.IProgressionTab;
 import joshie.progression.api.event.TabVisibleEvent;
-import joshie.progression.api.fields.IInit;
+import joshie.progression.api.special.IGetterCallback;
+import joshie.progression.api.special.IHasEventBus;
+import joshie.progression.api.special.IInit;
+import joshie.progression.api.special.IStoreNBTData;
 import joshie.progression.handlers.APIHandler;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
@@ -20,7 +20,7 @@ public class RewardShowTab extends RewardBase implements IStoreNBTData, IHasEven
     public boolean hideByDefault = true;
     public String displayName = "";
     private String tabID = "";
-    private ITab tab;
+    private IProgressionTab tab;
 
     public RewardShowTab() {
         super("tab.show", 0xFFCCCCCC);
@@ -34,7 +34,7 @@ public class RewardShowTab extends RewardBase implements IStoreNBTData, IHasEven
     @Override
     public void init() {
         try {
-            for (ITab t : APIHandler.getTabs().values()) {
+            for (IProgressionTab t : APIHandler.getTabs().values()) {
                 String display = t.getDisplayName();
                 if (t.getDisplayName().equals(displayName)) {
                     tab = t;
@@ -45,7 +45,7 @@ public class RewardShowTab extends RewardBase implements IStoreNBTData, IHasEven
         } catch (Exception e) {}
     }
 
-    public ITab getAssignedTab() {
+    public IProgressionTab getAssignedTab() {
         return APIHandler.getTabFromName(tabID);
     }
 

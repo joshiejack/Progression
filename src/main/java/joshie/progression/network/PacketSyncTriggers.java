@@ -1,7 +1,7 @@
 package joshie.progression.network;
 
 import io.netty.buffer.ByteBuf;
-import joshie.progression.api.ICriteria;
+import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.network.core.PenguinPacket;
 import joshie.progression.player.PlayerTracker;
@@ -10,12 +10,12 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 public class PacketSyncTriggers extends PenguinPacket {
     public static class SyncPair {
-        public ICriteria criteria;
+        public IProgressionCriteria criteria;
         public int[] triggers;
 
         public SyncPair() {}
 
-        public SyncPair(ICriteria criteria, int[] triggers) {
+        public SyncPair(IProgressionCriteria criteria, int[] triggers) {
             this.criteria = criteria;
             this.triggers = triggers;
         }
@@ -46,7 +46,7 @@ public class PacketSyncTriggers extends PenguinPacket {
         this.toSync = toSync;
     }
 
-    public PacketSyncTriggers(ICriteria criteria, int... triggers) {
+    public PacketSyncTriggers(IProgressionCriteria criteria, int... triggers) {
         this.toSync = new SyncPair[] { new SyncPair(criteria, triggers) };
         this.overwrite = false;
     }

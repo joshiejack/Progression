@@ -12,6 +12,7 @@ import joshie.progression.crafting.Crafter;
 import joshie.progression.crafting.CrafterCreative;
 import joshie.progression.crafting.CrafterHuman;
 import joshie.progression.crafting.CraftingUnclaimed;
+import joshie.progression.json.Options;
 import joshie.progression.player.PlayerTeam;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,8 +31,8 @@ public class PlayerHelper {
     public static Crafter getCrafterFromUUID(final UUID uuid) {
         //If we are creative always jump to the creative profile, never cache it
         EntityPlayer player = PlayerHelper.getPlayerFromUUID(uuid);
-        if (player != null && player.capabilities.isCreativeMode) {
-            //return CrafterCreative.INSTANCE;
+        if (Options.settings.craftAnythingCreative && player != null && player.capabilities.isCreativeMode) {
+            return CrafterCreative.INSTANCE;
         }
 
         try {

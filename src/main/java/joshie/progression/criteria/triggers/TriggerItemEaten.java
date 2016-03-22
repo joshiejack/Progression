@@ -2,11 +2,10 @@ package joshie.progression.criteria.triggers;
 
 import java.util.List;
 
-import joshie.progression.api.IFilter;
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.fields.IField;
-import joshie.progression.api.fields.ISpecialFieldProvider;
-import joshie.progression.gui.fields.ItemFilterFieldPreview;
+import joshie.progression.api.criteria.IProgressionField;
+import joshie.progression.api.criteria.IProgressionFilter;
+import joshie.progression.api.special.ISpecialFieldProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -27,14 +26,14 @@ public class TriggerItemEaten extends TriggerBaseItemFilter implements ISpecialF
     }
 
     @Override
-    public void addSpecialFields(List<IField> fields, DisplayMode mode) {
+    public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
         if (mode == DisplayMode.EDIT) fields.add(ProgressionAPI.fields.getItemPreview(this, "filters", 30, 35, 1.9F));
     }
 
     @Override
     protected boolean canIncrease(Object... data) {
         ItemStack item = (ItemStack) data[0];
-        for (IFilter filter : filters) {
+        for (IProgressionFilter filter : filters) {
             if (filter.matches((ItemStack) data[0])) return true;
         }
 

@@ -82,7 +82,7 @@ public class FakeNetHandler extends NetHandlerPlayServer {
         super(paramMinecraftServer, new NetworkManagerFake(), paramEntityPlayerMP);
     }
 
-    public void onNetworkTick() {}
+    public void update() {}
 
     public void kickPlayerFromServer(String paramString) {}
 
@@ -104,7 +104,7 @@ public class FakeNetHandler extends NetHandlerPlayServer {
 
     public void processChatMessage(C01PacketChatMessage paramC01PacketChatMessage) {}
 
-    public void processAnimation(C0APacketAnimation paramC0APacketAnimation) {}
+    public void handleAnimation(C0APacketAnimation paramC0APacketAnimation) {}
 
     public void processEntityAction(C0BPacketEntityAction paramC0BPacketEntityAction) {}
 

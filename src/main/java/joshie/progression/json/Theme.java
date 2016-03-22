@@ -28,7 +28,7 @@ public class Theme {
     public int connectLineColor1 = 0xDDB9B9AD;
     public int connectLineColor2 = 0xFF636C69;
     public int connectLineColor3 = 0xFFE8EFE7;
-    public int connectLineColorize = 0xFFBF00FF;
+    
     public int toolTipWhite = 0xFFFFFFFF;
 
     public int optionsFontColor = 0xFFFFFFFF;
@@ -38,7 +38,6 @@ public class Theme {
 
     public int triggerBoxGradient1 = 0xFF0080FF;
     public int triggerBoxGradient2 = 0xFF00468C;
-    public int triggerBoxBorder = 0xFF00468C;
     public int triggerBoxUnderline1 = 0xFF003366;
     public int triggerBoxFont = 0xFFFFFFFF;
 

@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.UUID;
 
 import joshie.progression.Progression;
-import joshie.progression.api.IFilter;
-import joshie.progression.api.ISpecialFilters;
-import joshie.progression.api.fields.IHasFilters;
-import joshie.progression.api.filters.IFilterSelectorFilter;
-import joshie.progression.gui.selector.filters.LocationFilter;
+import joshie.progression.api.criteria.IProgressionFilter;
+import joshie.progression.api.criteria.IProgressionFilterSelector;
+import joshie.progression.api.special.IHasFilters;
+import joshie.progression.api.special.ISpecialFilters;
+import joshie.progression.gui.filters.FilterSelectorLocation;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.lib.WorldLocation;
 import net.minecraft.block.material.Material;
@@ -32,20 +32,20 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class RewardTeleport extends RewardBase implements ISpecialFilters, IHasFilters {
-    public List<IFilter> locations = new ArrayList();
+    public List<IProgressionFilter> locations = new ArrayList();
 
     public RewardTeleport() {
         super(new ItemStack(Items.ender_pearl), "teleport", 0xFFDDDDDD);
     }
 
     @Override
-    public List<IFilter> getAllFilters() {
+    public List<IProgressionFilter> getAllFilters() {
         return locations;
     }
 
     @Override
-    public IFilterSelectorFilter getFilterForField(String fieldName) {
-        return LocationFilter.INSTANCE;
+    public IProgressionFilterSelector getFilterForField(String fieldName) {
+        return FilterSelectorLocation.INSTANCE;
     }
 
     @Override
@@ -54,7 +54,7 @@ public class RewardTeleport extends RewardBase implements ISpecialFilters, IHasF
         for (EntityPlayerMP player : players) {
             boolean notteleported = true;
             for (int i = 0; i < 10 && notteleported; i++) {
-                ArrayList<IFilter> locality = new ArrayList(locations);
+                ArrayList<IProgressionFilter> locality = new ArrayList(locations);
                 if (locality.size() > 0) {
                     Collections.shuffle(locality);
                     WorldLocation location = (WorldLocation) locality.get(0).getMatches(player).get(0);

@@ -4,14 +4,14 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import joshie.progression.api.IConditionType;
-import joshie.progression.api.IFilter;
-import joshie.progression.api.IRewardType;
-import joshie.progression.api.ITriggerType;
-import joshie.progression.api.fields.IFieldProvider;
-import joshie.progression.gui.newversion.GuiConditionEditor;
-import joshie.progression.gui.newversion.GuiCriteriaEditor;
-import joshie.progression.gui.newversion.GuiItemFilterEditor;
+import joshie.progression.api.criteria.IFieldProvider;
+import joshie.progression.api.criteria.IProgressionCondition;
+import joshie.progression.api.criteria.IProgressionFilter;
+import joshie.progression.api.criteria.IProgressionReward;
+import joshie.progression.api.criteria.IProgressionTrigger;
+import joshie.progression.gui.editors.GuiConditionEditor;
+import joshie.progression.gui.editors.GuiCriteriaEditor;
+import joshie.progression.gui.editors.GuiItemFilterEditor;
 import joshie.progression.handlers.EventsManager;
 
 public class CollectionHelper {
@@ -27,19 +27,19 @@ public class CollectionHelper {
     }
 
     public static void removeAndUpdate(List<IFieldProvider> drawable, IFieldProvider drawing) {
-        if (drawing instanceof IRewardType) {
-            EventsManager.onRewardRemoved((IRewardType) drawing);
-            CollectionHelper.remove(GuiCriteriaEditor.INSTANCE.getCriteria().getRewards(), (IRewardType) drawing);
+        if (drawing instanceof IProgressionReward) {
+            EventsManager.onRewardRemoved((IProgressionReward) drawing);
+            CollectionHelper.remove(GuiCriteriaEditor.INSTANCE.getCriteria().getRewards(), (IProgressionReward) drawing);
             //GuiCriteriaEditor.INSTANCE.initGui();
-        } else if (drawing instanceof ITriggerType) {
-            EventsManager.onTriggerRemoved((ITriggerType) drawing);
-            CollectionHelper.remove(GuiCriteriaEditor.INSTANCE.getCriteria().getTriggers(), (ITriggerType) drawing);
+        } else if (drawing instanceof IProgressionTrigger) {
+            EventsManager.onTriggerRemoved((IProgressionTrigger) drawing);
+            CollectionHelper.remove(GuiCriteriaEditor.INSTANCE.getCriteria().getTriggers(), (IProgressionTrigger) drawing);
             //GuiCriteriaEditor.INSTANCE.initGui();
-        } else if (drawing instanceof IFilter) {
-            GuiItemFilterEditor.INSTANCE.getField().remove((IFilter) drawing);
+        } else if (drawing instanceof IProgressionFilter) {
+            GuiItemFilterEditor.INSTANCE.getField().remove((IProgressionFilter) drawing);
             //GuiItemFilterEditor.INSTANCE.initGui();
-        } else if (drawing instanceof IConditionType) {
-            CollectionHelper.remove(GuiConditionEditor.INSTANCE.getTrigger().getConditions(), (IConditionType) drawing);
+        } else if (drawing instanceof IProgressionCondition) {
+            CollectionHelper.remove(GuiConditionEditor.INSTANCE.getTrigger().getConditions(), (IProgressionCondition) drawing);
             //GuiConditionEditor.INSTANCE.initGui();
         }
 

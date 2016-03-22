@@ -7,6 +7,7 @@ import java.util.Map;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.CommandEvent;
@@ -72,7 +73,8 @@ public class CommandManager extends CommandBase {
         return "/" + "progression" + " " + command.getCommandName() + " " + command.getUsage();
     }
 
-    public List addTabCompletionOptions(ICommandSender sender, String[] parameters) {
+    @Override
+    public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
         return new ArrayList();
     }
 

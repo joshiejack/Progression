@@ -2,24 +2,23 @@ package joshie.progression.criteria;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-import joshie.progression.api.ICriteria;
-import joshie.progression.api.IRewardType;
-import joshie.progression.api.ITab;
-import joshie.progression.api.ITriggerType;
+import joshie.progression.api.criteria.IProgressionCriteria;
+import joshie.progression.api.criteria.IProgressionReward;
+import joshie.progression.api.criteria.IProgressionTab;
+import joshie.progression.api.criteria.IProgressionTrigger;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
-public class Criteria implements ICriteria {
+public class Criteria implements IProgressionCriteria {
     /** All the data for this **/
-    public List<ITriggerType> triggers = new ArrayList();
-    public List<IRewardType> rewards = new ArrayList();
-    public List<ICriteria> prereqs = new ArrayList();
-    public List<ICriteria> conflicts = new ArrayList();
+    public List<IProgressionTrigger> triggers = new ArrayList();
+    public List<IProgressionReward> rewards = new ArrayList();
+    public List<IProgressionCriteria> prereqs = new ArrayList();
+    public List<IProgressionCriteria> conflicts = new ArrayList();
 
-    public ITab tab;
+    public IProgressionTab tab;
     public String uniqueName;
     public int isRepeatable = 1;
     public boolean infinite = false;
@@ -34,7 +33,7 @@ public class Criteria implements ICriteria {
     public ItemStack stack = new ItemStack(Blocks.stone);
     public int x, y;
 
-    public Criteria(ITab tab, String uniqueName, boolean isClientside) {
+    public Criteria(IProgressionTab tab, String uniqueName, boolean isClientside) {
         this.tab = tab;
         this.uniqueName = uniqueName;
         this.isRepeatable = 1;
@@ -45,7 +44,7 @@ public class Criteria implements ICriteria {
         this.displayName = "New Criteria";
     }
 
-    public void init(ICriteria[] prereqs, ICriteria[] theConflicts, String displayName, boolean isVisible, boolean mustClaim, boolean achievement, int repeatable, ItemStack icon, boolean allRequired, int tasksRequired, boolean infinite, boolean allRewards, int rewardsGiven, int x, int y) {
+    public void init(IProgressionCriteria[] prereqs, IProgressionCriteria[] theConflicts, String displayName, boolean isVisible, boolean mustClaim, boolean achievement, int repeatable, ItemStack icon, boolean allRequired, int tasksRequired, boolean infinite, boolean allRewards, int rewardsGiven, int x, int y) {
         this.displayName = displayName;
         this.isVisible = isVisible;
         this.mustClaim = mustClaim;
@@ -64,12 +63,12 @@ public class Criteria implements ICriteria {
         addConflicts(theConflicts);
     }
 
-    public void addRequirements(ICriteria... prereqs) {
-        this.prereqs.addAll(Arrays.asList((ICriteria[]) prereqs));
+    private void addRequirements(IProgressionCriteria... prereqs) {
+        this.prereqs.addAll(Arrays.asList((IProgressionCriteria[]) prereqs));
     }
 
-    public void addConflicts(ICriteria... conflicts) {
-        this.conflicts.addAll(Arrays.asList((ICriteria[]) conflicts));
+    private void addConflicts(IProgressionCriteria... conflicts) {
+        this.conflicts.addAll(Arrays.asList((IProgressionCriteria[]) conflicts));
     }
 
     public void addTooltip(List<String> toolTip) {
@@ -89,7 +88,7 @@ public class Criteria implements ICriteria {
         if (this == obj) return true;
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
-        ICriteria other = (ICriteria) obj;
+        IProgressionCriteria other = (IProgressionCriteria) obj;
         if (uniqueName == null) {
             if (other.getUniqueName() != null) return false;
         } else if (!uniqueName.equals(other.getUniqueName())) return false;
@@ -97,12 +96,12 @@ public class Criteria implements ICriteria {
     }
 
     @Override
-    public List<ITriggerType> getTriggers() {
+    public List<IProgressionTrigger> getTriggers() {
         return triggers;
     }
 
     @Override
-    public List<IRewardType> getRewards() {
+    public List<IProgressionReward> getRewards() {
         return rewards;
     }
 
@@ -152,17 +151,17 @@ public class Criteria implements ICriteria {
     }
 
     @Override
-    public List<ICriteria> getConflicts() {
+    public List<IProgressionCriteria> getConflicts() {
         return conflicts;
     }
 
     @Override
-    public ITab getTab() {
+    public IProgressionTab getTab() {
         return tab;
     }
 
     @Override
-    public List<ICriteria> getPreReqs() {
+    public List<IProgressionCriteria> getPreReqs() {
         return prereqs;
     }
 

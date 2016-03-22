@@ -1,7 +1,7 @@
 package joshie.progression.gui.fields;
 
-import joshie.progression.api.fields.IHideable;
-import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
+import joshie.progression.api.special.IHideable;
+import joshie.progression.gui.editors.FeatureItemSelector.Type;
 
 public class TextFieldHideable extends TextField implements IHideable {
     private BooleanFieldHideable field;

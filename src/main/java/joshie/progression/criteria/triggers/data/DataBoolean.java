@@ -1,9 +1,9 @@
 package joshie.progression.criteria.triggers.data;
 
-import joshie.progression.api.ITriggerData;
+import joshie.progression.api.criteria.IProgressionTriggerData;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class DataBoolean implements ITriggerData {
+public class DataBoolean implements IProgressionTriggerData {
 	public boolean completed = false;
 
 	@Override

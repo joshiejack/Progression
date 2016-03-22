@@ -2,11 +2,11 @@ package joshie.progression.criteria.filters.crafting;
 
 import java.util.List;
 
-import joshie.progression.api.fields.IField;
-import joshie.progression.api.fields.ISpecialFieldProvider;
+import joshie.progression.api.criteria.IProgressionField;
+import joshie.progression.api.special.ISpecialFieldProvider;
+import joshie.progression.gui.editors.FeatureItemSelector.Type;
 import joshie.progression.gui.fields.ItemField;
-import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
-import joshie.progression.gui.selector.filters.ActionFilter;
+import joshie.progression.gui.filters.FilterSelectorAction;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import scala.actors.threadpool.Arrays;
@@ -29,8 +29,8 @@ public class FilterExact extends FilterBaseCrafting implements ISpecialFieldProv
     }
 
     @Override
-    public void addSpecialFields(List<IField> fields, DisplayMode mode) {
-        if (mode == DisplayMode.EDIT) fields.add(new ItemField("stack", this, 30, 35, 1.4F, Type.TRIGGER, ActionFilter.INSTANCE));
+    public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
+        if (mode == DisplayMode.EDIT) fields.add(new ItemField("stack", this, 30, 35, 1.4F, Type.TRIGGER, FilterSelectorAction.INSTANCE));
     }
 
     @Override

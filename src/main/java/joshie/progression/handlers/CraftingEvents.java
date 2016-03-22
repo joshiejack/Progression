@@ -5,16 +5,17 @@ import java.util.Collection;
 import java.util.Set;
 
 import joshie.progression.Progression;
-import joshie.progression.api.ICriteria;
+import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.api.event.ActionEvent.CanObtainFromActionEvent;
 import joshie.progression.api.event.ActionEvent.CanUseToPeformActionEvent;
 import joshie.progression.crafting.ActionType;
 import joshie.progression.crafting.Crafter;
 import joshie.progression.crafting.CraftingRegistry;
 import joshie.progression.crafting.CraftingRegistry.DisallowType;
-import joshie.progression.gui.newversion.GuiCriteriaEditor;
+import joshie.progression.gui.editors.GuiCriteriaEditor;
 import joshie.progression.helpers.CraftingHelper;
 import joshie.progression.helpers.MCClientHelper;
+import joshie.progression.lib.GuiIDs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -69,19 +70,17 @@ public class CraftingEvents {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (!checkAndCancelEvent(event)) {
-            Collection<ICriteria> requirements = CraftingRegistry.getRequirements(event.entityPlayer.getCurrentEquippedItem(), DisallowType.GENERALUSE);
+            Collection<IProgressionCriteria> requirements = CraftingRegistry.getRequirements(event.entityPlayer.getCurrentEquippedItem(), DisallowType.GENERALUSE);
             if (requirements.size() > 0) {
                 if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
-                    for (ICriteria c : requirements) {
+                    for (IProgressionCriteria c : requirements) {
                         GuiCriteriaEditor.INSTANCE.setCriteria(c);
                         break;
                     }
-                } else event.entityPlayer.openGui(Progression.instance, 1, null, 0, 0, 0);
+                } else event.entityPlayer.openGui(Progression.instance, GuiIDs.EDITOR, null, 0, 0, 0);
             }
         }
     }
-
-    static java.util.List<Crafter> fooList = new ArrayList<Crafter>();
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onItemTooltipEvent(ItemTooltipEvent event) {
@@ -90,7 +89,7 @@ public class CraftingEvents {
             //TODO: Readd tooltips for things you can't craft
             boolean hasStuff = false;
             for (ActionType type : ActionType.values()) {
-                Set<ICriteria> requirements = CraftingRegistry.getRequirements(type, event.itemStack, DisallowType.CRAFTING);
+                Set<IProgressionCriteria> requirements = CraftingRegistry.getRequirements(type, event.itemStack, DisallowType.CRAFTING);
                 if (requirements.size() > 0) {
                     if (!hasStuff) {
                         event.toolTip.add("Currently Locked");
@@ -98,8 +97,8 @@ public class CraftingEvents {
                     }
 
                     event.toolTip.add(EnumChatFormatting.WHITE + type.getDisplayName());
-                    for (ICriteria c : requirements) {
-                        ((ICriteria) c).addTooltip(event.toolTip);
+                    for (IProgressionCriteria c : requirements) {
+                        ((IProgressionCriteria) c).addTooltip(event.toolTip);
                     }
                 }
             }

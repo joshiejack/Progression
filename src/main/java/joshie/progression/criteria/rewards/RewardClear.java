@@ -3,10 +3,9 @@ package joshie.progression.criteria.rewards;
 import java.util.List;
 import java.util.UUID;
 
-import joshie.progression.api.IFilter;
-import joshie.progression.api.fields.IField;
-import joshie.progression.api.fields.ISpecialFieldProvider;
-import joshie.progression.api.fields.ISpecialFieldProvider.DisplayMode;
+import joshie.progression.api.criteria.IProgressionField;
+import joshie.progression.api.criteria.IProgressionFilter;
+import joshie.progression.api.special.ISpecialFieldProvider;
 import joshie.progression.gui.fields.ItemFilterFieldPreview;
 import joshie.progression.helpers.PlayerHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,7 +26,7 @@ public class RewardClear extends RewardBaseItemFilter implements ISpecialFieldPr
     }
 
     @Override
-    public void addSpecialFields(List<IField> fields, DisplayMode mode) {
+    public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
         if (mode == DisplayMode.EDIT) fields.add(new ItemFilterFieldPreview("filters", this, 25, 30, 2.8F));
     }
 
@@ -45,7 +44,7 @@ public class RewardClear extends RewardBaseItemFilter implements ISpecialFieldPr
 
                     if (check != null) {
                         for (int j = 0; j < check.stackSize && taken < toTake; j++) {
-                            for (IFilter filter : filters) {
+                            for (IProgressionFilter filter : filters) {
                                 if (filter.matches(check)) {
                                     decrease++;
                                     taken++;

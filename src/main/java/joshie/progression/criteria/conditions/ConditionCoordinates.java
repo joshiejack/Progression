@@ -4,8 +4,7 @@ import java.util.UUID;
 
 import com.google.gson.JsonObject;
 
-import joshie.progression.api.ISpecialJSON;
-import joshie.progression.helpers.JSONHelper;
+import joshie.progression.api.special.ISpecialJSON;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 

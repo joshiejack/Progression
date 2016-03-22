@@ -2,7 +2,7 @@ package joshie.progression.player.nbt;
 
 import java.util.Map;
 
-import joshie.progression.api.ICriteria;
+import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.NBTHelper.IMapHelper;
 import net.minecraft.nbt.NBTTagCompound;
@@ -35,7 +35,7 @@ public class CriteriaNBT implements IMapHelper {
 
 	@Override
 	public void writeKey(NBTTagCompound tag, Object o) {
-		String name = ((ICriteria)o).getUniqueName();
+		String name = ((IProgressionCriteria)o).getUniqueName();
 		tag.setString("Name", name);
 	}
 

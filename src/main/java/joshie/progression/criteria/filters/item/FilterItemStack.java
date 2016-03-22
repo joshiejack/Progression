@@ -3,13 +3,11 @@ package joshie.progression.criteria.filters.item;
 import java.util.List;
 
 import joshie.progression.PCommonProxy;
-import joshie.progression.api.fields.IField;
-import joshie.progression.api.fields.ISpecialFieldProvider;
-import joshie.progression.api.fields.ISpecialFieldProvider.DisplayMode;
+import joshie.progression.api.criteria.IProgressionField;
+import joshie.progression.api.special.ISpecialFieldProvider;
+import joshie.progression.gui.editors.FeatureItemSelector.Type;
 import joshie.progression.gui.fields.ItemField;
-import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
-import joshie.progression.gui.selector.filters.ItemFilter;
-import net.minecraft.init.Items;
+import joshie.progression.gui.filters.FilterSelectorItem;
 import net.minecraft.item.ItemStack;
 
 public class FilterItemStack extends FilterBaseItem implements ISpecialFieldProvider {
@@ -27,9 +25,9 @@ public class FilterItemStack extends FilterBaseItem implements ISpecialFieldProv
     }
 
     @Override
-    public void addSpecialFields(List<IField> fields, DisplayMode mode) {
+    public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
         if (mode == DisplayMode.EDIT)
-        fields.add(new ItemField("stack", this, 30, 35, 1.4F, Type.TRIGGER, ItemFilter.INSTANCE));
+        fields.add(new ItemField("stack", this, 30, 35, 1.4F, Type.TRIGGER, FilterSelectorItem.INSTANCE));
     }
 
     @Override

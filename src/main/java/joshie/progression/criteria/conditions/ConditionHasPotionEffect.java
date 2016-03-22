@@ -4,28 +4,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import joshie.progression.api.IFilter;
-import joshie.progression.api.ISpecialFilters;
-import joshie.progression.api.filters.IFilterSelectorFilter;
-import joshie.progression.gui.selector.filters.PotionFilter;
+import joshie.progression.api.criteria.IProgressionFilter;
+import joshie.progression.api.criteria.IProgressionFilterSelector;
+import joshie.progression.api.special.ISpecialFilters;
+import joshie.progression.gui.filters.FilterSelectorPotion;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 public class ConditionHasPotionEffect extends ConditionBase implements ISpecialFilters {
-    public List<IFilter> filters = new ArrayList();
+    public List<IProgressionFilter> filters = new ArrayList();
 
     public ConditionHasPotionEffect() {
         super("potioneffect", 0xFFFFFF00);
     }
 
     @Override
-    public IFilterSelectorFilter getFilterForField(String fieldName) {
-        return PotionFilter.INSTANCE;
+    public IProgressionFilterSelector getFilterForField(String fieldName) {
+        return FilterSelectorPotion.INSTANCE;
     }
 
     @Override
     public boolean isSatisfied(World world, EntityPlayer player, UUID uuid) {
-        for (IFilter filter : filters) {
+        for (IProgressionFilter filter : filters) {
             if (filter.matches(player.getActivePotionEffects())) return true;
         }
 

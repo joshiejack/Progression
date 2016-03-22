@@ -1,7 +1,7 @@
 package joshie.progression.gui.fields;
 
 import joshie.progression.Progression;
-import joshie.progression.api.fields.IHideable;
+import joshie.progression.api.special.IHideable;
 
 public class BooleanFieldHideable extends BooleanField implements IHideable {
     public BooleanFieldHideable(String name, Object object) {

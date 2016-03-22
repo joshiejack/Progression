@@ -1,11 +1,11 @@
 package joshie.progression.gui.fields;
 
-import joshie.progression.api.IGetterCallback;
+import joshie.progression.api.special.IGetterCallback;
+import joshie.progression.gui.core.DrawHelper;
+import joshie.progression.gui.editors.FeatureItemSelector.Type;
 import joshie.progression.gui.fields.FieldHelper.DoubleFieldHelper;
 import joshie.progression.gui.fields.FieldHelper.FloatFieldHelper;
 import joshie.progression.gui.fields.FieldHelper.IntegerFieldHelper;
-import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
-import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
 
 public class TextField extends AbstractField {
     protected FieldHelper data;
@@ -38,7 +38,7 @@ public class TextField extends AbstractField {
     }
 
     @Override
-    public void draw(DrawFeatureHelper helper, int renderX, int renderY, int color, int yPos, int mouseX, int mouseY) {
+    public void draw(DrawHelper helper, int renderX, int renderY, int color, int yPos, int mouseX, int mouseY) {
         String datatext = data.getText();
         if (object instanceof IGetterCallback) {
             datatext = ((IGetterCallback) object).getField(data.getFieldName());
@@ -50,7 +50,7 @@ public class TextField extends AbstractField {
         helper.drawSplitText(renderX, renderY, name + ": " + datatext, 4, yPos, 125, color, 0.75F);
     }
 
-    public static FieldHelper getField(String name, Object object, joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type type) {
+    public static FieldHelper getField(String name, Object object, joshie.progression.gui.editors.FeatureItemSelector.Type type) {
         try {
             Class clazz = object.getClass().getField(name).getType();
             String className = clazz.getSimpleName();

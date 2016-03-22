@@ -3,12 +3,11 @@ package joshie.progression.criteria.triggers;
 import java.util.List;
 import java.util.UUID;
 
-import joshie.progression.api.IFilter;
-import joshie.progression.api.ITriggerData;
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.fields.IField;
-import joshie.progression.api.fields.ISpecialFieldProvider;
-import joshie.progression.api.fields.ISpecialFieldProvider.DisplayMode;
+import joshie.progression.api.criteria.IProgressionField;
+import joshie.progression.api.criteria.IProgressionFilter;
+import joshie.progression.api.criteria.IProgressionTriggerData;
+import joshie.progression.api.special.ISpecialFieldProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
@@ -31,21 +30,21 @@ public class TriggerCrafting extends TriggerBaseItemFilter implements ISpecialFi
     }
     
     @Override
-    public void addSpecialFields(List<IField> fields, DisplayMode mode) {
+    public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
         if (mode == DisplayMode.EDIT) fields.add(ProgressionAPI.fields.getItemPreview(this, "filters", 30, 35, 1.9F));
     }
 
     @Override
-    public boolean isCompleted(ITriggerData existing) {
+    public boolean isCompleted(IProgressionTriggerData existing) {
         int craftedNumber = ProgressionAPI.data.getDualNumber1(existing);
         int timesNumber = ProgressionAPI.data.getDualNumber2(existing);
         return craftedNumber >= amount && timesNumber >= timesCrafted;
     }
 
     @Override
-    public boolean onFired(UUID uuid, ITriggerData existing, Object... additional) {
+    public boolean onFired(UUID uuid, IProgressionTriggerData existing, Object... additional) {
         ItemStack crafted = (ItemStack) (additional[0]);
-        for (IFilter filter : filters) {
+        for (IProgressionFilter filter : filters) {
             if (filter.matches(crafted)) {
                 int craftedNumber = ProgressionAPI.data.getDualNumber1(existing) + crafted.stackSize;
                 int timesNumber = ProgressionAPI.data.getDualNumber2(existing) + 1;

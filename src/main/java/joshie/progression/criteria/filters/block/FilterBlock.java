@@ -2,13 +2,13 @@ package joshie.progression.criteria.filters.block;
 
 import java.util.List;
 
-import joshie.progression.api.ISetterCallback;
-import joshie.progression.api.fields.IField;
-import joshie.progression.api.fields.IItemGetterCallback;
-import joshie.progression.api.fields.ISpecialFieldProvider;
+import joshie.progression.api.criteria.IProgressionField;
+import joshie.progression.api.special.IItemGetterCallback;
+import joshie.progression.api.special.ISetterCallback;
+import joshie.progression.api.special.ISpecialFieldProvider;
+import joshie.progression.gui.editors.FeatureItemSelector.Type;
 import joshie.progression.gui.fields.ItemField;
-import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
-import joshie.progression.gui.selector.filters.BlockFilter;
+import joshie.progression.gui.filters.FilterSelectorBlock;
 import joshie.progression.helpers.ItemHelper;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -27,9 +27,9 @@ public class FilterBlock extends FilterBaseBlock implements IItemGetterCallback,
     }
 
     @Override
-    public void addSpecialFields(List<IField> fields, DisplayMode mode) {
+    public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
         if (mode == DisplayMode.EDIT) {
-            fields.add(new ItemField("filterBlock", this, 25, 25, 3F, Type.TRIGGER, BlockFilter.INSTANCE));
+            fields.add(new ItemField("filterBlock", this, 25, 25, 3F, Type.TRIGGER, FilterSelectorBlock.INSTANCE));
         }
     }
 

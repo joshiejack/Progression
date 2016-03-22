@@ -3,7 +3,7 @@ package joshie.progression.criteria.rewards;
 import java.util.List;
 import java.util.UUID;
 
-import joshie.progression.player.PlayerTracker;
+import joshie.progression.api.ProgressionAPI;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
@@ -19,7 +19,7 @@ public class RewardBoolean extends RewardBase {
 
     @Override
     public void reward(UUID uuid) {
-        PlayerTracker.getServerPlayer(uuid).setBoolean(variable, value);
+        ProgressionAPI.player.setBoolean(uuid, variable, value);
     }
 
     @Override

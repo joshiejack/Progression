@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import joshie.progression.api.IFilter;
-import joshie.progression.api.fields.IEnum;
-import joshie.progression.api.fields.IHasFilters;
+import joshie.progression.api.criteria.IProgressionFilter;
+import joshie.progression.api.special.IEnum;
+import joshie.progression.api.special.IHasFilters;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -16,7 +16,7 @@ public class ConditionInInventory extends ConditionBase implements IEnum, IHasFi
         HELD, ARMOR, HOTBAR, INVENTORY;
     }
 
-    public List<IFilter> filters = new ArrayList();
+    public List<IProgressionFilter> filters = new ArrayList();
     public int amount = 1;
     public CheckSlots slotType = CheckSlots.INVENTORY;
 
@@ -35,7 +35,7 @@ public class ConditionInInventory extends ConditionBase implements IEnum, IHasFi
     }
 
     private boolean matches(ItemStack check) {
-        for (IFilter filter : filters) {
+        for (IProgressionFilter filter : filters) {
             if (filter.matches(check)) return true;
         }
 
@@ -86,7 +86,7 @@ public class ConditionInInventory extends ConditionBase implements IEnum, IHasFi
     }
 
     @Override
-    public List<IFilter> getAllFilters() {
+    public List<IProgressionFilter> getAllFilters() {
         return filters;
     }
 }

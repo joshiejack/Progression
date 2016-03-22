@@ -1,18 +1,16 @@
 package joshie.progression.criteria.rewards;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import joshie.progression.Progression;
-import joshie.progression.api.ICriteria;
-import joshie.progression.api.IRewardType;
-import joshie.progression.api.fields.IField;
+import joshie.progression.api.criteria.IProgressionCriteria;
+import joshie.progression.api.criteria.IProgressionReward;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
-public abstract class RewardBase implements IRewardType {
-    protected ICriteria criteria;
+public abstract class RewardBase implements IProgressionReward {
+    protected IProgressionCriteria criteria;
     private String name;
     private int color;
     private boolean mustClaim = false;
@@ -35,7 +33,7 @@ public abstract class RewardBase implements IRewardType {
     }
 
     @Override
-    public void setCriteria(ICriteria criteria) {
+    public void setCriteria(IProgressionCriteria criteria) {
         this.criteria = criteria;
     }
 

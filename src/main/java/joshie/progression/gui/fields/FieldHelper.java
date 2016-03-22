@@ -2,11 +2,11 @@ package joshie.progression.gui.fields;
 
 import java.lang.reflect.Field;
 
-import joshie.progression.api.ISetterCallback;
-import joshie.progression.api.fields.IInit;
-import joshie.progression.gui.editors.EditText.ITextEditable;
-import joshie.progression.gui.newversion.overlays.FeatureFullTextEditor;
-import joshie.progression.gui.newversion.overlays.FeatureItemSelector.Type;
+import joshie.progression.api.special.IInit;
+import joshie.progression.api.special.ISetterCallback;
+import joshie.progression.gui.editors.FeatureFullTextEditor;
+import joshie.progression.gui.editors.ITextEditable;
+import joshie.progression.gui.editors.FeatureItemSelector.Type;
 import net.minecraft.item.ItemStack;
 
 public class FieldHelper implements ITextEditable {

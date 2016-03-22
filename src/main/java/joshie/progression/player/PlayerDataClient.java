@@ -2,7 +2,7 @@ package joshie.progression.player;
 
 import java.util.UUID;
 
-import joshie.progression.gui.newversion.GuiGroupEditor;
+import joshie.progression.gui.editors.GuiGroupEditor;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.player.data.AbilityStats;

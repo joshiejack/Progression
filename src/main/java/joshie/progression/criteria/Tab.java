@@ -3,21 +3,18 @@ package joshie.progression.criteria;
 import java.util.ArrayList;
 import java.util.List;
 
-import joshie.progression.api.ICriteria;
-import joshie.progression.api.ITab;
-import joshie.progression.api.event.TabVisibleEvent;
-import joshie.progression.helpers.MCClientHelper;
+import joshie.progression.api.criteria.IProgressionCriteria;
+import joshie.progression.api.criteria.IProgressionTab;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
 
-public class Tab implements ITab {
+public class Tab implements IProgressionTab {
     private String uniqueName;
     private String displayName;
     private boolean isVisible;
     private ItemStack stack;
     private int sortIndex;
     
-    private List<ICriteria> criteria = new ArrayList();
+    private List<IProgressionCriteria> criteria = new ArrayList();
     
     public Tab setUniqueName(String unique) {
         this.uniqueName = unique;
@@ -28,15 +25,7 @@ public class Tab implements ITab {
         this.displayName = name;
         return this;
     }
-
-    public Tab addCriteria(ICriteria... critera) {        
-        for (ICriteria c: critera) {
-            criteria.add(c);
-        }
-        
-        return this;
-    }
-    
+   
     public Tab setVisibility(boolean visibility) {
         this.isVisible = visibility;
         return this;
@@ -61,7 +50,7 @@ public class Tab implements ITab {
     }
     
     @Override
-    public List<ICriteria> getCriteria() {
+    public List<IProgressionCriteria> getCriteria() {
         return criteria;
     }
 

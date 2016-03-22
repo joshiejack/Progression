@@ -3,9 +3,9 @@ package joshie.progression.network;
 import java.util.HashMap;
 
 import io.netty.buffer.ByteBuf;
-import joshie.progression.api.ICriteria;
 import joshie.progression.api.ICustomDataBuilder;
 import joshie.progression.api.ProgressionAPI;
+import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.network.core.PenguinPacket;
@@ -71,7 +71,7 @@ public class PacketFireTrigger extends PenguinPacket {
                         ByteBufUtils.writeUTF8String(buf, (String) object);
                         break;
                     case CRITERIA:
-                        ByteBufUtils.writeUTF8String(buf, ((ICriteria) object).getUniqueName());
+                        ByteBufUtils.writeUTF8String(buf, ((IProgressionCriteria) object).getUniqueName());
                         break;
                     case BLOCK:
                         ResourceLocation blockLocation = Block.blockRegistry.getNameForObject((Block) object);
@@ -165,7 +165,7 @@ public class PacketFireTrigger extends PenguinPacket {
             if (object instanceof String) return STRING;
             if (object instanceof ItemStack) return ITEMSTACK;
             if (object instanceof NBTTagCompound) return NBT;
-            if (object instanceof ICriteria) return CRITERIA;
+            if (object instanceof IProgressionCriteria) return CRITERIA;
             if (object instanceof Block) return BLOCK;
             if (object instanceof Item) return ITEM;
             if (object instanceof Entity) return ENTITY;

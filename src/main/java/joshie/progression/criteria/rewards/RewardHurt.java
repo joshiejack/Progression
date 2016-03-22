@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-import joshie.progression.api.IGetterCallback;
-import joshie.progression.api.fields.IInit;
+import joshie.progression.api.special.IGetterCallback;
+import joshie.progression.api.special.IInit;
 import joshie.progression.helpers.PlayerHelper;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.DamageSource;

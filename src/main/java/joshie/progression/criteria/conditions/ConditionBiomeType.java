@@ -6,8 +6,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-import joshie.progression.api.ISetterCallback;
-import joshie.progression.api.ISpecialJSON;
+import joshie.progression.api.special.ISetterCallback;
+import joshie.progression.api.special.ISpecialJSON;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;

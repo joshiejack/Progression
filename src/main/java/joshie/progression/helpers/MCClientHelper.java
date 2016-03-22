@@ -14,10 +14,6 @@ public class MCClientHelper {
 		return Minecraft.getMinecraft();
 	}
 
-	public static boolean isMovementPressed() {
-        return GameSettings.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindForward);
-    }
-
     public static World getWorld() {
         return getPlayer().worldObj;
     }

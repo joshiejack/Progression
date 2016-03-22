@@ -3,7 +3,7 @@ package joshie.progression.items;
 import java.util.List;
 
 import joshie.progression.Progression;
-import joshie.progression.api.ICriteria;
+import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.crafting.Crafter;
 import joshie.progression.crafting.CraftingRegistry;
 import joshie.progression.crafting.CraftingUnclaimed;
@@ -65,7 +65,7 @@ public class ItemCriteria extends Item {
         setCreativeTab(tab);
     }
 
-    public static ICriteria getCriteriaFromStack(ItemStack stack) {
+    public static IProgressionCriteria getCriteriaFromStack(ItemStack stack) {
         if (!stack.hasTagCompound()) return null;
         return APIHandler.getCriteriaFromName(stack.getTagCompound().getString("Criteria"));
     }
@@ -78,13 +78,27 @@ public class ItemCriteria extends Item {
             return "Progression Book";
         }
 
-        ICriteria criteria = getCriteriaFromStack(stack);
+        IProgressionCriteria criteria = getCriteriaFromStack(stack);
         return criteria == null ? "BROKEN ITEM" : criteria.getDisplayName();
+    }
+
+    @SideOnly(Side.CLIENT)
+    public int getColorFromItemStack(ItemStack stack, int renderPass) {
+        IProgressionCriteria criteria = getCriteriaFromStack(stack);
+        if (criteria != null) {
+            return criteria.getIcon().getItem().getColorFromItemStack(criteria.getIcon(), renderPass);
+        }
+        
+        return 16777215;
     }
 
     @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (stack.getItemDamage() == BOOK) player.openGui(Progression.instance, 0, null, 0, 0, 0);
+        if (stack.getItemDamage() == BOOK) {
+            int guiid = player.isSneaking() ? GuiIDs.GROUP : GuiIDs.EDITOR;
+            player.openGui(Progression.instance, guiid, null, 0, 0, 0);
+        }
+
         if (world.isRemote || player == null || stack == null) return true;
         if (stack.getItemDamage() == CLAIM) {
             TileEntity tile = world.getTileEntity(pos);
@@ -103,10 +117,10 @@ public class ItemCriteria extends Item {
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
         if (stack.getItemDamage() == BOOK) {
-            int guiid = player.isSneaking() ? GuiIDs.GROUP : GuiIDs.TREE;
+            int guiid = player.isSneaking() ? GuiIDs.GROUP : GuiIDs.EDITOR;
             player.openGui(Progression.instance, guiid, null, 0, 0, 0);
         } else if (!world.isRemote) {
-            ICriteria criteria = getCriteriaFromStack(stack);
+            IProgressionCriteria criteria = getCriteriaFromStack(stack);
             if (criteria != null) {
                 Result completed = PlayerTracker.getServerPlayer(PlayerHelper.getUUIDForPlayer(player)).getMappings().fireAllTriggers("forced-complete", criteria);
                 if (!player.capabilities.isCreativeMode && completed == Result.ALLOW) {
@@ -138,7 +152,7 @@ public class ItemCriteria extends Item {
     public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
         list.add(new ItemStack(item, 1, CLAIM));
         list.add(new ItemStack(item, 1, BOOK));
-        for (ICriteria c : APIHandler.getCriteria().values()) {
+        for (IProgressionCriteria c : APIHandler.getCriteria().values()) {
             ItemStack stack = new ItemStack(item);
             stack.setTagCompound(new NBTTagCompound());
             stack.getTagCompound().setString("Criteria", c.getUniqueName());

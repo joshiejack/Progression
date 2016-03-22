@@ -5,21 +5,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import joshie.progression.Progression;
-import joshie.progression.api.IFilter;
-import joshie.progression.api.ISetterCallback;
-import joshie.progression.api.ISpecialFilters;
-import joshie.progression.api.fields.IInit;
-import joshie.progression.api.filters.IFilterSelectorFilter;
-import joshie.progression.gui.newversion.GuiCriteriaEditor;
-import joshie.progression.gui.newversion.GuiItemFilterEditor;
-import joshie.progression.gui.newversion.overlays.DrawFeatureHelper;
-import joshie.progression.gui.newversion.overlays.FeatureItemPreview;
-import joshie.progression.gui.selector.filters.ItemFilter;
+import joshie.progression.api.criteria.IProgressionFilter;
+import joshie.progression.api.criteria.IProgressionFilterSelector;
+import joshie.progression.api.special.IInit;
+import joshie.progression.api.special.ISetterCallback;
+import joshie.progression.api.special.ISpecialFilters;
+import joshie.progression.gui.core.DrawHelper;
+import joshie.progression.gui.core.GuiCore;
+import joshie.progression.gui.editors.GuiItemFilterEditor;
+import joshie.progression.gui.filters.FeatureItemPreview;
+import joshie.progression.gui.filters.FilterSelectorItem;
 import joshie.progression.helpers.CollectionHelper;
-import joshie.progression.helpers.MCClientHelper;
 
 public class ItemFilterField extends AbstractField {
-    private IFilterSelectorFilter selector;
+    private IProgressionFilterSelector selector;
     private Field field;
 
     public ItemFilterField(String fieldName, Object object) {
@@ -36,7 +35,7 @@ public class ItemFilterField extends AbstractField {
 
         if (object instanceof ISpecialFilters) {
             selector = ((ISpecialFilters) object).getFilterForField(getFieldName());
-        } else selector = ItemFilter.INSTANCE;
+        } else selector = FilterSelectorItem.INSTANCE;
     }
 
     @Override
@@ -50,11 +49,11 @@ public class ItemFilterField extends AbstractField {
     }
 
     @Override
-    public void draw(DrawFeatureHelper helper, int renderX, int renderY, int color, int yPos, int mouseX, int mouseY) {
+    public void draw(DrawHelper helper, int renderX, int renderY, int color, int yPos, int mouseX, int mouseY) {
         helper.drawSplitText(renderX, renderY, Progression.translate("filter." + selector.getType().name().toLowerCase()), 4, yPos, 105, color, 0.75F);
     }
 
-    public boolean isAccepted(IFilter filter) {
+    public boolean isAccepted(IProgressionFilter filter) {
         if (filter.getType() != selector.getType()) return false;
         return true;
     }
@@ -62,10 +61,9 @@ public class ItemFilterField extends AbstractField {
     @Override
     public void click() {
         try {
-            GuiItemFilterEditor.INSTANCE.setFilterSet(this); //Adjust this filter object
+            GuiItemFilterEditor.INSTANCE.setPrevious(GuiCore.INSTANCE.openGui).setFilterSet(this); //Adjust this filter object
             FeatureItemPreview.INSTANCE.select(selector); //Allow for selection of multiple items 
-            GuiCriteriaEditor.INSTANCE.switching = true; //Don't save if we're switching guis
-            MCClientHelper.getPlayer().openGui(Progression.instance, 3, MCClientHelper.getWorld(), 0, 0, 0);
+            GuiCore.INSTANCE.setEditor(GuiItemFilterEditor.INSTANCE);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -76,7 +74,7 @@ public class ItemFilterField extends AbstractField {
         return false;
     }
 
-    public void setFilters(List<IFilter> filters) {
+    public void setFilters(List<IProgressionFilter> filters) {
         try {
             if (object instanceof ISetterCallback) {
                 ((ISetterCallback) object).setField(field.getName(), filters);
@@ -89,17 +87,17 @@ public class ItemFilterField extends AbstractField {
         } catch (Exception e) {}
     }
 
-    public List<IFilter> getFilters() {
+    public List<IProgressionFilter> getFilters() {
         try {
-            return (List<IFilter>) field.get(object);
+            return (List<IProgressionFilter>) field.get(object);
         } catch (Exception e) {}
 
         //Return a blank list yo!
         return new ArrayList();
     }
 
-    public void add(IFilter filter) {
-        List<IFilter> filters = getFilters();
+    public void add(IProgressionFilter filter) {
+        List<IProgressionFilter> filters = getFilters();
         filters.add(filter);
         if (object instanceof ISetterCallback) {
             ((ISetterCallback) object).setField(field.getName(), filters);
@@ -111,8 +109,8 @@ public class ItemFilterField extends AbstractField {
         }
     }
 
-    public void remove(IFilter filter) {
-        List<IFilter> filters = getFilters();
+    public void remove(IProgressionFilter filter) {
+        List<IProgressionFilter> filters = getFilters();
         CollectionHelper.remove(filters, filter);
         if (object instanceof ISetterCallback) {
             ((ISetterCallback) object).setField(field.getName(), filters);

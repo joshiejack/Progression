@@ -12,18 +12,19 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import joshie.progression.commands.CommandManager;
-import joshie.progression.enchiridion.EnchiridionSupport;
-import joshie.progression.handlers.GUIHandler;
 import joshie.progression.handlers.RemappingHandler;
 import joshie.progression.helpers.ModLogHelper;
 import joshie.progression.json.JSONLoader;
+import joshie.progression.json.Options;
 import joshie.progression.lib.ProgressionInfo;
 import joshie.progression.player.PlayerSavedData;
+import joshie.progression.plugins.enchiridion.EnchiridionSupport;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -34,7 +35,6 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
 @Mod(modid = MODID, name = MODNAME, version = VERSION)
@@ -48,7 +48,6 @@ public class Progression {
     public static Progression instance;
 
     public static PlayerSavedData data = new PlayerSavedData(MODNAME);
-    public static File root;
     
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -61,14 +60,15 @@ public class Progression {
         } catch (ClassNotFoundException e) {}
 
         /** Create the config directory **/
-        root = new File("config" + File.separator + ProgressionInfo.MODPATH);
+        File root = new File("config" + File.separator + ProgressionInfo.MODPATH);
         if (!root.exists()) {
             root.mkdir();
         }
         
+        Options.init(new Configuration(new File(root, "options.cfg")));
+        
         proxy.preInit();
         proxy.initClient();
-        NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GUIHandler());
     }
     
     @EventHandler

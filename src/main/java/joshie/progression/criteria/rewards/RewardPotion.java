@@ -3,9 +3,9 @@ package joshie.progression.criteria.rewards;
 import java.util.List;
 import java.util.UUID;
 
-import joshie.progression.api.ISpecialFilters;
-import joshie.progression.api.filters.IFilterSelectorFilter;
-import joshie.progression.gui.selector.filters.PotionFilter;
+import joshie.progression.api.criteria.IProgressionFilterSelector;
+import joshie.progression.api.special.ISpecialFilters;
+import joshie.progression.gui.filters.FilterSelectorPotion;
 import joshie.progression.helpers.ItemHelper;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.PlayerHelper;
@@ -27,8 +27,8 @@ public class RewardPotion extends RewardBaseItemFilter implements ISpecialFilter
     }
 
     @Override
-    public IFilterSelectorFilter getFilterForField(String fieldName) {
-        return PotionFilter.INSTANCE;
+    public IProgressionFilterSelector getFilterForField(String fieldName) {
+        return FilterSelectorPotion.INSTANCE;
     }
 
     @Override

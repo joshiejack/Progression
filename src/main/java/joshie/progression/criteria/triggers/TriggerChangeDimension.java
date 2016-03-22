@@ -1,7 +1,7 @@
 package joshie.progression.criteria.triggers;
 
-import joshie.progression.api.IHasEventBus;
 import joshie.progression.api.ProgressionAPI;
+import joshie.progression.api.special.IHasEventBus;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
