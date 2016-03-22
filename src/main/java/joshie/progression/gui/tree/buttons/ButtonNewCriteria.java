@@ -42,6 +42,8 @@ public class ButtonNewCriteria extends ButtonBase {
 
     @Override
     public void onClicked() {
+        GuiCore.INSTANCE.clickedButton = true;
+        
         if (GuiScreen.isShiftKeyDown()) {
             APIHandler.newTab(APIHandler.getNextUnique()).setDisplayName("New Tab").setStack(new ItemStack(Items.book)).setVisibility(true);
             GuiCore.INSTANCE.initGui();

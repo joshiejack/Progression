@@ -30,10 +30,10 @@ import joshie.progression.criteria.filters.item.FilterItemMod;
 import joshie.progression.criteria.filters.item.FilterItemNBT;
 import joshie.progression.criteria.filters.item.FilterItemOre;
 import joshie.progression.criteria.filters.item.FilterItemStack;
-import joshie.progression.criteria.filters.location.FilterRandomLocationDimension;
 import joshie.progression.criteria.filters.location.FilterPlayerLocationAbove;
 import joshie.progression.criteria.filters.location.FilterPlayerLocationAround;
 import joshie.progression.criteria.filters.location.FilterRandomAround;
+import joshie.progression.criteria.filters.location.FilterRandomLocationDimension;
 import joshie.progression.criteria.filters.potion.FilterPotionEffect;
 import joshie.progression.criteria.rewards.RewardBoolean;
 import joshie.progression.criteria.rewards.RewardClear;
@@ -94,7 +94,6 @@ import joshie.progression.player.PlayerHandler;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
@@ -106,14 +105,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 public class PCommonProxy implements IGuiHandler {
-    public static Item item;
-
     public void preInit() {
+      //Create the API
         RemappingHandler.resetRegistries();
-
-        //Create the API
-        ProgressionAPI.data = new DataHelper();
         ProgressionAPI.registry = new APIHandler();
+        ProgressionAPI.data = new DataHelper();
         ProgressionAPI.player = new PlayerHandler();
         ProgressionAPI.filters = new FilterSelectorHelper();
         ProgressionAPI.fields = new FieldRegistry();
@@ -124,11 +120,11 @@ public class PCommonProxy implements IGuiHandler {
         MinecraftForge.EVENT_BUS.register(new CraftingEvents());
 
         //Register the items
-        PCommonProxy.item = new ItemCriteria().setUnlocalizedName("item");
-        GameRegistry.registerItem(PCommonProxy.item, "item");
+        Progression.item = new ItemCriteria().setUnlocalizedName("item");
+        GameRegistry.registerItem(Progression.item, "item");
 
         if (Options.tileClaimerRecipe) {
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(PCommonProxy.item, 1, ItemCriteria.CLAIM), new Object[] { "F", "P", 'F', Items.flint, 'P', "plankWood" }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Progression.item, 1, ItemCriteria.CLAIM), new Object[] { "F", "P", 'F', Items.flint, 'P', "plankWood" }));
         }
 
         registerFilters();

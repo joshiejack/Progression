@@ -21,6 +21,7 @@ import joshie.progression.player.PlayerSavedData;
 import joshie.progression.plugins.enchiridion.EnchiridionSupport;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
+import net.minecraft.item.Item;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
@@ -48,6 +49,7 @@ public class Progression {
     public static Progression instance;
 
     public static PlayerSavedData data = new PlayerSavedData(MODNAME);
+    public static Item item;
     
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {

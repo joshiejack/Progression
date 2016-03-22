@@ -9,7 +9,7 @@ import joshie.progression.api.criteria.IProgressionTab;
 import joshie.progression.gui.core.FeatureTooltip;
 import joshie.progression.gui.core.GuiCore;
 import joshie.progression.gui.editors.FeatureItemSelector;
-import joshie.progression.gui.editors.FeatureItemSelector.Type;
+import joshie.progression.gui.editors.FeatureItemSelector.Position;
 import joshie.progression.gui.editors.GuiTreeEditor;
 import joshie.progression.gui.editors.IItemSelectable;
 import joshie.progression.gui.editors.ITextEditable;
@@ -52,7 +52,7 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
 
         boolean displayTooltip = false;
         if (MCClientHelper.isInEditMode()) {
-            displayTooltip = TextEditor.INSTANCE.getEditable() == this;
+            //displayTooltip = TextEditor.INSTANCE.getEditable() == this;
         }
 
         if (k == 2 || displayTooltip) {
@@ -76,9 +76,11 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
 
     @Override
     public void onClicked() {
+        GuiCore.INSTANCE.clickedButton = true;
         //MCClientHelper.getPlayer().closeScreen(); //Close everything first
         //If the tab is already selected, then we should edit it instead        
 
+        boolean donestuff = false;
         if (MCClientHelper.isInEditMode()) {
             if (Keyboard.isKeyDown(Keyboard.KEY_DELETE)) {
                 IProgressionTab newTab = GuiTreeEditor.INSTANCE.currentTab;
@@ -110,25 +112,29 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
 
             if (GuiScreen.isShiftKeyDown()) {
                 TextEditor.INSTANCE.setEditable(this);
+                donestuff = true;
             } else if (GuiScreen.isCtrlKeyDown()) {
-                FeatureItemSelector.INSTANCE.select(FilterSelectorItem.INSTANCE, this, Type.TREE);
+                FeatureItemSelector.INSTANCE.select(FilterSelectorItem.INSTANCE, this, Position.TOP);
             } else if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
                 boolean current = tab.isVisible();
                 tab.setVisibility(!current);
+                donestuff = true;
             }
         }
 
-        GuiTreeEditor.INSTANCE.previousTab = GuiTreeEditor.INSTANCE.currentTab;
-        GuiTreeEditor.INSTANCE.currentTab = tab;
-        GuiTreeEditor.INSTANCE.currentTabName = tab.getUniqueName(); //Reopen the gui
-        //MCClientHelper.getPlayer().openGui(Progression.instance, GuiIDs.TREE, MCClientHelper.getWorld(), 0, 0, 0);
+        if (!donestuff) {
+            GuiTreeEditor.INSTANCE.previousTab = GuiTreeEditor.INSTANCE.currentTab;
+            GuiTreeEditor.INSTANCE.currentTab = tab;
+            GuiTreeEditor.INSTANCE.currentTabName = tab.getUniqueName(); //Reopen the gui
+        }
+
         //Rebuild
         GuiTreeEditor.INSTANCE.rebuildCriteria();
     }
 
     @Override
     public void onNotClicked() {
-        
+
     }
 
     @Override

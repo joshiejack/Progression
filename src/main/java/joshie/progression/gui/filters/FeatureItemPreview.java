@@ -13,7 +13,7 @@ import joshie.progression.api.criteria.IProgressionFilterSelector;
 import joshie.progression.gui.core.FeatureAbstract;
 import joshie.progression.gui.editors.FeatureItemSelector;
 import joshie.progression.gui.editors.GuiItemFilterEditor;
-import joshie.progression.gui.editors.FeatureItemSelector.Type;
+import joshie.progression.gui.editors.FeatureItemSelector.Position;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
@@ -101,7 +101,7 @@ public class FeatureItemPreview extends FeatureAbstract {
         int k = 0;
         for (int i = position; i < position + (width * 4); i++) {
             if (i >= 0 && i < sorted.size()) {
-                filter.draw(offset, sorted.get(i), 0, j, Type.TRIGGER.yOffset, k, mouseX, mouseY);
+                filter.draw(offset, sorted.get(i), 0, j, Position.BOTTOM.yOffset, k, mouseX, mouseY);
 
                 j++;
 

@@ -10,7 +10,7 @@ import joshie.progression.api.criteria.IProgressionField;
 import joshie.progression.api.special.IInit;
 import joshie.progression.api.special.ISpecialFieldProvider;
 import joshie.progression.criteria.filters.item.FilterBaseItem;
-import joshie.progression.gui.editors.FeatureItemSelector.Type;
+import joshie.progression.gui.editors.FeatureItemSelector.Position;
 import joshie.progression.gui.fields.ItemField;
 import joshie.progression.gui.filters.FilterSelectorPotion;
 import net.minecraft.init.Items;
@@ -39,7 +39,7 @@ public class FilterPotionEffect extends FilterBaseItem implements IInit, ISpecia
 
     @Override
     public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
-        if (mode == DisplayMode.EDIT) fields.add(new ItemField("stack", this, 25, 25, 3F, Type.TRIGGER, FilterSelectorPotion.INSTANCE));
+        if (mode == DisplayMode.EDIT) fields.add(new ItemField("stack", this, 25, 25, 3F, Position.BOTTOM, FilterSelectorPotion.INSTANCE));
     }
 
     @Override

@@ -20,7 +20,7 @@ import joshie.progression.gui.core.FeatureAbstract;
 import joshie.progression.gui.core.FeatureTooltip;
 import joshie.progression.gui.core.GuiCore;
 import joshie.progression.gui.core.IGuiFeature;
-import joshie.progression.gui.editors.FeatureItemSelector.Type;
+import joshie.progression.gui.editors.FeatureItemSelector.Position;
 import joshie.progression.gui.editors.insert.FeatureNew;
 import joshie.progression.gui.fields.BooleanField;
 import joshie.progression.gui.fields.EnumField;
@@ -75,7 +75,7 @@ public class FeatureDrawable extends FeatureAbstract {
     }
 
     private void addFieldsViaReflection(IFieldProvider provider, List<IProgressionField> fields) {
-        Type type = provider instanceof IProgressionReward ? Type.REWARD : Type.TRIGGER;
+        Position type = provider instanceof IProgressionReward ? Position.TOP : Position.BOTTOM;
         for (Field field : provider.getClass().getFields()) {
             if (provider instanceof ISpecialFieldProvider) {
                 if (((ISpecialFieldProvider) provider).shouldReflectionSkipField(field.getName())) continue;

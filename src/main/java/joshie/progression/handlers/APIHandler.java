@@ -48,11 +48,11 @@ public class APIHandler implements IProgressionAPI {
 
     //These four maps are registries for fetching the various types
     @SideOnly(Side.CLIENT)
-    private static HashMap<String, IProgressionTab> tabsClient;
-    private static HashMap<String, IProgressionTab> tabsServer;
+    public static HashMap<String, IProgressionTab> tabsClient;
+    public static HashMap<String, IProgressionTab> tabsServer;
     @SideOnly(Side.CLIENT)
-    private static HashMap<String, IProgressionCriteria> criteriaClient;
-    private static HashMap<String, IProgressionCriteria> criteriaServer;
+    public static HashMap<String, IProgressionCriteria> criteriaClient;
+    public static HashMap<String, IProgressionCriteria> criteriaServer;
 
     public static IFieldProvider getDefault(IFieldProvider provider) {
         if (provider instanceof IProgressionTrigger) return triggerTypes.get(provider.getUnlocalisedName());
@@ -133,7 +133,7 @@ public class APIHandler implements IProgressionAPI {
         itemFilterTypes.put(filter.getUnlocalisedName(), filter);
         return filter;
     }
-    
+
     @Override
     public void registerDamageSource(DamageSource source) {
         RewardHurt.sources.put(source.damageType, source);
@@ -199,8 +199,7 @@ public class APIHandler implements IProgressionAPI {
         return newRewardType;
     }
 
-
-   public static IProgressionFilter newFilter(String typeName, JsonObject typeData) {
+    public static IProgressionFilter newFilter(String typeName, JsonObject typeData) {
         IProgressionFilter type = itemFilterTypes.get(typeName);
         if (type != null) {
             try {
@@ -220,7 +219,7 @@ public class APIHandler implements IProgressionAPI {
             newTriggerType.setCriteria(criteria);
             EventsManager.onTriggerAdded(newTriggerType);
             criteria.getTriggers().add(newTriggerType);
-            if (newTriggerType instanceof IInit) ((IInit)newTriggerType).init();
+            if (newTriggerType instanceof IInit) ((IInit) newTriggerType).init();
         } catch (Exception e) {}
 
         return newTriggerType;
@@ -234,7 +233,7 @@ public class APIHandler implements IProgressionAPI {
             newRewardType.setCriteria(criteria);
             EventsManager.onRewardAdded(newRewardType);
             criteria.getRewards().add(newRewardType);
-            if (newRewardType instanceof IInit) ((IInit)newRewardType).init();
+            if (newRewardType instanceof IInit) ((IInit) newRewardType).init();
         } catch (Exception e) {}
 
         return newRewardType;
@@ -247,19 +246,20 @@ public class APIHandler implements IProgressionAPI {
             newConditionType = oldConditionType.getClass().newInstance();
             newConditionType.setTrigger(trigger);
             trigger.getConditions().add(newConditionType);
-            if (newConditionType instanceof IInit) ((IInit)newConditionType).init();
+            if (newConditionType instanceof IInit) ((IInit) newConditionType).init();
         } catch (Exception e) {}
 
         return newConditionType;
     }
-    
 
     public static void cloneFilter(ItemFilterField field, IProgressionFilter filter) {
         try {
             IProgressionFilter newFilter = filter.getClass().newInstance();
-            if (newFilter instanceof IInit) ((IInit)newFilter).init();
+            if (newFilter instanceof IInit) ((IInit) newFilter).init();
             field.add(newFilter);
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

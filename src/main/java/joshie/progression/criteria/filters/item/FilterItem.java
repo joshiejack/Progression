@@ -6,7 +6,7 @@ import joshie.progression.api.criteria.IProgressionField;
 import joshie.progression.api.special.IItemGetterCallback;
 import joshie.progression.api.special.ISetterCallback;
 import joshie.progression.api.special.ISpecialFieldProvider;
-import joshie.progression.gui.editors.FeatureItemSelector.Type;
+import joshie.progression.gui.editors.FeatureItemSelector.Position;
 import joshie.progression.gui.fields.ItemField;
 import joshie.progression.gui.filters.FilterSelectorItem;
 import net.minecraft.init.Items;
@@ -27,7 +27,7 @@ public class FilterItem extends FilterBaseItem implements IItemGetterCallback, I
 
     @Override
     public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
-        if (mode == DisplayMode.EDIT) fields.add(new ItemField("item", this, 25, 25, 3F, Type.TRIGGER, FilterSelectorItem.INSTANCE));
+        if (mode == DisplayMode.EDIT) fields.add(new ItemField("item", this, 25, 25, 3F, Position.BOTTOM, FilterSelectorItem.INSTANCE));
     }
 
     @Override

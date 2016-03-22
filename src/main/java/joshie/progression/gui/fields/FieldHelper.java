@@ -6,17 +6,17 @@ import joshie.progression.api.special.IInit;
 import joshie.progression.api.special.ISetterCallback;
 import joshie.progression.gui.editors.FeatureFullTextEditor;
 import joshie.progression.gui.editors.ITextEditable;
-import joshie.progression.gui.editors.FeatureItemSelector.Type;
+import joshie.progression.gui.editors.FeatureItemSelector.Position;
 import net.minecraft.item.ItemStack;
 
 public class FieldHelper implements ITextEditable {
-    public Type type;
+    public Position type;
     public Object o;
     public Field f;
 
     public FieldHelper() {}
 
-    public FieldHelper(String f, Object o, Type type) {
+    public FieldHelper(String f, Object o, Position type) {
         this.o = o;
 
         try {
@@ -99,7 +99,7 @@ public class FieldHelper implements ITextEditable {
 
         public IntegerFieldHelper() {}
 
-        public IntegerFieldHelper(String f, Object o, Type type) {
+        public IntegerFieldHelper(String f, Object o, Position type) {
             super(f, o, type);
         }
 
@@ -132,7 +132,7 @@ public class FieldHelper implements ITextEditable {
     }
 
     public static class DoubleFieldHelper extends IntegerFieldHelper {
-        public DoubleFieldHelper(String f, Object o, Type type) {
+        public DoubleFieldHelper(String f, Object o, Position type) {
             super(f, o, type);
         }
 
@@ -161,7 +161,7 @@ public class FieldHelper implements ITextEditable {
     }
 
     public static class FloatFieldHelper extends IntegerFieldHelper {
-        public FloatFieldHelper(String f, Object o, Type type) {
+        public FloatFieldHelper(String f, Object o, Position type) {
             super(f, o, type);
         }
 
@@ -190,7 +190,7 @@ public class FieldHelper implements ITextEditable {
     }
 
     public static class ItemAmountFieldHelper extends IntegerFieldHelper {
-        public ItemAmountFieldHelper(String f, ItemField item, Type type) {
+        public ItemAmountFieldHelper(String f, ItemField item, Position type) {
             super(f, item, type);
         }
 

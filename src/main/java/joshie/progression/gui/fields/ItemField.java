@@ -11,7 +11,7 @@ import joshie.progression.gui.core.DrawHelper;
 import joshie.progression.gui.core.FeatureTooltip;
 import joshie.progression.gui.editors.FeatureItemSelector;
 import joshie.progression.gui.editors.IItemSelectable;
-import joshie.progression.gui.editors.FeatureItemSelector.Type;
+import joshie.progression.gui.editors.FeatureItemSelector.Position;
 import joshie.progression.gui.filters.FilterSelectorItem;
 import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.item.ItemStack;
@@ -26,10 +26,10 @@ public class ItemField extends AbstractField implements IItemSelectable {
     protected final int mouseX2;
     protected final int mouseY1;
     protected final int mouseY2;
-    protected final Type type;
+    protected final Position type;
     protected final IProgressionFilterSelector filter;
 
-    public ItemField(String fieldName, Object object, int x, int y, float scale, Type type, IProgressionFilterSelector filter) {
+    public ItemField(String fieldName, Object object, int x, int y, float scale, Position type, IProgressionFilterSelector filter) {
         super(fieldName);
         this.x = x;
         this.y = y;

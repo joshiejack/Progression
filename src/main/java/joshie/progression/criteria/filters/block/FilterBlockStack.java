@@ -5,7 +5,7 @@ import java.util.List;
 import joshie.progression.api.criteria.IProgressionField;
 import joshie.progression.api.special.IInit;
 import joshie.progression.api.special.ISpecialFieldProvider;
-import joshie.progression.gui.editors.FeatureItemSelector.Type;
+import joshie.progression.gui.editors.FeatureItemSelector.Position;
 import joshie.progression.gui.fields.ItemField;
 import joshie.progression.gui.filters.FilterSelectorBlock;
 import joshie.progression.helpers.ItemHelper;
@@ -39,7 +39,7 @@ public class FilterBlockStack extends FilterBaseBlock implements ISpecialFieldPr
     @Override
     public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
         if (mode == DisplayMode.EDIT) {
-            fields.add(new ItemField("stack", this, 30, 35, 2.4F, Type.TRIGGER, FilterSelectorBlock.INSTANCE));
+            fields.add(new ItemField("stack", this, 30, 35, 2.4F, Position.BOTTOM, FilterSelectorBlock.INSTANCE));
         }
     }
 

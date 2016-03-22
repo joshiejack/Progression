@@ -6,7 +6,7 @@ import joshie.progression.gui.core.FeatureBarsX2;
 import joshie.progression.gui.core.FeatureTooltip;
 import joshie.progression.gui.core.GuiCore;
 import joshie.progression.gui.core.IBarProvider;
-import joshie.progression.gui.editors.FeatureItemSelector.Type;
+import joshie.progression.gui.editors.FeatureItemSelector.Position;
 import joshie.progression.gui.editors.insert.FeatureNewReward;
 import joshie.progression.gui.editors.insert.FeatureNewTrigger;
 import joshie.progression.gui.fields.BooleanField;
@@ -56,16 +56,16 @@ public class GuiCriteriaEditor extends GuiBaseEditor implements IBarProvider, II
 
         //Create Fields
         fields.clear(); //Reset the fields
-        fields.put("name", new TextField("displayName", criteria, Type.TREE));
+        fields.put("name", new TextField("displayName", criteria, Position.TOP));
 
         if (MCClientHelper.isInEditMode()) {
             fields.put("popup", new BooleanField("achievement", criteria));
             fields.put("allRewards", new BooleanFieldHideable("allRewards", criteria));
             fields.put("allTasks", new BooleanFieldHideable("allTasks", criteria));
             fields.put("infinite", new BooleanFieldHideable("infinite", criteria));
-            fields.put("rewardsGiven", new TextFieldHideable((BooleanFieldHideable) fields.get("allRewards"), "rewardsGiven", criteria, Type.TREE));
-            fields.put("tasksRequired", new TextFieldHideable((BooleanFieldHideable) fields.get("allTasks"), "tasksRequired", criteria, Type.TREE));
-            fields.put("repeatAmount", new TextFieldHideable((BooleanFieldHideable) fields.get("infinite"), "isRepeatable", criteria, Type.TREE));
+            fields.put("rewardsGiven", new TextFieldHideable((BooleanFieldHideable) fields.get("allRewards"), "rewardsGiven", criteria, Position.TOP));
+            fields.put("tasksRequired", new TextFieldHideable((BooleanFieldHideable) fields.get("allTasks"), "tasksRequired", criteria, Position.TOP));
+            fields.put("repeatAmount", new TextFieldHideable((BooleanFieldHideable) fields.get("infinite"), "isRepeatable", criteria, Position.TOP));
         }
     }
 
@@ -158,7 +158,7 @@ public class GuiCriteriaEditor extends GuiBaseEditor implements IBarProvider, II
                     fields.get("name").click();
                     return true;
                 } else if (mouseX > 0 && mouseX < 18 && mouseY >= 4 && mouseY <= 20) {
-                    FeatureItemSelector.INSTANCE.select(FilterSelectorItem.INSTANCE, this, Type.REWARD);
+                    FeatureItemSelector.INSTANCE.select(FilterSelectorItem.INSTANCE, this, Position.TOP);
                     return true;
                 }
             }

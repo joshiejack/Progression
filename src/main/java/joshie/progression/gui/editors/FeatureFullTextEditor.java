@@ -3,13 +3,13 @@ package joshie.progression.gui.editors;
 import org.lwjgl.opengl.GL11;
 
 import joshie.progression.gui.core.FeatureAbstract;
-import joshie.progression.gui.editors.FeatureItemSelector.Type;
+import joshie.progression.gui.editors.FeatureItemSelector.Position;
 import net.minecraft.client.renderer.GlStateManager;
 
 public class FeatureFullTextEditor extends FeatureAbstract implements ITextEditable {
     public static FeatureFullTextEditor INSTANCE = new FeatureFullTextEditor();
     private ITextEditable editable = null;
-    private Type type;
+    private Position type;
 
     public FeatureFullTextEditor() {}
 
@@ -17,7 +17,7 @@ public class FeatureFullTextEditor extends FeatureAbstract implements ITextEdita
         return editable;
     }
 
-    public void select(ITextEditable editable, Type type) {
+    public void select(ITextEditable editable, Position type) {
         this.type = type;
         this.editable = editable;
         TextEditor.INSTANCE.setEditable(this);

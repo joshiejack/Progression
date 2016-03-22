@@ -1,12 +1,12 @@
 package joshie.progression.gui.fields;
 
 import joshie.progression.api.special.IHideable;
-import joshie.progression.gui.editors.FeatureItemSelector.Type;
+import joshie.progression.gui.editors.FeatureItemSelector.Position;
 
 public class TextFieldHideable extends TextField implements IHideable {
     private BooleanFieldHideable field;
     
-    public TextFieldHideable(BooleanFieldHideable field, String name, Object object, Type type) {
+    public TextFieldHideable(BooleanFieldHideable field, String name, Object object, Position type) {
         super(name, object, type);
         this.field = field;
     }

@@ -2,23 +2,23 @@ package joshie.progression.gui.fields;
 
 import joshie.progression.api.special.IGetterCallback;
 import joshie.progression.gui.core.DrawHelper;
-import joshie.progression.gui.editors.FeatureItemSelector.Type;
+import joshie.progression.gui.editors.FeatureItemSelector.Position;
 import joshie.progression.gui.fields.FieldHelper.DoubleFieldHelper;
 import joshie.progression.gui.fields.FieldHelper.FloatFieldHelper;
 import joshie.progression.gui.fields.FieldHelper.IntegerFieldHelper;
 
 public class TextField extends AbstractField {
     protected FieldHelper data;
-    private Type type;
+    private Position type;
 
-    public TextField(String displayName, String fieldName, Object object, Type type) {
+    public TextField(String displayName, String fieldName, Object object, Position type) {
         super(displayName);
         this.data = getField(name, object, type);
         this.object = object;
         this.type = type;
     }
 
-    public TextField(String name, Object object, Type type) {
+    public TextField(String name, Object object, Position type) {
         this(name, name, object, type);
     }
 
@@ -50,7 +50,7 @@ public class TextField extends AbstractField {
         helper.drawSplitText(renderX, renderY, name + ": " + datatext, 4, yPos, 125, color, 0.75F);
     }
 
-    public static FieldHelper getField(String name, Object object, joshie.progression.gui.editors.FeatureItemSelector.Type type) {
+    public static FieldHelper getField(String name, Object object, joshie.progression.gui.editors.FeatureItemSelector.Position type) {
         try {
             Class clazz = object.getClass().getField(name).getType();
             String className = clazz.getSimpleName();

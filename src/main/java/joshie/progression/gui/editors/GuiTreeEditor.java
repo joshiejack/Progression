@@ -13,6 +13,7 @@ import org.lwjgl.opengl.GL11;
 import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.api.criteria.IProgressionTab;
 import joshie.progression.api.event.TabVisibleEvent;
+import joshie.progression.gui.core.FeatureTooltip;
 import joshie.progression.gui.core.GuiCore;
 import joshie.progression.gui.editors.insert.FeatureNewReward;
 import joshie.progression.gui.tree.buttons.ButtonNewCriteria;
@@ -139,7 +140,6 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
 
     @Override
     public void drawGuiForeground(boolean overlayvisible, int mouseX, int mouseY) {
-        if (currentTab == null) core.initGui();
         if (!MCClientHelper.isInEditMode() && !isTabVisible(currentTab)) return;
         for (IProgressionCriteria criteria : currentTab.getCriteria()) {
             if (getElement(criteria).isCriteriaVisible() || MCClientHelper.isInEditMode()) {
@@ -161,9 +161,9 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
                     width -= 3;
 
                     if (c.getTab() == criteria.getTab()) {
-                        drawLine(offsetX + width + x1, screenTop + 12 + y1 - 1, offsetX + 5 + x2, screenTop + 12 + y2 - 1, 1, theme.connectLineColor1);
-                        drawLine(offsetX + width + x1, screenTop + 12 + y1 + 1, offsetX + 5 + x2, screenTop + 12 + y2 + 1, 1, theme.connectLineColor2); //#636C69
-                        drawLine(offsetX + width + x1, screenTop + 12 + y1, offsetX + 5 + x2, screenTop + 12 + y2, 1, theme.connectLineColor3);
+                        drawLine(offsetX + width + x1, 12 + y1 - 1, offsetX + 5 + x2, 12 + y2 - 1, 1, theme.connectLineColor1);
+                        drawLine(offsetX + width + x1, 12 + y1 + 1, offsetX + 5 + x2, 12 + y2 + 1, 1, theme.connectLineColor2); //#636C69
+                        drawLine(offsetX + width + x1, 12 + y1, offsetX + 5 + x2, 12 + y2, 1, theme.connectLineColor3);
                     }
                 }
             }
@@ -227,18 +227,19 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
         boolean isDoubleClick = button == 0 && lastType == 0 && difference <= 500;
         lastClick = System.currentTimeMillis();
         lastType = button;
-
+        
         lastClicked = null;
         if (button == 0) {
             for (IProgressionCriteria criteria : currentTab.getCriteria()) {
                 if (getElement(criteria).isCriteriaVisible() || MCClientHelper.isInEditMode()) {
                     if (getElement(criteria).click(mouseX, mouseY, isDoubleClick)) {
                         lastClicked = criteria;
+                        return true;
                     }
                 }
             }
             
-            return true;
+            return false;
         } else {
             if (lastClicked == null && selected == null) {
                 isDragging = true;
@@ -247,7 +248,7 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
             }
         }
         
-        return false;
+        return true;
     }
 
     @Override

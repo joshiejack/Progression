@@ -61,14 +61,16 @@ public class GuiCore extends GuiScreen {
     public int screenTop; // Top of the screen :D
     public int screenWidth; //Width of the screen
 
+    
+    public boolean clickedButton = false;
     public boolean scrollingEnabled = true;
     public boolean markedForInit = false;
 
     public GuiCore setEditor(IEditorMode editor) {
         this.markedForInit = true;
         this.nextGui = editor;
-        if (editor != GuiGroupEditor.INSTANCE) {
-            this.lastGui = this.openGui;
+        if (this.nextGui != GuiGroupEditor.INSTANCE) {
+            this.lastGui = this.nextGui;
         }
         
         return this;
@@ -152,6 +154,7 @@ public class GuiCore extends GuiScreen {
         }
 
         if (openGui != null) openGui.drawGuiForeground(overlayvisible, mouseX, mouseY);
+        if (overlayvisible) FeatureTooltip.INSTANCE.clear();
 
         for (IGuiFeature feature : features) {
             if (feature.isVisible() && feature.isOverlay()) { //Only new Stuff
@@ -181,13 +184,18 @@ public class GuiCore extends GuiScreen {
         }
 
         if (openGui == GuiTreeEditor.INSTANCE) super.mouseClicked(mouseX, mouseY, button);
+        if (clickedButton) {
+            clickedButton = false;
+            return;
+        }
+        
         if (openGui != null && openGui.guiMouseClicked(overlayvisible, mouseX, mouseY, button)) {
             return;
         }
 
         if (button == 1) {
             if (!FeatureNew.IS_OPEN) {
-                if (openGui != null) {
+                if (openGui != null && openGui != GuiGroupEditor.INSTANCE) {
                     setEditor(openGui.getPreviousGui());
                 }
             }
@@ -337,6 +345,9 @@ public class GuiCore extends GuiScreen {
     }
 
     public void drawLine(int left, int top, int right, int bottom, int thickness, int color) {
+        top = screenTop + top; //Adjust
+        bottom = screenTop + bottom; //Adjust
+        
         float f3 = (float) (color >> 24 & 255) / 255.0F;
         float f = (float) (color >> 16 & 255) / 255.0F;
         float f1 = (float) (color >> 8 & 255) / 255.0F;

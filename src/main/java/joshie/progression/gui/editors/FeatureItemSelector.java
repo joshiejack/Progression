@@ -18,11 +18,11 @@ import net.minecraft.client.renderer.GlStateManager;
 public class FeatureItemSelector extends FeatureAbstract implements ITextEditable {
     public static FeatureItemSelector INSTANCE = new FeatureItemSelector();
     public IItemSelectable selectable = null;
-    private IProgressionFilterSelector filter = null;
+    private IProgressionFilterSelector filter = FilterSelectorItem.INSTANCE;
     public ArrayList<Object> sorted;
     private String search = "";
-    private Type type;
-    public int position;
+    private Position position;
+    public int index;
 
     public FeatureItemSelector() {}
 
@@ -30,23 +30,23 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
         return selectable;
     }
 
-    public static enum Type {
-        REWARD(0), TRIGGER(95), TREE(0);
+    public static enum Position {
+        TOP(0), BOTTOM(95);
 
         public int yOffset;
 
-        private Type(int offset) {
+        private Position(int offset) {
             this.yOffset = offset;
         }
     }
 
-    public void select(IProgressionFilterSelector filter, IItemSelectable selectable, Type type) {
+    public void select(IProgressionFilterSelector filter, IItemSelectable selectable, Position type) {
         ItemHelper.addInventory();
         TextEditor.INSTANCE.setEditable(this);
         this.filter = filter;
         this.selectable = selectable;
-        this.type = type;
-        if (this.filter == null) this.filter = FilterSelectorItem.INSTANCE;
+        this.position = type;
+        if (filter == null) this.filter = FilterSelectorItem.INSTANCE;
         updateSearch();
     }
 
@@ -56,12 +56,12 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
 
     @Override
     public boolean scroll(int mouseX, int mouseY, boolean scrolledDown) {
-        mouseY -= type.yOffset;
+        mouseY -= position.yOffset;
         if (mouseY >= 40 && mouseY <= 110) {
             if (selectable != null) {
                 int width = (int) ((double) (screenWidth - 10) / 16.133333334D) * 4;
-                if (scrolledDown) position = Math.min(sorted.size() - 200, position + width);
-                else position = Math.max(0, position - width);
+                if (scrolledDown) index = Math.min(sorted.size() - 200, index + width);
+                else index = Math.max(0, index - width);
                 return true;
             }
         }
@@ -107,7 +107,7 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
                 attemptToAdd(stack);
             }
         } else {
-            position = 0;
+            index = 0;
             sorted = new ArrayList();
             for (Object stack : getAllItems()) {
                 if (stack != null) {
@@ -141,11 +141,11 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
             updateSearch();
         }
 
-        mouseY -= type.yOffset;
+        mouseY -= position.yOffset;
         int width = (int) ((double) (screenWidth - 10) / 16.133333334D);
         int j = 0;
         int k = 0;
-        for (int i = position; i < position + (width * 4); i++) {
+        for (int i = index; i < index + (width * 4); i++) {
             if (i >= 0 && i < sorted.size()) {
                 if (filter.mouseClicked(mouseX, mouseY, j, k)) {
                     selectable.setObject(sorted.get(i));
@@ -172,20 +172,20 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
             updateSearch();
         }
 
-        mouseY -= type.yOffset;
-        offset.drawGradient(-1, 25 + type.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 15, theme.blackBarGradient1, theme.blackBarGradient2, theme.blackBarBorder);
-        offset.drawRectangle(-1, 40 + type.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 73, theme.blackBarUnderLine, theme.blackBarUnderLineBorder);
+        mouseY -= position.yOffset;
+        offset.drawGradient(-1, 25 + position.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 15, theme.blackBarGradient1, theme.blackBarGradient2, theme.blackBarBorder);
+        offset.drawRectangle(-1, 40 + position.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 73, theme.blackBarUnderLine, theme.blackBarUnderLineBorder);
 
-        offset.drawText(Progression.translate("selector.items"), 5, 29 + type.yOffset, theme.blackBarFontColor);
-        offset.drawRectangle(285 - offsetX, 27 + type.yOffset, 200, 12, theme.blackBarUnderLine, theme.blackBarUnderLineBorder);
-        offset.drawText(TextEditor.INSTANCE.getText(this), 290, 29 + type.yOffset, theme.blackBarFontColor);
+        offset.drawText(Progression.translate("selector.items"), 5, 29 + position.yOffset, theme.blackBarFontColor);
+        offset.drawRectangle(285 - offsetX, 27 + position.yOffset, 200, 12, theme.blackBarUnderLine, theme.blackBarUnderLineBorder);
+        offset.drawText(TextEditor.INSTANCE.getText(this), 290, 29 + position.yOffset, theme.blackBarFontColor);
 
         int width = (int) ((double) (screenWidth - 10) / 16.133333334D);
         int j = 0;
         int k = 0;
-        for (int i = position; i < position + (width * 4); i++) {
+        for (int i = index; i < index + (width * 4); i++) {
             if (i >= 0 && i < sorted.size()) {
-                filter.draw(offset, sorted.get(i), offsetX, j, type.yOffset, k, mouseX, mouseY);
+                filter.draw(offset, sorted.get(i), offsetX, j, position.yOffset, k, mouseX, mouseY);
 
                 j++;
 
