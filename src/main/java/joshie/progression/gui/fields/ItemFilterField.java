@@ -84,6 +84,9 @@ public class ItemFilterField extends AbstractField {
             if (object instanceof IInit) {
                 ((IInit) object).init();
             }
+
+            //Update
+            FeatureItemPreview.INSTANCE.updateSearch();
         } catch (Exception e) {}
     }
 
@@ -107,6 +110,9 @@ public class ItemFilterField extends AbstractField {
         if (object instanceof IInit) {
             ((IInit) object).init();
         }
+
+        //Update
+        FeatureItemPreview.INSTANCE.updateSearch();
     }
 
     public void remove(IProgressionFilter filter) {
@@ -120,5 +126,8 @@ public class ItemFilterField extends AbstractField {
         if (object instanceof IInit) {
             ((IInit) object).init();
         }
+
+        //Update
+        FeatureItemPreview.INSTANCE.updateSearch();
     }
 }

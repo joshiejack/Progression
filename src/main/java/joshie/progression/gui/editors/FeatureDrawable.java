@@ -26,6 +26,7 @@ import joshie.progression.gui.fields.BooleanField;
 import joshie.progression.gui.fields.EnumField;
 import joshie.progression.gui.fields.ItemFilterField;
 import joshie.progression.gui.fields.TextField;
+import joshie.progression.gui.filters.FeatureItemPreview;
 import joshie.progression.helpers.CollectionHelper;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.json.Theme;
@@ -215,6 +216,9 @@ public class FeatureDrawable extends FeatureAbstract {
                     if (mouseX >= 1 && mouseX <= 99) {
                         if (mouseY >= yPos && mouseY < yPos + 6) {
                             t.click();
+
+                            //Update the item preview when selecting toggling something
+                            FeatureItemPreview.INSTANCE.updateSearch();
                             return true;
                         }
                     }
@@ -223,6 +227,8 @@ public class FeatureDrawable extends FeatureAbstract {
                 }
             }
 
+            //Update the item preview when selecting toggling something
+            FeatureItemPreview.INSTANCE.updateSearch();
             if (editor != null && editor.mouseClicked(mouseX, mouseY)) return true;
         }
 

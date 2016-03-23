@@ -38,7 +38,7 @@ public class ItemFilterFieldPreview extends ItemFilterField implements IProgress
 
     private static final ItemStack BROKEN = new ItemStack(Items.baked_potato);
 
-    public ItemStack getStack() {
+    public ItemStack getStack(boolean hovered) {
         if (ticker >= 200 || ticker == 0) {
             stack = ItemHelper.getRandomItem(getFilters());
             if (stack != null) {
@@ -50,7 +50,8 @@ public class ItemFilterFieldPreview extends ItemFilterField implements IProgress
             ticker = 1;
         }
 
-        ticker++;
+        if (!hovered) ticker++;
+        else ticker += 2;
 
         return stack != null ? stack : BROKEN;
     }
@@ -58,9 +59,9 @@ public class ItemFilterFieldPreview extends ItemFilterField implements IProgress
     @Override
     public void draw(DrawHelper helper, int renderX, int renderY, int color, int yPos, int mouseX, int mouseY) {
         try {
-            boolean clicked = mouseX >= mouseX1 && mouseX <= mouseX2 && mouseY >= mouseY1 && mouseY <= mouseY2;
-            if (clicked) FeatureTooltip.INSTANCE.addTooltip(getStack().getTooltip(MCClientHelper.getPlayer(), false));
-            helper.drawStack(renderX, renderY, getStack(), x, y, scale);
+            boolean hovered = mouseX >= mouseX1 && mouseX <= mouseX2 && mouseY >= mouseY1 && mouseY <= mouseY2;
+            if (hovered) FeatureTooltip.INSTANCE.addTooltip(getStack(hovered).getTooltip(MCClientHelper.getPlayer(), false));
+            helper.drawStack(renderX, renderY, getStack(hovered), x, y, scale);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -46,7 +46,7 @@ public class RewardStepAssist extends RewardBase implements IHasEventBus {
 
     @Override
     public void reward(UUID uuid) {
-        PlayerTracker.getServerPlayer(uuid).getAbilities().addStepAssist(steps);
+        PlayerTracker.getServerPlayer(uuid).addStepAssist(steps);
     }
 
     @Override

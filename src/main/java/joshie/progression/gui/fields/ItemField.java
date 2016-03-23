@@ -12,6 +12,7 @@ import joshie.progression.gui.core.FeatureTooltip;
 import joshie.progression.gui.editors.FeatureItemSelector;
 import joshie.progression.gui.editors.IItemSelectable;
 import joshie.progression.gui.editors.FeatureItemSelector.Position;
+import joshie.progression.gui.filters.FeatureItemPreview;
 import joshie.progression.gui.filters.FilterSelectorItem;
 import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.item.ItemStack;
@@ -114,6 +115,9 @@ public class ItemField extends AbstractField implements IItemSelectable {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            //Update
+            FeatureItemPreview.INSTANCE.updateSearch();
         }
     }
 }

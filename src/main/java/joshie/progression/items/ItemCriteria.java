@@ -109,6 +109,14 @@ public class ItemCriteria extends Item {
                     PacketHandler.sendToClient(new PacketClaimed(pos.getX(), pos.getY(), pos.getZ()), (EntityPlayerMP) player);
                 }
             }
+        } else {
+            IProgressionCriteria criteria = getCriteriaFromStack(stack);
+            if (criteria != null) {
+                Result completed = PlayerTracker.getServerPlayer(PlayerHelper.getUUIDForPlayer(player)).getMappings().fireAllTriggers("forced-complete", criteria);
+                if (!player.capabilities.isCreativeMode && completed == Result.ALLOW) {
+                    stack.stackSize--;
+                }
+            }
         }
 
         return true;

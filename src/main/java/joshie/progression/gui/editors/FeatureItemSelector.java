@@ -3,6 +3,7 @@ package joshie.progression.gui.editors;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
+import joshie.progression.gui.filters.FeatureItemPreview;
 import org.lwjgl.opengl.GL11;
 
 import com.google.common.cache.Cache;
@@ -150,6 +151,9 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
                 if (filter.mouseClicked(mouseX, mouseY, j, k)) {
                     selectable.setObject(sorted.get(i));
                     selectable = null;
+
+                    //Update the item preview when selecting an item
+                    FeatureItemPreview.INSTANCE.updateSearch();
                     return true;
                 }
 

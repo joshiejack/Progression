@@ -53,7 +53,7 @@ public class GuiItemFilterEditor extends GuiBaseEditor implements IBarProvider {
 
     @Override
     public void drawGuiForeground(boolean overlayvisible, int mouseX, int mouseY) {
-        FeatureItemPreview.INSTANCE.updateSearch();
+        //FeatureItemPreview.INSTANCE.updateSearch();
     }
     
     @Override
