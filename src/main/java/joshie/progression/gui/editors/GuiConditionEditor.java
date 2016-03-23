@@ -39,7 +39,6 @@ public class GuiConditionEditor extends GuiBaseEditor implements IBarProvider {
         //Setup the features
         features.add(new FeatureBarsX1(this, "conditions"));
         features.add(new FeatureDrawable(EnumChatFormatting.BOLD + Progression.translate("new.condition"), trigger.getConditions(), 45, 201, 201, 64, 119, FeatureNewCondition.INSTANCE, theme.conditionGradient1, theme.conditionGradient2, theme.conditionFontColor));
-        //features.add(new FeatureDrawable(new ArrayList(criteria.rewards), 140, 0, 55, 201, 201, FeatureNewReward.INSTANCE, theme.rewardBoxGradient1, theme.rewardBoxGradient2, theme.rewardBoxFont));
         features.add(FeatureItemSelector.INSTANCE); //Add the item selector
         features.add(FeatureNewCondition.INSTANCE); //Add new trigger popup
         features.add(FeatureNewReward.INSTANCE); //Add new reward popup

@@ -1,16 +1,5 @@
 package joshie.progression;
 
-import static joshie.progression.lib.ProgressionInfo.JAVAPATH;
-import static joshie.progression.lib.ProgressionInfo.MODID;
-import static joshie.progression.lib.ProgressionInfo.MODNAME;
-import static joshie.progression.lib.ProgressionInfo.VERSION;
-
-import java.io.File;
-
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import joshie.progression.commands.CommandManager;
 import joshie.progression.handlers.RemappingHandler;
 import joshie.progression.helpers.ModLogHelper;
@@ -37,6 +26,13 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+
+import static joshie.progression.lib.ProgressionInfo.*;
 
 @Mod(modid = MODID, name = MODNAME, version = VERSION)
 public class Progression {
@@ -50,7 +46,7 @@ public class Progression {
 
     public static PlayerSavedData data = new PlayerSavedData(MODNAME);
     public static Item item;
-    
+
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         ModLogHelper.log("enchiridion", "The more that you read, the more things you will know. The more that you learn, the more places you'll go.");

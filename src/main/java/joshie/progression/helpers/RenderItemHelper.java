@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.model.ModelLoader;
 
 public class RenderItemHelper {
     private final static RenderItem itemRenderer = Minecraft.getMinecraft().getRenderItem();
@@ -32,6 +33,7 @@ public class RenderItemHelper {
     }
 
 	public static void register(Item item, int meta, ModelResourceLocation location) {
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, meta, location);
+        Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, meta, location);
+        ModelLoader.registerItemVariants(item, location);
 	}
 }

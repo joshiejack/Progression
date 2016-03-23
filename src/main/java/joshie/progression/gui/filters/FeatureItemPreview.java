@@ -1,26 +1,24 @@
 package joshie.progression.gui.filters;
 
-import java.util.ArrayList;
-import java.util.concurrent.Callable;
-
-import org.lwjgl.opengl.GL11;
-
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-
 import joshie.progression.api.criteria.IProgressionFilter;
 import joshie.progression.api.criteria.IProgressionFilterSelector;
 import joshie.progression.gui.core.FeatureAbstract;
 import joshie.progression.gui.editors.FeatureItemSelector;
-import joshie.progression.gui.editors.GuiItemFilterEditor;
 import joshie.progression.gui.editors.FeatureItemSelector.Position;
+import joshie.progression.gui.editors.GuiItemFilterEditor;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
+import org.lwjgl.opengl.GL11;
+
+import java.util.ArrayList;
+import java.util.concurrent.Callable;
 
 public class FeatureItemPreview extends FeatureAbstract {
     public static FeatureItemPreview INSTANCE = new FeatureItemPreview();
-    private IProgressionFilterSelector filter;
+    private IProgressionFilterSelector filter = FilterSelectorItem.INSTANCE;
     private ArrayList<Object> sorted;
     private boolean blocksOnly;
     private int position;

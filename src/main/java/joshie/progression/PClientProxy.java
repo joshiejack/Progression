@@ -1,12 +1,7 @@
 package joshie.progression;
 
-import java.util.HashMap;
-
-import joshie.progression.api.criteria.IProgressionCriteria;
-import joshie.progression.api.criteria.IProgressionTab;
 import joshie.progression.gui.core.GuiCore;
 import joshie.progression.gui.editors.GuiGroupEditor;
-import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.RenderItemHelper;
 import joshie.progression.items.RenderItemCriteria;
 import joshie.progression.lib.GuiIDs;
@@ -15,9 +10,7 @@ import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class PClientProxy extends PCommonProxy {
     public static final ModelResourceLocation criteria = new ModelResourceLocation(new ResourceLocation(ProgressionInfo.MODPATH, "item"), "inventory");
@@ -36,7 +29,6 @@ public class PClientProxy extends PCommonProxy {
         RenderItemHelper.register(Progression.item, 0, criteria);
         RenderItemHelper.register(Progression.item, 1, getLocation("padlock"));
         RenderItemHelper.register(Progression.item, 2, getLocation("book"));
-        ModelLoader.registerItemVariants(Progression.item, getLocation("padlock"), getLocation("book"));
     }
 
     @Override
