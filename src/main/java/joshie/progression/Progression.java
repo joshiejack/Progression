@@ -62,7 +62,7 @@ public class Progression {
         if (!root.exists()) {
             root.mkdir();
         }
-        
+
         Options.init(new Configuration(new File(root, "options.cfg")));
         
         proxy.preInit();

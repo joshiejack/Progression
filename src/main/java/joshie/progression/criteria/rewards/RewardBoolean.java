@@ -1,12 +1,11 @@
 package joshie.progression.criteria.rewards;
 
+import joshie.progression.api.ProgressionAPI;
+import joshie.progression.items.ItemCriteria;
+import net.minecraft.util.EnumChatFormatting;
+
 import java.util.List;
 import java.util.UUID;
-
-import joshie.progression.api.ProgressionAPI;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 
 public class RewardBoolean extends RewardBase {
     public String variable = "default";
@@ -14,7 +13,7 @@ public class RewardBoolean extends RewardBase {
     public boolean value = true;
 
     public RewardBoolean() {
-        super(new ItemStack(Items.potionitem), "boolean", 0xFF99B3FF);
+        super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.booleanValue), "boolean", 0xFF99B3FF);
     }
 
     @Override

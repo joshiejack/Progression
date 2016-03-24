@@ -1,23 +1,24 @@
 package joshie.progression.criteria.rewards;
 
-import java.util.List;
-import java.util.UUID;
-
 import joshie.progression.api.criteria.IProgressionField;
 import joshie.progression.api.criteria.IProgressionFilter;
 import joshie.progression.api.special.ISpecialFieldProvider;
 import joshie.progression.gui.fields.ItemFilterFieldPreview;
 import joshie.progression.helpers.PlayerHelper;
+import joshie.progression.items.ItemCriteria;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
+import java.util.List;
+import java.util.UUID;
+
 public class RewardClear extends RewardBaseItemFilter implements ISpecialFieldProvider {
     public int toTake = 1;
 
     public RewardClear() {
-        super("clear", 0xFF69008C);
+        super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.clearInventory), "clear", 0xFF69008C);
     }
 
     @Override
@@ -57,6 +58,11 @@ public class RewardClear extends RewardBaseItemFilter implements ISpecialFieldPr
                 }
             }
         }
+    }
+
+    @Override
+    public ItemStack getIcon() {
+        return BROKEN;
     }
 
     @Override

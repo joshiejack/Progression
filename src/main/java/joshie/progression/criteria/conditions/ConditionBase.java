@@ -2,15 +2,25 @@ package joshie.progression.criteria.conditions;
 
 import joshie.progression.api.criteria.IProgressionCondition;
 import joshie.progression.api.criteria.IProgressionTrigger;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 
 public abstract class ConditionBase implements IProgressionCondition {
     public boolean inverted = false; //Data for all conditions
     private IProgressionTrigger trigger;
+    private ItemStack icon;
     private String unlocalized;
     private int color;
 
+    public ConditionBase(ItemStack stack, String name, int color) {
+        this.icon = stack;
+        this.unlocalized = name;
+        this.color = color;
+    }
+
     public ConditionBase(String name, int color) {
+        this.icon = new ItemStack(Items.brick);
         this.unlocalized = name;
         this.color = color;
     }
@@ -41,6 +51,11 @@ public abstract class ConditionBase implements IProgressionCondition {
     @Override
     public String getDescription() {
         return "";
+    }
+
+    @Override
+    public ItemStack getIcon() {
+        return icon;
     }
     
     @Override

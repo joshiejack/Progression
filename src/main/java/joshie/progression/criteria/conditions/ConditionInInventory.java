@@ -1,22 +1,18 @@
 package joshie.progression.criteria.conditions;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 import joshie.progression.api.criteria.IProgressionFilter;
 import joshie.progression.api.special.IEnum;
-import joshie.progression.api.special.IHasFilters;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class ConditionInInventory extends ConditionBase implements IEnum, IHasFilters {
+import java.util.UUID;
+
+public class ConditionInInventory extends ConditionBaseItemFilter implements IEnum {
     private static enum CheckSlots {
         HELD, ARMOR, HOTBAR, INVENTORY;
     }
 
-    public List<IProgressionFilter> filters = new ArrayList();
     public int amount = 1;
     public CheckSlots slotType = CheckSlots.INVENTORY;
 
@@ -83,10 +79,5 @@ public class ConditionInInventory extends ConditionBase implements IEnum, IHasFi
         }
 
         return false;
-    }
-
-    @Override
-    public List<IProgressionFilter> getAllFilters() {
-        return filters;
     }
 }

@@ -1,15 +1,16 @@
 package joshie.progression.criteria.conditions;
 
-import java.util.UUID;
-
+import joshie.progression.items.ItemCriteria;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+
+import java.util.UUID;
 
 public class ConditionDaytime extends ConditionBase {	
     public boolean isDaytime = true;
     
 	public ConditionDaytime() {
-		super("daytime", 0xFFFFFF00);
+		super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.ifDayOrNight), "daytime", 0xFFFFFF00);
 	}
 	
 	@Override

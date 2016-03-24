@@ -1,19 +1,18 @@
 package joshie.progression.criteria.triggers;
 
-import java.util.UUID;
-
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionTriggerData;
 import joshie.progression.api.special.ICancelable;
 import joshie.progression.api.special.IInit;
+import joshie.progression.items.ItemCriteria;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.UUID;
 
 public class TriggerChat extends TriggerBaseBoolean implements IInit, ICancelable {
     private String matchString;
@@ -25,7 +24,7 @@ public class TriggerChat extends TriggerBaseBoolean implements IInit, ICancelabl
     public boolean cancel = false;
 
     public TriggerChat() {
-        super(new ItemStack(Blocks.wool), "chat", 0xFFCC6600);
+        super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.onSentMessage), "chat", 0xFFCC6600);
     }
 
     @Override

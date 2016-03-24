@@ -3,6 +3,7 @@ package joshie.progression;
 import joshie.progression.gui.core.GuiCore;
 import joshie.progression.gui.editors.GuiGroupEditor;
 import joshie.progression.helpers.RenderItemHelper;
+import joshie.progression.items.ItemCriteria;
 import joshie.progression.items.RenderItemCriteria;
 import joshie.progression.lib.GuiIDs;
 import joshie.progression.lib.ProgressionInfo;
@@ -27,8 +28,10 @@ public class PClientProxy extends PCommonProxy {
     @Override
     public void registerRendering() {
         RenderItemHelper.register(Progression.item, 0, criteria);
-        RenderItemHelper.register(Progression.item, 1, getLocation("padlock"));
-        RenderItemHelper.register(Progression.item, 2, getLocation("book"));
+        for (ItemCriteria.ItemMeta meta: ItemCriteria.ItemMeta.values()) {
+            if (meta == ItemCriteria.ItemMeta.criteria) continue;
+            RenderItemHelper.register(Progression.item, meta.ordinal(), getLocation(meta.name()));
+        }
     }
 
     @Override

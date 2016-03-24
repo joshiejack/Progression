@@ -58,7 +58,7 @@ public class PCommonProxy implements IGuiHandler {
         GameRegistry.registerItem(Progression.item, "item");
 
         if (Options.tileClaimerRecipe) {
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Progression.item, 1, ItemCriteria.CLAIM), new Object[] { "F", "P", 'F', Items.flint, 'P', "plankWood" }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Progression.item, 1, ItemCriteria.ItemMeta.claim.ordinal()), new Object[] { "F", "P", 'F', Items.flint, 'P', "plankWood" }));
         }
 
         registerFilters();

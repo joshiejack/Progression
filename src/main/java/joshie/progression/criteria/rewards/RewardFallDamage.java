@@ -1,24 +1,23 @@
 package joshie.progression.criteria.rewards;
 
-import java.util.List;
-import java.util.UUID;
-
 import joshie.progression.api.special.IHasEventBus;
+import joshie.progression.items.ItemCriteria;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.util.List;
+import java.util.UUID;
+
 public class RewardFallDamage extends RewardBase implements IHasEventBus {
     public int absorption = 1;
 
     public RewardFallDamage() {
-        super(new ItemStack(Items.feather), "fallDamage", 0xFF661A00);
+        super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.fallResistance), "fallDamage", 0xFF661A00);
     }
 
     @Override

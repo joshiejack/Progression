@@ -1,25 +1,25 @@
 package joshie.progression.criteria.conditions;
 
-import java.util.UUID;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-
 import joshie.progression.api.special.ISetterCallback;
 import joshie.progression.api.special.ISpecialJSON;
+import joshie.progression.items.ItemCriteria;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 
+import java.util.UUID;
+
 public class ConditionBiomeType extends ConditionBase implements ISetterCallback, ISpecialJSON {
     private Type[] theBiomeTypes = new Type[] { Type.FOREST };
     public String biomeTypes = "forest";
 
     public ConditionBiomeType() {
-        super("biomeType", 0xFF00B200);
+        super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.ifIsBiome), "biomeType", 0xFF00B200);
     }
 
     @Override

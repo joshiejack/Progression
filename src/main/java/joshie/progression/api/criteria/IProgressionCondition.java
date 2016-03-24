@@ -1,9 +1,10 @@
 package joshie.progression.api.criteria;
 
-import java.util.UUID;
-
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+
+import java.util.UUID;
 
 public interface IProgressionCondition extends IFieldProvider {
     /** Whether this condition checks for true or false **/
@@ -20,4 +21,7 @@ public interface IProgressionCondition extends IFieldProvider {
     
     /** Return the trigger type this condition is attached to **/
     public IProgressionTrigger getTrigger();
+
+    /** Returns an icon represenation of this condition **/
+    public ItemStack getIcon();
 }

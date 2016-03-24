@@ -1,16 +1,15 @@
 package joshie.progression.criteria.rewards;
 
-import java.util.List;
-import java.util.UUID;
-
 import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.api.special.IGetterCallback;
 import joshie.progression.api.special.IInit;
 import joshie.progression.handlers.APIHandler;
+import joshie.progression.items.ItemCriteria;
 import joshie.progression.player.PlayerTracker;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
+
+import java.util.List;
+import java.util.UUID;
 
 public class RewardCriteria extends RewardBase implements IGetterCallback, IInit {
     private IProgressionCriteria criteria = null;
@@ -20,7 +19,7 @@ public class RewardCriteria extends RewardBase implements IGetterCallback, IInit
     public String displayName = "";
 
     public RewardCriteria() {
-        super(new ItemStack(Items.golden_apple), "criteria", 0xFF99B3FF);
+        super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.clearOrReceiveOrBlockCriteria), "criteria", 0xFF99B3FF);
     }
 
     @Override

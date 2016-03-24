@@ -1,17 +1,18 @@
 package joshie.progression.criteria.conditions;
 
-import java.util.UUID;
-
 import joshie.progression.api.ProgressionAPI;
+import joshie.progression.items.ItemCriteria;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+
+import java.util.UUID;
 
 public class ConditionBoolean extends ConditionBase {
     public String variable = "default";
     public boolean isTrue = true;
 
     public ConditionBoolean() {
-        super("boolean", 0xFF00FFBF);
+        super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.ifHasBoolean), "boolean", 0xFF00FFBF);
     }
 
     @Override

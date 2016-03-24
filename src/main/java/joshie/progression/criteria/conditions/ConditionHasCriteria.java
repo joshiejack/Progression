@@ -1,15 +1,16 @@
 package joshie.progression.criteria.conditions;
 
-import java.util.UUID;
-
 import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.api.special.IGetterCallback;
 import joshie.progression.api.special.IInit;
 import joshie.progression.handlers.APIHandler;
+import joshie.progression.items.ItemCriteria;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
+
+import java.util.UUID;
 
 public class ConditionHasCriteria extends ConditionBase implements IGetterCallback, IInit {
     private IProgressionCriteria criteria = null;
@@ -17,7 +18,7 @@ public class ConditionHasCriteria extends ConditionBase implements IGetterCallba
     public String displayName = "";
 
     public ConditionHasCriteria() {
-        super("criteria", 0xFF00FFBF);
+        super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.ifCriteriaCompleted), "criteria", 0xFF00FFBF);
     }
 
     @Override

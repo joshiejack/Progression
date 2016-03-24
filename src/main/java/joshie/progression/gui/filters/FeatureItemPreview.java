@@ -8,9 +8,7 @@ import joshie.progression.gui.core.FeatureAbstract;
 import joshie.progression.gui.editors.FeatureItemSelector;
 import joshie.progression.gui.editors.FeatureItemSelector.Position;
 import joshie.progression.gui.editors.GuiItemFilterEditor;
-import net.minecraft.block.Block;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -20,7 +18,6 @@ public class FeatureItemPreview extends FeatureAbstract {
     public static FeatureItemPreview INSTANCE = new FeatureItemPreview();
     private IProgressionFilterSelector filter = FilterSelectorItem.INSTANCE;
     private ArrayList<Object> sorted;
-    private boolean blocksOnly;
     private int position;
 
     public FeatureItemPreview() {}
@@ -35,7 +32,6 @@ public class FeatureItemPreview extends FeatureAbstract {
         if (FeatureItemSelector.INSTANCE.isVisible()) return false;
         mouseY -= 95;
         if (mouseY >= 40 && mouseY <= 110) {
-            int width = (int) ((double) (screenWidth - 10) / filter.getScale()) * 4;
             if (scrolledDown) position = Math.min(sorted.size() - filter.getChange(), position + filter.getChange());
             else position = Math.max(0, position - filter.getChange());
             return true;
@@ -44,18 +40,6 @@ public class FeatureItemPreview extends FeatureAbstract {
         return false;
     }
 
-    private void attemptToAddBlock(ItemStack stack) {
-        Block block = null;
-        int meta = 0;
-
-        try {
-            block = Block.getBlockFromItem(stack.getItem());
-            meta = stack.getItemDamage();
-        } catch (Exception e) {}
-
-        if (block != null) sorted.add(stack);
-    }
-    
     private static Cache<Object, ArrayList<Object>> cacheList = CacheBuilder.newBuilder().maximumSize(64).build();
 
     public ArrayList<Object> getAllItems() {
@@ -72,13 +56,12 @@ public class FeatureItemPreview extends FeatureAbstract {
     }
 
     public void updateSearch() {
+        if (GuiItemFilterEditor.INSTANCE.getField() == null) return; //NO UPDATES!!!
         sorted = new ArrayList();
         for (Object stack: getAllItems()) {
-            int matches = 0;
             for (IProgressionFilter filter: GuiItemFilterEditor.INSTANCE.getField().getFilters()) {
                 if (filter.matches(stack)) {
                     sorted.add(stack);
-                    matches++;
                 }
             }
         }

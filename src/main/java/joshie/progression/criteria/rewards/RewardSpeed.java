@@ -1,23 +1,20 @@
 package joshie.progression.criteria.rewards;
 
-import static joshie.progression.player.data.AbilityStats.SpeedType.AIR;
-import static joshie.progression.player.data.AbilityStats.SpeedType.LAND;
-import static joshie.progression.player.data.AbilityStats.SpeedType.WATER;
-
-import java.util.List;
-import java.util.UUID;
-
 import joshie.progression.api.special.IHasEventBus;
+import joshie.progression.items.ItemCriteria;
 import joshie.progression.player.PlayerTracker;
 import joshie.progression.player.data.AbilityStats.SpeedType;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.List;
+import java.util.UUID;
+
+import static joshie.progression.player.data.AbilityStats.SpeedType.*;
 
 public class RewardSpeed extends RewardBase implements IHasEventBus {
     public float speed = 0.1F;
@@ -26,7 +23,7 @@ public class RewardSpeed extends RewardBase implements IHasEventBus {
     public boolean water = true;
 
     public RewardSpeed() {
-        super(new ItemStack(Items.potionitem, 1, 8194), "speed", 0xFFFFBF00);
+        super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.speed), "speed", 0xFFFFBF00);
     }
 
     @SubscribeEvent

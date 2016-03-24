@@ -1,12 +1,12 @@
 package joshie.progression.criteria.conditions;
 
-import java.util.UUID;
-
 import com.google.gson.JsonObject;
-
 import joshie.progression.api.special.ISpecialJSON;
+import joshie.progression.items.ItemCriteria;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+
+import java.util.UUID;
 
 public class ConditionCoordinates extends ConditionBase implements ISpecialJSON {
     public boolean checkDimension = false; //Whether we check the dimension
@@ -19,7 +19,7 @@ public class ConditionCoordinates extends ConditionBase implements ISpecialJSON 
     public boolean lessThan = false; //If we are checking less than
 
     public ConditionCoordinates() {
-        super("coordinates", 0xFF000000);
+        super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.ifIsAtCoordinates), "coordinates", 0xFF000000);
     }
 
     @Override

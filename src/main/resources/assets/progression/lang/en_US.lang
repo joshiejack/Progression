@@ -161,6 +161,10 @@ progression.filter.block.blockState=Block State
 progression.filter.block.blockOre=Block Ore
 progression.filter.block.blockMod=Block Mod
 
+#Items
+progression.item.book=Progression Book
+progression.item.claim=Progression Tile Claimer
+
 #Random Stuff
 achievement.criteria=Criteria Complete
 progression.name.display=Name

@@ -1,13 +1,13 @@
 package joshie.progression.criteria.rewards;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import joshie.progression.api.criteria.IProgressionFilter;
 import joshie.progression.api.special.IHasFilters;
 import joshie.progression.helpers.ItemHelper;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class RewardBaseItemFilter extends RewardBase implements IHasFilters {
     public List<IProgressionFilter> filters = new ArrayList();
@@ -18,6 +18,11 @@ public abstract class RewardBaseItemFilter extends RewardBase implements IHasFil
     public RewardBaseItemFilter(String name, int color) {
         super(name, color);
         BROKEN = new ItemStack(Items.baked_potato);
+    }
+
+    public RewardBaseItemFilter(ItemStack stack, String name, int color) {
+        super(name, color);
+        BROKEN = stack;
     }
     
     @Override

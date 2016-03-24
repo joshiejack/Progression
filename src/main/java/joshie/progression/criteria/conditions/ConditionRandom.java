@@ -1,15 +1,16 @@
 package joshie.progression.criteria.conditions;
 
-import java.util.UUID;
-
+import joshie.progression.items.ItemCriteria;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+
+import java.util.UUID;
 
 public class ConditionRandom extends ConditionBase {
     public double chance = 50D;
 
     public ConditionRandom() {
-        super("chance", 0xFF00FFBF);
+        super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.ifRandom), "chance", 0xFF00FFBF);
     }
 
     @Override

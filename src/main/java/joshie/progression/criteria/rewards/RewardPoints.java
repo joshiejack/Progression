@@ -1,12 +1,13 @@
 package joshie.progression.criteria.rewards;
 
-import java.util.List;
-import java.util.UUID;
-
 import joshie.progression.api.ProgressionAPI;
+import joshie.progression.items.ItemCriteria;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
+
+import java.util.List;
+import java.util.UUID;
 
 public class RewardPoints extends RewardBase {
     public ItemStack icon = new ItemStack(Items.gold_ingot);
@@ -15,7 +16,7 @@ public class RewardPoints extends RewardBase {
     public int amount = 1;
 
     public RewardPoints() {
-        super(new ItemStack(Items.potionitem), "points", 0xFF002DB2);
+        super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.points), "points", 0xFF002DB2);
     }
 
     @Override

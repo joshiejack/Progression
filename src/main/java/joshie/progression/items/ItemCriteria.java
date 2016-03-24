@@ -1,7 +1,5 @@
 package joshie.progression.items;
 
-import java.util.List;
-
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.crafting.Crafter;
@@ -28,16 +26,26 @@ import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.List;
+
 public class ItemCriteria extends Item {
+    public static ItemStack getStackFromMeta(ItemMeta meta) {
+        return new ItemStack(Progression.item, 1, meta.ordinal());
+    }
+
+    public static enum ItemMeta {
+        criteria, claim, book, booleanValue, clearInventory, clearOrReceiveOrBlockCriteria, fallResistance,
+        ifCriteriaCompleted, ifDayOrNight, ifHasAchievement, ifHasBoolean, ifHasPoints, ifIsAtCoordinates,
+        ifIsBiome, ifRandom, onChangeDimension, onLogin, onReceivedAchiement, onReceivedBoolean,
+        onReceivedPoints, onSecond, onSentMessage, points, speed;
+    }
+
     public static CreativeTabs tab;
-    public static final int CRITERIA = 0;
-    public static final int CLAIM = 1;
-    public static final int BOOK = 2;
 
     public ItemCriteria() {
         final Item item = this;
         tab = new CreativeTabs("progression") {
-            private ItemStack stack = new ItemStack(item, 1, BOOK);
+            private ItemStack stack = new ItemStack(item, 1, ItemMeta.book.ordinal());
 
             @Override
             public String getTranslatedTabLabel() {
@@ -56,7 +64,7 @@ public class ItemCriteria extends Item {
 
             @Override
             public int getIconItemDamage() {
-                return BOOK;
+                return ItemMeta.book.ordinal();
             }
         };
 
@@ -72,14 +80,10 @@ public class ItemCriteria extends Item {
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        if (stack.getItemDamage() == 1) {
-            return "Progression Tile Claimer";
-        } else if (stack.getItemDamage() == 2) {
-            return "Progression Book";
-        }
-
-        IProgressionCriteria criteria = getCriteriaFromStack(stack);
-        return criteria == null ? "BROKEN ITEM" : criteria.getDisplayName();
+        if (stack.getItemDamage() == ItemMeta.criteria.ordinal()) {
+            IProgressionCriteria criteria = getCriteriaFromStack(stack);
+            return criteria == null ? "BROKEN ITEM" : criteria.getDisplayName();
+        } else return Progression.translate("item." + ItemMeta.values()[Math.min(ItemMeta.values().length - 1, stack.getItemDamage())].name());
     }
 
     @SideOnly(Side.CLIENT)
@@ -94,13 +98,13 @@ public class ItemCriteria extends Item {
 
     @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (stack.getItemDamage() == BOOK) {
+        if (stack.getItemDamage() == ItemMeta.book.ordinal()) {
             int guiid = player.isSneaking() ? GuiIDs.GROUP : GuiIDs.EDITOR;
             player.openGui(Progression.instance, guiid, null, 0, 0, 0);
         }
 
         if (world.isRemote || player == null || stack == null) return true;
-        if (stack.getItemDamage() == CLAIM) {
+        if (stack.getItemDamage() == ItemMeta.claim.ordinal()) {
             TileEntity tile = world.getTileEntity(pos);
             if (tile != null) {
                 Crafter crafter = CraftingRegistry.getCrafterFromTile(tile);
@@ -124,7 +128,7 @@ public class ItemCriteria extends Item {
 
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-        if (stack.getItemDamage() == BOOK) {
+        if (stack.getItemDamage() == ItemMeta.book.ordinal()) {
             int guiid = player.isSneaking() ? GuiIDs.GROUP : GuiIDs.EDITOR;
             player.openGui(Progression.instance, guiid, null, 0, 0, 0);
         } else if (!world.isRemote) {
@@ -143,10 +147,10 @@ public class ItemCriteria extends Item {
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean debug) {
-        if (stack.getItemDamage() == CLAIM) {
+        if (stack.getItemDamage() == ItemMeta.claim.ordinal()) {
             list.add("Right click me on tiles");
             list.add("to claim them as yours");
-        } else if (stack.getItemDamage() == BOOK) {
+        } else if (stack.getItemDamage() == ItemMeta.book.ordinal()) {
             list.add(EnumChatFormatting.ITALIC + "Hold Shift to Edit Team");
             if (player.capabilities.isCreativeMode) {
                 list.add("");
@@ -158,8 +162,14 @@ public class ItemCriteria extends Item {
 
     @SideOnly(Side.CLIENT)
     public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
-        list.add(new ItemStack(item, 1, CLAIM));
-        list.add(new ItemStack(item, 1, BOOK));
+        /*for (ItemMeta meta: ItemMeta.values()) {
+            if (meta == ItemMeta.criteria) continue;
+            else list.add(new ItemStack(item, 1, meta.ordinal()));
+        } */
+
+        list.add(new ItemStack(item, 1, ItemMeta.book.ordinal()));
+        list.add(new ItemStack(item, 1, ItemMeta.claim.ordinal()));
+
         for (IProgressionCriteria c : APIHandler.getCriteria().values()) {
             ItemStack stack = new ItemStack(item);
             stack.setTagCompound(new NBTTagCompound());

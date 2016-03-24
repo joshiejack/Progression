@@ -1,9 +1,5 @@
 package joshie.progression.criteria.conditions;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 import joshie.progression.api.criteria.IProgressionFilter;
 import joshie.progression.api.criteria.IProgressionFilterSelector;
 import joshie.progression.api.special.ISpecialFilters;
@@ -11,9 +7,9 @@ import joshie.progression.gui.filters.FilterSelectorPotion;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
-public class ConditionHasPotionEffect extends ConditionBase implements ISpecialFilters {
-    public List<IProgressionFilter> filters = new ArrayList();
+import java.util.UUID;
 
+public class ConditionHasPotionEffect extends ConditionBaseItemFilter implements ISpecialFilters {
     public ConditionHasPotionEffect() {
         super("potioneffect", 0xFFFFFF00);
     }

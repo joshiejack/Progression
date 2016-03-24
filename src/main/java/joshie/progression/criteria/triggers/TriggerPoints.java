@@ -1,14 +1,13 @@
 package joshie.progression.criteria.triggers;
 
-import java.util.UUID;
-
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionTriggerData;
 import joshie.progression.criteria.triggers.data.DataBoolean;
+import joshie.progression.items.ItemCriteria;
 import joshie.progression.player.PlayerTracker;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.EventBus;
+
+import java.util.UUID;
 
 public class TriggerPoints extends TriggerBaseBoolean {
     public String variable = "gold";
@@ -19,7 +18,7 @@ public class TriggerPoints extends TriggerBaseBoolean {
     public boolean lesserThan = false;
 
     public TriggerPoints() {
-        super(new ItemStack(Items.potionitem), "points", 0xFFB2B200);
+        super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.onReceivedPoints), "points", 0xFFB2B200);
     }
     
     @Override
