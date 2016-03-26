@@ -2,15 +2,13 @@ package joshie.progression.plugins.enchiridion.features;
 
 import joshie.enchiridion.api.EnchiridionAPI;
 import joshie.enchiridion.api.book.IFeatureProvider;
-import joshie.enchiridion.gui.book.GuiSimpleEditor;
-import joshie.enchiridion.gui.book.features.FeatureAbstract;
-import joshie.enchiridion.helpers.MCClientHelper;
+import joshie.enchiridion.api.gui.ISimpleEditorFieldProvider;
+import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.player.PlayerTracker;
 
-public class FeaturePoints extends FeatureAbstract implements ISimpleEditorFieldProvider {
+public class FeaturePoints extends FeatureProgression implements ISimpleEditorFieldProvider {
     private transient double cachedWidth = 0;
     public transient int wrap = 50;
-    private transient IFeatureProvider provider;
     public float size = 1F;
     public String description = "[amount] Gold";
     public String variable = "gold";
@@ -24,14 +22,9 @@ public class FeaturePoints extends FeatureAbstract implements ISimpleEditorField
 
     @Override
     public void update(IFeatureProvider position) {
-        provider = position;
+        super.update(position);
         cachedWidth = position.getWidth();
         wrap = Math.max(50, (int) (cachedWidth / size) + 4);
-    }
-
-    @Override
-    public void onFieldsSet() {
-        update(provider);
     }
 
     @Override
@@ -47,16 +40,16 @@ public class FeaturePoints extends FeatureAbstract implements ISimpleEditorField
     }
 
     @Override
-    public void draw(int xPos, int yPos, double width, double height, boolean isMouseHovering) {
+    public void draw(int mouseX, int mouseY) {
         if (variable != null) {
             double amount = PlayerTracker.getClientPlayer().getPoints().getDouble(variable);
-            EnchiridionAPI.draw.drawSplitScaledString(description.replace("[amount]", amountAsString(amount)), xPos, yPos, wrap, 0x555555, size);
+            EnchiridionAPI.draw.drawSplitScaledString(description.replace("[amount]", amountAsString(amount)), position.getLeft(), position.getTop(), wrap, 0x555555, size);
         }
     }
 
     @Override
     public boolean getAndSetEditMode() {
-        GuiSimpleEditor.INSTANCE.setEditor(GuiSimpleEditorPoints.INSTANCE.setFeature(this));
+        EnchiridionAPI.editor.setSimpleEditorFeature(this);
         return true;
     }
 

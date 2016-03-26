@@ -1,10 +1,12 @@
 package joshie.progression.plugins.enchiridion.features;
 
-import java.util.List;
-
 import joshie.enchiridion.api.EnchiridionAPI;
+import joshie.enchiridion.api.book.IFeatureProvider;
+import joshie.enchiridion.api.gui.ISimpleEditorFieldProvider;
 import joshie.progression.api.criteria.IProgressionTrigger;
 import net.minecraft.item.ItemStack;
+
+import java.util.List;
 
 public class FeatureTasks extends FeatureCriteria implements ISimpleEditorFieldProvider {
     public FeatureTasks() {}
@@ -19,12 +21,24 @@ public class FeatureTasks extends FeatureCriteria implements ISimpleEditorFieldP
     }
 
     @Override
-    public void drawFeature(int xPos, int yPos, double width, double height, boolean isMouseHovering) {
+    public void update(IFeatureProvider position) {
+        super.update(position);
+        if (criteria != null) {
+            int size = criteria.getTriggers().size();
+            position.setWidth((size * 17D) + ((size - 1) * 3D));
+        }
+
+        double width = position.getWidth();
+        position.setHeight(17D);
+    }
+
+    @Override
+    public void drawFeature(int mouseX, int mouseY) {
         int x = 0;
         for (IProgressionTrigger trigger : criteria.getTriggers()) {
             ItemStack stack = trigger.getIcon();
-            if (background) EnchiridionAPI.draw.drawRectangle(xPos + x, yPos, xPos + x + 17, yPos + 17, 0xFFD2C9B5);
-            EnchiridionAPI.draw.drawStack(stack, xPos + x, yPos, 1F);
+            if (background) EnchiridionAPI.draw.drawRectangle(position.getLeft() + x, position.getTop(), position.getLeft() + x + 17, position.getTop() + 17, 0xFFD2C9B5);
+            EnchiridionAPI.draw.drawStack(stack, position.getLeft() + x, position.getTop(), 1F);
             x += 20;
         }
     }
@@ -32,8 +46,8 @@ public class FeatureTasks extends FeatureCriteria implements ISimpleEditorFieldP
     @Override
     public void addFeatureTooltip(List<String> tooltip, int mouseX, int mouseY) {
         int x = 0;
-        int offsetMouseX = mouseX - provider.getX();
-        int offsetMouseY = mouseY - provider.getY();
+        int offsetMouseX = mouseX - position.getLeft();
+        int offsetMouseY = mouseY - position.getTop();
         for (IProgressionTrigger trigger : criteria.getTriggers()) {
             ItemStack stack = trigger.getIcon();
             if (offsetMouseX >= x && offsetMouseX <= x + 17) {

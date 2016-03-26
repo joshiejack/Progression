@@ -4,10 +4,12 @@ Progression 0.5.0
   Changed items to use filters instead of selecting all individually
   Added Support for displaying criteria, and claiming rewards with Enchiridion Books (And more)
     (ENCHIRIDION): Added Hide/Show Book Layer Reward
+    (ENCHIRIDION): Add Open Book Gui Reward (Could make blocks open your gui?)
     (ENCHIRIDION:BOOKS:FEATURES): Added Display Rewards Feature
     (ENCHIRIDION:BOOKS:FEATURES): Added Display Tasks Feature
     (ENCHIRIDION:BOOKS:FEATURES): Added Display Points Feature
     (ENCHIRIDION:BOOKS:FEATURES): Added Display Rewards Feature
+    (ENCHIRIDION:BOOKS:FEATURES): Added Display Tabs Feature
     (ENCHIRIDION:BOOKS:ACTIONS):  Added Claim Specific Reward Action
     (ENCHIRIDION:BOOKS:ACTIONS):  Added Complete Criteria Action
   Added a Player Specific command for resetting data

@@ -1,20 +1,18 @@
 package joshie.progression.plugins.enchiridion.features;
 
 import joshie.enchiridion.api.book.IFeatureProvider;
-import joshie.enchiridion.gui.book.features.FeatureAbstract;
+import joshie.enchiridion.api.gui.ISimpleEditorFieldProvider;
 
 public abstract class FeatureProgression extends FeatureAbstract implements ISimpleEditorFieldProvider {
-    protected transient IFeatureProvider provider;
-
     public FeatureProgression() {}
 
     @Override
     public void update(IFeatureProvider position) {
-        provider = position;
+        super.update(position);
     }
 
     @Override
     public void onFieldsSet() {
-        update(provider);
+        update(position);
     }
 }

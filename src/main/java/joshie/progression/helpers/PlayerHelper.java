@@ -1,13 +1,7 @@
 package joshie.progression.helpers;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.Callable;
-
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-
 import joshie.progression.crafting.Crafter;
 import joshie.progression.crafting.CrafterCreative;
 import joshie.progression.crafting.CrafterHuman;
@@ -19,6 +13,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.Callable;
 
 public class PlayerHelper {
     private static Cache<UUID, Crafter> crafters = CacheBuilder.newBuilder().maximumSize(64).build();
@@ -87,5 +87,10 @@ public class PlayerHelper {
 
     public static List<EntityPlayerMP> getAllPlayers() {
         return (List<EntityPlayerMP>) FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static UUID getClientUUID() {
+        return getUUIDForPlayer(MCClientHelper.getPlayer());
     }
 }

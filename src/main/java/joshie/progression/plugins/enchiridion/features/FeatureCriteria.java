@@ -1,11 +1,13 @@
 package joshie.progression.plugins.enchiridion.features;
 
-import java.util.List;
-
+import joshie.enchiridion.api.EnchiridionAPI;
 import joshie.enchiridion.api.book.IFeatureProvider;
-import joshie.enchiridion.gui.book.GuiSimpleEditor;
+import joshie.enchiridion.api.gui.ISimpleEditorFieldProvider;
 import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.handlers.APIHandler;
+
+import java.util.List;
+
 
 public abstract class FeatureCriteria extends FeatureProgression implements ISimpleEditorFieldProvider {
     protected transient IProgressionCriteria criteria = null;
@@ -19,13 +21,13 @@ public abstract class FeatureCriteria extends FeatureProgression implements ISim
         this.displayName = displayName;
         this.background = background;
     }
-    
+
     @Override
     public void update(IFeatureProvider position) {
         super.update(position);
-        if (criteria != null) position.setWidth(criteria.getRewards().size() * 18.5D);
+        if (criteria != null) position.setWidth(criteria.getTriggers().size() * 19D);
         double width = position.getWidth();
-        position.setHeight(width * 0.475D);
+        position.setHeight(width * 0.35D);
     }
 
     @Override
@@ -44,14 +46,14 @@ public abstract class FeatureCriteria extends FeatureProgression implements ISim
         } catch (Exception e) {}
     }
    
-    public abstract void drawFeature(int xPos, int yPos, double width, double height, boolean isMouseHovering);
+    public abstract void drawFeature(int mouseX, int mouseY);
 
     @Override
-    public void draw(int xPos, int yPos, double width, double height, boolean isMouseHovering) {
+    public void draw(int mouseX, int mouseY) {
         if (criteriaID.equals("")) onFieldsSet();
         criteria = APIHandler.getCriteriaFromName(criteriaID);
         if (criteria != null) {
-            drawFeature(xPos, yPos, width, height, isMouseHovering);
+            drawFeature(mouseX, mouseY);
         }
     }
     
@@ -66,7 +68,7 @@ public abstract class FeatureCriteria extends FeatureProgression implements ISim
 
     @Override
     public boolean getAndSetEditMode() {
-        GuiSimpleEditor.INSTANCE.setEditor(GuiSimpleEditorPoints.INSTANCE.setFeature(this));
+        EnchiridionAPI.editor.setSimpleEditorFeature(this);
         return true;
     }
 }

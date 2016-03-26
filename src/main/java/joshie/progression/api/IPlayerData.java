@@ -1,9 +1,11 @@
 package joshie.progression.api;
 
-import java.util.UUID;
-
+import joshie.progression.api.criteria.IProgressionCriteria;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+
+import java.util.Set;
+import java.util.UUID;
 
 public interface IPlayerData {
     /** Returns the tag compound with this string id **/
@@ -27,4 +29,7 @@ public interface IPlayerData {
     public void setBoolean(UUID uuid, String name, boolean value);
     /** Add to the the internal double stored with this name **/
     public void addDouble(UUID uuid, String name, double value);
+
+    /** Returns a list of all the completed criteria for this player **/
+    public Set<IProgressionCriteria> getCompletedCriteriaList(UUID uuid);
 }

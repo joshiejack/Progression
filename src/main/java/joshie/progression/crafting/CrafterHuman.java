@@ -1,17 +1,17 @@
 package joshie.progression.crafting;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-
+import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.api.criteria.IProgressionFilter;
 import joshie.progression.crafting.CraftingRegistry.DisallowType;
 import joshie.progression.json.Options;
-import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 public class CrafterHuman extends Crafter {
     //List of technologies this human has unlocked
@@ -33,7 +33,7 @@ public class CrafterHuman extends Crafter {
         }
 
         if (matched.size() == 0) return !Options.settings.disableUsageUntilRewardAdded;
-        Set<IProgressionCriteria> completed = PlayerTracker.getPlayerData(uuid).getMappings().getCompletedCriteria().keySet();
+        Set<IProgressionCriteria> completed = ProgressionAPI.player.getCompletedCriteriaList(uuid);
         for (IProgressionFilter filter : matched) {
             IProgressionCriteria criteria = CraftingRegistry.getCriteriaForFilter(type, filter, DisallowType.USEINCRAFTING);
             if (criteria != null && completed.contains(criteria)) return true;
@@ -54,7 +54,7 @@ public class CrafterHuman extends Crafter {
         }
 
         if (matched.size() == 0) return !Options.settings.disableCraftingUntilRewardAdded;
-        Set<IProgressionCriteria> completed = PlayerTracker.getPlayerData(uuid).getMappings().getCompletedCriteria().keySet();
+        Set<IProgressionCriteria> completed = ProgressionAPI.player.getCompletedCriteriaList(uuid);
         for (IProgressionFilter filter : matched) {
             IProgressionCriteria criteria = CraftingRegistry.getCriteriaForFilter(type, filter, DisallowType.CRAFTING);
             if (criteria != null && completed.contains(criteria)) return true;

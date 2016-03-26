@@ -1,10 +1,12 @@
 package joshie.progression.player;
 
-import java.util.UUID;
-
 import joshie.progression.api.IPlayerData;
+import joshie.progression.api.criteria.IProgressionCriteria;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+
+import java.util.Set;
+import java.util.UUID;
 
 public class PlayerHandler implements IPlayerData {
     @Override
@@ -30,6 +32,11 @@ public class PlayerHandler implements IPlayerData {
     @Override
     public void addDouble(UUID uuid, String name, double value) {
         PlayerTracker.getServerPlayer(uuid).addDouble(name, value);
+    }
+
+    @Override
+    public Set<IProgressionCriteria> getCompletedCriteriaList(UUID uuid) {
+        return PlayerTracker.getPlayerData(uuid).getMappings().getCompletedCriteria().keySet();
     }
 
     @Override
