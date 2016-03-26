@@ -21,7 +21,7 @@ public class ConditionInInventory extends ConditionBaseItemFilter implements IEn
     }
 
     @Override
-    public Enum next() {
+    public Enum next(String name) {
         int id = slotType.ordinal() + 1;
         if (id < CheckSlots.values().length) {
             return CheckSlots.values()[id];

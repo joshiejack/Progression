@@ -1,8 +1,5 @@
 package joshie.progression.criteria.triggers;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionFilter;
 import joshie.progression.api.criteria.IProgressionFilterSelector;
@@ -17,6 +14,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TriggerKill extends TriggerBaseCounterVaries implements IHasFilters, ISpecialFilters {
     public List<IProgressionFilter> entities = new ArrayList();
 
@@ -27,7 +27,7 @@ public class TriggerKill extends TriggerBaseCounterVaries implements IHasFilters
     @SubscribeEvent
     public void onEvent(LivingDeathEvent event) {
         Entity source = event.source.getSourceOfDamage();
-        if (source instanceof EntityPlayer && source instanceof EntityLivingBase) {
+        if (source instanceof EntityPlayer) {
             ProgressionAPI.registry.fireTrigger((EntityPlayer) source, getUnlocalisedName(), event.entityLiving);
         }
     }

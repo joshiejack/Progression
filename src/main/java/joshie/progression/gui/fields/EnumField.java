@@ -1,10 +1,10 @@
 package joshie.progression.gui.fields;
 
-import java.lang.reflect.Field;
-
 import joshie.progression.api.special.IEnum;
 import joshie.progression.api.special.IInit;
 import joshie.progression.gui.core.DrawHelper;
+
+import java.lang.reflect.Field;
 
 public class EnumField extends AbstractField {
     public Field field;
@@ -44,7 +44,7 @@ public class EnumField extends AbstractField {
     @Override
     public void click() {
         try {
-            setField(object.next());
+            setField(object.next(getFieldName()));
         } catch (Exception e) {}
     }
 

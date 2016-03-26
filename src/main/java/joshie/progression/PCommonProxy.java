@@ -115,6 +115,7 @@ public class PCommonProxy implements IGuiHandler {
         ProgressionAPI.registry.registerFilter(new FilterItem());
         ProgressionAPI.registry.registerFilter(new FilterItemMeta());
         ProgressionAPI.registry.registerFilter(new FilterItemNBT());
+        ProgressionAPI.registry.registerFilter(new FilterItemNBTFuzzy());
         ProgressionAPI.registry.registerFilter(new FilterItemMod());
         ProgressionAPI.registry.registerFilter(new FilterItemOre());
 
