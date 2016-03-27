@@ -21,7 +21,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.Level;
-import scala.swing.Action.Trigger;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -186,9 +185,7 @@ public class JSONLoader {
                 }
 
                 if (criteria.triggers != null) {
-                    Trigger[] triggerz = new Trigger[criteria.triggers.size()];
-                    for (int j = 0; j < triggerz.length; j++) {
-                        DataTrigger trigger = criteria.triggers.get(j);
+                    for (DataTrigger trigger: criteria.triggers) {
                         IProgressionTrigger iTrigger = APIHandler.newTrigger(theCriteria, trigger.uuid, trigger.type, trigger.data);
                         if (trigger.conditions != null) {
                             for (DataGeneric generic : trigger.conditions) {

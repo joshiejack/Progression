@@ -1,7 +1,5 @@
 package joshie.progression.criteria.filters.crafting;
 
-import java.util.List;
-
 import joshie.progression.api.criteria.IProgressionField;
 import joshie.progression.api.special.ISpecialFieldProvider;
 import joshie.progression.gui.editors.FeatureItemSelector.Position;
@@ -9,7 +7,9 @@ import joshie.progression.gui.fields.ItemField;
 import joshie.progression.gui.filters.FilterSelectorAction;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import scala.actors.threadpool.Arrays;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class FilterExact extends FilterBaseCrafting implements ISpecialFieldProvider {
     public ItemStack stack = new ItemStack(Blocks.crafting_table);
@@ -20,7 +20,7 @@ public class FilterExact extends FilterBaseCrafting implements ISpecialFieldProv
     
     @Override
     public List<ItemStack> getMatches(Object object) {
-        return Arrays.asList(new Object[] { stack });
+        return Arrays.asList(stack);
     }
 
     @Override
