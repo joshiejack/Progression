@@ -233,7 +233,6 @@ public class JSONLoader {
                 boolean allRewards = criteria.allRewards;
                 int rewardsGiven = criteria.rewardsGiven;
                 boolean isVisible = criteria.isVisible;
-                boolean mustClaim = criteria.mustClaim;
                 boolean achievement = criteria.displayAchievement;
                 boolean infinite = criteria.infinite;
                 int repeatable = criteria.repeatable;
@@ -254,7 +253,7 @@ public class JSONLoader {
                     repeatable = 1;
                 }
 
-                theCriteria.init(thePrereqs, theConflicts, display, isVisible, mustClaim, achievement, repeatable, icon, allRequired, tasksRequired, infinite, allRewards, rewardsGiven, x, y);
+                theCriteria.init(thePrereqs, theConflicts, display, isVisible, achievement, repeatable, icon, allRequired, tasksRequired, infinite, allRewards, rewardsGiven, x, y);
             }
         }
         
@@ -331,7 +330,6 @@ public class JSONLoader {
                 data.x = c.getX();
                 data.y = c.getY();
                 data.isVisible = c.isVisible();
-                data.mustClaim = c.requiresClaiming();
                 data.displayAchievement = c.displayAchievement();
                 data.repeatable = c.getRepeatAmount();
                 data.infinite = c.canRepeatInfinite();

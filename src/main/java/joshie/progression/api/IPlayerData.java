@@ -1,8 +1,8 @@
 package joshie.progression.api;
 
 import joshie.progression.api.criteria.IProgressionCriteria;
-import joshie.progression.api.criteria.IProgressionTrigger;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Set;
@@ -27,13 +27,10 @@ public interface IPlayerData {
     public void setCustomData(EntityPlayer player, String string, NBTTagCompound tag); 
     
     /** Set a boolean **/
-    public void setBoolean(UUID uuid, String name, boolean value);
+    public void setBoolean(EntityPlayerMP player, String name, boolean value);
     /** Add to the the internal double stored with this name **/
-    public void addDouble(UUID uuid, String name, double value);
+    public void addDouble(EntityPlayerMP player, String name, double value);
 
     /** Returns a list of all the completed criteria for this player **/
     public Set<IProgressionCriteria> getCompletedCriteriaList(UUID uuid);
-
-    /** Returns the trigger data for this trigger **/
-    public NBTTagCompound getTriggerData(UUID uuid, IProgressionTrigger trigger);
 }

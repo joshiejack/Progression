@@ -3,6 +3,7 @@ package joshie.progression.criteria.rewards;
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.api.criteria.IProgressionReward;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
@@ -13,9 +14,11 @@ public abstract class RewardBase implements IProgressionReward {
     protected IProgressionCriteria criteria;
     private String name;
     private int color;
-    private boolean mustClaim = false;
     private ItemStack stack;
     private UUID uuid;
+
+    //Whether users must claim this reward or not
+    public boolean mustClaim = false;
 
     public RewardBase(ItemStack stack, String name, int color) {
         this(name, color);
@@ -49,6 +52,11 @@ public abstract class RewardBase implements IProgressionReward {
     }
 
     @Override
+    public IProgressionCriteria getCriteria() {
+        return criteria;
+    }
+
+    @Override
     public String getUnlocalisedName() {
         return name;
     }
@@ -68,9 +76,19 @@ public abstract class RewardBase implements IProgressionReward {
 
     @Override
     public void onRemoved() {}
+
+    @Override
+    public boolean isAutomatic() {
+        return !mustClaim;
+    }
+
+    @Override
+    public boolean shouldRunOnce() {
+        return false;
+    }
     
     @Override
-    public void reward(UUID uuid) {}
+    public void reward(EntityPlayerMP player) {}
 
     @Override
     public void updateDraw() {}

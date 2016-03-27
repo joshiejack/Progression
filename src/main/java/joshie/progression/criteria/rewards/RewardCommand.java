@@ -1,15 +1,13 @@
 package joshie.progression.criteria.rewards;
 
-import java.util.List;
-import java.util.UUID;
-
-import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.lib.FakeOp;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumChatFormatting;
+
+import java.util.List;
 
 public class RewardCommand extends RewardBase {
     public String command = "dummy";
@@ -20,14 +18,9 @@ public class RewardCommand extends RewardBase {
     }
 
     @Override
-    public void reward(UUID uuid) {
-        List<EntityPlayerMP> players = PlayerHelper.getPlayersFromUUID(uuid);
-        for (EntityPlayerMP player : players) {
-            if (player != null) {
-                String newCommand = command.replace("@u", player.getDisplayNameString());
-                MinecraftServer.getServer().getCommandManager().executeCommand(FakeOp.getInstance(), newCommand);
-            }
-        }
+    public void reward(EntityPlayerMP player) {
+        String newCommand = command.replace("@u", player.getDisplayNameString());
+        MinecraftServer.getServer().getCommandManager().executeCommand(FakeOp.getInstance(), newCommand);
     }
 
     @Override

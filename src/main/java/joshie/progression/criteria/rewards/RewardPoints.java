@@ -2,6 +2,7 @@ package joshie.progression.criteria.rewards;
 
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.items.ItemCriteria;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
@@ -9,7 +10,7 @@ import net.minecraft.util.EnumChatFormatting;
 import java.util.List;
 import java.util.UUID;
 
-public class RewardPoints extends RewardBase {
+public class RewardPoints extends RewardBaseSingular {
     public ItemStack icon = new ItemStack(Items.gold_ingot);
     public String variable = "gold";
     public String display = "[amount] Gold";
@@ -20,8 +21,8 @@ public class RewardPoints extends RewardBase {
     }
 
     @Override
-    public void reward(UUID uuid) {
-        ProgressionAPI.player.addDouble(uuid, variable, amount);
+    public void reward(EntityPlayerMP player) {
+        ProgressionAPI.player.addDouble(player, variable, amount);
     }
 
     @Override

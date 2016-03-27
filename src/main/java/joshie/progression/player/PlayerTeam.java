@@ -1,9 +1,5 @@
 package joshie.progression.player;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
-
 import joshie.progression.gui.editors.ITextEditable;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.network.PacketHandler;
@@ -16,6 +12,11 @@ import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.UUID;
+
 public class PlayerTeam implements ITextEditable {
     public static enum TeamType {
         SINGLE, TEAM;
@@ -25,7 +26,7 @@ public class PlayerTeam implements ITextEditable {
     private TeamType type;
     private UUID owner;
     private boolean isActive = true;
-    private boolean multipleRewards = false;
+    private boolean multipleRewards = true;
     private boolean isPublic = false;
     private String name;
 
@@ -76,6 +77,16 @@ public class PlayerTeam implements ITextEditable {
 
     public Set<UUID> getMembers() {
         return members;
+    }
+
+    public Set<UUID> getEveryone() {
+        Set<UUID> everyone = new LinkedHashSet();
+        everyone.add(getOwner());
+        if (giveMultipleRewards()) {
+            everyone.addAll(getMembers());
+        }
+
+        return everyone;
     }
 
     @SideOnly(Side.CLIENT)

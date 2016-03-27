@@ -4,9 +4,9 @@ import io.netty.buffer.ByteBuf;
 import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.api.criteria.IProgressionReward;
 import joshie.progression.handlers.APIHandler;
-import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.network.core.PenguinPacket;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import java.util.Collections;
@@ -54,7 +54,7 @@ public class PacketClaimReward extends PenguinPacket {
                 }
             }
 
-            rewards.get(selected).reward(PlayerHelper.getUUIDForPlayer(player));
+            rewards.get(selected).reward((EntityPlayerMP)player);
         }
     }
 }

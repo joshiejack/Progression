@@ -31,7 +31,7 @@ public class CriteriaNBT implements IMapHelper {
 
 	@Override
 	public Object readValue(NBTTagCompound tag) {
-		return (Integer)tag.getInteger("Repeated");
+		return (Integer)tag.getInteger("Number");
 	}
 
 	@Override
@@ -42,6 +42,6 @@ public class CriteriaNBT implements IMapHelper {
 
 	@Override
 	public void writeValue(NBTTagCompound tag, Object o) {
-		tag.setInteger("Repeated", (Integer)o);
+		tag.setInteger("Number", (Integer)o);
 	}
 }

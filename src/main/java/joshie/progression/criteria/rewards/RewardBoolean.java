@@ -2,12 +2,12 @@ package joshie.progression.criteria.rewards;
 
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.items.ItemCriteria;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumChatFormatting;
 
 import java.util.List;
-import java.util.UUID;
 
-public class RewardBoolean extends RewardBase {
+public class RewardBoolean extends RewardBaseSingular {
     public String variable = "default";
     public String display = "Free Research:\nDefault";
     public boolean value = true;
@@ -17,8 +17,8 @@ public class RewardBoolean extends RewardBase {
     }
 
     @Override
-    public void reward(UUID uuid) {
-        ProgressionAPI.player.setBoolean(uuid, variable, value);
+    public void reward(EntityPlayerMP player) {
+        ProgressionAPI.player.setBoolean(player, variable, value);
     }
 
     @Override

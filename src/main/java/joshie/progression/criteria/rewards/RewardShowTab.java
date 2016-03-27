@@ -8,27 +8,22 @@ import joshie.progression.api.special.IHasEventBus;
 import joshie.progression.api.special.IInit;
 import joshie.progression.api.special.IStoreNBTData;
 import joshie.progression.handlers.APIHandler;
+import joshie.progression.items.ItemCriteria;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.UUID;
 
-public class RewardShowTab extends RewardBase implements IStoreNBTData, IHasEventBus, IInit, IGetterCallback {
+public class RewardShowTab extends RewardBaseAbility implements IStoreNBTData, IHasEventBus, IInit, IGetterCallback {
     public boolean hideByDefault = true;
     public String displayName = "";
     private UUID tabID = UUID.randomUUID();
     private IProgressionTab tab;
 
     public RewardShowTab() {
-        super("tab.show", 0xFFCCCCCC);
-    }
-
-    @Override
-    public EventBus getEventBus() {
-        return MinecraftForge.EVENT_BUS;
+        super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.showTab), "tab.show", 0xFFCCCCCC);
     }
 
     @Override
@@ -81,15 +76,15 @@ public class RewardShowTab extends RewardBase implements IStoreNBTData, IHasEven
     }
 
     @Override
-    public void reward(UUID uuid) {
+    public void reward(EntityPlayerMP player) {
         if (tab == null) return; //Do not give the reward
 
-        NBTTagCompound tag = ProgressionAPI.player.getCustomData(uuid, "progression.tab.hidden");
+        NBTTagCompound tag = ProgressionAPI.player.getCustomData(player, "progression.tab.hidden");
         if (tag == null) tag = new NBTTagCompound();
         if (hideByDefault) tag.removeTag(tab.getUniqueID().toString());
         else tag.setBoolean(tab.getUniqueID().toString(), true);
 
-        ProgressionAPI.player.setCustomData(uuid, "progression.tab.hidden", tag);
+        ProgressionAPI.player.setCustomData(player, "progression.tab.hidden", tag);
     }
 
 }

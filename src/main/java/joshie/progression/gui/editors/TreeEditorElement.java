@@ -1,19 +1,10 @@
 package joshie.progression.gui.editors;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
-
 import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.api.criteria.IProgressionReward;
 import joshie.progression.gui.core.FeatureTooltip;
 import joshie.progression.gui.core.GuiCore;
 import joshie.progression.helpers.MCClientHelper;
-import joshie.progression.helpers.RenderItemHelper;
 import joshie.progression.json.Theme;
 import joshie.progression.lib.ProgressionInfo;
 import joshie.progression.player.PlayerTracker;
@@ -22,6 +13,13 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 public class TreeEditorElement {
     private static final GuiTreeEditor gui = GuiTreeEditor.INSTANCE;
@@ -149,7 +147,7 @@ public class TreeEditorElement {
                 }
             }
 
-            if (isSelected || (isCompleted && criteria.requiresClaiming())) textureY = 100;
+            if (isSelected) textureY = 100;
             IProgressionCriteria selected = GuiTreeEditor.INSTANCE.lastClicked;
             if (!isCompleted) {
                 if (!isCriteriaCompleteable(criteria)) {

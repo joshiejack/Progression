@@ -1,30 +1,22 @@
 package joshie.progression.plugins.enchiridion.rewards;
 
-import java.util.UUID;
-
 import joshie.enchiridion.api.event.FeatureVisibleEvent;
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.special.IHasEventBus;
 import joshie.progression.api.special.IStoreNBTData;
-import joshie.progression.criteria.rewards.RewardBase;
+import joshie.progression.criteria.rewards.RewardBaseAbility;
+import joshie.progression.items.ItemCriteria;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class RewardShowLayer extends RewardBase implements IStoreNBTData, IHasEventBus {
+public class RewardShowLayer extends RewardBaseAbility implements IStoreNBTData {
     public boolean hideByDefault = true;
     public String bookid = "";
     public int page = 1;
     public int layer = 1;
 
     public RewardShowLayer() {
-        super("layer.show", 0xFFCCCCCC);
-    }
-
-    @Override
-    public EventBus getEventBus() {
-        return MinecraftForge.EVENT_BUS;
+        super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.showLayer), "layer.show", 0xFFCCCCCC);
     }
 
     @SubscribeEvent
@@ -65,14 +57,14 @@ public class RewardShowLayer extends RewardBase implements IStoreNBTData, IHasEv
     }
 
     @Override
-    public void reward(UUID uuid) {
-        NBTTagCompound tag = ProgressionAPI.player.getCustomData(uuid, "enchiridion.hidden");
+    public void reward(EntityPlayerMP player) {
+        NBTTagCompound tag = ProgressionAPI.player.getCustomData(player, "enchiridion.hidden");
         if (tag == null) tag = new NBTTagCompound();
         NBTTagCompound bookData = getTag(tag, bookid);
         NBTTagCompound pageData = getTag(bookData, "" + page);
         if (hideByDefault) pageData.removeTag("" + layer);
         else pageData.setBoolean("" + layer, true);
 
-        ProgressionAPI.player.setCustomData(uuid, "enchiridion.hidden", tag);
+        ProgressionAPI.player.setCustomData(player, "enchiridion.hidden", tag);
     }
 }

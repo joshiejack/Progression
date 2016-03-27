@@ -43,7 +43,7 @@ public class PacketSyncTriggers extends PenguinPacket {
         int size = buf.readInt();
         triggers = new HashSet();
         for (int i = 0; i < size; i++) {
-            IProgressionTrigger trigger = APIHandler.getTriggerFromUUID(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
+            IProgressionTrigger trigger = APIHandler.getCache().getTriggerFromUUID(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
             if (trigger != null) {
                 triggers.add(trigger);
             }

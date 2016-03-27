@@ -6,12 +6,13 @@ import joshie.progression.api.special.IInit;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.items.ItemCriteria;
 import joshie.progression.player.PlayerTracker;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumChatFormatting;
 
 import java.util.List;
 import java.util.UUID;
 
-public class RewardCriteria extends RewardBase implements IGetterCallback, IInit {
+public class RewardCriteria extends RewardBaseSingular implements IGetterCallback, IInit {
     private IProgressionCriteria criteria = null;
     private UUID criteriaID = UUID.randomUUID();
     public boolean remove = true;
@@ -37,14 +38,14 @@ public class RewardCriteria extends RewardBase implements IGetterCallback, IInit
     }
 
     @Override
-    public void reward(UUID uuid) {
+    public void reward(EntityPlayerMP player) {
         if (criteria == null) return; //Do not give the reward
         if (remove) {
-            PlayerTracker.getServerPlayer(uuid).getMappings().fireAllTriggers("forced-remove", criteria);
-        } else PlayerTracker.getServerPlayer(uuid).getMappings().fireAllTriggers("forced-complete", criteria, criteria.getRewards());
+            PlayerTracker.getServerPlayer(player).getMappings().fireAllTriggers("forced-remove", criteria);
+        } else PlayerTracker.getServerPlayer(player).getMappings().fireAllTriggers("forced-complete", criteria, criteria.getRewards());
 
         if (possibility) {
-            PlayerTracker.getServerPlayer(uuid).getMappings().switchPossibility(criteria);
+            PlayerTracker.getServerPlayer(player).getMappings().switchPossibility(criteria);
         }
     }
 

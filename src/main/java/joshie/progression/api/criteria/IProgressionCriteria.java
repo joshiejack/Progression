@@ -21,8 +21,6 @@ public interface IProgressionCriteria {
 
     public boolean getIfRequiresAllTasks();
 
-    public boolean requiresClaiming();
-
     public boolean displayAchievement();
 
     public String getDisplayName();
@@ -43,7 +41,7 @@ public interface IProgressionCriteria {
 
     public boolean givesAllRewards();
 
-    public void init(IProgressionCriteria[] thePrereqs, IProgressionCriteria[] theConflicts, String display, boolean isVisible, boolean mustClaim, boolean achievement, int repeatable, ItemStack icon, boolean allRequired, int tasksRequired, boolean infinite, boolean allRewards, int rewardsGiven, int x, int y);
+    public void init(IProgressionCriteria[] thePrereqs, IProgressionCriteria[] theConflicts, String display, boolean isVisible, boolean achievement, int repeatable, ItemStack icon, boolean allRequired, int tasksRequired, boolean infinite, boolean allRewards, int rewardsGiven, int x, int y);
 
     public int getX();
 

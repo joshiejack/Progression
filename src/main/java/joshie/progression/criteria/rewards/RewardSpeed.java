@@ -1,22 +1,19 @@
 package joshie.progression.criteria.rewards;
 
-import joshie.progression.api.special.IHasEventBus;
 import joshie.progression.items.ItemCriteria;
 import joshie.progression.player.PlayerTracker;
 import joshie.progression.player.data.AbilityStats.SpeedType;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
-import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.List;
-import java.util.UUID;
 
 import static joshie.progression.player.data.AbilityStats.SpeedType.*;
 
-public class RewardSpeed extends RewardBase implements IHasEventBus {
+public class RewardSpeed extends RewardBaseAbility {
     public float speed = 0.1F;
     public boolean land = true;
     public boolean air = false;
@@ -42,15 +39,10 @@ public class RewardSpeed extends RewardBase implements IHasEventBus {
     }
 
     @Override
-    public EventBus getEventBus() {
-        return MinecraftForge.EVENT_BUS;
-    }
-
-    @Override
-    public void reward(UUID uuid) {
-        if (land) PlayerTracker.getServerPlayer(uuid).addSpeed(LAND, speed);
-        if (air) PlayerTracker.getServerPlayer(uuid).addSpeed(AIR, speed);
-        if (water) PlayerTracker.getServerPlayer(uuid).addSpeed(WATER, speed);
+    public void reward(EntityPlayerMP player) {
+        if (land) PlayerTracker.getServerPlayer(player).addSpeed(LAND, speed);
+        if (air) PlayerTracker.getServerPlayer(player).addSpeed(AIR, speed);
+        if (water) PlayerTracker.getServerPlayer(player).addSpeed(WATER, speed);
     }
 
     private String getType() {

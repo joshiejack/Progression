@@ -29,7 +29,7 @@ public abstract class TriggerBaseCounter extends TriggerBase implements IStoreTr
 
     @Override
     public boolean onFired(UUID uuid, Object... data) {
-        if (canIncrease(data)) {
+        if (canIncrease(data) && counter < amount) {
             counter++;
         }
 
@@ -46,11 +46,11 @@ public abstract class TriggerBaseCounter extends TriggerBase implements IStoreTr
 
     @Override
     public void readDataFromNBT(NBTTagCompound tag) {
-        tag.setInteger("Count", counter);
+        counter = tag.getInteger("Count");
     }
 
     @Override
     public void writeDataToNBT(NBTTagCompound tag) {
-        counter = tag.getInteger("Count");
+        tag.setInteger("Count", counter);
     }
 }

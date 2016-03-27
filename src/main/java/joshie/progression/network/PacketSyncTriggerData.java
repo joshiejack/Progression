@@ -2,6 +2,7 @@ package joshie.progression.network;
 
 import io.netty.buffer.ByteBuf;
 import joshie.progression.api.criteria.IProgressionTrigger;
+import joshie.progression.api.special.IStoreTriggerData;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.network.core.PenguinPacket;
 import joshie.progression.player.PlayerTracker;
@@ -29,8 +30,11 @@ public class PacketSyncTriggerData extends PenguinPacket {
         }
 
         public void fromBytes(ByteBuf buf) {
-            trigger = APIHandler.getTriggerFromUUID(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
+            trigger = APIHandler.getCache().getTriggerFromUUID(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
             data = ByteBufUtils.readTag(buf);
+            if (trigger instanceof IStoreTriggerData) {
+                ((IStoreTriggerData) trigger).readDataFromNBT(data);
+            }
         }
     }
 

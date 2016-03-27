@@ -1,15 +1,13 @@
 package joshie.progression.criteria.rewards;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
-
 import joshie.progression.api.special.IGetterCallback;
 import joshie.progression.api.special.IInit;
-import joshie.progression.helpers.PlayerHelper;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumChatFormatting;
+
+import java.util.HashMap;
+import java.util.List;
 
 public class RewardHurt extends RewardBase implements IInit, IGetterCallback {
     public static final HashMap<String, DamageSource> sources = new HashMap();
@@ -35,14 +33,9 @@ public class RewardHurt extends RewardBase implements IInit, IGetterCallback {
     }
         
     @Override
-    public void reward(UUID uuid) {
+    public void reward(EntityPlayerMP player) {
         if (source == null) return;
-        List<EntityPlayerMP> players = PlayerHelper.getPlayersFromUUID(uuid);
-        for (EntityPlayerMP player : players) {
-            if (player != null) {
-                player.attackEntityFrom(source, damage);
-            }
-        }
+        player.attackEntityFrom(source, damage);
     }
 
     @Override

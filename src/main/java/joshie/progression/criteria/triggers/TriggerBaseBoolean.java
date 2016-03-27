@@ -34,11 +34,11 @@ public abstract class TriggerBaseBoolean extends TriggerBase implements IStoreTr
 
     @Override
     public void readDataFromNBT(NBTTagCompound tag) {
-        tag.setBoolean("Value", value);
+        value = tag.getBoolean("Value");
     }
 
     @Override
     public void writeDataToNBT(NBTTagCompound tag) {
-        value = tag.getBoolean("Value");
+        tag.setBoolean("Value", value);
     }
 }

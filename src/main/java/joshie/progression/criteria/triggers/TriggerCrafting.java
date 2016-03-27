@@ -57,13 +57,13 @@ public class TriggerCrafting extends TriggerBaseItemFilter implements ISpecialFi
 
     @Override
     public void readDataFromNBT(NBTTagCompound tag) {
-        tag.setInteger("Crafted", amountItemCrafted);
-        tag.setInteger("Times", timesItemCrafted);
+        amountItemCrafted = tag.getInteger("Crafted");
+        timesItemCrafted = tag.getInteger("Times");
     }
 
     @Override
     public void writeDataToNBT(NBTTagCompound tag) {
-        amountItemCrafted = tag.getInteger("Crafted");
-        timesItemCrafted = tag.getInteger("Times");
+        tag.setInteger("Crafted", amountItemCrafted);
+        tag.setInteger("Times", timesItemCrafted);
     }
 }

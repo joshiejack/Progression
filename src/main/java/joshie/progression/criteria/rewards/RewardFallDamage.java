@@ -4,25 +4,18 @@ import joshie.progression.api.special.IHasEventBus;
 import joshie.progression.items.ItemCriteria;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
-import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.List;
-import java.util.UUID;
 
-public class RewardFallDamage extends RewardBase implements IHasEventBus {
+public class RewardFallDamage extends RewardBaseAbility implements IHasEventBus {
     public int absorption = 1;
 
     public RewardFallDamage() {
         super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.fallResistance), "fallDamage", 0xFF661A00);
-    }
-
-    @Override
-    public EventBus getEventBus() {
-        return MinecraftForge.EVENT_BUS;
     }
 
     @SubscribeEvent
@@ -40,8 +33,8 @@ public class RewardFallDamage extends RewardBase implements IHasEventBus {
     }
 
     @Override
-    public void reward(UUID uuid) {
-        PlayerTracker.getServerPlayer(uuid).addFallDamagePrevention(absorption);
+    public void reward(EntityPlayerMP player) {
+        PlayerTracker.getServerPlayer(player).addFallDamagePrevention(absorption);
     }
 
     @Override

@@ -1,7 +1,5 @@
 package joshie.progression.handlers;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import com.google.gson.JsonObject;
 import joshie.progression.api.ICustomDataBuilder;
 import joshie.progression.api.IProgressionAPI;
@@ -29,12 +27,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 
 public class APIHandler implements IProgressionAPI {
     //Caches
-    private static final Cache<UUID, IProgressionTrigger> triggerCache = CacheBuilder.newBuilder().maximumSize(2048).build();
-    private static final Cache<UUID, IProgressionReward> rewardCache = CacheBuilder.newBuilder().maximumSize(2048).build();
+
 
     //This is the registry for trigger type and reward type creation
     public static final HashMap<String, IProgressionTrigger> triggerTypes = new HashMap();
@@ -43,12 +39,9 @@ public class APIHandler implements IProgressionAPI {
     public static final HashMap<String, IProgressionFilter> itemFilterTypes = new HashMap();
 
     //These four maps are registries for fetching the various types
+    public static APICache serverCache;
     @SideOnly(Side.CLIENT)
-    public static HashMap<UUID, IProgressionTab> tabsClient;
-    public static HashMap<UUID, IProgressionTab> tabsServer;
-    @SideOnly(Side.CLIENT)
-    public static HashMap<UUID, IProgressionCriteria> criteriaClient;
-    public static HashMap<UUID, IProgressionCriteria> criteriaServer;
+    public static APICache clientCache;
 
     public static IFieldProvider getDefault(IFieldProvider provider) {
         if (provider instanceof IProgressionTrigger) return triggerTypes.get(provider.getUnlocalisedName());
@@ -61,21 +54,29 @@ public class APIHandler implements IProgressionAPI {
     }
 
     public static void resetAPIHandler() {
-        tabsServer = new HashMap();
-        criteriaServer = new HashMap();
+        serverCache = new APICache();
+        clientCache = new APICache();
+    }
 
-        if (isClientSide()) {
-            tabsClient = new HashMap();
-            criteriaClient = new HashMap();
-        }
+    @SideOnly(Side.CLIENT)
+    public static APICache getClientCache() {
+        return clientCache;
+    }
+
+    public static APICache getServerCache() {
+        return serverCache;
+    }
+
+    public static APICache getCache() {
+        return isClientSide() ? clientCache : serverCache;
     }
 
     public static HashMap<UUID, IProgressionCriteria> getCriteria() {
-        return isClientSide() ? criteriaClient : criteriaServer;
+        return getCache().getCriteria();
     }
 
     public static HashMap<UUID, IProgressionTab> getTabs() {
-        return isClientSide() ? tabsClient : tabsServer;
+        return getCache().getTabs();
     }
 
     private static boolean isClientSide() {
@@ -267,11 +268,11 @@ public class APIHandler implements IProgressionAPI {
     }
 
     public static IProgressionCriteria getCriteriaFromName(UUID name) {
-        return getCriteria().get(name);
+        return getCache().getCriteria().get(name);
     }
 
     public static IProgressionTab getTabFromName(UUID name) {
-        return getTabs().get(name);
+        return getCache().getTabs().get(name);
     }
 
     public static void removeCriteria(UUID uuid, boolean skipTab) {
@@ -322,44 +323,6 @@ public class APIHandler implements IProgressionAPI {
 
         //Remove it in general
         getCriteria().remove(uuid);
-    }
-
-    public static IProgressionReward getRewardFromUUID(final UUID uuid) {
-        try {
-            return rewardCache.get(uuid, new Callable<IProgressionReward>() {
-                @Override
-                public IProgressionReward call() throws Exception {
-                    for (IProgressionCriteria criteria: getCriteria().values()) {
-                        for (IProgressionReward reward: criteria.getRewards()) {
-                            if (reward.getUniqueID().equals(uuid)) return reward;
-                        }
-                    }
-
-                    return null;
-                }
-            });
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    public static IProgressionTrigger getTriggerFromUUID(final UUID uuid) {
-        try {
-            return triggerCache.get(uuid, new Callable<IProgressionTrigger>() {
-                @Override
-                public IProgressionTrigger call() throws Exception {
-                    for (IProgressionCriteria criteria: getCriteria().values()) {
-                        for (IProgressionTrigger trigger: criteria.getTriggers()) {
-                            if (trigger.getUniqueID().equals(uuid)) return trigger;
-                        }
-                    }
-
-                    return null;
-                }
-            });
-        } catch (Exception e) {
-            return null;
-        }
     }
 
     @Override

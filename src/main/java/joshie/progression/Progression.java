@@ -26,6 +26,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -116,6 +117,6 @@ public class Progression {
 	}
 
     public static String format(String string, Object... object) {
-        return StatCollector.translateToLocalFormatted("progression." + string, object);
+        return StringEscapeUtils.unescapeJava(StatCollector.translateToLocalFormatted("progression." + string, object));
     }
 }

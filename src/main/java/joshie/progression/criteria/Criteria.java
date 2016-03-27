@@ -29,7 +29,6 @@ public class Criteria implements IProgressionCriteria {
     public boolean allRewards = true;
     public String displayName = "New Criteria";
     public boolean isVisible = true;
-    public boolean mustClaim = false;
     public boolean achievement = true;
     public ItemStack stack = new ItemStack(Blocks.stone);
     public int x, y;
@@ -45,10 +44,9 @@ public class Criteria implements IProgressionCriteria {
         this.displayName = "New Criteria";
     }
 
-    public void init(IProgressionCriteria[] prereqs, IProgressionCriteria[] theConflicts, String displayName, boolean isVisible, boolean mustClaim, boolean achievement, int repeatable, ItemStack icon, boolean allRequired, int tasksRequired, boolean infinite, boolean allRewards, int rewardsGiven, int x, int y) {
+    public void init(IProgressionCriteria[] prereqs, IProgressionCriteria[] theConflicts, String displayName, boolean isVisible, boolean achievement, int repeatable, ItemStack icon, boolean allRequired, int tasksRequired, boolean infinite, boolean allRewards, int rewardsGiven, int x, int y) {
         this.displayName = displayName;
         this.isVisible = isVisible;
-        this.mustClaim = mustClaim;
         this.achievement = achievement;
         this.isRepeatable = repeatable;
         this.stack = icon;
@@ -115,12 +113,7 @@ public class Criteria implements IProgressionCriteria {
     public boolean getIfRequiresAllTasks() {
         return allTasks;
     }
-
-    @Override
-    public boolean requiresClaiming() {
-        return mustClaim;
-    }
-
+    
     @Override
     public boolean displayAchievement() {
         return achievement;

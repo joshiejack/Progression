@@ -1,14 +1,12 @@
 package joshie.progression.criteria.rewards;
 
-import java.util.List;
-import java.util.UUID;
-
-import joshie.progression.helpers.PlayerHelper;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
-public class RewardTime extends RewardBase {
+import java.util.List;
+
+public class RewardTime extends RewardBaseSingular {
     public boolean add = false;
     public int time = 0;
 
@@ -17,13 +15,10 @@ public class RewardTime extends RewardBase {
     }
 
     @Override
-    public void reward(UUID uuid) {
-        EntityPlayer player = PlayerHelper.getPlayerFromUUID(uuid);
-        if (player != null) {
-            if (add) {
-                player.worldObj.setWorldTime(player.worldObj.getWorldTime() + (long) time);
-            } else player.worldObj.setWorldTime(time);
-        }
+    public void reward(EntityPlayerMP player) {
+        if (add) {
+            player.worldObj.setWorldTime(player.worldObj.getWorldTime() + (long) time);
+        } else player.worldObj.setWorldTime(time);
     }
 
     @Override

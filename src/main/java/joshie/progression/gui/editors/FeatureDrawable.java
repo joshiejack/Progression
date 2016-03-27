@@ -136,7 +136,7 @@ public class FeatureDrawable extends FeatureAbstract {
             if (mode == DisplayMode.DISPLAY) {
                 ICustomDrawGuiDisplay display = drawing instanceof ICustomDrawGuiDisplay ? ((ICustomDrawGuiDisplay) drawing) : null;
                 if (display == null) {
-                    helper.drawSplitText(renderX, renderY, drawing.getDescription(), 6, 20, 125, fontColor, 0.75F);
+                    helper.drawSplitText(renderX, renderY, drawing.getDescription(), 4, 20, 125, fontColor, 0.75F);
                     //Draw Shit
                 } else display.drawDisplay(offset, renderX, renderY, mouseX, mouseY);
             }
@@ -164,13 +164,16 @@ public class FeatureDrawable extends FeatureAbstract {
 
             //We have drawn the deleted button now we check for conditions
             if (drawing instanceof IProgressionTrigger) {
-                int color = Theme.INSTANCE.blackBarBorder;
-                if (mouseOffsetX >= 2 && mouseOffsetX <= 87 && mouseOffsetY >= 66 && mouseOffsetY <= 77) {
-                    color = Theme.INSTANCE.blackBarFontColor;
-                }
+                boolean display = MCClientHelper.isInEditMode() ? true: ((IProgressionTrigger)drawing).getConditions().size() > 0;
+                if (display) {
+                    int color = Theme.INSTANCE.blackBarBorder;
+                    if (mouseOffsetX >= 2 && mouseOffsetX <= 87 && mouseOffsetY >= 66 && mouseOffsetY <= 77) {
+                        color = Theme.INSTANCE.blackBarFontColor;
+                    }
 
-                offset.drawGradient(xPos, offsetY, 2, 66, 85, 11, color, Theme.INSTANCE.blackBarGradient1, Theme.INSTANCE.blackBarGradient2);
-                offset.drawText(xPos, offsetY, Progression.translate((MCClientHelper.isInEditMode() ? "editor" : "display") + ".condition"), 6, 67, Theme.INSTANCE.blackBarFontColor);
+                    offset.drawGradient(xPos, offsetY, 2, 66, 85, 11, color, Theme.INSTANCE.blackBarGradient1, Theme.INSTANCE.blackBarGradient2);
+                    offset.drawText(xPos, offsetY, Progression.translate((MCClientHelper.isInEditMode() ? "editor" : "display") + ".condition"), 6, 67, Theme.INSTANCE.blackBarFontColor);
+                }
             }
 
             xCoord++;
@@ -251,14 +254,13 @@ public class FeatureDrawable extends FeatureAbstract {
 
             //Delete button done, on to condition editor!!!!!!!!!!!!!!!!!!!!!!!
             if (provider instanceof IProgressionTrigger) {
-                int color = Theme.INSTANCE.blackBarBorder;
-                if (mouseOffsetX >= 2 && mouseOffsetX <= 87 && mouseOffsetY >= 66 && mouseOffsetY <= 77) {
-                    GuiConditionEditor.INSTANCE.setTrigger((IProgressionTrigger) provider);
-                    GuiCore.INSTANCE.setEditor(GuiConditionEditor.INSTANCE);
+                boolean display = MCClientHelper.isInEditMode() ? true: ((IProgressionTrigger)provider).getConditions().size() > 0;
+                if (display) {
+                    if (mouseOffsetX >= 2 && mouseOffsetX <= 87 && mouseOffsetY >= 66 && mouseOffsetY <= 77) {
+                        GuiConditionEditor.INSTANCE.setTrigger((IProgressionTrigger) provider);
+                        GuiCore.INSTANCE.setEditor(GuiConditionEditor.INSTANCE);
+                    }
                 }
-
-                offset.drawGradient(xPos, offsetY, 2, 66, 85, 11, color, Theme.INSTANCE.blackBarGradient1, Theme.INSTANCE.blackBarGradient2);
-                offset.drawText(xPos, offsetY, Progression.translate((MCClientHelper.isInEditMode() ? "editor" : "display") + ".condition"), 6, 67, Theme.INSTANCE.blackBarFontColor);
             }
 
             if (drawingMouseClicked(provider, mouseOffsetX, mouseOffsetY, button)) return true;

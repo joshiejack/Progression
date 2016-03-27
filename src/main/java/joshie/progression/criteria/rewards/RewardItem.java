@@ -1,8 +1,5 @@
 package joshie.progression.criteria.rewards;
 
-import java.util.List;
-import java.util.UUID;
-
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.IProgressionField;
 import joshie.progression.api.special.ISpecialFieldProvider;
@@ -10,13 +7,14 @@ import joshie.progression.api.special.IStackSizeable;
 import joshie.progression.gui.fields.ItemFilterFieldPreview;
 import joshie.progression.helpers.ItemHelper;
 import joshie.progression.helpers.MCClientHelper;
-import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.helpers.SpawnItemHelper;
 import joshie.progression.network.PacketHandler;
 import joshie.progression.network.PacketRewardItem;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
+
+import java.util.List;
 
 public class RewardItem extends RewardBaseItemFilter implements ISpecialFieldProvider, IStackSizeable {
     public int stackSize = 1;
@@ -58,16 +56,11 @@ public class RewardItem extends RewardBaseItemFilter implements ISpecialFieldPro
     }
 
     @Override
-    public void reward(UUID uuid) {
-        List<EntityPlayerMP> players = PlayerHelper.getPlayersFromUUID(uuid);
-        for (EntityPlayerMP player : players) {
-            if (player != null) {
-                ItemStack stack = ItemHelper.getRandomItemOfSize(filters, stackSize);
-                if (stack != null) {
-                    PacketHandler.sendToClient(new PacketRewardItem(stack.copy()), (EntityPlayerMP) player);
-                    SpawnItemHelper.addToPlayerInventory(player, stack.copy());
-                }
-            }
+    public void reward(EntityPlayerMP player) {
+        ItemStack stack = ItemHelper.getRandomItemOfSize(filters, stackSize);
+        if (stack != null) {
+            PacketHandler.sendToClient(new PacketRewardItem(stack.copy()), (EntityPlayerMP) player);
+            SpawnItemHelper.addToPlayerInventory(player, stack.copy());
         }
     }
 }

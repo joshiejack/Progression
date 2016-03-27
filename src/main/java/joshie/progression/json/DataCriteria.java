@@ -19,7 +19,6 @@ public class DataCriteria {
     int x;
     int y;
     boolean isVisible;
-    boolean mustClaim;
     boolean displayAchievement;
     public int rewardsGiven;
     public boolean allRewards;

@@ -38,7 +38,7 @@ public class ItemCriteria extends Item {
         criteria, claim, book, booleanValue, clearInventory, clearOrReceiveOrBlockCriteria, fallResistance,
         ifCriteriaCompleted, ifDayOrNight, ifHasAchievement, ifHasBoolean, ifHasPoints, ifIsAtCoordinates,
         ifIsBiome, ifRandom, onChangeDimension, onLogin, onReceivedAchiement, onReceivedBoolean,
-        onReceivedPoints, onSecond, onSentMessage, points, speed;
+        onReceivedPoints, onSecond, onSentMessage, points, speed, showTab, showLayer;
     }
 
     public static CreativeTabs tab;

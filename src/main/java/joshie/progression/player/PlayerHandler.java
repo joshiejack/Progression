@@ -2,8 +2,8 @@ package joshie.progression.player;
 
 import joshie.progression.api.IPlayerData;
 import joshie.progression.api.criteria.IProgressionCriteria;
-import joshie.progression.api.criteria.IProgressionTrigger;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Set;
@@ -31,8 +31,8 @@ public class PlayerHandler implements IPlayerData {
     }
 
     @Override
-    public void addDouble(UUID uuid, String name, double value) {
-        PlayerTracker.getServerPlayer(uuid).addDouble(name, value);
+    public void addDouble(EntityPlayerMP player, String name, double value) {
+        PlayerTracker.getServerPlayer(player).addDouble(name, value);
     }
 
     @Override
@@ -41,18 +41,13 @@ public class PlayerHandler implements IPlayerData {
     }
 
     @Override
-    public NBTTagCompound getTriggerData(UUID uuid, IProgressionTrigger trigger) {
-        return PlayerTracker.getPlayerData(uuid).getMappings().getTriggerData(trigger);
-    }
-
-    @Override
     public double getDouble(UUID uuid, String name) {
         return PlayerTracker.getPlayerData(uuid).getPoints().getDouble(name);
     }
 
     @Override
-    public void setBoolean(UUID uuid, String name, boolean value) {
-        PlayerTracker.getServerPlayer(uuid).setBoolean(name, value);
+    public void setBoolean(EntityPlayerMP player, String name, boolean value) {
+        PlayerTracker.getServerPlayer(player).setBoolean(name, value);
     }
 
     @Override

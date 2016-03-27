@@ -1,7 +1,5 @@
 package joshie.progression.criteria.triggers;
 
-import java.util.List;
-
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionField;
 import joshie.progression.api.criteria.IProgressionFilter;
@@ -11,6 +9,8 @@ import joshie.progression.api.special.ISpecialFieldProvider;
 import joshie.progression.api.special.ISpecialFilters;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
+
+import java.util.List;
 
 public class TriggerBaseBlock extends TriggerBaseItemFilter implements ICancelable, ISpecialFilters, ISpecialFieldProvider {
     public boolean cancel = false;
@@ -27,6 +27,7 @@ public class TriggerBaseBlock extends TriggerBaseItemFilter implements ICancelab
     @Override
     public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
         if (mode == DisplayMode.EDIT) fields.add(ProgressionAPI.fields.getItemPreview(this, "filters", 30, 35, 1.9F));
+        else fields.add(ProgressionAPI.fields.getItemPreview(this, "filters", 65, 35, 1.9F));
     }
 
     @Override
