@@ -8,16 +8,18 @@ import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.JSONHelper;
 
+import java.util.UUID;
+
 public class ActionCompleteCriteria extends AbstractAction implements IButtonAction {
     public transient String displayName;
-    public transient String criteriaID;
+    public transient UUID criteriaID;
     public transient IProgressionCriteria criteria;
 
     public ActionCompleteCriteria() {
         super("criteria.complete");
     }
 
-    public ActionCompleteCriteria(String displayName, String criteriaID, IProgressionCriteria criteria) {
+    public ActionCompleteCriteria(String displayName, UUID criteriaID, IProgressionCriteria criteria) {
         super("criteria.complete");
         this.displayName = displayName;
         this.criteriaID = criteriaID;
@@ -42,7 +44,7 @@ public class ActionCompleteCriteria extends AbstractAction implements IButtonAct
 
     @Override
     public IButtonAction create() {
-        return new ActionCompleteCriteria("New Criteria", "", null);
+        return new ActionCompleteCriteria("New Criteria", UUID.randomUUID(), null);
     }
 
     private IProgressionCriteria getCriteria() {
@@ -55,7 +57,7 @@ public class ActionCompleteCriteria extends AbstractAction implements IButtonAct
             String display = c.getDisplayName();
             if (c.getDisplayName().equals(displayName)) {
                 criteria = c;
-                criteriaID = c.getUniqueName();
+                criteriaID = c.getUniqueID();
                 return criteria;
             }
         }
@@ -74,14 +76,14 @@ public class ActionCompleteCriteria extends AbstractAction implements IButtonAct
     @Override
     public void readFromJson(JsonObject data) {
         super.readFromJson(data);
-        criteriaID = JSONHelper.getString(data, "criteriaID", "");
+        criteriaID = UUID.fromString(JSONHelper.getString(data, "criteriaID", ""));
     }
 
     @Override
     public void writeToJson(JsonObject data) {
         super.writeToJson(data);
         if (criteriaID != null) {
-            JSONHelper.setString(data, "criteriaID", criteriaID, "");
+            JSONHelper.setString(data, "criteriaID", criteriaID.toString(), "");
         }
     }
 }

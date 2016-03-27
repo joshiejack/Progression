@@ -1,7 +1,5 @@
 package joshie.progression.network;
 
-import java.util.HashMap;
-
 import io.netty.buffer.ByteBuf;
 import joshie.progression.api.ICustomDataBuilder;
 import joshie.progression.api.ProgressionAPI;
@@ -17,6 +15,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+
+import java.util.HashMap;
+import java.util.UUID;
 
 public class PacketFireTrigger extends PenguinPacket {
     private String type;
@@ -71,7 +72,7 @@ public class PacketFireTrigger extends PenguinPacket {
                         ByteBufUtils.writeUTF8String(buf, (String) object);
                         break;
                     case CRITERIA:
-                        ByteBufUtils.writeUTF8String(buf, ((IProgressionCriteria) object).getUniqueName());
+                        ByteBufUtils.writeUTF8String(buf, ((IProgressionCriteria) object).getUniqueID().toString());
                         break;
                     case BLOCK:
                         ResourceLocation blockLocation = Block.blockRegistry.getNameForObject((Block) object);
@@ -133,7 +134,7 @@ public class PacketFireTrigger extends PenguinPacket {
                         data[i] = ByteBufUtils.readTag(buf);
                         break;
                     case CRITERIA:
-                        data[i] = APIHandler.getCriteriaFromName(ByteBufUtils.readUTF8String(buf));
+                        data[i] = APIHandler.getCriteriaFromName(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
                         break;
                     case BLOCK:
                         data[i] = Block.blockRegistry.getObject(new ResourceLocation(ByteBufUtils.readUTF8String(buf), ByteBufUtils.readUTF8String(buf)));

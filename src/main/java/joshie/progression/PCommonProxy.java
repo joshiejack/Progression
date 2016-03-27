@@ -5,7 +5,9 @@ import joshie.progression.commands.*;
 import joshie.progression.criteria.conditions.*;
 import joshie.progression.criteria.filters.block.*;
 import joshie.progression.criteria.filters.crafting.FilterExact;
+import joshie.progression.criteria.filters.entity.FilterEntityDisplayName;
 import joshie.progression.criteria.filters.entity.FilterEntityName;
+import joshie.progression.criteria.filters.entity.FilterEntityType;
 import joshie.progression.criteria.filters.entity.FilterSkeletonType;
 import joshie.progression.criteria.filters.item.*;
 import joshie.progression.criteria.filters.location.FilterPlayerLocationAbove;
@@ -15,7 +17,6 @@ import joshie.progression.criteria.filters.location.FilterRandomLocationDimensio
 import joshie.progression.criteria.filters.potion.FilterPotionEffect;
 import joshie.progression.criteria.rewards.*;
 import joshie.progression.criteria.triggers.*;
-import joshie.progression.criteria.triggers.data.DataHelper;
 import joshie.progression.gui.fields.FieldRegistry;
 import joshie.progression.gui.filters.FilterSelectorHelper;
 import joshie.progression.handlers.APIHandler;
@@ -43,7 +44,6 @@ public class PCommonProxy implements IGuiHandler {
       //Create the API
         RemappingHandler.resetRegistries();
         ProgressionAPI.registry = new APIHandler();
-        ProgressionAPI.data = new DataHelper();
         ProgressionAPI.player = new PlayerHandler();
         ProgressionAPI.filters = new FilterSelectorHelper();
         ProgressionAPI.fields = new FieldRegistry();
@@ -132,6 +132,8 @@ public class PCommonProxy implements IGuiHandler {
 
         //Entity Filterss
         ProgressionAPI.registry.registerFilter(new FilterEntityName());
+        ProgressionAPI.registry.registerFilter(new FilterEntityDisplayName());
+        ProgressionAPI.registry.registerFilter(new FilterEntityType());
         ProgressionAPI.registry.registerFilter(new FilterSkeletonType());
 
         //Location Filters

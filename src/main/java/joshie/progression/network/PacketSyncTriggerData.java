@@ -2,7 +2,6 @@ package joshie.progression.network;
 
 import io.netty.buffer.ByteBuf;
 import joshie.progression.api.criteria.IProgressionTrigger;
-import joshie.progression.api.criteria.IProgressionTriggerData;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.network.core.PenguinPacket;
 import joshie.progression.player.PlayerTracker;
@@ -16,37 +15,30 @@ import java.util.UUID;
 public class PacketSyncTriggerData extends PenguinPacket {
     public static class DataPair {
         public IProgressionTrigger trigger;
-        public IProgressionTriggerData data;
+        public NBTTagCompound data;
 
         public DataPair(){}
-        public DataPair(IProgressionTrigger trigger, IProgressionTriggerData data) {
+        public DataPair(IProgressionTrigger trigger, NBTTagCompound data) {
             this.trigger = trigger;
             this.data = data;
         }
 
         public void toBytes(ByteBuf buf) {
             ByteBufUtils.writeUTF8String(buf, trigger.getUniqueID().toString());
-            ByteBufUtils.writeUTF8String(buf, data.getClass().getCanonicalName());
-            NBTTagCompound nbt = new NBTTagCompound();
-            data.writeToNBT(nbt);
-            ByteBufUtils.writeTag(buf, nbt);
+            ByteBufUtils.writeTag(buf, data);
         }
 
         public void fromBytes(ByteBuf buf) {
             trigger = APIHandler.getTriggerFromUUID(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
-            String clazz = ByteBufUtils.readUTF8String(buf);
-            try {
-                data = (IProgressionTriggerData) Class.forName(clazz).newInstance();
-                NBTTagCompound nbt = ByteBufUtils.readTag(buf);
-                data.readFromNBT(nbt);
-            } catch (Exception e) {}
+            data = ByteBufUtils.readTag(buf);
         }
     }
 
     private boolean overwrite;
     private DataPair[] data;
 
-    public PacketSyncTriggerData(HashMap<IProgressionTrigger, IProgressionTriggerData> triggers) {
+    public PacketSyncTriggerData() {}
+    public PacketSyncTriggerData(HashMap<IProgressionTrigger, NBTTagCompound> triggers) {
         this.overwrite = true;
         this.data = new DataPair[triggers.size()];
         int position = 0;
@@ -56,7 +48,7 @@ public class PacketSyncTriggerData extends PenguinPacket {
         }
     }
 
-    public PacketSyncTriggerData(IProgressionTrigger trigger, IProgressionTriggerData data) {
+    public PacketSyncTriggerData(IProgressionTrigger trigger, NBTTagCompound data) {
         this.overwrite = false;
         this.data = new DataPair[1];
         this.data[0] = new DataPair(trigger, data);

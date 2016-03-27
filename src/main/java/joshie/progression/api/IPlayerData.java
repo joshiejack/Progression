@@ -1,6 +1,7 @@
 package joshie.progression.api;
 
 import joshie.progression.api.criteria.IProgressionCriteria;
+import joshie.progression.api.criteria.IProgressionTrigger;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -32,4 +33,7 @@ public interface IPlayerData {
 
     /** Returns a list of all the completed criteria for this player **/
     public Set<IProgressionCriteria> getCompletedCriteriaList(UUID uuid);
+
+    /** Returns the trigger data for this trigger **/
+    public NBTTagCompound getTriggerData(UUID uuid, IProgressionTrigger trigger);
 }

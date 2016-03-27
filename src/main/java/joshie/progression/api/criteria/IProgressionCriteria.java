@@ -3,6 +3,7 @@ package joshie.progression.api.criteria;
 import net.minecraft.item.ItemStack;
 
 import java.util.List;
+import java.util.UUID;
 
 /** This is just a wrapper interface
  *  Don't use it for anything. */
@@ -13,8 +14,8 @@ public interface IProgressionCriteria {
     /** Returns a list of all the reward in this criteria **/
     public List<IProgressionReward> getRewards();
 
-    /** Returns the unique name for this criteria **/
-    public String getUniqueName();
+    /** Returns the unique id for this criteria **/
+    public UUID getUniqueID();
     
     public int getTasksRequired();
 

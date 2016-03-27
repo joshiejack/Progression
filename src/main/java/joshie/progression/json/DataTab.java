@@ -1,14 +1,15 @@
 package joshie.progression.json;
 
-import java.util.List;
-
 import joshie.progression.helpers.StackHelper;
 import net.minecraft.item.ItemStack;
 
+import java.util.List;
+import java.util.UUID;
+
 public class DataTab {
     public DataTab() {}
-    public DataTab(String unique, String display, int sortIndex, List<DataCriteria> criteria, boolean isVisible, ItemStack stack) {
-        this.uniqueName = unique;
+    public DataTab(UUID uuid, String display, int sortIndex, List<DataCriteria> criteria, boolean isVisible, ItemStack stack) {
+        this.uuid = uuid;
         this.displayName = display;
         this.sortIndex = sortIndex;
         this.criteria = criteria;
@@ -16,7 +17,7 @@ public class DataTab {
         this.stack = StackHelper.getStringFromStack(stack);
     }
     
-    String uniqueName;
+    UUID uuid;
     String displayName;
     int sortIndex;
     boolean isVisible;

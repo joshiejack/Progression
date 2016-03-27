@@ -1,21 +1,9 @@
 package joshie.progression.gui.editors;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-
 import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.api.criteria.IProgressionTab;
 import joshie.progression.api.event.TabVisibleEvent;
-import joshie.progression.gui.core.FeatureTooltip;
 import joshie.progression.gui.core.GuiCore;
-import joshie.progression.gui.editors.insert.FeatureNewReward;
 import joshie.progression.gui.tree.buttons.ButtonNewCriteria;
 import joshie.progression.gui.tree.buttons.ButtonTab;
 import joshie.progression.handlers.APIHandler;
@@ -26,13 +14,18 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+
+import java.util.*;
 
 public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
     public static final GuiTreeEditor INSTANCE = new GuiTreeEditor();
     private HashMap<IProgressionCriteria, TreeEditorElement> elements;
     public IProgressionCriteria selected = null;
     public IProgressionCriteria previous = null;
-    public String currentTabName;
+    public UUID currentTabID;
     public IProgressionTab currentTab;
 
     private static class SortIndex implements Comparator {
@@ -85,11 +78,11 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
             }
         }
 
-        if (currentTabName == null) {
-            currentTabName = Options.settings.defaultTabID;
+        if (currentTabID == null) {
+            currentTabID = Options.settings.defaultTabID;
         }
 
-        currentTab = APIHandler.getTabFromName(currentTabName);
+        currentTab = APIHandler.getTabFromName(currentTabID);
         if (currentTab == null) {
             for (IProgressionTab tab : APIHandler.getTabs().values()) {
                 currentTab = tab;
@@ -97,13 +90,13 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
             }
 
             if (currentTab == null) {
-                currentTab = APIHandler.newTab(APIHandler.getNextUnique()).setDisplayName("New Tab").setStack(new ItemStack(Items.book)).setVisibility(true);
-                currentTabName = currentTab.getUniqueName();
+                currentTab = APIHandler.newTab(UUID.randomUUID()).setDisplayName("New Tab").setStack(new ItemStack(Items.book)).setVisibility(true);
+                currentTabID = currentTab.getUniqueID();
                 core.initGui(); //Reset things
             }
         }
 
-        currentTabName = currentTab.getUniqueName();
+        currentTabID = currentTab.getUniqueID();
         features.add(FeatureItemSelectorTree.INSTANCE);
         rebuildCriteria();
     }
@@ -128,7 +121,7 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
     }
 
     public static boolean isTabVisible(IProgressionTab tab) {
-        TabVisibleEvent event = new TabVisibleEvent(MCClientHelper.getPlayer(), tab.getUniqueName());
+        TabVisibleEvent event = new TabVisibleEvent(MCClientHelper.getPlayer(), tab.getUniqueID());
         if (MinecraftForge.EVENT_BUS.post(event)) return false;
         return tab.isVisible();
     }
@@ -192,7 +185,7 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
         }
 
         if (toRemove != null) {
-            APIHandler.removeCriteria(toRemove.getUniqueName(), false);
+            APIHandler.removeCriteria(toRemove.getUniqueID(), false);
         }
 
         if (key == Keyboard.KEY_UP) {

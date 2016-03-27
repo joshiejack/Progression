@@ -1,7 +1,5 @@
 package joshie.progression.gui.tree.buttons;
 
-import java.util.ArrayList;
-
 import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.api.criteria.IProgressionTab;
 import joshie.progression.gui.core.FeatureTooltip;
@@ -16,6 +14,9 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
+
+import java.util.ArrayList;
+import java.util.UUID;
 
 public class ButtonNewCriteria extends ButtonBase {
     public ButtonNewCriteria(int y) {
@@ -45,7 +46,7 @@ public class ButtonNewCriteria extends ButtonBase {
         GuiCore.INSTANCE.clickedButton = true;
         
         if (GuiScreen.isShiftKeyDown()) {
-            APIHandler.newTab(APIHandler.getNextUnique()).setDisplayName("New Tab").setStack(new ItemStack(Items.book)).setVisibility(true);
+            APIHandler.newTab(UUID.randomUUID()).setDisplayName("New Tab").setStack(new ItemStack(Items.book)).setVisibility(true);
             GuiCore.INSTANCE.initGui();
         } else {
             GuiTreeEditor.INSTANCE.previous = null;
@@ -56,7 +57,7 @@ public class ButtonNewCriteria extends ButtonBase {
             int mouseX = GuiCore.INSTANCE.mouseX;
             int mouseY = GuiCore.INSTANCE.mouseY;
             int offsetX = GuiTreeEditor.INSTANCE.offsetX;
-            IProgressionCriteria criteria = APIHandler.newCriteria(currentTab, APIHandler.getNextUnique(), true);
+            IProgressionCriteria criteria = APIHandler.newCriteria(currentTab, UUID.randomUUID(), true);
             criteria.setCoordinates(mouseX - 50 - offsetX, mouseY - 10);
             GuiTreeEditor.INSTANCE.addCriteria(criteria, mouseX - 50, mouseY - 10, offsetX);
         }

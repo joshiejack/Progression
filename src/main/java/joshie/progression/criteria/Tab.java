@@ -6,9 +6,10 @@ import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Tab implements IProgressionTab {
-    private String uniqueName;
+    private UUID uuid;
     private String displayName;
     private boolean isVisible;
     private ItemStack stack;
@@ -16,8 +17,8 @@ public class Tab implements IProgressionTab {
     
     private List<IProgressionCriteria> criteria = new ArrayList();
     
-    public Tab setUniqueName(String unique) {
-        this.uniqueName = unique;
+    public Tab setUniqueName(UUID uuid) {
+        this.uuid = uuid;
         return this;
     }
 
@@ -41,10 +42,12 @@ public class Tab implements IProgressionTab {
         return this;
     }
 
-    public String getUniqueName() {
-        return uniqueName;
+    @Override
+    public UUID getUniqueID() {
+        return uuid;
     }
 
+    @Override
     public String getDisplayName() {
         return displayName;
     }
@@ -73,12 +76,12 @@ public class Tab implements IProgressionTab {
         if (o == null || getClass() != o.getClass()) return false;
 
         Tab tab = (Tab) o;
-        return uniqueName != null ? uniqueName.equals(tab.uniqueName) : tab.uniqueName == null;
+        return uuid != null ? uuid.equals(tab.uuid) : tab.uuid == null;
 
     }
 
     @Override
     public int hashCode() {
-        return uniqueName != null ? uniqueName.hashCode() : 0;
+        return uuid != null ? uuid.hashCode() : 0;
     }
 }

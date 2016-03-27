@@ -1,20 +1,18 @@
 package joshie.progression.gui.editors;
 
-import java.util.ArrayList;
-import java.util.concurrent.Callable;
-
-import joshie.progression.gui.filters.FeatureItemPreview;
-import org.lwjgl.opengl.GL11;
-
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.IProgressionFilterSelector;
 import joshie.progression.gui.core.FeatureAbstract;
+import joshie.progression.gui.filters.FeatureItemPreview;
 import joshie.progression.gui.filters.FilterSelectorItem;
 import joshie.progression.helpers.ItemHelper;
 import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
+
+import java.util.ArrayList;
+import java.util.concurrent.Callable;
 
 public class FeatureItemSelector extends FeatureAbstract implements ITextEditable {
     public static FeatureItemSelector INSTANCE = new FeatureItemSelector();

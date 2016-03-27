@@ -13,7 +13,7 @@ import java.util.UUID;
 
 public class RewardCriteria extends RewardBase implements IGetterCallback, IInit {
     private IProgressionCriteria criteria = null;
-    private String criteriaID = "";
+    private UUID criteriaID = UUID.randomUUID();
     public boolean remove = true;
     public boolean possibility = false;
     public String displayName = "";
@@ -29,7 +29,7 @@ public class RewardCriteria extends RewardBase implements IGetterCallback, IInit
                 String display = c.getDisplayName();
                 if (c.getDisplayName().equals(displayName)) {
                     criteria = c;
-                    criteriaID = c.getUniqueName();
+                    criteriaID = c.getUniqueID();
                     break;
                 }
             }

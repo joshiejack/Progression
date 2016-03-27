@@ -8,6 +8,8 @@ import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
+import java.util.UUID;
+
 public class PacketSyncCriteria extends PenguinPacket {
     private IProgressionCriteria[] criteria;
     private Integer[] integers;
@@ -26,7 +28,7 @@ public class PacketSyncCriteria extends PenguinPacket {
         buf.writeBoolean(overwrite);
         buf.writeInt(criteria.length);
         for (IProgressionCriteria tech : criteria) {
-            ByteBufUtils.writeUTF8String(buf, tech.getUniqueName());
+            ByteBufUtils.writeUTF8String(buf, tech.getUniqueID().toString());
         }
 
         for (Integer i : integers) {
@@ -40,7 +42,7 @@ public class PacketSyncCriteria extends PenguinPacket {
         int size = buf.readInt();
         criteria = new IProgressionCriteria[size];
         for (int i = 0; i < size; i++) {
-            criteria[i] = APIHandler.getCriteriaFromName(ByteBufUtils.readUTF8String(buf));
+            criteria[i] = APIHandler.getCriteriaFromName(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
         }
 
         integers = new Integer[size];

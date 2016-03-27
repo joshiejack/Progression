@@ -6,7 +6,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
-public class TriggerTick extends TriggerBaseBoolean {
+public class TriggerTick extends TriggerBaseAlwaysTrue {
     public TriggerTick() {
         super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.onSecond), "tick", 0xFFA300D9);
     }
@@ -17,10 +17,5 @@ public class TriggerTick extends TriggerBaseBoolean {
         if (event.player.worldObj.getTotalWorldTime() % 20 == 0) {
             ProgressionAPI.registry.fireTrigger(event.player, getUnlocalisedName());
         }
-    }
-
-    @Override
-    protected boolean isTrue(Object... data) {
-        return true;
     }
 }

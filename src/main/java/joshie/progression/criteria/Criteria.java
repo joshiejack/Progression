@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class Criteria implements IProgressionCriteria {
     /** All the data for this **/
@@ -19,7 +20,7 @@ public class Criteria implements IProgressionCriteria {
     public List<IProgressionCriteria> conflicts = new ArrayList();
 
     public IProgressionTab tab;
-    public String uniqueName;
+    public UUID uuid;
     public int isRepeatable = 1;
     public boolean infinite = false;
     public int tasksRequired = 1;
@@ -33,9 +34,9 @@ public class Criteria implements IProgressionCriteria {
     public ItemStack stack = new ItemStack(Blocks.stone);
     public int x, y;
 
-    public Criteria(IProgressionTab tab, String uniqueName, boolean isClientside) {
+    public Criteria(IProgressionTab tab, UUID uuid, boolean isClientside) {
         this.tab = tab;
-        this.uniqueName = uniqueName;
+        this.uuid = uuid;
         this.isRepeatable = 1;
         this.tasksRequired = 1;
         this.allTasks = true;
@@ -76,23 +77,18 @@ public class Criteria implements IProgressionCriteria {
     }
 
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((uniqueName == null) ? 0 : uniqueName.hashCode());
-        return result;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Criteria criteria = (Criteria) o;
+        return uuid != null ? uuid.equals(criteria.uuid) : criteria.uuid == null;
+
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (getClass() != obj.getClass()) return false;
-        IProgressionCriteria other = (IProgressionCriteria) obj;
-        if (uniqueName == null) {
-            if (other.getUniqueName() != null) return false;
-        } else if (!uniqueName.equals(other.getUniqueName())) return false;
-        return true;
+    public int hashCode() {
+        return uuid != null ? uuid.hashCode() : 0;
     }
 
     @Override
@@ -106,8 +102,8 @@ public class Criteria implements IProgressionCriteria {
     }
 
     @Override
-    public String getUniqueName() {
-        return uniqueName;
+    public UUID getUniqueID() {
+        return uuid;
     }
 
     @Override

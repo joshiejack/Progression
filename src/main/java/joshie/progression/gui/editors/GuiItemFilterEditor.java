@@ -46,6 +46,7 @@ public class GuiItemFilterEditor extends GuiBaseEditor implements IBarProvider {
         features.add(new FeatureBarsX2(this, "filters", "preview"));
         features.add(new FeatureDrawable(EnumChatFormatting.BOLD + Progression.translate("new.filter"), field.getFilters(), 45, 201, 201, 64, 119, FeatureNewItemFilter.INSTANCE, theme.triggerGradient1, theme.triggerGradient2, theme.triggerFontColor));
         features.add(FeatureItemPreview.INSTANCE);
+        features.add(FeatureFullTextEditor.INSTANCE); //Add the text selector
         features.add(FeatureItemSelector.INSTANCE); //Add the item selector
         features.add(FeatureNewItemFilter.INSTANCE); //Add new item filter screen
         FeatureItemPreview.INSTANCE.updateSearch();

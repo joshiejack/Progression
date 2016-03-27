@@ -5,5 +5,4 @@ public class ProgressionAPI {
     public static IPlayerData player = null;
     public static IFieldRegistry fields = null;
     public static IFilterRegistry filters = null;
-    public static IDataHelper data = null;
 }

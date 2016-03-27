@@ -1,22 +1,15 @@
 package joshie.progression.gui.tree.buttons;
 
-import java.util.ArrayList;
-
-import org.lwjgl.input.Keyboard;
-
 import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.api.criteria.IProgressionTab;
 import joshie.progression.gui.core.FeatureTooltip;
 import joshie.progression.gui.core.GuiCore;
-import joshie.progression.gui.editors.FeatureItemSelector;
+import joshie.progression.gui.editors.*;
 import joshie.progression.gui.editors.FeatureItemSelector.Position;
-import joshie.progression.gui.editors.GuiTreeEditor;
-import joshie.progression.gui.editors.IItemSelectable;
-import joshie.progression.gui.editors.ITextEditable;
-import joshie.progression.gui.editors.TextEditor;
 import joshie.progression.gui.filters.FilterSelectorItem;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.MCClientHelper;
+import joshie.progression.json.Options;
 import joshie.progression.lib.ProgressionInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -24,6 +17,9 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
+import org.lwjgl.input.Keyboard;
+
+import java.util.ArrayList;
 
 public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelectable {
     private IProgressionTab tab;
@@ -63,6 +59,7 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
                 name.add(EnumChatFormatting.GRAY + "(Sort Index) " + tab.getSortIndex());
                 name.add(EnumChatFormatting.GRAY + "Shift + Click to rename");
                 name.add(EnumChatFormatting.GRAY + "Ctrl + Click to select item icon");
+                name.add(EnumChatFormatting.GRAY + "Alt + Click to make this tab the default");
                 name.add(EnumChatFormatting.GRAY + "I + Click to hide/unhide");
                 name.add(EnumChatFormatting.GRAY + "Arrow keys to move up/down");
                 name.add(EnumChatFormatting.GRAY + "Delete + Click to delete");
@@ -89,7 +86,7 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
                 }
 
                 if (newTab != null) {
-                    if (!APIHandler.getTabs().containsKey(newTab.getUniqueName())) {
+                    if (!APIHandler.getTabs().containsKey(newTab.getUniqueID())) {
                         for (IProgressionTab tab : APIHandler.getTabs().values()) {
                             newTab = tab;
                             break;
@@ -102,10 +99,10 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
                 GuiTreeEditor.INSTANCE.lastClicked = null;
                 GuiTreeEditor.INSTANCE.currentTab = newTab;
                 for (IProgressionCriteria c : tab.getCriteria()) {
-                    APIHandler.removeCriteria(c.getUniqueName(), true);
+                    APIHandler.removeCriteria(c.getUniqueID(), true);
                 }
 
-                APIHandler.getTabs().remove(tab.getUniqueName()); //Reopen after removing
+                APIHandler.getTabs().remove(tab.getUniqueID()); //Reopen after removing
                 GuiCore.INSTANCE.setEditor(GuiTreeEditor.INSTANCE);
                 return;
             }
@@ -113,19 +110,21 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
             if (GuiScreen.isShiftKeyDown()) {
                 TextEditor.INSTANCE.setEditable(this);
                 donestuff = true;
-            } else if (GuiScreen.isCtrlKeyDown()) {
+            } else if (GuiScreen.isCtrlKeyDown() || FeatureItemSelector.INSTANCE.isVisible()) {
                 FeatureItemSelector.INSTANCE.select(FilterSelectorItem.INSTANCE, this, Position.TOP);
             } else if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
                 boolean current = tab.isVisible();
                 tab.setVisibility(!current);
                 donestuff = true;
+            } else if (GuiScreen.isAltKeyDown()) {
+                Options.settings.defaultTabID = tab.getUniqueID();
             }
         }
 
         if (!donestuff) {
             GuiTreeEditor.INSTANCE.previousTab = GuiTreeEditor.INSTANCE.currentTab;
             GuiTreeEditor.INSTANCE.currentTab = tab;
-            GuiTreeEditor.INSTANCE.currentTabName = tab.getUniqueName(); //Reopen the gui
+            GuiTreeEditor.INSTANCE.currentTabID = tab.getUniqueID(); //Reopen the gui
         }
 
         //Rebuild

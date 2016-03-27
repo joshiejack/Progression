@@ -17,7 +17,7 @@ public class TriggerLogin extends TriggerBaseCounterVaries {
     }
 
     @Override
-    protected boolean canIncrease(Object... data) {
+    protected boolean canIncrease() {
         return true;
     }
 }

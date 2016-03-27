@@ -11,9 +11,6 @@ import joshie.progression.crafting.ActionType;
 import joshie.progression.criteria.Criteria;
 import joshie.progression.criteria.Tab;
 import joshie.progression.criteria.rewards.RewardHurt;
-import joshie.progression.criteria.triggers.data.DataBoolean;
-import joshie.progression.criteria.triggers.data.DataCount;
-import joshie.progression.criteria.triggers.data.DataCrafting;
 import joshie.progression.gui.fields.ItemFilterField;
 import joshie.progression.helpers.CraftingHelper;
 import joshie.progression.helpers.JSONHelper;
@@ -47,11 +44,11 @@ public class APIHandler implements IProgressionAPI {
 
     //These four maps are registries for fetching the various types
     @SideOnly(Side.CLIENT)
-    public static HashMap<String, IProgressionTab> tabsClient;
-    public static HashMap<String, IProgressionTab> tabsServer;
+    public static HashMap<UUID, IProgressionTab> tabsClient;
+    public static HashMap<UUID, IProgressionTab> tabsServer;
     @SideOnly(Side.CLIENT)
-    public static HashMap<String, IProgressionCriteria> criteriaClient;
-    public static HashMap<String, IProgressionCriteria> criteriaServer;
+    public static HashMap<UUID, IProgressionCriteria> criteriaClient;
+    public static HashMap<UUID, IProgressionCriteria> criteriaServer;
 
     public static IFieldProvider getDefault(IFieldProvider provider) {
         if (provider instanceof IProgressionTrigger) return triggerTypes.get(provider.getUnlocalisedName());
@@ -73,11 +70,11 @@ public class APIHandler implements IProgressionAPI {
         }
     }
 
-    public static HashMap<String, IProgressionCriteria> getCriteria() {
+    public static HashMap<UUID, IProgressionCriteria> getCriteria() {
         return isClientSide() ? criteriaClient : criteriaServer;
     }
 
-    public static HashMap<String, IProgressionTab> getTabs() {
+    public static HashMap<UUID, IProgressionTab> getTabs() {
         return isClientSide() ? tabsClient : tabsServer;
     }
 
@@ -138,14 +135,14 @@ public class APIHandler implements IProgressionAPI {
         RewardHurt.sources.put(source.damageType, source);
     }
 
-    public static IProgressionCriteria newCriteria(IProgressionTab tab, String name, boolean isClientside) {
+    public static IProgressionCriteria newCriteria(IProgressionTab tab, UUID name, boolean isClientside) {
         IProgressionCriteria theCriteria = new Criteria(tab, name, isClientside);
         tab.getCriteria().add(theCriteria);
         getCriteria().put(name, theCriteria);
         return theCriteria;
     }
 
-    public static IProgressionTab newTab(String name) {
+    public static IProgressionTab newTab(UUID name) {
         IProgressionTab iTab = new Tab().setUniqueName(name);
         getTabs().put(name, iTab);
         return iTab;
@@ -269,16 +266,16 @@ public class APIHandler implements IProgressionAPI {
         new ActionType(name.toUpperCase()); //WOOT!
     }
 
-    public static IProgressionCriteria getCriteriaFromName(String name) {
+    public static IProgressionCriteria getCriteriaFromName(UUID name) {
         return getCriteria().get(name);
     }
 
-    public static IProgressionTab getTabFromName(String name) {
+    public static IProgressionTab getTabFromName(UUID name) {
         return getTabs().get(name);
     }
 
-    public static void removeCriteria(String unique, boolean skipTab) {
-        IProgressionCriteria c = getCriteria().get(unique);
+    public static void removeCriteria(UUID uuid, boolean skipTab) {
+        IProgressionCriteria c = getCriteria().get(uuid);
         //Remove the criteria from the tab
         if (!skipTab) {
             Iterator<IProgressionCriteria> itC = c.getTab().getCriteria().iterator();
@@ -324,24 +321,7 @@ public class APIHandler implements IProgressionAPI {
         }
 
         //Remove it in general
-        getCriteria().remove(unique);
-    }
-
-    //Returns the next unique string for this crafting api
-    public static String getNextUnique() {
-        return "" + System.currentTimeMillis();
-    }
-
-    public static IProgressionTriggerData newData(String string) {
-        if (string.equalsIgnoreCase("count")) {
-            return new DataCount();
-        } else if (string.equalsIgnoreCase("boolean")) {
-            return new DataBoolean();
-        } else if (string.equalsIgnoreCase("crafting")) {
-            return new DataCrafting();
-        }
-
-        return null;
+        getCriteria().remove(uuid);
     }
 
     public static IProgressionReward getRewardFromUUID(final UUID uuid) {

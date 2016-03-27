@@ -13,6 +13,8 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.UUID;
+
 public class PacketCompleted extends PenguinPacket {
     private IProgressionCriteria criteria;
 
@@ -24,12 +26,12 @@ public class PacketCompleted extends PenguinPacket {
 
     @Override
     public void toBytes(ByteBuf buf) {
-        ByteBufUtils.writeUTF8String(buf, criteria.getUniqueName());
+        ByteBufUtils.writeUTF8String(buf, criteria.getUniqueID().toString());
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        criteria = APIHandler.getCriteriaFromName(ByteBufUtils.readUTF8String(buf));
+        criteria = APIHandler.getCriteriaFromName(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
     }
 
     @Override

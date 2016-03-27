@@ -1,11 +1,9 @@
 package joshie.progression.criteria.triggers;
 
 import joshie.progression.Progression;
-import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionCondition;
 import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.api.criteria.IProgressionTrigger;
-import joshie.progression.api.criteria.IProgressionTriggerData;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -20,21 +18,18 @@ public abstract class TriggerBase implements IProgressionTrigger {
     private IProgressionCriteria criteria;
     private String name;
     private int color;
-    private String data;
     private ItemStack stack;
     private UUID uuid;
     
-    public TriggerBase(ItemStack stack, String name, int color, String data) {
+    public TriggerBase(ItemStack stack, String name, int color) {
         this.name = name;
         this.color = color;
-        this.data = data;
         this.stack = stack;
     }
 
     public TriggerBase(String name, int color, String data) {
         this.name = name;
         this.color = color;
-        this.data = data;
         this.stack = new ItemStack(Blocks.stone);
     }
     
@@ -51,11 +46,6 @@ public abstract class TriggerBase implements IProgressionTrigger {
     @Override
     public IProgressionCriteria getCriteria() {
         return criteria;
-    }
-
-    @Override
-    public IProgressionTriggerData newData() {
-        return ProgressionAPI.data.newData(data);
     }
 
     @Override

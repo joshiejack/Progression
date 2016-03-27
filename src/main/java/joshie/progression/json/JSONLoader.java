@@ -27,10 +27,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class JSONLoader {
     public static Gson gson;
@@ -173,19 +170,19 @@ public class JSONLoader {
                 stack = new ItemStack(Items.book);
             }
 
-            IProgressionTab iTab = APIHandler.newTab(data.uniqueName);
+            IProgressionTab iTab = APIHandler.newTab(data.uuid);
             iTab.setDisplayName(data.displayName).setVisibility(data.isVisible).setStack(stack).setSortIndex(data.sortIndex);
 
             /** Step 1: we create add all instances of criteria to the registry **/
             for (DataCriteria criteria : data.criteria) {
-                APIHandler.newCriteria(iTab, criteria.uniqueName, isClientside);
+                APIHandler.newCriteria(iTab, criteria.uuid, isClientside);
             }
 
             /** Step 2 : Register all the conditions and triggers for this criteria **/
             for (DataCriteria criteria : data.criteria) {
-                IProgressionCriteria theCriteria = APIHandler.getCriteriaFromName(criteria.uniqueName);
+                IProgressionCriteria theCriteria = APIHandler.getCriteriaFromName(criteria.uuid);
                 if (theCriteria == null) {
-                    throw new CriteriaNotFoundException(criteria.uniqueName);
+                    throw new CriteriaNotFoundException(criteria.uuid);
                 }
 
                 if (criteria.triggers != null) {
@@ -211,10 +208,10 @@ public class JSONLoader {
 
             /** Step 3, nAdd the extra data **/
             for (DataCriteria criteria : data.criteria) {
-                IProgressionCriteria theCriteria = APIHandler.getCriteriaFromName(criteria.uniqueName);
+                IProgressionCriteria theCriteria = APIHandler.getCriteriaFromName(criteria.uuid);
                 if (theCriteria == null) {
                     Progression.logger.log(org.apache.logging.log4j.Level.WARN, "Criteria was not found, do not report this.");
-                    throw new CriteriaNotFoundException(criteria.uniqueName);
+                    throw new CriteriaNotFoundException(criteria.uuid);
                 }
 
                 IProgressionCriteria[] thePrereqs = new IProgressionCriteria[0];
@@ -314,21 +311,21 @@ public class JSONLoader {
 
     public static void saveData() {
         if (Options.debugMode) Progression.logger.log(Level.INFO, "Begin logging");
-        HashSet<String> tabNames = new HashSet();
+        HashSet<UUID> tabNames = new HashSet();
         Collection<IProgressionTab> allTabs = APIHandler.getTabs().values();
-        HashSet<String> names = new HashSet();
+        HashSet<UUID> names = new HashSet();
         DefaultSettings forJSONTabs = new DefaultSettings();
         for (IProgressionTab tab : allTabs) {
             ArrayList<DataCriteria> list = new ArrayList();
-            if (!tabNames.add(tab.getUniqueName())) continue;
+            if (!tabNames.add(tab.getUniqueID())) continue;
             DataTab tabData = new DataTab();
-            tabData.uniqueName = tab.getUniqueName();
+            tabData.uuid = tab.getUniqueID();
             tabData.displayName = tab.getDisplayName();
             tabData.sortIndex = tab.getSortIndex();
             tabData.isVisible = tab.isVisible();
             tabData.stack = StackHelper.getStringFromStack(tab.getStack());
             for (IProgressionCriteria c : tab.getCriteria()) {
-                if (!names.add(c.getUniqueName())) continue;
+                if (!names.add(c.getUniqueID())) continue;
                 if (c.getIcon() == null) continue;
                 DataCriteria data = new DataCriteria();          
                 data.x = c.getX();
@@ -344,7 +341,7 @@ public class JSONLoader {
                 data.rewardsGiven = c.getAmountOfRewards();
                 data.allRewards = c.givesAllRewards();
                 if (Options.debugMode) Progression.logger.log(Level.INFO, "Saved the display name " + c.getDisplayName());
-                data.uniqueName = c.getUniqueName();
+                data.uuid = c.getUniqueID();
                 data.displayStack = StackHelper.getStringFromStack(c.getIcon());
                 List<IProgressionTrigger> triggers = c.getTriggers();
                 List<IProgressionReward> rewards = c.getRewards();
@@ -382,12 +379,12 @@ public class JSONLoader {
                     }
                 }
 
-                String[] thePrereqs = new String[prereqs.size()];
-                String[] theConflicts = new String[conflicts.size()];
+                UUID[] thePrereqs = new UUID[prereqs.size()];
+                UUID[] theConflicts = new UUID[conflicts.size()];
                 for (int i = 0; i < thePrereqs.length; i++)
-                    thePrereqs[i] = prereqs.get(i).getUniqueName();
+                    thePrereqs[i] = prereqs.get(i).getUniqueID();
                 for (int i = 0; i < theConflicts.length; i++)
-                    theConflicts[i] = conflicts.get(i).getUniqueName();
+                    theConflicts[i] = conflicts.get(i).getUniqueID();
                 if (theTriggers.size() > 0) data.triggers = theTriggers;
                 if (theRewards.size() > 0) data.rewards = theRewards;
                 if (thePrereqs.length > 0) data.prereqs = thePrereqs;

@@ -1,7 +1,9 @@
 package joshie.progression.lib;
 
+import java.util.UUID;
+
 public class CriteriaNotFoundException extends NullPointerException {
-    public CriteriaNotFoundException(String name) {
-        super("The following condition does not actually exist: " + name);
+    public CriteriaNotFoundException(UUID name) {
+        super("The following criteria does not actually exist: " + name);
     }
 }

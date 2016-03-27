@@ -27,6 +27,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
+import java.util.UUID;
 
 public class ItemCriteria extends Item {
     public static ItemStack getStackFromMeta(ItemMeta meta) {
@@ -75,7 +76,7 @@ public class ItemCriteria extends Item {
 
     public static IProgressionCriteria getCriteriaFromStack(ItemStack stack) {
         if (!stack.hasTagCompound()) return null;
-        return APIHandler.getCriteriaFromName(stack.getTagCompound().getString("Criteria"));
+        return APIHandler.getCriteriaFromName(UUID.fromString(stack.getTagCompound().getString("Criteria")));
     }
 
     @Override
@@ -173,7 +174,7 @@ public class ItemCriteria extends Item {
         for (IProgressionCriteria c : APIHandler.getCriteria().values()) {
             ItemStack stack = new ItemStack(item);
             stack.setTagCompound(new NBTTagCompound());
-            stack.getTagCompound().setString("Criteria", c.getUniqueName());
+            stack.getTagCompound().setString("Criteria", c.getUniqueID().toString());
             list.add(stack);
         }
     }

@@ -1,15 +1,16 @@
 package joshie.progression.api.criteria;
 
-import java.util.List;
-
 import net.minecraft.item.ItemStack;
+
+import java.util.List;
+import java.util.UUID;
 
 public interface IProgressionTab {
     /** Returns a list of all the criteria in this tab **/
     public List<IProgressionCriteria> getCriteria();
     
     /** Returns the unique name for this tab **/
-    public String getUniqueName();
+    public UUID getUniqueID();
     
     /** Returns the display name for this tab **/
     public String getDisplayName();

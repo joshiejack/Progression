@@ -1,7 +1,6 @@
 package joshie.progression.criteria.triggers;
 
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.criteria.IProgressionTriggerData;
 import joshie.progression.items.ItemCriteria;
 
 import java.util.UUID;
@@ -15,10 +14,10 @@ public class TriggerBoolean extends TriggerBaseBoolean {
     }
 
     @Override
-    public boolean onFired(UUID uuid, IProgressionTriggerData iTriggerData, Object... data) {
+    public boolean onFired(UUID uuid, Object... data) {
         boolean check = ProgressionAPI.player.getBoolean(uuid, variable);
         if (check == isTrue) {
-            markTrue(iTriggerData);
+            markTrue();
         }
 
         return true;

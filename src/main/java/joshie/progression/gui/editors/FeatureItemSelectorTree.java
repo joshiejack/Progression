@@ -28,12 +28,10 @@ public class FeatureItemSelectorTree extends FeatureAbstract implements ITextEdi
             FeatureItemSelector.INSTANCE.updateSearch();
         }
 
-        ScaledResolution res = GuiTreeEditor.INSTANCE.res;
-        int fullWidth = res.getScaledWidth() - 10;
-        int width = (int) ((double) fullWidth / 18.633333334D);
+        int width = (int) ((double) (screenWidth - 75) / 16.133333334D);
         int j = 0;
         int k = 0;
-        for (int i = FeatureItemSelector.INSTANCE.index; i < FeatureItemSelector.INSTANCE.index + (width * 10); i++) {
+        for (int i = FeatureItemSelector.INSTANCE.index; i < FeatureItemSelector.INSTANCE.index + (width * 10) + 10; i++) {
             if (i >= 0 && i < FeatureItemSelector.INSTANCE.sorted.size()) {
                 if (mouseX >= 32 + (j * 16) && mouseX <= 32 + (j * 16) + 16) {
                     if (mouseY >= 45 + (k * 16) && mouseY <= 45 + (k * 16) + 16) {
@@ -71,18 +69,20 @@ public class FeatureItemSelectorTree extends FeatureAbstract implements ITextEdi
 
             GuiTreeEditor.INSTANCE.mc.fontRendererObj.drawString("Select Item - Click elsewhere to close", 35 - offsetX, GuiCore.INSTANCE.screenTop + 27, theme.blackBarFontColor);
             GuiCore.INSTANCE.drawRectWithBorder(res.getScaledWidth() - 180, 23, res.getScaledWidth() - 35, 38, theme.blackBarUnderLine, theme.blackBarUnderLineBorder);
-            GuiTreeEditor.INSTANCE.mc.fontRendererObj.drawString(TextEditor.INSTANCE.getText(this), res.getScaledWidth() - 175, GuiCore.INSTANCE.screenTop + 29, theme.blackBarFontColor);
 
-            int width = (int) ((double) fullWidth / 18.633333334D);
-            int j = 0;
-            int k = 0;
+            String text = TextEditor.INSTANCE.getText(this);
+            if (text.equals("")) text = "Type to search";
+            GuiTreeEditor.INSTANCE.mc.fontRendererObj.drawString(text + "...", res.getScaledWidth() - 175, GuiCore.INSTANCE.screenTop + 28, theme.blackBarFontColor);
 
+            int width = (int) ((double) (screenWidth - 75) / 16.133333334D);
             //Switch 8 > 32 (-offsetX + 32)
             //Switch 16.6333333 to 18
             //width * 4 to width *10
-            for (int i = FeatureItemSelector.INSTANCE.index; i < FeatureItemSelector.INSTANCE.index + (width * 10); i++) {
+            int j = 0;
+            int k = 0;
+            for (int i = FeatureItemSelector.INSTANCE.index; i < FeatureItemSelector.INSTANCE.index + (width * 10) + 10; i++) {
                 if (i >= 0 && i < FeatureItemSelector.INSTANCE.sorted.size()) {
-                    RenderItemHelper.drawStack((ItemStack) FeatureItemSelector.INSTANCE.sorted.get(i), -offsetX + 32 + (j * 16), GuiCore.INSTANCE.screenTop + 45 + (k * 16), 1F);
+                    RenderItemHelper.drawStack((ItemStack) FeatureItemSelector.INSTANCE.sorted.get(i), 32 + (j * 16), GuiCore.INSTANCE.screenTop + 45 + (k * 16), 1F);
 
                     j++;
 

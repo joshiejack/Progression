@@ -1,13 +1,14 @@
 package joshie.progression.criteria.triggers;
 
+import joshie.progression.api.special.IStoreTriggerData;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+
 import java.util.UUID;
 
-import joshie.progression.api.criteria.IProgressionTriggerData;
-import joshie.progression.criteria.triggers.data.DataCount;
-import net.minecraft.item.ItemStack;
-
-public abstract class TriggerBaseCounter extends TriggerBase {
+public abstract class TriggerBaseCounter extends TriggerBase implements IStoreTriggerData {
     public int amount = 1;
+    protected transient int counter;
 
     public TriggerBaseCounter(String name, int color) {
         super(name, color, "count");
@@ -18,29 +19,38 @@ public abstract class TriggerBaseCounter extends TriggerBase {
     }
     
     public TriggerBaseCounter(ItemStack stack, String name, int color) {
-        super(stack, name, color, "count");
-    }
-
-    public TriggerBaseCounter(ItemStack stack, String name, int color, String data) {
-        super(stack, name, color, data);
+        super(stack, name, color);
     }
 
     @Override
-    public boolean isCompleted(IProgressionTriggerData iTriggerData) {
-        return ((DataCount) iTriggerData).count >= amount;
+    public boolean isCompleted() {
+        return counter >= amount;
     }
 
     @Override
-    public boolean onFired(UUID uuid, IProgressionTriggerData iTriggerData, Object... data) {
-        DataCount triggerData = (DataCount) iTriggerData;
+    public boolean onFired(UUID uuid, Object... data) {
         if (canIncrease(data)) {
-            triggerData.count++;
+            counter++;
         }
 
         return true;
     }
 
     protected boolean canIncrease(Object... data) {
+        return canIncrease();
+    }
+
+    protected boolean canIncrease() {
         return false;
+    }
+
+    @Override
+    public void readDataFromNBT(NBTTagCompound tag) {
+        tag.setInteger("Count", counter);
+    }
+
+    @Override
+    public void writeDataToNBT(NBTTagCompound tag) {
+        counter = tag.getInteger("Count");
     }
 }

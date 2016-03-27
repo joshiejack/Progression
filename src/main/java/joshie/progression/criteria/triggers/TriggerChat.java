@@ -1,7 +1,6 @@
 package joshie.progression.criteria.triggers;
 
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.criteria.IProgressionTriggerData;
 import joshie.progression.api.special.ICancelable;
 import joshie.progression.api.special.IInit;
 import joshie.progression.items.ItemCriteria;
@@ -61,10 +60,9 @@ public class TriggerChat extends TriggerBaseBoolean implements IInit, ICancelabl
     }
 
     @Override
-    public boolean onFired(UUID uuid, IProgressionTriggerData iTriggerData, Object... data) {
-        boolean isTrue = isTrue(data);
-        ProgressionAPI.data.setBooleanData(iTriggerData, isTrue);
-        return isTrue;
+    public boolean onFired(UUID uuid, Object... data) {
+        value = isTrue(data);
+        return value;
     }
 
     @Override

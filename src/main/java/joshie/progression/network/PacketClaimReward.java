@@ -1,8 +1,5 @@
 package joshie.progression.network;
 
-import java.util.Collections;
-import java.util.List;
-
 import io.netty.buffer.ByteBuf;
 import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.api.criteria.IProgressionReward;
@@ -11,6 +8,10 @@ import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.network.core.PenguinPacket;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
 public class PacketClaimReward extends PenguinPacket {
     private IProgressionCriteria criteria;
@@ -27,14 +28,14 @@ public class PacketClaimReward extends PenguinPacket {
 
     @Override
     public void toBytes(ByteBuf buf) {
-        ByteBufUtils.writeUTF8String(buf, criteria.getUniqueName());
+        ByteBufUtils.writeUTF8String(buf, criteria.getUniqueID().toString());
         buf.writeInt(rewardId);
         buf.writeBoolean(randomReward);
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        criteria = APIHandler.getCriteriaFromName(ByteBufUtils.readUTF8String(buf));
+        criteria = APIHandler.getCriteriaFromName(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
         rewardId = buf.readInt();
         randomReward = buf.readBoolean();
     }

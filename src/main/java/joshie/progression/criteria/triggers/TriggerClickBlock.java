@@ -32,7 +32,8 @@ public class TriggerClickBlock extends TriggerBaseBlock {
         if (cancel) {
             return Progression.translate("trigger.clickBlock.cancel");
         }
-        
-        return Progression.format("trigger.clickBlock.description", amount);
+
+        int percentage = (counter * 100) / amount;
+        return Progression.format("trigger.clickBlock.description", amount, percentage);
     }
 }

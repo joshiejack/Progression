@@ -1,7 +1,5 @@
 package joshie.progression.criteria.rewards;
 
-import java.util.UUID;
-
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionTab;
 import joshie.progression.api.event.TabVisibleEvent;
@@ -16,10 +14,12 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.util.UUID;
+
 public class RewardShowTab extends RewardBase implements IStoreNBTData, IHasEventBus, IInit, IGetterCallback {
     public boolean hideByDefault = true;
     public String displayName = "";
-    private String tabID = "";
+    private UUID tabID = UUID.randomUUID();
     private IProgressionTab tab;
 
     public RewardShowTab() {
@@ -38,7 +38,7 @@ public class RewardShowTab extends RewardBase implements IStoreNBTData, IHasEven
                 String display = t.getDisplayName();
                 if (t.getDisplayName().equals(displayName)) {
                     tab = t;
-                    tabID = t.getUniqueName();
+                    tabID = t.getUniqueID();
                     break;
                 }
             }
@@ -53,7 +53,7 @@ public class RewardShowTab extends RewardBase implements IStoreNBTData, IHasEven
     public void onFeatureRender(TabVisibleEvent event) {
         NBTTagCompound tag = ProgressionAPI.player.getCustomData(event.entityPlayer, "progression.tab.hidden");
         if (tag != null) {
-            if (tag.hasKey(event.unique)) {
+            if (tag.hasKey(event.unique.toString())) {
                 event.setCanceled(true);
             }
         }
@@ -68,7 +68,7 @@ public class RewardShowTab extends RewardBase implements IStoreNBTData, IHasEven
     public NBTTagCompound getDefaultTags(NBTTagCompound tag) {
         if (hideByDefault) {
             if (tab != null) {
-                tag.setBoolean(tab.getUniqueName(), true);
+                tag.setBoolean(tab.getUniqueID().toString(), true);
             }
         }
 
@@ -86,8 +86,8 @@ public class RewardShowTab extends RewardBase implements IStoreNBTData, IHasEven
 
         NBTTagCompound tag = ProgressionAPI.player.getCustomData(uuid, "progression.tab.hidden");
         if (tag == null) tag = new NBTTagCompound();
-        if (hideByDefault) tag.removeTag(tab.getUniqueName());
-        else tag.setBoolean(tab.getUniqueName(), true);
+        if (hideByDefault) tag.removeTag(tab.getUniqueID().toString());
+        else tag.setBoolean(tab.getUniqueID().toString(), true);
 
         ProgressionAPI.player.setCustomData(uuid, "progression.tab.hidden", tag);
     }

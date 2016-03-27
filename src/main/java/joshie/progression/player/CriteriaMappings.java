@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.*;
 import joshie.progression.api.special.ICancelable;
+import joshie.progression.api.special.IStoreTriggerData;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.handlers.RemappingHandler;
 import joshie.progression.helpers.CollectionHelper;
@@ -30,7 +31,7 @@ public class CriteriaMappings {
 
     protected HashMap<IProgressionCriteria, Integer> completedCritera = new HashMap(); //All the completed criteria, with a number for how many times repeated
     protected Set<IProgressionTrigger> completedTriggers = new HashSet(); //All the completed trigger, With their unique name as their identifier, Persistent
-    protected HashMap<IProgressionTrigger, IProgressionTriggerData> triggerData = new HashMap(); //Unique String > Data mappings for this trigger
+    protected HashMap<IProgressionTrigger, NBTTagCompound> triggerData = new HashMap(); //Unique String > Data mappings for this trigger
     protected Set<IProgressionCriteria> unclaimed = new HashSet();
     protected Set<IProgressionCriteria> impossible = new HashSet();
 
@@ -65,14 +66,12 @@ public class CriteriaMappings {
         NBTTagList data = nbt.getTagList("Active Trigger Data", 10);
         for (int i = 0; i < data.tagCount(); i++) {
             NBTTagCompound tag = data.getCompoundTagAt(i);
-            String name = tag.getString("Name");
-            IProgressionCriteria criteria = APIHandler.getCriteriaFromName(name);
-            if (criteria != null) {
-                for (IProgressionTrigger trigger : criteria.getTriggers()) {
-                    IProgressionTriggerData iTriggerData = trigger.newData();
-                    iTriggerData.readFromNBT(tag);
-                    triggerData.put(trigger, iTriggerData);
-                }
+            UUID uuid = UUID.fromString(tag.getString("UUID"));
+            IProgressionTrigger trigger = APIHandler.getTriggerFromUUID(uuid);
+            if (trigger instanceof IStoreTriggerData) {
+                NBTTagCompound triggerNBT = tag.getCompoundTag("Data");
+                ((IStoreTriggerData)trigger).readDataFromNBT(triggerNBT);
+                triggerData.put(trigger, triggerNBT);
             }
         }
     }
@@ -87,9 +86,13 @@ public class CriteriaMappings {
         for (IProgressionTrigger trigger : triggerData.keySet()) {
             if (trigger != null) {
                 NBTTagCompound tag = new NBTTagCompound();
-                tag.setString("Name", trigger.getCriteria().getUniqueName());
-                IProgressionTriggerData iTriggerData = triggerData.get(trigger);
-                iTriggerData.writeToNBT(tag);
+                tag.setString("UUID", trigger.getUniqueID().toString());
+                if (trigger instanceof IStoreTriggerData) {
+                    NBTTagCompound triggerNBT = new NBTTagCompound();
+                    ((IStoreTriggerData)trigger).writeDataToNBT(triggerNBT);
+                    tag.setTag("Data", triggerNBT);
+                }
+
                 data.appendTag(tag);
             }
         }
@@ -135,10 +138,10 @@ public class CriteriaMappings {
         return false;
     }
 
-    private IProgressionTriggerData getTriggerData(IProgressionTrigger trigger) {
-        IProgressionTriggerData data = triggerData.get(trigger);
+    public NBTTagCompound getTriggerData(IProgressionTrigger trigger) {
+        NBTTagCompound data = triggerData.get(trigger);
         if (data == null) {
-            data = trigger.newData();
+            data = new NBTTagCompound();
             triggerData.put(trigger, data);
             return data;
         } else return data;
@@ -209,12 +212,12 @@ public class CriteriaMappings {
         for (IProgressionTrigger trigger : toTrigger) {
             if (trigger instanceof ICancelable) {
                 boolean isCancelingEnabled = (((ICancelable) trigger).isCanceling());
-                if ((trigger.onFired(uuid, getTriggerData(trigger), data))) {
+                if ((trigger.onFired(uuid, data))) {
                      if (isCancelingEnabled) return Result.DENY;
                 }
 
                 PacketHandler.sendToTeam(new PacketSyncTriggerData(trigger, getTriggerData(trigger)), master.team);
-            } else if (!trigger.onFired(uuid, getTriggerData(trigger), data)) {
+            } else if (!trigger.onFired(uuid, data)) {
                 return Result.DENY;
             } else PacketHandler.sendToTeam(new PacketSyncTriggerData(trigger, getTriggerData(trigger)), master.team);
         }
@@ -224,7 +227,7 @@ public class CriteriaMappings {
         HashSet<IProgressionTrigger> toRemove = new HashSet();
         for (IProgressionTrigger trigger : triggers) {
             if (cantContinue.contains(trigger)) continue; //If we're bypassing mark all triggers as fired
-            if (trigger.isCompleted(getTriggerData(trigger))) {
+            if (trigger.isCompleted()) {
                 completedTriggers.add(trigger);
                 toRemove.add(trigger);
                 PacketHandler.sendToTeam(new PacketSyncTriggers(trigger), master.team);

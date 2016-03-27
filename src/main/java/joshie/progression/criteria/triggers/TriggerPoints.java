@@ -1,8 +1,6 @@
 package joshie.progression.criteria.triggers;
 
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.criteria.IProgressionTriggerData;
-import joshie.progression.criteria.triggers.data.DataBoolean;
 import joshie.progression.items.ItemCriteria;
 import joshie.progression.player.PlayerTracker;
 import net.minecraftforge.fml.common.eventhandler.EventBus;
@@ -36,10 +34,10 @@ public class TriggerPoints extends TriggerBaseBoolean {
     }
 
     @Override
-    public boolean onFired(UUID uuid, IProgressionTriggerData iTriggerData, Object... data) {
+    public boolean onFired(UUID uuid, Object... data) {
         double total = ProgressionAPI.player.getDouble(uuid, variable);
         if (isValidValue(total)) {
-            ((DataBoolean) iTriggerData).completed = true;
+            markTrue();
             if (consume) {
                 PlayerTracker.getServerPlayer(uuid).addDouble(variable, -amount);
             }

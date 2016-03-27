@@ -9,9 +9,11 @@ import joshie.progression.helpers.JSONHelper;
 import joshie.progression.network.PacketClaimReward;
 import joshie.progression.network.PacketHandler;
 
+import java.util.UUID;
+
 public class ActionClaimReward extends AbstractAction implements IButtonAction {
     public transient String displayName;
-    public transient String criteriaID;
+    public transient UUID criteriaID;
     public transient IProgressionCriteria criteria;
     public transient boolean randomReward;
     public transient int rewardPosition;
@@ -20,7 +22,7 @@ public class ActionClaimReward extends AbstractAction implements IButtonAction {
         super("reward");
     }
 
-    public ActionClaimReward(String displayName, String criteriaID, IProgressionCriteria criteria, int rewardPosition) {
+    public ActionClaimReward(String displayName, UUID criteriaID, IProgressionCriteria criteria, int rewardPosition) {
         super("reward");
         this.displayName = displayName;
         this.criteriaID = criteriaID;
@@ -46,7 +48,7 @@ public class ActionClaimReward extends AbstractAction implements IButtonAction {
 
     @Override
     public IButtonAction create() {
-        return new ActionClaimReward("New Criteria", "", null, 1);
+        return new ActionClaimReward("New Criteria", UUID.randomUUID(), null, 1);
     }
 
     private IProgressionCriteria getCriteria() {
@@ -59,7 +61,7 @@ public class ActionClaimReward extends AbstractAction implements IButtonAction {
             String display = c.getDisplayName();
             if (c.getDisplayName().equals(displayName)) {
                 criteria = c;
-                criteriaID = c.getUniqueName();
+                criteriaID = c.getUniqueID();
                 return criteria;
             }
         }
@@ -78,7 +80,7 @@ public class ActionClaimReward extends AbstractAction implements IButtonAction {
     @Override
     public void readFromJson(JsonObject data) {
         super.readFromJson(data);
-        criteriaID = JSONHelper.getString(data, "criteriaID", "");
+        criteriaID = UUID.fromString(JSONHelper.getString(data, "criteriaID", ""));
         randomReward = JSONHelper.getBoolean(data, "randomReward", false);
         rewardPosition = JSONHelper.getInteger(data, "rewardPosition", 1);
     }
@@ -90,7 +92,7 @@ public class ActionClaimReward extends AbstractAction implements IButtonAction {
         JSONHelper.setInteger(data, "rewardPosition", rewardPosition, 1);
 
         if (criteriaID != null) {
-            JSONHelper.setString(data, "criteriaID", criteriaID, "");
+            JSONHelper.setString(data, "criteriaID", criteriaID.toString(), "");
         }
     }
 }

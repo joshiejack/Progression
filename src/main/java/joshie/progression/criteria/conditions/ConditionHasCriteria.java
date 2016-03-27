@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class ConditionHasCriteria extends ConditionBase implements IGetterCallback, IInit {
     private IProgressionCriteria criteria = null;
-    private String criteriaID = "";
+    private UUID criteriaID = UUID.randomUUID();
     public String displayName = "";
 
     public ConditionHasCriteria() {
@@ -28,7 +28,7 @@ public class ConditionHasCriteria extends ConditionBase implements IGetterCallba
                 String display = c.getDisplayName();
                 if (c.getDisplayName().equals(displayName)) {
                     criteria = c;
-                    criteriaID = c.getUniqueName();
+                    criteriaID = c.getUniqueID();
                     break;
                 }
             }

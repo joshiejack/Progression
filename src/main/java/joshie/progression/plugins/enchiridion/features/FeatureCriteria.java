@@ -7,11 +7,12 @@ import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.handlers.APIHandler;
 
 import java.util.List;
+import java.util.UUID;
 
 
 public abstract class FeatureCriteria extends FeatureProgression implements ISimpleEditorFieldProvider {
     protected transient IProgressionCriteria criteria = null;
-    protected String criteriaID = "";
+    protected UUID criteriaID = UUID.randomUUID();
     public String displayName = "";
     public boolean background = true;
 
@@ -39,7 +40,7 @@ public abstract class FeatureCriteria extends FeatureProgression implements ISim
                 String display = c.getDisplayName();
                 if (c.getDisplayName().equals(displayName)) {
                     criteria = c;
-                    criteriaID = c.getUniqueName();
+                    criteriaID = c.getUniqueID();
                     return;
                 }
             }

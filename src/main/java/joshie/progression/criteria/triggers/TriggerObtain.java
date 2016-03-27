@@ -7,12 +7,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class TriggerObtain extends TriggerBaseBoolean {
+public class TriggerObtain extends TriggerBaseAlwaysTrue {
     public TriggerObtain() {
         super(new ItemStack(Blocks.chest), "openContainer", 0xFFFFFF00);
     }
 
-    private boolean fired = false;
     private static Gui lastGui;
 
     @SubscribeEvent
@@ -21,10 +20,5 @@ public class TriggerObtain extends TriggerBaseBoolean {
             lastGui = event.gui;
             ProgressionAPI.registry.fireTriggerClientside(getUnlocalisedName());
         }
-    }
-
-    @Override
-    protected boolean isTrue(Object... data) {
-        return true;
     }
 }

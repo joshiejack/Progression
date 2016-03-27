@@ -7,7 +7,8 @@ import joshie.progression.helpers.TriggerHelper;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import scala.swing.Action.Trigger;
+
+import java.util.UUID;
 
 public class TriggerNBT extends AbstractUniqueNBT {
     public static final TriggerNBT INSTANCE = new TriggerNBT();
@@ -16,7 +17,7 @@ public class TriggerNBT extends AbstractUniqueNBT {
     public NBTBase write(Object s) {
         NBTTagCompound tag = new NBTTagCompound();
         IProgressionTrigger t = ((IProgressionTrigger) s);
-        tag.setString("Criteria", t.getCriteria().getUniqueName());
+        tag.setString("Criteria", t.getCriteria().getUniqueID().toString());
         tag.setInteger("Value", TriggerHelper.getInternalID(t));
         return tag;
     }
@@ -24,7 +25,7 @@ public class TriggerNBT extends AbstractUniqueNBT {
     @Override
     public Object read(NBTTagList list, int i) {
         NBTTagCompound tag = list.getCompoundTagAt(i);
-        IProgressionCriteria criteria = APIHandler.getCriteriaFromName(tag.getString("Criteria"));
+        IProgressionCriteria criteria = APIHandler.getCriteriaFromName(UUID.fromString(tag.getString("Criteria")));
         if (criteria == null) return null;
         int value = tag.getInteger("Value");
         if (value < criteria.getTriggers().size()) {

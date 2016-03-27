@@ -1,19 +1,21 @@
 package joshie.progression.criteria.triggers;
 
-import java.util.List;
-import java.util.UUID;
-
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionField;
 import joshie.progression.api.criteria.IProgressionFilter;
-import joshie.progression.api.criteria.IProgressionTriggerData;
 import joshie.progression.api.special.ISpecialFieldProvider;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 
+import java.util.List;
+import java.util.UUID;
+
 public class TriggerCrafting extends TriggerBaseItemFilter implements ISpecialFieldProvider {
     public int timesCrafted = 1;
+    protected transient int amountItemCrafted;
+    protected transient int timesItemCrafted;
 
     public TriggerCrafting() {
         super("crafting", 0xFF663300, "crafting");
@@ -35,24 +37,33 @@ public class TriggerCrafting extends TriggerBaseItemFilter implements ISpecialFi
     }
 
     @Override
-    public boolean isCompleted(IProgressionTriggerData existing) {
-        int craftedNumber = ProgressionAPI.data.getDualNumber1(existing);
-        int timesNumber = ProgressionAPI.data.getDualNumber2(existing);
-        return craftedNumber >= amount && timesNumber >= timesCrafted;
+    public boolean isCompleted() {
+        return amountItemCrafted >= amount && timesItemCrafted >= timesCrafted;
     }
 
     @Override
-    public boolean onFired(UUID uuid, IProgressionTriggerData existing, Object... additional) {
+    public boolean onFired(UUID uuid, Object... additional) {
         ItemStack crafted = (ItemStack) (additional[0]);
         for (IProgressionFilter filter : filters) {
             if (filter.matches(crafted)) {
-                int craftedNumber = ProgressionAPI.data.getDualNumber1(existing) + crafted.stackSize;
-                int timesNumber = ProgressionAPI.data.getDualNumber2(existing) + 1;
-                ProgressionAPI.data.setDualData(existing, craftedNumber, timesNumber);
+                amountItemCrafted += crafted.stackSize;
+                timesItemCrafted++;
                 return true;
             }
         }
 
         return true;
+    }
+
+    @Override
+    public void readDataFromNBT(NBTTagCompound tag) {
+        tag.setInteger("Crafted", amountItemCrafted);
+        tag.setInteger("Times", timesItemCrafted);
+    }
+
+    @Override
+    public void writeDataToNBT(NBTTagCompound tag) {
+        amountItemCrafted = tag.getInteger("Crafted");
+        timesItemCrafted = tag.getInteger("Times");
     }
 }
