@@ -1,8 +1,5 @@
 package joshie.progression.criteria.triggers;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionCondition;
@@ -14,6 +11,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.EventBus;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 public abstract class TriggerBase implements IProgressionTrigger {
     private List<IProgressionCondition> conditions = new ArrayList();
     private IProgressionCriteria criteria;
@@ -21,6 +22,7 @@ public abstract class TriggerBase implements IProgressionTrigger {
     private int color;
     private String data;
     private ItemStack stack;
+    private UUID uuid;
     
     public TriggerBase(ItemStack stack, String name, int color, String data) {
         this.name = name;
@@ -57,8 +59,9 @@ public abstract class TriggerBase implements IProgressionTrigger {
     }
 
     @Override
-    public void setCriteria(IProgressionCriteria criteria) {
+    public void setCriteria(IProgressionCriteria criteria, UUID uuid) {
         this.criteria = criteria;
+        this.uuid = uuid;
     }
 
     @Override
@@ -69,6 +72,15 @@ public abstract class TriggerBase implements IProgressionTrigger {
     @Override
     public String getLocalisedName() {
         return Progression.translate("trigger." + getUnlocalisedName());
+    }
+
+    @Override
+    public UUID getUniqueID() {
+        if (uuid == null) {
+            uuid = UUID.randomUUID();
+        }
+
+        return uuid;
     }
 
     @Override

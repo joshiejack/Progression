@@ -17,7 +17,7 @@ public interface IProgressionCondition extends IFieldProvider {
     public boolean isSatisfied(World world, EntityPlayer player, UUID uuid);
 
     /** This is called when the criteria is created, so you have upper access **/
-    public void setTrigger(IProgressionTrigger trigger);
+    public void setTrigger(IProgressionTrigger trigger, UUID uuid);
     
     /** Return the trigger type this condition is attached to **/
     public IProgressionTrigger getTrigger();

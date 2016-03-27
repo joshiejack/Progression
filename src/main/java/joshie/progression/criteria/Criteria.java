@@ -1,15 +1,15 @@
 package joshie.progression.criteria;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.api.criteria.IProgressionReward;
 import joshie.progression.api.criteria.IProgressionTab;
 import joshie.progression.api.criteria.IProgressionTrigger;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Criteria implements IProgressionCriteria {
     /** All the data for this **/

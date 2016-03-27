@@ -1,8 +1,8 @@
 package joshie.progression.api.criteria;
 
-import java.util.List;
-
 import net.minecraft.item.ItemStack;
+
+import java.util.List;
 
 /** This is just a wrapper interface
  *  Don't use it for anything. */

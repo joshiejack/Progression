@@ -1,12 +1,7 @@
 package joshie.progression.helpers;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
 import joshie.progression.api.criteria.IFieldProvider;
 import joshie.progression.api.criteria.IProgressionFilter;
 import joshie.progression.api.special.ISpecialJSON;
@@ -18,11 +13,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+
 public class JSONHelper {
     public static Enum getEnum(JsonObject data, String string, Enum default_) {
         if (data.get(string) != null) {
             try {
-                return Enum.valueOf(default_.getClass(), getString(data, "enum:" + string, default_.name()));
+                return Enum.valueOf((Class)default_.getClass(), getString(data, "enum:" + string, default_.name()));
             } catch (Exception e) {}
         }
 

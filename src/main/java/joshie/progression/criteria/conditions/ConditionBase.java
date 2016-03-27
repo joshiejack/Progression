@@ -6,8 +6,11 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 
+import java.util.UUID;
+
 public abstract class ConditionBase implements IProgressionCondition {
     public boolean inverted = false; //Data for all conditions
+    private UUID uuid;
     private IProgressionTrigger trigger;
     private ItemStack icon;
     private String unlocalized;
@@ -41,6 +44,15 @@ public abstract class ConditionBase implements IProgressionCondition {
     }
 
     @Override
+    public UUID getUniqueID() {
+        if (uuid == null) {
+            uuid = UUID.randomUUID();
+        }
+
+        return uuid;
+    }
+
+    @Override
     public int getColor() {
         return color;
     }
@@ -59,8 +71,9 @@ public abstract class ConditionBase implements IProgressionCondition {
     }
     
     @Override
-    public void setTrigger(IProgressionTrigger trigger) {
+    public void setTrigger(IProgressionTrigger trigger, UUID uuid) {
         this.trigger = trigger;
+        this.uuid = uuid;
     }
 
     @Override

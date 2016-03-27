@@ -3,9 +3,12 @@ package joshie.progression.criteria.filters;
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.IProgressionFilter;
 
+import java.util.UUID;
+
 public abstract class FilterBase implements IProgressionFilter {
     private int color;
     private String name;
+    private UUID uuid;
 
     public FilterBase(String name, int color) {
         this.name = name;
@@ -20,6 +23,15 @@ public abstract class FilterBase implements IProgressionFilter {
     @Override
     public String getLocalisedName() {
         return Progression.translate("filter." + getType().name().toLowerCase() + "." + getUnlocalisedName());
+    }
+
+    @Override
+    public UUID getUniqueID() {
+        if (uuid == null) {
+            uuid = UUID.randomUUID();
+        }
+
+        return uuid;
     }
 
     @Override

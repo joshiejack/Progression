@@ -1,13 +1,13 @@
 package joshie.progression.criteria.rewards;
 
-import java.util.List;
-import java.util.UUID;
-
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.api.criteria.IProgressionReward;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+
+import java.util.List;
+import java.util.UUID;
 
 public abstract class RewardBase implements IProgressionReward {
     protected IProgressionCriteria criteria;
@@ -15,6 +15,7 @@ public abstract class RewardBase implements IProgressionReward {
     private int color;
     private boolean mustClaim = false;
     private ItemStack stack;
+    private UUID uuid;
 
     public RewardBase(ItemStack stack, String name, int color) {
         this(name, color);
@@ -28,13 +29,23 @@ public abstract class RewardBase implements IProgressionReward {
     }
 
     @Override
+    public UUID getUniqueID() {
+        if (uuid == null) {
+            uuid = UUID.randomUUID();
+        }
+
+        return uuid;
+    }
+
+    @Override
     public ItemStack getIcon() {
         return stack;
     }
 
     @Override
-    public void setCriteria(IProgressionCriteria criteria) {
+    public void setCriteria(IProgressionCriteria criteria, UUID uuid) {
         this.criteria = criteria;
+        this.uuid = uuid;
     }
 
     @Override

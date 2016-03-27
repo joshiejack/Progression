@@ -1,7 +1,5 @@
 package joshie.progression.network;
 
-import java.util.UUID;
-
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.lib.ProgressionInfo;
 import joshie.progression.network.core.PenguinNetwork;
@@ -11,6 +9,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
+
+import java.util.UUID;
 
 public class PacketHandler {
 	private static final PenguinNetwork INSTANCE = new PenguinNetwork(ProgressionInfo.MODID);
@@ -47,7 +47,7 @@ public class PacketHandler {
 			sendToClient(packet, player);
 		}
     }
-    
+
     public static void sendToTeam(IMessage packet, PlayerTeam team) {
         /** Send the stuff to the captain first **/
         EntityPlayerMP owner = (EntityPlayerMP) PlayerHelper.getPlayerFromUUID(team.getOwner());

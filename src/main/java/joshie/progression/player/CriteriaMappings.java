@@ -1,40 +1,16 @@
 package joshie.progression.player;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-
 import joshie.progression.Progression;
-import joshie.progression.api.criteria.IProgressionCondition;
-import joshie.progression.api.criteria.IProgressionCriteria;
-import joshie.progression.api.criteria.IProgressionReward;
-import joshie.progression.api.criteria.IProgressionTrigger;
-import joshie.progression.api.criteria.IProgressionTriggerData;
+import joshie.progression.api.criteria.*;
 import joshie.progression.api.special.ICancelable;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.handlers.RemappingHandler;
 import joshie.progression.helpers.CollectionHelper;
 import joshie.progression.helpers.NBTHelper;
 import joshie.progression.helpers.PlayerHelper;
-import joshie.progression.helpers.TriggerHelper;
-import joshie.progression.network.PacketCompleted;
-import joshie.progression.network.PacketHandler;
-import joshie.progression.network.PacketSyncAbilities;
-import joshie.progression.network.PacketSyncCriteria;
-import joshie.progression.network.PacketSyncCustomData;
-import joshie.progression.network.PacketSyncImpossible;
-import joshie.progression.network.PacketSyncPoints;
-import joshie.progression.network.PacketSyncTeam;
-import joshie.progression.network.PacketSyncTriggers;
-import joshie.progression.network.PacketSyncTriggers.SyncPair;
+import joshie.progression.network.*;
 import joshie.progression.player.nbt.CriteriaNBT;
 import joshie.progression.player.nbt.CriteriaSet;
 import joshie.progression.player.nbt.TriggerNBT;
@@ -45,6 +21,8 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
+
+import java.util.*;
 
 public class CriteriaMappings {
     private PlayerDataServer master;
@@ -72,21 +50,9 @@ public class CriteriaMappings {
         PacketHandler.sendToClient(new PacketSyncAbilities(master.getAbilities()), player);
         PacketHandler.sendToClient(new PacketSyncCustomData(master.getCustomStats()), player);
         PacketHandler.sendToClient(new PacketSyncPoints(master.getPoints()), player);
-        SyncPair[] values = new SyncPair[APIHandler.getCriteria().size()];
-        int pos = 0;
-        for (IProgressionCriteria criteria : APIHandler.getCriteria().values()) {
-            int[] numbers = new int[criteria.getTriggers().size()];
-            for (int i = 0; i < criteria.getTriggers().size(); i++) {
-                numbers[i] = i;
-            }
-
-            values[pos] = new SyncPair(criteria, numbers);
-
-            pos++;
-        }
-
         PacketHandler.sendToClient(new PacketSyncImpossible(impossible.toArray(new IProgressionCriteria[impossible.size()])), player);
-        PacketHandler.sendToClient(new PacketSyncTriggers(values), player); //Sync all researches to the client
+        PacketHandler.sendToClient(new PacketSyncTriggers(completedTriggers), player); //Sync all trigger that are completed to the client
+        PacketHandler.sendToClient(new PacketSyncTriggerData(triggerData), player); //Sync all trigger data
         PacketHandler.sendToClient(new PacketSyncCriteria(true, completedCritera.values().toArray(new Integer[completedCritera.size()]), completedCritera.keySet().toArray(new IProgressionCriteria[completedCritera.size()])), player); //Sync all conditions to the client
     }
 
@@ -149,14 +115,15 @@ public class CriteriaMappings {
         }
     }
 
-    public void markTriggerAsCompleted(boolean overwrite, SyncPair[] pairs) {
+    public void markTriggerAsCompleted(boolean overwrite, Set<IProgressionTrigger> triggers) {
         if (overwrite) completedTriggers = new HashSet();
-        for (SyncPair pair : pairs) {
-            if (pair == null || pair.criteria == null) continue; //Avoid broken pairs
-            for (int i = 0; i < pair.triggers.length; i++) {
-                int num = pair.triggers[i];
-                if (pair.criteria.getTriggers().size() > num) completedTriggers.add(pair.criteria.getTriggers().get(num));
-            }
+        completedTriggers.addAll(triggers);
+    }
+
+    public void setTriggerData(boolean overwrite, PacketSyncTriggerData.DataPair[] pairs) {
+        if (overwrite) triggerData = new HashMap();
+        for (PacketSyncTriggerData.DataPair pair: pairs) {
+            triggerData.put(pair.trigger, pair.data);
         }
     }
 
@@ -193,7 +160,7 @@ public class CriteriaMappings {
         else CollectionHelper.remove(impossible, criteria);
         
         Progression.data.markDirty();
-        PacketHandler.sendToClient(new PacketSyncImpossible(impossible.toArray(new IProgressionCriteria[impossible.size()])), uuid);
+        PacketHandler.sendToTeam(new PacketSyncImpossible(impossible.toArray(new IProgressionCriteria[impossible.size()])), master.team);
     }
     
     public void claimUnclaimedReward(IProgressionCriteria criteria) {
@@ -245,9 +212,11 @@ public class CriteriaMappings {
                 if ((trigger.onFired(uuid, getTriggerData(trigger), data))) {
                      if (isCancelingEnabled) return Result.DENY;
                 }
+
+                PacketHandler.sendToTeam(new PacketSyncTriggerData(trigger, getTriggerData(trigger)), master.team);
             } else if (!trigger.onFired(uuid, getTriggerData(trigger), data)) {
                 return Result.DENY;
-            }
+            } else PacketHandler.sendToTeam(new PacketSyncTriggerData(trigger, getTriggerData(trigger)), master.team);
         }
         
         //Next step, now that the triggers have been fire, we need to go through them again
@@ -258,7 +227,7 @@ public class CriteriaMappings {
             if (trigger.isCompleted(getTriggerData(trigger))) {
                 completedTriggers.add(trigger);
                 toRemove.add(trigger);
-                PacketHandler.sendToClient(new PacketSyncTriggers(trigger.getCriteria(), TriggerHelper.getInternalID(trigger)), uuid);
+                PacketHandler.sendToTeam(new PacketSyncTriggers(trigger), master.team);
             }
         }
 
@@ -350,7 +319,7 @@ public class CriteriaMappings {
 
     public void removeCriteria(IProgressionCriteria criteria) {
         completedCritera.remove(criteria);
-        PacketHandler.sendToClient(new PacketSyncCriteria(false, new Integer[] { 0 }, new IProgressionCriteria[] { criteria }), uuid);
+        PacketHandler.sendToTeam(new PacketSyncCriteria(false, new Integer[] { 0 }, new IProgressionCriteria[] { criteria }), master.team);
     }
 
     private void completeCriteria(IProgressionCriteria criteria, HashSet<IProgressionTrigger> forRemovalFromActive, HashSet<IProgressionCriteria> toRemap) {
@@ -380,8 +349,8 @@ public class CriteriaMappings {
 
         List<EntityPlayerMP> list = PlayerHelper.getPlayersFromUUID(uuid);
         for (EntityPlayerMP player : list) {
-            PacketHandler.sendToClient(new PacketSyncCriteria(false, new Integer[] { completedTimes }, new IProgressionCriteria[] { criteria }), player);
-            if (criteria.displayAchievement()) PacketHandler.sendToClient(new PacketCompleted(criteria), player);
+            PacketHandler.sendToTeam(new PacketSyncCriteria(false, new Integer[] { completedTimes }, new IProgressionCriteria[] { criteria }), master.team);
+            if (criteria.displayAchievement()) PacketHandler.sendToTeam(new PacketCompleted(criteria), master.team);
         }
     }
 

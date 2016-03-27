@@ -1,18 +1,18 @@
 package joshie.progression.api.criteria;
 
-import java.util.List;
-import java.util.UUID;
-
 import joshie.progression.api.special.IHasEventBus;
 import net.minecraft.item.ItemStack;
+
+import java.util.List;
+import java.util.UUID;
 
 public interface IProgressionTrigger extends IFieldProvider, IHasEventBus {
     /** Return the list this trigger is saving it's conditions to **/
     public List<IProgressionCondition> getConditions();
     
-    /** Associates this reward type with the criteria
+    /** Associates this trigger type with the criteria, and marks the uuid
      *  Most trigger types will not need access to this. **/
-    public void setCriteria(IProgressionCriteria criteria);
+    public void setCriteria(IProgressionCriteria criteria, UUID uuid);
     
     /** Return the criteria this trigger is attached to **/
     public IProgressionCriteria getCriteria();

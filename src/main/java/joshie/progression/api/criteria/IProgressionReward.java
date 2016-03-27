@@ -1,14 +1,14 @@
 package joshie.progression.api.criteria;
 
+import net.minecraft.item.ItemStack;
+
 import java.util.List;
 import java.util.UUID;
-
-import net.minecraft.item.ItemStack;
 
 public interface IProgressionReward extends IFieldProvider {
     /** Associates this reward type with the criteria
      *  Most reward types will not need access to this. **/
-    public void setCriteria(IProgressionCriteria criteria);
+    public void setCriteria(IProgressionCriteria criteria, UUID uuid);
 
     /** Gives the reward to this UUID **/
     public void reward(UUID uuid);

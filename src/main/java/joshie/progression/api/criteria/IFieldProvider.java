@@ -1,11 +1,16 @@
 package joshie.progression.api.criteria;
 
+import java.util.UUID;
+
 public interface IFieldProvider {
     /** Return an unlocalised name **/
     public String getUnlocalisedName();
     
     /** Return the localised name for this thing **/
     public String getLocalisedName();
+
+    /** Return the uniqueid for this object **/
+    public UUID getUniqueID();
     
     /** Return a colour to display this thingy as **/
     public int getColor();

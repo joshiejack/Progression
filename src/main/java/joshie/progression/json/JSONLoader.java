@@ -1,28 +1,10 @@
 package joshie.progression.json;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.Level;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-
 import joshie.progression.Progression;
-import joshie.progression.api.criteria.IProgressionCondition;
-import joshie.progression.api.criteria.IProgressionCriteria;
-import joshie.progression.api.criteria.IProgressionFilter;
-import joshie.progression.api.criteria.IProgressionReward;
-import joshie.progression.api.criteria.IProgressionTab;
-import joshie.progression.api.criteria.IProgressionTrigger;
+import joshie.progression.api.criteria.*;
 import joshie.progression.api.special.IHasFilters;
 import joshie.progression.api.special.IInit;
 import joshie.progression.handlers.APIHandler;
@@ -37,7 +19,18 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.Level;
 import scala.swing.Action.Trigger;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 
 public class JSONLoader {
     public static Gson gson;
@@ -199,10 +192,10 @@ public class JSONLoader {
                     Trigger[] triggerz = new Trigger[criteria.triggers.size()];
                     for (int j = 0; j < triggerz.length; j++) {
                         DataTrigger trigger = criteria.triggers.get(j);
-                        IProgressionTrigger iTrigger = APIHandler.newTrigger(theCriteria, trigger.type, trigger.data);
+                        IProgressionTrigger iTrigger = APIHandler.newTrigger(theCriteria, trigger.uuid, trigger.type, trigger.data);
                         if (trigger.conditions != null) {
                             for (DataGeneric generic : trigger.conditions) {
-                                APIHandler.newCondition(iTrigger, generic.type, generic.data);
+                                APIHandler.newCondition(iTrigger, generic.uuid, generic.type, generic.data);
                             }
                         }
                     }
@@ -211,7 +204,7 @@ public class JSONLoader {
                 //Add the Rewards
                 if (criteria.rewards != null) {
                     for (DataGeneric reward : criteria.rewards) {
-                        APIHandler.newReward(theCriteria, reward.type, reward.data);
+                        APIHandler.newReward(theCriteria, reward.uuid, reward.type, reward.data);
                     }
                 }
             }
@@ -368,14 +361,14 @@ public class JSONLoader {
                             for (IProgressionCondition condition : trigger.getConditions()) {
                                 JsonObject conditionData = new JsonObject();
                                 JSONHelper.writeJSON(conditionData, condition);
-                                DataGeneric dCondition = new DataGeneric(condition.getUnlocalisedName(), conditionData);
+                                DataGeneric dCondition = new DataGeneric(condition.getUniqueID(), condition.getUnlocalisedName(), conditionData);
                                 theConditions.add(dCondition);
                             }
                         }
 
                         JsonObject triggerData = new JsonObject();
                         JSONHelper.writeJSON(triggerData, trigger);
-                        DataTrigger dTrigger = new DataTrigger(trigger.getUnlocalisedName(), triggerData, theConditions);
+                        DataTrigger dTrigger = new DataTrigger(trigger.getUniqueID(), trigger.getUnlocalisedName(), triggerData, theConditions);
                         theTriggers.add(dTrigger);
                     }
                 }
@@ -384,7 +377,7 @@ public class JSONLoader {
                     for (IProgressionReward reward : rewards) {
                         JsonObject rewardData = new JsonObject();
                         JSONHelper.writeJSON(rewardData, reward);
-                        DataGeneric dReward = new DataGeneric(reward.getUnlocalisedName(), rewardData);
+                        DataGeneric dReward = new DataGeneric(reward.getUniqueID(), reward.getUnlocalisedName(), rewardData);
                         theRewards.add(dReward);
                     }
                 }

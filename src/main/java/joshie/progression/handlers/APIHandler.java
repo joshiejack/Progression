@@ -1,21 +1,11 @@
 package joshie.progression.handlers;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.UUID;
-
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.gson.JsonObject;
-
 import joshie.progression.api.ICustomDataBuilder;
 import joshie.progression.api.IProgressionAPI;
-import joshie.progression.api.criteria.IFieldProvider;
-import joshie.progression.api.criteria.IProgressionCondition;
-import joshie.progression.api.criteria.IProgressionCriteria;
-import joshie.progression.api.criteria.IProgressionFilter;
-import joshie.progression.api.criteria.IProgressionReward;
-import joshie.progression.api.criteria.IProgressionTab;
-import joshie.progression.api.criteria.IProgressionTrigger;
-import joshie.progression.api.criteria.IProgressionTriggerData;
+import joshie.progression.api.criteria.*;
 import joshie.progression.api.special.IInit;
 import joshie.progression.crafting.ActionType;
 import joshie.progression.criteria.Criteria;
@@ -39,7 +29,16 @@ import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.UUID;
+import java.util.concurrent.Callable;
+
 public class APIHandler implements IProgressionAPI {
+    //Caches
+    private static final Cache<UUID, IProgressionTrigger> triggerCache = CacheBuilder.newBuilder().maximumSize(2048).build();
+    private static final Cache<UUID, IProgressionReward> rewardCache = CacheBuilder.newBuilder().maximumSize(2048).build();
+
     //This is the registry for trigger type and reward type creation
     public static final HashMap<String, IProgressionTrigger> triggerTypes = new HashMap();
     public static final HashMap<String, IProgressionReward> rewardTypes = new HashMap();
@@ -152,29 +151,31 @@ public class APIHandler implements IProgressionAPI {
         return iTab;
     }
 
-    public static IProgressionCondition newCondition(IProgressionTrigger trigger, String type, JsonObject data) {
+    public static IProgressionCondition newCondition(IProgressionTrigger trigger, UUID uuid, String type, JsonObject data) {
         IProgressionCondition oldConditionType = conditionTypes.get(type);
         if (oldConditionType == null) return null;
         IProgressionCondition newConditionType = oldConditionType;
 
         try {
+            if (uuid == null) uuid = UUID.randomUUID();
             newConditionType = oldConditionType.getClass().newInstance();
-            newConditionType.setTrigger(trigger);
+            newConditionType.setTrigger(trigger, uuid);
             JSONHelper.readJSON(data, newConditionType);
             trigger.getConditions().add(newConditionType);
         } catch (Exception e) {}
         return newConditionType;
     }
 
-    public static IProgressionTrigger newTrigger(IProgressionCriteria criteria, String type, JsonObject data) {
+    public static IProgressionTrigger newTrigger(IProgressionCriteria criteria, UUID uuid, String type, JsonObject data) {
         IProgressionTrigger oldTriggerType = triggerTypes.get(type);
         if (oldTriggerType == null) return null;
 
         IProgressionTrigger newTriggerType = oldTriggerType;
 
         try {
+            if (uuid == null) uuid = UUID.randomUUID();
             newTriggerType = oldTriggerType.getClass().newInstance();
-            newTriggerType.setCriteria(criteria);
+            newTriggerType.setCriteria(criteria, uuid);
             JSONHelper.readJSON(data, newTriggerType);
             criteria.getTriggers().add(newTriggerType);
         } catch (Exception e) {}
@@ -182,7 +183,7 @@ public class APIHandler implements IProgressionAPI {
         return newTriggerType;
     }
 
-    public static IProgressionReward newReward(IProgressionCriteria criteria, String type, JsonObject data) {
+    public static IProgressionReward newReward(IProgressionCriteria criteria, UUID uuid, String type, JsonObject data) {
         IProgressionReward oldRewardType = rewardTypes.get(type);
         if (oldRewardType == null) return null;
 
@@ -190,8 +191,9 @@ public class APIHandler implements IProgressionAPI {
         boolean optional = data.get("optional") != null ? data.get("optional").getAsBoolean() : false;
 
         try {
+            if (uuid == null) uuid = UUID.randomUUID();
             newRewardType = oldRewardType.getClass().newInstance(); //Create a new instance of the reward
-            newRewardType.setCriteria(criteria); //Let the reward know which criteria is attached to
+            newRewardType.setCriteria(criteria, uuid); //Let the reward know which criteria is attached to
             JSONHelper.readJSON(data, newRewardType);
             criteria.getRewards().add(newRewardType);
         } catch (Exception e) {}
@@ -216,7 +218,7 @@ public class APIHandler implements IProgressionAPI {
 
         try {
             newTriggerType = oldTriggerType.getClass().newInstance();
-            newTriggerType.setCriteria(criteria);
+            newTriggerType.setCriteria(criteria, UUID.randomUUID());
             EventsManager.onTriggerAdded(newTriggerType);
             criteria.getTriggers().add(newTriggerType);
             if (newTriggerType instanceof IInit) ((IInit) newTriggerType).init();
@@ -230,7 +232,7 @@ public class APIHandler implements IProgressionAPI {
 
         try {
             newRewardType = oldRewardType.getClass().newInstance();
-            newRewardType.setCriteria(criteria);
+            newRewardType.setCriteria(criteria, UUID.randomUUID());
             EventsManager.onRewardAdded(newRewardType);
             criteria.getRewards().add(newRewardType);
             if (newRewardType instanceof IInit) ((IInit) newRewardType).init();
@@ -244,7 +246,7 @@ public class APIHandler implements IProgressionAPI {
 
         try {
             newConditionType = oldConditionType.getClass().newInstance();
-            newConditionType.setTrigger(trigger);
+            newConditionType.setTrigger(trigger, UUID.randomUUID());
             trigger.getConditions().add(newConditionType);
             if (newConditionType instanceof IInit) ((IInit) newConditionType).init();
         } catch (Exception e) {}
@@ -340,6 +342,44 @@ public class APIHandler implements IProgressionAPI {
         }
 
         return null;
+    }
+
+    public static IProgressionReward getRewardFromUUID(final UUID uuid) {
+        try {
+            return rewardCache.get(uuid, new Callable<IProgressionReward>() {
+                @Override
+                public IProgressionReward call() throws Exception {
+                    for (IProgressionCriteria criteria: getCriteria().values()) {
+                        for (IProgressionReward reward: criteria.getRewards()) {
+                            if (reward.getUniqueID().equals(uuid)) return reward;
+                        }
+                    }
+
+                    return null;
+                }
+            });
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static IProgressionTrigger getTriggerFromUUID(final UUID uuid) {
+        try {
+            return triggerCache.get(uuid, new Callable<IProgressionTrigger>() {
+                @Override
+                public IProgressionTrigger call() throws Exception {
+                    for (IProgressionCriteria criteria: getCriteria().values()) {
+                        for (IProgressionTrigger trigger: criteria.getTriggers()) {
+                            if (trigger.getUniqueID().equals(uuid)) return trigger;
+                        }
+                    }
+
+                    return null;
+                }
+            });
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
