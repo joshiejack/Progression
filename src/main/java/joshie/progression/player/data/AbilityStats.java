@@ -1,11 +1,9 @@
 package joshie.progression.player.data;
 
-import static joshie.progression.player.data.AbilityStats.SpeedType.AIR;
-import static joshie.progression.player.data.AbilityStats.SpeedType.LAND;
-import static joshie.progression.player.data.AbilityStats.SpeedType.WATER;
-
 import joshie.progression.network.core.PacketNBT.INBTWritable;
 import net.minecraft.nbt.NBTTagCompound;
+
+import static joshie.progression.player.data.AbilityStats.SpeedType.*;
 
 public class AbilityStats implements INBTWritable<AbilityStats> {
     public static enum SpeedType {
@@ -48,21 +46,21 @@ public class AbilityStats implements INBTWritable<AbilityStats> {
     @Override
     public AbilityStats readFromNBT(NBTTagCompound tag) {
         if (tag.hasKey("Speed")) landSpeed = tag.getFloat("Speed");
-        else landSpeed = tag.getFloat("LandSpeed");
-        airSpeed = tag.getFloat("AirSpeed");
-        waterSpeed = tag.getFloat("WaterSpeed");
+        else landSpeed = tag.getFloat("SpeedLand");
+        airSpeed = tag.getFloat("SpeedAir");
+        waterSpeed = tag.getFloat("SpeedWater");
         stepAssist = tag.getFloat("StepAssist");
-        fallDamage = tag.getInteger("Fall Damage");
+        fallDamage = tag.getInteger("FallDamage");
         return this;
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
-        tag.setFloat("LandSpeed", landSpeed);
-        tag.setFloat("AirSpeed", airSpeed);
-        tag.setFloat("WaterSpeed", waterSpeed);
+        tag.setFloat("SpeedLand", landSpeed);
+        tag.setFloat("SpeedAir", airSpeed);
+        tag.setFloat("SpeedWater", waterSpeed);
         tag.setFloat("StepAssist", stepAssist);
-        tag.setInteger("Fall Damage", fallDamage);
+        tag.setInteger("FallDamage", fallDamage);
         return tag;
     }
 }

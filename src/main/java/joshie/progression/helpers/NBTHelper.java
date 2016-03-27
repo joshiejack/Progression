@@ -1,11 +1,11 @@
 package joshie.progression.helpers;
 
-import java.util.Collection;
-import java.util.Map;
-
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+
+import java.util.Collection;
+import java.util.Map;
 
 public class NBTHelper {
 	public static void readTagCollection(NBTTagCompound nbt, String string, ICollectionHelper something) {
@@ -27,14 +27,14 @@ public class NBTHelper {
 	}
 	
 	public static NBTTagCompound writeCollection(NBTTagCompound nbt, String name, ICollectionHelper something) {
-		NBTTagList list = new NBTTagList();
-		for (Object s: something.getSet()) {
-		    if (s == null) continue;
-			list.appendTag(something.write(s));
-		}
-		
-		nbt.setTag(name, list);
-		return nbt;
+        NBTTagList list = new NBTTagList();
+        for (Object s : something.getSet()) {
+            if (s == null) continue;
+            list.appendTag(something.write(s));
+        }
+
+        nbt.setTag(name, list);
+        return nbt;
 	}
 	
 	public static void readMap(NBTTagCompound nbt, String string, IMapHelper something) {
@@ -49,18 +49,18 @@ public class NBTHelper {
 	}
 	
 	public static NBTTagCompound writeMap(NBTTagCompound nbt, String name, IMapHelper something) {
-		NBTTagList list = new NBTTagList();
-		for (Object o: something.getMap().keySet()) {
-			Object key = o;
-			Object value = something.getMap().get(key);
-	         if (key == null || value == null) continue;
-			NBTTagCompound tag = new NBTTagCompound();
-			something.writeKey(tag, key);
-			something.writeValue(tag, value);
-			list.appendTag(tag);
-		}
-		
-		nbt.setTag(name, list);
+        NBTTagList list = new NBTTagList();
+        for (Object o: something.getMap().keySet()) {
+            Object key = o;
+            Object value = something.getMap().get(key);
+            if (key == null || value == null) continue;
+            NBTTagCompound tag = new NBTTagCompound();
+            something.writeKey(tag, key);
+            something.writeValue(tag, value);
+            list.appendTag(tag);
+        }
+
+        nbt.setTag(name, list);
 		return nbt;
 	}
 	

@@ -59,13 +59,13 @@ public class CriteriaMappings {
 
     //Reads the completed criteria
     public void readFromNBT(NBTTagCompound nbt) {
-        NBTHelper.readTagCollection(nbt, "Claimed Rewards", RewardSet.INSTANCE.setCollection(claimedRewards));
-        NBTHelper.readTagCollection(nbt, "Impossible Criteria", CriteriaSet.INSTANCE.setCollection(impossible));
-        NBTHelper.readTagCollection(nbt, "Completed Triggers", TriggerNBT.INSTANCE.setCollection(completedTriggers));
-        NBTHelper.readMap(nbt, "Unclaimed Rewards", UnclaimedNBT.INSTANCE.setMap(unclaimedRewards));
-        NBTHelper.readMap(nbt, "Completed Criteria", CriteriaNBT.INSTANCE.setMap(completedCritera));
-        NBTHelper.readMap(nbt, "Member Reward Counter", RewardCountNBT.INSTANCE.setMap(numberRewards));
-        NBTTagList data = nbt.getTagList("Active Trigger Data", 10);
+        NBTHelper.readTagCollection(nbt, "ClaimedRewards", RewardSet.INSTANCE.setCollection(claimedRewards));
+        NBTHelper.readTagCollection(nbt, "ImpossibleCriteria", CriteriaSet.INSTANCE.setCollection(impossible));
+        NBTHelper.readTagCollection(nbt, "CompletedTriggers", TriggerNBT.INSTANCE.setCollection(completedTriggers));
+        NBTHelper.readMap(nbt, "UnclaimedRewards", UnclaimedNBT.INSTANCE.setMap(unclaimedRewards));
+        NBTHelper.readMap(nbt, "CompletedCriteria", CriteriaNBT.INSTANCE.setMap(completedCritera));
+        NBTHelper.readMap(nbt, "MemberRewardCounter", RewardCountNBT.INSTANCE.setMap(numberRewards));
+        NBTTagList data = nbt.getTagList("ActiveTrigger Data", 10);
         for (int i = 0; i < data.tagCount(); i++) {
             NBTTagCompound tag = data.getCompoundTagAt(i);
             UUID uuid = UUID.fromString(tag.getString("UUID"));
@@ -79,12 +79,12 @@ public class CriteriaMappings {
     }
 
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        NBTHelper.writeCollection(nbt, "Claimed Rewards", RewardSet.INSTANCE.setCollection(claimedRewards));
-        NBTHelper.writeCollection(nbt, "Impossible Criteria", CriteriaSet.INSTANCE.setCollection(impossible));
-        NBTHelper.writeCollection(nbt, "Completed Triggers", TriggerNBT.INSTANCE.setCollection(completedTriggers));
-        NBTHelper.writeMap(nbt, "Unclaimed Rewards", UnclaimedNBT.INSTANCE.setMap(unclaimedRewards));
-        NBTHelper.writeMap(nbt, "Completed Criteria", CriteriaNBT.INSTANCE.setMap(completedCritera));
-        NBTHelper.writeMap(nbt, "Member Reward Counter", RewardCountNBT.INSTANCE.setMap(numberRewards));
+        NBTHelper.writeCollection(nbt, "ClaimedRewards", RewardSet.INSTANCE.setCollection(claimedRewards));
+        NBTHelper.writeCollection(nbt, "ImpossibleCriteria", CriteriaSet.INSTANCE.setCollection(impossible));
+        NBTHelper.writeCollection(nbt, "CompletedTriggers", TriggerNBT.INSTANCE.setCollection(completedTriggers));
+        NBTHelper.writeMap(nbt, "UnclaimedRewards", UnclaimedNBT.INSTANCE.setMap(unclaimedRewards));
+        NBTHelper.writeMap(nbt, "CompletedCriteria", CriteriaNBT.INSTANCE.setMap(completedCritera));
+        NBTHelper.writeMap(nbt, "MemberRewardCounter", RewardCountNBT.INSTANCE.setMap(numberRewards));
         //Save the extra data for the existing triggers
         NBTTagList data = new NBTTagList();
         for (IProgressionTrigger trigger : triggerData.keySet()) {
@@ -101,7 +101,7 @@ public class CriteriaMappings {
             }
         }
 
-        nbt.setTag("Active Trigger Data", data);
+        nbt.setTag("ActiveTriggerData", data);
         return nbt;
     }
 

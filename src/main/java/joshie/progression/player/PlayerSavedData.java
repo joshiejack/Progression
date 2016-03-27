@@ -1,14 +1,6 @@
 package joshie.progression.player;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
 import com.google.common.collect.Maps;
-
 import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.api.criteria.IProgressionReward;
 import joshie.progression.api.criteria.IProgressionTab;
@@ -23,6 +15,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.WorldSavedData;
 import net.minecraftforge.common.UsernameCache;
+
+import java.util.*;
 
 public class PlayerSavedData extends WorldSavedData {
     private HashMap<UUID, PlayerTeam> teams = Maps.newHashMap();
@@ -138,7 +132,7 @@ public class PlayerSavedData extends WorldSavedData {
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         /** Load in the data about teams **/
-        NBTTagList map = nbt.getTagList("PlayerData", 10);
+        NBTTagList map = nbt.getTagList("TeamData", 10);
         for (int i = 0; i < map.tagCount(); i++) {
             NBTTagCompound tag = map.getCompoundTagAt(i);
             if (tag.hasKey("Owner") || tag.hasKey("UUID-Most")) {
@@ -171,6 +165,6 @@ public class PlayerSavedData extends WorldSavedData {
             map.appendTag(tag);
         }
 
-        nbt.setTag("PlayerData", map);
+        nbt.setTag("TeamData", map);
     }
 }

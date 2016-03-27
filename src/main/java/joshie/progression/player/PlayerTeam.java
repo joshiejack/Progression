@@ -144,7 +144,7 @@ public class PlayerTeam implements ITextEditable {
         isActive = tag.getBoolean("IsActive");
 
         members = new HashSet();
-        NBTTagList list = tag.getTagList("Team", 8);
+        NBTTagList list = tag.getTagList("TeamMembers", 8);
         for (int j = 0; j < list.tagCount(); j++) {
             addMember(UUID.fromString(list.getStringTagAt(j)));
         }
@@ -163,6 +163,6 @@ public class PlayerTeam implements ITextEditable {
             list.appendTag(new NBTTagString(uuid.toString()));
         }
 
-        tag.setTag("Team", list);
+        tag.setTag("TeamMembers", list);
     }
 }
