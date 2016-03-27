@@ -1,10 +1,5 @@
 package joshie.progression.gui.editors;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.IFieldProvider;
 import joshie.progression.api.criteria.IProgressionField;
@@ -15,11 +10,7 @@ import joshie.progression.api.gui.ICustomDrawGuiEditor;
 import joshie.progression.api.special.IEnum;
 import joshie.progression.api.special.ISpecialFieldProvider;
 import joshie.progression.api.special.ISpecialFieldProvider.DisplayMode;
-import joshie.progression.gui.core.DrawHelper;
-import joshie.progression.gui.core.FeatureAbstract;
-import joshie.progression.gui.core.FeatureTooltip;
-import joshie.progression.gui.core.GuiCore;
-import joshie.progression.gui.core.IGuiFeature;
+import joshie.progression.gui.core.*;
 import joshie.progression.gui.editors.FeatureItemSelector.Position;
 import joshie.progression.gui.editors.insert.FeatureNew;
 import joshie.progression.gui.fields.BooleanField;
@@ -32,6 +23,11 @@ import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.json.Theme;
 import joshie.progression.lib.ProgressionInfo;
 import net.minecraft.client.renderer.GlStateManager;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class FeatureDrawable extends FeatureAbstract {
     private List<IFieldProvider> drawable;
@@ -81,18 +77,18 @@ public class FeatureDrawable extends FeatureAbstract {
             if (provider instanceof ISpecialFieldProvider) {
                 if (((ISpecialFieldProvider) provider).shouldReflectionSkipField(field.getName())) continue;
             }
-            
-            
 
-            if (field.getClass().isEnum()) fields.add(new EnumField(field.getName(), (IEnum) provider));
-            if (field.getType() == boolean.class) fields.add(new BooleanField(field.getName(), provider));
-            if (field.getType() == String.class) fields.add(new TextField(field.getName(), provider, type));
-            if (field.getType() == int.class) fields.add(new TextField(field.getName(), provider, type));
-            if (field.getType() == float.class) fields.add(new TextField(field.getName(), provider, type));
-            if (field.getType() == double.class) fields.add(new TextField(field.getName(), provider, type));
-            if (field.getGenericType().toString().equals("java.util.List<" + ProgressionInfo.FILTER + ">")) {
-                fields.add(new ItemFilterField(field.getName(), provider));
-            }
+            try {
+                if (field.getType() == boolean.class) fields.add(new BooleanField(field.getName(), provider));
+                else if (field.getType() == String.class) fields.add(new TextField(field.getName(), provider, type));
+                else if (field.getType() == int.class) fields.add(new TextField(field.getName(), provider, type));
+                else if (field.getType() == float.class) fields.add(new TextField(field.getName(), provider, type));
+                else if (field.getType() == double.class) fields.add(new TextField(field.getName(), provider, type));
+                else if (field.get(provider) instanceof Enum) fields.add(new EnumField(field.getName(), (IEnum) provider));
+                else if (field.getGenericType().toString().equals("java.util.List<" + ProgressionInfo.FILTER + ">")) {
+                    fields.add(new ItemFilterField(field.getName(), provider));
+                }
+            } catch (Exception e) {}
         }
     }
 
