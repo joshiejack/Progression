@@ -14,6 +14,7 @@ import joshie.progression.gui.fields.BooleanFieldHideable;
 import joshie.progression.gui.fields.TextField;
 import joshie.progression.gui.fields.TextFieldHideable;
 import joshie.progression.gui.filters.FilterSelectorItem;
+import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
@@ -44,10 +45,11 @@ public class GuiCriteriaEditor extends GuiBaseEditor implements IBarProvider, II
 
     @Override
     public void initData(GuiCore core) {
+        criteria = APIHandler.getCriteriaFromName(criteria.getUniqueID()); //Reload the criteria from the cache
         super.initData(core);
         //Setup the features
-        features.add(new FeatureDrawable(EnumChatFormatting.BOLD + Progression.translate("new.trigger"), criteria.getTriggers(), 45, 201, 201, 64, 119, FeatureNewTrigger.INSTANCE, theme.triggerGradient1, theme.triggerGradient2, theme.triggerFontColor));
-        features.add(new FeatureDrawable(EnumChatFormatting.BOLD + Progression.translate("new.reward"), criteria.getRewards(), 140, 0, 55, 201, 201, FeatureNewReward.INSTANCE, theme.rewardBoxGradient1, theme.rewardBoxGradient2, theme.rewardBoxFont));
+        features.add(new FeatureTrigger(EnumChatFormatting.BOLD + Progression.translate("new.trigger"), criteria.getTriggers(), 45, 201, 201, 64, 119, FeatureNewTrigger.INSTANCE, theme.triggerGradient1, theme.triggerGradient2, theme.triggerFontColor));
+        features.add(new FeatureReward(EnumChatFormatting.BOLD + Progression.translate("new.reward"), criteria.getRewards(), 140, 0, 55, 201, 201, FeatureNewReward.INSTANCE, theme.rewardBoxGradient1, theme.rewardBoxGradient2, theme.rewardBoxFont));
         features.add(new FeatureBarsX2(this, "requirements", "results"));
         features.add(FeatureFullTextEditor.INSTANCE); //Add the text selector
         features.add(FeatureItemSelector.INSTANCE); //Add the item selector

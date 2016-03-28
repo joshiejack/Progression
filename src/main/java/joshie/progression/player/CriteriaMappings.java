@@ -1,9 +1,13 @@
 package joshie.progression.player;
 
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import joshie.progression.Progression;
-import joshie.progression.api.criteria.*;
+import joshie.progression.api.criteria.IProgressionCondition;
+import joshie.progression.api.criteria.IProgressionCriteria;
+import joshie.progression.api.criteria.IProgressionReward;
+import joshie.progression.api.criteria.IProgressionTrigger;
 import joshie.progression.api.special.ICancelable;
 import joshie.progression.api.special.IStoreTriggerData;
 import joshie.progression.handlers.APIHandler;
@@ -65,7 +69,7 @@ public class CriteriaMappings {
         NBTHelper.readMap(nbt, "UnclaimedRewards", UnclaimedNBT.INSTANCE.setMap(unclaimedRewards));
         NBTHelper.readMap(nbt, "CompletedCriteria", CriteriaNBT.INSTANCE.setMap(completedCritera));
         NBTHelper.readMap(nbt, "MemberRewardCounter", RewardCountNBT.INSTANCE.setMap(numberRewards));
-        NBTTagList data = nbt.getTagList("ActiveTrigger Data", 10);
+        NBTTagList data = nbt.getTagList("ActiveTriggerData", 10);
         for (int i = 0; i < data.tagCount(); i++) {
             NBTTagCompound tag = data.getCompoundTagAt(i);
             UUID uuid = UUID.fromString(tag.getString("UUID"));
@@ -289,19 +293,30 @@ public class CriteriaMappings {
             }
         }
 
+        Set<IProgressionCriteria> completed = new HashSet();
         //Now we should try and dish out any automatic rewards
         for (UUID uuid: unclaimedRewards.keySet()) {
-            Iterator<IProgressionReward> it = unclaimedRewards.get(uuid).iterator();
-            while (it.hasNext()) {
-                IProgressionReward reward = it.next();
+            List<IProgressionReward> list = Lists.newArrayList(unclaimedRewards.get(uuid));
+            Set<IProgressionReward> remove = new HashSet();
+            Collections.shuffle(list);
+            for (IProgressionReward reward: list) {
                 if (reward.isAutomatic()) {
                     EntityPlayerMP aPlayer = (EntityPlayerMP) PlayerHelper.getPlayerFromUUID(uuid);
                     if (aPlayer != null) {
-                        claimReward(aPlayer, reward);
-                        it.remove(); //Remove this from unclaimed list, once we have claimed it
+                        if(claimReward(aPlayer, reward)) {
+                            completed.add(reward.getCriteria());
+                        }
+
+                        remove.add(reward); //Remove this from unclaimed list, once we have claimed it
                     }
                 }
             }
+
+            CollectionHelper.removeAll(unclaimedRewards.get(uuid), list);
+        }
+
+        for (IProgressionCriteria criteria: completed) {
+            remapAfterClaiming(criteria);
         }
 
         //Mark data as dirty, whether it changed or not
@@ -328,28 +343,32 @@ public class CriteriaMappings {
         map.put(criteria, amount);
     }
 
-
-    public void claimReward(EntityPlayerMP player, IProgressionReward reward) {
-        if (!(reward.shouldRunOnce() && claimedRewards.contains(reward))) {
-            UUID uuid = PlayerHelper.getUUIDForPlayer(player);
-            IProgressionCriteria criteria = reward.getCriteria();
-            int rewardsGiven = getRewardsGiven(uuid, criteria);
-            if (rewardsGiven < criteria.getAmountOfRewards() || criteria.givesAllRewards()) {
-                reward.reward(player);
-                rewardsGiven++; //Increase the amount
-            }
-
-            if ((!criteria.givesAllRewards() && rewardsGiven == criteria.getAmountOfRewards()) || (criteria.givesAllRewards() && rewardsGiven == criteria.getRewards().size())) { //If all the rewards have been given out, then do some remapping of everything
-                HashSet<IProgressionTrigger> forRemovalFromActive = new HashSet(); //Reset them
-                HashSet<IProgressionCriteria> toRemap = new HashSet();
-                completeCriteria(criteria, forRemovalFromActive, toRemap);
-                remapStuff(forRemovalFromActive, toRemap);
-            }
-
-
-            setRewardsGiven(uuid, criteria, rewardsGiven);
-            claimedRewards.add(reward);
+    public void remapAfterClaiming(IProgressionCriteria criteria) {
+        HashSet<IProgressionTrigger> forRemovalFromActive = new HashSet(); //Reset them
+        HashSet<IProgressionCriteria> toRemap = new HashSet();
+        completeCriteria(criteria, forRemovalFromActive, toRemap);
+        remapStuff(forRemovalFromActive, toRemap);
+        for (UUID uuid: master.team.getEveryone()) {
+            setRewardsGiven(uuid, criteria, 0);
         }
+    }
+
+
+    public boolean claimReward(EntityPlayerMP player, IProgressionReward reward) {
+        UUID uuid = PlayerHelper.getUUIDForPlayer(player);
+        IProgressionCriteria criteria = reward.getCriteria();
+        int rewardsGiven = getRewardsGiven(uuid, criteria);
+        if (rewardsGiven < criteria.getAmountOfRewards() || criteria.givesAllRewards()) {
+            reward.reward(player);
+            rewardsGiven++; //Increase the amount
+        }
+
+        setRewardsGiven(uuid, criteria, rewardsGiven);
+        if ((!criteria.givesAllRewards() && rewardsGiven >= criteria.getAmountOfRewards()) || (criteria.givesAllRewards() && rewardsGiven >= criteria.getRewards().size())) { //If all the rewards have been given out, then do some remapping of everything
+            return true;
+        }
+
+        return false;
     }
 
     public void removeCriteria(IProgressionCriteria criteria) {
@@ -371,10 +390,19 @@ public class CriteriaMappings {
                 forRemovalFromActive.addAll(conflict.getTriggers());
             }
 
-            if (criteriaTrigger instanceof IStoreTriggerData) {
-                triggerData.remove(criteriaTrigger);
-                ((IStoreTriggerData)criteriaTrigger).readDataFromNBT(new NBTTagCompound()); //Read in a blank nbt file to reset the data
-                sendTriggerDataToClient(criteriaTrigger); //Let the client know it was wiped
+            boolean repeat = criteria.canRepeatInfinite();
+            if (!repeat) {
+                int max = criteria.getRepeatAmount();
+                int last = getCriteriaCount(criteria);
+                repeat = last < max;
+            }
+
+            if (repeat) {
+                if (criteriaTrigger instanceof IStoreTriggerData) {
+                    triggerData.remove(criteriaTrigger);
+                    ((IStoreTriggerData) criteriaTrigger).readDataFromNBT(new NBTTagCompound()); //Read in a blank nbt file to reset the data
+                    sendTriggerDataToClient(criteriaTrigger); //Let the client know it was wiped
+                }
             }
         }
 

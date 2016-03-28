@@ -6,6 +6,7 @@ import joshie.progression.crafting.Crafter;
 import joshie.progression.crafting.CraftingRegistry;
 import joshie.progression.crafting.CraftingUnclaimed;
 import joshie.progression.handlers.APIHandler;
+import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.lib.GuiIDs;
 import joshie.progression.network.PacketClaimed;
@@ -35,7 +36,7 @@ public class ItemCriteria extends Item {
     }
 
     public static enum ItemMeta {
-        criteria, claim, book, booleanValue, clearInventory, clearOrReceiveOrBlockCriteria, fallResistance,
+        criteria, claim, book, edit, booleanValue, clearInventory, clearOrReceiveOrBlockCriteria, fallResistance,
         ifCriteriaCompleted, ifDayOrNight, ifHasAchievement, ifHasBoolean, ifHasPoints, ifIsAtCoordinates,
         ifIsBiome, ifRandom, onChangeDimension, onLogin, onReceivedAchiement, onReceivedBoolean,
         onReceivedPoints, onSecond, onSentMessage, points, speed, showTab, showLayer;
@@ -76,7 +77,11 @@ public class ItemCriteria extends Item {
 
     public static IProgressionCriteria getCriteriaFromStack(ItemStack stack) {
         if (!stack.hasTagCompound()) return null;
-        return APIHandler.getCriteriaFromName(UUID.fromString(stack.getTagCompound().getString("Criteria")));
+        if (stack.getItemDamage() != ItemMeta.criteria.ordinal()) return null;
+        String uuid = stack.getTagCompound().getString("Criteria");
+        if (uuid.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
+            return APIHandler.getCriteriaFromName(UUID.fromString(uuid));
+        } else return null;
     }
 
     @Override
@@ -99,8 +104,13 @@ public class ItemCriteria extends Item {
 
     @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (stack.getItemDamage() == ItemMeta.book.ordinal()) {
+        if (stack.getItemDamage() == ItemMeta.book.ordinal() || stack.getItemDamage() == ItemMeta.edit.ordinal()) {
             int guiid = player.isSneaking() ? GuiIDs.GROUP : GuiIDs.EDITOR;
+            if (world.isRemote) {
+                if (stack.getItemDamage() == ItemMeta.edit.ordinal()) MCClientHelper.FORCE_EDIT = true;
+                else MCClientHelper.FORCE_EDIT = false;
+            }
+
             player.openGui(Progression.instance, guiid, null, 0, 0, 0);
         }
 
@@ -129,8 +139,13 @@ public class ItemCriteria extends Item {
 
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-        if (stack.getItemDamage() == ItemMeta.book.ordinal()) {
+        if (stack.getItemDamage() == ItemMeta.book.ordinal() || stack.getItemDamage() == ItemMeta.edit.ordinal()) {
             int guiid = player.isSneaking() ? GuiIDs.GROUP : GuiIDs.EDITOR;
+            if (world.isRemote) {
+                if (stack.getItemDamage() == ItemMeta.edit.ordinal()) MCClientHelper.FORCE_EDIT = true;
+                else MCClientHelper.FORCE_EDIT = false;
+            }
+
             player.openGui(Progression.instance, guiid, null, 0, 0, 0);
         } else if (!world.isRemote) {
             IProgressionCriteria criteria = getCriteriaFromStack(stack);
@@ -151,9 +166,9 @@ public class ItemCriteria extends Item {
         if (stack.getItemDamage() == ItemMeta.claim.ordinal()) {
             list.add("Right click me on tiles");
             list.add("to claim them as yours");
-        } else if (stack.getItemDamage() == ItemMeta.book.ordinal()) {
+        } else if (stack.getItemDamage() == ItemMeta.book.ordinal() || stack.getItemDamage() == ItemMeta.edit.ordinal()) {
             list.add(EnumChatFormatting.ITALIC + "Hold Shift to Edit Team");
-            if (player.capabilities.isCreativeMode) {
+            if (player.capabilities.isCreativeMode || stack.getItemDamage() == ItemMeta.edit.ordinal()) {
                 list.add("");
                 list.add("Right click me to open");
                 list.add("'Progression editor'");
@@ -169,6 +184,7 @@ public class ItemCriteria extends Item {
         } */
 
         list.add(new ItemStack(item, 1, ItemMeta.book.ordinal()));
+        list.add(new ItemStack(item, 1, ItemMeta.edit.ordinal()));
         list.add(new ItemStack(item, 1, ItemMeta.claim.ordinal()));
 
         for (IProgressionCriteria c : APIHandler.getCriteria().values()) {

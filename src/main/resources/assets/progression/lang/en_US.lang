@@ -164,6 +164,7 @@ progression.filter.block.blockMod=Block Mod
 
 #Items
 progression.item.book=Progression Book
+progression.item.edit=Progression Editor
 progression.item.claim=Progression Tile Claimer
 
 #Random Stuff

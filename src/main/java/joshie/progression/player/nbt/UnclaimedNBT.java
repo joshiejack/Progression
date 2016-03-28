@@ -57,7 +57,7 @@ public class UnclaimedNBT implements IMapHelper {
 
     @Override
     public void writeValue(NBTTagCompound tag, Object o) {
-        HashSet<IProgressionReward> rewards = (HashSet<IProgressionReward>) o;
+        Set<IProgressionReward> rewards = (Set<IProgressionReward>) o;
         NBTTagList list = new NBTTagList();
         for (IProgressionReward reward: rewards) {
             NBTTagString string = new NBTTagString(reward.getUniqueID().toString());

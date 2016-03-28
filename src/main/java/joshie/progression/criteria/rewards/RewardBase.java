@@ -100,4 +100,19 @@ public abstract class RewardBase implements IProgressionReward {
 
     @Override
     public void addTooltip(List list) {}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || !(o instanceof IProgressionReward)) return false;
+
+        IProgressionReward that = (IProgressionReward) o;
+        return getUniqueID() != null ? getUniqueID().equals(that.getUniqueID()) : that.getUniqueID() == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return getUniqueID() != null ? getUniqueID().hashCode() : 0;
+    }
 }

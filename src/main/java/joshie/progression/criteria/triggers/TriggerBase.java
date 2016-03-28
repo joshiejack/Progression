@@ -90,4 +90,19 @@ public abstract class TriggerBase implements IProgressionTrigger {
     public EventBus getEventBus() {
         return MinecraftForge.EVENT_BUS;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || !(o instanceof IProgressionTrigger)) return false;
+
+        IProgressionTrigger that = (IProgressionTrigger) o;
+        return getUniqueID() != null ? getUniqueID().equals(that.getUniqueID()) : that.getUniqueID() == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return getUniqueID() != null ? getUniqueID().hashCode() : 0;
+    }
 }

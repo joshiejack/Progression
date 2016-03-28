@@ -7,6 +7,7 @@ import joshie.progression.gui.core.GuiCore;
 import joshie.progression.gui.core.IBarProvider;
 import joshie.progression.gui.editors.insert.FeatureNewCondition;
 import joshie.progression.gui.editors.insert.FeatureNewReward;
+import joshie.progression.handlers.APIHandler;
 import net.minecraft.util.EnumChatFormatting;
 
 public class GuiConditionEditor extends GuiBaseEditor implements IBarProvider {
@@ -35,6 +36,7 @@ public class GuiConditionEditor extends GuiBaseEditor implements IBarProvider {
 
     @Override
     public void initData(GuiCore core) {
+        trigger = APIHandler.getCache().getTriggerFromUUID(trigger.getUniqueID()); //Reload the trigger from the cache
         super.initData(core);
         //Setup the features
         features.add(new FeatureBarsX1(this, "conditions"));

@@ -5,8 +5,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import org.lwjgl.input.Keyboard;
 
-public class MCClientHelper {	
-	public static EntityPlayer getPlayer() {
+public class MCClientHelper {
+    public static boolean FORCE_EDIT = false;
+
+    public static EntityPlayer getPlayer() {
 		return getMinecraft().thePlayer;
 	}
 
@@ -19,7 +21,7 @@ public class MCClientHelper {
     }
     
     public static boolean isInEditMode() {
-        return getPlayer().capabilities.isCreativeMode;
+        return FORCE_EDIT ? true: getPlayer().capabilities.isCreativeMode;
     }
 
     public static boolean isShiftPressed() {

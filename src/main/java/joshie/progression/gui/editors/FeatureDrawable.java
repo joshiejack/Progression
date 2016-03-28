@@ -4,13 +4,15 @@ import joshie.progression.Progression;
 import joshie.progression.api.criteria.IFieldProvider;
 import joshie.progression.api.criteria.IProgressionField;
 import joshie.progression.api.criteria.IProgressionReward;
-import joshie.progression.api.criteria.IProgressionTrigger;
 import joshie.progression.api.gui.ICustomDrawGuiDisplay;
 import joshie.progression.api.gui.ICustomDrawGuiEditor;
 import joshie.progression.api.special.IEnum;
 import joshie.progression.api.special.ISpecialFieldProvider;
 import joshie.progression.api.special.ISpecialFieldProvider.DisplayMode;
-import joshie.progression.gui.core.*;
+import joshie.progression.gui.core.DrawHelper;
+import joshie.progression.gui.core.FeatureAbstract;
+import joshie.progression.gui.core.FeatureTooltip;
+import joshie.progression.gui.core.IGuiFeature;
 import joshie.progression.gui.editors.FeatureItemSelector.Position;
 import joshie.progression.gui.editors.insert.FeatureNew;
 import joshie.progression.gui.fields.BooleanField;
@@ -29,7 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class FeatureDrawable extends FeatureAbstract {
+public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
     private List<IFieldProvider> drawable;
     private HashMap<IFieldProvider, List<IProgressionField>> fieldsMap;
     private IGuiFeature newDrawable;
@@ -143,15 +145,17 @@ public class FeatureDrawable extends FeatureAbstract {
         }
     }
 
+    public void drawSpecial(T provider, int xPos, int offsetY, int mouseOffsetX, int mouseOffsetY) {}
+
     @Override
     public void drawFeature(int mouseX, int mouseY) {
         int xCoord = 0;
         for (int i = 0; i < drawable.size(); i++) {
-            int xPos = (MCClientHelper.isInEditMode() ? (100 * xCoord) : (80 * xCoord));
-            int mouseOffsetX = mouseX - offsetX - xPos;
+            int offsetX = (MCClientHelper.isInEditMode() ? (100 * xCoord) : (80 * xCoord));
+            int mouseOffsetX = mouseX - this.offsetX - offsetX;
             int mouseOffsetY = mouseY - offsetY;
             IFieldProvider drawing = drawable.get(i);
-            drawingDraw(drawing, offset, xPos, offsetY, mouseOffsetX, mouseOffsetY);
+            drawingDraw(drawing, offset, offsetX, offsetY, mouseOffsetX, mouseOffsetY);
             //Draw The Delete Button
             if (MCClientHelper.isInEditMode()) {
                 int xXcoord = 234;
@@ -159,23 +163,10 @@ public class FeatureDrawable extends FeatureAbstract {
                     xXcoord += 11;
                 }
 
-                offset.drawTexture(xPos, offsetY, ProgressionInfo.textures, 87, 4, xXcoord, 52, 11, 11);
+                offset.drawTexture(offsetX, offsetY, ProgressionInfo.textures, 87, 4, xXcoord, 52, 11, 11);
             }
 
-            //We have drawn the deleted button now we check for conditions
-            if (drawing instanceof IProgressionTrigger) {
-                boolean display = MCClientHelper.isInEditMode() ? true: ((IProgressionTrigger)drawing).getConditions().size() > 0;
-                if (display) {
-                    int color = Theme.INSTANCE.blackBarBorder;
-                    if (mouseOffsetX >= 2 && mouseOffsetX <= 87 && mouseOffsetY >= 66 && mouseOffsetY <= 77) {
-                        color = Theme.INSTANCE.blackBarFontColor;
-                    }
-
-                    offset.drawGradient(xPos, offsetY, 2, 66, 85, 11, color, Theme.INSTANCE.blackBarGradient1, Theme.INSTANCE.blackBarGradient2);
-                    offset.drawText(xPos, offsetY, Progression.translate((MCClientHelper.isInEditMode() ? "editor" : "display") + ".condition"), 6, 67, Theme.INSTANCE.blackBarFontColor);
-                }
-            }
-
+            drawSpecial((T)drawing, offsetX, offsetY, mouseOffsetX, mouseOffsetY);
             xCoord++;
         }
 
@@ -234,6 +225,10 @@ public class FeatureDrawable extends FeatureAbstract {
         return false;
     }
 
+    public boolean clickSpecial(T provider, int mouseOffsetX, int mouseOffsetY) {
+        return false;
+    }
+
     @Override
     public boolean mouseClicked(final int mouseX, final int mouseY, int button) {
         if (FeatureItemSelector.INSTANCE.isVisible()) return false; //If the item selector is visible, don't process clicks
@@ -252,17 +247,7 @@ public class FeatureDrawable extends FeatureAbstract {
                 }
             }
 
-            //Delete button done, on to condition editor!!!!!!!!!!!!!!!!!!!!!!!
-            if (provider instanceof IProgressionTrigger) {
-                boolean display = MCClientHelper.isInEditMode() ? true: ((IProgressionTrigger)provider).getConditions().size() > 0;
-                if (display) {
-                    if (mouseOffsetX >= 2 && mouseOffsetX <= 87 && mouseOffsetY >= 66 && mouseOffsetY <= 77) {
-                        GuiConditionEditor.INSTANCE.setTrigger((IProgressionTrigger) provider);
-                        GuiCore.INSTANCE.setEditor(GuiConditionEditor.INSTANCE);
-                    }
-                }
-            }
-
+            if (clickSpecial((T)provider, mouseOffsetX, mouseOffsetY)) return true;
             if (drawingMouseClicked(provider, mouseOffsetX, mouseOffsetY, button)) return true;
             xCoord++;
         }
