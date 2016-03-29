@@ -493,9 +493,15 @@ public class CriteriaMappings {
             for (IProgressionTrigger trigger : triggers) {
                 //If we don't have the trigger in the completed map, mark it as available in the active triggers
                 if (!completedTriggers.contains(trigger)) {
-                    IProgressionTrigger clone = triggerDataMap.containsKey(trigger.getUniqueID()) ? (IProgressionTrigger) triggerDataMap.get(trigger.getUniqueID()) : trigger.copy();
-                    if (clone instanceof IStoreTriggerData) {
-                        triggerDataMap.put(clone.getUniqueID(), (IStoreTriggerData) clone);
+                    IProgressionTrigger clone = trigger.copy();
+                    if (clone instanceof IStoreTriggerData) { //Create a new copy when we remap, with updated requirements
+                        if (triggerDataMap.containsKey(trigger.getUniqueID())) {
+                            NBTTagCompound tag = new NBTTagCompound(); //Create a tag
+                            triggerDataMap.get(trigger.getUniqueID()).writeDataToNBT(tag); //Write to it
+                            ((IStoreTriggerData) clone).readDataFromNBT(tag); //Copy the old data to the clone
+                        }
+
+                        triggerDataMap.put(clone.getUniqueID(), (IStoreTriggerData) clone); //Remap the triggers data
                     }
 
                     activeTriggers.get(clone.getUnlocalisedName()).add(clone);
@@ -542,8 +548,14 @@ public class CriteriaMappings {
             List<IProgressionTrigger> triggers = criteria.getTriggers(); //Grab a list of all the triggers
             for (IProgressionTrigger trigger : triggers) {
                 //If we don't have the trigger in the completed map, mark it as available in the active triggers
-                IProgressionTrigger clone = triggerDataMap.containsKey(trigger.getUniqueID()) ? (IProgressionTrigger) triggerDataMap.get(trigger.getUniqueID()) : trigger.copy();
-                if (clone instanceof IStoreTriggerData) {
+                IProgressionTrigger clone = trigger.copy();
+                if (clone instanceof IStoreTriggerData) { //Create a new copy when we remap, with updated requirements
+                    if (triggerDataMap.containsKey(trigger.getUniqueID())) {
+                        NBTTagCompound tag = new NBTTagCompound(); //Create a tag
+                        triggerDataMap.get(trigger.getUniqueID()).writeDataToNBT(tag); //Write to it
+                        ((IStoreTriggerData) clone).readDataFromNBT(tag); //Copy the old data to the clone
+                    }
+
                     triggerDataMap.put(clone.getUniqueID(), (IStoreTriggerData) clone); //Remap the triggers data
                 }
 

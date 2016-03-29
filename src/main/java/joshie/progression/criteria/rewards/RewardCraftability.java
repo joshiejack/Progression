@@ -31,8 +31,8 @@ public class RewardCraftability extends RewardBaseItemFilter implements ISpecial
     @Override
     public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
         if (mode == DisplayMode.EDIT) {
-            fields.add(new ItemFilterFieldPreview("filters", this, 0, 30, 2.8F));
-            fields.add(new ItemFilterFieldPreview("actionfilters", this, 45, 30, 2.8F));
+            fields.add(new ItemFilterFieldPreview("filters", this, 5, 44, 1.9F));
+            fields.add(new ItemFilterFieldPreview("actionfilters", this, 40, 44, 1.9F));
         }
     }
 

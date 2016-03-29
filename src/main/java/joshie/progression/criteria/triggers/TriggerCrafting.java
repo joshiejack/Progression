@@ -62,7 +62,7 @@ public class TriggerCrafting extends TriggerBaseItemFilter implements ISpecialFi
 
     @Override
     public String getDescription() {
-        return Progression.format("Craft any of these items %s times\n\n%s%% completed", amount, getPercentage());
+        return Progression.format("trigger.crafting.description", amount) + "\n\n" + Progression.format("completed", getPercentage());
     }
 
     @Override
