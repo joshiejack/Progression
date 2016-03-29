@@ -52,9 +52,8 @@ public class RewardCraftability extends RewardBaseItemFilter implements ISpecial
     public List<ActionType> getTypesFromFilter() {
         List<ActionType> list = new ArrayList();
         for (IProgressionFilter filter : actionfilters) {
-            List<ItemStack> matches = filter.getMatches(null);
-            if (matches.size() > 0) {
-                ItemStack icon = matches.get(0);
+            if (filter.getType() == FilterSelectorAction.INSTANCE) {
+                ItemStack icon = (ItemStack) filter.getRandom(null);
                 if (icon != null) {
                     ActionType type = null;
                     for (ActionType action : ActionType.values()) {

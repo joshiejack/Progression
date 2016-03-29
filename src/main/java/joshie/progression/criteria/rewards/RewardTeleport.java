@@ -25,7 +25,6 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -50,10 +49,8 @@ public class RewardTeleport extends RewardBase implements ISpecialFilters, IHasF
     public void reward(EntityPlayerMP player) {
         boolean notteleported = true;
         for (int i = 0; i < 10 && notteleported; i++) {
-            ArrayList<IProgressionFilter> locality = new ArrayList(locations);
-            if (locality.size() > 0) {
-                Collections.shuffle(locality);
-                WorldLocation location = (WorldLocation) locality.get(0).getMatches(player).get(0);
+            WorldLocation location = WorldLocation.getRandomLocationFromFilters(locations, player);
+            if (location != null) {
                 World world = DimensionManager.getWorld(location.dimension);
                 int dimension = location.dimension;
                 if (world == null) continue; //NO!!!!

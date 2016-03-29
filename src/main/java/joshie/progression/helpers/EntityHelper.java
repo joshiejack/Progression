@@ -119,4 +119,14 @@ public class EntityHelper {
     public static String getNameForEntity(EntityLivingBase living) {
         return EntityList.getEntityString(living);
     }
+
+    public static EntityLivingBase getRandomEntity(IProgressionFilter filter) {
+        Collections.shuffle(shuffledEntityCache);
+        for (EntityLivingBase entity : shuffledEntityCache) {
+            if (filter.matches(entity)) return entity;
+        }
+
+        //In theory if set up correctly this should be no issue
+        return null;
+    }
 }

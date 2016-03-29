@@ -10,10 +10,7 @@ import joshie.progression.criteria.filters.entity.FilterEntityName;
 import joshie.progression.criteria.filters.entity.FilterEntityType;
 import joshie.progression.criteria.filters.entity.FilterSkeletonType;
 import joshie.progression.criteria.filters.item.*;
-import joshie.progression.criteria.filters.location.FilterPlayerLocationAbove;
-import joshie.progression.criteria.filters.location.FilterPlayerLocationAround;
-import joshie.progression.criteria.filters.location.FilterRandomAround;
-import joshie.progression.criteria.filters.location.FilterRandomLocationDimension;
+import joshie.progression.criteria.filters.location.*;
 import joshie.progression.criteria.filters.potion.FilterPotionEffect;
 import joshie.progression.criteria.rewards.*;
 import joshie.progression.criteria.triggers.*;
@@ -141,6 +138,7 @@ public class PCommonProxy implements IGuiHandler {
         //Location Filters
         ProgressionAPI.registry.registerFilter(new FilterPlayerLocationAround());
         ProgressionAPI.registry.registerFilter(new FilterPlayerLocationAbove());
+        ProgressionAPI.registry.registerFilter(new FilterPlayerLocationLooking());
         ProgressionAPI.registry.registerFilter(new FilterRandomLocationDimension());
         ProgressionAPI.registry.registerFilter(new FilterRandomAround());
 

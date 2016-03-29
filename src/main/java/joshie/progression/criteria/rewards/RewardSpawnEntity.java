@@ -25,7 +25,6 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class RewardSpawnEntity extends RewardBase implements ISpecialFilters, IInit, IHasFilters, ISpecialFieldProvider {
@@ -76,10 +75,8 @@ public class RewardSpawnEntity extends RewardBase implements ISpecialFilters, II
             for (int i = 0; i < spawnNumber; i++) {
                 boolean notspawned = true;
                 for (int j = 0; j < 10 && notspawned; j++) {
-                    ArrayList<IProgressionFilter> locality = new ArrayList(locations);
-                    if (locality.size() > 0) {
-                        Collections.shuffle(locality);
-                        WorldLocation location = (WorldLocation) locality.get(0).getMatches(player).get(0);
+                    WorldLocation location = WorldLocation.getRandomLocationFromFilters(locations, player);
+                    if (location != null) {
                         BlockPos pos = new BlockPos(location.pos);
                         if (player.worldObj.isBlockLoaded(pos)) {
                             if (isValidLocation(player.worldObj, pos)) {

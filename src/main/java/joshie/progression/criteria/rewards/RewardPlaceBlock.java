@@ -20,7 +20,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class RewardPlaceBlock extends RewardBaseItemFilter implements ISpecialFieldProvider, ISpecialFilters {
@@ -61,10 +60,8 @@ public class RewardPlaceBlock extends RewardBaseItemFilter implements ISpecialFi
 
     @Override
     public void reward(EntityPlayerMP player) {
-        ArrayList<IProgressionFilter> locality = new ArrayList(locations);
-        if (locality.size() > 0) {
-            Collections.shuffle(locality);
-            WorldLocation location = (WorldLocation) locality.get(0).getMatches(player).get(0);
+        WorldLocation location = WorldLocation.getRandomLocationFromFilters(locations, player);
+        if (location != null) {
             World world = DimensionManager.getWorld(location.dimension);
 
             ItemStack stack = ItemHelper.getRandomBlock(filters);

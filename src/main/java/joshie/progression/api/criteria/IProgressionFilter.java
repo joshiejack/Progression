@@ -1,8 +1,8 @@
 package joshie.progression.api.criteria;
 
-import java.util.List;
+import net.minecraft.entity.player.EntityPlayer;
 
-public interface IProgressionFilter extends IFieldProvider {
+public interface IProgressionFilter<T> extends IFieldProvider {
     /** Return true if the pass in object, matches this filter.
      *  Keep in mind this can pass in entities, itemstack,
      *  Lists or anything really, so make sure to validate
@@ -11,7 +11,7 @@ public interface IProgressionFilter extends IFieldProvider {
     
     /** Returns a list of all things that match this filter
      *  May pass in something, or it can be null **/
-    public List getMatches(Object object);
+    public T getRandom(EntityPlayer player);
     
     /** Returns the type of filter this is **/
     public IProgressionFilterSelector getType();

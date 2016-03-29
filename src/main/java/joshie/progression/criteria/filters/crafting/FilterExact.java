@@ -3,13 +3,10 @@ package joshie.progression.criteria.filters.crafting;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionField;
 import joshie.progression.api.special.ISpecialFieldProvider;
-import joshie.progression.gui.editors.FeatureItemSelector.Position;
-import joshie.progression.gui.fields.ItemField;
-import joshie.progression.gui.filters.FilterSelectorAction;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class FilterExact extends FilterBaseCrafting implements ISpecialFieldProvider {
@@ -20,8 +17,8 @@ public class FilterExact extends FilterBaseCrafting implements ISpecialFieldProv
     }
     
     @Override
-    public List<ItemStack> getMatches(Object object) {
-        return Arrays.asList(stack);
+    public ItemStack getRandom(EntityPlayer player) {
+        return stack;
     }
 
     @Override

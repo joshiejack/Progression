@@ -1,10 +1,5 @@
 package joshie.progression.helpers;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
 import joshie.progression.api.criteria.IProgressionFilter;
 import joshie.progression.api.criteria.IProgressionFilterSelector;
 import joshie.progression.gui.filters.FilterSelectorBlock;
@@ -12,6 +7,11 @@ import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 public class ItemHelper {
     private static final ArrayList<ItemStack> itemsWithoutInventory = new ArrayList();
@@ -71,6 +71,18 @@ public class ItemHelper {
         return block != null;
     }
 
+    public static ItemStack getRandomItem(IProgressionFilter filter) {
+        if (shuffledItemsCache == null) shuffledItemsCache = new ArrayList(getCreativeItems());
+        Collections.shuffle(shuffledItemsCache);
+        for (ItemStack stack : shuffledItemsCache) {
+            if (filter.getType() != null && !filter.getType().isAcceptable(stack)) continue;
+            if (filter.matches(stack)) return stack;
+        }
+
+        //In theory if set up correctly this should be no issue
+        return null;
+    }
+
     public static ItemStack getRandomItem(List<IProgressionFilter> filters) {
         return getRandomItem(filters, null);
     }
@@ -114,10 +126,14 @@ public class ItemHelper {
         return stacks;
     }
 
+    public static List<ItemStack> getMatches(IProgressionFilter filter) {
+        return ItemHelper.getAllMatchingItems(filter);
+    }
+
     public static List<ItemStack> getAllMatchingItems(List<IProgressionFilter> filters) {
         ArrayList<ItemStack> stacks = new ArrayList();
         for (IProgressionFilter filter : filters) {
-            stacks.addAll(filter.getMatches(null));
+            stacks.addAll(getMatches(filter));
         }
 
         return stacks;
