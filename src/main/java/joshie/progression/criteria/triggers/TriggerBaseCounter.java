@@ -1,12 +1,14 @@
 package joshie.progression.criteria.triggers;
 
+import joshie.progression.api.special.IAdditionalTooltip;
 import joshie.progression.api.special.IStoreTriggerData;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+import java.util.List;
 import java.util.UUID;
 
-public abstract class TriggerBaseCounter extends TriggerBase implements IStoreTriggerData {
+public abstract class TriggerBaseCounter extends TriggerBase implements IStoreTriggerData, IAdditionalTooltip {
     public int amount = 1;
     protected transient int counter;
 
@@ -20,6 +22,15 @@ public abstract class TriggerBaseCounter extends TriggerBase implements IStoreTr
     
     public TriggerBaseCounter(ItemStack stack, String name, int color) {
         super(stack, name, color);
+    }
+
+    public TriggerBaseCounter copyCounter(TriggerBaseCounter trigger) {
+        trigger.amount = amount;
+        return trigger;
+    }
+
+    protected int getPercentage() {
+        return (counter * 100) / amount;
     }
 
     @Override
@@ -42,6 +53,11 @@ public abstract class TriggerBaseCounter extends TriggerBase implements IStoreTr
 
     protected boolean canIncrease() {
         return false;
+    }
+
+    @Override
+    public void addHoverTooltip(List<String> tooltip) {
+        tooltip.add(counter + "/" + amount);
     }
 
     @Override

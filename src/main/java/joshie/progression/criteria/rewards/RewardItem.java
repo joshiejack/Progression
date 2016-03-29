@@ -29,14 +29,9 @@ public class RewardItem extends RewardBaseItemFilter implements ISpecialFieldPro
     }
 
     @Override
-    public boolean shouldReflectionSkipField(String name) {
-        return name.equals("filters");
-    }
-
-    @Override
     public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
         if (mode == DisplayMode.EDIT) fields.add(new ItemFilterFieldPreview("filters", this, 25, 30, 2.8F));
-        else fields.add(new ItemFilterFieldPreview("filters", this, 25, 25, 2.8F));
+        else fields.add(new ItemFilterFieldPreview("filters", this, 5, 25, 2.8F));
     }
     
     @Override
@@ -53,6 +48,11 @@ public class RewardItem extends RewardBaseItemFilter implements ISpecialFieldPro
     public void addTooltip(List list) {
         list.add(EnumChatFormatting.WHITE + Progression.translate("item.free"));
         list.add(getIcon().getDisplayName() + " x" + stackSize);
+    }
+
+    @Override
+    public int getWidth() {
+        return 55;
     }
 
     @Override

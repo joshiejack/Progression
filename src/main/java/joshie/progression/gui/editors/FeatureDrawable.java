@@ -17,7 +17,6 @@ import joshie.progression.gui.editors.FeatureItemSelector.Position;
 import joshie.progression.gui.editors.insert.FeatureNew;
 import joshie.progression.gui.fields.BooleanField;
 import joshie.progression.gui.fields.EnumField;
-import joshie.progression.gui.fields.ItemFilterField;
 import joshie.progression.gui.fields.TextField;
 import joshie.progression.gui.filters.FeatureItemPreview;
 import joshie.progression.helpers.CollectionHelper;
@@ -76,10 +75,6 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
     private void addFieldsViaReflection(IFieldProvider provider, List<IProgressionField> fields) {
         Position type = provider instanceof IProgressionReward ? Position.TOP : Position.BOTTOM;
         for (Field field : provider.getClass().getFields()) {
-            if (provider instanceof ISpecialFieldProvider) {
-                if (((ISpecialFieldProvider) provider).shouldReflectionSkipField(field.getName())) continue;
-            }
-
             try {
                 if (field.getType() == boolean.class) fields.add(new BooleanField(field.getName(), provider));
                 else if (field.getType() == String.class) fields.add(new TextField(field.getName(), provider, type));
@@ -87,9 +82,6 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
                 else if (field.getType() == float.class) fields.add(new TextField(field.getName(), provider, type));
                 else if (field.getType() == double.class) fields.add(new TextField(field.getName(), provider, type));
                 else if (field.get(provider) instanceof Enum) fields.add(new EnumField(field.getName(), (IEnum) provider));
-                else if (field.getGenericType().toString().equals("java.util.List<" + ProgressionInfo.FILTER + ">")) {
-                    fields.add(new ItemFilterField(field.getName(), provider));
-                }
             } catch (Exception e) {}
         }
     }
@@ -102,7 +94,7 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
             ticker = 1;
         }
 
-        int width = MCClientHelper.isInEditMode() ? 99 : 99;
+        int width = MCClientHelper.isInEditMode() ? 99 : drawing.getWidth() - 1;
         helper.drawGradient(renderX, renderY, 1, 2, width, 15, drawing.getColor(), gradient1, gradient2);
         helper.drawText(renderX, renderY, drawing.getLocalisedName(), 6, 6, fontColor);
 
@@ -119,7 +111,7 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
                         if (mouseY >= yPos && mouseY < yPos + 6) {
                             if (mode == DisplayMode.EDIT) color = Theme.INSTANCE.optionsFontColorHover;
                             List<String> tooltip = new ArrayList();
-                            for (int i = 0; i < 5; i++) {
+                            for (int i = 0; i < 10; i++) {
                                 String untranslated = mode.name().toLowerCase() + ".tooltip." + drawing.getUnlocalisedName() + "." + t.getFieldName() + "." + i;
                                 String translated = Progression.translate(untranslated);
                                 if (!("progression." + untranslated).equals(translated)) {
@@ -138,7 +130,7 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
             if (mode == DisplayMode.DISPLAY) {
                 ICustomDrawGuiDisplay display = drawing instanceof ICustomDrawGuiDisplay ? ((ICustomDrawGuiDisplay) drawing) : null;
                 if (display == null) {
-                    helper.drawSplitText(renderX, renderY, drawing.getDescription(), 4, 20, 125, fontColor, 0.75F);
+                    helper.drawSplitText(renderX, renderY, drawing.getDescription(), 4, 20, drawing.getWidth() + drawing.getWidth() / 4, fontColor, 0.75F);
                     //Draw Shit
                 } else display.drawDisplay(offset, renderX, renderY, mouseX, mouseY);
             }
@@ -149,13 +141,12 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
 
     @Override
     public void drawFeature(int mouseX, int mouseY) {
-        int xCoord = 0;
+        int offsetX = 0;
         for (int i = 0; i < drawable.size(); i++) {
-            int offsetX = (MCClientHelper.isInEditMode() ? (100 * xCoord) : (80 * xCoord));
-            int mouseOffsetX = mouseX - this.offsetX - offsetX;
-            int mouseOffsetY = mouseY - offsetY;
             IFieldProvider drawing = drawable.get(i);
-            drawingDraw(drawing, offset, offsetX, offsetY, mouseOffsetX, mouseOffsetY);
+            int mouseOffsetX = mouseX - this.offsetX - offsetX;
+            int mouseOffsetY = mouseY - this.offsetY;
+            drawingDraw(drawing, offset, offsetX, this.offsetY, mouseOffsetX, mouseOffsetY);
             //Draw The Delete Button
             if (MCClientHelper.isInEditMode()) {
                 int xXcoord = 234;
@@ -167,14 +158,13 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
             }
 
             drawSpecial((T)drawing, offsetX, offsetY, mouseOffsetX, mouseOffsetY);
-            xCoord++;
+            offsetX += (MCClientHelper.isInEditMode() ? 100 : drawing.getWidth());
         }
 
         //Draw the addition texture
         if (MCClientHelper.isInEditMode()) {
-            int xPos = (MCClientHelper.isInEditMode() ? (100 * xCoord) : (80 * xCoord));
-            int mouseOffsetX = mouseX - offsetX - xPos;
-            int mouseOffsetY = mouseY - offsetY;
+            int mouseOffsetX = mouseX - this.offsetX - offsetX;
+            int mouseOffsetY = mouseY - this.offsetY;
 
             int crossX = crossX1;
             int crossY = crossY1;
@@ -186,7 +176,7 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
 
             GlStateManager.enableBlend();
             GlStateManager.color(1F, 1F, 1F);
-            offset.drawTexture(xPos, offsetY, ProgressionInfo.textures, 15, 10, crossX, crossY, 55, 55);
+            offset.drawTexture(offsetX, offsetY, ProgressionInfo.textures, 15, 10, crossX, crossY, 55, 55);
         }
     }
 
@@ -233,11 +223,10 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
     public boolean mouseClicked(final int mouseX, final int mouseY, int button) {
         if (FeatureItemSelector.INSTANCE.isVisible()) return false; //If the item selector is visible, don't process clicks
         if (FeatureNew.IS_OPEN) return false;
-        int xCoord = 0;
+        int offsetX = 0;
         for (int i = 0; i < drawable.size(); i++) {
-            int xPos = (MCClientHelper.isInEditMode() ? (100 * xCoord) : (80 * xCoord));
-            int mouseOffsetX = mouseX - offsetX - xPos;
-            int mouseOffsetY = mouseY - offsetY;
+            int mouseOffsetX = mouseX - this.offsetX - offsetX;
+            int mouseOffsetY = mouseY - this.offsetY;
             IFieldProvider provider = drawable.get(i);
             if (MCClientHelper.isInEditMode()) {
                 //Delete Button
@@ -249,14 +238,13 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
 
             if (clickSpecial((T)provider, mouseOffsetX, mouseOffsetY)) return true;
             if (drawingMouseClicked(provider, mouseOffsetX, mouseOffsetY, button)) return true;
-            xCoord++;
+            offsetX += (MCClientHelper.isInEditMode() ? 100 : provider.getWidth());
         }
 
         //Now that we've tried all, let's try the new button
         if (MCClientHelper.isInEditMode()) {
-            int xPos = (MCClientHelper.isInEditMode() ? (100 * xCoord) : (80 * xCoord));
-            int mouseOffsetX = mouseX - offsetX - xPos;
-            int mouseOffsetY = mouseY - offsetY;
+            int mouseOffsetX = mouseX - this.offsetX - offsetX;
+            int mouseOffsetY = mouseY - this.offsetY;
             if (mouseOffsetX >= 15 && mouseOffsetX <= 70 && mouseOffsetY >= 10 && mouseOffsetY <= 65) {
                 newDrawable.init(offset.getGui());
                 newDrawable.setVisibility(true);

@@ -1,16 +1,20 @@
 package joshie.progression.gui.filters;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import joshie.progression.api.criteria.IProgressionFilterSelector;
-import joshie.progression.api.criteria.IProgressionFilter.FilterType;
 import joshie.progression.crafting.ActionType;
 import net.minecraft.item.ItemStack;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FilterSelectorAction extends FilterSelectorItem {
     public static final IProgressionFilterSelector INSTANCE = new FilterSelectorAction();
-    
+
+    @Override
+    public String getName() {
+        return "crafting";
+    }
+
     @Override
     public List<ItemStack> getAllItems() {
         List<ItemStack> list = new ArrayList();
@@ -19,11 +23,6 @@ public class FilterSelectorAction extends FilterSelectorItem {
         }
         
         return list;
-    }
-
-    @Override
-    public FilterType getType() {
-        return FilterType.CRAFTING;
     }
 
     @Override

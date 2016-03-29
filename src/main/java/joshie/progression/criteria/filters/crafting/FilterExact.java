@@ -1,5 +1,6 @@
 package joshie.progression.criteria.filters.crafting;
 
+import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionField;
 import joshie.progression.api.special.ISpecialFieldProvider;
 import joshie.progression.gui.editors.FeatureItemSelector.Position;
@@ -24,13 +25,8 @@ public class FilterExact extends FilterBaseCrafting implements ISpecialFieldProv
     }
 
     @Override
-    public boolean shouldReflectionSkipField(String name) {
-        return name.equals("stack");
-    }
-
-    @Override
     public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
-        if (mode == DisplayMode.EDIT) fields.add(new ItemField("stack", this, 30, 35, 1.4F, Position.BOTTOM, FilterSelectorAction.INSTANCE));
+        if (mode == DisplayMode.EDIT) fields.add(ProgressionAPI.fields.getItem(this, "stack", 30, 35, 1.4F));
     }
 
     @Override

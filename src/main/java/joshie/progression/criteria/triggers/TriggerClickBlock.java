@@ -2,6 +2,7 @@ package joshie.progression.criteria.triggers;
 
 import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
+import joshie.progression.api.criteria.IProgressionTrigger;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -12,6 +13,13 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class TriggerClickBlock extends TriggerBaseBlock {
     public TriggerClickBlock() {
         super("clickBlock", 0xFF69008C);
+    }
+
+    @Override
+    public IProgressionTrigger copy() {
+        TriggerClickBlock trigger = new TriggerClickBlock();
+        trigger.cancel = cancel;
+        return copyBase(copyCounter(copyFilter(trigger)));
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -33,7 +41,6 @@ public class TriggerClickBlock extends TriggerBaseBlock {
             return Progression.translate("trigger.clickBlock.cancel");
         }
 
-        int percentage = (counter * 100) / amount;
-        return Progression.format("trigger.clickBlock.description", amount, percentage);
+        return Progression.format("trigger.clickBlock.description", amount) + "\n\n" + Progression.format("completed", getPercentage());
     }
 }

@@ -24,12 +24,21 @@ public abstract class TriggerBaseBoolean extends TriggerBase implements IStoreTr
         return true;
     }
 
+    public TriggerBaseBoolean copyBoolean(TriggerBaseBoolean trigger) {
+        trigger.value = value;
+        return trigger;
+    }
+
     protected boolean isTrue(Object... data) {
         return false;
     }
 
     protected void markTrue() {
         value = true;
+    }
+
+    public int getPercentage() {
+        return value ? 100: 0;
     }
 
     @Override

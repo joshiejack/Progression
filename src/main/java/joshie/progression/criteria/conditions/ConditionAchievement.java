@@ -1,7 +1,5 @@
 package joshie.progression.criteria.conditions;
 
-import java.util.UUID;
-
 import joshie.progression.api.special.IInit;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -9,8 +7,10 @@ import net.minecraft.stats.Achievement;
 import net.minecraft.stats.AchievementList;
 import net.minecraft.world.World;
 
+import java.util.UUID;
+
 public class ConditionAchievement extends ConditionBase implements IInit {   
-    public String name = "mineWood";
+    public String id = "mineWood";
     private transient Achievement achievement;
     
     public ConditionAchievement() {
@@ -20,7 +20,7 @@ public class ConditionAchievement extends ConditionBase implements IInit {
     @Override
     public void init() {
         for (Achievement a: AchievementList.achievementList) {
-            if (a.statId.equals("achievement." + name)) {
+            if (a.statId.equals("achievement." + id)) {
                 achievement = a;
                 break;
             }

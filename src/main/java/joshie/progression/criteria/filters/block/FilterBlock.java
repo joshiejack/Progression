@@ -1,20 +1,21 @@
 package joshie.progression.criteria.filters.block;
 
-import java.util.List;
-
+import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionField;
+import joshie.progression.api.criteria.IProgressionFilterSelector;
 import joshie.progression.api.special.IItemGetterCallback;
 import joshie.progression.api.special.ISetterCallback;
 import joshie.progression.api.special.ISpecialFieldProvider;
-import joshie.progression.gui.editors.FeatureItemSelector.Position;
-import joshie.progression.gui.fields.ItemField;
+import joshie.progression.api.special.ISpecialFilters;
 import joshie.progression.gui.filters.FilterSelectorBlock;
 import joshie.progression.helpers.ItemHelper;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
-public class FilterBlock extends FilterBaseBlock implements IItemGetterCallback, ISetterCallback, ISpecialFieldProvider {
+import java.util.List;
+
+public class FilterBlock extends FilterBaseBlock implements IItemGetterCallback, ISetterCallback, ISpecialFilters, ISpecialFieldProvider {
     public Block filterBlock = Blocks.sandstone;
 
     public FilterBlock() {
@@ -22,15 +23,13 @@ public class FilterBlock extends FilterBaseBlock implements IItemGetterCallback,
     }
 
     @Override
-    public boolean shouldReflectionSkipField(String name) {
-        return true;
+    public IProgressionFilterSelector getFilterForField(String fieldName) {
+        return FilterSelectorBlock.INSTANCE;
     }
 
     @Override
     public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
-        if (mode == DisplayMode.EDIT) {
-            fields.add(new ItemField("filterBlock", this, 25, 25, 3F, Position.BOTTOM, FilterSelectorBlock.INSTANCE));
-        }
+        if (mode == DisplayMode.EDIT) fields.add(ProgressionAPI.fields.getItem(this, "filterBlock", 25, 25, 3F));
     }
 
     @Override

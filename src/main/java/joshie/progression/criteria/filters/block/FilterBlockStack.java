@@ -1,17 +1,15 @@
 package joshie.progression.criteria.filters.block;
 
-import java.util.List;
-
+import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionField;
 import joshie.progression.api.special.IInit;
 import joshie.progression.api.special.ISpecialFieldProvider;
-import joshie.progression.gui.editors.FeatureItemSelector.Position;
-import joshie.progression.gui.fields.ItemField;
-import joshie.progression.gui.filters.FilterSelectorBlock;
 import joshie.progression.helpers.ItemHelper;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+
+import java.util.List;
 
 public class FilterBlockStack extends FilterBaseBlock implements ISpecialFieldProvider, IInit {
     public ItemStack stack = new ItemStack(Blocks.anvil);
@@ -32,15 +30,8 @@ public class FilterBlockStack extends FilterBaseBlock implements ISpecialFieldPr
     }
 
     @Override
-    public boolean shouldReflectionSkipField(String name) {
-        return name.equals("stack");
-    }
-
-    @Override
     public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
-        if (mode == DisplayMode.EDIT) {
-            fields.add(new ItemField("stack", this, 30, 35, 2.4F, Position.BOTTOM, FilterSelectorBlock.INSTANCE));
-        }
+        if (mode == DisplayMode.EDIT) fields.add(ProgressionAPI.fields.getItem(this, "stack", 30, 35, 2.4F));
     }
 
     @Override

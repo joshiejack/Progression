@@ -1,5 +1,7 @@
 package joshie.progression.criteria.filters.block;
 
+import joshie.progression.api.ProgressionAPI;
+import joshie.progression.api.criteria.IProgressionFilterSelector;
 import joshie.progression.criteria.filters.item.FilterItemOre;
 import joshie.progression.helpers.ItemHelper;
 import net.minecraft.block.Block;
@@ -15,9 +17,9 @@ public class FilterBlockOre extends FilterItemOre {
         Block block = ItemHelper.getBlock(check);
         return block == null ? false : super.matches(check);
     }
-    
+
     @Override
-    public FilterType getType() {
-        return FilterType.BLOCK;
+    public IProgressionFilterSelector getType() {
+        return ProgressionAPI.filters.getBlockFilter();
     }
 }

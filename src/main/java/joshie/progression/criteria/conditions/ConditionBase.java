@@ -80,4 +80,9 @@ public abstract class ConditionBase implements IProgressionCondition {
     public IProgressionTrigger getTrigger() {
         return trigger;
     }
+
+    @Override
+    public int getWidth() {
+        return 100;
+    }
 }

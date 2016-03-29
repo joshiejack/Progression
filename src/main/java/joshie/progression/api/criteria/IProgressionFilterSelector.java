@@ -1,14 +1,13 @@
 package joshie.progression.api.criteria;
 
-import java.util.List;
-
-import joshie.progression.api.criteria.IProgressionFilter.FilterType;
 import joshie.progression.gui.core.DrawHelper;
 
+import java.util.List;
+
 public interface IProgressionFilterSelector {
-    /** Returns the filter type **/
-    public FilterType getType();
-    
+    /** Return an unlocalized name for this selector **/
+    public String getName();
+
     /** Whether this object is acceptable **/
     public boolean isAcceptable(Object object);
 

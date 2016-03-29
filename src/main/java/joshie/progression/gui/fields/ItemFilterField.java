@@ -1,9 +1,5 @@
 package joshie.progression.gui.fields;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.IProgressionFilter;
 import joshie.progression.api.criteria.IProgressionFilterSelector;
@@ -16,6 +12,10 @@ import joshie.progression.gui.editors.GuiItemFilterEditor;
 import joshie.progression.gui.filters.FeatureItemPreview;
 import joshie.progression.gui.filters.FilterSelectorItem;
 import joshie.progression.helpers.CollectionHelper;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ItemFilterField extends AbstractField {
     private IProgressionFilterSelector selector;
@@ -50,11 +50,11 @@ public class ItemFilterField extends AbstractField {
 
     @Override
     public void draw(DrawHelper helper, int renderX, int renderY, int color, int yPos, int mouseX, int mouseY) {
-        helper.drawSplitText(renderX, renderY, Progression.translate("filter." + selector.getType().name().toLowerCase()), 4, yPos, 105, color, 0.75F);
+        helper.drawSplitText(renderX, renderY, Progression.translate("filter." + selector.getName()), 4, yPos, 105, color, 0.75F);
     }
 
     public boolean isAccepted(IProgressionFilter filter) {
-        if (filter.getType() != selector.getType()) return false;
+        if (filter.getType() != selector) return false;
         return true;
     }
 

@@ -12,16 +12,11 @@ import net.minecraft.item.ItemStack;
 
 import java.util.List;
 
-public class TriggerBaseBlock extends TriggerBaseItemFilter implements ICancelable, ISpecialFilters, ISpecialFieldProvider {
+public abstract class TriggerBaseBlock extends TriggerBaseItemFilter implements ICancelable, ISpecialFilters, ISpecialFieldProvider {
     public boolean cancel = false;
     
     public TriggerBaseBlock(String unlocalised, int color) {
         super(unlocalised, color);
-    }
-    
-    @Override
-    public boolean shouldReflectionSkipField(String name) {
-        return name.equals("filters");
     }
     
     @Override

@@ -1,11 +1,13 @@
 package joshie.progression.criteria.filters.crafting;
 
-import java.util.List;
-
+import joshie.progression.api.ProgressionAPI;
+import joshie.progression.api.criteria.IProgressionFilterSelector;
 import joshie.progression.crafting.ActionType;
 import joshie.progression.criteria.filters.FilterBase;
 import joshie.progression.helpers.ItemHelper;
 import net.minecraft.item.ItemStack;
+
+import java.util.List;
 
 public abstract class FilterBaseCrafting extends FilterBase {
     public FilterBaseCrafting(String string, int color) {
@@ -37,8 +39,8 @@ public abstract class FilterBaseCrafting extends FilterBase {
     }
 
     @Override
-    public FilterType getType() {
-        return FilterType.CRAFTING;
+    public IProgressionFilterSelector getType() {
+        return ProgressionAPI.filters.getCraftingFilter();
     }
 
     protected abstract boolean matches(ItemStack stack);

@@ -56,6 +56,9 @@ public class FeatureItemPreview extends FeatureAbstract {
     }
 
     public void updateSearch() {
+        GuiItemFilterEditor.INSTANCE.offsetX = 0; //Reset the offset on update
+        position = 0; //Reset the position on update
+
         if (GuiItemFilterEditor.INSTANCE.getField() == null) return; //NO UPDATES!!!
         sorted = new ArrayList();
         for (Object stack: getAllItems()) {

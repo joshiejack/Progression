@@ -2,18 +2,19 @@ package joshie.progression.gui.fields;
 
 import joshie.progression.api.criteria.IProgressionField;
 import joshie.progression.api.special.IAdditionalTooltip;
-import joshie.progression.api.special.IStackSizeable;
 import joshie.progression.gui.core.DrawHelper;
 import joshie.progression.gui.core.FeatureTooltip;
-import joshie.progression.helpers.ItemHelper;
+import joshie.progression.gui.core.GuiCore;
+import joshie.progression.helpers.EntityHelper;
 import joshie.progression.helpers.MCClientHelper;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.boss.BossStatus;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemFilterFieldPreview extends ItemFilterField implements IProgressionField {
+public class EntityFilterFieldPreview extends ItemFilterField implements IProgressionField {
     private final int x;
     private final int y;
     private final float scale;
@@ -21,18 +22,18 @@ public class ItemFilterFieldPreview extends ItemFilterField implements IProgress
     protected final int mouseX2;
     protected final int mouseY1;
     protected final int mouseY2;
-    private ItemStack stack;
+    private EntityLivingBase entity;
     private int ticker;
 
-    public ItemFilterFieldPreview(String fieldName, Object object, int x, int y, float scale) {
+    public EntityFilterFieldPreview(String fieldName, Object object, int x, int y, float scale) {
         super(fieldName, object);
         this.x = x;
         this.y = y;
         this.scale = scale;
-        this.mouseX1 = x;
+        this.mouseX1 = x + 5;
         this.mouseX2 = (int) (x + 14 * scale);
-        this.mouseY1 = y - 2;
-        this.mouseY2 = (int) (y + 15 * scale);
+        this.mouseY1 = y - (int)(14.2 * scale);
+        this.mouseY2 = y;
     }
 
     @Override
@@ -40,34 +41,30 @@ public class ItemFilterFieldPreview extends ItemFilterField implements IProgress
         return "";
     }
 
-    private static final ItemStack BROKEN = new ItemStack(Items.baked_potato);
+    public EntityLivingBase getEntity() {
+        return entity != null ? entity : MCClientHelper.getPlayer();
+    }
 
-    public ItemStack getStack(boolean hovered) {
+    public EntityLivingBase getEntity(boolean hovered) {
         if (ticker >= 200 || ticker == 0) {
-            stack = ItemHelper.getRandomItem(getFilters());
-            if (stack != null) {
-                if (object instanceof IStackSizeable) {
-                    stack.stackSize = ((IStackSizeable) object).getStackSize();
-                }
-            }
-
+            entity = EntityHelper.getRandomEntityForFilters(getFilters());
             ticker = 1;
         }
 
         if (!hovered) ticker++;
         else ticker += 2;
 
-        return stack != null ? stack : BROKEN;
+        return entity != null ? entity : MCClientHelper.getPlayer();
     }
 
     @Override
     public void draw(DrawHelper helper, int renderX, int renderY, int color, int yPos, int mouseX, int mouseY) {
         try {
             boolean hovered = mouseX >= mouseX1 && mouseX <= mouseX2 && mouseY >= mouseY1 && mouseY <= mouseY2;
-
+            EntityLivingBase entity = getEntity(hovered);
             if (hovered) {
                 List<String> tooltip = new ArrayList();
-                tooltip.addAll(getStack(hovered).getTooltip(MCClientHelper.getPlayer(), false));
+                tooltip.add(entity.getName());
                 if (object instanceof IAdditionalTooltip) {
                     ((IAdditionalTooltip)object).addHoverTooltip(tooltip);
                 }
@@ -75,7 +72,9 @@ public class ItemFilterFieldPreview extends ItemFilterField implements IProgress
                 FeatureTooltip.INSTANCE.addTooltip(tooltip);
             }
 
-            helper.drawStack(renderX, renderY, getStack(hovered), x, y, scale);
+            GuiInventory.drawEntityOnScreen(GuiCore.INSTANCE.offsetX + renderX + 24 + x, GuiCore.INSTANCE.screenTop + renderY + y + EntityHelper.getOffsetForEntity(entity), EntityHelper.getSizeForEntity(entity), 25F, -5F, entity);
+            BossStatus.bossName = null; //Reset boss
+            //helper.drawStack(renderX, renderY, getEntity(hovered), x, y, scale);
         } catch (Exception e) {
             e.printStackTrace();
         }

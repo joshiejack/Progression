@@ -9,4 +9,9 @@ public class FieldRegistry implements IFieldRegistry {
     public IProgressionField getItemPreview(IFieldProvider provider, String string, int x, int y, float scale) {
         return new ItemFilterFieldPreview(string, provider, x, y, scale);
     }
+
+    @Override
+    public IProgressionField getItem(IFieldProvider provider, String string, int x, int y, float scale) {
+        return new ItemField(string, provider, x, y, scale);
+    }
 }

@@ -14,9 +14,5 @@ public interface IProgressionFilter extends IFieldProvider {
     public List getMatches(Object object);
     
     /** Returns the type of filter this is **/
-    public FilterType getType();
-    
-    public static enum FilterType {
-        ITEM, BLOCK, POTIONEFFECT, ENTITY, LOCATION, CRAFTING;
-    }
+    public IProgressionFilterSelector getType();
 }

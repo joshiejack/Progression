@@ -16,11 +16,11 @@ import java.util.UUID;
 public abstract class TriggerBase implements IProgressionTrigger {
     private List<IProgressionCondition> conditions = new ArrayList();
     private IProgressionCriteria criteria;
+    private UUID uuid;
     private String name;
     private int color;
     private ItemStack stack;
-    private UUID uuid;
-    
+
     public TriggerBase(ItemStack stack, String name, int color) {
         this.name = name;
         this.color = color;
@@ -32,7 +32,14 @@ public abstract class TriggerBase implements IProgressionTrigger {
         this.color = color;
         this.stack = new ItemStack(Blocks.stone);
     }
-    
+
+    public TriggerBase copyBase(TriggerBase trigger) {
+        trigger.conditions = conditions;
+        trigger.criteria = criteria;
+        trigger.uuid = uuid;
+        return trigger;
+    }
+
     @Override
     public ItemStack getIcon() {
         return stack;
@@ -89,6 +96,11 @@ public abstract class TriggerBase implements IProgressionTrigger {
     @Override
     public EventBus getEventBus() {
         return MinecraftForge.EVENT_BUS;
+    }
+
+    @Override
+    public int getWidth() {
+        return 100;
     }
 
     @Override

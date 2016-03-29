@@ -1,9 +1,5 @@
 package joshie.progression.criteria.rewards;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-
 import joshie.progression.api.criteria.IProgressionField;
 import joshie.progression.api.criteria.IProgressionFilter;
 import joshie.progression.api.criteria.IProgressionFilterSelector;
@@ -17,6 +13,10 @@ import joshie.progression.gui.filters.FilterSelectorAction;
 import joshie.progression.gui.filters.FilterSelectorItem;
 import net.minecraft.item.ItemStack;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
 public class RewardCraftability extends RewardBaseItemFilter implements ISpecialFieldProvider, ISpecialFilters {
     public static HashSet<IHasEventBus> craftRegistry = new HashSet();
     public List<IProgressionFilter> actionfilters = new ArrayList();
@@ -26,11 +26,6 @@ public class RewardCraftability extends RewardBaseItemFilter implements ISpecial
 
     public RewardCraftability() {
         super("crafting", 0xFFCCCCCC);
-    }
-
-    @Override
-    public boolean shouldReflectionSkipField(String name) {
-        return name.equals("filters") || name.equals("actionfilters");
     }
 
     @Override

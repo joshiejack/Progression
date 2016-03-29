@@ -1,6 +1,7 @@
 package joshie.progression.criteria.triggers;
 
 import joshie.progression.api.ProgressionAPI;
+import joshie.progression.api.criteria.IProgressionTrigger;
 import joshie.progression.items.ItemCriteria;
 import joshie.progression.player.PlayerTracker;
 import net.minecraftforge.fml.common.eventhandler.EventBus;
@@ -17,6 +18,18 @@ public class TriggerPoints extends TriggerBaseBoolean {
 
     public TriggerPoints() {
         super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.onReceivedPoints), "points", 0xFFB2B200);
+    }
+
+    @Override
+    public IProgressionTrigger copy() {
+        TriggerPoints trigger = new TriggerPoints();
+        trigger.variable = variable;
+        trigger.amount = amount;
+        trigger.consume = consume;
+        trigger.greaterThan = greaterThan;
+        trigger.isEqualTo = isEqualTo;
+        trigger.lesserThan = lesserThan;
+        return copyBase(copyBoolean(trigger));
     }
     
     @Override

@@ -1,10 +1,12 @@
 package joshie.progression.criteria.filters.location;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import joshie.progression.api.ProgressionAPI;
+import joshie.progression.api.criteria.IProgressionFilterSelector;
 import joshie.progression.criteria.filters.FilterBase;
 import joshie.progression.lib.WorldLocation;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class FilterLocationBase extends FilterBase {
     public FilterLocationBase(String name, int color) {
@@ -26,8 +28,8 @@ public abstract class FilterLocationBase extends FilterBase {
     }
 
     @Override
-    public FilterType getType() {
-        return FilterType.LOCATION;
+    public IProgressionFilterSelector getType() {
+        return ProgressionAPI.filters.getLocationFilter();
     }
 
     public boolean matches(WorldLocation location) {

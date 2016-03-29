@@ -42,4 +42,7 @@ public interface IFieldProvider {
      *  Use this if you need to perform checks,
      *  Or validate things before stuff is drawn*/
     public void updateDraw();
+
+    /** Called in draw mode to draw the width **/
+    public int getWidth();
 }

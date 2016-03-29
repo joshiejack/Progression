@@ -1,26 +1,25 @@
 package joshie.progression.gui.filters;
 
-import java.util.List;
-
 import joshie.progression.api.criteria.IProgressionFilterSelector;
-import joshie.progression.api.criteria.IProgressionFilter.FilterType;
 import joshie.progression.helpers.ItemHelper;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
+import java.util.List;
+
 public class FilterSelectorBlock extends FilterSelectorItem {
     public static final IProgressionFilterSelector INSTANCE = new FilterSelectorBlock();
-    
+
+    @Override
+    public String getName() {
+        return "block";
+    }
+
     @Override
     public List<ItemStack> getAllItems() {
         return ItemHelper.getAllItems();
     }
     
-    @Override
-    public FilterType getType() {
-        return FilterType.BLOCK;
-    }
-
     @Override
     public boolean isAcceptedItem(ItemStack stack) {
         Block block = null;

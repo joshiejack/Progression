@@ -1,6 +1,7 @@
 package joshie.progression.criteria.triggers;
 
 import joshie.progression.api.ProgressionAPI;
+import joshie.progression.api.criteria.IProgressionTrigger;
 import joshie.progression.items.ItemCriteria;
 
 import java.util.UUID;
@@ -11,6 +12,14 @@ public class TriggerBoolean extends TriggerBaseBoolean {
 
     public TriggerBoolean() {
         super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.onReceivedBoolean), "boolean", 0xFF26C9FF);
+    }
+
+    @Override
+    public IProgressionTrigger copy() {
+        TriggerBoolean trigger = new TriggerBoolean();
+        trigger.variable = variable;
+        trigger.isTrue = isTrue;
+        return copyBase(copyBoolean(trigger));
     }
 
     @Override

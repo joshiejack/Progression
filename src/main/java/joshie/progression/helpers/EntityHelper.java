@@ -1,11 +1,7 @@
 package joshie.progression.helpers;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import joshie.progression.api.criteria.IProgressionFilter;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -13,25 +9,63 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.passive.EntityRabbit;
 
+import java.util.*;
+import java.util.concurrent.Callable;
+
 public class EntityHelper {
     private static ArrayList<EntityLivingBase> shuffledEntityCache = new ArrayList();
     private static final HashMap<String, Integer> scalings = new HashMap();
-
-    static {
-        scalings.put("EnderDragon", 5);
-        scalings.put("Giant", 3);
-        scalings.put("WitherBoss", 10);
-        scalings.put("Ghast", 10);
+    private static final HashMap<String, Integer> offsetY = new HashMap();
+    private static final Cache<EntityLivingBase, Integer> scaleCache = CacheBuilder.newBuilder().maximumSize(1024).build();
+    private static final Cache<EntityLivingBase, Integer> offsetCache = CacheBuilder.newBuilder().maximumSize(1024).build();
+    private static void register(String entity, int scale, int offset) {
+        scalings.put(entity, scale);
+        offsetY.put(entity, offset);
     }
 
-    public static int getSizeForString(String name) {
+    static {
+        offsetY.put("Thaumcraft.TaintacleTiny", -15);
+        offsetY.put("Thaumcraft.Taintacle", -45);
+        scalings.put("Giant", 3);
+        scalings.put("WitherBoss", 10);
+        scalings.put("Thaumcraft.EldritchGolem", 11);
+        register("EnderDragon", 4, -4);
+        register("Ghast", 5, -30);
+        register("Thaumcraft.EldritchWarden", 4, 11);
+    }
+
+    private static int getSizeForString(String name) {
         if (scalings.containsKey(name)) {
             return scalings.get(name);
         } else return 15;
     }
 
-    public static int getSizeForEntity(Entity entity) {
-        return getSizeForString(EntityList.getEntityString(entity));
+    private static int getOffsetForString(String name) {
+        if (offsetY.containsKey(name)) {
+            return offsetY.get(name);
+        } else return 0;
+    }
+
+    public static int getSizeForEntity(final EntityLivingBase entity) {
+        try {
+            return offsetCache.get(entity, new Callable<Integer>() {
+                @Override
+                public Integer call() throws Exception {
+                    return getSizeForString(EntityList.getEntityString(entity));
+                }
+            });
+        } catch (Exception e) { return  15; }
+    }
+
+    public static int getOffsetForEntity(final EntityLivingBase entity) {
+        try {
+            return scaleCache.get(entity, new Callable<Integer>() {
+                @Override
+                public Integer call() throws Exception {
+                    return getOffsetForString(EntityList.getEntityString(entity));
+                }
+            });
+        } catch (Exception e) { return  0; }
     }
 
     private static final ArrayList<EntityLivingBase> entities = new ArrayList();

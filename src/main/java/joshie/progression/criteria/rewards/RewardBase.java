@@ -102,6 +102,11 @@ public abstract class RewardBase implements IProgressionReward {
     public void addTooltip(List list) {}
 
     @Override
+    public int getWidth() {
+        return 100;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || !(o instanceof IProgressionReward)) return false;

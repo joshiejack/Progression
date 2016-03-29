@@ -6,6 +6,7 @@ import joshie.progression.api.criteria.IProgressionFilter;
 import joshie.progression.api.criteria.IProgressionFilterSelector;
 import joshie.progression.api.special.ISpecialFieldProvider;
 import joshie.progression.api.special.ISpecialFilters;
+import joshie.progression.gui.fields.ItemFilterField;
 import joshie.progression.gui.fields.ItemFilterFieldPreview;
 import joshie.progression.gui.filters.FilterSelectorBlock;
 import joshie.progression.gui.filters.FilterSelectorLocation;
@@ -30,13 +31,11 @@ public class RewardPlaceBlock extends RewardBaseItemFilter implements ISpecialFi
     }
 
     @Override
-    public boolean shouldReflectionSkipField(String name) {
-        return name.equals("filters");
-    }
-
-    @Override
     public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
-        if (mode == DisplayMode.EDIT) fields.add(new ItemFilterFieldPreview("filters", this, 25, 30, 2.8F));
+        if (mode == DisplayMode.EDIT) {
+            fields.add(new ItemFilterField("locations", this));
+            fields.add(new ItemFilterFieldPreview("filters", this, 25, 30, 2.8F));
+        }
     }
 
     @Override

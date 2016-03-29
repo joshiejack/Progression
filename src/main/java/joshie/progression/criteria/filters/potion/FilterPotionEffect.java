@@ -1,21 +1,16 @@
 package joshie.progression.criteria.filters.potion;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionField;
+import joshie.progression.api.criteria.IProgressionFilterSelector;
 import joshie.progression.api.special.IInit;
 import joshie.progression.api.special.ISpecialFieldProvider;
 import joshie.progression.criteria.filters.item.FilterBaseItem;
-import joshie.progression.gui.editors.FeatureItemSelector.Position;
-import joshie.progression.gui.fields.ItemField;
-import joshie.progression.gui.filters.FilterSelectorPotion;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
+
+import java.util.*;
 
 public class FilterPotionEffect extends FilterBaseItem implements IInit, ISpecialFieldProvider {
     private static final List<PotionEffect> EMPTY = new ArrayList();
@@ -28,18 +23,13 @@ public class FilterPotionEffect extends FilterBaseItem implements IInit, ISpecia
     }
 
     @Override
-    public FilterType getType() {
-        return FilterType.POTIONEFFECT;
-    }
-
-    @Override
-    public boolean shouldReflectionSkipField(String name) {
-        return name.equals("stack");
+    public IProgressionFilterSelector getType() {
+        return ProgressionAPI.filters.getPotionFilter();
     }
 
     @Override
     public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
-        if (mode == DisplayMode.EDIT) fields.add(new ItemField("stack", this, 25, 25, 3F, Position.BOTTOM, FilterSelectorPotion.INSTANCE));
+        if (mode == DisplayMode.EDIT) fields.add(ProgressionAPI.fields.getItem(this, "stack", 25, 25, 3F));
     }
 
     @Override

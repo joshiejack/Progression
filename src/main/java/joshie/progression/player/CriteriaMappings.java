@@ -24,8 +24,11 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
+import org.apache.logging.log4j.Level;
 
 import java.util.*;
+
+import static joshie.progression.Progression.data;
 
 public class CriteriaMappings {
     private PlayerDataServer master;
@@ -33,9 +36,9 @@ public class CriteriaMappings {
 
     protected HashMap<IProgressionCriteria, Integer> completedCritera = new HashMap(); //All the completed criteria, with a number for how many times repeated
     protected Set<IProgressionTrigger> completedTriggers = new HashSet(); //All the completed trigger, With their unique name as their identifier, Persistent
-    protected HashMap<IProgressionTrigger, NBTTagCompound> triggerData = new HashMap(); //Unique String > Data mappings for this trigger
     protected HashMultimap<UUID, IProgressionReward> unclaimedRewards = HashMultimap.create(); //List of the team members and the rewards they haven't claimed yet
     protected HashMap<UUID, HashMap<IProgressionCriteria, Integer>> numberRewards = new HashMap();
+    protected HashMap<UUID, IStoreTriggerData> triggerDataMap = new HashMap(); //
     protected Set<IProgressionReward> claimedRewards = new HashSet();
     protected Set<IProgressionCriteria> impossible = new HashSet();
 
@@ -57,8 +60,23 @@ public class CriteriaMappings {
         PacketHandler.sendToClient(new PacketSyncPoints(master.getPoints()), player);
         PacketHandler.sendToClient(new PacketSyncImpossible(impossible.toArray(new IProgressionCriteria[impossible.size()])), player);
         PacketHandler.sendToClient(new PacketSyncTriggers(completedTriggers), player); //Sync all trigger that are completed to the client
-        PacketHandler.sendToClient(new PacketSyncTriggerData(triggerData), player); //Sync all trigger data
+        PacketHandler.sendToClient(new PacketSyncTriggerData(triggerDataMap), player); //Sync all trigger data
         PacketHandler.sendToClient(new PacketSyncCriteria(true, completedCritera.values().toArray(new Integer[completedCritera.size()]), completedCritera.keySet().toArray(new IProgressionCriteria[completedCritera.size()])), player); //Sync all conditions to the client
+    }
+
+    private void readTriggerData(NBTTagCompound nbt) {
+        Progression.logger.log(Level.INFO, "Reading the nbt data for uuid " + uuid);
+        NBTTagList data = nbt.getTagList("ActiveTriggerData", 10);
+        for (int i = 0; i < data.tagCount(); i++) {
+            NBTTagCompound tag = data.getCompoundTagAt(i);
+            UUID uuid = UUID.fromString(tag.getString("UUID"));
+            NBTTagCompound triggerNBT = tag.getCompoundTag("Data");
+            if (triggerDataMap.get(uuid) == null) {
+                IStoreTriggerData triggerData = (IStoreTriggerData) APIHandler.getCache().getTriggerFromUUID(uuid).copy();
+                triggerData.readDataFromNBT(triggerNBT);
+                triggerDataMap.put(uuid, triggerData);
+            } else triggerDataMap.get(uuid).readDataFromNBT(tag);
+        }
     }
 
     //Reads the completed criteria
@@ -69,17 +87,22 @@ public class CriteriaMappings {
         NBTHelper.readMap(nbt, "UnclaimedRewards", UnclaimedNBT.INSTANCE.setMap(unclaimedRewards));
         NBTHelper.readMap(nbt, "CompletedCriteria", CriteriaNBT.INSTANCE.setMap(completedCritera));
         NBTHelper.readMap(nbt, "MemberRewardCounter", RewardCountNBT.INSTANCE.setMap(numberRewards));
-        NBTTagList data = nbt.getTagList("ActiveTriggerData", 10);
-        for (int i = 0; i < data.tagCount(); i++) {
-            NBTTagCompound tag = data.getCompoundTagAt(i);
-            UUID uuid = UUID.fromString(tag.getString("UUID"));
-            IProgressionTrigger trigger = APIHandler.getCache().getTriggerFromUUID(uuid);
-            if (trigger instanceof IStoreTriggerData) {
-                NBTTagCompound triggerNBT = tag.getCompoundTag("Data");
-                ((IStoreTriggerData)trigger).readDataFromNBT(triggerNBT);
-                triggerData.put(trigger, triggerNBT);
-            }
+        readTriggerData(nbt);
+    }
+
+    private void writeTriggerData(NBTTagCompound nbt) {
+    //Save the extra data for the existing triggers
+        NBTTagList data = new NBTTagList();
+        for (UUID uuid : triggerDataMap.keySet()) {
+            NBTTagCompound tag = new NBTTagCompound();
+            tag.setString("UUID", uuid.toString());
+            NBTTagCompound triggerNBT = new NBTTagCompound();
+            triggerDataMap.get(uuid).writeDataToNBT(triggerNBT);
+            tag.setTag("Data", triggerNBT);
+            data.appendTag(tag);
         }
+
+        nbt.setTag("ActiveTriggerData", data);
     }
 
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
@@ -89,23 +112,7 @@ public class CriteriaMappings {
         NBTHelper.writeMap(nbt, "UnclaimedRewards", UnclaimedNBT.INSTANCE.setMap(unclaimedRewards));
         NBTHelper.writeMap(nbt, "CompletedCriteria", CriteriaNBT.INSTANCE.setMap(completedCritera));
         NBTHelper.writeMap(nbt, "MemberRewardCounter", RewardCountNBT.INSTANCE.setMap(numberRewards));
-        //Save the extra data for the existing triggers
-        NBTTagList data = new NBTTagList();
-        for (IProgressionTrigger trigger : triggerData.keySet()) {
-            if (trigger != null) {
-                NBTTagCompound tag = new NBTTagCompound();
-                tag.setString("UUID", trigger.getUniqueID().toString());
-                if (trigger instanceof IStoreTriggerData) {
-                    NBTTagCompound triggerNBT = new NBTTagCompound();
-                    ((IStoreTriggerData)trigger).writeDataToNBT(triggerNBT);
-                    tag.setTag("Data", triggerNBT);
-                }
-
-                data.appendTag(tag);
-            }
-        }
-
-        nbt.setTag("ActiveTriggerData", data);
+        writeTriggerData(nbt);
         return nbt;
     }
 
@@ -132,9 +139,12 @@ public class CriteriaMappings {
     }
 
     public void setTriggerData(boolean overwrite, PacketSyncTriggerData.DataPair[] pairs) {
-        if (overwrite) triggerData = new HashMap();
+        if (overwrite) triggerDataMap = new HashMap();
         for (PacketSyncTriggerData.DataPair pair: pairs) {
-            triggerData.put(pair.trigger, pair.data);
+            IProgressionTrigger trigger = APIHandler.getCache().getTriggerFromUUID(pair.uuid);
+            if (trigger != null) {
+                ((IStoreTriggerData)trigger).readDataFromNBT(pair.data); //Fuck with local cache
+            }
         }
     }
 
@@ -148,10 +158,14 @@ public class CriteriaMappings {
 
     public void sendTriggerDataToClient(IProgressionTrigger trigger) {
         if (trigger instanceof IStoreTriggerData) {
-            NBTTagCompound nbt = new NBTTagCompound();
-            ((IStoreTriggerData)trigger).writeDataToNBT(nbt);
-            PacketHandler.sendToTeam(new PacketSyncTriggerData(trigger, nbt), master.team);
+            sendTriggerDataToClient(trigger.getUniqueID(), (IStoreTriggerData) trigger);
         }
+    }
+
+    public void sendTriggerDataToClient(UUID uuid, IStoreTriggerData trigger) {
+        NBTTagCompound nbt = new NBTTagCompound();
+        trigger.writeDataToNBT(nbt);
+        PacketHandler.sendToTeam(new PacketSyncTriggerData(uuid, nbt), master.team);
     }
     
     public boolean isImpossible(IProgressionCriteria criteria) {
@@ -169,7 +183,7 @@ public class CriteriaMappings {
         if (isPossible) impossible.add(criteria);
         else CollectionHelper.remove(impossible, criteria);
         
-        Progression.data.markDirty();
+        data.markDirty();
         PacketHandler.sendToTeam(new PacketSyncImpossible(impossible.toArray(new IProgressionCriteria[impossible.size()])), master.team);
     }
     
@@ -182,7 +196,7 @@ public class CriteriaMappings {
             if (criteria == null || !completedCritera.keySet().contains(criteria)) return Result.DEFAULT;
             else removeCriteria(criteria);
             remap(); //Remap everything
-            Progression.data.markDirty();
+            data.markDirty();
             return Result.ALLOW;
         }
 
@@ -232,13 +246,7 @@ public class CriteriaMappings {
             }
         }
 
-        //Remove completed triggers from the active map
-        for (IProgressionTrigger trigger : toRemove) {
-            triggers.remove(toRemove);
-        }
-
         //Create a list of new triggers to add to the active trigger map
-        HashSet<IProgressionTrigger> forRemovalFromCompleted = new HashSet();
         HashSet<IProgressionCriteria> toComplete = new HashSet();
 
         //Next step, now that we have fired the trigger, we need to go through all the active criteria
@@ -261,11 +269,14 @@ public class CriteriaMappings {
             }
 
             //Complete the criteria and bypass any requirements
-            if ((allFired && allRequired) || (firedCount >= countRequired)) {
+            if ((allFired && allRequired) || (!allRequired && firedCount >= countRequired)) {
                 completedAnyCriteria = true;
                 toComplete.add(criteria);
             }
         }
+
+        //Remove completed triggers from the active map
+        triggers.removeAll(toRemove);
 
         //Add the bypassing of requirements completion
         if (type.equals("forced-complete")) {
@@ -320,7 +331,7 @@ public class CriteriaMappings {
         }
 
         //Mark data as dirty, whether it changed or not
-        Progression.data.markDirty();
+        data.markDirty();
         return completedAnyCriteria ? Result.ALLOW : Result.DEFAULT;
     }
 
@@ -398,9 +409,9 @@ public class CriteriaMappings {
             }
 
             if (repeat) {
+                CollectionHelper.remove(completedTriggers, criteriaTrigger);
                 if (criteriaTrigger instanceof IStoreTriggerData) {
-                    triggerData.remove(criteriaTrigger);
-                    ((IStoreTriggerData) criteriaTrigger).readDataFromNBT(new NBTTagCompound()); //Read in a blank nbt file to reset the data
+                    triggerDataMap.get(criteriaTrigger.getUniqueID()).readDataFromNBT(new NBTTagCompound());
                     sendTriggerDataToClient(criteriaTrigger); //Let the client know it was wiped
                 }
             }
@@ -471,8 +482,7 @@ public class CriteriaMappings {
             //Remove all data for the triggers too
             for (IProgressionTrigger trigger: criteria.getTriggers()) {
                 if (trigger instanceof IStoreTriggerData) {
-                    triggerData.remove(trigger);
-                    ((IStoreTriggerData)trigger).readDataFromNBT(new NBTTagCompound()); //Read in a blank nbt file to reset the data
+                    triggerDataMap.get(trigger.getUniqueID()).readDataFromNBT(new NBTTagCompound());
                     sendTriggerDataToClient(trigger); //Let the client know it was wiped
                 }
             }
@@ -483,13 +493,19 @@ public class CriteriaMappings {
             for (IProgressionTrigger trigger : triggers) {
                 //If we don't have the trigger in the completed map, mark it as available in the active triggers
                 if (!completedTriggers.contains(trigger)) {
-                    activeTriggers.get(trigger.getUnlocalisedName()).add((IProgressionTrigger) trigger);
+                    IProgressionTrigger clone = triggerDataMap.containsKey(trigger.getUniqueID()) ? (IProgressionTrigger) triggerDataMap.get(trigger.getUniqueID()) : trigger.copy();
+                    if (clone instanceof IStoreTriggerData) {
+                        triggerDataMap.put(clone.getUniqueID(), (IStoreTriggerData) clone);
+                    }
+
+                    activeTriggers.get(clone.getUnlocalisedName()).add(clone);
                 }
             }
         }
     }
 
     public void remap() {
+        Progression.logger.log(Level.INFO, "Progression began remapping for the uuid: " + uuid);
         Set<IProgressionCriteria> availableCriteria = new HashSet(); //Recreate the available mappings
         activeTriggers = HashMultimap.create(); //Recreate the trigger mappings
 
@@ -526,8 +542,14 @@ public class CriteriaMappings {
             List<IProgressionTrigger> triggers = criteria.getTriggers(); //Grab a list of all the triggers
             for (IProgressionTrigger trigger : triggers) {
                 //If we don't have the trigger in the completed map, mark it as available in the active triggers
+                IProgressionTrigger clone = triggerDataMap.containsKey(trigger.getUniqueID()) ? (IProgressionTrigger) triggerDataMap.get(trigger.getUniqueID()) : trigger.copy();
+                if (clone instanceof IStoreTriggerData) {
+                    triggerDataMap.put(clone.getUniqueID(), (IStoreTriggerData) clone); //Remap the triggers data
+                }
+
+                //Only mark it as active if applicable
                 if (!completedTriggers.contains(trigger)) {
-                    activeTriggers.get(trigger.getUnlocalisedName()).add((IProgressionTrigger) trigger);
+                    activeTriggers.get(clone.getUnlocalisedName()).add(clone);
                 }
             }
         }

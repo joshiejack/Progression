@@ -1,7 +1,10 @@
 package joshie.progression.criteria.triggers;
 
+import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
+import joshie.progression.api.criteria.IProgressionTrigger;
 import joshie.progression.api.special.IHasEventBus;
+import joshie.progression.helpers.DimensionHelper;
 import joshie.progression.items.ItemCriteria;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -15,6 +18,16 @@ public class TriggerChangeDimension extends TriggerBaseCounter implements IHasEv
 
     public TriggerChangeDimension() {
         super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.onChangeDimension), "changeDimension", 0xFF000000);
+    }
+
+    @Override
+    public IProgressionTrigger copy() {
+        TriggerChangeDimension trigger = new TriggerChangeDimension();
+        trigger.checkFrom = checkFrom;
+        trigger.from = from;
+        trigger.checkTo = checkTo;
+        trigger.to = to;
+        return copyBase(copyCounter(trigger));
     }
     
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -35,5 +48,21 @@ public class TriggerChangeDimension extends TriggerBaseCounter implements IHasEv
         }
 
         return true;
+    }
+
+    @Override
+    public int getWidth() {
+        return 80;
+    }
+
+    @Override
+    public String getDescription() {
+        StringBuilder builder = new StringBuilder();
+        if (checkTo) builder.append("Go to " + DimensionHelper.getDimensionNameFromID(to));
+        if (checkFrom && checkTo) builder.append("\n");
+        if (checkFrom) builder.append("Leave " + DimensionHelper.getDimensionNameFromID(from));
+        if (!checkTo && !checkFrom) builder.append("Change Dimension");
+        builder.append("\n\n" + Progression.format("completed", getPercentage()));
+        return  builder.toString();
     }
 }

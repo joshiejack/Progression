@@ -1,9 +1,7 @@
 package joshie.progression.network;
 
 import io.netty.buffer.ByteBuf;
-import joshie.progression.api.criteria.IProgressionTrigger;
 import joshie.progression.api.special.IStoreTriggerData;
-import joshie.progression.handlers.APIHandler;
 import joshie.progression.network.core.PenguinPacket;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,26 +13,23 @@ import java.util.UUID;
 
 public class PacketSyncTriggerData extends PenguinPacket {
     public static class DataPair {
-        public IProgressionTrigger trigger;
+        public UUID uuid;
         public NBTTagCompound data;
 
         public DataPair(){}
-        public DataPair(IProgressionTrigger trigger, NBTTagCompound data) {
-            this.trigger = trigger;
+        public DataPair(UUID uuid, NBTTagCompound data) {
+            this.uuid = uuid;
             this.data = data;
         }
 
         public void toBytes(ByteBuf buf) {
-            ByteBufUtils.writeUTF8String(buf, trigger.getUniqueID().toString());
+            ByteBufUtils.writeUTF8String(buf, uuid.toString());
             ByteBufUtils.writeTag(buf, data);
         }
 
         public void fromBytes(ByteBuf buf) {
-            trigger = APIHandler.getCache().getTriggerFromUUID(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
+            uuid = UUID.fromString(ByteBufUtils.readUTF8String(buf));
             data = ByteBufUtils.readTag(buf);
-            if (trigger instanceof IStoreTriggerData) {
-                ((IStoreTriggerData) trigger).readDataFromNBT(data);
-            }
         }
     }
 
@@ -42,20 +37,22 @@ public class PacketSyncTriggerData extends PenguinPacket {
     private DataPair[] data;
 
     public PacketSyncTriggerData() {}
-    public PacketSyncTriggerData(HashMap<IProgressionTrigger, NBTTagCompound> triggers) {
+    public PacketSyncTriggerData(HashMap<UUID, IStoreTriggerData> triggerData) {
         this.overwrite = true;
-        this.data = new DataPair[triggers.size()];
+        this.data = new DataPair[triggerData.size()];
         int position = 0;
-        for (IProgressionTrigger trigger: triggers.keySet()) {
-            this.data[position] = new DataPair(trigger, triggers.get(trigger));
+        for (UUID uuid: triggerData.keySet()) {
+            NBTTagCompound tag = new NBTTagCompound();
+            triggerData.get(uuid).writeDataToNBT(tag);
+            this.data[position] = new DataPair(uuid, tag);
             position++;
         }
     }
 
-    public PacketSyncTriggerData(IProgressionTrigger trigger, NBTTagCompound data) {
+    public PacketSyncTriggerData(UUID uuid, NBTTagCompound data) {
         this.overwrite = false;
         this.data = new DataPair[1];
-        this.data[0] = new DataPair(trigger, data);
+        this.data[0] = new DataPair(uuid, data);
     }
 
     @Override

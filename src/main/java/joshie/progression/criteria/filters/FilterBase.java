@@ -22,7 +22,7 @@ public abstract class FilterBase implements IProgressionFilter {
 
     @Override
     public String getLocalisedName() {
-        return Progression.translate("filter." + getType().name().toLowerCase() + "." + getUnlocalisedName());
+        return Progression.translate("filter." + getType().getName().toLowerCase() + "." + getUnlocalisedName());
     }
 
     @Override
@@ -50,5 +50,10 @@ public abstract class FilterBase implements IProgressionFilter {
     @Override
     public boolean matches(Object object) {
         return false;
+    }
+
+    @Override
+    public int getWidth() {
+        return 100;
     }
 }

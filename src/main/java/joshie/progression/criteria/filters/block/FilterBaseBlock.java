@@ -1,11 +1,13 @@
 package joshie.progression.criteria.filters.block;
 
-import java.util.List;
-
+import joshie.progression.api.ProgressionAPI;
+import joshie.progression.api.criteria.IProgressionFilterSelector;
 import joshie.progression.criteria.filters.FilterBase;
 import joshie.progression.helpers.ItemHelper;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
+
+import java.util.List;
 
 public abstract class FilterBaseBlock extends FilterBase {
     public FilterBaseBlock(String string, int color) {
@@ -36,8 +38,8 @@ public abstract class FilterBaseBlock extends FilterBase {
     }
 
     @Override
-    public FilterType getType() {
-        return FilterType.BLOCK;
+    public IProgressionFilterSelector getType() {
+        return ProgressionAPI.filters.getBlockFilter();
     }
 
     protected abstract boolean matches(Block block, int metadata);

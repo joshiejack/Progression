@@ -26,4 +26,10 @@ public interface IProgressionTrigger extends IFieldProvider, IHasEventBus {
 
     /** Returns an icon representation for this trigger **/
     public ItemStack getIcon();
+
+    /** This should create an exact copy of this object type,
+     *  This is used so that players have their own unique, versions,
+     *  for storing the data. If you don't return,
+     *  an exact copy, then everything will not work correctly */
+    public IProgressionTrigger copy();
 }

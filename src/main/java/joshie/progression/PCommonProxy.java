@@ -69,6 +69,7 @@ public class PCommonProxy implements IGuiHandler {
         //Register Commands
         CommandManager.INSTANCE.registerCommand(new CommandHelp());
         CommandManager.INSTANCE.registerCommand(new CommandEdit());
+        CommandManager.INSTANCE.registerCommand(new CommandGui());
         CommandManager.INSTANCE.registerCommand(new CommandReload());
         CommandManager.INSTANCE.registerCommand(new CommandReset());
 
@@ -84,6 +85,7 @@ public class PCommonProxy implements IGuiHandler {
         PacketHandler.registerPacket(PacketClaimed.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketCompleted.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketOpenEditor.class, Side.CLIENT);
+        PacketHandler.registerPacket(PacketDebugGUI.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketFireTrigger.class, Side.SERVER);
         PacketHandler.registerPacket(PacketSyncTeam.class);
         PacketHandler.registerPacket(PacketReload.class);
@@ -152,7 +154,7 @@ public class PCommonProxy implements IGuiHandler {
         ProgressionAPI.registry.registerTriggerType(new TriggerItemEaten());
         ProgressionAPI.registry.registerTriggerType(new TriggerKill());
         ProgressionAPI.registry.registerTriggerType(new TriggerLogin());
-        ProgressionAPI.registry.registerTriggerType(new TriggerObtain());
+        ProgressionAPI.registry.registerTriggerType(new TriggerChangeGui());
         ProgressionAPI.registry.registerTriggerType(new TriggerBoolean());
         ProgressionAPI.registry.registerTriggerType(new TriggerClickBlock());
         ProgressionAPI.registry.registerTriggerType(new TriggerPoints());

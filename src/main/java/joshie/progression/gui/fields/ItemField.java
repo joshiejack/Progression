@@ -1,36 +1,35 @@
 package joshie.progression.gui.fields;
 
-import java.lang.reflect.Field;
-
+import joshie.progression.api.criteria.IProgressionFilter;
 import joshie.progression.api.criteria.IProgressionFilterSelector;
-import joshie.progression.api.special.IInit;
-import joshie.progression.api.special.IItemGetterCallback;
-import joshie.progression.api.special.ISetterCallback;
-import joshie.progression.api.special.ISpecialFilters;
+import joshie.progression.api.special.*;
 import joshie.progression.gui.core.DrawHelper;
 import joshie.progression.gui.core.FeatureTooltip;
 import joshie.progression.gui.editors.FeatureItemSelector;
-import joshie.progression.gui.editors.IItemSelectable;
 import joshie.progression.gui.editors.FeatureItemSelector.Position;
+import joshie.progression.gui.editors.IItemSelectable;
 import joshie.progression.gui.filters.FeatureItemPreview;
 import joshie.progression.gui.filters.FilterSelectorItem;
 import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.item.ItemStack;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+
 public class ItemField extends AbstractField implements IItemSelectable {
+    private final IProgressionFilterSelector filter;
     private Field field;
-    protected Object object;
+    private Object object;
     private final int x;
     private final int y;
     private final float scale;
-    protected final int mouseX1;
-    protected final int mouseX2;
-    protected final int mouseY1;
-    protected final int mouseY2;
-    protected final Position type;
-    protected final IProgressionFilterSelector filter;
+    private final int mouseX1;
+    private final int mouseX2;
+    private final int mouseY1;
+    private final int mouseY2;
 
-    public ItemField(String fieldName, Object object, int x, int y, float scale, Position type, IProgressionFilterSelector filter) {
+    public ItemField(String fieldName, Object object, int x, int y, float scale) {
         super(fieldName);
         this.x = x;
         this.y = y;
@@ -39,9 +38,10 @@ public class ItemField extends AbstractField implements IItemSelectable {
         this.mouseX2 = (int) (x + 14 * scale);
         this.mouseY1 = y - 2;
         this.mouseY2 = (int) (y + 15 * scale);
-        this.type = type;
-               
-        if (object instanceof ISpecialFilters) {
+
+        if (object instanceof IProgressionFilter) {
+            this.filter = ((IProgressionFilter)object).getType();
+        } else if (object instanceof ISpecialFilters) {
             this.filter = ((ISpecialFilters) object).getFilterForField(fieldName);
         } else this.filter = FilterSelectorItem.INSTANCE;
 
@@ -63,7 +63,7 @@ public class ItemField extends AbstractField implements IItemSelectable {
     public boolean attemptClick(int mouseX, int mouseY) {
         boolean clicked = mouseX >= mouseX1 && mouseX <= mouseX2 && mouseY >= mouseY1 && mouseY <= mouseY2;
         if (clicked) {
-            FeatureItemSelector.INSTANCE.select(filter, this, type);
+            FeatureItemSelector.INSTANCE.select(filter, this, Position.BOTTOM);
             return true;
         } else return false;
     }
@@ -93,8 +93,17 @@ public class ItemField extends AbstractField implements IItemSelectable {
     @Override
     public void draw(DrawHelper helper, int renderX, int renderY, int color, int yPos, int mouseX, int mouseY) {
         try {
-            boolean clicked = mouseX >= mouseX1 && mouseX <= mouseX2 && mouseY >= mouseY1 && mouseY <= mouseY2;
-            if (clicked) FeatureTooltip.INSTANCE.addTooltip(getStack().getTooltip(MCClientHelper.getPlayer(), false));
+            boolean hovered = mouseX >= mouseX1 && mouseX <= mouseX2 && mouseY >= mouseY1 && mouseY <= mouseY2;
+            if (hovered) {
+                List<String> tooltip = new ArrayList();
+                tooltip.addAll(getStack().getTooltip(MCClientHelper.getPlayer(), false));
+                if (object instanceof IAdditionalTooltip) {
+                    ((IAdditionalTooltip)object).addHoverTooltip(tooltip);
+                }
+
+                FeatureTooltip.INSTANCE.addTooltip(tooltip);
+            }
+
             helper.drawStack(renderX, renderY, getStack(), x, y, scale);
         } catch (Exception e) {}
     }

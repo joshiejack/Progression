@@ -1,12 +1,12 @@
 package joshie.progression.criteria.triggers;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import joshie.progression.api.criteria.IProgressionFilter;
 import joshie.progression.api.special.IHasFilters;
 import joshie.progression.helpers.ItemHelper;
 import net.minecraft.item.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class TriggerBaseItemFilter extends TriggerBaseCounter implements IHasFilters {
     public List<IProgressionFilter> filters = new ArrayList();
@@ -20,6 +20,11 @@ public abstract class TriggerBaseItemFilter extends TriggerBaseCounter implement
 
     public TriggerBaseItemFilter(String name, int color, String data) {
         super(name, color, data);
+    }
+
+    public TriggerBaseItemFilter copyFilter(TriggerBaseItemFilter trigger) {
+        trigger.filters = filters;
+        return trigger;
     }
     
     @Override

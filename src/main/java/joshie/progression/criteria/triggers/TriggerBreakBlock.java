@@ -1,12 +1,12 @@
 package joshie.progression.criteria.triggers;
 
+import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
+import joshie.progression.api.criteria.IProgressionTrigger;
 import joshie.progression.api.special.IHasEventBus;
 import net.minecraft.block.Block;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
-import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -16,8 +16,10 @@ public class TriggerBreakBlock extends TriggerBaseBlock implements IHasEventBus 
     }
 
     @Override
-    public EventBus getEventBus() {
-        return MinecraftForge.EVENT_BUS;
+    public IProgressionTrigger copy() {
+        TriggerBreakBlock trigger = new TriggerBreakBlock();
+        trigger.cancel = cancel;
+        return copyBase(copyCounter(copyFilter(trigger)));
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -27,5 +29,14 @@ public class TriggerBreakBlock extends TriggerBaseBlock implements IHasEventBus 
         if (ProgressionAPI.registry.fireTrigger(event.getPlayer(), getUnlocalisedName(), block, meta) == Result.DENY) {
             event.setCanceled(true);
         }
+    }
+
+    @Override
+    public String getDescription() {
+        if (cancel) {
+            return Progression.translate("trigger.breakBlock.cancel");
+        }
+
+        return Progression.format("trigger.breakBlock.description", amount) + "\n\n" + Progression.format("completed", getPercentage());
     }
 }

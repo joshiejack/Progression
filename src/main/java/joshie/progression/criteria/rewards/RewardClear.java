@@ -19,11 +19,6 @@ public class RewardClear extends RewardBaseItemFilter implements ISpecialFieldPr
     }
 
     @Override
-    public boolean shouldReflectionSkipField(String name) {
-        return name.equals("filters");
-    }
-
-    @Override
     public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
         if (mode == DisplayMode.EDIT) fields.add(new ItemFilterFieldPreview("filters", this, 25, 30, 2.8F));
     }
