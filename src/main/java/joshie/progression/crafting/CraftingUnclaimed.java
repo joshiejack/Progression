@@ -9,22 +9,12 @@ public class CraftingUnclaimed extends Crafter {
 	public static final Crafter INSTANCE = new CraftingUnclaimed();
 	
 	@Override
-	public boolean canUseItemForCrafting(ActionType type, ItemStack stack) {
-		return Options.settings.unclaimedTileCanUseAnythingForCrafting;
+	public boolean canUseItemWithAction(ActionType type, ItemStack stack) {
+		return Options.settings.unclaimedTileCanDoAnything;
 	}
 
 	@Override
-	public boolean canCraftItem(ActionType type, ItemStack stack) {
-		return Options.settings.unclaimedTileCanCraftAnything;
+	public boolean canDoAnything() {
+		return Options.settings.unclaimedTileCanDoAnything;
 	}
-
-	@Override
-	public boolean canCraftWithAnything() {
-		return Options.settings.unclaimedTileCanUseAnythingForCrafting;
-	}
-
-    @Override
-    public boolean canCraftAnything() {
-        return Options.settings.unclaimedTileCanCraftAnything;
-    }
 }

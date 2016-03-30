@@ -3,7 +3,6 @@ package joshie.progression.crafting;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.api.criteria.IProgressionFilter;
-import joshie.progression.crafting.CraftingRegistry.DisallowType;
 import joshie.progression.json.Options;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -23,8 +22,8 @@ public class CrafterHuman extends Crafter {
     }
 
     @Override
-    public boolean canUseItemForCrafting(ActionType type, ItemStack stack) {
-        Set<IProgressionFilter> filters = CraftingRegistry.getFiltersForStack(type, stack, DisallowType.USEINCRAFTING);
+    public boolean canUseItemWithAction(ActionType type, ItemStack stack) {
+        Set<IProgressionFilter> filters = CraftingRegistry.getFiltersForStack(type, stack);
         List<IProgressionFilter> matched = new ArrayList();
         for (IProgressionFilter filter : filters) {
             if (filter.matches(stack)) {
@@ -35,7 +34,7 @@ public class CrafterHuman extends Crafter {
         if (matched.size() == 0) return !Options.settings.disableUsageUntilRewardAdded;
         Set<IProgressionCriteria> completed = ProgressionAPI.player.getCompletedCriteriaList(uuid);
         for (IProgressionFilter filter : matched) {
-            IProgressionCriteria criteria = CraftingRegistry.getCriteriaForFilter(type, filter, DisallowType.USEINCRAFTING);
+            IProgressionCriteria criteria = CraftingRegistry.getCriteriaForFilter(type, filter);
             if (criteria != null && completed.contains(criteria)) return true;
         }
         
@@ -43,33 +42,7 @@ public class CrafterHuman extends Crafter {
     }
 
     @Override
-    public boolean canCraftItem(ActionType type, ItemStack stack) {
-        Set<IProgressionFilter> filters = CraftingRegistry.getFiltersForStack(type, stack, DisallowType.CRAFTING);
-               
-        List<IProgressionFilter> matched = new ArrayList();
-        for (IProgressionFilter filter : filters) {
-            if (filter.matches(stack)) {
-                matched.add(filter); //Add all matches so we can check all criteria
-            }
-        }
-
-        if (matched.size() == 0) return !Options.settings.disableCraftingUntilRewardAdded;
-        Set<IProgressionCriteria> completed = ProgressionAPI.player.getCompletedCriteriaList(uuid);
-        for (IProgressionFilter filter : matched) {
-            IProgressionCriteria criteria = CraftingRegistry.getCriteriaForFilter(type, filter, DisallowType.CRAFTING);
-            if (criteria != null && completed.contains(criteria)) return true;
-        }
-        
-        return false;
-    }
-
-    @Override
-    public boolean canCraftWithAnything() {
-        return false;
-    }
-
-    @Override
-    public boolean canCraftAnything() {
+    public boolean canDoAnything() {
         return false;
     }
 }

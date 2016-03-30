@@ -14,8 +14,7 @@ public class DefaultSettings {
     public UUID defaultTabID = UUID.fromString("c051e0e2-f5ad-4b9d-b889-0ada75d4062b");
     public boolean disableCraftingUntilRewardAdded = false;
     public boolean disableUsageUntilRewardAdded = false;
-    public boolean unclaimedTileCanCraftAnything = false;
-    public boolean unclaimedTileCanUseAnythingForCrafting = false;
+    public boolean unclaimedTileCanDoAnything = false;
     public boolean craftAnythingCreative = false;
 
     public DefaultSettings setDefaults() {

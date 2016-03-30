@@ -25,12 +25,17 @@ public class FilterExact extends FilterBaseCrafting implements ISpecialFieldProv
 
     @Override
     public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
-        if (mode == DisplayMode.EDIT) fields.add(ProgressionAPI.fields.getItem(this, "stack", 30, 35, 1.4F));
+        if (mode == DisplayMode.EDIT) fields.add(ProgressionAPI.fields.getItem(this, "stack", 5, 25, 2.8F));
     }
 
     @Override
     public String getDescription() {
         return ActionType.getCraftingActionFromIcon(stack).getUnlocalisedName().toLowerCase();
+    }
+
+    @Override
+    public int getWidth(DisplayMode mode) {
+        return 55;
     }
 
     @Override

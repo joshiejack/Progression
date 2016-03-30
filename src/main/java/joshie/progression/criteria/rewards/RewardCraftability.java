@@ -1,6 +1,5 @@
 package joshie.progression.criteria.rewards;
 
-import joshie.progression.Progression;
 import joshie.progression.api.criteria.IProgressionField;
 import joshie.progression.api.criteria.IProgressionFilter;
 import joshie.progression.api.criteria.IProgressionFilterSelector;
@@ -15,7 +14,6 @@ import joshie.progression.gui.fields.ItemFilterFieldPreview;
 import joshie.progression.gui.filters.FilterSelectorAction;
 import joshie.progression.gui.filters.FilterSelectorItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.StatCollector;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -26,9 +24,6 @@ public class RewardCraftability extends RewardBaseItemFilter implements ISpecial
     public List<IProgressionFilter> actionfilters = new ArrayList();
     protected IProgressionFilter actionpreview;
     protected int actionticker;
-    public boolean general = true;
-    public boolean usage = true;
-    public boolean crafting = true;
 
     public RewardCraftability() {
         super("crafting", 0xFFCCCCCC);
@@ -90,7 +85,7 @@ public class RewardCraftability extends RewardBaseItemFilter implements ISpecial
                 }
             }
 
-            CraftingRegistry.addRequirement(type, criteria, filters, usage, crafting, general);
+            CraftingRegistry.addRequirement(type, criteria, filters);
         }
     }
 
@@ -105,7 +100,7 @@ public class RewardCraftability extends RewardBaseItemFilter implements ISpecial
             }
 
             
-            CraftingRegistry.removeRequirement(type, criteria, filters, usage, crafting, general);
+            CraftingRegistry.removeRequirement(type, criteria, filters);
         }
     }
 
@@ -133,10 +128,6 @@ public class RewardCraftability extends RewardBaseItemFilter implements ISpecial
 
     @Override
     public String getDescription() {
-        String filter = getFilter();
-        String s1 = crafting ? Progression.translate("reward.crafting.creation." + filter) : "";
-        String s2 = usage ? Progression.translate("reward.crafting.useincrafting." + filter) : "";
-        String s3 = general ? Progression.translate("reward.crafting.general." + filter) : "";
-        return StatCollector.translateToLocalFormatted("%s %s %s", s1, s2, s3);
+        return getFilter();
     }
 }

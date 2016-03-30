@@ -359,12 +359,12 @@ public class APIHandler implements IProgressionAPI {
     @Override
     public boolean canObtainFromAction(String actionType, ItemStack stack, Object tileOrPlayer) {
         ActionType type = ActionType.getCraftingActionFromName(actionType);
-        return CraftingHelper.canCraftItem(type, tileOrPlayer, stack);
+        return CraftingHelper.canPerformActionAbstract(type, tileOrPlayer, stack);
     }
 
     @Override
     public boolean canUseToPerformAction(String actionType, ItemStack stack, Object tileOrPlayer) {
         ActionType type = ActionType.getCraftingActionFromName(actionType);
-        return CraftingHelper.canUseItemForCrafting(type, tileOrPlayer, stack);
+        return CraftingHelper.canPerformActionAbstract(type, tileOrPlayer, stack);
     }
 }

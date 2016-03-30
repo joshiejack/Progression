@@ -21,47 +21,19 @@ public class ActionEvent extends Event {
     /** Can be null **/
     public final TileEntity tile;
     public final ItemStack stack;
+    public final ActionType type;
 
-    public ActionEvent(EntityPlayer player, ItemStack stack) {
+    public ActionEvent(ActionType type, EntityPlayer player, ItemStack stack) {
+        this.type = type;
         this.player = player;
         this.tile = null;
         this.stack = stack;
     }
     
-    public ActionEvent(TileEntity tile, ItemStack stack) {
+    public ActionEvent(ActionType type, TileEntity tile, ItemStack stack) {
+        this.type = type;
         this.player = null;
         this.tile = tile;
         this.stack = stack;
-    }
-
-    @Cancelable
-    public static class CanObtainFromActionEvent extends ActionEvent {
-        public final ActionType type;
-        
-        public CanObtainFromActionEvent(ActionType type, EntityPlayer player, ItemStack stack) {
-            super(player, stack);
-            this.type = type;
-        }
-        
-        public CanObtainFromActionEvent(ActionType type, TileEntity tile, ItemStack stack) {
-            super(tile, stack);
-            this.type = type;
-        }
-    }
-
-    /** The stack can be null with this event **/
-    @Cancelable
-    public static class CanUseToPeformActionEvent extends ActionEvent {
-        public final ActionType type;
-        
-        public CanUseToPeformActionEvent(ActionType type, EntityPlayer player, ItemStack stack) {
-            super(player, stack);
-            this.type = type;
-        }
-        
-        public CanUseToPeformActionEvent(ActionType type, TileEntity tile, ItemStack stack) {
-            super(tile, stack);
-            this.type = type;
-        }
     }
 }

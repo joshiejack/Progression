@@ -18,7 +18,7 @@ public class ThaumcraftHelper {
         InventoryCrafting ic = new InventoryCrafting(new ContainerDummy(), 3, 3);
         for (int a = 0; a < 9; a++) { //Validate all the items can be used in crafting
             ItemStack stack = tile.inventory.getStackInSlot(a);
-            if (!CraftingHelper.canUseItemForCrafting(ActionType.CRAFTING, ip.player, stack) || !CraftingHelper.canUseItemForCrafting(ActionType.ARCANE, ip.player, stack)) {
+            if (!CraftingHelper.canPerformAction(ActionType.CRAFTINGUSE, ip.player, stack) || !CraftingHelper.canPerformAction(ActionType.ARCANEUSE, ip.player, stack)) {
                 ic.setInventorySlotContents(a, null);
             } else ic.setInventorySlotContents(a, stack);
         }

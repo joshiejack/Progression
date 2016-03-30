@@ -1,10 +1,5 @@
 package joshie.progression.asm.helpers;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import joshie.progression.asm.ContainerPlayer;
 import joshie.progression.asm.ContainerTile;
 import joshie.progression.crafting.ActionType;
@@ -19,6 +14,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class VanillaHelper {
     public static Field fContainer;
@@ -59,7 +59,7 @@ public class VanillaHelper {
         ItemStack result = CraftingManager.getInstance().findMatchingRecipe(matrix, world);
         if (result != null) {
             for (Object o : getPlayers(matrix, FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)) {
-                if (!CraftingHelper.canCraftItem(ActionType.CRAFTING, o, result)) {
+                if (!CraftingHelper.canPerformActionAbstract(ActionType.CRAFTING, o, result)) {
                     result = null;
                 }
 
@@ -67,7 +67,7 @@ public class VanillaHelper {
                     for (int i = 0; i < matrix.getSizeInventory(); i++) {
                         if (matrix.getStackInSlot(i) != null) {
                             ItemStack stack = matrix.getStackInSlot(i);
-                            if (!CraftingHelper.canUseItemForCrafting(ActionType.CRAFTING, o, stack)) {
+                            if (!CraftingHelper.canPerformActionAbstract(ActionType.CRAFTINGUSE, o, stack)) {
                                 result = null;
                                 break;
                             }

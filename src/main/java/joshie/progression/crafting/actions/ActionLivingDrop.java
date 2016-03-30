@@ -1,7 +1,5 @@
 package joshie.progression.crafting.actions;
 
-import java.util.Iterator;
-
 import joshie.progression.crafting.ActionType;
 import joshie.progression.handlers.CraftingEvents;
 import net.minecraft.entity.Entity;
@@ -10,6 +8,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.Iterator;
 
 public class ActionLivingDrop extends ActionForgeEvent {
     public ActionLivingDrop(String name) {
@@ -25,7 +25,7 @@ public class ActionLivingDrop extends ActionForgeEvent {
                 EntityItem item = it.next();
                 ItemStack stack = item.getEntityItem();
                 EntityPlayer player = (EntityPlayer) source;
-                if (CraftingEvents.isEventCancelled(player, ActionType.ENTITYDROP, player.getCurrentEquippedItem(), stack)) {
+                if (CraftingEvents.isEventCancelled(player, ActionType.ENTITYDROPKILLEDWITH, player.getCurrentEquippedItem(), ActionType.ENTITYDROP, stack)) {
                     it.remove();
                 }
             }

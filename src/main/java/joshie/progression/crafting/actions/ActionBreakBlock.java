@@ -18,7 +18,7 @@ public class ActionBreakBlock extends ActionForgeEvent {
     public void onBreakSpeed(BreakSpeed event) {
         Block block = event.state.getBlock();
         int meta = block.getMetaFromState(event.state);
-        if (CraftingEvents.isEventCancelled(event.entityPlayer, ActionType.BREAKBLOCK, event.entityPlayer.getCurrentEquippedItem(), BlockActionHelper.getStackFromBlockData(block, meta))) {
+        if (CraftingEvents.isEventCancelled(event.entityPlayer, ActionType.BREAKBLOCKWITH, event.entityPlayer.getCurrentEquippedItem(), ActionType.BREAKBLOCK, BlockActionHelper.getStackFromBlockData(block, meta))) {
             event.newSpeed = 0F;
         }
     }
@@ -29,7 +29,7 @@ public class ActionBreakBlock extends ActionForgeEvent {
         if (player != null) {
             Block block = event.state.getBlock();
             int meta = block.getMetaFromState(event.state);
-            if (CraftingEvents.isEventCancelled(player, ActionType.BREAKBLOCK, player.getCurrentEquippedItem(), BlockActionHelper.getStackFromBlockData(block, meta))) {
+            if (CraftingEvents.isEventCancelled(player, ActionType.BREAKBLOCKWITH, player.getCurrentEquippedItem(), ActionType.BREAKBLOCK, BlockActionHelper.getStackFromBlockData(block, meta))) {
                 event.setCanceled(true);
             }
         }

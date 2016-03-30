@@ -110,14 +110,22 @@ progression.reward.placeBlock=Place Block
 progression.reward.stepAssist=Step Assist
 
 #Actions
-progression.action.crafting=Crafting
-progression.action.repair=Repair
-progression.action.furnace=Furnace
-progression.action.breakblock=Break Block
-progression.action.harvestdrop=Harvest Drop
-progression.action.entitydrop=Entity Drop
+progression.action.arcane=Allow arcane crafting of these items
+progression.action.arcaneuse=Allow arcane crafting to use these items in recipes
+progression.action.crafting=Allow crafting of these items
+progression.action.craftinguse=Allow these items to be used to craft things
+progression.action.general=Allow these items to be placed, or used
+progression.action.furnace=Allow these items to be made in a furnace
+progression.action.furnaceuse=Allow these items to be smelted in a furnace
+progression.action.breakblock=Allow breaking of these blocks
+progression.action.breakblockwith=Allow breaking of blocks with these tools
+progression.action.harvestdrop=Allow these items to drop from blocks
+progression.action.harvestdropkilledwith=Allow blocks to drop when broken with these tools
+progression.action.entitydrop=Allow entities to drop these items
+progression.action.entitydropwith=Allow entities to drop items when killed with these tools
 
 #Filters
+progression.filter=Filters
 progression.filter.block=Block Selector
 progression.filter.item=Item Selector
 progression.filter.entity=Entity Selector
@@ -138,6 +146,7 @@ progression.filter.block.blockStack=Block Stacks
 progression.filter.block.blockState=Block State
 progression.filter.block.blockOre=Block Ore
 progression.filter.block.blockMod=Block Mod
+progression.filter.action.exact=Action
 #Location Filters
 progression.filter.location=Location Selector
 progression.filter.location.playerLook=Player Look

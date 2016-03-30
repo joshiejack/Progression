@@ -1,14 +1,6 @@
 package joshie.progression.crafting;
 
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-
 import com.google.common.collect.HashMultimap;
-
 import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.api.criteria.IProgressionFilter;
 import joshie.progression.helpers.ItemHelper;
@@ -19,62 +11,40 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
+import java.util.*;
+
 public class CraftingRegistry {
-    private static volatile EnumMap<DisallowType, HashMap<ActionType, HashMultimap<Item, IProgressionFilter>>> itemToFiltersMapCrafting;
-    //private static volatile HashMap<ActionType, HashMultimap<Item, IFilter>> itemToFiltersMapUsage;
-    
-    
-    private static volatile EnumMap<DisallowType, HashMap<ActionType, HashMap<IProgressionFilter, IProgressionCriteria>>> filterToCriteriaMapCrafting;
-    
-    
-   // private static volatile HashMap<ActionType, HashMap<IFilter, ICriteria>> filterToCriteriaMapUsage;
-    
-    public static enum DisallowType {
-        CRAFTING, USEINCRAFTING, GENERALUSE;
-    }
+    private static volatile HashMap<ActionType, HashMultimap<Item, IProgressionFilter>> itemToFiltersMapCrafting;
+    private static volatile HashMap<ActionType, HashMap<IProgressionFilter, IProgressionCriteria>> filterToCriteriaMapCrafting;
 
     public static void create() {
-        itemToFiltersMapCrafting = new EnumMap(DisallowType.class);
-        filterToCriteriaMapCrafting = new EnumMap(DisallowType.class);
-        for (DisallowType type: DisallowType.values()) {
-            itemToFiltersMapCrafting.put(type, new HashMap());
-            filterToCriteriaMapCrafting.put(type, new HashMap());
-        }
+        itemToFiltersMapCrafting = new HashMap();
+        filterToCriteriaMapCrafting = new HashMap();
     }
 
-    private static HashMap<ActionType, HashMultimap<Item, IProgressionFilter>> getItemToFiltersMap(DisallowType disallowed) {
-        return itemToFiltersMapCrafting.get(disallowed);
-    }
-
-    private static HashMap<ActionType, HashMap<IProgressionFilter, IProgressionCriteria>> getFilterToCriteriaMap(DisallowType disallowed) {
-        return filterToCriteriaMapCrafting.get(disallowed);
-    }
-
-    private static HashMultimap<Item, IProgressionFilter> getItemToFiltersForType(ActionType type, DisallowType disallowed) {
-        HashMap<ActionType, HashMultimap<Item, IProgressionFilter>> itemToFiltersMap = getItemToFiltersMap(disallowed);       
-        HashMultimap<Item, IProgressionFilter> itemToFilters = itemToFiltersMap.get(type);
+    private static HashMultimap<Item, IProgressionFilter> getItemToFiltersForType(ActionType type) {
+        HashMultimap<Item, IProgressionFilter> itemToFilters = itemToFiltersMapCrafting.get(type);
         if (itemToFilters == null) {
             itemToFilters = HashMultimap.create();
-            itemToFiltersMap.put(type, itemToFilters);
+            itemToFiltersMapCrafting.put(type, itemToFilters);
         }
 
         return itemToFilters;
     }
 
-    private static HashMap<IProgressionFilter, IProgressionCriteria> getFilterToCriteriaForType(ActionType type, DisallowType disallowed) {
-        HashMap<ActionType, HashMap<IProgressionFilter, IProgressionCriteria>> filterToCriteriaMap = getFilterToCriteriaMap(disallowed);
-        HashMap<IProgressionFilter, IProgressionCriteria> filterToCriteria = filterToCriteriaMap.get(type);
+    private static HashMap<IProgressionFilter, IProgressionCriteria> getFilterToCriteriaForType(ActionType type) {
+        HashMap<IProgressionFilter, IProgressionCriteria> filterToCriteria = filterToCriteriaMapCrafting.get(type);
         if (filterToCriteria == null) {
             filterToCriteria = new HashMap();
-            filterToCriteriaMap.put(type, filterToCriteria);
+            filterToCriteriaMapCrafting.put(type, filterToCriteria);
         }
 
         return filterToCriteria;
     }
 
-    private static void addRequirement(ActionType type, IProgressionCriteria requirement, List<IProgressionFilter> filters, DisallowType disallowed) {
-        HashMultimap<Item, IProgressionFilter> itemToFilters = getItemToFiltersForType(type, disallowed);
-        HashMap<IProgressionFilter, IProgressionCriteria> filterToCriteria = getFilterToCriteriaForType(type, disallowed);
+    public static void addRequirement(ActionType type, IProgressionCriteria requirement, List<IProgressionFilter> filters) {
+        HashMultimap<Item, IProgressionFilter> itemToFilters = getItemToFiltersForType(type);
+        HashMap<IProgressionFilter, IProgressionCriteria> filterToCriteria = getFilterToCriteriaForType(type);
 
         List<ItemStack> stacks = ItemHelper.getAllMatchingItems(filters);
 
@@ -89,15 +59,9 @@ public class CraftingRegistry {
         }
     }
 
-    public static void addRequirement(ActionType type, IProgressionCriteria requirement, List<IProgressionFilter> filters, boolean usage, boolean crafting, boolean general) {
-        if (usage) addRequirement(type, requirement, filters, DisallowType.USEINCRAFTING);
-        if (crafting) addRequirement(type, requirement, filters, DisallowType.CRAFTING);
-        if (general) addRequirement(type, requirement, filters, DisallowType.GENERALUSE);
-    }
-
-    private static void removeRequirement(ActionType type, IProgressionCriteria requirement, List<IProgressionFilter> filters, DisallowType disallowed) {
-        HashMultimap<Item, IProgressionFilter> itemToFilters = getItemToFiltersForType(type, disallowed);
-        HashMap<IProgressionFilter, IProgressionCriteria> filterToCriteria = getFilterToCriteriaForType(type, disallowed);
+    public static void removeRequirement(ActionType type, IProgressionCriteria requirement, List<IProgressionFilter> filters) {
+        HashMultimap<Item, IProgressionFilter> itemToFilters = getItemToFiltersForType(type);
+        HashMap<IProgressionFilter, IProgressionCriteria> filterToCriteria = getFilterToCriteriaForType(type);
 
         for (Item key : itemToFilters.keySet()) {
             itemToFilters.get(key).removeAll(filters); //Remove any matching filters
@@ -109,35 +73,20 @@ public class CraftingRegistry {
         }
     }
 
-    public static void removeRequirement(ActionType type, IProgressionCriteria requirement, List<IProgressionFilter> filters, boolean usage, boolean crafting, boolean general) {
-        if (usage) removeRequirement(type, requirement, filters, DisallowType.USEINCRAFTING);
-        if (crafting) removeRequirement(type, requirement, filters, DisallowType.CRAFTING);
-        if (general) removeRequirement(type, requirement, filters, DisallowType.GENERALUSE);
-    }
-
-    public static Set<IProgressionFilter> getFiltersForStack(ActionType type, ItemStack stack, DisallowType disallowed) {
-        HashMultimap<Item, IProgressionFilter> itemToFilters = getItemToFiltersForType(type, disallowed);
+    public static Set<IProgressionFilter> getFiltersForStack(ActionType type, ItemStack stack) {
+        HashMultimap<Item, IProgressionFilter> itemToFilters = getItemToFiltersForType(type);
         Set<IProgressionFilter> result = itemToFilters.get(stack.getItem());
         return result != null ? result : new HashSet();
     }
 
-    public static IProgressionCriteria getCriteriaForFilter(ActionType type, IProgressionFilter filter, DisallowType disallowed) {
-        HashMap<IProgressionFilter, IProgressionCriteria> filterToCriteria = getFilterToCriteriaForType(type, disallowed);
+    public static IProgressionCriteria getCriteriaForFilter(ActionType type, IProgressionFilter filter) {
+        HashMap<IProgressionFilter, IProgressionCriteria> filterToCriteria = getFilterToCriteriaForType(type);
         return filterToCriteria.get(filter);
     }
 
     private static HashMap<ActionType, HashMap<ItemStack, Set>> actionCache = new HashMap();
 
-    public static Set<IProgressionCriteria> getRequirements(ItemStack stack, DisallowType disallowed) {
-        Set<IProgressionCriteria> matched = new HashSet();
-        for (ActionType type : ActionType.values()) {
-            matched.addAll(getRequirements(type, stack, disallowed));
-        }
-
-        return matched;
-    }
-
-    public static Set<IProgressionCriteria> getRequirements(ActionType type, ItemStack stack, DisallowType disallowed) {
+    public static Set<IProgressionCriteria> getRequirements(ActionType type, ItemStack stack) {
         HashMap<ItemStack, Set> cache = actionCache.get(type);
         if (cache == null) {
             cache = new HashMap();
@@ -145,11 +94,11 @@ public class CraftingRegistry {
         }
 
         if (cache.containsKey(stack)) return cache.get(stack);
-        Set<IProgressionFilter> filters = CraftingRegistry.getFiltersForStack(type, stack, disallowed);
+        Set<IProgressionFilter> filters = CraftingRegistry.getFiltersForStack(type, stack);
         Set<IProgressionCriteria> matched = new HashSet();
         for (IProgressionFilter filter : filters) {
             if (filter.matches(stack)) {
-                matched.add(getCriteriaForFilter(type, filter, disallowed)); //Add all matches so we can check all criteria
+                matched.add(getCriteriaForFilter(type, filter)); //Add all matches so we can check all criteria
             }
         }
 
