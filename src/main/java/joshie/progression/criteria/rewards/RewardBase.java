@@ -26,7 +26,7 @@ public abstract class RewardBase implements IProgressionReward {
     }
 
     public RewardBase(String name, int color) {
-        this.name = name;
+        this.name = "reward." + name;
         this.color = color;
         this.stack = new ItemStack(Blocks.stone);
     }
@@ -63,7 +63,7 @@ public abstract class RewardBase implements IProgressionReward {
 
     @Override
     public String getLocalisedName() {
-        return Progression.translate("reward." + getUnlocalisedName());
+        return Progression.translate(getUnlocalisedName());
     }
 
     @Override

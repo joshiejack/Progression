@@ -6,15 +6,13 @@ import net.minecraft.world.World;
 
 import java.util.UUID;
 
-public class ConditionDaytime extends ConditionBase {	
-    public boolean isDaytime = true;
-    
+public class ConditionDaytime extends ConditionBase {
 	public ConditionDaytime() {
 		super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.ifDayOrNight), "daytime", 0xFFFFFF00);
 	}
 	
 	@Override
 	public boolean isSatisfied(World world, EntityPlayer player, UUID uuid) {
-		return world.isDaytime() == isDaytime;
+		return world.isDaytime();
 	}
 }

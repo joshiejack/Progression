@@ -1,18 +1,14 @@
 package joshie.progression.helpers;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-
-import joshie.progression.api.criteria.IFieldProvider;
-import joshie.progression.api.criteria.IProgressionCondition;
-import joshie.progression.api.criteria.IProgressionFilter;
-import joshie.progression.api.criteria.IProgressionReward;
-import joshie.progression.api.criteria.IProgressionTrigger;
+import joshie.progression.api.criteria.*;
 import joshie.progression.gui.editors.GuiConditionEditor;
 import joshie.progression.gui.editors.GuiCriteriaEditor;
 import joshie.progression.gui.editors.GuiItemFilterEditor;
 import joshie.progression.handlers.EventsManager;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 public class CollectionHelper {
     public static void remove(Collection collection, Object object) {
@@ -28,14 +24,15 @@ public class CollectionHelper {
 
     public static void removeAndUpdate(List<IFieldProvider> drawable, IFieldProvider drawing) {
         if (drawing instanceof IProgressionReward) {
-            EventsManager.onRewardRemoved((IProgressionReward) drawing);
+            EventsManager.onRemoved((IProgressionReward) drawing);
             CollectionHelper.remove(GuiCriteriaEditor.INSTANCE.getCriteria().getRewards(), (IProgressionReward) drawing);
             //GuiCriteriaEditor.INSTANCE.initGui();
         } else if (drawing instanceof IProgressionTrigger) {
-            EventsManager.onTriggerRemoved((IProgressionTrigger) drawing);
+            EventsManager.onRemoved((IProgressionTrigger) drawing);
             CollectionHelper.remove(GuiCriteriaEditor.INSTANCE.getCriteria().getTriggers(), (IProgressionTrigger) drawing);
             //GuiCriteriaEditor.INSTANCE.initGui();
         } else if (drawing instanceof IProgressionFilter) {
+            EventsManager.onRemoved((IProgressionFilter) drawing);
             GuiItemFilterEditor.INSTANCE.getField().remove((IProgressionFilter) drawing);
             //GuiItemFilterEditor.INSTANCE.initGui();
         } else if (drawing instanceof IProgressionCondition) {

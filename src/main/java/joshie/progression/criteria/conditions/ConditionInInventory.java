@@ -1,14 +1,18 @@
 package joshie.progression.criteria.conditions;
 
+import joshie.progression.api.ProgressionAPI;
+import joshie.progression.api.criteria.IProgressionField;
 import joshie.progression.api.criteria.IProgressionFilter;
 import joshie.progression.api.special.IEnum;
+import joshie.progression.api.special.ISpecialFieldProvider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+import java.util.List;
 import java.util.UUID;
 
-public class ConditionInInventory extends ConditionBaseItemFilter implements IEnum {
+public class ConditionInInventory extends ConditionBaseItemFilter implements IEnum, ISpecialFieldProvider {
     private static enum CheckSlots {
         HELD, ARMOR, HOTBAR, INVENTORY;
     }
@@ -18,6 +22,12 @@ public class ConditionInInventory extends ConditionBaseItemFilter implements IEn
 
     public ConditionInInventory() {
         super("ininventory", 0xFF660000);
+    }
+
+    @Override
+    public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
+        if (mode == DisplayMode.EDIT) fields.add(ProgressionAPI.fields.getItemPreview(this, "filters", 30, 35, 1.9F));
+        else fields.add(ProgressionAPI.fields.getItemPreview(this, "filters", 65, 35, 1.9F));
     }
 
     @Override

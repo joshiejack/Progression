@@ -72,9 +72,12 @@ public class CriteriaMappings {
             UUID uuid = UUID.fromString(tag.getString("UUID"));
             NBTTagCompound triggerNBT = tag.getCompoundTag("Data");
             if (triggerDataMap.get(uuid) == null) {
-                IStoreTriggerData triggerData = (IStoreTriggerData) APIHandler.getCache().getTriggerFromUUID(uuid).copy();
-                triggerData.readDataFromNBT(triggerNBT);
-                triggerDataMap.put(uuid, triggerData);
+                IProgressionTrigger trigger = APIHandler.getCache().getTriggerFromUUID(uuid);
+                if (trigger != null) {
+                    IStoreTriggerData triggerData = (IStoreTriggerData)trigger.copy();
+                    triggerData.readDataFromNBT(triggerNBT);
+                    triggerDataMap.put(uuid, triggerData);
+                }
             } else triggerDataMap.get(uuid).readDataFromNBT(tag);
         }
     }

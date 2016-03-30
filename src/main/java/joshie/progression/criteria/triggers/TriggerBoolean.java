@@ -9,6 +9,8 @@ import java.util.UUID;
 public class TriggerBoolean extends TriggerBaseBoolean {
     public String variable = "default";
     public boolean isTrue = true;
+    public String description = "Done some arbitrary thing you've tested for";
+    public int displayWidth = 75;
 
     public TriggerBoolean() {
         super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.onReceivedBoolean), "boolean", 0xFF26C9FF);
@@ -17,6 +19,8 @@ public class TriggerBoolean extends TriggerBaseBoolean {
     @Override
     public IProgressionTrigger copy() {
         TriggerBoolean trigger = new TriggerBoolean();
+        trigger.description = description;
+        trigger.displayWidth = displayWidth;
         trigger.variable = variable;
         trigger.isTrue = isTrue;
         return copyBase(copyBoolean(trigger));
@@ -30,5 +34,15 @@ public class TriggerBoolean extends TriggerBaseBoolean {
         }
 
         return true;
+    }
+
+    @Override
+    public int getWidth() {
+        return displayWidth;
+    }
+
+    @Override
+    public String getDescription() {
+        return description;
     }
 }

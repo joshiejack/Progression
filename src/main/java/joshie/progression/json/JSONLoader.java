@@ -265,7 +265,7 @@ public class JSONLoader {
                         }
                     }
                     
-                    EventsManager.onTriggerAdded(trigger);
+                    EventsManager.onAdded(trigger);
                     
                     for (IProgressionCondition condition: trigger.getConditions()) {
                         if (condition instanceof IInit) ((IInit)condition).init();
@@ -285,7 +285,7 @@ public class JSONLoader {
                         }
                     }
                     
-                    EventsManager.onRewardAdded(reward);
+                    EventsManager.onAdded(reward);
                 }
             }
         }

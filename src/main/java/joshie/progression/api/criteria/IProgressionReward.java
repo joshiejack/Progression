@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import java.util.List;
 import java.util.UUID;
 
-public interface IProgressionReward extends IFieldProvider {
+public interface IProgressionReward extends ICanHaveEvents {
     /** Associates this reward type with the criteria
      *  Most reward types will not need access to this. **/
     public void setCriteria(IProgressionCriteria criteria, UUID uuid);

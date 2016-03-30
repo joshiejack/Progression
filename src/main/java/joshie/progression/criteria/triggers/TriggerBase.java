@@ -22,13 +22,13 @@ public abstract class TriggerBase implements IProgressionTrigger {
     private ItemStack stack;
 
     public TriggerBase(ItemStack stack, String name, int color) {
-        this.name = name;
+        this.name = "trigger." + name;
         this.color = color;
         this.stack = stack;
     }
 
     public TriggerBase(String name, int color, String data) {
-        this.name = name;
+        this.name = "trigger." + name;
         this.color = color;
         this.stack = new ItemStack(Blocks.stone);
     }
@@ -68,7 +68,7 @@ public abstract class TriggerBase implements IProgressionTrigger {
 
     @Override
     public String getLocalisedName() {
-        return Progression.translate("trigger." + getUnlocalisedName());
+        return Progression.translate(getUnlocalisedName());
     }
 
     @Override

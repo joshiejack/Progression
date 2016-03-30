@@ -11,8 +11,8 @@ public class FeatureReward extends FeatureDrawable<IProgressionReward> {
     }
 
     @Override
-    public void drawSpecial(IProgressionReward drawing, int xPos, int offsetY, int mouseOffsetX, int mouseOffsetY) {
-
+    public int drawSpecial(IProgressionReward drawing, int offsetX, int offsetY, int mouseOffsetX, int mouseOffsetY) {
+        return super.drawSpecial(drawing, offsetX, offsetY, mouseOffsetX, mouseOffsetY);
     }
 
     @Override

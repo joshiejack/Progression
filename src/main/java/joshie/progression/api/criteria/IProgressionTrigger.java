@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import java.util.List;
 import java.util.UUID;
 
-public interface IProgressionTrigger extends IFieldProvider, IHasEventBus {
+public interface IProgressionTrigger extends ICanHaveEvents, IHasEventBus {
     /** Return the list this trigger is saving it's conditions to **/
     public List<IProgressionCondition> getConditions();
     

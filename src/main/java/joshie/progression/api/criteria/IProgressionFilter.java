@@ -2,7 +2,7 @@ package joshie.progression.api.criteria;
 
 import net.minecraft.entity.player.EntityPlayer;
 
-public interface IProgressionFilter<T> extends IFieldProvider {
+public interface IProgressionFilter<T> extends ICanHaveEvents {
     /** Return true if the pass in object, matches this filter.
      *  Keep in mind this can pass in entities, itemstack,
      *  Lists or anything really, so make sure to validate

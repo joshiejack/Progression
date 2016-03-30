@@ -34,11 +34,7 @@ public class SpawnItemHelper {
     }
 
     public static void spawnItem(World world, int x, int y, int z, ItemStack stack) {
-        spawnItem(world, x, y, z, stack, true);
-    }
-    
-    public static void spawnItem(World world, double x, double y, double z, ItemStack stack) {
-        spawnItem(world, x, y, z, stack, false, 0, 10, 0D);
+        spawnItem(world, x, y, z, stack, true, 0, 10, 0.25D);
     }
 
     public static void spawnItem(World world, int x, int y, int z, ItemStack stack, boolean random, int lifespan) {

@@ -60,9 +60,9 @@ public class RewardSpawnEntity extends RewardBase implements ISpecialFilters, II
     }
 
     private boolean isValidLocation(World world, BlockPos pos) {
-        Material posfloor = world.getBlockState(pos).getBlock().getMaterial();
-        Material posfeet = world.getBlockState(pos.up()).getBlock().getMaterial();
-        Material poshead = world.getBlockState(pos.up(2)).getBlock().getMaterial();
+        Material posfloor = world.getBlockState(pos.down()).getBlock().getMaterial();
+        Material posfeet = world.getBlockState(pos).getBlock().getMaterial();
+        Material poshead = world.getBlockState(pos.up()).getBlock().getMaterial();
         if (posfeet.blocksMovement()) return false;
         if (poshead.blocksMovement()) return false;
         if (posfloor.isLiquid() || posfeet.isLiquid() || poshead.isLiquid()) return false;

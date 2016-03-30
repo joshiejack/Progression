@@ -14,7 +14,7 @@ public class FeatureNewItemFilter extends FeatureNew<IProgressionFilter> {
 
     @Override
     public Collection<IProgressionFilter> getFields() {
-        return APIHandler.itemFilterTypes.values();
+        return APIHandler.filterTypes.values();
     }
 
     @Override

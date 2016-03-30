@@ -139,8 +139,10 @@ public class PCommonProxy implements IGuiHandler {
         ProgressionAPI.registry.registerFilter(new FilterPlayerLocationAround());
         ProgressionAPI.registry.registerFilter(new FilterPlayerLocationAbove());
         ProgressionAPI.registry.registerFilter(new FilterPlayerLocationLooking());
+        ProgressionAPI.registry.registerFilter(new FilterPlayerLastBroken());
         ProgressionAPI.registry.registerFilter(new FilterRandomLocationDimension());
         ProgressionAPI.registry.registerFilter(new FilterRandomAround());
+        MinecraftForge.EVENT_BUS.register(new FilterPlayerLastBroken());
 
         //Crafting Filters
         ProgressionAPI.registry.registerFilter(new FilterExact());
@@ -193,6 +195,7 @@ public class PCommonProxy implements IGuiHandler {
         ProgressionAPI.registry.registerRewardType(new RewardShowTab());
         ProgressionAPI.registry.registerRewardType(new RewardStepAssist());
         ProgressionAPI.registry.registerRewardType(new RewardHurt());
+        ProgressionAPI.registry.registerRewardType(new RewardSpawnItem());
     }
 
     public void initClient() {}

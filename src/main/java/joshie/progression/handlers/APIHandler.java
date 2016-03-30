@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import joshie.progression.api.ICustomDataBuilder;
 import joshie.progression.api.IProgressionAPI;
 import joshie.progression.api.criteria.*;
+import joshie.progression.api.special.IHasFilters;
 import joshie.progression.api.special.IInit;
 import joshie.progression.crafting.ActionType;
 import joshie.progression.criteria.Criteria;
@@ -24,9 +25,7 @@ import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.UUID;
+import java.util.*;
 
 public class APIHandler implements IProgressionAPI {
     //Caches
@@ -36,7 +35,21 @@ public class APIHandler implements IProgressionAPI {
     public static final HashMap<String, IProgressionTrigger> triggerTypes = new HashMap();
     public static final HashMap<String, IProgressionReward> rewardTypes = new HashMap();
     public static final HashMap<String, IProgressionCondition> conditionTypes = new HashMap();
-    public static final HashMap<String, IProgressionFilter> itemFilterTypes = new HashMap();
+    public static final HashMap<String, IProgressionFilter> filterTypes = new HashMap();
+
+    public static ICanHaveEvents getGenericFromType(ICanHaveEvents type) {
+        if (type instanceof IProgressionTrigger) return triggerTypes.get(type.getUnlocalisedName());
+        else if (type instanceof IProgressionReward) return rewardTypes.get(type.getUnlocalisedName());
+        else if (type instanceof IProgressionFilter) return filterTypes.get(type.getUnlocalisedName());
+        else return null; //Will never return null;
+    }
+
+    public static Collection<ICanHaveEvents> getCollectionFromType(ICanHaveEvents type) {
+        if (type instanceof IProgressionTrigger) return new ArrayList(triggerTypes.values());
+        else if (type instanceof IProgressionReward) return new ArrayList(rewardTypes.values());
+        else if (type instanceof IProgressionFilter) return new ArrayList(filterTypes.values());
+        else return null; //Will never return null;
+    }
 
     //These four maps are registries for fetching the various types
     public static APICache serverCache;
@@ -47,7 +60,7 @@ public class APIHandler implements IProgressionAPI {
         if (provider instanceof IProgressionTrigger) return triggerTypes.get(provider.getUnlocalisedName());
         if (provider instanceof IProgressionReward) return rewardTypes.get(provider.getUnlocalisedName());
         if (provider instanceof IProgressionCondition) return conditionTypes.get(provider.getUnlocalisedName());
-        if (provider instanceof IProgressionFilter) return itemFilterTypes.get(provider.getUnlocalisedName());
+        if (provider instanceof IProgressionFilter) return filterTypes.get(provider.getUnlocalisedName());
 
         //WHAT
         return null;
@@ -127,7 +140,7 @@ public class APIHandler implements IProgressionAPI {
 
     @Override
     public IProgressionFilter registerFilter(IProgressionFilter filter) {
-        itemFilterTypes.put(filter.getUnlocalisedName(), filter);
+        filterTypes.put(filter.getUnlocalisedName(), filter);
         return filter;
     }
 
@@ -200,10 +213,11 @@ public class APIHandler implements IProgressionAPI {
     }
 
     public static IProgressionFilter newFilter(String typeName, JsonObject typeData) {
-        IProgressionFilter type = itemFilterTypes.get(typeName);
+        IProgressionFilter type = filterTypes.get(typeName);
         if (type != null) {
             try {
                 type = type.getClass().newInstance();
+                EventsManager.onAdded(type);
                 JSONHelper.readJSON(typeData, type);
             } catch (Exception e) {}
         }
@@ -217,7 +231,7 @@ public class APIHandler implements IProgressionAPI {
         try {
             newTriggerType = oldTriggerType.getClass().newInstance();
             newTriggerType.setCriteria(criteria, UUID.randomUUID());
-            EventsManager.onTriggerAdded(newTriggerType);
+            EventsManager.onAdded(newTriggerType);
             criteria.getTriggers().add(newTriggerType);
             if (newTriggerType instanceof IInit) ((IInit) newTriggerType).init();
         } catch (Exception e) {}
@@ -231,7 +245,7 @@ public class APIHandler implements IProgressionAPI {
         try {
             newRewardType = oldRewardType.getClass().newInstance();
             newRewardType.setCriteria(criteria, UUID.randomUUID());
-            EventsManager.onRewardAdded(newRewardType);
+            EventsManager.onAdded(newRewardType);
             criteria.getRewards().add(newRewardType);
             if (newRewardType instanceof IInit) ((IInit) newRewardType).init();
         } catch (Exception e) {}
@@ -312,13 +326,30 @@ public class APIHandler implements IProgressionAPI {
 
         //Remove all rewards associated with this criteria
         for (IProgressionReward reward : c.getRewards()) {
-            EventsManager.onRewardRemoved(reward);
-            reward.onRemoved();
+            EventsManager.onRemoved(reward);
+            if (reward instanceof IHasFilters) {
+                for (IProgressionFilter filter: ((IHasFilters)reward).getAllFilters()) {
+                    EventsManager.onRemoved(filter);
+                }
+            }
         }
 
         //Remove all triggers associated with this criteria
         for (IProgressionTrigger trigger : c.getTriggers()) {
-            EventsManager.onTriggerRemoved(trigger);
+            EventsManager.onRemoved(trigger);
+            for (IProgressionCondition condition: trigger.getConditions()) {
+                if (condition instanceof IHasFilters) {
+                    for (IProgressionFilter filter: ((IHasFilters)condition).getAllFilters()) {
+                        EventsManager.onRemoved(filter);
+                    }
+                }
+            }
+
+            if (trigger instanceof IHasFilters) {
+                for (IProgressionFilter filter: ((IHasFilters)trigger).getAllFilters()) {
+                    EventsManager.onRemoved(filter);
+                }
+            }
         }
 
         //Remove it in general

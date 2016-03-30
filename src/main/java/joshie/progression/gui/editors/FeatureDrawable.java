@@ -86,7 +86,7 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
         }
     }
 
-    private void drawingDraw(IFieldProvider drawing, DrawHelper helper, int renderX, int renderY, int mouseX, int mouseY) {
+    protected void drawingDraw(IFieldProvider drawing, DrawHelper helper, int renderX, int renderY, int mouseX, int mouseY) {
         //For updating the render ticker
         ticker++;
         if (ticker == 0 || ticker >= 200) {
@@ -137,7 +137,9 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
         }
     }
 
-    public void drawSpecial(T provider, int xPos, int offsetY, int mouseOffsetX, int mouseOffsetY) {}
+    public int drawSpecial(T drawing, int offsetX, int offsetY, int mouseOffsetX, int mouseOffsetY) {
+        return offsetX + (MCClientHelper.isInEditMode() ? 100 : drawing.getWidth());
+    }
 
     @Override
     public void drawFeature(int mouseX, int mouseY) {
@@ -157,8 +159,7 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
                 offset.drawTexture(offsetX, offsetY, ProgressionInfo.textures, 87, 4, xXcoord, 52, 11, 11);
             }
 
-            drawSpecial((T)drawing, offsetX, offsetY, mouseOffsetX, mouseOffsetY);
-            offsetX += (MCClientHelper.isInEditMode() ? 100 : drawing.getWidth());
+            offsetX = drawSpecial((T)drawing, offsetX, offsetY, mouseOffsetX, mouseOffsetY);
         }
 
         //Draw the addition texture
