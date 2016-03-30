@@ -2,11 +2,13 @@
 progression.trigger=Requirements
 progression.new.trigger=Add New Requirement
 progression.trigger.achievement=Achievement
-progression.trigger.achievement.id.0=Achievement ID
+progression.trigger.achievement.id=Achievement ID
 progression.trigger.achievement.description=Achievement Get!
 progression.trigger.boolean=True/False
 progression.trigger.boolean.variable=The 'ID' of the True/False value that you wish to check
 progression.trigger.boolean.isTrue=Whether you are checking if the statement is true or false
+progression.trigger.boolean.description=The description you wish to display for this trigger in display mode
+progression.trigger.boolean.displayWidth=The width of this trigger in display mode
 progression.trigger.breakBlock=Break Block
 progression.trigger.breakBlock.cancel=You cannot break any of these blocks
 progression.trigger.breakBlock.description=Break any of the blocks displayed %s times
@@ -24,10 +26,9 @@ progression.trigger.changeDimension.amount=Number of times the dimension change 
 progression.trigger.chat=On Chat
 progression.trigger.chat.description=Type the following text in to chat, * = anything\n%s
 progression.trigger.chat.toMatch=The string you wish to validate against.\n You can use * on the left or right of the string if you do not care about what appears, e.g. gamemode* would trigger for any change of game mode.
-progression.trigger.chat.cancel=Marking this as true will cancel the
-progression.trigger.chat.cancel=trigger, so that the chat/command will fail
+progression.trigger.chat.cancel=Marking this as true will cancel the trigger, so that the chat/command will fail
 progression.trigger.openContainer=Gui Change
-progression.trigger.openContainer.className=This the class name of the gui you want to check has been opened. If you want to find out the name of a gui, simply type the command /progression gui , This command will post the name to the chat window, and to the logger.\nA gui change trigger must exist for this to work.
+progression.trigger.openContainer.className=This the class name of the gui you want to check has been opened. If you want to find out the name of a gui, simply type the command /progression gui , This command will post the name to the chat window, and to the logger.\n\nA gui change trigger must exist for this to work.
 progression.trigger.openContainer.description=This is what you wish to be written as the description for users to complete the task
 progression.trigger.openContainer.displayWidth=This is how wide this display box is, in display mode, you may want to increase it if you have a long description.
 progression.trigger.clickBlock=Click Block
@@ -42,7 +43,7 @@ progression.trigger.crafting.amount=This checks how many items the player has ac
 progression.trigger.kill=Kill
 progression.trigger.kill.description=Kill %s x any of these entities
 progression.trigger.kill.amount=Amount of entities needed to be killed
-progression.trigger.kill.entities=Click to open the entity filtering editor\nWhich allows you to pick the entities that qualify
+progression.trigger.kill.entities=Click to open the entity filtering editor\n\nWhich allows you to pick the entities that qualify
 progression.trigger.login=Login
 progression.trigger.login.description=Login %s times
 progression.trigger.login.amount=Amount of times logged in needed to activate
@@ -76,16 +77,26 @@ progression.condition.criteria=Has Criteria
 #Rewards
 progression.reward=Results
 progression.new.reward=Add New Result
-progression.reward.fallDamage=Fall Damage
-progression.reward.time=Time
+progression.reward.crafting=Allow Action
+progression.reward.crafting.description=Allows the creation of the items on the left, using the machine on the right
 progression.reward.criteria=Criteria
+progression.reward.criteria.remove.description=Removes %s from being completed
+progression.reward.criteria.add.description=Marks %s as being completed
+progression.reward.criteria.possibility.description=Toggles whether %s is possible or not
+progression.reward.command=Command
+progression.reward.command.description=The following command will be executed where @u is the player\n\n%s
+progression.reward.fallDamage=Fall Damage
+progression.reward.fallDamage.description=You will be able to survive an additional %s points of fall damage
+progression.reward.hurt=Attack Player
+progression.reward.hurt.description=Player is attacked for %s hearts of damage, with the source being %s
+
+progression.reward.time=Time
+
 progression.reward.speed=Speed
 progression.reward.item=Give Item
 progression.reward.item.display=Item
-progression.reward.command=Command
 progression.reward.points=Points
 progression.reward.boolean=True/False
-progression.reward.crafting=Allow Action
 progression.reward.tab.show=Hide/Show Tab
 progression.reward.entity=Spawn Entity
 progression.reward.entity.nbtData=Extra NBT data to spawn the entity with
@@ -97,7 +108,6 @@ progression.reward.teleport=Teleport
 progression.reward.teleport.description=Teleports the player to:
 progression.reward.placeBlock=Place Block
 progression.reward.stepAssist=Step Assist
-progression.reward.hurt=Attack Player
 
 #Actions
 progression.action.crafting=Crafting

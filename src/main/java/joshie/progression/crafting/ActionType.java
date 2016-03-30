@@ -1,8 +1,5 @@
 package joshie.progression.crafting;
 
-import java.util.Collection;
-import java.util.HashMap;
-
 import joshie.progression.api.special.IHasEventBus;
 import joshie.progression.crafting.actions.ActionBreakBlock;
 import joshie.progression.crafting.actions.ActionHarvestDrop;
@@ -12,7 +9,11 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 
+import java.util.Collection;
+import java.util.HashMap;
+
 public class ActionType {
+    public static final ActionType GENERAL = new ActionType("GENERAL").setItemStack(new ItemStack(Blocks.brick_block));
     public static final ActionType CRAFTING = new ActionType("CRAFTING").setItemStack(new ItemStack(Blocks.crafting_table));
     public static final ActionType FURNACE = new ActionType("FURNACE").setItemStack(new ItemStack(Blocks.furnace));
     public static final ActionType BREAKBLOCK = new ActionBreakBlock("BREAKBLOCK").setItemStack(new ItemStack(Items.iron_pickaxe));
@@ -20,6 +21,7 @@ public class ActionType {
     public static final ActionType ENTITYDROP = new ActionLivingDrop("ENTITYDROP").setItemStack(new ItemStack(Items.rotten_flesh));
     public static final ActionType ARCANE = new ActionType("ARCANE").setItemStack(new ItemStack(Items.writable_book));
     private static HashMap<String, ActionType> registry;
+    private static HashMap<ItemStack, ActionType> itemRegistry;
 
     private final String name;
     private ItemStack stack;
@@ -32,11 +34,16 @@ public class ActionType {
     
     public ActionType setItemStack(ItemStack stack) {
         this.stack = stack;
+        itemRegistry.put(stack, this);
         return this;
     }
 
     public String getDisplayName() {
         return StatCollector.translateToLocal("progression.action." + name.toLowerCase());
+    }
+
+    public String getUnlocalisedName() {
+        return name;
     }
 
     public static ActionType getCraftingActionFromName(String name) {
@@ -54,5 +61,9 @@ public class ActionType {
 
     public ItemStack getIcon() {
         return stack;
+    }
+
+    public static ActionType getCraftingActionFromIcon(ItemStack stack) {
+        return itemRegistry.get(stack);
     }
 }

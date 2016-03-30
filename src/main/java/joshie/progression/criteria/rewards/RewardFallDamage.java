@@ -1,5 +1,7 @@
 package joshie.progression.criteria.rewards;
 
+import joshie.progression.Progression;
+import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.IHasEventBus;
 import joshie.progression.items.ItemCriteria;
 import joshie.progression.player.PlayerTracker;
@@ -41,5 +43,15 @@ public class RewardFallDamage extends RewardBaseAbility implements IHasEventBus 
     public void addTooltip(List list) {
         list.add(EnumChatFormatting.WHITE + "Ability Gain");
         list.add("Fall Resistance: " + absorption);
+    }
+
+    @Override
+    public int getWidth(DisplayMode mode) {
+        return mode == DisplayMode.EDIT ? 85 : 75;
+    }
+
+    @Override
+    public String getDescription() {
+        return Progression.format(getUnlocalisedName() + ".description", absorption);
     }
 }

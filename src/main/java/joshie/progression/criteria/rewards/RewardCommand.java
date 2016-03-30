@@ -1,5 +1,6 @@
 package joshie.progression.criteria.rewards;
 
+import joshie.progression.Progression;
 import joshie.progression.lib.FakeOp;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -32,5 +33,10 @@ public class RewardCommand extends RewardBase {
     public void addTooltip(List list) {
         list.add(EnumChatFormatting.WHITE + "Execute Command");
         list.add(command);
+    }
+
+    @Override
+    public String getDescription() {
+        return Progression.format(getUnlocalisedName() + ".description", command);
     }
 }

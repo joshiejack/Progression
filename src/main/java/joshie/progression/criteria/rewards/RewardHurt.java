@@ -1,10 +1,14 @@
 package joshie.progression.criteria.rewards;
 
+import joshie.progression.Progression;
+import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.IGetterCallback;
 import joshie.progression.api.special.IInit;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumChatFormatting;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.WordUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -42,5 +46,18 @@ public class RewardHurt extends RewardBase implements IInit, IGetterCallback {
     public void addTooltip(List list) {
         // list.add(EnumChatFormatting.WHITE + Progression.translate("item.free"));
         // list.add(getIcon().getDisplayName() + " x" + spawnNumber);
+    }
+
+    @Override
+    public int getWidth(DisplayMode mode) {
+        return mode == DisplayMode.EDIT ? 85 : 80;
+    }
+
+    @Override
+    public String getDescription() {
+        if (source != null) {
+            String s = WordUtils.capitalizeFully(StringUtils.join(StringUtils.splitByCharacterTypeCamelCase(source.damageType), ' '));
+            return Progression.format(getUnlocalisedName() + ".description", damage, s);
+        } else return "Incorrectly setup damage source";
     }
 }

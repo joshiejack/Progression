@@ -4,6 +4,7 @@ import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionField;
 import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.ISpecialFieldProvider;
+import joshie.progression.crafting.ActionType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -25,6 +26,17 @@ public class FilterExact extends FilterBaseCrafting implements ISpecialFieldProv
     @Override
     public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
         if (mode == DisplayMode.EDIT) fields.add(ProgressionAPI.fields.getItem(this, "stack", 30, 35, 1.4F));
+    }
+
+    @Override
+    public String getDescription() {
+        for (ActionType type: ActionType.values()) {
+            if (type.getIcon().getItem() == stack.getItem() && type.getIcon().getItemDamage() == stack.getItemDamage()) {
+                return type.getUnlocalisedName().toLowerCase();
+            }
+        }
+
+        return ActionType.CRAFTING.getUnlocalisedName().toLowerCase();
     }
 
     @Override

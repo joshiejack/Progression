@@ -96,7 +96,7 @@ public abstract class RewardBase implements IProgressionReward {
 
     @Override
     public String getDescription() {
-        return "MISSING DESCRIPTION";
+        return Progression.format(getUnlocalisedName() + ".description");
     }
 
     @Override

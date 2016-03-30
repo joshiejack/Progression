@@ -1,5 +1,6 @@
 package joshie.progression.criteria.rewards;
 
+import joshie.progression.Progression;
 import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.api.special.IGetterCallback;
 import joshie.progression.api.special.IInit;
@@ -61,5 +62,22 @@ public class RewardCriteria extends RewardBaseSingular implements IGetterCallbac
                 list.add("Remove " + criteria.getDisplayName());
             } else list.add("Add " + criteria.getDisplayName());
         }
+    }
+
+    @Override
+    public String getDescription() {
+        if (criteria != null) {
+            StringBuilder builder = new StringBuilder();
+            if (remove) builder.append(Progression.format("reward.criteria.remove.description", criteria.getDisplayName()));
+            else builder.append(Progression.format("reward.criteria.add.description", criteria.getDisplayName()));
+            if (possibility) {
+                builder.append("\n");
+                builder.append(Progression.format("reward.criteria.possibility.description", criteria.getDisplayName()));
+            }
+
+            return builder.toString();
+        }
+
+        return "Reward Criteria was incorrectly setup";
     }
 }

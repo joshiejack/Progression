@@ -117,10 +117,10 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
                         if (mouseY >= yPos && mouseY < yPos + 6) {
                             if (mode == DisplayMode.EDIT) color = Theme.INSTANCE.optionsFontColorHover;
                             List<String> tooltip = new ArrayList();
-                            String untranslated = text + "." + drawing.getUnlocalisedName() + "." + t.getFieldName();
+                            String untranslated = drawing.getUnlocalisedName() + "." + t.getFieldName();
                             String translated = Progression.translate(untranslated);
                             if (!("progression." + untranslated).equals(translated)) {
-                                FeatureTooltip.INSTANCE.addTooltip(WordUtils.wrap(StringEscapeUtils.unescapeJava(translated), 100).split("\n"));
+                                FeatureTooltip.INSTANCE.addTooltip(WordUtils.wrap(StringEscapeUtils.unescapeJava(translated), 42).replace("\r", "").split("\n"));
                             }
                         }
                     }
@@ -187,6 +187,7 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
     }
 
     private boolean drawingMouseClicked(IFieldProvider provider, int mouseX, int mouseY, int button) {
+        DisplayMode mode = getMode();
         if (MCClientHelper.isInEditMode()) {
             ICustomDrawGuiEditor editor = provider instanceof ICustomDrawGuiEditor ? ((ICustomDrawGuiEditor) provider) : null;
             if (editor == null || (editor != null && !editor.hideDefaultEditor())) {
@@ -199,7 +200,7 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
 
                     int color = Theme.INSTANCE.optionsFontColor;
                     int yPos = yStart + (index * 6);
-                    if (mouseX >= 1 && mouseX <= 99) {
+                    if (mouseX >= 1 && mouseX <= provider.getWidth(mode) - 1) {
                         if (mouseY >= yPos && mouseY < yPos + 6) {
                             t.click();
 
@@ -227,6 +228,7 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
 
     @Override
     public boolean mouseClicked(final int mouseX, final int mouseY, int button) {
+        DisplayMode mode = getMode();
         if (FeatureItemSelector.INSTANCE.isVisible()) return false; //If the item selector is visible, don't process clicks
         if (FeatureNew.IS_OPEN) return false;
         int offsetX = 0;
@@ -236,7 +238,7 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
             IFieldProvider provider = drawable.get(i);
             if (MCClientHelper.isInEditMode()) {
                 //Delete Button
-                if (mouseOffsetX >= 87 && mouseOffsetX <= 97 && mouseOffsetY >= 4 && mouseOffsetY <= 14) {
+                if (mouseOffsetX >= provider.getWidth(mode) - 13 && mouseOffsetX <= provider.getWidth(mode) - 3 && mouseOffsetY >= 4 && mouseOffsetY <= 14) {
                     CollectionHelper.removeAndUpdate(drawable, provider);
                     return true;
                 }

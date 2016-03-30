@@ -8,6 +8,7 @@ import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.IHasFilters;
 import joshie.progression.api.special.ISpecialFieldProvider;
 import joshie.progression.api.special.ISpecialFilters;
+import joshie.progression.criteria.filters.FilterBase;
 import joshie.progression.gui.fields.ItemFilterField;
 import joshie.progression.gui.filters.FilterSelectorLocation;
 import joshie.progression.lib.WorldLocation;
@@ -146,7 +147,7 @@ public class RewardTeleport extends RewardBase implements ISpecialFilters, IHasF
 
     public String getFilter() {
         if (ticker == 0 || ticker >= 200) {
-            preview = WorldLocation.getRandomFilterFromFilters(locations);
+            preview = FilterBase.getRandomFilterFromFilters(locations);
             ticker = 1;
         }
 
