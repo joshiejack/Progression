@@ -228,13 +228,18 @@ public class CriteriaMappings {
             if (trigger instanceof ICancelable) {
                 boolean isCancelingEnabled = (((ICancelable) trigger).isCanceling());
                 if ((trigger.onFired(uuid, triggerData))) {
-                     if (isCancelingEnabled) return Result.DENY;
+                     if (isCancelingEnabled) {
+                         sendTriggerDataToClient(trigger); //Send updated trigger before returning
+                         return Result.DENY;
+                     }
                 }
-
-                sendTriggerDataToClient(trigger);
             } else if (!trigger.onFired(uuid, triggerData)) {
+                sendTriggerDataToClient(trigger); //Send updated trigger before denying
                 return Result.DENY;
-            } else sendTriggerDataToClient(trigger);
+            }
+
+            //After everything send updated trigger no matter what
+            sendTriggerDataToClient(trigger);
         }
         
         //Next step, now that the triggers have been fire, we need to go through them again

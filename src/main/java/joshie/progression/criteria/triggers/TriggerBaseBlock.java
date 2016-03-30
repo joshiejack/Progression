@@ -4,6 +4,7 @@ import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionField;
 import joshie.progression.api.criteria.IProgressionFilter;
 import joshie.progression.api.criteria.IProgressionFilterSelector;
+import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.ICancelable;
 import joshie.progression.api.special.ISpecialFieldProvider;
 import joshie.progression.api.special.ISpecialFilters;

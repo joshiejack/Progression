@@ -5,6 +5,7 @@ import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionField;
 import joshie.progression.api.criteria.IProgressionFilter;
 import joshie.progression.api.criteria.IProgressionTrigger;
+import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.ISpecialFieldProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,7 +17,6 @@ import java.util.UUID;
 
 public class TriggerCrafting extends TriggerBaseItemFilter implements ISpecialFieldProvider {
     public int timesCrafted = 1;
-    protected transient int amountItemCrafted;
     protected transient int timesItemCrafted;
 
     public TriggerCrafting() {
@@ -43,7 +43,7 @@ public class TriggerCrafting extends TriggerBaseItemFilter implements ISpecialFi
 
     @Override
     public boolean isCompleted() {
-        return amountItemCrafted >= amount && timesItemCrafted >= timesCrafted;
+        return counter >= amount && timesItemCrafted >= timesCrafted;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class TriggerCrafting extends TriggerBaseItemFilter implements ISpecialFi
         ItemStack crafted = (ItemStack) (additional[0]);
         for (IProgressionFilter filter : filters) {
             if (filter.matches(crafted)) {
-                amountItemCrafted += crafted.stackSize;
+                counter += crafted.stackSize;
                 timesItemCrafted++;
                 return true;
             }
@@ -62,18 +62,21 @@ public class TriggerCrafting extends TriggerBaseItemFilter implements ISpecialFi
 
     @Override
     public String getDescription() {
-        return Progression.format("trigger.crafting.description", amount) + "\n\n" + Progression.format("completed", getPercentage());
+        int percentageItemTotal = (counter * 100) / amount;
+        int percentageCraftedTotal = (timesItemCrafted * 100) / timesCrafted;
+        int percentageTotal = (percentageItemTotal + percentageCraftedTotal) / 2;
+        return Progression.format("trigger.crafting.description", amount) + "\n\n" + Progression.format("completed", percentageTotal);
     }
 
     @Override
     public void readDataFromNBT(NBTTagCompound tag) {
-        amountItemCrafted = tag.getInteger("Crafted");
+        super.readDataFromNBT(tag);
         timesItemCrafted = tag.getInteger("Times");
     }
 
     @Override
     public void writeDataToNBT(NBTTagCompound tag) {
-        tag.setInteger("Crafted", amountItemCrafted);
+        super.writeDataToNBT(tag);
         tag.setInteger("Times", timesItemCrafted);
     }
 }

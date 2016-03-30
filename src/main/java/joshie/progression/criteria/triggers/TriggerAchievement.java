@@ -64,8 +64,8 @@ public class TriggerAchievement extends TriggerBaseBoolean implements IHasEventB
     }
 
     @Override
-    public int getWidth() {
-        return 70;
+    public int getWidth(DisplayMode mode) {
+        return mode == DisplayMode.EDIT ? super.getWidth(mode) : 70;
     }
 
     @Override

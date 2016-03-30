@@ -3,6 +3,7 @@ package joshie.progression.criteria.rewards;
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.api.criteria.IProgressionReward;
+import joshie.progression.api.special.DisplayMode;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -102,7 +103,7 @@ public abstract class RewardBase implements IProgressionReward {
     public void addTooltip(List list) {}
 
     @Override
-    public int getWidth() {
+    public int getWidth(DisplayMode mode) {
         return 100;
     }
 

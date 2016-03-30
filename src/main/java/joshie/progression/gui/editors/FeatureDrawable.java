@@ -6,9 +6,9 @@ import joshie.progression.api.criteria.IProgressionField;
 import joshie.progression.api.criteria.IProgressionReward;
 import joshie.progression.api.gui.ICustomDrawGuiDisplay;
 import joshie.progression.api.gui.ICustomDrawGuiEditor;
+import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.IEnum;
 import joshie.progression.api.special.ISpecialFieldProvider;
-import joshie.progression.api.special.ISpecialFieldProvider.DisplayMode;
 import joshie.progression.gui.core.DrawHelper;
 import joshie.progression.gui.core.FeatureAbstract;
 import joshie.progression.gui.core.FeatureTooltip;
@@ -56,6 +56,10 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
 
     private int ticker = 0;
 
+    protected DisplayMode getMode() {
+        return MCClientHelper.isInEditMode() ? DisplayMode.EDIT: DisplayMode.DISPLAY;
+    }
+
     private List<IProgressionField> getFields(IFieldProvider provider, DisplayMode mode) {
         if (fieldsMap.containsKey(provider)) return fieldsMap.get(provider);
         else {
@@ -94,13 +98,13 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
             ticker = 1;
         }
 
-        int width = MCClientHelper.isInEditMode() ? 99 : drawing.getWidth() - 1;
+        int width = MCClientHelper.isInEditMode() ? 99 : drawing.getWidth(getMode()) - 1;
         helper.drawGradient(renderX, renderY, 1, 2, width, 15, drawing.getColor(), gradient1, gradient2);
         helper.drawText(renderX, renderY, drawing.getLocalisedName(), 6, 6, fontColor);
 
         ICustomDrawGuiEditor editor = drawing instanceof ICustomDrawGuiEditor ? ((ICustomDrawGuiEditor) drawing) : null;
         if (editor == null || (editor != null && !editor.hideDefaultEditor())) {
-            DisplayMode mode = MCClientHelper.isInEditMode() ? DisplayMode.EDIT : DisplayMode.DISPLAY;
+            DisplayMode mode = getMode();
             int yStart = 18;
             int index = 0;
             for (IProgressionField t : getFields(drawing, mode)) {
@@ -130,7 +134,7 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
             if (mode == DisplayMode.DISPLAY) {
                 ICustomDrawGuiDisplay display = drawing instanceof ICustomDrawGuiDisplay ? ((ICustomDrawGuiDisplay) drawing) : null;
                 if (display == null) {
-                    helper.drawSplitText(renderX, renderY, drawing.getDescription(), 4, 20, drawing.getWidth() + drawing.getWidth() / 4, fontColor, 0.75F);
+                    helper.drawSplitText(renderX, renderY, drawing.getDescription(), 4, 20, drawing.getWidth(mode) + drawing.getWidth(mode) / 4, fontColor, 0.75F);
                     //Draw Shit
                 } else display.drawDisplay(offset, renderX, renderY, mouseX, mouseY);
             }
@@ -138,7 +142,7 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
     }
 
     public int drawSpecial(T drawing, int offsetX, int offsetY, int mouseOffsetX, int mouseOffsetY) {
-        return offsetX + (MCClientHelper.isInEditMode() ? 100 : drawing.getWidth());
+        return offsetX + drawing.getWidth(getMode());
     }
 
     @Override
@@ -239,7 +243,7 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
 
             if (clickSpecial((T)provider, mouseOffsetX, mouseOffsetY)) return true;
             if (drawingMouseClicked(provider, mouseOffsetX, mouseOffsetY, button)) return true;
-            offsetX += (MCClientHelper.isInEditMode() ? 100 : provider.getWidth());
+            offsetX += provider.getWidth(getMode());
         }
 
         //Now that we've tried all, let's try the new button

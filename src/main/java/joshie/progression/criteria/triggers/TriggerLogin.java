@@ -3,6 +3,7 @@ package joshie.progression.criteria.triggers;
 import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionTrigger;
+import joshie.progression.api.special.DisplayMode;
 import joshie.progression.items.ItemCriteria;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -30,8 +31,8 @@ public class TriggerLogin extends TriggerBaseCounter {
     }
 
     @Override
-    public int getWidth() {
-        return 65;
+    public int getWidth(DisplayMode mode) {
+        return mode == DisplayMode.EDIT ? super.getWidth(mode) : 65;
     }
 
     @Override

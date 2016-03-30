@@ -1,5 +1,7 @@
 package joshie.progression.api.criteria;
 
+import joshie.progression.api.special.DisplayMode;
+
 import java.util.UUID;
 
 public interface IFieldProvider {
@@ -44,5 +46,5 @@ public interface IFieldProvider {
     public void updateDraw();
 
     /** Called in draw mode to draw the width **/
-    public int getWidth();
+    public int getWidth(DisplayMode mode);
 }

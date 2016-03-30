@@ -4,6 +4,7 @@ import joshie.progression.Progression;
 import joshie.progression.api.criteria.IProgressionCondition;
 import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.api.criteria.IProgressionTrigger;
+import joshie.progression.api.special.DisplayMode;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -99,7 +100,7 @@ public abstract class TriggerBase implements IProgressionTrigger {
     }
 
     @Override
-    public int getWidth() {
+    public int getWidth(DisplayMode mode) {
         return 100;
     }
 

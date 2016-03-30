@@ -2,6 +2,7 @@ package joshie.progression.criteria.conditions;
 
 import joshie.progression.api.criteria.IProgressionCondition;
 import joshie.progression.api.criteria.IProgressionTrigger;
+import joshie.progression.api.special.DisplayMode;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
@@ -54,7 +55,7 @@ public abstract class ConditionBase implements IProgressionCondition {
 
     @Override
     public int getColor() {
-        return color;
+        return trigger.getColor();
     }
 
     @Override
@@ -82,7 +83,7 @@ public abstract class ConditionBase implements IProgressionCondition {
     }
 
     @Override
-    public int getWidth() {
+    public int getWidth(DisplayMode mode) {
         return 100;
     }
 }

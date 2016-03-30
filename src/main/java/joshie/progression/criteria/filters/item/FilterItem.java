@@ -2,6 +2,7 @@ package joshie.progression.criteria.filters.item;
 
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionField;
+import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.IItemGetterCallback;
 import joshie.progression.api.special.ISetterCallback;
 import joshie.progression.api.special.ISpecialFieldProvider;

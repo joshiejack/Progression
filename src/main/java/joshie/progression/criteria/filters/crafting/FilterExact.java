@@ -2,6 +2,7 @@ package joshie.progression.criteria.filters.crafting;
 
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionField;
+import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.ISpecialFieldProvider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;

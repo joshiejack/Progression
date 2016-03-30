@@ -3,6 +3,7 @@ package joshie.progression.criteria.filters.item;
 import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionField;
+import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.ISpecialFieldProvider;
 import net.minecraft.item.ItemStack;
 

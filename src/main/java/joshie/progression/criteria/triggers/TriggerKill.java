@@ -5,6 +5,7 @@ import joshie.progression.api.criteria.IProgressionField;
 import joshie.progression.api.criteria.IProgressionFilter;
 import joshie.progression.api.criteria.IProgressionFilterSelector;
 import joshie.progression.api.criteria.IProgressionTrigger;
+import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.IHasFilters;
 import joshie.progression.api.special.ISpecialFieldProvider;
 import joshie.progression.api.special.ISpecialFilters;
@@ -73,8 +74,8 @@ public class TriggerKill extends TriggerBaseCounter implements IHasFilters, ISpe
     }
 
     @Override
-    public int getWidth() {
-        return 85;
+    public int getWidth(DisplayMode mode) {
+        return mode == DisplayMode.EDIT ? super.getWidth(mode) : 85;
     }
 
     @Override

@@ -2,6 +2,7 @@ package joshie.progression.criteria.rewards;
 
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.IProgressionField;
+import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.ISpecialFieldProvider;
 import joshie.progression.api.special.IStackSizeable;
 import joshie.progression.gui.fields.ItemFilterFieldPreview;
@@ -51,8 +52,8 @@ public class RewardItem extends RewardBaseItemFilter implements ISpecialFieldPro
     }
 
     @Override
-    public int getWidth() {
-        return 55;
+    public int getWidth(DisplayMode mode) {
+        return mode == DisplayMode.EDIT ? super.getWidth(mode) : 55;
     }
 
     @Override

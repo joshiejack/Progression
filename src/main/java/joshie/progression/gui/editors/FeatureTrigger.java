@@ -3,6 +3,7 @@ package joshie.progression.gui.editors;
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.IFieldProvider;
 import joshie.progression.api.criteria.IProgressionTrigger;
+import joshie.progression.api.special.DisplayMode;
 import joshie.progression.gui.core.GuiCore;
 import joshie.progression.gui.core.IGuiFeature;
 import joshie.progression.helpers.MCClientHelper;
@@ -18,8 +19,8 @@ public class FeatureTrigger extends FeatureDrawable<IProgressionTrigger> {
     @Override
     public int drawSpecial(IProgressionTrigger drawing, int offsetX, int offsetY, int mouseOffsetX, int mouseOffsetY) {
         //We have drawn the deleted button now we check for conditions for triggers.
-        boolean display = MCClientHelper.isInEditMode();
-        if (display) {
+        DisplayMode mode = getMode();
+        if (mode == DisplayMode.EDIT) {
             int color = Theme.INSTANCE.blackBarBorder;
             if (mouseOffsetX >= 2 && mouseOffsetX <= 87 && mouseOffsetY >= 66 && mouseOffsetY <= 77) {
                 color = Theme.INSTANCE.blackBarFontColor;
@@ -34,7 +35,7 @@ public class FeatureTrigger extends FeatureDrawable<IProgressionTrigger> {
                 IFieldProvider condition = drawing.getConditions().get(i);
                 mouseOffsetX = mouseOffsetX - offsetX;
                 drawingDraw(condition, offset, offsetX, offsetY, mouseOffsetX, mouseOffsetY);
-                offsetX = offsetX + (MCClientHelper.isInEditMode() ? 100 : condition.getWidth());
+                offsetX = offsetX + condition.getWidth(mode);
             }
         }
 

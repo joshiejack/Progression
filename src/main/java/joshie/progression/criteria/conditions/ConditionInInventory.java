@@ -3,8 +3,11 @@ package joshie.progression.criteria.conditions;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionField;
 import joshie.progression.api.criteria.IProgressionFilter;
+import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.IEnum;
 import joshie.progression.api.special.ISpecialFieldProvider;
+import joshie.progression.api.special.IStackSizeable;
+import joshie.progression.gui.fields.ItemFilterFieldPreview;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -12,12 +15,12 @@ import net.minecraft.world.World;
 import java.util.List;
 import java.util.UUID;
 
-public class ConditionInInventory extends ConditionBaseItemFilter implements IEnum, ISpecialFieldProvider {
+public class ConditionInInventory extends ConditionBaseItemFilter implements IEnum, ISpecialFieldProvider, IStackSizeable {
     private static enum CheckSlots {
         HELD, ARMOR, HOTBAR, INVENTORY;
     }
 
-    public int amount = 1;
+    public int stackSize = 1;
     public CheckSlots slotType = CheckSlots.INVENTORY;
 
     public ConditionInInventory() {
@@ -27,7 +30,12 @@ public class ConditionInInventory extends ConditionBaseItemFilter implements IEn
     @Override
     public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
         if (mode == DisplayMode.EDIT) fields.add(ProgressionAPI.fields.getItemPreview(this, "filters", 30, 35, 1.9F));
-        else fields.add(ProgressionAPI.fields.getItemPreview(this, "filters", 65, 35, 1.9F));
+        else fields.add(new ItemFilterFieldPreview("filters", this, 18, 25, 2.8F));
+    }
+
+    @Override
+    public int getStackSize() {
+        return stackSize;
     }
 
     @Override
@@ -73,21 +81,26 @@ public class ConditionInInventory extends ConditionBaseItemFilter implements IEn
     public boolean isSatisfied(World world, EntityPlayer player, UUID uuid) {
         if (player == null) return false;
         if (slotType == CheckSlots.HELD) {
-            if (matches(player.getCurrentEquippedItem())) return player.getCurrentEquippedItem().stackSize >= amount;
+            if (matches(player.getCurrentEquippedItem())) return player.getCurrentEquippedItem().stackSize >= stackSize;
         } else if (slotType == CheckSlots.ARMOR) {
             for (ItemStack armor : player.inventory.armorInventory) {
                 if (armor != null) {
-                    if (matches(armor)) return armor.stackSize >= amount;
+                    if (matches(armor)) return armor.stackSize >= stackSize;
                 }
             }
 
             return false;
         } else if (slotType == CheckSlots.HOTBAR) {
-            return getAmount(player, 9) >= amount;
+            return getAmount(player, 9) >= stackSize;
         } else if (slotType == CheckSlots.INVENTORY) {
-            return getAmount(player, 36) >= amount;
+            return getAmount(player, 36) >= stackSize;
         }
 
         return false;
+    }
+
+    @Override
+    public int getWidth(DisplayMode mode) {
+        return mode == DisplayMode.EDIT ? super.getWidth(mode) : 75;
     }
 }

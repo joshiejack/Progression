@@ -3,6 +3,7 @@ package joshie.progression.criteria.triggers;
 import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionTrigger;
+import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.IHasEventBus;
 import joshie.progression.helpers.DimensionHelper;
 import joshie.progression.items.ItemCriteria;
@@ -51,8 +52,8 @@ public class TriggerChangeDimension extends TriggerBaseCounter implements IHasEv
     }
 
     @Override
-    public int getWidth() {
-        return 80;
+    public int getWidth(DisplayMode mode) {
+        return mode == DisplayMode.EDIT ? super.getWidth(mode) : 80;
     }
 
     @Override

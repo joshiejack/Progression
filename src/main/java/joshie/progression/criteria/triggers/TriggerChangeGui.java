@@ -3,6 +3,7 @@ package joshie.progression.criteria.triggers;
 import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionTrigger;
+import joshie.progression.api.special.DisplayMode;
 import joshie.progression.helpers.ChatHelper;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.init.Blocks;
@@ -58,8 +59,8 @@ public class TriggerChangeGui extends TriggerBaseBoolean {
     }
 
     @Override
-    public int getWidth() {
-        return displayWidth;
+    public int getWidth(DisplayMode mode) {
+        return mode == DisplayMode.EDIT ? super.getWidth(mode) : displayWidth;
     }
 
     @Override

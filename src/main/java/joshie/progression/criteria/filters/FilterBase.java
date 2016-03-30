@@ -2,6 +2,7 @@ package joshie.progression.criteria.filters;
 
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.IProgressionFilter;
+import joshie.progression.api.special.DisplayMode;
 
 import java.util.UUID;
 
@@ -53,7 +54,7 @@ public abstract class FilterBase implements IProgressionFilter {
     }
 
     @Override
-    public int getWidth() {
+    public int getWidth(DisplayMode mode) {
         return 100;
     }
 }

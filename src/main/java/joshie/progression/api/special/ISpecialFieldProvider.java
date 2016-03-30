@@ -11,8 +11,4 @@ public interface ISpecialFieldProvider {
     /** Add extra fields, If you wish to only use your new fields,
      *  Just clear the list. **/
     public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode);
-    
-    public static enum DisplayMode {
-        DISPLAY, EDIT;
-    }
 }
