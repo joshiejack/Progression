@@ -34,6 +34,7 @@ public class ActionType {
     
     public ActionType setItemStack(ItemStack stack) {
         this.stack = stack;
+        if (itemRegistry == null) itemRegistry = new HashMap();
         itemRegistry.put(stack, this);
         return this;
     }
@@ -64,6 +65,16 @@ public class ActionType {
     }
 
     public static ActionType getCraftingActionFromIcon(ItemStack stack) {
-        return itemRegistry.get(stack);
+        ActionType type = itemRegistry.get(stack);
+        if (type == null) {
+            for (ActionType t: registry.values()) {
+                if (t.getIcon().getItem() == stack.getItem() && t.getIcon().getItemDamage() == stack.getItemDamage()) {
+                    itemRegistry.put(stack, t);
+                    return t;
+                }
+            }
+
+            return ActionType.CRAFTING;
+        } else return type;
     }
 }

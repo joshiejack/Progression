@@ -30,13 +30,7 @@ public class FilterExact extends FilterBaseCrafting implements ISpecialFieldProv
 
     @Override
     public String getDescription() {
-        for (ActionType type: ActionType.values()) {
-            if (type.getIcon().getItem() == stack.getItem() && type.getIcon().getItemDamage() == stack.getItemDamage()) {
-                return type.getUnlocalisedName().toLowerCase();
-            }
-        }
-
-        return ActionType.CRAFTING.getUnlocalisedName().toLowerCase();
+        return ActionType.getCraftingActionFromIcon(stack).getUnlocalisedName().toLowerCase();
     }
 
     @Override
