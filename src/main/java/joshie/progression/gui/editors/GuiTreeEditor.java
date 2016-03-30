@@ -154,9 +154,9 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
                     width -= 3;
 
                     if (c.getTab() == criteria.getTab()) {
-                        drawLine(offsetX + width + x1, 12 + y1 - 1, offsetX + 5 + x2, 12 + y2 - 1, 1, theme.connectLineColor1);
-                        drawLine(offsetX + width + x1, 12 + y1 + 1, offsetX + 5 + x2, 12 + y2 + 1, 1, theme.connectLineColor2); //#636C69
-                        drawLine(offsetX + width + x1, 12 + y1, offsetX + 5 + x2, 12 + y2, 1, theme.connectLineColor3);
+                        drawLine(GuiCore.INSTANCE.offsetX + width + x1, 12 + y1 - 1, GuiCore.INSTANCE.offsetX + 5 + x2, 12 + y2 - 1, 1, theme.connectLineColor1);
+                        drawLine(GuiCore.INSTANCE.offsetX + width + x1, 12 + y1 + 1, GuiCore.INSTANCE.offsetX + 5 + x2, 12 + y2 + 1, 1, theme.connectLineColor2); //#636C69
+                        drawLine(GuiCore.INSTANCE.offsetX + width + x1, 12 + y1, GuiCore.INSTANCE.offsetX + 5 + x2, 12 + y2, 1, theme.connectLineColor3);
                     }
                 }
             }
@@ -165,7 +165,7 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
         GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
         for (IProgressionCriteria criteria : currentTab.getCriteria()) {
             if (getElement(criteria).isCriteriaVisible() || MCClientHelper.isInEditMode()) {
-                getElement(criteria).draw(0, screenTop, offsetX);
+                getElement(criteria).draw(0, screenTop, GuiCore.INSTANCE.offsetX);
             }
         }
     }

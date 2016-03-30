@@ -17,7 +17,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.StatCollector;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -76,10 +75,5 @@ public class TriggerKill extends TriggerBaseCounter implements IHasFilters, ISpe
     @Override
     public int getWidth(DisplayMode mode) {
         return mode == DisplayMode.EDIT ? super.getWidth(mode) : 85;
-    }
-
-    @Override
-    public String getDescription() {
-        return StatCollector.translateToLocalFormatted("Kill %s x any of these entities\n\n%s%% completed", amount, getPercentage());
     }
 }

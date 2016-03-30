@@ -1,29 +1,9 @@
 package joshie.progression.gui.core;
 
-import static joshie.progression.network.core.PacketPart.SEND_SIZE;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.apache.logging.log4j.Level;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.IProgressionField;
-import joshie.progression.gui.editors.FeatureFullTextEditor;
-import joshie.progression.gui.editors.FeatureItemSelector;
-import joshie.progression.gui.editors.GuiGroupEditor;
-import joshie.progression.gui.editors.GuiTreeEditor;
-import joshie.progression.gui.editors.IEditorMode;
-import joshie.progression.gui.editors.TextEditor;
-import joshie.progression.gui.editors.insert.FeatureNew;
-import joshie.progression.gui.editors.insert.FeatureNewCondition;
-import joshie.progression.gui.editors.insert.FeatureNewItemFilter;
-import joshie.progression.gui.editors.insert.FeatureNewReward;
-import joshie.progression.gui.editors.insert.FeatureNewTrigger;
+import joshie.progression.gui.editors.*;
+import joshie.progression.gui.editors.insert.*;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.RenderItemHelper;
 import joshie.progression.helpers.SplitHelper;
@@ -42,6 +22,16 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import org.apache.logging.log4j.Level;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import static joshie.progression.network.core.PacketPart.SEND_SIZE;
 
 public class GuiCore extends GuiScreen {
     public static final GuiCore INSTANCE = new GuiCore();
@@ -214,7 +204,7 @@ public class GuiCore extends GuiScreen {
         if (markedForInit) return; //Dont process keys while active
         int jump = 1;
         if (Keyboard.isKeyDown(54) || Keyboard.isKeyDown(42)) {
-            jump = 50; //Shift Jump
+            jump = 100; //Shift Jump
         }
 
         if (!TextEditor.INSTANCE.isEditing()) {
@@ -252,9 +242,9 @@ public class GuiCore extends GuiScreen {
 
             if (!scrolled) {
                 if (!down) {
-                    scroll(20);
+                    scroll(50);
                 } else {
-                    scroll(-20);
+                    scroll(-50);
                 }
             }
         }

@@ -5,6 +5,7 @@ import joshie.progression.api.criteria.IProgressionCondition;
 import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.api.criteria.IProgressionTrigger;
 import joshie.progression.api.special.DisplayMode;
+import joshie.progression.api.special.ICancelable;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -89,9 +90,21 @@ public abstract class TriggerBase implements IProgressionTrigger {
     @Override
     public void updateDraw() {}
 
+    public String getTriggerDescription() {
+        return Progression.translate(getUnlocalisedName() + ".description");
+    }
+
     @Override
     public String getDescription() {
-        return "MISSING DESCRIPTION";
+        if (this instanceof ICancelable) {
+            if(((ICancelable)this).isCanceling()) return Progression.format(getUnlocalisedName() + ".cancel");
+        }
+
+        return getTriggerDescription() + "\n\n" + Progression.format("completed", getPercentage());
+    }
+
+    protected int getPercentage() {
+        return 100;
     }
     
     @Override

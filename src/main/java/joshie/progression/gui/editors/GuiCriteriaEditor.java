@@ -50,7 +50,7 @@ public class GuiCriteriaEditor extends GuiBaseEditor implements IBarProvider, II
         //Setup the features
         features.add(new FeatureTrigger(EnumChatFormatting.BOLD + Progression.translate("new.trigger"), criteria.getTriggers(), 45, 201, 201, 64, 119, FeatureNewTrigger.INSTANCE, theme.triggerGradient1, theme.triggerGradient2, theme.triggerFontColor));
         features.add(new FeatureReward(EnumChatFormatting.BOLD + Progression.translate("new.reward"), criteria.getRewards(), 140, 0, 55, 201, 201, FeatureNewReward.INSTANCE, theme.rewardBoxGradient1, theme.rewardBoxGradient2, theme.rewardBoxFont));
-        features.add(new FeatureBarsX2(this, "requirements", "results"));
+        features.add(new FeatureBarsX2(this, "trigger", "reward"));
         features.add(FeatureFullTextEditor.INSTANCE); //Add the text selector
         features.add(FeatureItemSelector.INSTANCE); //Add the item selector
         features.add(FeatureNewTrigger.INSTANCE); //Add new trigger popup

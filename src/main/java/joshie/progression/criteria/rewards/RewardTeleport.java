@@ -1,10 +1,14 @@
 package joshie.progression.criteria.rewards;
 
 import joshie.progression.Progression;
+import joshie.progression.api.criteria.IProgressionField;
 import joshie.progression.api.criteria.IProgressionFilter;
 import joshie.progression.api.criteria.IProgressionFilterSelector;
+import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.IHasFilters;
+import joshie.progression.api.special.ISpecialFieldProvider;
 import joshie.progression.api.special.ISpecialFilters;
+import joshie.progression.gui.fields.ItemFilterField;
 import joshie.progression.gui.filters.FilterSelectorLocation;
 import joshie.progression.lib.WorldLocation;
 import net.minecraft.block.material.Material;
@@ -28,8 +32,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class RewardTeleport extends RewardBase implements ISpecialFilters, IHasFilters {
+public class RewardTeleport extends RewardBase implements ISpecialFilters, IHasFilters, ISpecialFieldProvider {
     public List<IProgressionFilter> locations = new ArrayList();
+    protected IProgressionFilter preview;
+    protected int ticker;
 
     public RewardTeleport() {
         super(new ItemStack(Items.ender_pearl), "teleport", 0xFFDDDDDD);
@@ -43,6 +49,13 @@ public class RewardTeleport extends RewardBase implements ISpecialFilters, IHasF
     @Override
     public IProgressionFilterSelector getFilterForField(String fieldName) {
         return FilterSelectorLocation.INSTANCE;
+    }
+
+    @Override
+    public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
+        if (mode == DisplayMode.EDIT) {
+            fields.add(new ItemFilterField("locations", this));
+        }
     }
 
     @Override
@@ -129,5 +142,21 @@ public class RewardTeleport extends RewardBase implements ISpecialFilters, IHasF
     @Override
     public void addTooltip(List list) {
         list.add(EnumChatFormatting.WHITE + Progression.translate("teleport"));
+    }
+
+    public String getFilter() {
+        if (ticker == 0 || ticker >= 200) {
+            preview = WorldLocation.getRandomFilterFromFilters(locations);
+            ticker = 1;
+        }
+
+        ticker++;
+
+        return preview == null ? "Nowhere": preview.getDescription();
+    }
+
+    @Override
+    public String getDescription() {
+        return Progression.translate("reward.teleport.description") + " \n" + getFilter();
     }
 }

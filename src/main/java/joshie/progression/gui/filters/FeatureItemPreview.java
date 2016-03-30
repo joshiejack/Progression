@@ -5,6 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import joshie.progression.api.criteria.IProgressionFilter;
 import joshie.progression.api.criteria.IProgressionFilterSelector;
 import joshie.progression.gui.core.FeatureAbstract;
+import joshie.progression.gui.core.GuiCore;
 import joshie.progression.gui.editors.FeatureItemSelector;
 import joshie.progression.gui.editors.FeatureItemSelector.Position;
 import joshie.progression.gui.editors.GuiItemFilterEditor;
@@ -56,7 +57,7 @@ public class FeatureItemPreview extends FeatureAbstract {
     }
 
     public void updateSearch() {
-        GuiItemFilterEditor.INSTANCE.offsetX = 0; //Reset the offset on update
+        GuiCore.INSTANCE.offsetX = 0; //Reset the offset on update
         position = 0; //Reset the position on update
 
         if (GuiItemFilterEditor.INSTANCE.getField() == null) return; //NO UPDATES!!!

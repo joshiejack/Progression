@@ -1,8 +1,5 @@
 package joshie.progression.gui.editors;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import joshie.progression.api.criteria.IProgressionField;
 import joshie.progression.gui.core.GuiCore;
 import joshie.progression.gui.core.IGuiFeature;
@@ -10,6 +7,9 @@ import joshie.progression.json.Theme;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.item.ItemStack;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public abstract class GuiBaseEditor implements IEditorMode {
     public ArrayList<IGuiFeature> features;
@@ -19,7 +19,7 @@ public abstract class GuiBaseEditor implements IEditorMode {
     public GuiCore core;
     public Theme theme;
 
-    public int offsetX;
+    //public int offsetX;
     public int screenTop;
     public int screenWidth;
 
@@ -28,7 +28,7 @@ public abstract class GuiBaseEditor implements IEditorMode {
         this.core = core;
         this.res = core.res;
         this.mc = core.mc;
-        this.offsetX = core.offsetX;
+        //this.offsetX = core.offsetX;
         this.features = core.features;
         this.fields = core.fields;
         this.theme = core.theme;

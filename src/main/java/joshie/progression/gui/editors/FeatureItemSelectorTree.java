@@ -60,7 +60,7 @@ public class FeatureItemSelectorTree extends FeatureAbstract implements ITextEdi
                 FeatureItemSelector.INSTANCE.updateSearch();
             }
 
-            int offsetX = GuiTreeEditor.INSTANCE.offsetX;
+            int offsetX = GuiCore.INSTANCE.offsetX;
             ScaledResolution res = GuiTreeEditor.INSTANCE.res;
             int fullWidth = res.getScaledWidth() - 10;
 

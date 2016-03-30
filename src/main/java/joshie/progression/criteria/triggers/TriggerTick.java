@@ -2,6 +2,7 @@ package joshie.progression.criteria.triggers;
 
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionTrigger;
+import joshie.progression.api.special.DisplayMode;
 import joshie.progression.items.ItemCriteria;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
@@ -23,5 +24,15 @@ public class TriggerTick extends TriggerBaseAlwaysTrue {
         if (event.player.worldObj.getTotalWorldTime() % 20 == 0) {
             ProgressionAPI.registry.fireTrigger(event.player, getUnlocalisedName());
         }
+    }
+
+    @Override
+    public int getWidth(DisplayMode mode) {
+        return 75;
+    }
+
+    @Override
+    public String getDescription() {
+        return getTriggerDescription();
     }
 }

@@ -1,6 +1,5 @@
 package joshie.progression.criteria.triggers;
 
-import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionTrigger;
 import net.minecraft.block.Block;
@@ -33,14 +32,5 @@ public class TriggerClickBlock extends TriggerBaseBlock {
                 event.setCanceled(true);
             }
         }
-    }
-        
-    @Override
-    public String getDescription() {
-        if (cancel) {
-            return Progression.translate("trigger.clickBlock.cancel");
-        }
-
-        return Progression.format("trigger.clickBlock.description", amount) + "\n\n" + Progression.format("completed", getPercentage());
     }
 }

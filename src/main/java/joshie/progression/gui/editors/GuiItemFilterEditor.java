@@ -43,7 +43,7 @@ public class GuiItemFilterEditor extends GuiBaseEditor implements IBarProvider {
     public void initData(GuiCore core) {
         super.initData(core);
         //Setup the features
-        features.add(new FeatureBarsX2(this, "filters", "preview"));
+        features.add(new FeatureBarsX2(this, "filter", "preview"));
         features.add(new FeatureDrawable(EnumChatFormatting.BOLD + Progression.translate("new.filter"), field.getFilters(), 45, 201, 201, 64, 119, FeatureNewItemFilter.INSTANCE, theme.triggerGradient1, theme.triggerGradient2, theme.triggerFontColor));
         features.add(FeatureItemPreview.INSTANCE);
         features.add(FeatureFullTextEditor.INSTANCE); //Add the text selector

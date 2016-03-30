@@ -18,7 +18,7 @@ public class TriggerChangeDimension extends TriggerBaseCounter implements IHasEv
     public int to = -1;
 
     public TriggerChangeDimension() {
-        super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.onChangeDimension), "changeDimension", 0xFF000000);
+        super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.onChangeDimension), "changeDimension", 0xFF4C0000);
     }
 
     @Override
@@ -59,10 +59,10 @@ public class TriggerChangeDimension extends TriggerBaseCounter implements IHasEv
     @Override
     public String getDescription() {
         StringBuilder builder = new StringBuilder();
-        if (checkTo) builder.append("Go to " + DimensionHelper.getDimensionNameFromID(to));
+        if (checkTo) builder.append(Progression.translate("trigger.changeDimension.go") + " " + DimensionHelper.getDimensionNameFromID(to));
         if (checkFrom && checkTo) builder.append("\n");
-        if (checkFrom) builder.append("Leave " + DimensionHelper.getDimensionNameFromID(from));
-        if (!checkTo && !checkFrom) builder.append("Change Dimension");
+        if (checkFrom) builder.append(Progression.translate("trigger.changeDimension.leave")+ " " + DimensionHelper.getDimensionNameFromID(from));
+        if (!checkTo && !checkFrom) builder.append(Progression.translate("trigger.changeDimension.change"));
         builder.append("\n\n" + Progression.format("completed", getPercentage()));
         return  builder.toString();
     }

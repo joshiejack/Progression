@@ -9,10 +9,12 @@ import java.util.UUID;
 public abstract class FilterBase implements IProgressionFilter {
     private int color;
     private String name;
+    private String unformatted;
     private UUID uuid;
 
     public FilterBase(String name, int color) {
         this.name = "filter." + name;
+        this.unformatted = name;
         this.color = color;
     }
 
@@ -23,7 +25,7 @@ public abstract class FilterBase implements IProgressionFilter {
 
     @Override
     public String getLocalisedName() {
-        return Progression.translate(getType().getName().toLowerCase() + "." + getUnlocalisedName());
+        return Progression.translate("filter." + getType().getName().toLowerCase() + "." + unformatted);
     }
 
     @Override

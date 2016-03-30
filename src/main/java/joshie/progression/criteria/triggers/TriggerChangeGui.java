@@ -1,6 +1,5 @@
 package joshie.progression.criteria.triggers;
 
-import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionTrigger;
 import joshie.progression.api.special.DisplayMode;
@@ -64,7 +63,7 @@ public class TriggerChangeGui extends TriggerBaseBoolean {
     }
 
     @Override
-    public String getDescription() {
-        return description + "\n\n" + Progression.format("completed", getPercentage());
+    public String getTriggerDescription() {
+        return description;
     }
 }

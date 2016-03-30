@@ -56,7 +56,7 @@ public class ButtonNewCriteria extends ButtonBase {
             IProgressionTab currentTab = GuiTreeEditor.INSTANCE.currentTab;
             int mouseX = GuiCore.INSTANCE.mouseX;
             int mouseY = GuiCore.INSTANCE.mouseY;
-            int offsetX = GuiTreeEditor.INSTANCE.offsetX;
+            int offsetX = GuiCore.INSTANCE.offsetX;
             IProgressionCriteria criteria = APIHandler.newCriteria(currentTab, UUID.randomUUID(), true);
             criteria.setCoordinates(mouseX - 50 - offsetX, mouseY - 10);
             GuiTreeEditor.INSTANCE.addCriteria(criteria, mouseX - 50, mouseY - 10, offsetX);

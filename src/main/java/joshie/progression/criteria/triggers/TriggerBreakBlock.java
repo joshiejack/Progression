@@ -1,6 +1,5 @@
 package joshie.progression.criteria.triggers;
 
-import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionTrigger;
 import joshie.progression.api.special.IHasEventBus;
@@ -29,14 +28,5 @@ public class TriggerBreakBlock extends TriggerBaseBlock implements IHasEventBus 
         if (ProgressionAPI.registry.fireTrigger(event.getPlayer(), getUnlocalisedName(), block, meta) == Result.DENY) {
             event.setCanceled(true);
         }
-    }
-
-    @Override
-    public String getDescription() {
-        if (cancel) {
-            return Progression.translate("trigger.breakBlock.cancel");
-        }
-
-        return Progression.format("trigger.breakBlock.description", amount) + "\n\n" + Progression.format("completed", getPercentage());
     }
 }

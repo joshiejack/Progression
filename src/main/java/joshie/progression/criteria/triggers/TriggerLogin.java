@@ -1,6 +1,5 @@
 package joshie.progression.criteria.triggers;
 
-import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionTrigger;
 import joshie.progression.api.special.DisplayMode;
@@ -33,10 +32,5 @@ public class TriggerLogin extends TriggerBaseCounter {
     @Override
     public int getWidth(DisplayMode mode) {
         return mode == DisplayMode.EDIT ? super.getWidth(mode) : 65;
-    }
-
-    @Override
-    public String getDescription() {
-        return Progression.format("trigger.login.description", amount) + "\n\n" + Progression.format("completed", getPercentage());
     }
 }

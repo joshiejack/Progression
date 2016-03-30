@@ -43,7 +43,7 @@ public class TriggerBoolean extends TriggerBaseBoolean {
     }
 
     @Override
-    public String getDescription() {
+    public String getTriggerDescription() {
         return description;
     }
 }

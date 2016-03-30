@@ -48,7 +48,8 @@ public class TriggerPoints extends TriggerBaseBoolean {
 
     @Override
     public String getDescription() {
-        String extra = consume ? "\n" + EnumChatFormatting.ITALIC + Progression.format("%s will be consumed", variable) : "";
-        return Progression.format("Have %s %s %s", amount, variable, extra) + "\n\n" + Progression.format("completed", getPercentage());
+        String extra = consume ? "\n" + EnumChatFormatting.ITALIC + Progression.format("trigger.points.extra", variable) : "";
+        String value = (amount == (long) amount) ? String.format("%d", (long) amount): String.format("%s", amount);
+        return Progression.format("trigger.points.description", value, variable, extra) + "\n\n" + Progression.format("completed", getPercentage());
     }
 }

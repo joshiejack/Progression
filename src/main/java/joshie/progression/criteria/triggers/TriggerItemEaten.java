@@ -1,6 +1,5 @@
 package joshie.progression.criteria.triggers;
 
-import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionField;
 import joshie.progression.api.criteria.IProgressionFilter;
@@ -43,10 +42,5 @@ public class TriggerItemEaten extends TriggerBaseItemFilter implements ISpecialF
         }
 
         return false;
-    }
-
-    @Override
-    public String getDescription() {
-        return Progression.format("trigger.onEaten.description", amount) + "\n\n" + Progression.format("completed", getPercentage());
     }
 }

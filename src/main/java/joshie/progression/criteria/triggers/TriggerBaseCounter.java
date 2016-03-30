@@ -1,5 +1,6 @@
 package joshie.progression.criteria.triggers;
 
+import joshie.progression.Progression;
 import joshie.progression.api.special.IAdditionalTooltip;
 import joshie.progression.api.special.IStoreTriggerData;
 import net.minecraft.item.ItemStack;
@@ -58,6 +59,11 @@ public abstract class TriggerBaseCounter extends TriggerBase implements IStoreTr
     @Override
     public void addHoverTooltip(List<String> tooltip) {
         tooltip.add(counter + "/" + amount);
+    }
+
+    @Override
+    public String getTriggerDescription() {
+        return Progression.format(getUnlocalisedName() + ".description", amount);
     }
 
     @Override

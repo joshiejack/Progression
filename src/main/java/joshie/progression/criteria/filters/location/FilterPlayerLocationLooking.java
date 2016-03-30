@@ -1,5 +1,6 @@
 package joshie.progression.criteria.filters.location;
 
+import joshie.progression.Progression;
 import joshie.progression.lib.WorldLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
@@ -10,6 +11,9 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 
 public class FilterPlayerLocationLooking extends FilterLocationBase {
+    public boolean reachDistance = true;
+    public double maximumDistance = 64;
+
     public FilterPlayerLocationLooking() {
         super("playerLook", 0xFFBBBBBB);
     }
@@ -28,12 +32,20 @@ public class FilterPlayerLocationLooking extends FilterLocationBase {
         float f6 = f3 * f4;
         float f7 = f2 * f4;
         double d3 = 5.0D;
-        if (player instanceof net.minecraft.entity.player.EntityPlayerMP) {
-            d3 = ((net.minecraft.entity.player.EntityPlayerMP)player).theItemInWorldManager.getBlockReachDistance();
-        }
+        if (reachDistance) {
+            if (player instanceof net.minecraft.entity.player.EntityPlayerMP) {
+                d3 = ((net.minecraft.entity.player.EntityPlayerMP) player).theItemInWorldManager.getBlockReachDistance();
+            }
+        } else d3 = maximumDistance;
 
         Vec3 vec31 = vec3.addVector((double)f6 * d3, (double)f5 * d3, (double)f7 * d3);
         return worldIn.rayTraceBlocks(vec3, vec31, false, true, false);
+    }
+
+    @Override
+    public String getDescription() {
+        if (reachDistance) return Progression.translate("filter.location.playerLook.reach");
+        else return Progression.format("filter.location.playerLook.blocks", maximumDistance);
     }
 
     @Override

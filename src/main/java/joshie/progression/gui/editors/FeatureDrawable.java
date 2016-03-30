@@ -24,6 +24,8 @@ import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.json.Theme;
 import joshie.progression.lib.ProgressionInfo;
 import net.minecraft.client.renderer.GlStateManager;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.text.WordUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -91,6 +93,7 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
     }
 
     protected void drawingDraw(IFieldProvider drawing, DrawHelper helper, int renderX, int renderY, int mouseX, int mouseY) {
+        DisplayMode mode = getMode();
         //For updating the render ticker
         ticker++;
         if (ticker == 0 || ticker >= 200) {
@@ -98,29 +101,26 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
             ticker = 1;
         }
 
-        int width = MCClientHelper.isInEditMode() ? 99 : drawing.getWidth(getMode()) - 1;
+        int width = drawing.getWidth(getMode()) - 1;
         helper.drawGradient(renderX, renderY, 1, 2, width, 15, drawing.getColor(), gradient1, gradient2);
         helper.drawText(renderX, renderY, drawing.getLocalisedName(), 6, 6, fontColor);
 
         ICustomDrawGuiEditor editor = drawing instanceof ICustomDrawGuiEditor ? ((ICustomDrawGuiEditor) drawing) : null;
         if (editor == null || (editor != null && !editor.hideDefaultEditor())) {
-            DisplayMode mode = getMode();
             int yStart = 18;
             int index = 0;
             for (IProgressionField t : getFields(drawing, mode)) {
                 int color = Theme.INSTANCE.optionsFontColor;
                 int yPos = yStart + (index * 6);
-                if (MCClientHelper.isInEditMode()) {
-                    if (mouseX >= 1 && mouseX <= 84) {
+                if (mode == DisplayMode.EDIT) {
+                    if (mouseX >= 1 && mouseX <= drawing.getWidth(mode) - 16) {
                         if (mouseY >= yPos && mouseY < yPos + 6) {
                             if (mode == DisplayMode.EDIT) color = Theme.INSTANCE.optionsFontColorHover;
                             List<String> tooltip = new ArrayList();
-                            for (int i = 0; i < 10; i++) {
-                                String untranslated = mode.name().toLowerCase() + ".tooltip." + drawing.getUnlocalisedName() + "." + t.getFieldName() + "." + i;
-                                String translated = Progression.translate(untranslated);
-                                if (!("progression." + untranslated).equals(translated)) {
-                                    FeatureTooltip.INSTANCE.addTooltip(translated);
-                                }
+                            String untranslated = text + "." + drawing.getUnlocalisedName() + "." + t.getFieldName();
+                            String translated = Progression.translate(untranslated);
+                            if (!("progression." + untranslated).equals(translated)) {
+                                FeatureTooltip.INSTANCE.addTooltip(WordUtils.wrap(StringEscapeUtils.unescapeJava(translated), 100).split("\n"));
                             }
                         }
                     }
@@ -147,6 +147,7 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
 
     @Override
     public void drawFeature(int mouseX, int mouseY) {
+        DisplayMode mode = getMode();
         int offsetX = 0;
         for (int i = 0; i < drawable.size(); i++) {
             IFieldProvider drawing = drawable.get(i);
@@ -154,13 +155,13 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
             int mouseOffsetY = mouseY - this.offsetY;
             drawingDraw(drawing, offset, offsetX, this.offsetY, mouseOffsetX, mouseOffsetY);
             //Draw The Delete Button
-            if (MCClientHelper.isInEditMode()) {
+            if (mode == DisplayMode.EDIT) {
                 int xXcoord = 234;
-                if (mouseOffsetX >= 87 && mouseOffsetX <= 97 && mouseOffsetY >= 4 && mouseOffsetY <= 14) {
+                if (mouseOffsetX >= drawing.getWidth(mode) - 13 && mouseOffsetX <= drawing.getWidth(mode) - 3 && mouseOffsetY >= 4 && mouseOffsetY <= 14) {
                     xXcoord += 11;
                 }
 
-                offset.drawTexture(offsetX, offsetY, ProgressionInfo.textures, 87, 4, xXcoord, 52, 11, 11);
+                offset.drawTexture(offsetX, offsetY, ProgressionInfo.textures, drawing.getWidth(mode) - 13, 4, xXcoord, 52, 11, 11);
             }
 
             offsetX = drawSpecial((T)drawing, offsetX, offsetY, mouseOffsetX, mouseOffsetY);

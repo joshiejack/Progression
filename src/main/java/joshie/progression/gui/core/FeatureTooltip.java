@@ -1,13 +1,12 @@
 package joshie.progression.gui.core;
 
-import java.util.ArrayList;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
+
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 
 public class FeatureTooltip extends FeatureAbstract {
     public static FeatureTooltip INSTANCE = new FeatureTooltip();
@@ -34,6 +33,10 @@ public class FeatureTooltip extends FeatureAbstract {
 
     public void addTooltip(List<String> list) {
         this.tooltip.addAll(list);
+    }
+
+    public void addTooltip(String[] split) {
+        for (String s: split) this.tooltip.add(s);
     }
     
     @Override

@@ -39,7 +39,7 @@ public class GuiConditionEditor extends GuiBaseEditor implements IBarProvider {
         trigger = APIHandler.getCache().getTriggerFromUUID(trigger.getUniqueID()); //Reload the trigger from the cache
         super.initData(core);
         //Setup the features
-        features.add(new FeatureBarsX1(this, "conditions"));
+        features.add(new FeatureBarsX1(this, "condition"));
         features.add(new FeatureDrawable(EnumChatFormatting.BOLD + Progression.translate("new.condition"), trigger.getConditions(), 45, 201, 201, 64, 119, FeatureNewCondition.INSTANCE, theme.conditionGradient1, theme.conditionGradient2, theme.conditionFontColor));
         features.add(FeatureItemSelector.INSTANCE); //Add the item selector
         features.add(FeatureNewCondition.INSTANCE); //Add new trigger popup

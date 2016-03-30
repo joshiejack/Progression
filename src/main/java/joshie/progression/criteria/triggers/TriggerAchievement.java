@@ -1,6 +1,5 @@
 package joshie.progression.criteria.triggers;
 
-import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionField;
 import joshie.progression.api.criteria.IProgressionTrigger;
@@ -50,7 +49,7 @@ public class TriggerAchievement extends TriggerBaseBoolean implements IHasEventB
 
     @Override
     public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
-        if (mode == DisplayMode.DISPLAY) fields.add(ProgressionAPI.fields.getItem(this, "id", 20, 35, 2F));
+        if (mode == DisplayMode.DISPLAY) fields.add(ProgressionAPI.fields.getItem(this, "id", 20, 42, 2F));
     }
     
     @SubscribeEvent
@@ -66,11 +65,6 @@ public class TriggerAchievement extends TriggerBaseBoolean implements IHasEventB
     @Override
     public int getWidth(DisplayMode mode) {
         return mode == DisplayMode.EDIT ? super.getWidth(mode) : 70;
-    }
-
-    @Override
-    public String getDescription() {
-        return Progression.translate("trigger.achievement.description") + "\n  " + Progression.format("completed", (value ? 100 : 0));
     }
 
     @Override

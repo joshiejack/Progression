@@ -1,5 +1,6 @@
 package joshie.progression.criteria.triggers;
 
+import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionTrigger;
 import joshie.progression.api.special.ICancelable;
@@ -79,5 +80,10 @@ public class TriggerChat extends TriggerBaseBoolean implements IInit, ICancelabl
         else if (!matchFront && matchBack && matchString.startsWith(text)) return true;
         else if (matchString.equals(text)) return true;
         else return false;
+    }
+
+    @Override
+    public String getTriggerDescription() {
+        return Progression.format(getUnlocalisedName() + ".description", toMatch);
     }
 }
