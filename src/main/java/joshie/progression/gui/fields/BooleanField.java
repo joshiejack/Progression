@@ -1,9 +1,9 @@
 package joshie.progression.gui.fields;
 
-import java.lang.reflect.Field;
-
 import joshie.progression.api.special.IInit;
 import joshie.progression.gui.core.DrawHelper;
+
+import java.lang.reflect.Field;
 
 public class BooleanField extends AbstractField {
     public Field field;
@@ -67,7 +67,7 @@ public class BooleanField extends AbstractField {
         try {
             boolean value = getBoolean();
             if (truth != null) helper.drawSplitText(renderX, renderY, name + ": " + (value ? truth : lies), 4, yPos, 105, color, 0.75F);
-            else helper.drawSplitText(renderX, renderY, name + ": " + value, 4, yPos, 105, color, 0.75F);
+            else helper.drawSplitText(renderX, renderY, name + ": " + value, 4, yPos, 125, color, 0.75F);
         } catch (Exception e) {}
     }
 }

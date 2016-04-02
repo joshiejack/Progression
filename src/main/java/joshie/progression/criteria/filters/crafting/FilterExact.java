@@ -30,7 +30,7 @@ public class FilterExact extends FilterBaseCrafting implements ISpecialFieldProv
 
     @Override
     public String getDescription() {
-        return ActionType.getCraftingActionFromIcon(stack).getUnlocalisedName().toLowerCase();
+        return ActionType.getCraftingActionFromIcon(stack).getDisplayName();
     }
 
     @Override

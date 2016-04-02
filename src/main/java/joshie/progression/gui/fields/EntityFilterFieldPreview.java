@@ -7,6 +7,7 @@ import joshie.progression.gui.core.FeatureTooltip;
 import joshie.progression.gui.core.GuiCore;
 import joshie.progression.helpers.EntityHelper;
 import joshie.progression.helpers.MCClientHelper;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.BossStatus;
@@ -52,7 +53,7 @@ public class EntityFilterFieldPreview extends ItemFilterField implements IProgre
         }
 
         if (!hovered) ticker++;
-        else ticker += 2;
+        else if (!GuiScreen.isShiftKeyDown()) ticker += 2;
 
         return entity != null ? entity : MCClientHelper.getPlayer();
     }

@@ -1,5 +1,6 @@
 package joshie.progression.criteria.rewards;
 
+import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionTab;
 import joshie.progression.api.event.TabVisibleEvent;
@@ -87,4 +88,11 @@ public class RewardShowTab extends RewardBaseAbility implements IStoreNBTData, I
         ProgressionAPI.player.setCustomData(player, "progression.tab.hidden", tag);
     }
 
+    @Override
+    public String getDescription() {
+        if (tab != null) {
+            String end = hideByDefault ? "show" : "hide";
+            return Progression.format("reward.layer.show.description." + end, tab.getDisplayName());
+        } else return "Invalid Book setup";
+    }
 }

@@ -1,12 +1,14 @@
 package joshie.progression.criteria.rewards;
 
 import joshie.progression.Progression;
+import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionField;
 import joshie.progression.api.criteria.IProgressionFilter;
 import joshie.progression.api.criteria.IProgressionFilterSelector;
 import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.ISpecialFieldProvider;
 import joshie.progression.api.special.ISpecialFilters;
+import joshie.progression.criteria.filters.FilterBase;
 import joshie.progression.gui.fields.ItemFilterField;
 import joshie.progression.gui.fields.ItemFilterFieldPreview;
 import joshie.progression.gui.filters.FilterSelectorBlock;
@@ -14,6 +16,7 @@ import joshie.progression.gui.filters.FilterSelectorLocation;
 import joshie.progression.helpers.ItemHelper;
 import joshie.progression.lib.WorldLocation;
 import net.minecraft.block.Block;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
@@ -25,6 +28,8 @@ import java.util.List;
 
 public class RewardPlaceBlock extends RewardBaseItemFilter implements ISpecialFieldProvider, ISpecialFilters {
     public List<IProgressionFilter> locations = new ArrayList();
+    protected transient IProgressionFilter locationpreview;
+    protected transient int locationticker;
 
     public RewardPlaceBlock() {
         super("placeBlock", 0xFF00680A);
@@ -34,8 +39,8 @@ public class RewardPlaceBlock extends RewardBaseItemFilter implements ISpecialFi
     public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
         if (mode == DisplayMode.EDIT) {
             fields.add(new ItemFilterField("locations", this));
-            fields.add(new ItemFilterFieldPreview("filters", this, 25, 30, 2.8F));
-        }
+            fields.add(new ItemFilterFieldPreview("filters", this, 25, 40, 2F));
+        } else fields.add(ProgressionAPI.fields.getItemPreview(this, "filters", 65, 42, 1.9F));
     }
 
     @Override
@@ -73,8 +78,29 @@ public class RewardPlaceBlock extends RewardBaseItemFilter implements ISpecialFi
     }
 
     @Override
+    public int getWidth(DisplayMode mode) {
+        return mode == DisplayMode.DISPLAY ? 116: super.getWidth(mode);
+    }
+
+    @Override
     public void addTooltip(List list) {
         list.add(EnumChatFormatting.WHITE + Progression.translate("block.place"));
         list.add(getIcon().getDisplayName());
+    }
+
+    public String getFilter() {
+        if (locationticker == 0 || locationticker >= 200) {
+            locationpreview = FilterBase.getRandomFilterFromFilters(locations);
+            locationticker = 1;
+        }
+
+        if (!GuiScreen.isShiftKeyDown()) locationticker++;
+
+        return locationpreview == null ? "Nowhere": locationpreview.getDescription();
+    }
+
+    @Override
+    public String getDescription() {
+        return Progression.translate("reward.placeBlock.description") + " \n" + getFilter();
     }
 }

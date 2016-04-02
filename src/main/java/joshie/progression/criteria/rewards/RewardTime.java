@@ -1,5 +1,7 @@
 package joshie.progression.criteria.rewards;
 
+import joshie.progression.Progression;
+import joshie.progression.api.special.DisplayMode;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -7,7 +9,7 @@ import net.minecraft.item.ItemStack;
 import java.util.List;
 
 public class RewardTime extends RewardBaseSingular {
-    public boolean add = false;
+    public boolean addTime = false;
     public int time = 0;
 
     public RewardTime() {
@@ -16,14 +18,24 @@ public class RewardTime extends RewardBaseSingular {
 
     @Override
     public void reward(EntityPlayerMP player) {
-        if (add) {
+        if (addTime) {
             player.worldObj.setWorldTime(player.worldObj.getWorldTime() + (long) time);
         } else player.worldObj.setWorldTime(time);
     }
 
     @Override
     public void addTooltip(List list) {
-        if (add) list.add("Add " + time + " ticks to time");
-        else list.add("Set time to " + time);
+        list.add(getDescription());
+    }
+
+    @Override
+    public int getWidth(DisplayMode mode) {
+        return mode == DisplayMode.EDIT ? super.getWidth(mode) : 55;
+    }
+
+    @Override
+    public String getDescription() {
+        if (addTime) return Progression.format("reward.time.add", time);
+        else return Progression.format("reward.time.set", time);
     }
 }

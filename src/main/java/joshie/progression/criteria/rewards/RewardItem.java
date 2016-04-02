@@ -37,7 +37,7 @@ public class RewardItem extends RewardBaseItemFilter implements ISpecialFieldPro
     
     @Override
     public String getLocalisedName() {
-        return MCClientHelper.isInEditMode() ? Progression.translate("reward." + getUnlocalisedName()) : Progression.translate("reward." + getUnlocalisedName() + ".display");
+        return MCClientHelper.isInEditMode() ? Progression.translate(getUnlocalisedName()) : Progression.translate(getUnlocalisedName() + ".display");
     }
     
     @Override

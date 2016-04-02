@@ -1,5 +1,7 @@
 package joshie.progression.criteria.rewards;
 
+import joshie.progression.Progression;
+import joshie.progression.api.special.DisplayMode;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -45,5 +47,15 @@ public class RewardStepAssist extends RewardBaseAbility {
     public void addTooltip(List list) {
         list.add(EnumChatFormatting.WHITE + "Ability Gain");
         list.add("Step Assist: " + steps);
+    }
+
+    @Override
+    public int getWidth(DisplayMode mode) {
+        return mode == DisplayMode.EDIT ? super.getWidth(mode) : 65;
+    }
+
+    @Override
+    public String getDescription() {
+        return Progression.format("reward.stepAssist.description", steps);
     }
 }

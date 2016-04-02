@@ -161,7 +161,7 @@ public class GuiCore extends GuiScreen {
     protected void mouseClicked(int x, int y, int button) throws IOException {
         if (markedForInit) return; //Dont process clicks while active
         boolean overlayvisible = false;
-        if (button == 0) {
+        if (button == 0 && MCClientHelper.isInEditMode()) {
             for (IGuiFeature feature : features) {
                 if (feature.isVisible()) { //Don't process hidden features
                     if (feature.mouseClicked(mouseX, mouseY, button)) {

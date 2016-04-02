@@ -57,7 +57,7 @@ public class FeatureItemPreview extends FeatureAbstract {
     }
 
     public void updateSearch() {
-        GuiCore.INSTANCE.offsetX = 0; //Reset the offset on update
+        int size1 = sorted.size();
         position = 0; //Reset the position on update
 
         if (GuiItemFilterEditor.INSTANCE.getField() == null) return; //NO UPDATES!!!
@@ -68,6 +68,10 @@ public class FeatureItemPreview extends FeatureAbstract {
                     sorted.add(stack);
                 }
             }
+        }
+
+        if (sorted.size() < size1) {
+            GuiCore.INSTANCE.offsetX = 0; //Reset the offset on update
         }
     }
 

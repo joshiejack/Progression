@@ -23,6 +23,9 @@ public abstract class TriggerBase implements IProgressionTrigger {
     private int color;
     private ItemStack stack;
 
+    //Whether this is visible or not
+    public boolean isVisible = true;
+
     public TriggerBase(ItemStack stack, String name, int color) {
         this.name = "trigger." + name;
         this.color = color;
@@ -45,6 +48,11 @@ public abstract class TriggerBase implements IProgressionTrigger {
     @Override
     public ItemStack getIcon() {
         return stack;
+    }
+
+    @Override
+    public boolean isVisible() {
+        return isVisible;
     }
 
     @Override

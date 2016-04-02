@@ -6,10 +6,8 @@ import joshie.progression.crafting.ActionType;
 import joshie.progression.crafting.Crafter;
 import joshie.progression.crafting.CraftingRegistry;
 import joshie.progression.gui.editors.GuiCriteriaEditor;
-import joshie.progression.helpers.CraftingHelper;
 import joshie.progression.lib.GuiIDs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -48,18 +46,6 @@ public class ActionGeneral extends ActionForgeEvent {
                 } else event.entityPlayer.openGui(Progression.instance, GuiIDs.EDITOR, null, 0, 0, 0);
             }
         }
-    }
-
-    public boolean isEventCancelled(EntityPlayer player, ActionType usageAction, ItemStack usageStack, ActionType craftingAction, ItemStack craftingStack) {
-        if (!CraftingHelper.canPerformAction(usageAction, player, usageStack)) {
-            return true;
-        } else {
-            if (!CraftingHelper.canPerformAction(craftingAction, player, craftingStack)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     public boolean checkAndCancelEvent(net.minecraftforge.event.entity.player.PlayerEvent event) {

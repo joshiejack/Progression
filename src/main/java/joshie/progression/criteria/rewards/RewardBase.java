@@ -20,6 +20,8 @@ public abstract class RewardBase implements IProgressionReward {
 
     //Whether users must claim this reward or not
     public boolean mustClaim = false;
+    //Whether this is visible or not
+    public boolean isVisible = true;
 
     public RewardBase(ItemStack stack, String name, int color) {
         this(name, color);
@@ -44,6 +46,11 @@ public abstract class RewardBase implements IProgressionReward {
     @Override
     public ItemStack getIcon() {
         return stack;
+    }
+
+    @Override
+    public boolean isVisible() {
+        return isVisible;
     }
 
     @Override
@@ -100,7 +107,9 @@ public abstract class RewardBase implements IProgressionReward {
     }
 
     @Override
-    public void addTooltip(List list) {}
+    public void addTooltip(List list) {
+        list.add(getDescription());
+    }
 
     @Override
     public int getWidth(DisplayMode mode) {

@@ -13,6 +13,7 @@ import joshie.progression.gui.fields.ItemFilterField;
 import joshie.progression.gui.filters.FilterSelectorLocation;
 import joshie.progression.lib.WorldLocation;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -35,8 +36,8 @@ import java.util.List;
 
 public class RewardTeleport extends RewardBase implements ISpecialFilters, IHasFilters, ISpecialFieldProvider {
     public List<IProgressionFilter> locations = new ArrayList();
-    protected IProgressionFilter preview;
-    protected int ticker;
+    protected transient IProgressionFilter preview;
+    protected transient int ticker;
 
     public RewardTeleport() {
         super(new ItemStack(Items.ender_pearl), "teleport", 0xFFDDDDDD);
@@ -151,7 +152,7 @@ public class RewardTeleport extends RewardBase implements ISpecialFilters, IHasF
             ticker = 1;
         }
 
-        ticker++;
+        if (!GuiScreen.isShiftKeyDown()) ticker++;
 
         return preview == null ? "Nowhere": preview.getDescription();
     }

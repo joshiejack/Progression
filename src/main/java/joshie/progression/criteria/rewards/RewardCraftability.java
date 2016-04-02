@@ -13,6 +13,7 @@ import joshie.progression.criteria.filters.FilterBase;
 import joshie.progression.gui.fields.ItemFilterFieldPreview;
 import joshie.progression.gui.filters.FilterSelectorAction;
 import joshie.progression.gui.filters.FilterSelectorItem;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
@@ -35,8 +36,8 @@ public class RewardCraftability extends RewardBaseItemFilter implements ISpecial
             fields.add(new ItemFilterFieldPreview("filters", this, 5, 44, 1.9F));
             fields.add(new ItemFilterFieldPreview("actionfilters", this, 45, 44, 1.9F));
         } else {
-            fields.add(new ItemFilterFieldPreview("filters", this, 15, 44, 1.9F));
-            fields.add(new ItemFilterFieldPreview("actionfilters", this, 60, 44, 1.9F));
+            fields.add(new ItemFilterFieldPreview("filters", this, 35, 40, 2F));
+            //fields.add(new ItemFilterFieldPreview("actionfilters", this, 60, 44, 1.9F));
         }
     }
 
@@ -111,19 +112,19 @@ public class RewardCraftability extends RewardBaseItemFilter implements ISpecial
     }
 
     public String getFilter() {
-        if (actionticker == 0 || actionticker >= 200) {
+        if (actionticker == 0 || actionticker >= 400) {
             actionpreview = FilterBase.getRandomFilterFromFilters(actionfilters);
             actionticker = 1;
         }
 
-        ticker++;
+        if (!GuiScreen.isShiftKeyDown())  actionticker++;
 
         return actionpreview == null ? "": actionpreview.getDescription();
     }
 
     @Override
     public int getWidth(DisplayMode mode) {
-        return mode == DisplayMode.EDIT ? 85 : 110;
+        return mode == DisplayMode.EDIT ? 85 : 100;
     }
 
     @Override

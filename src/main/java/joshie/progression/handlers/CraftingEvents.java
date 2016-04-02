@@ -5,7 +5,10 @@ import joshie.progression.api.event.ActionEvent;
 import joshie.progression.crafting.ActionType;
 import joshie.progression.crafting.Crafter;
 import joshie.progression.crafting.CraftingRegistry;
+import joshie.progression.helpers.CraftingHelper;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -52,5 +55,17 @@ public class CraftingEvents {
         if (hasStuff) {
             event.toolTip.add(EnumChatFormatting.AQUA + "Click for more info");
         }
+    }
+
+    public static boolean isEventCancelled(EntityPlayer player, ActionType usageAction, ItemStack usageStack, ActionType craftingAction, ItemStack craftingStack) {
+        if (!CraftingHelper.canPerformAction(usageAction, player, usageStack)) {
+            return true;
+        } else {
+            if (!CraftingHelper.canPerformAction(craftingAction, player, craftingStack)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

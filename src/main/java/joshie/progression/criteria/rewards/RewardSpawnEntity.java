@@ -1,9 +1,11 @@
 package joshie.progression.criteria.rewards;
 
+import joshie.progression.Progression;
 import joshie.progression.api.criteria.IProgressionField;
 import joshie.progression.api.criteria.IProgressionFilter;
 import joshie.progression.api.criteria.IProgressionFilterSelector;
 import joshie.progression.api.special.*;
+import joshie.progression.criteria.filters.FilterBase;
 import joshie.progression.gui.fields.EntityFilterFieldPreview;
 import joshie.progression.gui.fields.ItemFilterField;
 import joshie.progression.gui.filters.FilterSelectorEntity;
@@ -12,6 +14,7 @@ import joshie.progression.helpers.EntityHelper;
 import joshie.progression.helpers.StackHelper;
 import joshie.progression.lib.WorldLocation;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -31,6 +34,9 @@ public class RewardSpawnEntity extends RewardBase implements ISpecialFilters, II
     public int spawnNumber = 1;
     public String nbtData = "";
 
+    protected transient IProgressionFilter locationpreview;
+    protected transient int locationticker;
+
     public RewardSpawnEntity() {
         super("entity", 0xFFE599FF);
     }
@@ -45,7 +51,7 @@ public class RewardSpawnEntity extends RewardBase implements ISpecialFilters, II
         if (mode == DisplayMode.EDIT) {
             fields.add(new ItemFilterField("locations", this));
             fields.add(new ItemFilterField("entities", this));
-        } else fields.add(new EntityFilterFieldPreview("entities", this, 15, 70, 2.8F));
+        } else fields.add(new EntityFilterFieldPreview("entities", this, 45, 70, 2.8F));
     }
     
     @Override
@@ -111,5 +117,26 @@ public class RewardSpawnEntity extends RewardBase implements ISpecialFilters, II
         if (fieldName.equals("entities")) return FilterSelectorEntity.INSTANCE;
 
         return null;
+    }
+
+    public String getFilter() {
+        if (locationticker == 0 || locationticker >= 200) {
+            locationpreview = FilterBase.getRandomFilterFromFilters(locations);
+            locationticker = 1;
+        }
+
+        if (!GuiScreen.isShiftKeyDown()) locationticker++;
+
+        return locationpreview == null ? "Nowhere": locationpreview.getDescription();
+    }
+
+    @Override
+    public int getWidth(DisplayMode mode) {
+        return mode == DisplayMode.DISPLAY ? 121: super.getWidth(mode);
+    }
+
+    @Override
+    public String getDescription() {
+        return Progression.format("reward.entity.description", spawnNumber) + " \n" + getFilter();
     }
 }

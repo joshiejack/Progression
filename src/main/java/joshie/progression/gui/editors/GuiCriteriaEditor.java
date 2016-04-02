@@ -46,6 +46,11 @@ public class GuiCriteriaEditor extends GuiBaseEditor implements IBarProvider, II
     @Override
     public void initData(GuiCore core) {
         criteria = APIHandler.getCriteriaFromName(criteria.getUniqueID()); //Reload the criteria from the cache
+        if (criteria == null) {
+            GuiCore.INSTANCE.setEditor(GuiTreeEditor.INSTANCE);
+            return;
+        }
+
         super.initData(core);
         //Setup the features
         features.add(new FeatureTrigger(EnumChatFormatting.BOLD + Progression.translate("new.trigger"), criteria.getTriggers(), 45, 201, 201, 64, 119, FeatureNewTrigger.INSTANCE, theme.triggerGradient1, theme.triggerGradient2, theme.triggerFontColor));

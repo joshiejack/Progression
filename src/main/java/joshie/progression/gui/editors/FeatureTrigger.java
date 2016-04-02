@@ -3,7 +3,6 @@ package joshie.progression.gui.editors;
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.IFieldProvider;
 import joshie.progression.api.criteria.IProgressionTrigger;
-import joshie.progression.api.special.DisplayMode;
 import joshie.progression.gui.core.GuiCore;
 import joshie.progression.gui.core.IGuiFeature;
 import joshie.progression.helpers.MCClientHelper;
@@ -11,7 +10,7 @@ import joshie.progression.json.Theme;
 
 import java.util.List;
 
-import static com.ibm.icu.impl.CurrencyData.provider;
+import static joshie.progression.api.special.DisplayMode.EDIT;
 
 public class FeatureTrigger extends FeatureDrawable<IProgressionTrigger> {
     public FeatureTrigger(String text, List drawable, int offsetY, int x1, int x2, int y1, int y2, IGuiFeature newDrawable, int gradient1, int gradient2, int fontColor) {
@@ -21,8 +20,7 @@ public class FeatureTrigger extends FeatureDrawable<IProgressionTrigger> {
     @Override
     public int drawSpecial(IProgressionTrigger drawing, int offsetX, int offsetY, int mouseOffsetX, int mouseOffsetY) {
         //We have drawn the deleted button now we check for conditions for triggers.
-        DisplayMode mode = getMode();
-        if (mode == DisplayMode.EDIT) {
+        if (mode == EDIT) {
             int color = Theme.INSTANCE.blackBarBorder;
             if (mouseOffsetX >= 2 && mouseOffsetX <= drawing.getWidth(mode) - 3 && mouseOffsetY >= 66 && mouseOffsetY <= 77) {
                 color = Theme.INSTANCE.blackBarFontColor;
@@ -46,13 +44,10 @@ public class FeatureTrigger extends FeatureDrawable<IProgressionTrigger> {
 
     @Override
     public boolean clickSpecial(IProgressionTrigger provider, int mouseOffsetX, int mouseOffsetY) {
-        DisplayMode mode = getMode();
-        if (mode == DisplayMode.EDIT) {
-            if (mouseOffsetX >= 2 && mouseOffsetX <= provider.getWidth(mode) - 3 && mouseOffsetY >= 66 && mouseOffsetY <= 77) {
-                GuiConditionEditor.INSTANCE.setTrigger((IProgressionTrigger) provider);
-                GuiCore.INSTANCE.setEditor(GuiConditionEditor.INSTANCE);
-                return true;
-            }
+        if (mouseOffsetX >= 2 && mouseOffsetX <= provider.getWidth(mode) - 3 && mouseOffsetY >= 66 && mouseOffsetY <= 77) {
+            GuiConditionEditor.INSTANCE.setTrigger((IProgressionTrigger) provider);
+            GuiCore.INSTANCE.setEditor(GuiConditionEditor.INSTANCE);
+            return true;
         }
 
         return false;

@@ -7,6 +7,7 @@ import joshie.progression.gui.core.DrawHelper;
 import joshie.progression.gui.core.FeatureTooltip;
 import joshie.progression.helpers.ItemHelper;
 import joshie.progression.helpers.MCClientHelper;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
@@ -55,7 +56,7 @@ public class ItemFilterFieldPreview extends ItemFilterField implements IProgress
         }
 
         if (!hovered) ticker++;
-        else ticker += 2;
+        else if (!GuiScreen.isShiftKeyDown()) ticker += 2;
 
         return stack != null ? stack : BROKEN;
     }

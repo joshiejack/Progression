@@ -10,12 +10,15 @@ import net.minecraft.util.StatCollector;
 import java.util.UUID;
 
 public abstract class ConditionBase implements IProgressionCondition {
-    public boolean inverted = false; //Data for all conditions
     private UUID uuid;
     private IProgressionTrigger trigger;
     private ItemStack icon;
     private String unlocalized;
     private int color;
+
+    public boolean inverted = false; //Data for all conditions
+    //Whether this is visible or not
+    public boolean isVisible = true;
 
     public ConditionBase(ItemStack stack, String name, int color) {
         this.icon = stack;
@@ -32,6 +35,11 @@ public abstract class ConditionBase implements IProgressionCondition {
     @Override
     public boolean isInverted() {
         return inverted;
+    }
+
+    @Override
+    public boolean isVisible() {
+        return isVisible;
     }
 
     @Override

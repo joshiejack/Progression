@@ -31,6 +31,11 @@ public abstract class FilterBase implements IProgressionFilter {
     }
 
     @Override
+    public boolean isVisible() {
+        return true;
+    }
+
+    @Override
     public String getUnlocalisedName() {
         return name;
     }
@@ -59,7 +64,7 @@ public abstract class FilterBase implements IProgressionFilter {
 
     @Override
     public String getDescription() {
-        return "";
+        return Progression.translate("filter." + getType().getName().toLowerCase() + "." + unformatted + ".description");
     }
 
     @Override

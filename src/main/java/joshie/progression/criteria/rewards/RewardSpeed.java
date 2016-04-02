@@ -1,5 +1,7 @@
 package joshie.progression.criteria.rewards;
 
+import joshie.progression.Progression;
+import joshie.progression.api.special.DisplayMode;
 import joshie.progression.items.ItemCriteria;
 import joshie.progression.player.PlayerTracker;
 import joshie.progression.player.data.AbilityStats.SpeedType;
@@ -45,20 +47,39 @@ public class RewardSpeed extends RewardBaseAbility {
         if (water) PlayerTracker.getServerPlayer(player).addSpeed(WATER, speed);
     }
 
+    public String[] translate(String... text) {
+        String[] translated = new String[text.length];
+        for (int i = 0; i < translated.length; i++) {
+            translated[i] = Progression.translate("reward.speed." + text[i]);
+        }
+
+        return translated;
+    }
+
     private String getType() {
-        if (land && water && air) return "in water, on land or in air";
-        else if (land && air && !water) return "on land or in air";
-        else if (water && air && !land) return "in water or in air";
-        else if (land && water && !air) return "in water or on land";
-        else if (!land && !water && air) return "in air";
-        else if (land && !water && !air) return "on land";
-        else if (!land && water && !air) return "in water";
-        else return "never";
+        if (land && water && air) return Progression.format("reward.speed.format3", translate("water.description", "land.description", "air.description"));
+        else if (land && water) return Progression.format("reward.speed.format2", translate("water.description", "land.description"));
+        else if (water && air) return Progression.format("reward.speed.format2", translate("water.description", "air.description"));
+        else if (land && air) return Progression.format("reward.speed.format2", translate("land.description", "air.description"));
+        else if (land) return Progression.translate("reward.speed.land");
+        else if (water) return Progression.translate("reward.speed.water");
+        else if (air) return Progression.translate("reward.speed.air");
+        else return Progression.translate("reward.speed.never");
     }
 
     @Override
     public void addTooltip(List list) {
         list.add(EnumChatFormatting.WHITE + "Ability Gain");
         list.add("Speed: " + speed + " " + getType());
+    }
+
+    @Override
+    public int getWidth(DisplayMode mode) {
+        return mode == DisplayMode.EDIT ? super.getWidth(mode) : 55;
+    }
+
+    @Override
+    public String getDescription() {
+        return Progression.format("reward.speed.description", speed, getType());
     }
 }

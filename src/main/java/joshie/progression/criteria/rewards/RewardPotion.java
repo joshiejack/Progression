@@ -1,7 +1,12 @@
 package joshie.progression.criteria.rewards;
 
+import joshie.progression.api.criteria.IProgressionField;
 import joshie.progression.api.criteria.IProgressionFilterSelector;
+import joshie.progression.api.special.DisplayMode;
+import joshie.progression.api.special.ISpecialFieldProvider;
 import joshie.progression.api.special.ISpecialFilters;
+import joshie.progression.gui.fields.ItemFilterField;
+import joshie.progression.gui.fields.ItemFilterFieldPreview;
 import joshie.progression.gui.filters.FilterSelectorPotion;
 import joshie.progression.helpers.ItemHelper;
 import joshie.progression.helpers.MCClientHelper;
@@ -12,7 +17,7 @@ import net.minecraft.potion.PotionEffect;
 
 import java.util.List;
 
-public class RewardPotion extends RewardBaseItemFilter implements ISpecialFilters {
+public class RewardPotion extends RewardBaseItemFilter implements ISpecialFilters, ISpecialFieldProvider {
     public boolean randomVanilla = false;
     public int customid = -1;
     public int duration = 200;
@@ -30,6 +35,12 @@ public class RewardPotion extends RewardBaseItemFilter implements ISpecialFilter
     }
 
     @Override
+    public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
+        if (mode == DisplayMode.DISPLAY) fields.add(new ItemFilterFieldPreview("filters", this, 5, 25, 2.8F));
+        else fields.add(new ItemFilterField("filters", this));
+    }
+
+    @Override
     public void reward(EntityPlayerMP player) {
         if (player != null) {
             ItemStack stack = ItemHelper.getRandomItem(filters, null);
@@ -43,6 +54,16 @@ public class RewardPotion extends RewardBaseItemFilter implements ISpecialFilter
                 }
             }
         }
+    }
+
+    @Override
+    public String getDescription() {
+        return "";
+    }
+
+    @Override
+    public int getWidth(DisplayMode mode) {
+        return mode == DisplayMode.EDIT ? super.getWidth(mode) : 55;
     }
 
     @Override

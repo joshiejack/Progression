@@ -13,13 +13,13 @@ import net.minecraft.potion.PotionEffect;
 
 import java.util.*;
 
-public class FilterPotionEffect extends FilterBaseItem implements IInit, ISpecialFieldProvider {
+public class FilterPotionItem extends FilterBaseItem implements IInit, ISpecialFieldProvider {
     private static final List<PotionEffect> EMPTY = new ArrayList();
     public ItemStack stack = new ItemStack(Items.potionitem, 1, 16385); //Splash Potion of Regen, 33 seconds
     private List<PotionEffect> effects;
     private Set<Integer> ids;
 
-    public FilterPotionEffect() {
+    public FilterPotionItem() {
         super("potioneffect", 0xFFFF73FF);
     }
 

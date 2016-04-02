@@ -1,5 +1,7 @@
 package joshie.progression.criteria.rewards;
 
+import joshie.progression.Progression;
+import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionField;
 import joshie.progression.api.criteria.IProgressionFilter;
 import joshie.progression.api.criteria.IProgressionFilterSelector;
@@ -7,6 +9,7 @@ import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.IHasFilters;
 import joshie.progression.api.special.ISpecialFieldProvider;
 import joshie.progression.api.special.ISpecialFilters;
+import joshie.progression.criteria.filters.FilterBase;
 import joshie.progression.gui.fields.ItemFilterField;
 import joshie.progression.gui.filters.FilterSelectorItem;
 import joshie.progression.gui.filters.FilterSelectorLocation;
@@ -14,6 +17,7 @@ import joshie.progression.helpers.ItemHelper;
 import joshie.progression.helpers.SpawnItemHelper;
 import joshie.progression.lib.WorldLocation;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
@@ -25,6 +29,9 @@ public class RewardSpawnItem extends RewardBaseItemFilter implements ISpecialFil
     public List<IProgressionFilter> locations = new ArrayList();
     public int stackSize = 1;
 
+    protected transient IProgressionFilter locationpreview;
+    protected transient int locationticker;
+
     public RewardSpawnItem() {
         super("spawnItem", 0xFFE599FF);
     }
@@ -34,7 +41,7 @@ public class RewardSpawnItem extends RewardBaseItemFilter implements ISpecialFil
         if (mode == DisplayMode.EDIT) {
             fields.add(new ItemFilterField("locations", this));
             fields.add(new ItemFilterField("filters", this));
-        }
+        } else fields.add(ProgressionAPI.fields.getItemPreview(this, "filters", 65, 42, 1.9F));
     }
     
     @Override
@@ -76,6 +83,27 @@ public class RewardSpawnItem extends RewardBaseItemFilter implements ISpecialFil
     public void addTooltip(List list) {
         // list.add(EnumChatFormatting.WHITE + Progression.translate("item.free"));
         // list.add(getIcon().getDisplayName() + " x" + spawnNumber);
+    }
+
+    public String getFilter() {
+        if (locationticker == 0 || locationticker >= 200) {
+            locationpreview = FilterBase.getRandomFilterFromFilters(locations);
+            locationticker = 1;
+        }
+
+        if (!GuiScreen.isShiftKeyDown()) locationticker++;
+
+        return locationpreview == null ? "Nowhere": locationpreview.getDescription();
+    }
+
+    @Override
+    public String getDescription() {
+        return Progression.format("reward.spawnItem.description", stackSize) + " \n" + getFilter();
+    }
+
+    @Override
+    public int getWidth(DisplayMode mode) {
+        return mode == DisplayMode.DISPLAY ? 111: super.getWidth(mode);
     }
 
     @Override

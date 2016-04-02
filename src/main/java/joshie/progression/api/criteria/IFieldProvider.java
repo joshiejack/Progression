@@ -40,6 +40,9 @@ public interface IFieldProvider {
      *  this is to be displayed in display mode */
     public String getDescription();
 
+    /** Return true if this items should be displayed to the players, should be configurable **/
+    public boolean isVisible();
+
     /** Called before anything is drawn
      *  Use this if you need to perform checks,
      *  Or validate things before stuff is drawn*/

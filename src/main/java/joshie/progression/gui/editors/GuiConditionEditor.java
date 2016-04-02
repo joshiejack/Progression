@@ -58,15 +58,15 @@ public class GuiConditionEditor extends GuiBaseEditor implements IBarProvider {
     public int getColorForBar(BarColorType type) {
         switch (type) {
             case BAR1_GRADIENT1:
-                return theme.conditionEditorGradient1;
+                return trigger.getColor();
             case BAR1_GRADIENT2:
-                return theme.conditionEditorGradient2;
+                return 0xFF000000;
             case BAR1_BORDER:
-                return theme.conditionEditorUnderline2;
+                return 0xFF000000;
             case BAR1_FONT:
                 return theme.conditionEditorFont;
             case BAR1_UNDERLINE:
-                return theme.conditionEditorUnderline;
+                return 0xFF000000;
             default:
                 return 0;
         }

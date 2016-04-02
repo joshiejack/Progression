@@ -3,6 +3,7 @@ package joshie.progression.criteria.rewards;
 import joshie.progression.api.criteria.IProgressionFilter;
 import joshie.progression.api.special.IHasFilters;
 import joshie.progression.helpers.ItemHelper;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
@@ -36,8 +37,8 @@ public abstract class RewardBaseItemFilter extends RewardBase implements IHasFil
             preview = ItemHelper.getRandomItem(filters);
             ticker = 1;
         }
-        
-        ticker++;
+
+        if (!GuiScreen.isShiftKeyDown()) ticker++;
         
         return preview == null ? BROKEN: preview;
     }

@@ -11,7 +11,8 @@ import joshie.progression.criteria.filters.entity.FilterEntityType;
 import joshie.progression.criteria.filters.entity.FilterSkeletonType;
 import joshie.progression.criteria.filters.item.*;
 import joshie.progression.criteria.filters.location.*;
-import joshie.progression.criteria.filters.potion.FilterPotionEffect;
+import joshie.progression.criteria.filters.potion.FilterPotionEffectID;
+import joshie.progression.criteria.filters.potion.FilterPotionItem;
 import joshie.progression.criteria.rewards.*;
 import joshie.progression.criteria.triggers.*;
 import joshie.progression.gui.fields.FieldRegistry;
@@ -127,7 +128,8 @@ public class PCommonProxy implements IGuiHandler {
         ProgressionAPI.registry.registerFilter(new FilterBlockOre());
 
         //Potion Filters
-        ProgressionAPI.registry.registerFilter(new FilterPotionEffect());
+        ProgressionAPI.registry.registerFilter(new FilterPotionItem());
+        ProgressionAPI.registry.registerFilter(new FilterPotionEffectID());
 
         //Entity Filterss
         ProgressionAPI.registry.registerFilter(new FilterEntityName());

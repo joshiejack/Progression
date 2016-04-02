@@ -1,6 +1,8 @@
 package joshie.progression.criteria.rewards;
 
+import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
+import joshie.progression.api.special.DisplayMode;
 import joshie.progression.items.ItemCriteria;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumChatFormatting;
@@ -27,5 +29,15 @@ public class RewardBoolean extends RewardBaseSingular {
         for (String string : tooltip) {
             list.add(EnumChatFormatting.WHITE + string);
         }
+    }
+
+    @Override
+    public int getWidth(DisplayMode mode) {
+        return mode == DisplayMode.DISPLAY ? 75: super.getWidth(mode);
+    }
+
+    @Override
+    public String getDescription() {
+        return Progression.format("reward.boolean.description", variable, value);
     }
 }
