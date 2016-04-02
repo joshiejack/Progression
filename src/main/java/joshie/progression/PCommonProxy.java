@@ -139,7 +139,6 @@ public class PCommonProxy implements IGuiHandler {
 
         //Location Filters
         ProgressionAPI.registry.registerFilter(new FilterPlayerLocationAround());
-        ProgressionAPI.registry.registerFilter(new FilterPlayerLocationAbove());
         ProgressionAPI.registry.registerFilter(new FilterPlayerLocationLooking());
         ProgressionAPI.registry.registerFilter(new FilterPlayerLastBroken());
         ProgressionAPI.registry.registerFilter(new FilterRandomAround());

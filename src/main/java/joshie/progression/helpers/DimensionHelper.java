@@ -9,7 +9,7 @@ import java.util.concurrent.Callable;
 public class DimensionHelper {
     private static final Cache<Integer, String> dimensionNames = CacheBuilder.newBuilder().maximumSize(128).build();
 
-    public static String getDimensionNameFromID(int id) {
+    public static String getDimensionNameFromID(final int id) {
         try {
             return dimensionNames.get(id, new Callable<String>() {
                 @Override
