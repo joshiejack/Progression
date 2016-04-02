@@ -2,19 +2,18 @@ package joshie.progression.gui.editors;
 
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.IFieldProvider;
+import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.api.criteria.IProgressionTrigger;
 import joshie.progression.gui.core.GuiCore;
-import joshie.progression.gui.core.IGuiFeature;
+import joshie.progression.gui.editors.insert.FeatureNewTrigger;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.json.Theme;
-
-import java.util.List;
 
 import static joshie.progression.api.special.DisplayMode.EDIT;
 
 public class FeatureTrigger extends FeatureDrawable<IProgressionTrigger> {
-    public FeatureTrigger(String text, List drawable, int offsetY, int x1, int x2, int y1, int y2, IGuiFeature newDrawable, int gradient1, int gradient2, int fontColor) {
-        super(text, drawable, offsetY, x1, x2, y1, y2, newDrawable, gradient1, gradient2, fontColor);
+    public FeatureTrigger(IProgressionCriteria criteria) {
+        super("trigger", criteria.getTriggers(), 45, FeatureNewTrigger.INSTANCE, theme.triggerGradient1, theme.triggerGradient2, theme.triggerFontColor, theme.triggerBoxGradient2);
     }
 
     @Override
@@ -22,12 +21,12 @@ public class FeatureTrigger extends FeatureDrawable<IProgressionTrigger> {
         //We have drawn the deleted button now we check for conditions for triggers.
         if (mode == EDIT) {
             int color = Theme.INSTANCE.blackBarBorder;
-            if (mouseOffsetX >= 2 && mouseOffsetX <= drawing.getWidth(mode) - 3 && mouseOffsetY >= 66 && mouseOffsetY <= 77) {
+            if (mouseOffsetX >= 2 && mouseOffsetX <= drawing.getWidth(mode) - 3 && mouseOffsetY >= 65 && mouseOffsetY <= 77) {
                 color = Theme.INSTANCE.blackBarFontColor;
             }
 
-            offset.drawGradient(offsetX, offsetY, 2, 66, drawing.getWidth(mode) - 5, 11, color, Theme.INSTANCE.blackBarGradient1, Theme.INSTANCE.blackBarGradient2);
-            offset.drawText(offsetX, offsetY, Progression.translate((MCClientHelper.isInEditMode() ? "editor" : "display") + ".condition"), 6, 67, Theme.INSTANCE.blackBarFontColor);
+            offset.drawGradient(offsetX, offsetY, 2, 65, drawing.getWidth(mode) - 5, 11, color, Theme.INSTANCE.blackBarGradient1, Theme.INSTANCE.blackBarGradient2);
+            offset.drawText(offsetX, offsetY, Progression.translate((MCClientHelper.isInEditMode() ? "editor" : "display") + ".condition"), (drawing.getWidth(EDIT) / 5), 67, Theme.INSTANCE.blackBarFontColor);
             offsetX = super.drawSpecial(drawing, offsetX, offsetY, mouseOffsetX, mouseOffsetY);
         } else {
             offsetX = super.drawSpecial(drawing, offsetX, offsetY, mouseOffsetX, mouseOffsetY);

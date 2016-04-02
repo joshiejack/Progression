@@ -10,6 +10,8 @@ import net.minecraft.world.World;
 import java.util.UUID;
 
 public class ConditionHasPotionEffect extends ConditionBaseItemFilter implements ISpecialFilters {
+    public String description = "Have the regeneration potion effect";
+
     public ConditionHasPotionEffect() {
         super("potioneffect", 0xFFFFFF00);
     }
@@ -26,5 +28,10 @@ public class ConditionHasPotionEffect extends ConditionBaseItemFilter implements
         }
 
         return false;
+    }
+
+    @Override
+    public String getDescription() {
+        return description;
     }
 }

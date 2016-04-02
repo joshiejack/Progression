@@ -1,10 +1,10 @@
 package joshie.progression.gui.editors.insert;
 
-import java.util.Collection;
-
 import joshie.progression.api.criteria.IProgressionCondition;
 import joshie.progression.gui.editors.GuiConditionEditor;
 import joshie.progression.handlers.APIHandler;
+
+import java.util.Collection;
 
 public class FeatureNewCondition extends FeatureNew<IProgressionCondition> {
     public static final FeatureNewCondition INSTANCE = new FeatureNewCondition();
@@ -16,6 +16,11 @@ public class FeatureNewCondition extends FeatureNew<IProgressionCondition> {
     @Override
     public Collection<IProgressionCondition> getFields() {
         return APIHandler.conditionTypes.values();
+    }
+
+    @Override
+    public int getColor() {
+        return GuiConditionEditor.INSTANCE.getTrigger().getColor();
     }
 
     @Override

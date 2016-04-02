@@ -37,7 +37,7 @@ public class JSONLoader {
     }
 
     private static String[] splitStringEvery(String s, int interval) {
-        int arrayLength = (int) Math.ceil(((s.length() / (double) interval)));
+        int arrayLength = (int) (Math.max(1, Math.ceil(((s.length() / (double) interval)))));
         String[] result = new String[arrayLength];
 
         int j = 0;

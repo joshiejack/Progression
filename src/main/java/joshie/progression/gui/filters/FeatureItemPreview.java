@@ -8,7 +8,7 @@ import joshie.progression.gui.core.FeatureAbstract;
 import joshie.progression.gui.core.GuiCore;
 import joshie.progression.gui.editors.FeatureItemSelector;
 import joshie.progression.gui.editors.FeatureItemSelector.Position;
-import joshie.progression.gui.editors.GuiItemFilterEditor;
+import joshie.progression.gui.editors.GuiFilterEditor;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL11;
 
@@ -57,13 +57,13 @@ public class FeatureItemPreview extends FeatureAbstract {
     }
 
     public void updateSearch() {
-        int size1 = sorted.size();
+        int size1 = sorted != null ? sorted.size() : 0;
         position = 0; //Reset the position on update
 
-        if (GuiItemFilterEditor.INSTANCE.getField() == null) return; //NO UPDATES!!!
+        if (GuiFilterEditor.INSTANCE.getField() == null) return; //NO UPDATES!!!
         sorted = new ArrayList();
         for (Object stack: getAllItems()) {
-            for (IProgressionFilter filter: GuiItemFilterEditor.INSTANCE.getField().getFilters()) {
+            for (IProgressionFilter filter: GuiFilterEditor.INSTANCE.getField().getFilters()) {
                 if (filter.matches(stack)) {
                     sorted.add(stack);
                 }

@@ -35,4 +35,22 @@ public class WorldLocation {
             return (WorldLocation) locality.get(rand.nextInt(size));
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        WorldLocation location = (WorldLocation) o;
+        if (dimension != location.dimension) return false;
+        return pos != null ? pos.equals(location.pos) : location.pos == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = dimension;
+        result = 31 * result + (pos != null ? pos.hashCode() : 0);
+        return result;
+    }
 }

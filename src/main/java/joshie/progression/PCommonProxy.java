@@ -143,6 +143,10 @@ public class PCommonProxy implements IGuiHandler {
         ProgressionAPI.registry.registerFilter(new FilterPlayerLocationLooking());
         ProgressionAPI.registry.registerFilter(new FilterPlayerLastBroken());
         ProgressionAPI.registry.registerFilter(new FilterRandomAround());
+        ProgressionAPI.registry.registerFilter(new FilterDimension());
+        ProgressionAPI.registry.registerFilter(new FilterRandomX());
+        ProgressionAPI.registry.registerFilter(new FilterRandomY());
+        ProgressionAPI.registry.registerFilter(new FilterRandomZ());
         MinecraftForge.EVENT_BUS.register(new FilterPlayerLastBroken());
 
         //Crafting Filters
@@ -168,7 +172,6 @@ public class PCommonProxy implements IGuiHandler {
     private void registerConditions() {
         ProgressionAPI.registry.registerConditionType(new ConditionBiomeType());
         ProgressionAPI.registry.registerConditionType(new ConditionRandom());
-        ProgressionAPI.registry.registerConditionType(new ConditionCoordinates());
         ProgressionAPI.registry.registerConditionType(new ConditionDaytime());
         ProgressionAPI.registry.registerConditionType(new ConditionInInventory());
         ProgressionAPI.registry.registerConditionType(new ConditionHasPotionEffect());
@@ -176,6 +179,7 @@ public class PCommonProxy implements IGuiHandler {
         ProgressionAPI.registry.registerConditionType(new ConditionBoolean());
         ProgressionAPI.registry.registerConditionType(new ConditionPoints());
         ProgressionAPI.registry.registerConditionType(new ConditionAchievement());
+        ProgressionAPI.registry.registerConditionType(new ConditionLocation());
     }
     
     private void registerRewards() {

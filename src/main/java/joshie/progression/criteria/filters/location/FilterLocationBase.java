@@ -12,7 +12,10 @@ public abstract class FilterLocationBase extends FilterBase {
 
     @Override
     public boolean matches(Object object) {
-        return object instanceof WorldLocation ? matches((WorldLocation) object) : false;
+        if (!(object instanceof WorldLocation)) return false;
+        WorldLocation location = ((WorldLocation)object);
+        if (location.player == null) return false;
+        return matches(location);
     }
 
     @Override
@@ -21,6 +24,10 @@ public abstract class FilterLocationBase extends FilterBase {
     }
 
     public boolean matches(WorldLocation location) {
-        return true;
+        return location.equals(getRandom(location.player));
+    }
+
+    public static enum LocationOperator {
+        THISORMORE, THISORLESS, RADIUS;
     }
 }

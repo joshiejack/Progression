@@ -1,5 +1,6 @@
 package joshie.progression.criteria.conditions;
 
+import joshie.progression.Progression;
 import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.api.special.IGetterCallback;
 import joshie.progression.api.special.IInit;
@@ -52,5 +53,12 @@ public class ConditionHasCriteria extends ConditionBase implements IGetterCallba
     @Override
     public String getField(String fieldName) {
         return criteria != null ? EnumChatFormatting.GREEN + displayName : EnumChatFormatting.RED + displayName;
+    }
+
+    @Override
+    public String getDescription() {
+        if (criteria != null) {
+            return Progression.format(getUnlocalisedName() + ".description", criteria.getDisplayName());
+        } else return "BROKEN CRITERIA";
     }
 }

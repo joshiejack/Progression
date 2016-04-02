@@ -61,9 +61,9 @@ public class RewardSpeed extends RewardBaseAbility {
         else if (land && water) return Progression.format("reward.speed.format2", translate("water.description", "land.description"));
         else if (water && air) return Progression.format("reward.speed.format2", translate("water.description", "air.description"));
         else if (land && air) return Progression.format("reward.speed.format2", translate("land.description", "air.description"));
-        else if (land) return Progression.translate("reward.speed.land");
-        else if (water) return Progression.translate("reward.speed.water");
-        else if (air) return Progression.translate("reward.speed.air");
+        else if (land) return Progression.translate("reward.speed.land.description");
+        else if (water) return Progression.translate("reward.speed.water.description");
+        else if (air) return Progression.translate("reward.speed.air.description");
         else return Progression.translate("reward.speed.never");
     }
 

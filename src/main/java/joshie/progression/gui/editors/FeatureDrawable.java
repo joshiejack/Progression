@@ -9,10 +9,7 @@ import joshie.progression.api.gui.ICustomDrawGuiEditor;
 import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.IEnum;
 import joshie.progression.api.special.ISpecialFieldProvider;
-import joshie.progression.gui.core.DrawHelper;
-import joshie.progression.gui.core.FeatureAbstract;
-import joshie.progression.gui.core.FeatureTooltip;
-import joshie.progression.gui.core.IGuiFeature;
+import joshie.progression.gui.core.*;
 import joshie.progression.gui.editors.insert.FeatureNew;
 import joshie.progression.gui.fields.BooleanField;
 import joshie.progression.gui.fields.EnumField;
@@ -23,8 +20,10 @@ import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.json.Theme;
 import joshie.progression.lib.ProgressionInfo;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.EnumChatFormatting;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.text.WordUtils;
+import org.lwjgl.opengl.GL11;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -37,30 +36,28 @@ import static joshie.progression.gui.editors.FeatureItemSelector.Position.BOTTOM
 import static joshie.progression.gui.editors.FeatureItemSelector.Position.TOP;
 
 public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
+    protected static final Theme theme = Theme.INSTANCE;
+    private int color;
     private List<IFieldProvider> drawable;
     private HashMap<IFieldProvider, List<IProgressionField>> fieldsMap;
     private IGuiFeature newDrawable;
-    private int crossX1, crossX2, crossY1, crossY2;
     private int gradient1, gradient2, fontColor;
     private int offsetY;
     private String text;
 
     protected DisplayMode mode;
 
-    public FeatureDrawable(String text, List drawable, int offsetY, int x1, int x2, int y1, int y2, IGuiFeature newDrawable, int gradient1, int gradient2, int fontColor) {
-        this.text = text;
+    public FeatureDrawable(String text, List drawable, int offsetY, IGuiFeature newDrawable, int gradient1, int gradient2, int fontColor, int color) {
+        this.text = EnumChatFormatting.BOLD + Progression.translate("new." + text);
         this.drawable = drawable;
         this.offsetY = offsetY;
-        this.crossX1 = x1;
-        this.crossX2 = x2;
-        this.crossY1 = y1;
-        this.crossY2 = y2;
         this.newDrawable = newDrawable;
         this.gradient1 = gradient1;
         this.gradient2 = gradient2;
         this.fontColor = fontColor;
         this.fieldsMap = new HashMap();
         this.mode = MCClientHelper.isInEditMode() ? EDIT: DISPLAY;
+        this.color = color;
     }
 
     private int ticker = 0;
@@ -176,17 +173,22 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
             int mouseOffsetX = mouseX - this.offsetX - offsetX;
             int mouseOffsetY = mouseY - this.offsetY;
 
-            int crossX = crossX1;
-            int crossY = crossY1;
+            int crossX = 201;
+            int crossY = 64;
             if (mouseOffsetX >= 15 && mouseOffsetX <= 70 && mouseOffsetY >= 10 && mouseOffsetY <= 65) {
                 FeatureTooltip.INSTANCE.addTooltip(text);
-                crossX = crossX2;
-                crossY = crossY2;
+                crossY = 119;
             }
 
             GlStateManager.enableBlend();
-            GlStateManager.color(1F, 1F, 1F);
+            float red = (color >> 16 & 255) / 255.0F;
+            float green = (color >> 8 & 255) / 255.0F;
+            float blue = (color & 255) / 255.0F;
+            //GlStateManager.resetColor();
+            //GlStateManager.color(red, green, blue, 1F);
+            GL11.glColor4f(red, green, blue, 1F);
             offset.drawTexture(offsetX, offsetY, ProgressionInfo.textures, 15, 10, crossX, crossY, 55, 55);
+            GL11.glColor4f(1F, 1F, 1F, 1F);
         }
     }
 

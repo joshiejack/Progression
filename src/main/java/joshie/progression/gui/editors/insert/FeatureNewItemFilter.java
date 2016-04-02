@@ -20,7 +20,7 @@ public class FeatureNewItemFilter extends FeatureNew<IProgressionFilter> {
     @Override
     public void clone(IProgressionFilter provider) {
         APIHandler.cloneFilter(field, provider);
-        //GuiItemFilterEditor.INSTANCE.initGui(); //Refresh the gui
+        //GuiFilterEditor.INSTANCE.initGui(); //Refresh the gui
     }
 
     @Override

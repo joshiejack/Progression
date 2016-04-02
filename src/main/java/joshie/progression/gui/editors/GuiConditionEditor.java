@@ -1,6 +1,5 @@
 package joshie.progression.gui.editors;
 
-import joshie.progression.Progression;
 import joshie.progression.api.criteria.IProgressionTrigger;
 import joshie.progression.gui.core.FeatureBarsX1;
 import joshie.progression.gui.core.GuiCore;
@@ -8,7 +7,6 @@ import joshie.progression.gui.core.IBarProvider;
 import joshie.progression.gui.editors.insert.FeatureNewCondition;
 import joshie.progression.gui.editors.insert.FeatureNewReward;
 import joshie.progression.handlers.APIHandler;
-import net.minecraft.util.EnumChatFormatting;
 
 public class GuiConditionEditor extends GuiBaseEditor implements IBarProvider {
     public static final GuiConditionEditor INSTANCE = new GuiConditionEditor();
@@ -37,10 +35,15 @@ public class GuiConditionEditor extends GuiBaseEditor implements IBarProvider {
     @Override
     public void initData(GuiCore core) {
         trigger = APIHandler.getCache().getTriggerFromUUID(trigger.getUniqueID()); //Reload the trigger from the cache
+        if (trigger == null) {
+            GuiCore.INSTANCE.setEditor(GuiCriteriaEditor.INSTANCE);
+            return;
+        }
+
         super.initData(core);
         //Setup the features
         features.add(new FeatureBarsX1(this, "condition"));
-        features.add(new FeatureDrawable(EnumChatFormatting.BOLD + Progression.translate("new.condition"), trigger.getConditions(), 45, 201, 201, 64, 119, FeatureNewCondition.INSTANCE, theme.conditionGradient1, theme.conditionGradient2, theme.conditionFontColor));
+        features.add(new FeatureCondition(trigger));
         features.add(FeatureItemSelector.INSTANCE); //Add the item selector
         features.add(FeatureNewCondition.INSTANCE); //Add new trigger popup
         features.add(FeatureNewReward.INSTANCE); //Add new reward popup

@@ -8,7 +8,7 @@ import joshie.progression.api.special.ISetterCallback;
 import joshie.progression.api.special.ISpecialFilters;
 import joshie.progression.gui.core.DrawHelper;
 import joshie.progression.gui.core.GuiCore;
-import joshie.progression.gui.editors.GuiItemFilterEditor;
+import joshie.progression.gui.editors.GuiFilterEditor;
 import joshie.progression.gui.filters.FeatureItemPreview;
 import joshie.progression.gui.filters.FilterSelectorItem;
 import joshie.progression.helpers.CollectionHelper;
@@ -61,9 +61,9 @@ public class ItemFilterField extends AbstractField {
     @Override
     public void click() {
         try {
-            GuiItemFilterEditor.INSTANCE.setPrevious(GuiCore.INSTANCE.openGui).setFilterSet(this); //Adjust this filter object
+            GuiFilterEditor.INSTANCE.setPrevious(GuiCore.INSTANCE.openGui).setFilterSet(this); //Adjust this filter object
             FeatureItemPreview.INSTANCE.select(selector); //Allow for selection of multiple items 
-            GuiCore.INSTANCE.setEditor(GuiItemFilterEditor.INSTANCE);
+            GuiCore.INSTANCE.setEditor(GuiFilterEditor.INSTANCE);
         } catch (Exception e) {
             e.printStackTrace();
         }

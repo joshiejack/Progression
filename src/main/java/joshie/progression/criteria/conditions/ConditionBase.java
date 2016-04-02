@@ -1,5 +1,6 @@
 package joshie.progression.criteria.conditions;
 
+import joshie.progression.Progression;
 import joshie.progression.api.criteria.IProgressionCondition;
 import joshie.progression.api.criteria.IProgressionTrigger;
 import joshie.progression.api.special.DisplayMode;
@@ -71,7 +72,7 @@ public abstract class ConditionBase implements IProgressionCondition {
 
     @Override
     public String getDescription() {
-        return "";
+        return Progression.translate(getUnlocalisedName() + ".description");
     }
 
     @Override

@@ -219,7 +219,7 @@ public class APIHandler implements IProgressionAPI {
                 type = type.getClass().newInstance();
                 EventsManager.onAdded(type);
                 JSONHelper.readJSON(typeData, type);
-            } catch (Exception e) {}
+            } catch (Exception e) { e.printStackTrace(); }
         }
 
         return type;

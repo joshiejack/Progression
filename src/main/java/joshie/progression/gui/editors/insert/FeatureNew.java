@@ -1,13 +1,5 @@
 package joshie.progression.gui.editors.insert;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
-import org.lwjgl.opengl.GL11;
-
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.IFieldProvider;
 import joshie.progression.api.criteria.IProgressionCriteria;
@@ -16,9 +8,12 @@ import joshie.progression.gui.core.FeatureAbstract;
 import joshie.progression.gui.core.GuiCore;
 import joshie.progression.gui.editors.GuiConditionEditor;
 import joshie.progression.gui.editors.GuiCriteriaEditor;
-import joshie.progression.gui.editors.GuiItemFilterEditor;
+import joshie.progression.gui.editors.GuiFilterEditor;
 import joshie.progression.gui.fields.ItemFilterField;
 import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
+
+import java.util.*;
 
 public abstract class FeatureNew<T> extends FeatureAbstract {
     public static boolean IS_OPEN = false;
@@ -58,7 +53,7 @@ public abstract class FeatureNew<T> extends FeatureAbstract {
         setVisibility(false);
         criteria = GuiCriteriaEditor.INSTANCE.getCriteria();
         trigger = GuiConditionEditor.INSTANCE.getTrigger();
-        field = GuiItemFilterEditor.INSTANCE.getField();
+        field = GuiFilterEditor.INSTANCE.getField();
         return this;
     }
 
@@ -67,46 +62,53 @@ public abstract class FeatureNew<T> extends FeatureAbstract {
         return true;
     }
 
+    public int getColor() {
+        return 0xFF333333;
+    }
+
     @Override
     public void drawFeature(int mouseX, int mouseY) {
+        int maxY = (sorted.size() / 2);
         GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
-        offset.drawRectangle(150, 30, 200, 150, theme.newBox1, theme.newBox2);
-        offset.drawGradient(150, 30, 200, 15, theme.newGradient1, theme.newGradient2, theme.newBorder);
-        offset.drawText(Progression.translate("new." + text), 155, 34, theme.newFont);
+        offset.drawRectangle(150, 50, 200, 50 + maxY * 12, 0xFF222222, theme.newBox2);
+        offset.drawGradient(150, 50, 200, 15, getColor(), 0xFF111111, theme.newBorder);
+        offset.drawText(Progression.translate("new." + text), 155, 54, theme.newFont);
         drawForeground(mouseX, mouseY);
     }
 
     public void drawForeground(int mouseX, int mouseY) {
+        int maxY = sorted.size() / 2;
         int yPos = 0;
         int xPos = 0;
         for (IFieldProvider provider : sorted) {
             if (!isValid((T) provider)) continue;
             int color = theme.newFont;
             if (mouseX >= (xPos * 100) + 155 && mouseX <= (xPos * 100) + 255) {
-                if (mouseY >= 46 + (yPos * 12) && mouseY < 46 + (yPos * 12) + 12) {
-                    color = theme.newFontHover;
+                if (mouseY >= 67 + (yPos * 12) && mouseY < 67 + (yPos * 12) + 12) {
+                    color = 0xFF555555;
                 }
             }
 
-            offset.drawText(provider.getLocalisedName(), (xPos * 100) + 155, 46 + (yPos * 12), color);
+            offset.drawText(provider.getLocalisedName(), (xPos * 100) + 155, 67 + (yPos * 12), color);
 
-            xPos++;
+            yPos++;
 
-            if (xPos > 1) {
-                yPos++;
-                xPos = 0;
+            if (yPos > maxY) {
+                xPos++;
+                yPos = 0;
             }
         }
     }
 
     @Override
     public boolean mouseClicked(int mouseX, int mouseY, int button) {
+        int maxY = sorted.size() / 2;
         int yPos = 0;
         int xPos = 0;
         for (IFieldProvider provider : sorted) {
             if (!isValid((T) provider)) continue;
             if (mouseX >= (xPos * 100) + 155 && mouseX <= (xPos * 100) + 255) {
-                if (mouseY >= 46 + (yPos * 12) && mouseY < 46 + (yPos * 12) + 12) {
+                if (mouseY >= 67 + (yPos * 12) && mouseY < 67 + (yPos * 12) + 12) {
                     IS_OPEN = false;
                     clone((T) provider);
                     setVisibility(false);
@@ -114,11 +116,11 @@ public abstract class FeatureNew<T> extends FeatureAbstract {
                 }
             }
 
-            xPos++;
+            yPos++;
 
-            if (xPos > 1) {
-                yPos++;
-                xPos = 0;
+            if (yPos > maxY) {
+                xPos++;
+                yPos = 0;
             }
         }
 

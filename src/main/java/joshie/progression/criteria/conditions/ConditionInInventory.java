@@ -1,5 +1,6 @@
 package joshie.progression.criteria.conditions;
 
+import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionField;
 import joshie.progression.api.criteria.IProgressionFilter;
@@ -102,5 +103,10 @@ public class ConditionInInventory extends ConditionBaseItemFilter implements IEn
     @Override
     public int getWidth(DisplayMode mode) {
         return mode == DisplayMode.EDIT ? super.getWidth(mode) : 75;
+    }
+
+    @Override
+    public String getDescription() {
+        return Progression.format(getUnlocalisedName() + ".description." + slotType.toString());
     }
 }

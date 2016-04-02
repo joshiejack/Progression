@@ -14,14 +14,14 @@ public class FilterPlayerLocationAround extends FilterLocationBase {
 
     @Override
     public WorldLocation getRandom(EntityPlayer player) {
-        int randX = randomX >= 1 ? player.worldObj.rand.nextInt(randomX) - (randomX / 2) : 0;
-        int randY = randomY >= 1 ? player.worldObj.rand.nextInt(randomY) - (randomY / 2) : 0;
-        int randZ = randomZ >= 1 ? player.worldObj.rand.nextInt(randomZ) - (randomZ / 2) : 0;
+        int randX = randomX >= 1 ? player.worldObj.rand.nextInt(randomX * 2) - randomX : 0;
+        int randY = randomY >= 1 ? player.worldObj.rand.nextInt(randomY * 2) - randomY : 0;
+        int randZ = randomZ >= 1 ? player.worldObj.rand.nextInt(randomZ * 2) - randomZ : 0;
         return new WorldLocation(player.dimension, player.posX + randX, player.posY + randY, player.posZ + randZ);
     }
 
     @Override
     public boolean matches(WorldLocation location) {
-        return true;
+        return true; //Always true as it's a location around the player
     }
 }

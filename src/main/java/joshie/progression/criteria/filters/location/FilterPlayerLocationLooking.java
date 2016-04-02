@@ -52,11 +52,6 @@ public class FilterPlayerLocationLooking extends FilterLocationBase {
     public WorldLocation getRandom(EntityPlayer player) {
         ArrayList<WorldLocation> locations = new ArrayList();
         MovingObjectPosition position = getMovingObjectPositionFromPlayer(player.worldObj, player);
-        return new WorldLocation(player.dimension, position.getBlockPos());
-    }
-
-    @Override
-    public boolean matches(WorldLocation location) {
-        return true;
+        return position == null? null: new WorldLocation(player.dimension, position.getBlockPos());
     }
 }

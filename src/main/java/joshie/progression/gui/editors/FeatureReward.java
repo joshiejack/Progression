@@ -1,13 +1,12 @@
 package joshie.progression.gui.editors;
 
+import joshie.progression.api.criteria.IProgressionCriteria;
 import joshie.progression.api.criteria.IProgressionReward;
-import joshie.progression.gui.core.IGuiFeature;
-
-import java.util.List;
+import joshie.progression.gui.editors.insert.FeatureNewReward;
 
 public class FeatureReward extends FeatureDrawable<IProgressionReward> {
-    public FeatureReward(String text, List drawable, int offsetY, int x1, int x2, int y1, int y2, IGuiFeature newDrawable, int gradient1, int gradient2, int fontColor) {
-        super(text, drawable, offsetY, x1, x2, y1, y2, newDrawable, gradient1, gradient2, fontColor);
+    public FeatureReward(IProgressionCriteria criteria) {
+        super("reward", criteria.getRewards(), 140, FeatureNewReward.INSTANCE, theme.rewardBoxGradient1, theme.rewardBoxGradient2, theme.rewardBoxFont, theme.rewardBoxGradient2);
     }
 
     @Override

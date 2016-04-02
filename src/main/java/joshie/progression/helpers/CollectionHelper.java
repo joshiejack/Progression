@@ -3,7 +3,7 @@ package joshie.progression.helpers;
 import joshie.progression.api.criteria.*;
 import joshie.progression.gui.editors.GuiConditionEditor;
 import joshie.progression.gui.editors.GuiCriteriaEditor;
-import joshie.progression.gui.editors.GuiItemFilterEditor;
+import joshie.progression.gui.editors.GuiFilterEditor;
 import joshie.progression.handlers.EventsManager;
 
 import java.util.Collection;
@@ -33,8 +33,8 @@ public class CollectionHelper {
             //GuiCriteriaEditor.INSTANCE.initGui();
         } else if (drawing instanceof IProgressionFilter) {
             EventsManager.onRemoved((IProgressionFilter) drawing);
-            GuiItemFilterEditor.INSTANCE.getField().remove((IProgressionFilter) drawing);
-            //GuiItemFilterEditor.INSTANCE.initGui();
+            GuiFilterEditor.INSTANCE.getField().remove((IProgressionFilter) drawing);
+            //GuiFilterEditor.INSTANCE.initGui();
         } else if (drawing instanceof IProgressionCondition) {
             CollectionHelper.remove(GuiConditionEditor.INSTANCE.getTrigger().getConditions(), (IProgressionCondition) drawing);
             //GuiConditionEditor.INSTANCE.initGui();

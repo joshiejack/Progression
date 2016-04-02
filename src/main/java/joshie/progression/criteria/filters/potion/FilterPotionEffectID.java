@@ -4,13 +4,14 @@ import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IProgressionFilterSelector;
 import joshie.progression.criteria.filters.FilterBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class FilterPotionEffectID extends FilterBase {
+    private static final List<PotionEffect> EMPTY = new ArrayList();
     public int effectID = 1;
 
     public FilterPotionEffectID() {
@@ -29,10 +30,17 @@ public class FilterPotionEffectID extends FilterBase {
         return ids;
     }
 
+    private List<PotionEffect> getEffects(int metadata) {
+        List<PotionEffect> effects = Items.potionitem.getEffects(metadata);
+        return effects != null ? effects : EMPTY;
+    }
+
     @Override
     public boolean matches(Object object) {
         if (object instanceof Collection) {
             return getIds((Collection<PotionEffect>)object).contains(effectID);
+        } else if (object instanceof ItemStack && ((ItemStack)object).getItem() == Items.potionitem) {
+            matches(getEffects(((ItemStack)object).getItemDamage()));
         }
 
         return false;

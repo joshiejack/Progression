@@ -61,7 +61,7 @@ public class EnumField extends AbstractField {
     public void draw(DrawHelper helper, int renderX, int renderY, int color, int yPos, int mouseX, int mouseY) {
         try {
             String value = getName().toString().toLowerCase();
-            helper.drawSplitText(renderX, renderY, name + ": " + value, 4, yPos, 105, color, 0.75F);
+            helper.drawSplitText(renderX, renderY, name + ": " + value, 4, yPos, 150, color, 0.75F);
         } catch (Exception e) {}
     }
 

@@ -1,5 +1,6 @@
 package joshie.progression.criteria.conditions;
 
+import joshie.progression.Progression;
 import joshie.progression.items.ItemCriteria;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -16,5 +17,10 @@ public class ConditionRandom extends ConditionBase {
     @Override
     public boolean isSatisfied(World world, EntityPlayer player, UUID uuid) {
         return (world.rand.nextDouble() * 100) <= chance;
+    }
+
+    @Override
+    public String getDescription() {
+        return Progression.format(getUnlocalisedName() + ".description", chance);
     }
 }
