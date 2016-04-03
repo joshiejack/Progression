@@ -73,7 +73,7 @@ public class EntityFilterFieldPreview extends ItemFilterField implements IField 
                 FeatureTooltip.INSTANCE.addTooltip(tooltip);
             }
 
-            GuiInventory.drawEntityOnScreen(GuiCore.INSTANCE.offsetX + renderX + 24 + x, GuiCore.INSTANCE.screenTop + renderY + y + EntityHelper.getOffsetForEntity(entity), EntityHelper.getSizeForEntity(entity), 25F, -5F, entity);
+            GuiInventory.drawEntityOnScreen(GuiCore.INSTANCE.getOffsetX() + renderX + 24 + x, GuiCore.INSTANCE.screenTop + renderY + y + EntityHelper.getOffsetForEntity(entity), EntityHelper.getSizeForEntity(entity), 25F, -5F, entity);
             BossStatus.bossName = null; //Reset boss
             //helper.drawStack(renderX, renderY, getEntity(hovered), x, y, scale);
         } catch (Exception e) {

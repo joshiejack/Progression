@@ -71,7 +71,8 @@ public class FeatureItemPreview extends FeatureAbstract {
         }
 
         if (sorted.size() < size1) {
-            GuiCore.INSTANCE.offsetX = 0; //Reset the offset on update
+            //GuiCore.INSTANCE.offsetX = 0; //Reset the offset on update
+            GuiCore.INSTANCE.resetX();
         }
     }
 

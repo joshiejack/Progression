@@ -151,7 +151,7 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
     public void drawFeature(int mouseX, int mouseY) {
         int offsetX = 0;
         for (IFieldProvider drawing: drawable) {
-            int mouseOffsetX = mouseX - this.offsetX - offsetX;
+            int mouseOffsetX = mouseX - offset.getGui().getOffsetX() - offsetX;
             int mouseOffsetY = mouseY - this.offsetY;
             if ((drawing.isVisible() && mode == DISPLAY) || mode == EDIT) {
                 drawingDraw(drawing, offset, offsetX, this.offsetY, mouseOffsetX, mouseOffsetY);
@@ -171,7 +171,7 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
 
         //Draw the addition texture
         if (mode == EDIT) {
-            int mouseOffsetX = mouseX - this.offsetX - offsetX;
+            int mouseOffsetX = mouseX - offset.getGui().getOffsetX() - offsetX;
             int mouseOffsetY = mouseY - this.offsetY;
 
             int crossX = 201;
@@ -240,7 +240,7 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
         int offsetX = 0;
         for (IFieldProvider provider: drawable) {
             if (!provider.isVisible() && mode == DISPLAY) continue;
-            int mouseOffsetX = mouseX - this.offsetX - offsetX;
+            int mouseOffsetX = mouseX - offset.getGui().getOffsetX() - offsetX;
             int mouseOffsetY = mouseY - this.offsetY;
             //Delete Button
             if (mouseOffsetX >= provider.getWidth(mode) - 13 && mouseOffsetX <= provider.getWidth(mode) - 3 && mouseOffsetY >= 4 && mouseOffsetY <= 14) {
@@ -254,7 +254,7 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
         }
 
         //Now that we've tried all, let's try the new button
-        int mouseOffsetX = mouseX - this.offsetX - offsetX;
+        int mouseOffsetX = mouseX - offset.getGui().getOffsetX() - offsetX;
         int mouseOffsetY = mouseY - this.offsetY;
         if (mouseOffsetX >= 15 && mouseOffsetX <= 70 && mouseOffsetY >= 10 && mouseOffsetY <= 65) {
             newDrawable.init(offset.getGui());

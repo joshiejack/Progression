@@ -6,7 +6,6 @@ import net.minecraft.util.ResourceLocation;
 
 public class DrawHelper {
     protected GuiCore guiDraw;
-    protected int offsetX; //OffsetX on the scroll position
 
     public DrawHelper(GuiCore core) {
         guiDraw = core;
@@ -18,10 +17,6 @@ public class DrawHelper {
 
     public Theme getTheme() {
         return guiDraw.getTheme();
-    }
-
-    public void configure() {
-        offsetX = guiDraw.offsetX; //Scroll position guiDraw.ySize; // Set that gui height
     }
 
     public void drawText(String text, int left, int top, int color) {
@@ -45,22 +40,22 @@ public class DrawHelper {
     }
 
     public void drawText(int renderX, int renderY, String text, int left, int top, int color) {
-        guiDraw.drawText(text, offsetX + left + renderX, top + renderY, color);
+        guiDraw.drawText(text, guiDraw.getOffsetX() + left + renderX, top + renderY, color);
     }
 
     public void drawSplitText(int renderX, int renderY, String text, int left, int top, int width, int color, float scale) {
-        guiDraw.drawSplitText(text, offsetX + left + renderX, top + renderY, width, color, scale);
+        guiDraw.drawSplitText(text, guiDraw.getOffsetX() + left + renderX, top + renderY, width, color, scale);
     }
 
     public void drawGradient(int renderX, int renderY, int left, int top, int width, int height, int color, int color2, int border) {
-        guiDraw.drawGradientRectWithBorder(offsetX + left + renderX, top + renderY, offsetX + left + renderX + width, top + renderY + height, color, color2, border);
+        guiDraw.drawGradientRectWithBorder(guiDraw.getOffsetX() + left + renderX, top + renderY, guiDraw.getOffsetX() + left + renderX + width, top + renderY + height, color, color2, border);
     }
 
     public void drawStack(int renderX, int renderY, ItemStack stack, int left, int top, float scale) {
-        guiDraw.drawStack(stack, offsetX + left + renderX, top + renderY, scale);
+        guiDraw.drawStack(stack, guiDraw.getOffsetX() + left + renderX, top + renderY, scale);
     }
 
     public void drawTexture(int renderX, int renderY, ResourceLocation resource, int left, int top, int u, int v, int width, int height) {
-        guiDraw.drawTexture(resource, offsetX + left + renderX, top + renderY, u, v, width, height);
+        guiDraw.drawTexture(resource, guiDraw.getOffsetX() + left + renderX, top + renderY, u, v, width, height);
     }
 }

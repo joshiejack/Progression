@@ -3,7 +3,6 @@ package joshie.progression.gui.core;
 import joshie.progression.json.Theme;
 
 public abstract class FeatureAbstract implements IGuiFeature {
-    protected int offsetX; //OffsetX on the scroll position
     protected DrawHelper offset;
     protected DrawHelper draw;
 
@@ -23,12 +22,9 @@ public abstract class FeatureAbstract implements IGuiFeature {
     @Override
     public final void draw(int mouseX, int mouseY) {
         if (draw == null || offset == null) return; //Avoid crashes
-        draw.configure();
-        offset.configure();
         theme = Theme.INSTANCE; // Grab that theme?
         guiHeight = draw.getGui().ySize; // Set that gui height
         screenWidth = draw.getGui().screenWidth; // Mark the size of the screen
-        offsetX = draw.getGui().offsetX; //Scroll position
         drawFeature(mouseX, mouseY); // Draw the features
     }
 

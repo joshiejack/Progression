@@ -46,7 +46,7 @@ public class GuiCore extends GuiScreen {
     public int mouseY = 0;
     public Theme theme;
 
-    public int offsetX; // Offset position
+    private int offsetX; // Offset position
     public int ySize = 240; // Height of the Gui :O
     public int screenTop; // Top of the screen :D
     public int screenWidth; //Width of the screen
@@ -64,6 +64,14 @@ public class GuiCore extends GuiScreen {
         }
         
         return this;
+    }
+
+    public int getOffsetX() {
+        return offsetX;
+    }
+
+    public void resetX() {
+        offsetX = 0;
     }
 
     @Override

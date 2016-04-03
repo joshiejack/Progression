@@ -46,37 +46,53 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
         return currentTab;
     }
 
-    @Override
-    public void initData(GuiCore core) {
-        super.initData(core);
+    public void addButtons(GuiCore core, boolean sideWays) {
         List<GuiButton> buttonList = core.getButtonNewList(); //Recreate the button list, in order to reposition it
-        int number = 0;
-        int pos = -5;
+        int position = 0;
+        int posY = -5;
         if (MCClientHelper.isInEditMode()) {
-            buttonList.add(new ButtonNewCriteria(pos));
-            pos += 28;
-            number++;
+            if (!sideWays) {
+                buttonList.add(new ButtonNewCriteria(0, posY));
+                posY += 28;
+            } else buttonList.add(new ButtonNewCriteria(posY + 10, -22).setSideways());
+            position++;
         }
 
         //Sort tabs alphabetically or by sort index
         ArrayList<ITab> tabs = new ArrayList(APIHandler.getTabs().values());
         Collections.sort(tabs, new SortIndex());
-
         for (ITab tab : tabs) {
             if (isTabVisible(tab) || MCClientHelper.isInEditMode()) {
-                if (number <= 8) {
-                    buttonList.add(new ButtonTab(tab, 0, pos));
-                } else buttonList.add(new ButtonTab(tab, res.getScaledWidth() - 25, pos));
+                if (!sideWays) {
+                    if (position <= 8) {
+                        buttonList.add(new ButtonTab(tab, 0, posY));
+                    } else buttonList.add(new ButtonTab(tab, res.getScaledWidth() - 25, posY));
 
-                pos += 28;
+                    posY += 28;
+                    if (position == 8) {
+                        posY = -5;
+                    }
 
-                if (number == 8) {
-                    pos = -5;
+                    position++;
+                } else {
+                    boolean isEven = (position - 1) % 2 == 0;
+                    if (!isEven) {
+                        buttonList.add(new ButtonTab(tab, posY + 10, -22).setSideways());
+                    } else {
+                        buttonList.add(new ButtonTab(tab, posY + 10, core.ySize).setBottom().setSideways());
+                        posY += 28;
+                    }
+
+                    position++;
                 }
-
-                number++;
             }
         }
+    }
+
+    @Override
+    public void initData(GuiCore core) {
+        super.initData(core);
+        addButtons(core, APIHandler.getTabs().size() > 17);
 
         if (currentTabID == null) {
             currentTabID = Options.settings.defaultTabID;
@@ -154,9 +170,9 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
                     width -= 3;
 
                     if (c.getTab() == criteria.getTab()) {
-                        drawLine(GuiCore.INSTANCE.offsetX + width + x1, 12 + y1 - 1, GuiCore.INSTANCE.offsetX + 5 + x2, 12 + y2 - 1, 1, theme.connectLineColor1);
-                        drawLine(GuiCore.INSTANCE.offsetX + width + x1, 12 + y1 + 1, GuiCore.INSTANCE.offsetX + 5 + x2, 12 + y2 + 1, 1, theme.connectLineColor2); //#636C69
-                        drawLine(GuiCore.INSTANCE.offsetX + width + x1, 12 + y1, GuiCore.INSTANCE.offsetX + 5 + x2, 12 + y2, 1, theme.connectLineColor3);
+                        drawLine(GuiCore.INSTANCE.getOffsetX() + width + x1, 12 + y1 - 1, GuiCore.INSTANCE.getOffsetX() + 5 + x2, 12 + y2 - 1, 1, theme.connectLineColor1);
+                        drawLine(GuiCore.INSTANCE.getOffsetX() + width + x1, 12 + y1 + 1, GuiCore.INSTANCE.getOffsetX() + 5 + x2, 12 + y2 + 1, 1, theme.connectLineColor2); //#636C69
+                        drawLine(GuiCore.INSTANCE.getOffsetX() + width + x1, 12 + y1, GuiCore.INSTANCE.getOffsetX() + 5 + x2, 12 + y2, 1, theme.connectLineColor3);
                     }
                 }
             }
@@ -165,7 +181,7 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
         GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
         for (ICriteria criteria : currentTab.getCriteria()) {
             if (getElement(criteria).isCriteriaVisible() || MCClientHelper.isInEditMode()) {
-                getElement(criteria).draw(0, screenTop, GuiCore.INSTANCE.offsetX);
+                getElement(criteria).draw(0, screenTop, GuiCore.INSTANCE.getOffsetX());
             }
         }
     }
@@ -211,17 +227,21 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
     public ICriteria lastClicked = null;
     public int drag = 0;
     public boolean isDragging = false;
+    public int lastX;
+    public int lastY;
 
     @Override
     public boolean guiMouseClicked(boolean overlayvisible, int mouseX, int mouseY, int button) {
         if (currentTab == null) return false;
         long thisClick = System.currentTimeMillis();
         long difference = thisClick - lastClick;
-        boolean isDoubleClick = button == 0 && lastType == 0 && difference <= 500;
+        boolean isDoubleClick = button == 0 && lastType == 0 && difference <= 500 && lastX == mouseX && lastY == mouseY;
         lastClick = System.currentTimeMillis();
         lastType = button;
-        
+        lastX = mouseX;
+        lastY = mouseY;
         lastClicked = null;
+
         if (button == 0) {
             for (ICriteria criteria : currentTab.getCriteria()) {
                 if (getElement(criteria).isCriteriaVisible() || MCClientHelper.isInEditMode()) {
@@ -230,6 +250,19 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
                         return true;
                     }
                 }
+            }
+
+            if (isDoubleClick) {
+                GuiTreeEditor.INSTANCE.previous = null;
+                GuiTreeEditor.INSTANCE.selected = null;
+                GuiTreeEditor.INSTANCE.lastClicked = null;
+                GuiTreeEditor.INSTANCE.isDragging = false;
+                ITab currentTab = GuiTreeEditor.INSTANCE.currentTab;
+                int offsetX = GuiCore.INSTANCE.getOffsetX();
+                ICriteria criteria = APIHandler.newCriteria(currentTab, UUID.randomUUID(), true);
+                criteria.setCoordinates(mouseX - 50 - offsetX, mouseY - 10);
+                GuiTreeEditor.INSTANCE.addCriteria(criteria, mouseX - 50, mouseY - 10, offsetX);
+                return true;
             }
             
             return false;

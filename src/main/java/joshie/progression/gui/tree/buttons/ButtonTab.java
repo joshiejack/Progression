@@ -23,28 +23,53 @@ import java.util.ArrayList;
 
 public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelectable {
     private ITab tab;
+    private boolean isBottom;
 
     public ButtonTab(ITab tab, int x, int y) {
         super(0, x, y, 25, 25, "");
         this.tab = tab;
     }
 
+    public ButtonTab setBottom() {
+        this.isBottom = true;
+        return this;
+    }
+
+    public void drawTexture(Minecraft mc) {
+        mc.getTextureManager().bindTexture(ProgressionInfo.textures);
+
+        if (isSideways) {
+            int yTexture = isBottom ? 234: 206;
+            RenderHelper.disableStandardItemLighting();
+            int xTexture = GuiTreeEditor.INSTANCE.currentTab == tab ? 206 : 231;;
+            if (xPosition == 0) xTexture = 206;
+            GuiCore.INSTANCE.drawTexture(ProgressionInfo.textures, xPosition + GuiCore.INSTANCE.getOffsetX(), yPosition, xTexture, yTexture, 25, 22);
+
+            int stackY = isBottom ? -3: 0;
+            if (xPosition == 0) {
+                GuiCore.INSTANCE.drawStack(tab.getStack(), xPosition + GuiCore.INSTANCE.getOffsetX(), yPosition + 5 + stackY, 1F);
+            } else GuiCore.INSTANCE.drawStack(tab.getStack(), xPosition + 4 + GuiCore.INSTANCE.getOffsetX(), yPosition + 5 + stackY, 1F);
+        } else {
+            int yTexture = GuiTreeEditor.INSTANCE.currentTab == tab ? 25 : 0;
+            RenderHelper.disableStandardItemLighting();
+            int xTexture = 206;
+            if (xPosition == 0) xTexture = 231;
+            GuiCore.INSTANCE.drawTexture(ProgressionInfo.textures, xPosition, yPosition, xTexture, yTexture, 25, 25);
+            if (xPosition == 0) {
+                GuiCore.INSTANCE.drawStack(tab.getStack(), xPosition + 2, yPosition + 5, 1F);
+            } else GuiCore.INSTANCE.drawStack(tab.getStack(), xPosition + 7, yPosition + 6, 1F);
+        }
+    }
+
     @Override
     public void drawButton(Minecraft mc, int x, int y) {
-        boolean hovering = hovered = x >= xPosition && y >= yPosition && x < xPosition + width && y < yPosition + height;
+        int xtra = isSideways ? GuiCore.INSTANCE.getOffsetX() : 0;
+        boolean hovering = hovered = x >= xPosition + xtra && y >= yPosition && x < xPosition + xtra + width && y < yPosition + height;
         int k = getHoverState(hovering);
         GlStateManager.enableBlend();
         GlStateManager.enableLighting();
         GlStateManager.color(1F, 1F, 1F, 1F);
-        mc.getTextureManager().bindTexture(ProgressionInfo.textures);
-        int yTexture = GuiTreeEditor.INSTANCE.currentTab == tab ? 25 : 0;
-        RenderHelper.disableStandardItemLighting();
-        int xTexture = 206;
-        if (xPosition == 0) xTexture = 231;
-        GuiCore.INSTANCE.drawTexture(ProgressionInfo.textures, xPosition, yPosition, xTexture, yTexture, 25, 25);
-        if (xPosition == 0) {
-            GuiCore.INSTANCE.drawStack(tab.getStack(), xPosition + 2, yPosition + 5, 1F);
-        } else GuiCore.INSTANCE.drawStack(tab.getStack(), xPosition + 7, yPosition + 5, 1F);
+        drawTexture(mc);
 
         boolean displayTooltip = false;
         if (MCClientHelper.isInEditMode()) {

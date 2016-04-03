@@ -179,7 +179,7 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
         offset.drawRectangle(-1, 40 + position.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 73, theme.blackBarUnderLine, theme.blackBarUnderLineBorder);
 
         offset.drawText(Progression.translate("selector.items"), 5, 29 + position.yOffset, theme.blackBarFontColor);
-        offset.drawRectangle(285 - offsetX, 27 + position.yOffset, 200, 12, theme.blackBarUnderLine, theme.blackBarUnderLineBorder);
+        offset.drawRectangle(285 - offset.getGui().getOffsetX(), 27 + position.yOffset, 200, 12, theme.blackBarUnderLine, theme.blackBarUnderLineBorder);
         offset.drawText(TextEditor.INSTANCE.getText(this), 290, 29 + position.yOffset, theme.blackBarFontColor);
 
         int width = (int) ((double) (screenWidth - 10) / 16.133333334D);
@@ -187,7 +187,7 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
         int k = 0;
         for (int i = index; i < index + (width * 4); i++) {
             if (i >= 0 && i < sorted.size()) {
-                filter.draw(offset, sorted.get(i), offsetX, j, position.yOffset, k, mouseX, mouseY);
+                filter.draw(offset, sorted.get(i), offset.getGui().getOffsetX(), j, position.yOffset, k, mouseX, mouseY);
 
                 j++;
 
