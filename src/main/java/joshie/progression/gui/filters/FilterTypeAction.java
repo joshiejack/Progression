@@ -1,6 +1,6 @@
 package joshie.progression.gui.filters;
 
-import joshie.progression.api.criteria.IProgressionFilterSelector;
+import joshie.progression.api.criteria.IFilterType;
 import joshie.progression.crafting.ActionType;
 import joshie.progression.gui.core.DrawHelper;
 import joshie.progression.gui.core.FeatureTooltip;
@@ -9,8 +9,8 @@ import net.minecraft.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FilterSelectorAction extends FilterSelectorItem {
-    public static final IProgressionFilterSelector INSTANCE = new FilterSelectorAction();
+public class FilterTypeAction extends FilterTypeItem {
+    public static final IFilterType INSTANCE = new FilterTypeAction();
 
     @Override
     public String getName() {

@@ -1,9 +1,10 @@
 package joshie.progression.criteria.conditions;
 
 import joshie.progression.Progression;
+import joshie.progression.api.IPlayerTeam;
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.criteria.IProgressionField;
-import joshie.progression.api.criteria.IProgressionFilter;
+import joshie.progression.api.criteria.IField;
+import joshie.progression.api.criteria.IFilter;
 import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.IEnum;
 import joshie.progression.api.special.ISpecialFieldProvider;
@@ -11,10 +12,8 @@ import joshie.progression.api.special.IStackSizeable;
 import joshie.progression.gui.fields.ItemFilterFieldPreview;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 
 import java.util.List;
-import java.util.UUID;
 
 public class ConditionInInventory extends ConditionBaseItemFilter implements IEnum, ISpecialFieldProvider, IStackSizeable {
     private static enum CheckSlots {
@@ -29,9 +28,9 @@ public class ConditionInInventory extends ConditionBaseItemFilter implements IEn
     }
 
     @Override
-    public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
-        if (mode == DisplayMode.EDIT) fields.add(ProgressionAPI.fields.getItemPreview(this, "filters", 30, 35, 1.9F));
-        else fields.add(new ItemFilterFieldPreview("filters", this, 18, 25, 2.8F));
+    public void addSpecialFields(List<IField> fields, DisplayMode mode) {
+        if (mode == DisplayMode.EDIT) fields.add(ProgressionAPI.fields.getItemPreview(this, "filters", 30, 50, 1.9F));
+        else fields.add(new ItemFilterFieldPreview("filters", this, 67, 40, 1.75F));
     }
 
     @Override
@@ -49,8 +48,13 @@ public class ConditionInInventory extends ConditionBaseItemFilter implements IEn
         return CheckSlots.values()[0];
     }
 
+    @Override
+    public boolean isEnum(String name) {
+        return name.equals("slotType");
+    }
+
     private boolean matches(ItemStack check) {
-        for (IProgressionFilter filter : filters) {
+        for (IFilter filter : filters) {
             if (filter.matches(check)) return true;
         }
 
@@ -79,22 +83,29 @@ public class ConditionInInventory extends ConditionBaseItemFilter implements IEn
     }
 
     @Override
-    public boolean isSatisfied(World world, EntityPlayer player, UUID uuid) {
-        if (player == null) return false;
-        if (slotType == CheckSlots.HELD) {
-            if (matches(player.getCurrentEquippedItem())) return player.getCurrentEquippedItem().stackSize >= stackSize;
-        } else if (slotType == CheckSlots.ARMOR) {
-            for (ItemStack armor : player.inventory.armorInventory) {
-                if (armor != null) {
-                    if (matches(armor)) return armor.stackSize >= stackSize;
+    public boolean isSatisfied(IPlayerTeam team) {
+        int counter = 0;
+        for (EntityPlayer player: team.getTeamEntities()) {
+            if (!team.isTrueTeam()) counter = 0; //Reset the counter
+            if (slotType == CheckSlots.HELD) {
+                if (matches(player.getCurrentEquippedItem())) {
+                    counter += player.getCurrentEquippedItem().stackSize;
+                    if (counter >= stackSize) return true;
                 }
+            } else if (slotType == CheckSlots.ARMOR) {
+                for (ItemStack armor : player.inventory.armorInventory) {
+                    if (armor != null && matches(armor)) {
+                        counter += armor.stackSize;
+                        if (counter >= stackSize) return true;
+                    }
+                }
+            } else if (slotType == CheckSlots.HOTBAR) {
+                counter += getAmount(player, 9);
+                if (counter >= stackSize) return true;
+            } else if (slotType == CheckSlots.INVENTORY) {
+                counter += getAmount(player, 36);
+                if (counter >= stackSize) return true;
             }
-
-            return false;
-        } else if (slotType == CheckSlots.HOTBAR) {
-            return getAmount(player, 9) >= stackSize;
-        } else if (slotType == CheckSlots.INVENTORY) {
-            return getAmount(player, 36) >= stackSize;
         }
 
         return false;
@@ -102,11 +113,12 @@ public class ConditionInInventory extends ConditionBaseItemFilter implements IEn
 
     @Override
     public int getWidth(DisplayMode mode) {
-        return mode == DisplayMode.EDIT ? super.getWidth(mode) : 75;
+        return mode == DisplayMode.EDIT ? super.getWidth(mode) : 100;
     }
 
     @Override
-    public String getDescription() {
-        return Progression.format(getUnlocalisedName() + ".description." + slotType.toString());
+    public String getConditionDescription() {
+        if (inverted) return Progression.format(getUnlocalisedName() + ".description." + slotType.toString().toLowerCase() + ".inverted");
+        else return Progression.format(getUnlocalisedName() + ".description." + slotType.toString().toLowerCase());
     }
 }

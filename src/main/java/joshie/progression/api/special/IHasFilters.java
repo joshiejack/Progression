@@ -2,8 +2,8 @@ package joshie.progression.api.special;
 
 import java.util.List;
 
-import joshie.progression.api.criteria.IProgressionFilter;
+import joshie.progression.api.criteria.IFilter;
 
 public interface IHasFilters {
-    public List<IProgressionFilter> getAllFilters();
+    public List<IFilter> getAllFilters();
 }

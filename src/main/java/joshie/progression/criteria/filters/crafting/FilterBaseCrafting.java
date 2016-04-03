@@ -1,7 +1,7 @@
 package joshie.progression.criteria.filters.crafting;
 
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.criteria.IProgressionFilterSelector;
+import joshie.progression.api.criteria.IFilterType;
 import joshie.progression.crafting.ActionType;
 import joshie.progression.criteria.filters.FilterBase;
 import net.minecraft.item.ItemStack;
@@ -27,7 +27,7 @@ public abstract class FilterBaseCrafting extends FilterBase {
     }
 
     @Override
-    public IProgressionFilterSelector getType() {
+    public IFilterType getType() {
         return ProgressionAPI.filters.getCraftingFilter();
     }
 

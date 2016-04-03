@@ -2,7 +2,7 @@ package joshie.progression.criteria.rewards;
 
 import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.criteria.IProgressionTab;
+import joshie.progression.api.criteria.ITab;
 import joshie.progression.api.event.TabVisibleEvent;
 import joshie.progression.api.special.IGetterCallback;
 import joshie.progression.api.special.IHasEventBus;
@@ -21,7 +21,7 @@ public class RewardShowTab extends RewardBaseAbility implements IStoreNBTData, I
     public boolean hideByDefault = true;
     public String displayName = "";
     private UUID tabID = UUID.randomUUID();
-    private IProgressionTab tab;
+    private ITab tab;
 
     public RewardShowTab() {
         super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.showTab), "tab.show", 0xFFCCCCCC);
@@ -30,7 +30,7 @@ public class RewardShowTab extends RewardBaseAbility implements IStoreNBTData, I
     @Override
     public void init() {
         try {
-            for (IProgressionTab t : APIHandler.getTabs().values()) {
+            for (ITab t : APIHandler.getTabs().values()) {
                 String display = t.getDisplayName();
                 if (t.getDisplayName().equals(displayName)) {
                     tab = t;
@@ -41,7 +41,7 @@ public class RewardShowTab extends RewardBaseAbility implements IStoreNBTData, I
         } catch (Exception e) {}
     }
 
-    public IProgressionTab getAssignedTab() {
+    public ITab getAssignedTab() {
         return APIHandler.getTabFromName(tabID);
     }
 

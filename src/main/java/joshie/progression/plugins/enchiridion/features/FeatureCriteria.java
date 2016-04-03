@@ -3,7 +3,7 @@ package joshie.progression.plugins.enchiridion.features;
 import joshie.enchiridion.api.EnchiridionAPI;
 import joshie.enchiridion.api.book.IFeatureProvider;
 import joshie.enchiridion.api.gui.ISimpleEditorFieldProvider;
-import joshie.progression.api.criteria.IProgressionCriteria;
+import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.handlers.APIHandler;
 
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.UUID;
 
 
 public abstract class FeatureCriteria extends FeatureProgression implements ISimpleEditorFieldProvider {
-    protected transient IProgressionCriteria criteria = null;
+    protected transient ICriteria criteria = null;
     protected UUID criteriaID = UUID.randomUUID();
     public String displayName = "";
     public boolean background = true;
@@ -36,7 +36,7 @@ public abstract class FeatureCriteria extends FeatureProgression implements ISim
         super.onFieldsSet();
 
         try {
-            for (IProgressionCriteria c : APIHandler.getCriteria().values()) {
+            for (ICriteria c : APIHandler.getCriteria().values()) {
                 String display = c.getDisplayName();
                 if (c.getDisplayName().equals(displayName)) {
                     criteria = c;

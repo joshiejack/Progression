@@ -1,12 +1,12 @@
 package joshie.progression.gui.filters;
 
-import joshie.progression.api.criteria.IProgressionFilterSelector;
+import joshie.progression.api.criteria.IFilterType;
 import joshie.progression.gui.core.DrawHelper;
 import joshie.progression.gui.core.FeatureTooltip;
 import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.item.ItemStack;
 
-public abstract class FilterSelectorBase implements IProgressionFilterSelector {
+public abstract class FilterTypeBase implements IFilterType {
     @Override
     public int getChange() {
         return 200;

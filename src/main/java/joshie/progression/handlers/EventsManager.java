@@ -2,7 +2,7 @@ package joshie.progression.handlers;
 
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.ICanHaveEvents;
-import joshie.progression.api.criteria.IProgressionReward;
+import joshie.progression.api.criteria.IReward;
 import joshie.progression.api.special.IHasEventBus;
 import net.minecraftforge.fml.common.eventhandler.EventBus;
 import org.apache.logging.log4j.Level;
@@ -51,8 +51,8 @@ public class EventsManager {
             }
         }
 
-        if (eventType instanceof IProgressionReward) {
-            ((IProgressionReward)eventType).onAdded();
+        if (eventType instanceof IReward) {
+            ((IReward)eventType).onAdded();
         }
     }
 
@@ -76,8 +76,8 @@ public class EventsManager {
             }
         }
 
-        if (eventType instanceof IProgressionReward) {
-            ((IProgressionReward)eventType).onRemoved();
+        if (eventType instanceof IReward) {
+            ((IReward)eventType).onRemoved();
         }
     }
 }

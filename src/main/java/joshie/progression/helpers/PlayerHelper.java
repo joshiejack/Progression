@@ -15,9 +15,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.Callable;
 
 public class PlayerHelper {
@@ -52,8 +50,8 @@ public class PlayerHelper {
     }
 
     /** Should only ever be called serverside **/
-    public static List<EntityPlayerMP> getPlayersFromUUID(UUID uuid) {
-        List<EntityPlayerMP> list = new ArrayList();
+    public static Set<EntityPlayerMP> getPlayersFromUUID(UUID uuid) {
+        Set<EntityPlayerMP> list = new LinkedHashSet();
         PlayerTeam team = PlayerTracker.getServerPlayer(uuid).getTeam();
         for (EntityPlayerMP player : getAllPlayers()) {
             /** Add the Owner **/
@@ -78,7 +76,7 @@ public class PlayerHelper {
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) return MCClientHelper.getPlayer();
         for (EntityPlayerMP player : getAllPlayers()) {
             if (getUUIDForPlayer(player).equals(uuid)) {
-                return (EntityPlayerMP) player;
+                return player;
             }
         }
 

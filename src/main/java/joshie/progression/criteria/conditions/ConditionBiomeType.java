@@ -3,16 +3,15 @@ package joshie.progression.criteria.conditions;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import joshie.progression.Progression;
+import joshie.progression.api.IPlayerTeam;
 import joshie.progression.api.special.ISetterCallback;
 import joshie.progression.api.special.ISpecialJSON;
 import joshie.progression.items.ItemCriteria;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
-
-import java.util.UUID;
 
 public class ConditionBiomeType extends ConditionBase implements ISetterCallback, ISpecialJSON {
     private Type[] theBiomeTypes = new Type[] { Type.FOREST };
@@ -23,12 +22,13 @@ public class ConditionBiomeType extends ConditionBase implements ISetterCallback
     }
 
     @Override
-    public boolean isSatisfied(World world, EntityPlayer player, UUID uuid) {
-        if (player == null) return false;
-        Type types[] = BiomeDictionary.getTypesForBiome(world.getBiomeGenForCoords(new BlockPos(player)));
-        for (Type type : theBiomeTypes) {
-            for (Type compare : types) {
-                if (compare == type) return true;
+    public boolean isSatisfied(IPlayerTeam team) {
+        for (EntityPlayer player: team.getTeamEntities()) { //If any team member has the achievement
+            Type types[] = BiomeDictionary.getTypesForBiome(player.worldObj.getBiomeGenForCoords(new BlockPos(player)));
+            for (Type type : theBiomeTypes) {
+                for (Type compare : types) {
+                    if (compare == type) return true;
+                }
             }
         }
 
@@ -38,6 +38,12 @@ public class ConditionBiomeType extends ConditionBase implements ISetterCallback
     @Override
     public boolean onlySpecial() {
         return true;
+    }
+
+    @Override
+    public String getConditionDescription() {
+        if (inverted) return Progression.format(getUnlocalisedName() + ".description.inverted", biomeTypes);
+        return Progression.format(getUnlocalisedName() + ".description", biomeTypes);
     }
 
     @Override

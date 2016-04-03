@@ -2,17 +2,17 @@ package joshie.progression.criteria.rewards;
 
 import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.criteria.IProgressionField;
-import joshie.progression.api.criteria.IProgressionFilter;
-import joshie.progression.api.criteria.IProgressionFilterSelector;
+import joshie.progression.api.criteria.IField;
+import joshie.progression.api.criteria.IFilter;
+import joshie.progression.api.criteria.IFilterType;
 import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.ISpecialFieldProvider;
 import joshie.progression.api.special.ISpecialFilters;
 import joshie.progression.criteria.filters.FilterBase;
 import joshie.progression.gui.fields.ItemFilterField;
 import joshie.progression.gui.fields.ItemFilterFieldPreview;
-import joshie.progression.gui.filters.FilterSelectorBlock;
-import joshie.progression.gui.filters.FilterSelectorLocation;
+import joshie.progression.gui.filters.FilterTypeBlock;
+import joshie.progression.gui.filters.FilterTypeLocation;
 import joshie.progression.helpers.ItemHelper;
 import joshie.progression.lib.WorldLocation;
 import net.minecraft.block.Block;
@@ -27,8 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RewardPlaceBlock extends RewardBaseItemFilter implements ISpecialFieldProvider, ISpecialFilters {
-    public List<IProgressionFilter> locations = new ArrayList();
-    protected transient IProgressionFilter locationpreview;
+    public List<IFilter> locations = new ArrayList();
+    protected transient IFilter locationpreview;
     protected transient int locationticker;
 
     public RewardPlaceBlock() {
@@ -36,7 +36,7 @@ public class RewardPlaceBlock extends RewardBaseItemFilter implements ISpecialFi
     }
 
     @Override
-    public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
+    public void addSpecialFields(List<IField> fields, DisplayMode mode) {
         if (mode == DisplayMode.EDIT) {
             fields.add(new ItemFilterField("locations", this));
             fields.add(new ItemFilterFieldPreview("filters", this, 25, 40, 2F));
@@ -44,16 +44,16 @@ public class RewardPlaceBlock extends RewardBaseItemFilter implements ISpecialFi
     }
 
     @Override
-    public IProgressionFilterSelector getFilterForField(String fieldName) {
-        if (fieldName.equals("locations")) return FilterSelectorLocation.INSTANCE;
-        if (fieldName.equals("filters")) return FilterSelectorBlock.INSTANCE;
+    public IFilterType getFilterForField(String fieldName) {
+        if (fieldName.equals("locations")) return FilterTypeLocation.INSTANCE;
+        if (fieldName.equals("filters")) return FilterTypeBlock.INSTANCE;
 
         return null;
     }
 
     @Override
-    public List<IProgressionFilter> getAllFilters() {
-        ArrayList<IProgressionFilter> all = new ArrayList();
+    public List<IFilter> getAllFilters() {
+        ArrayList<IFilter> all = new ArrayList();
         all.addAll(locations);
         all.addAll(filters);
         return all;

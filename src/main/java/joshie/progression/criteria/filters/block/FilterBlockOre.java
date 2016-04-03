@@ -1,7 +1,7 @@
 package joshie.progression.criteria.filters.block;
 
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.criteria.IProgressionFilterSelector;
+import joshie.progression.api.criteria.IFilterType;
 import joshie.progression.criteria.filters.item.FilterItemOre;
 import joshie.progression.helpers.ItemHelper;
 import net.minecraft.block.Block;
@@ -19,7 +19,7 @@ public class FilterBlockOre extends FilterItemOre {
     }
 
     @Override
-    public IProgressionFilterSelector getType() {
+    public IFilterType getType() {
         return ProgressionAPI.filters.getBlockFilter();
     }
 }

@@ -23,20 +23,20 @@ public class CollectionHelper {
     }
 
     public static void removeAndUpdate(List<IFieldProvider> drawable, IFieldProvider drawing) {
-        if (drawing instanceof IProgressionReward) {
-            EventsManager.onRemoved((IProgressionReward) drawing);
-            CollectionHelper.remove(GuiCriteriaEditor.INSTANCE.getCriteria().getRewards(), (IProgressionReward) drawing);
+        if (drawing instanceof IReward) {
+            EventsManager.onRemoved((IReward) drawing);
+            CollectionHelper.remove(GuiCriteriaEditor.INSTANCE.getCriteria().getRewards(), (IReward) drawing);
             //GuiCriteriaEditor.INSTANCE.initGui();
-        } else if (drawing instanceof IProgressionTrigger) {
-            EventsManager.onRemoved((IProgressionTrigger) drawing);
-            CollectionHelper.remove(GuiCriteriaEditor.INSTANCE.getCriteria().getTriggers(), (IProgressionTrigger) drawing);
+        } else if (drawing instanceof ITrigger) {
+            EventsManager.onRemoved((ITrigger) drawing);
+            CollectionHelper.remove(GuiCriteriaEditor.INSTANCE.getCriteria().getTriggers(), (ITrigger) drawing);
             //GuiCriteriaEditor.INSTANCE.initGui();
-        } else if (drawing instanceof IProgressionFilter) {
-            EventsManager.onRemoved((IProgressionFilter) drawing);
-            GuiFilterEditor.INSTANCE.getField().remove((IProgressionFilter) drawing);
+        } else if (drawing instanceof IFilter) {
+            EventsManager.onRemoved((IFilter) drawing);
+            GuiFilterEditor.INSTANCE.getField().remove((IFilter) drawing);
             //GuiFilterEditor.INSTANCE.initGui();
-        } else if (drawing instanceof IProgressionCondition) {
-            CollectionHelper.remove(GuiConditionEditor.INSTANCE.getTrigger().getConditions(), (IProgressionCondition) drawing);
+        } else if (drawing instanceof ICondition) {
+            CollectionHelper.remove(GuiConditionEditor.INSTANCE.getTrigger().getConditions(), (ICondition) drawing);
             //GuiConditionEditor.INSTANCE.initGui();
         }
 

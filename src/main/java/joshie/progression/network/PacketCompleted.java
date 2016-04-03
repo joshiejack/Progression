@@ -1,7 +1,7 @@
 package joshie.progression.network;
 
 import io.netty.buffer.ByteBuf;
-import joshie.progression.api.criteria.IProgressionCriteria;
+import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.network.core.PenguinPacket;
 import net.minecraft.client.Minecraft;
@@ -16,11 +16,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.UUID;
 
 public class PacketCompleted extends PenguinPacket {
-    private IProgressionCriteria criteria;
+    private ICriteria criteria;
 
     public PacketCompleted() {}
 
-    public PacketCompleted(IProgressionCriteria criteria) {
+    public PacketCompleted(ICriteria criteria) {
         this.criteria = criteria;
     }
 
@@ -45,9 +45,9 @@ public class PacketCompleted extends PenguinPacket {
     }
 
     public static class DummyAchievement extends Achievement {
-        private final IProgressionCriteria criteria;
+        private final ICriteria criteria;
 
-        public DummyAchievement(IProgressionCriteria criteria) {
+        public DummyAchievement(ICriteria criteria) {
             super("criteria", "criteria", 0, 0, criteria.getIcon(), null);
             this.criteria = criteria;
         }

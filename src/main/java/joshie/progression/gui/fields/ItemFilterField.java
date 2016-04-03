@@ -1,8 +1,8 @@
 package joshie.progression.gui.fields;
 
 import joshie.progression.Progression;
-import joshie.progression.api.criteria.IProgressionFilter;
-import joshie.progression.api.criteria.IProgressionFilterSelector;
+import joshie.progression.api.criteria.IFilter;
+import joshie.progression.api.criteria.IFilterType;
 import joshie.progression.api.special.IInit;
 import joshie.progression.api.special.ISetterCallback;
 import joshie.progression.api.special.ISpecialFilters;
@@ -10,7 +10,7 @@ import joshie.progression.gui.core.DrawHelper;
 import joshie.progression.gui.core.GuiCore;
 import joshie.progression.gui.editors.GuiFilterEditor;
 import joshie.progression.gui.filters.FeatureItemPreview;
-import joshie.progression.gui.filters.FilterSelectorItem;
+import joshie.progression.gui.filters.FilterTypeItem;
 import joshie.progression.helpers.CollectionHelper;
 
 import java.lang.reflect.Field;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemFilterField extends AbstractField {
-    private IProgressionFilterSelector selector;
+    private IFilterType selector;
     private Field field;
 
     public ItemFilterField(String fieldName, Object object) {
@@ -35,7 +35,7 @@ public class ItemFilterField extends AbstractField {
 
         if (object instanceof ISpecialFilters) {
             selector = ((ISpecialFilters) object).getFilterForField(getFieldName());
-        } else selector = FilterSelectorItem.INSTANCE;
+        } else selector = FilterTypeItem.INSTANCE;
     }
 
     @Override
@@ -53,7 +53,7 @@ public class ItemFilterField extends AbstractField {
         helper.drawSplitText(renderX, renderY, Progression.translate("filter." + selector.getName()), 4, yPos, 105, color, 0.75F);
     }
 
-    public boolean isAccepted(IProgressionFilter filter) {
+    public boolean isAccepted(IFilter filter) {
         if (filter.getType() != selector) return false;
         return true;
     }
@@ -74,7 +74,7 @@ public class ItemFilterField extends AbstractField {
         return false;
     }
 
-    public void setFilters(List<IProgressionFilter> filters) {
+    public void setFilters(List<IFilter> filters) {
         try {
             if (object instanceof ISetterCallback) {
                 ((ISetterCallback) object).setField(field.getName(), filters);
@@ -90,17 +90,17 @@ public class ItemFilterField extends AbstractField {
         } catch (Exception e) {}
     }
 
-    public List<IProgressionFilter> getFilters() {
+    public List<IFilter> getFilters() {
         try {
-            return (List<IProgressionFilter>) field.get(object);
+            return (List<IFilter>) field.get(object);
         } catch (Exception e) {}
 
         //Return a blank list yo!
         return new ArrayList();
     }
 
-    public void add(IProgressionFilter filter) {
-        List<IProgressionFilter> filters = getFilters();
+    public void add(IFilter filter) {
+        List<IFilter> filters = getFilters();
         filters.add(filter);
         if (object instanceof ISetterCallback) {
             ((ISetterCallback) object).setField(field.getName(), filters);
@@ -115,8 +115,8 @@ public class ItemFilterField extends AbstractField {
         FeatureItemPreview.INSTANCE.updateSearch();
     }
 
-    public void remove(IProgressionFilter filter) {
-        List<IProgressionFilter> filters = getFilters();
+    public void remove(IFilter filter) {
+        List<IFilter> filters = getFilters();
         CollectionHelper.remove(filters, filter);
         if (object instanceof ISetterCallback) {
             ((ISetterCallback) object).setField(field.getName(), filters);

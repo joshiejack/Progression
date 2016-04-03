@@ -1,9 +1,9 @@
 package joshie.progression.player;
 
 import com.google.common.collect.Maps;
-import joshie.progression.api.criteria.IProgressionCriteria;
-import joshie.progression.api.criteria.IProgressionReward;
-import joshie.progression.api.criteria.IProgressionTab;
+import joshie.progression.api.criteria.ICriteria;
+import joshie.progression.api.criteria.IReward;
+import joshie.progression.api.criteria.ITab;
 import joshie.progression.api.special.IStoreNBTData;
 import joshie.progression.criteria.filters.location.FilterPlayerLastBroken;
 import joshie.progression.handlers.APIHandler;
@@ -115,9 +115,9 @@ public class PlayerSavedData extends WorldSavedData {
             this.markDirty();
             //If this team never existed before
             //Loop through all the rewards loaded and init them with player data
-            for (IProgressionTab tab : APIHandler.getTabs().values()) {
-                for (IProgressionCriteria criteria : tab.getCriteria()) {
-                    for (IProgressionReward reward : criteria.getRewards()) {
+            for (ITab tab : APIHandler.getTabs().values()) {
+                for (ICriteria criteria : tab.getCriteria()) {
+                    for (IReward reward : criteria.getRewards()) {
                         if (reward instanceof IStoreNBTData) {
                             IStoreNBTData storage = (IStoreNBTData) reward;
                             data.getCustomStats().setCustomData(storage.getNBTKey(), storage.getDefaultTags(new NBTTagCompound()));

@@ -1,6 +1,6 @@
 package joshie.progression.api;
 
-import joshie.progression.api.criteria.IProgressionCriteria;
+import joshie.progression.api.criteria.ICriteria;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -32,5 +32,5 @@ public interface IPlayerData {
     public void addDouble(EntityPlayerMP player, String name, double value);
 
     /** Returns a list of all the completed criteria for this player **/
-    public Set<IProgressionCriteria> getCompletedCriteriaList(UUID uuid);
+    public Set<ICriteria> getCompletedCriteriaList(UUID uuid);
 }

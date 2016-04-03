@@ -1,16 +1,16 @@
 package joshie.progression.criteria.rewards;
 
 import joshie.progression.Progression;
-import joshie.progression.api.criteria.IProgressionField;
-import joshie.progression.api.criteria.IProgressionFilter;
-import joshie.progression.api.criteria.IProgressionFilterSelector;
+import joshie.progression.api.criteria.IField;
+import joshie.progression.api.criteria.IFilter;
+import joshie.progression.api.criteria.IFilterType;
 import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.IHasFilters;
 import joshie.progression.api.special.ISpecialFieldProvider;
 import joshie.progression.api.special.ISpecialFilters;
 import joshie.progression.criteria.filters.FilterBase;
 import joshie.progression.gui.fields.ItemFilterField;
-import joshie.progression.gui.filters.FilterSelectorLocation;
+import joshie.progression.gui.filters.FilterTypeLocation;
 import joshie.progression.lib.WorldLocation;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.gui.GuiScreen;
@@ -35,8 +35,8 @@ import java.util.Iterator;
 import java.util.List;
 
 public class RewardTeleport extends RewardBase implements ISpecialFilters, IHasFilters, ISpecialFieldProvider {
-    public List<IProgressionFilter> locations = new ArrayList();
-    protected transient IProgressionFilter preview;
+    public List<IFilter> locations = new ArrayList();
+    protected transient IFilter preview;
     protected transient int ticker;
 
     public RewardTeleport() {
@@ -44,17 +44,17 @@ public class RewardTeleport extends RewardBase implements ISpecialFilters, IHasF
     }
 
     @Override
-    public List<IProgressionFilter> getAllFilters() {
+    public List<IFilter> getAllFilters() {
         return locations;
     }
 
     @Override
-    public IProgressionFilterSelector getFilterForField(String fieldName) {
-        return FilterSelectorLocation.INSTANCE;
+    public IFilterType getFilterForField(String fieldName) {
+        return FilterTypeLocation.INSTANCE;
     }
 
     @Override
-    public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
+    public void addSpecialFields(List<IField> fields, DisplayMode mode) {
         if (mode == DisplayMode.EDIT) {
             fields.add(new ItemFilterField("locations", this));
         }

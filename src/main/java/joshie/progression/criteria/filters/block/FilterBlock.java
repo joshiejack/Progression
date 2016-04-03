@@ -1,10 +1,10 @@
 package joshie.progression.criteria.filters.block;
 
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.criteria.IProgressionField;
-import joshie.progression.api.criteria.IProgressionFilterSelector;
+import joshie.progression.api.criteria.IField;
+import joshie.progression.api.criteria.IFilterType;
 import joshie.progression.api.special.*;
-import joshie.progression.gui.filters.FilterSelectorBlock;
+import joshie.progression.gui.filters.FilterTypeBlock;
 import joshie.progression.helpers.ItemHelper;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -20,12 +20,12 @@ public class FilterBlock extends FilterBaseBlock implements IItemGetterCallback,
     }
 
     @Override
-    public IProgressionFilterSelector getFilterForField(String fieldName) {
-        return FilterSelectorBlock.INSTANCE;
+    public IFilterType getFilterForField(String fieldName) {
+        return FilterTypeBlock.INSTANCE;
     }
 
     @Override
-    public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
+    public void addSpecialFields(List<IField> fields, DisplayMode mode) {
         if (mode == DisplayMode.EDIT) fields.add(ProgressionAPI.fields.getItem(this, "filterBlock", 25, 25, 3F));
     }
 

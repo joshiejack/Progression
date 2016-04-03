@@ -1,7 +1,7 @@
 package joshie.progression.criteria.filters.block;
 
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.criteria.IProgressionField;
+import joshie.progression.api.criteria.IField;
 import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.IInit;
 import joshie.progression.api.special.ISpecialFieldProvider;
@@ -31,7 +31,7 @@ public class FilterBlockStack extends FilterBaseBlock implements ISpecialFieldPr
     }
 
     @Override
-    public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
+    public void addSpecialFields(List<IField> fields, DisplayMode mode) {
         if (mode == DisplayMode.EDIT) fields.add(ProgressionAPI.fields.getItem(this, "stack", 30, 35, 2.4F));
     }
 

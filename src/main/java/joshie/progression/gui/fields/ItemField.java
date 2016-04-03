@@ -1,7 +1,7 @@
 package joshie.progression.gui.fields;
 
-import joshie.progression.api.criteria.IProgressionFilter;
-import joshie.progression.api.criteria.IProgressionFilterSelector;
+import joshie.progression.api.criteria.IFilter;
+import joshie.progression.api.criteria.IFilterType;
 import joshie.progression.api.special.*;
 import joshie.progression.gui.core.DrawHelper;
 import joshie.progression.gui.core.FeatureTooltip;
@@ -9,7 +9,7 @@ import joshie.progression.gui.editors.FeatureItemSelector;
 import joshie.progression.gui.editors.FeatureItemSelector.Position;
 import joshie.progression.gui.editors.IItemSelectable;
 import joshie.progression.gui.filters.FeatureItemPreview;
-import joshie.progression.gui.filters.FilterSelectorItem;
+import joshie.progression.gui.filters.FilterTypeItem;
 import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.item.ItemStack;
 
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemField extends AbstractField implements IItemSelectable {
-    private final IProgressionFilterSelector filter;
+    private final IFilterType filter;
     private Field field;
     private Object object;
     private final int x;
@@ -39,11 +39,11 @@ public class ItemField extends AbstractField implements IItemSelectable {
         this.mouseY1 = y - 2;
         this.mouseY2 = (int) (y + 15 * scale);
 
-        if (object instanceof IProgressionFilter) {
-            this.filter = ((IProgressionFilter)object).getType();
+        if (object instanceof IFilter) {
+            this.filter = ((IFilter)object).getType();
         } else if (object instanceof ISpecialFilters) {
             this.filter = ((ISpecialFilters) object).getFilterForField(fieldName);
-        } else this.filter = FilterSelectorItem.INSTANCE;
+        } else this.filter = FilterTypeItem.INSTANCE;
 
         try {
             this.field = object.getClass().getField(fieldName);

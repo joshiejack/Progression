@@ -1,14 +1,14 @@
 package joshie.progression.criteria.filters;
 
 import joshie.progression.Progression;
-import joshie.progression.api.criteria.IProgressionFilter;
+import joshie.progression.api.criteria.IFilter;
 import joshie.progression.api.special.DisplayMode;
 
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-public abstract class FilterBase implements IProgressionFilter {
+public abstract class FilterBase implements IFilter {
     private static final Random rand = new Random();
     private int color;
     private String name;
@@ -21,7 +21,7 @@ public abstract class FilterBase implements IProgressionFilter {
         this.color = color;
     }
 
-    public static IProgressionFilter getRandomFilterFromFilters(List<IProgressionFilter> locality) {
+    public static IFilter getRandomFilterFromFilters(List<IFilter> locality) {
         int size = locality.size();
         if (size == 0) return null;
         if (size == 1) return locality.get(0);

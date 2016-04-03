@@ -2,10 +2,10 @@ package joshie.progression.api;
 
 import java.util.UUID;
 
-import joshie.progression.api.criteria.IProgressionCondition;
-import joshie.progression.api.criteria.IProgressionFilter;
-import joshie.progression.api.criteria.IProgressionReward;
-import joshie.progression.api.criteria.IProgressionTrigger;
+import joshie.progression.api.criteria.ICondition;
+import joshie.progression.api.criteria.IFilter;
+import joshie.progression.api.criteria.IReward;
+import joshie.progression.api.criteria.ITrigger;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
@@ -38,16 +38,16 @@ public interface IProgressionAPI {
     public void registerCustomDataBuilder(String trigger, ICustomDataBuilder builder);
     
     /** Register a condition with the registry **/
-    public IProgressionCondition registerConditionType(IProgressionCondition reward);
+    public ICondition registerConditionType(ICondition reward);
     
     /** Register a trigger with the registry **/
-    public IProgressionTrigger registerTriggerType(IProgressionTrigger trigger);
+    public ITrigger registerTriggerType(ITrigger trigger);
     
     /** Register a reward with the registry **/
-    public IProgressionReward registerRewardType(IProgressionReward reward);
+    public IReward registerRewardType(IReward reward);
     
     /** Register a filter type with the registry **/
-    public IProgressionFilter registerFilter(IProgressionFilter filter);
+    public IFilter registerFilter(IFilter filter);
     
     /** Register a new crafting type **/
     public void registerActionType(String unlocalised);

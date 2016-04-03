@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 
 import joshie.enchiridion.api.book.IButtonAction;
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.criteria.IProgressionCriteria;
+import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.JSONHelper;
 
@@ -13,13 +13,13 @@ import java.util.UUID;
 public class ActionCompleteCriteria extends AbstractAction implements IButtonAction {
     public transient String displayName;
     public transient UUID criteriaID;
-    public transient IProgressionCriteria criteria;
+    public transient ICriteria criteria;
 
     public ActionCompleteCriteria() {
         super("criteria.complete");
     }
 
-    public ActionCompleteCriteria(String displayName, UUID criteriaID, IProgressionCriteria criteria) {
+    public ActionCompleteCriteria(String displayName, UUID criteriaID, ICriteria criteria) {
         super("criteria.complete");
         this.displayName = displayName;
         this.criteriaID = criteriaID;
@@ -47,13 +47,13 @@ public class ActionCompleteCriteria extends AbstractAction implements IButtonAct
         return new ActionCompleteCriteria("New Criteria", UUID.randomUUID(), null);
     }
 
-    private IProgressionCriteria getCriteria() {
+    private ICriteria getCriteria() {
         if (criteria != null) {
             if (criteria.getDisplayName().equals(displayName)) return criteria;
         }
 
         //Attempt to grab the criteria based on the displayname
-        for (IProgressionCriteria c : APIHandler.getCriteria().values()) {
+        for (ICriteria c : APIHandler.getCriteria().values()) {
             String display = c.getDisplayName();
             if (c.getDisplayName().equals(displayName)) {
                 criteria = c;
@@ -67,7 +67,7 @@ public class ActionCompleteCriteria extends AbstractAction implements IButtonAct
 
     @Override
     public void performAction() {
-        IProgressionCriteria criteria = getCriteria();
+        ICriteria criteria = getCriteria();
         if (criteria != null) {
             ProgressionAPI.registry.fireTriggerClientside("forced-complete", getCriteria());
         }

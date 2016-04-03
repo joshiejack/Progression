@@ -1,8 +1,8 @@
 package joshie.progression.helpers;
 
-import joshie.progression.api.criteria.IProgressionFilter;
-import joshie.progression.api.criteria.IProgressionFilterSelector;
-import joshie.progression.gui.filters.FilterSelectorBlock;
+import joshie.progression.api.criteria.IFilter;
+import joshie.progression.api.criteria.IFilterType;
+import joshie.progression.gui.filters.FilterTypeBlock;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -71,7 +71,7 @@ public class ItemHelper {
         return block != null;
     }
 
-    public static ItemStack getRandomItem(IProgressionFilter filter) {
+    public static ItemStack getRandomItem(IFilter filter) {
         if (shuffledItemsCache == null) shuffledItemsCache = new ArrayList(getCreativeItems());
         Collections.shuffle(shuffledItemsCache);
         for (ItemStack stack : shuffledItemsCache) {
@@ -83,11 +83,11 @@ public class ItemHelper {
         return null;
     }
 
-    public static ItemStack getRandomItem(List<IProgressionFilter> filters) {
+    public static ItemStack getRandomItem(List<IFilter> filters) {
         return getRandomItem(filters, null);
     }
 
-    public static ItemStack getRandomItemOfSize(List<IProgressionFilter> filters, int stackSize) {
+    public static ItemStack getRandomItemOfSize(List<IFilter> filters, int stackSize) {
         ItemStack item = getRandomItem(filters, null);
         if (item == null) return null;
         else item = item.copy();
@@ -95,18 +95,18 @@ public class ItemHelper {
         return item;
     }
 
-    public static ItemStack getRandomBlock(List<IProgressionFilter> filters) {
-        return getRandomItem(filters, FilterSelectorBlock.INSTANCE);
+    public static ItemStack getRandomBlock(List<IFilter> filters) {
+        return getRandomItem(filters, FilterTypeBlock.INSTANCE);
     }
 
-    public static ItemStack getRandomItem(List<IProgressionFilter> filters, IProgressionFilterSelector selector) {
-        ArrayList<IProgressionFilter> shuffledFilters = new ArrayList(filters);
+    public static ItemStack getRandomItem(List<IFilter> filters, IFilterType selector) {
+        ArrayList<IFilter> shuffledFilters = new ArrayList(filters);
         if (shuffledItemsCache == null) shuffledItemsCache = new ArrayList(getCreativeItems());
         Collections.shuffle(shuffledItemsCache);
         Collections.shuffle(shuffledFilters);
         for (ItemStack stack : shuffledItemsCache) {
             if (selector != null && !selector.isAcceptable(stack)) continue;
-            for (IProgressionFilter filter : shuffledFilters) {
+            for (IFilter filter : shuffledFilters) {
                 if (filter.matches(stack)) return stack;
             }
         }
@@ -115,7 +115,7 @@ public class ItemHelper {
         return null;
     }
 
-    public static List<ItemStack> getAllMatchingItems(IProgressionFilter filter) {
+    public static List<ItemStack> getAllMatchingItems(IFilter filter) {
         ArrayList<ItemStack> stacks = new ArrayList();
         for (ItemStack stack : getAllItems()) {
             if (filter.matches(stack)) {
@@ -126,13 +126,13 @@ public class ItemHelper {
         return stacks;
     }
 
-    public static List<ItemStack> getMatches(IProgressionFilter filter) {
+    public static List<ItemStack> getMatches(IFilter filter) {
         return ItemHelper.getAllMatchingItems(filter);
     }
 
-    public static List<ItemStack> getAllMatchingItems(List<IProgressionFilter> filters) {
+    public static List<ItemStack> getAllMatchingItems(List<IFilter> filters) {
         ArrayList<ItemStack> stacks = new ArrayList();
-        for (IProgressionFilter filter : filters) {
+        for (IFilter filter : filters) {
             stacks.addAll(getMatches(filter));
         }
 

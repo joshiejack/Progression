@@ -2,10 +2,10 @@ package joshie.progression.gui.editors.insert;
 
 import java.util.Collection;
 
-import joshie.progression.api.criteria.IProgressionTrigger;
+import joshie.progression.api.criteria.ITrigger;
 import joshie.progression.handlers.APIHandler;
 
-public class FeatureNewTrigger extends FeatureNew<IProgressionTrigger> {
+public class FeatureNewTrigger extends FeatureNew<ITrigger> {
     public static final FeatureNewTrigger INSTANCE = new FeatureNewTrigger();
 
     public FeatureNewTrigger() {
@@ -13,12 +13,12 @@ public class FeatureNewTrigger extends FeatureNew<IProgressionTrigger> {
     }
 
     @Override
-    public Collection<IProgressionTrigger> getFields() {
+    public Collection<ITrigger> getFields() {
         return APIHandler.triggerTypes.values();
     }
 
     @Override
-    public void clone(IProgressionTrigger trigger) {
+    public void clone(ITrigger trigger) {
         APIHandler.cloneTrigger(criteria, trigger);
         //GuiCriteriaEditor.INSTANCE.initGui()
     }

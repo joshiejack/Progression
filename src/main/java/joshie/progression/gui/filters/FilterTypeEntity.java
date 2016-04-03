@@ -1,6 +1,6 @@
 package joshie.progression.gui.filters;
 
-import joshie.progression.api.criteria.IProgressionFilterSelector;
+import joshie.progression.api.criteria.IFilterType;
 import joshie.progression.gui.core.DrawHelper;
 import joshie.progression.gui.core.FeatureTooltip;
 import joshie.progression.gui.core.GuiCore;
@@ -13,8 +13,8 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 
-public class FilterSelectorEntity extends FilterSelectorBase {
-    public static final IProgressionFilterSelector INSTANCE = new FilterSelectorEntity();
+public class FilterTypeEntity extends FilterTypeBase {
+    public static final IFilterType INSTANCE = new FilterTypeEntity();
 
     @Override
     public String getName() {

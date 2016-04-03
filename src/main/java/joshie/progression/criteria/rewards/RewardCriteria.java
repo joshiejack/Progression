@@ -1,7 +1,7 @@
 package joshie.progression.criteria.rewards;
 
 import joshie.progression.Progression;
-import joshie.progression.api.criteria.IProgressionCriteria;
+import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.special.IGetterCallback;
 import joshie.progression.api.special.IInit;
 import joshie.progression.handlers.APIHandler;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class RewardCriteria extends RewardBaseSingular implements IGetterCallback, IInit {
-    private IProgressionCriteria criteria = null;
+    private ICriteria criteria = null;
     private UUID criteriaID = UUID.randomUUID();
     public boolean remove = true;
     public boolean possibility = false;
@@ -27,7 +27,7 @@ public class RewardCriteria extends RewardBaseSingular implements IGetterCallbac
     @Override
     public void init() {
         try {
-            for (IProgressionCriteria c : APIHandler.getCriteria().values()) {
+            for (ICriteria c : APIHandler.getCriteria().values()) {
                 String display = c.getDisplayName();
                 if (c.getDisplayName().equals(displayName)) {
                     criteria = c;

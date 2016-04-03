@@ -1,36 +1,36 @@
 package joshie.progression.gui.filters;
 
 import joshie.progression.api.IFilterRegistry;
-import joshie.progression.api.criteria.IProgressionFilterSelector;
+import joshie.progression.api.criteria.IFilterType;
 
 public class FilterSelectorHelper implements IFilterRegistry {
     @Override
-    public IProgressionFilterSelector getBlockFilter() {
-        return FilterSelectorBlock.INSTANCE;
+    public IFilterType getBlockFilter() {
+        return FilterTypeBlock.INSTANCE;
     }
 
     @Override
-    public IProgressionFilterSelector getEntityFilter() {
-        return FilterSelectorEntity.INSTANCE;
+    public IFilterType getEntityFilter() {
+        return FilterTypeEntity.INSTANCE;
     }
 
     @Override
-    public IProgressionFilterSelector getPotionFilter() {
-        return FilterSelectorPotion.INSTANCE;
+    public IFilterType getPotionFilter() {
+        return FilterTypePotion.INSTANCE;
     }
 
     @Override
-    public IProgressionFilterSelector getLocationFilter() {
-        return FilterSelectorLocation.INSTANCE;
+    public IFilterType getLocationFilter() {
+        return FilterTypeLocation.INSTANCE;
     }
 
     @Override
-    public IProgressionFilterSelector getItemStackFilter() {
-        return FilterSelectorItem.INSTANCE;
+    public IFilterType getItemStackFilter() {
+        return FilterTypeItem.INSTANCE;
     }
 
     @Override
-    public IProgressionFilterSelector getCraftingFilter() {
-        return FilterSelectorAction.INSTANCE;
+    public IFilterType getCraftingFilter() {
+        return FilterTypeAction.INSTANCE;
     }
 }

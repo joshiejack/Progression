@@ -111,6 +111,11 @@ public class FilterItemNBTFuzzy extends FilterBaseItem implements IInit, ISetter
         return NBTType.values()[0];
     }
 
+    @Override
+    public boolean isEnum(String name) {
+        return name.equals("type");
+    }
+
     public static enum NBTType {
          BYTE, SHORT, INT, LONG, FLOAT, DOUBLE, STRING;
     }

@@ -1,8 +1,8 @@
 package joshie.progression.criteria.rewards;
 
 import joshie.progression.Progression;
-import joshie.progression.api.criteria.IProgressionCriteria;
-import joshie.progression.api.criteria.IProgressionReward;
+import joshie.progression.api.criteria.ICriteria;
+import joshie.progression.api.criteria.IReward;
 import joshie.progression.api.special.DisplayMode;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -11,8 +11,8 @@ import net.minecraft.item.ItemStack;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class RewardBase implements IProgressionReward {
-    protected IProgressionCriteria criteria;
+public abstract class RewardBase implements IReward {
+    protected ICriteria criteria;
     private String name;
     private int color;
     private ItemStack stack;
@@ -54,13 +54,13 @@ public abstract class RewardBase implements IProgressionReward {
     }
 
     @Override
-    public void setCriteria(IProgressionCriteria criteria, UUID uuid) {
+    public void setCriteria(ICriteria criteria, UUID uuid) {
         this.criteria = criteria;
         this.uuid = uuid;
     }
 
     @Override
-    public IProgressionCriteria getCriteria() {
+    public ICriteria getCriteria() {
         return criteria;
     }
 
@@ -119,9 +119,9 @@ public abstract class RewardBase implements IProgressionReward {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || !(o instanceof IProgressionReward)) return false;
+        if (o == null || !(o instanceof IReward)) return false;
 
-        IProgressionReward that = (IProgressionReward) o;
+        IReward that = (IReward) o;
         return getUniqueID() != null ? getUniqueID().equals(that.getUniqueID()) : that.getUniqueID() == null;
 
     }

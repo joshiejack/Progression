@@ -6,10 +6,10 @@ import net.minecraft.item.ItemStack;
 import java.util.List;
 import java.util.UUID;
 
-public interface IProgressionReward extends ICanHaveEvents {
+public interface IReward extends ICanHaveEvents {
     /** Associates this reward type with the criteria
      *  Most reward types will not need access to this. **/
-    public void setCriteria(IProgressionCriteria criteria, UUID uuid);
+    public void setCriteria(ICriteria criteria, UUID uuid);
 
     /** Rewards this player, Called server side only **/
     public void reward(EntityPlayerMP player);
@@ -34,5 +34,5 @@ public interface IProgressionReward extends ICanHaveEvents {
     public boolean isAutomatic();
 
     /** return the criteria this reward is attached to **/
-    public IProgressionCriteria getCriteria();
+    public ICriteria getCriteria();
 }

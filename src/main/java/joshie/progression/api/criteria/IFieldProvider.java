@@ -19,9 +19,9 @@ public interface IFieldProvider {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (o == null || !(o instanceof IProgressionReward)) return false;
+            if (o == null || !(o instanceof IReward)) return false;
 
-            IProgressionReward that = (IProgressionReward) o;
+            IReward that = (IReward) o;
             return getUniqueID() != null ? getUniqueID().equals(that.getUniqueID()) : that.getUniqueID() == null;
 
         }

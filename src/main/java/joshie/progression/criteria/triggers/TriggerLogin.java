@@ -1,7 +1,7 @@
 package joshie.progression.criteria.triggers;
 
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.criteria.IProgressionTrigger;
+import joshie.progression.api.criteria.ITrigger;
 import joshie.progression.api.special.DisplayMode;
 import joshie.progression.items.ItemCriteria;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -14,7 +14,7 @@ public class TriggerLogin extends TriggerBaseCounter {
     }
 
     @Override
-    public IProgressionTrigger copy() {
+    public ITrigger copy() {
         TriggerLogin trigger = new TriggerLogin();
         return copyBase(copyCounter(trigger));
     }

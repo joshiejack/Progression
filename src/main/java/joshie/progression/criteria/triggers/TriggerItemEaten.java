@@ -1,9 +1,9 @@
 package joshie.progression.criteria.triggers;
 
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.criteria.IProgressionField;
-import joshie.progression.api.criteria.IProgressionFilter;
-import joshie.progression.api.criteria.IProgressionTrigger;
+import joshie.progression.api.criteria.IField;
+import joshie.progression.api.criteria.IFilter;
+import joshie.progression.api.criteria.ITrigger;
 import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.ISpecialFieldProvider;
 import net.minecraft.item.ItemStack;
@@ -18,7 +18,7 @@ public class TriggerItemEaten extends TriggerBaseItemFilter implements ISpecialF
     }
 
     @Override
-    public IProgressionTrigger copy() {
+    public ITrigger copy() {
         TriggerItemEaten trigger = new TriggerItemEaten();
         return copyBase(copyCounter(copyFilter(trigger)));
     }
@@ -29,7 +29,7 @@ public class TriggerItemEaten extends TriggerBaseItemFilter implements ISpecialF
     }
     
     @Override
-    public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
+    public void addSpecialFields(List<IField> fields, DisplayMode mode) {
         if (mode == DisplayMode.EDIT) fields.add(ProgressionAPI.fields.getItemPreview(this, "filters", 30, 35, 1.9F));
         else fields.add(ProgressionAPI.fields.getItemPreview(this, "filters", 65, 35, 1.9F));
     }
@@ -37,7 +37,7 @@ public class TriggerItemEaten extends TriggerBaseItemFilter implements ISpecialF
     @Override
     protected boolean canIncrease(Object... data) {
         ItemStack item = (ItemStack) data[0];
-        for (IProgressionFilter filter : filters) {
+        for (IFilter filter : filters) {
             if (filter.matches((ItemStack) data[0])) return true;
         }
 

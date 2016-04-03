@@ -1,15 +1,15 @@
 package joshie.progression.criteria.rewards;
 
 import joshie.progression.Progression;
-import joshie.progression.api.criteria.IProgressionField;
-import joshie.progression.api.criteria.IProgressionFilter;
-import joshie.progression.api.criteria.IProgressionFilterSelector;
+import joshie.progression.api.criteria.IField;
+import joshie.progression.api.criteria.IFilter;
+import joshie.progression.api.criteria.IFilterType;
 import joshie.progression.api.special.*;
 import joshie.progression.criteria.filters.FilterBase;
 import joshie.progression.gui.fields.EntityFilterFieldPreview;
 import joshie.progression.gui.fields.ItemFilterField;
-import joshie.progression.gui.filters.FilterSelectorEntity;
-import joshie.progression.gui.filters.FilterSelectorLocation;
+import joshie.progression.gui.filters.FilterTypeEntity;
+import joshie.progression.gui.filters.FilterTypeLocation;
 import joshie.progression.helpers.EntityHelper;
 import joshie.progression.helpers.StackHelper;
 import joshie.progression.lib.WorldLocation;
@@ -28,13 +28,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RewardSpawnEntity extends RewardBase implements ISpecialFilters, IInit, IHasFilters, ISpecialFieldProvider {
-    public List<IProgressionFilter> locations = new ArrayList();
-    public List<IProgressionFilter> entities = new ArrayList();
+    public List<IFilter> locations = new ArrayList();
+    public List<IFilter> entities = new ArrayList();
     public NBTTagCompound tagValue = new NBTTagCompound();
     public int spawnNumber = 1;
     public String nbtData = "";
 
-    protected transient IProgressionFilter locationpreview;
+    protected transient IFilter locationpreview;
     protected transient int locationticker;
 
     public RewardSpawnEntity() {
@@ -47,7 +47,7 @@ public class RewardSpawnEntity extends RewardBase implements ISpecialFilters, II
     }
 
     @Override
-    public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
+    public void addSpecialFields(List<IField> fields, DisplayMode mode) {
         if (mode == DisplayMode.EDIT) {
             fields.add(new ItemFilterField("locations", this));
             fields.add(new ItemFilterField("entities", this));
@@ -55,8 +55,8 @@ public class RewardSpawnEntity extends RewardBase implements ISpecialFilters, II
     }
     
     @Override
-    public List<IProgressionFilter> getAllFilters() {
-        ArrayList<IProgressionFilter> all = new ArrayList();
+    public List<IFilter> getAllFilters() {
+        ArrayList<IFilter> all = new ArrayList();
         all.addAll(locations);
         all.addAll(entities);
         return all;
@@ -112,9 +112,9 @@ public class RewardSpawnEntity extends RewardBase implements ISpecialFilters, II
     }
 
     @Override
-    public IProgressionFilterSelector getFilterForField(String fieldName) {
-        if (fieldName.equals("locations")) return FilterSelectorLocation.INSTANCE;
-        if (fieldName.equals("entities")) return FilterSelectorEntity.INSTANCE;
+    public IFilterType getFilterForField(String fieldName) {
+        if (fieldName.equals("locations")) return FilterTypeLocation.INSTANCE;
+        if (fieldName.equals("entities")) return FilterTypeEntity.INSTANCE;
 
         return null;
     }

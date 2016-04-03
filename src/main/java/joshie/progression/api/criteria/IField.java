@@ -2,7 +2,7 @@ package joshie.progression.api.criteria;
 
 import joshie.progression.gui.core.DrawHelper;
 
-public interface IProgressionField {
+public interface IField {
     public String getFieldName();
     public void click();
     public boolean attemptClick(int mouseX, int mouseY);

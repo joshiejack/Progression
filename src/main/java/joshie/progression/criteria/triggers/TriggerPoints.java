@@ -2,7 +2,7 @@ package joshie.progression.criteria.triggers;
 
 import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.criteria.IProgressionTrigger;
+import joshie.progression.api.criteria.ITrigger;
 import joshie.progression.items.ItemCriteria;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.util.EnumChatFormatting;
@@ -20,7 +20,7 @@ public class TriggerPoints extends TriggerBaseBoolean {
     }
 
     @Override
-    public IProgressionTrigger copy() {
+    public ITrigger copy() {
         TriggerPoints trigger = new TriggerPoints();
         trigger.variable = variable;
         trigger.amount = amount;

@@ -1,15 +1,23 @@
 package joshie.progression.criteria.conditions;
 
-import joshie.progression.api.special.IInit;
+import joshie.progression.api.IPlayerTeam;
+import joshie.progression.api.ProgressionAPI;
+import joshie.progression.api.criteria.IField;
+import joshie.progression.api.special.*;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Achievement;
 import net.minecraft.stats.AchievementList;
-import net.minecraft.world.World;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
+import org.apache.commons.lang3.text.WordUtils;
 
-import java.util.UUID;
+import java.util.List;
 
-public class ConditionAchievement extends ConditionBase implements IInit {   
+public class ConditionAchievement extends ConditionBase implements IInit, ISpecialFieldProvider, IItemGetterCallback, IAdditionalTooltip {
     public String id = "mineWood";
     private transient Achievement achievement;
     
@@ -26,11 +34,43 @@ public class ConditionAchievement extends ConditionBase implements IInit {
             }
         }
     }
+
+    @Override
+    public void addSpecialFields(List<IField> fields, DisplayMode mode) {
+        if (mode == DisplayMode.DISPLAY) fields.add(ProgressionAPI.fields.getItem(this, "id", 20, 42, 2F));
+    }
+
+    @Override
+    public ItemStack getItem(String fieldName) {
+        return achievement != null ? achievement.theItemStack : new ItemStack(Items.golden_hoe);
+    }
     
     @Override
-    public boolean isSatisfied(World world, EntityPlayer player, UUID uuid) {
+    public boolean isSatisfied(IPlayerTeam team) {
         if (achievement != null) {
-            return ((EntityPlayerMP)player).getStatFile().hasAchievementUnlocked(achievement);
-        } else return false;
+            for (EntityPlayer player: team.getTeamEntities()) { //If any team member has the achievement
+                if (player.worldObj.isRemote && ((EntityPlayerSP)player).getStatFileWriter().hasAchievementUnlocked(achievement)) return true;
+                else if (!player.worldObj.isRemote && ((EntityPlayerMP)player).getStatFile().hasAchievementUnlocked(achievement)) return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public int getWidth(DisplayMode mode) {
+        return mode == DisplayMode.EDIT ? super.getWidth(mode) : 92;
+    }
+
+    @Override
+    public void addHoverTooltip(List<String> tooltip) {
+        tooltip.clear();
+        if (achievement != null) {
+            tooltip.add(EnumChatFormatting.DARK_AQUA + StatCollector.translateToLocal(achievement.statId));
+            String[] split = WordUtils.wrap(achievement.getDescription() + ".", 27).split("\n");
+            for (String s: split) {
+                tooltip.add(s.trim());
+            }
+        }
     }
 }

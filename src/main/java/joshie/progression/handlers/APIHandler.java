@@ -32,22 +32,22 @@ public class APIHandler implements IProgressionAPI {
 
 
     //This is the registry for trigger type and reward type creation
-    public static final HashMap<String, IProgressionTrigger> triggerTypes = new HashMap();
-    public static final HashMap<String, IProgressionReward> rewardTypes = new HashMap();
-    public static final HashMap<String, IProgressionCondition> conditionTypes = new HashMap();
-    public static final HashMap<String, IProgressionFilter> filterTypes = new HashMap();
+    public static final HashMap<String, ITrigger> triggerTypes = new HashMap();
+    public static final HashMap<String, IReward> rewardTypes = new HashMap();
+    public static final HashMap<String, ICondition> conditionTypes = new HashMap();
+    public static final HashMap<String, IFilter> filterTypes = new HashMap();
 
     public static ICanHaveEvents getGenericFromType(ICanHaveEvents type) {
-        if (type instanceof IProgressionTrigger) return triggerTypes.get(type.getUnlocalisedName());
-        else if (type instanceof IProgressionReward) return rewardTypes.get(type.getUnlocalisedName());
-        else if (type instanceof IProgressionFilter) return filterTypes.get(type.getUnlocalisedName());
+        if (type instanceof ITrigger) return triggerTypes.get(type.getUnlocalisedName());
+        else if (type instanceof IReward) return rewardTypes.get(type.getUnlocalisedName());
+        else if (type instanceof IFilter) return filterTypes.get(type.getUnlocalisedName());
         else return null; //Will never return null;
     }
 
     public static Collection<ICanHaveEvents> getCollectionFromType(ICanHaveEvents type) {
-        if (type instanceof IProgressionTrigger) return new ArrayList(triggerTypes.values());
-        else if (type instanceof IProgressionReward) return new ArrayList(rewardTypes.values());
-        else if (type instanceof IProgressionFilter) return new ArrayList(filterTypes.values());
+        if (type instanceof ITrigger) return new ArrayList(triggerTypes.values());
+        else if (type instanceof IReward) return new ArrayList(rewardTypes.values());
+        else if (type instanceof IFilter) return new ArrayList(filterTypes.values());
         else return null; //Will never return null;
     }
 
@@ -57,10 +57,10 @@ public class APIHandler implements IProgressionAPI {
     public static APICache clientCache;
 
     public static IFieldProvider getDefault(IFieldProvider provider) {
-        if (provider instanceof IProgressionTrigger) return triggerTypes.get(provider.getUnlocalisedName());
-        if (provider instanceof IProgressionReward) return rewardTypes.get(provider.getUnlocalisedName());
-        if (provider instanceof IProgressionCondition) return conditionTypes.get(provider.getUnlocalisedName());
-        if (provider instanceof IProgressionFilter) return filterTypes.get(provider.getUnlocalisedName());
+        if (provider instanceof ITrigger) return triggerTypes.get(provider.getUnlocalisedName());
+        if (provider instanceof IReward) return rewardTypes.get(provider.getUnlocalisedName());
+        if (provider instanceof ICondition) return conditionTypes.get(provider.getUnlocalisedName());
+        if (provider instanceof IFilter) return filterTypes.get(provider.getUnlocalisedName());
 
         //WHAT
         return null;
@@ -84,11 +84,11 @@ public class APIHandler implements IProgressionAPI {
         return isClientSide() ? clientCache : serverCache;
     }
 
-    public static HashMap<UUID, IProgressionCriteria> getCriteria() {
+    public static HashMap<UUID, ICriteria> getCriteria() {
         return getCache().getCriteria();
     }
 
-    public static HashMap<UUID, IProgressionTab> getTabs() {
+    public static HashMap<UUID, ITab> getTabs() {
         return getCache().getTabs();
     }
 
@@ -121,25 +121,25 @@ public class APIHandler implements IProgressionAPI {
     }
 
     @Override
-    public IProgressionCondition registerConditionType(IProgressionCondition type) {
+    public ICondition registerConditionType(ICondition type) {
         conditionTypes.put(type.getUnlocalisedName(), type);
         return type;
     }
 
     @Override
-    public IProgressionTrigger registerTriggerType(IProgressionTrigger type) {
+    public ITrigger registerTriggerType(ITrigger type) {
         triggerTypes.put(type.getUnlocalisedName(), type);
         return type;
     }
 
     @Override
-    public IProgressionReward registerRewardType(IProgressionReward type) {
+    public IReward registerRewardType(IReward type) {
         rewardTypes.put(type.getUnlocalisedName(), type);
         return type;
     }
 
     @Override
-    public IProgressionFilter registerFilter(IProgressionFilter filter) {
+    public IFilter registerFilter(IFilter filter) {
         filterTypes.put(filter.getUnlocalisedName(), filter);
         return filter;
     }
@@ -149,23 +149,23 @@ public class APIHandler implements IProgressionAPI {
         RewardHurt.sources.put(source.damageType, source);
     }
 
-    public static IProgressionCriteria newCriteria(IProgressionTab tab, UUID name, boolean isClientside) {
-        IProgressionCriteria theCriteria = new Criteria(tab, name, isClientside);
+    public static ICriteria newCriteria(ITab tab, UUID name, boolean isClientside) {
+        ICriteria theCriteria = new Criteria(tab, name, isClientside);
         tab.getCriteria().add(theCriteria);
         getCriteria().put(name, theCriteria);
         return theCriteria;
     }
 
-    public static IProgressionTab newTab(UUID name) {
-        IProgressionTab iTab = new Tab().setUniqueName(name);
+    public static ITab newTab(UUID name) {
+        ITab iTab = new Tab().setUniqueName(name);
         getTabs().put(name, iTab);
         return iTab;
     }
 
-    public static IProgressionCondition newCondition(IProgressionTrigger trigger, UUID uuid, String type, JsonObject data) {
-        IProgressionCondition oldConditionType = conditionTypes.get(type);
+    public static ICondition newCondition(ITrigger trigger, UUID uuid, String type, JsonObject data) {
+        ICondition oldConditionType = conditionTypes.get(type);
         if (oldConditionType == null) return null;
-        IProgressionCondition newConditionType = oldConditionType;
+        ICondition newConditionType = oldConditionType;
 
         try {
             if (uuid == null) uuid = UUID.randomUUID();
@@ -177,11 +177,11 @@ public class APIHandler implements IProgressionAPI {
         return newConditionType;
     }
 
-    public static IProgressionTrigger newTrigger(IProgressionCriteria criteria, UUID uuid, String type, JsonObject data) {
-        IProgressionTrigger oldTriggerType = triggerTypes.get(type);
+    public static ITrigger newTrigger(ICriteria criteria, UUID uuid, String type, JsonObject data) {
+        ITrigger oldTriggerType = triggerTypes.get(type);
         if (oldTriggerType == null) return null;
 
-        IProgressionTrigger newTriggerType = oldTriggerType;
+        ITrigger newTriggerType = oldTriggerType;
 
         try {
             if (uuid == null) uuid = UUID.randomUUID();
@@ -194,11 +194,11 @@ public class APIHandler implements IProgressionAPI {
         return newTriggerType;
     }
 
-    public static IProgressionReward newReward(IProgressionCriteria criteria, UUID uuid, String type, JsonObject data) {
-        IProgressionReward oldRewardType = rewardTypes.get(type);
+    public static IReward newReward(ICriteria criteria, UUID uuid, String type, JsonObject data) {
+        IReward oldRewardType = rewardTypes.get(type);
         if (oldRewardType == null) return null;
 
-        IProgressionReward newRewardType = oldRewardType;
+        IReward newRewardType = oldRewardType;
         boolean optional = data.get("optional") != null ? data.get("optional").getAsBoolean() : false;
 
         try {
@@ -212,8 +212,8 @@ public class APIHandler implements IProgressionAPI {
         return newRewardType;
     }
 
-    public static IProgressionFilter newFilter(String typeName, JsonObject typeData) {
-        IProgressionFilter type = filterTypes.get(typeName);
+    public static IFilter newFilter(String typeName, JsonObject typeData) {
+        IFilter type = filterTypes.get(typeName);
         if (type != null) {
             try {
                 type = type.getClass().newInstance();
@@ -225,8 +225,8 @@ public class APIHandler implements IProgressionAPI {
         return type;
     }
 
-    public static IProgressionTrigger cloneTrigger(IProgressionCriteria criteria, IProgressionTrigger oldTriggerType) {
-        IProgressionTrigger newTriggerType = oldTriggerType;
+    public static ITrigger cloneTrigger(ICriteria criteria, ITrigger oldTriggerType) {
+        ITrigger newTriggerType = oldTriggerType;
 
         try {
             newTriggerType = oldTriggerType.getClass().newInstance();
@@ -239,8 +239,8 @@ public class APIHandler implements IProgressionAPI {
         return newTriggerType;
     }
 
-    public static IProgressionReward cloneReward(IProgressionCriteria criteria, IProgressionReward oldRewardType) {
-        IProgressionReward newRewardType = oldRewardType;
+    public static IReward cloneReward(ICriteria criteria, IReward oldRewardType) {
+        IReward newRewardType = oldRewardType;
 
         try {
             newRewardType = oldRewardType.getClass().newInstance();
@@ -253,8 +253,8 @@ public class APIHandler implements IProgressionAPI {
         return newRewardType;
     }
 
-    public static IProgressionCondition cloneCondition(IProgressionTrigger trigger, IProgressionCondition oldConditionType) {
-        IProgressionCondition newConditionType = oldConditionType;
+    public static ICondition cloneCondition(ITrigger trigger, ICondition oldConditionType) {
+        ICondition newConditionType = oldConditionType;
 
         try {
             newConditionType = oldConditionType.getClass().newInstance();
@@ -266,9 +266,9 @@ public class APIHandler implements IProgressionAPI {
         return newConditionType;
     }
 
-    public static void cloneFilter(ItemFilterField field, IProgressionFilter filter) {
+    public static void cloneFilter(ItemFilterField field, IFilter filter) {
         try {
-            IProgressionFilter newFilter = filter.getClass().newInstance();
+            IFilter newFilter = filter.getClass().newInstance();
             if (newFilter instanceof IInit) ((IInit) newFilter).init();
             field.add(newFilter);
         } catch (Exception e) {
@@ -281,21 +281,21 @@ public class APIHandler implements IProgressionAPI {
         new ActionType(name.toUpperCase()); //WOOT!
     }
 
-    public static IProgressionCriteria getCriteriaFromName(UUID name) {
+    public static ICriteria getCriteriaFromName(UUID name) {
         return getCache().getCriteria().get(name);
     }
 
-    public static IProgressionTab getTabFromName(UUID name) {
+    public static ITab getTabFromName(UUID name) {
         return getCache().getTabs().get(name);
     }
 
     public static void removeCriteria(UUID uuid, boolean skipTab) {
-        IProgressionCriteria c = getCriteria().get(uuid);
+        ICriteria c = getCriteria().get(uuid);
         //Remove the criteria from the tab
         if (!skipTab) {
-            Iterator<IProgressionCriteria> itC = c.getTab().getCriteria().iterator();
+            Iterator<ICriteria> itC = c.getTab().getCriteria().iterator();
             while (itC.hasNext()) {
-                IProgressionCriteria ic = itC.next();
+                ICriteria ic = itC.next();
                 if (ic.equals(c)) {
                     itC.remove();
                 }
@@ -303,10 +303,10 @@ public class APIHandler implements IProgressionAPI {
         }
 
         //Remove this from all the conflict lists
-        for (IProgressionCriteria conflict : c.getConflicts()) {
-            Iterator<IProgressionCriteria> it = conflict.getConflicts().iterator();
+        for (ICriteria conflict : c.getConflicts()) {
+            Iterator<ICriteria> it = conflict.getConflicts().iterator();
             while (it.hasNext()) {
-                IProgressionCriteria ct = it.next();
+                ICriteria ct = it.next();
                 if (ct.equals(c)) {
                     it.remove();
                 }
@@ -314,10 +314,10 @@ public class APIHandler implements IProgressionAPI {
         }
 
         //Remove this from all the requirement lists
-        for (IProgressionCriteria require : getCriteria().values()) {
-            Iterator<IProgressionCriteria> it = require.getPreReqs().iterator();
+        for (ICriteria require : getCriteria().values()) {
+            Iterator<ICriteria> it = require.getPreReqs().iterator();
             while (it.hasNext()) {
-                IProgressionCriteria ct = it.next();
+                ICriteria ct = it.next();
                 if (ct.equals(c)) {
                     it.remove();
                 }
@@ -325,28 +325,28 @@ public class APIHandler implements IProgressionAPI {
         }
 
         //Remove all rewards associated with this criteria
-        for (IProgressionReward reward : c.getRewards()) {
+        for (IReward reward : c.getRewards()) {
             EventsManager.onRemoved(reward);
             if (reward instanceof IHasFilters) {
-                for (IProgressionFilter filter: ((IHasFilters)reward).getAllFilters()) {
+                for (IFilter filter: ((IHasFilters)reward).getAllFilters()) {
                     EventsManager.onRemoved(filter);
                 }
             }
         }
 
         //Remove all triggers associated with this criteria
-        for (IProgressionTrigger trigger : c.getTriggers()) {
+        for (ITrigger trigger : c.getTriggers()) {
             EventsManager.onRemoved(trigger);
-            for (IProgressionCondition condition: trigger.getConditions()) {
+            for (ICondition condition: trigger.getConditions()) {
                 if (condition instanceof IHasFilters) {
-                    for (IProgressionFilter filter: ((IHasFilters)condition).getAllFilters()) {
+                    for (IFilter filter: ((IHasFilters)condition).getAllFilters()) {
                         EventsManager.onRemoved(filter);
                     }
                 }
             }
 
             if (trigger instanceof IHasFilters) {
-                for (IProgressionFilter filter: ((IHasFilters)trigger).getAllFilters()) {
+                for (IFilter filter: ((IHasFilters)trigger).getAllFilters()) {
                     EventsManager.onRemoved(filter);
                 }
             }

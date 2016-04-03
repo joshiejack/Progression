@@ -1,7 +1,7 @@
 package joshie.progression.crafting.actions;
 
 import joshie.progression.Progression;
-import joshie.progression.api.criteria.IProgressionCriteria;
+import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.crafting.ActionType;
 import joshie.progression.crafting.Crafter;
 import joshie.progression.crafting.CraftingRegistry;
@@ -36,10 +36,10 @@ public class ActionGeneral extends ActionForgeEvent {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (!checkAndCancelEvent(event)) {
-            Collection<IProgressionCriteria> requirements = CraftingRegistry.getRequirements(ActionType.GENERAL, event.entityPlayer.getCurrentEquippedItem());
+            Collection<ICriteria> requirements = CraftingRegistry.getRequirements(ActionType.GENERAL, event.entityPlayer.getCurrentEquippedItem());
             if (requirements.size() > 0) {
                 if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
-                    for (IProgressionCriteria c : requirements) {
+                    for (ICriteria c : requirements) {
                         GuiCriteriaEditor.INSTANCE.setCriteria(c);
                         break;
                     }

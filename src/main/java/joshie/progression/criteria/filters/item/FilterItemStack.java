@@ -2,7 +2,7 @@ package joshie.progression.criteria.filters.item;
 
 import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.criteria.IProgressionField;
+import joshie.progression.api.criteria.IField;
 import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.ISpecialFieldProvider;
 import net.minecraft.item.ItemStack;
@@ -19,7 +19,7 @@ public class FilterItemStack extends FilterBaseItem implements ISpecialFieldProv
     }
     
     @Override
-    public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
+    public void addSpecialFields(List<IField> fields, DisplayMode mode) {
         if (mode == DisplayMode.EDIT)
         fields.add(ProgressionAPI.fields.getItem(this, "stack", 30, 35, 1.4F));
     }

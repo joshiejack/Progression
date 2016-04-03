@@ -1,6 +1,6 @@
 package joshie.progression.api.special;
 
-import joshie.progression.api.criteria.IProgressionField;
+import joshie.progression.api.criteria.IField;
 
 import java.util.List;
 
@@ -10,5 +10,5 @@ import java.util.List;
 public interface ISpecialFieldProvider {
     /** Add extra fields, If you wish to only use your new fields,
      *  Just clear the list. **/
-    public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode);
+    public void addSpecialFields(List<IField> fields, DisplayMode mode);
 }

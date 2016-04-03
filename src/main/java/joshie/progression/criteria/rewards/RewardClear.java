@@ -1,8 +1,8 @@
 package joshie.progression.criteria.rewards;
 
 import joshie.progression.Progression;
-import joshie.progression.api.criteria.IProgressionField;
-import joshie.progression.api.criteria.IProgressionFilter;
+import joshie.progression.api.criteria.IField;
+import joshie.progression.api.criteria.IFilter;
 import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.ISpecialFieldProvider;
 import joshie.progression.gui.fields.ItemFilterFieldPreview;
@@ -22,7 +22,7 @@ public class RewardClear extends RewardBaseItemFilter implements ISpecialFieldPr
     }
 
     @Override
-    public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
+    public void addSpecialFields(List<IField> fields, DisplayMode mode) {
         if (mode == DisplayMode.EDIT) fields.add(new ItemFilterFieldPreview("filters", this, 25, 30, 2.8F));
         else fields.add(new ItemFilterFieldPreview("filters", this, 5, 25, 2.8F));
     }
@@ -36,7 +36,7 @@ public class RewardClear extends RewardBaseItemFilter implements ISpecialFieldPr
 
             if (check != null) {
                 for (int j = 0; j < check.stackSize && taken < stackSize; j++) {
-                    for (IProgressionFilter filter : filters) {
+                    for (IFilter filter : filters) {
                         if (filter.matches(check)) {
                             decrease++;
                             taken++;

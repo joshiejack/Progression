@@ -74,4 +74,9 @@ public class FilterRandomAround extends FilterLocationBase implements IInit, IEn
 
         return LocationOperator.values()[0];
     }
+
+    @Override
+    public boolean isEnum(String name) {
+        return name.contains("operator");
+    }
 }

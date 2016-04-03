@@ -1,8 +1,8 @@
 package joshie.progression.criteria.rewards;
 
-import joshie.progression.api.criteria.IProgressionField;
-import joshie.progression.api.criteria.IProgressionFilter;
-import joshie.progression.api.criteria.IProgressionFilterSelector;
+import joshie.progression.api.criteria.IField;
+import joshie.progression.api.criteria.IFilter;
+import joshie.progression.api.criteria.IFilterType;
 import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.IHasEventBus;
 import joshie.progression.api.special.ISpecialFieldProvider;
@@ -11,8 +11,8 @@ import joshie.progression.crafting.ActionType;
 import joshie.progression.crafting.CraftingRegistry;
 import joshie.progression.criteria.filters.FilterBase;
 import joshie.progression.gui.fields.ItemFilterFieldPreview;
-import joshie.progression.gui.filters.FilterSelectorAction;
-import joshie.progression.gui.filters.FilterSelectorItem;
+import joshie.progression.gui.filters.FilterTypeAction;
+import joshie.progression.gui.filters.FilterTypeItem;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.ItemStack;
 
@@ -22,8 +22,8 @@ import java.util.List;
 
 public class RewardCraftability extends RewardBaseItemFilter implements ISpecialFieldProvider, ISpecialFilters {
     public static HashSet<IHasEventBus> craftRegistry = new HashSet();
-    public List<IProgressionFilter> actionfilters = new ArrayList();
-    protected IProgressionFilter actionpreview;
+    public List<IFilter> actionfilters = new ArrayList();
+    protected IFilter actionpreview;
     protected int actionticker;
 
     public RewardCraftability() {
@@ -31,7 +31,7 @@ public class RewardCraftability extends RewardBaseItemFilter implements ISpecial
     }
 
     @Override
-    public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
+    public void addSpecialFields(List<IField> fields, DisplayMode mode) {
         if(mode == DisplayMode.EDIT) {
             fields.add(new ItemFilterFieldPreview("filters", this, 5, 44, 1.9F));
             fields.add(new ItemFilterFieldPreview("actionfilters", this, 45, 44, 1.9F));
@@ -42,13 +42,13 @@ public class RewardCraftability extends RewardBaseItemFilter implements ISpecial
     }
 
     @Override
-    public IProgressionFilterSelector getFilterForField(String fieldname) {
-        return fieldname.equals("actionfilters") ? FilterSelectorAction.INSTANCE : FilterSelectorItem.INSTANCE;
+    public IFilterType getFilterForField(String fieldname) {
+        return fieldname.equals("actionfilters") ? FilterTypeAction.INSTANCE : FilterTypeItem.INSTANCE;
     }
     
     @Override
-    public List<IProgressionFilter> getAllFilters() {
-        ArrayList<IProgressionFilter> all = new ArrayList();
+    public List<IFilter> getAllFilters() {
+        ArrayList<IFilter> all = new ArrayList();
         all.addAll(filters);
         all.addAll(actionfilters);
         return all;
@@ -56,8 +56,8 @@ public class RewardCraftability extends RewardBaseItemFilter implements ISpecial
 
     public List<ActionType> getTypesFromFilter() {
         List<ActionType> list = new ArrayList();
-        for (IProgressionFilter filter : actionfilters) {
-            if (filter.getType() == FilterSelectorAction.INSTANCE) {
+        for (IFilter filter : actionfilters) {
+            if (filter.getType() == FilterTypeAction.INSTANCE) {
                 ItemStack icon = (ItemStack) filter.getRandom(null);
                 if (icon != null) {
                     ActionType type = null;

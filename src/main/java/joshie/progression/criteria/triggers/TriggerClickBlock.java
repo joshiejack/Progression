@@ -1,7 +1,7 @@
 package joshie.progression.criteria.triggers;
 
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.criteria.IProgressionTrigger;
+import joshie.progression.api.criteria.ITrigger;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -15,7 +15,7 @@ public class TriggerClickBlock extends TriggerBaseBlock {
     }
 
     @Override
-    public IProgressionTrigger copy() {
+    public ITrigger copy() {
         TriggerClickBlock trigger = new TriggerClickBlock();
         trigger.cancel = cancel;
         return copyBase(copyCounter(copyFilter(trigger)));

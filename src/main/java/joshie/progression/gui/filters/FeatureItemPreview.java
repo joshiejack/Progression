@@ -2,8 +2,8 @@ package joshie.progression.gui.filters;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import joshie.progression.api.criteria.IProgressionFilter;
-import joshie.progression.api.criteria.IProgressionFilterSelector;
+import joshie.progression.api.criteria.IFilter;
+import joshie.progression.api.criteria.IFilterType;
 import joshie.progression.gui.core.FeatureAbstract;
 import joshie.progression.gui.core.GuiCore;
 import joshie.progression.gui.editors.FeatureItemSelector;
@@ -17,13 +17,13 @@ import java.util.concurrent.Callable;
 
 public class FeatureItemPreview extends FeatureAbstract {
     public static FeatureItemPreview INSTANCE = new FeatureItemPreview();
-    private IProgressionFilterSelector filter = FilterSelectorItem.INSTANCE;
+    private IFilterType filter = FilterTypeItem.INSTANCE;
     private ArrayList<Object> sorted;
     private int position;
 
     public FeatureItemPreview() {}
 
-    public void select(IProgressionFilterSelector filter) {
+    public void select(IFilterType filter) {
         this.filter = filter;
         updateSearch();
     }
@@ -63,7 +63,7 @@ public class FeatureItemPreview extends FeatureAbstract {
         if (GuiFilterEditor.INSTANCE.getField() == null) return; //NO UPDATES!!!
         sorted = new ArrayList();
         for (Object stack: getAllItems()) {
-            for (IProgressionFilter filter: GuiFilterEditor.INSTANCE.getField().getFilters()) {
+            for (IFilter filter: GuiFilterEditor.INSTANCE.getField().getFilters()) {
                 if (filter.matches(stack)) {
                     sorted.add(stack);
                 }

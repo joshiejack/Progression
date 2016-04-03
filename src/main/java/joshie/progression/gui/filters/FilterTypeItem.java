@@ -1,13 +1,13 @@
 package joshie.progression.gui.filters;
 
-import joshie.progression.api.criteria.IProgressionFilterSelector;
+import joshie.progression.api.criteria.IFilterType;
 import joshie.progression.helpers.ItemHelper;
 import net.minecraft.item.ItemStack;
 
 import java.util.List;
 
-public class FilterSelectorItem extends FilterSelectorBase {
-    public static final IProgressionFilterSelector INSTANCE = new FilterSelectorItem();
+public class FilterTypeItem extends FilterTypeBase {
+    public static final IFilterType INSTANCE = new FilterTypeItem();
 
     @Override
     public String getName() {

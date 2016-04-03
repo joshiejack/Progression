@@ -1,6 +1,6 @@
 package joshie.progression.lib;
 
-import joshie.progression.api.criteria.IProgressionFilter;
+import joshie.progression.api.criteria.IFilter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
 
@@ -22,12 +22,18 @@ public class WorldLocation {
         this.dimension = dimension;
         this.pos = new BlockPos(pos);
     }
+
+    public WorldLocation(EntityPlayer player) {
+        this.dimension = player.dimension;
+        this.pos = new BlockPos(player);
+        this.player = player;
+    }
     
     public void setPlayer(EntityPlayer player) {
         this.player = player;
     }
 
-    public static WorldLocation getRandomLocationFromFilters(List<IProgressionFilter> locality, EntityPlayer player) {
+    public static WorldLocation getRandomLocationFromFilters(List<IFilter> locality, EntityPlayer player) {
         int size = locality.size();
         if (size == 0) return null;
         if (size == 1) return (WorldLocation) locality.get(0).getRandom(player);

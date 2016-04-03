@@ -1,13 +1,14 @@
 package joshie.progression.criteria.conditions;
 
 import joshie.progression.Progression;
+import joshie.progression.api.IPlayerTeam;
+import joshie.progression.api.special.DisplayMode;
 import joshie.progression.items.ItemCriteria;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.World;
 
-import java.util.UUID;
+import java.util.Random;
 
 public class ConditionRandom extends ConditionBase {
+    private static final Random rand = new Random();
     public double chance = 50D;
 
     public ConditionRandom() {
@@ -15,12 +16,18 @@ public class ConditionRandom extends ConditionBase {
     }
 
     @Override
-    public boolean isSatisfied(World world, EntityPlayer player, UUID uuid) {
-        return (world.rand.nextDouble() * 100) <= chance;
+    public boolean isSatisfied(IPlayerTeam team) {
+        return (rand.nextDouble() * 100) <= chance;
     }
 
     @Override
     public String getDescription() {
-        return Progression.format(getUnlocalisedName() + ".description", chance);
+        if (inverted) return Progression.format(getUnlocalisedName() + ".description", 100D - chance);
+        else return Progression.format(getUnlocalisedName() + ".description", chance);
+    }
+
+    @Override
+    public int getWidth(DisplayMode mode) {
+        return mode == DisplayMode.DISPLAY ? 65: super.getWidth(mode);
     }
 }

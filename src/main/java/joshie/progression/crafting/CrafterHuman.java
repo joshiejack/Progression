@@ -1,8 +1,8 @@
 package joshie.progression.crafting;
 
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.criteria.IProgressionCriteria;
-import joshie.progression.api.criteria.IProgressionFilter;
+import joshie.progression.api.criteria.ICriteria;
+import joshie.progression.api.criteria.IFilter;
 import joshie.progression.json.Options;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -23,18 +23,18 @@ public class CrafterHuman extends Crafter {
 
     @Override
     public boolean canUseItemWithAction(ActionType type, ItemStack stack) {
-        Set<IProgressionFilter> filters = CraftingRegistry.getFiltersForStack(type, stack);
-        List<IProgressionFilter> matched = new ArrayList();
-        for (IProgressionFilter filter : filters) {
+        Set<IFilter> filters = CraftingRegistry.getFiltersForStack(type, stack);
+        List<IFilter> matched = new ArrayList();
+        for (IFilter filter : filters) {
             if (filter.matches(stack)) {
                 matched.add(filter); //Add all matches so we can check all criteria
             }
         }
 
         if (matched.size() == 0) return !Options.settings.disableUsageUntilRewardAdded;
-        Set<IProgressionCriteria> completed = ProgressionAPI.player.getCompletedCriteriaList(uuid);
-        for (IProgressionFilter filter : matched) {
-            IProgressionCriteria criteria = CraftingRegistry.getCriteriaForFilter(type, filter);
+        Set<ICriteria> completed = ProgressionAPI.player.getCompletedCriteriaList(uuid);
+        for (IFilter filter : matched) {
+            ICriteria criteria = CraftingRegistry.getCriteriaForFilter(type, filter);
             if (criteria != null && completed.contains(criteria)) return true;
         }
         

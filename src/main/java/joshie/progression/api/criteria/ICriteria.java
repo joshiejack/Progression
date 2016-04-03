@@ -7,12 +7,12 @@ import java.util.UUID;
 
 /** This is just a wrapper interface
  *  Don't use it for anything. */
-public interface IProgressionCriteria {
+public interface ICriteria {
     /** Returns a list of all the triggers in this criteria **/
-    public List<IProgressionTrigger> getTriggers();
+    public List<ITrigger> getTriggers();
     
     /** Returns a list of all the reward in this criteria **/
-    public List<IProgressionReward> getRewards();
+    public List<IReward> getRewards();
 
     /** Returns the unique id for this criteria **/
     public UUID getUniqueID();
@@ -31,17 +31,17 @@ public interface IProgressionCriteria {
 
     public int getRepeatAmount();
 
-    public List<IProgressionCriteria> getConflicts();
+    public List<ICriteria> getConflicts();
 
-    public IProgressionTab getTab();
+    public ITab getTab();
 
-    public List<IProgressionCriteria> getPreReqs();
+    public List<ICriteria> getPreReqs();
 
     public int getAmountOfRewards();
 
     public boolean givesAllRewards();
 
-    public void init(IProgressionCriteria[] thePrereqs, IProgressionCriteria[] theConflicts, String display, boolean isVisible, boolean achievement, int repeatable, ItemStack icon, boolean allRequired, int tasksRequired, boolean infinite, boolean allRewards, int rewardsGiven, int x, int y);
+    public void init(ICriteria[] thePrereqs, ICriteria[] theConflicts, String display, boolean isVisible, boolean achievement, int repeatable, ItemStack icon, boolean allRequired, int tasksRequired, boolean infinite, boolean allRewards, int rewardsGiven, int x, int y);
 
     public int getX();
 

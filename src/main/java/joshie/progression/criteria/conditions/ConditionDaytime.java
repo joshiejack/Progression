@@ -1,11 +1,9 @@
 package joshie.progression.criteria.conditions;
 
+import joshie.progression.api.IPlayerTeam;
 import joshie.progression.items.ItemCriteria;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
-
-import java.util.UUID;
 
 public class ConditionDaytime extends ConditionBase {
 	private static final ItemStack day = ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.sun);
@@ -16,7 +14,11 @@ public class ConditionDaytime extends ConditionBase {
 	}
 	
 	@Override
-	public boolean isSatisfied(World world, EntityPlayer player, UUID uuid) {
-		return world.isDaytime();
+	public boolean isSatisfied(IPlayerTeam team) {
+		for (EntityPlayer player: team.getTeamEntities()) {
+			if (player.worldObj.isDaytime()) return true;
+		}
+
+		return false;
 	}
 }

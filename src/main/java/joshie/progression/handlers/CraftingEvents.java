@@ -1,6 +1,6 @@
 package joshie.progression.handlers;
 
-import joshie.progression.api.criteria.IProgressionCriteria;
+import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.event.ActionEvent;
 import joshie.progression.crafting.ActionType;
 import joshie.progression.crafting.Crafter;
@@ -38,7 +38,7 @@ public class CraftingEvents {
         //TODO: Readd tooltips for things you can't craft
         boolean hasStuff = false;
         for (ActionType type : ActionType.values()) {
-            Set<IProgressionCriteria> requirements = CraftingRegistry.getRequirements(type, event.itemStack);
+            Set<ICriteria> requirements = CraftingRegistry.getRequirements(type, event.itemStack);
             if (requirements.size() > 0) {
                 if (!hasStuff) {
                     event.toolTip.add("Currently Locked");
@@ -46,8 +46,8 @@ public class CraftingEvents {
                 }
 
                 event.toolTip.add(EnumChatFormatting.WHITE + type.getDisplayName());
-                for (IProgressionCriteria c : requirements) {
-                    ((IProgressionCriteria) c).addTooltip(event.toolTip);
+                for (ICriteria c : requirements) {
+                    ((ICriteria) c).addTooltip(event.toolTip);
                 }
             }
         }

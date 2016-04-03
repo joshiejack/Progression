@@ -74,4 +74,9 @@ public abstract class FilterRandomCoordinate extends FilterLocationBase implemen
 
         return LocationOperator.values()[0];
     }
+
+    @Override
+    public boolean isEnum(String name) {
+        return name.equals("operator");
+    }
 }

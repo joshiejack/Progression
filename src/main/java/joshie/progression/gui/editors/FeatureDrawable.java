@@ -1,9 +1,9 @@
 package joshie.progression.gui.editors;
 
 import joshie.progression.Progression;
+import joshie.progression.api.criteria.IField;
 import joshie.progression.api.criteria.IFieldProvider;
-import joshie.progression.api.criteria.IProgressionField;
-import joshie.progression.api.criteria.IProgressionReward;
+import joshie.progression.api.criteria.IReward;
 import joshie.progression.api.gui.ICustomDrawGuiDisplay;
 import joshie.progression.api.gui.ICustomDrawGuiEditor;
 import joshie.progression.api.special.DisplayMode;
@@ -39,7 +39,7 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
     protected static final Theme theme = Theme.INSTANCE;
     private int color;
     private List<IFieldProvider> drawable;
-    private HashMap<IFieldProvider, List<IProgressionField>> fieldsMap;
+    private HashMap<IFieldProvider, List<IField>> fieldsMap;
     private IGuiFeature newDrawable;
     private int gradient1, gradient2, fontColor;
     private int offsetY;
@@ -62,10 +62,10 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
 
     private int ticker = 0;
 
-    private List<IProgressionField> getFields(IFieldProvider provider) {
+    private List<IField> getFields(IFieldProvider provider) {
         if (fieldsMap.containsKey(provider)) return fieldsMap.get(provider);
         else {
-            List<IProgressionField> fields = new ArrayList();
+            List<IField> fields = new ArrayList();
             if (mode == EDIT) addFieldsViaReflection(provider, fields);
             boolean hideitemfields = false;
             if (provider instanceof ISpecialFieldProvider) {
@@ -78,8 +78,8 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
         }
     }
 
-    private void addFieldsViaReflection(IFieldProvider provider, List<IProgressionField> fields) {
-        FeatureItemSelector.Position type = provider instanceof IProgressionReward ? TOP : BOTTOM;
+    private void addFieldsViaReflection(IFieldProvider provider, List<IField> fields) {
+        FeatureItemSelector.Position type = provider instanceof IReward ? TOP : BOTTOM;
         for (Field field : provider.getClass().getFields()) {
             try {
                 if (field.getType() == boolean.class) fields.add(new BooleanField(field.getName(), provider));
@@ -108,7 +108,7 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
         if (editor == null || (editor != null && !editor.hideDefaultEditor())) {
             int yStart = 18;
             int index = 0;
-            for (IProgressionField t : getFields(drawing)) {
+            for (IField t : getFields(drawing)) {
                 int color = Theme.INSTANCE.optionsFontColor;
                 int yPos = yStart + (index * 6);
                 if (mode == EDIT) {
@@ -151,18 +151,19 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
     public void drawFeature(int mouseX, int mouseY) {
         int offsetX = 0;
         for (IFieldProvider drawing: drawable) {
-            if (!drawing.isVisible() && mode == DISPLAY) continue;
             int mouseOffsetX = mouseX - this.offsetX - offsetX;
             int mouseOffsetY = mouseY - this.offsetY;
-            drawingDraw(drawing, offset, offsetX, this.offsetY, mouseOffsetX, mouseOffsetY);
-            //Draw The Delete Button
-            if (mode == EDIT) {
-                int xXcoord = 234;
-                if (mouseOffsetX >= drawing.getWidth(mode) - 13 && mouseOffsetX <= drawing.getWidth(mode) - 3 && mouseOffsetY >= 4 && mouseOffsetY <= 14) {
-                    xXcoord += 11;
-                }
+            if ((drawing.isVisible() && mode == DISPLAY) || mode == EDIT) {
+                drawingDraw(drawing, offset, offsetX, this.offsetY, mouseOffsetX, mouseOffsetY);
+                //Draw The Delete Button
+                if (mode == EDIT) {
+                    int xXcoord = 234;
+                    if (mouseOffsetX >= drawing.getWidth(mode) - 13 && mouseOffsetX <= drawing.getWidth(mode) - 3 && mouseOffsetY >= 4 && mouseOffsetY <= 14) {
+                        xXcoord += 11;
+                    }
 
-                offset.drawTexture(offsetX, offsetY, ProgressionInfo.textures, drawing.getWidth(mode) - 13, 4, xXcoord, 52, 11, 11);
+                    offset.drawTexture(offsetX, offsetY, ProgressionInfo.textures, drawing.getWidth(mode) - 13, 4, xXcoord, 52, 11, 11);
+                }
             }
 
             offsetX = drawSpecial((T)drawing, offsetX, offsetY, mouseOffsetX, mouseOffsetY);
@@ -197,7 +198,7 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
         if (editor == null || (editor != null && !editor.hideDefaultEditor())) {
             int yStart = 18;
             int index = 0;
-            for (IProgressionField t : getFields(provider)) {
+            for (IField t : getFields(provider)) {
                 if (t.attemptClick(mouseX, mouseY)) {
                     return true;
                 }

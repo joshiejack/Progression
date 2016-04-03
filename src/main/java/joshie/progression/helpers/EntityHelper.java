@@ -2,7 +2,7 @@ package joshie.progression.helpers;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import joshie.progression.api.criteria.IProgressionFilter;
+import joshie.progression.api.criteria.IFilter;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
@@ -102,12 +102,12 @@ public class EntityHelper {
         return entities;
     }
 
-    public static EntityLivingBase getRandomEntityForFilters(List<IProgressionFilter> filters) {
-        ArrayList<IProgressionFilter> shuffledFilters = new ArrayList(filters);
+    public static EntityLivingBase getRandomEntityForFilters(List<IFilter> filters) {
+        ArrayList<IFilter> shuffledFilters = new ArrayList(filters);
         Collections.shuffle(shuffledEntityCache);
         Collections.shuffle(shuffledFilters);
         for (EntityLivingBase entity : shuffledEntityCache) {
-            for (IProgressionFilter filter : shuffledFilters) {
+            for (IFilter filter : shuffledFilters) {
                 if (filter.matches(entity)) return entity;
             }
         }
@@ -120,7 +120,7 @@ public class EntityHelper {
         return EntityList.getEntityString(living);
     }
 
-    public static EntityLivingBase getRandomEntity(IProgressionFilter filter) {
+    public static EntityLivingBase getRandomEntity(IFilter filter) {
         Collections.shuffle(shuffledEntityCache);
         for (EntityLivingBase entity : shuffledEntityCache) {
             if (filter.matches(entity)) return entity;

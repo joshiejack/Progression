@@ -1,7 +1,7 @@
 package joshie.progression.criteria.triggers;
 
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.criteria.IProgressionTrigger;
+import joshie.progression.api.criteria.ITrigger;
 import joshie.progression.api.special.DisplayMode;
 import joshie.progression.helpers.ChatHelper;
 import net.minecraft.client.gui.Gui;
@@ -21,7 +21,7 @@ public class TriggerChangeGui extends TriggerBaseBoolean {
     }
 
     @Override
-    public IProgressionTrigger copy() {
+    public ITrigger copy() {
         TriggerChangeGui trigger = new TriggerChangeGui();
         trigger.className = className;
         trigger.description = description;

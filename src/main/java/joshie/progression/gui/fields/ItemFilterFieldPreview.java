@@ -1,6 +1,6 @@
 package joshie.progression.gui.fields;
 
-import joshie.progression.api.criteria.IProgressionField;
+import joshie.progression.api.criteria.IField;
 import joshie.progression.api.special.IAdditionalTooltip;
 import joshie.progression.api.special.IStackSizeable;
 import joshie.progression.gui.core.DrawHelper;
@@ -14,7 +14,7 @@ import net.minecraft.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemFilterFieldPreview extends ItemFilterField implements IProgressionField {
+public class ItemFilterFieldPreview extends ItemFilterField implements IField {
     private final int x;
     private final int y;
     private final float scale;

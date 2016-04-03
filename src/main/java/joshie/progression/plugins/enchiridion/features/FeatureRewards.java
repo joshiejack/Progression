@@ -3,7 +3,7 @@ package joshie.progression.plugins.enchiridion.features;
 import joshie.enchiridion.api.EnchiridionAPI;
 import joshie.enchiridion.api.book.IFeatureProvider;
 import joshie.enchiridion.api.gui.ISimpleEditorFieldProvider;
-import joshie.progression.api.criteria.IProgressionReward;
+import joshie.progression.api.criteria.IReward;
 import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.item.ItemStack;
 
@@ -36,7 +36,7 @@ public class FeatureRewards extends FeatureCriteria implements ISimpleEditorFiel
     @Override
     public void drawFeature(int mouseX, int mouseY) {
         int x = 0;
-        for (IProgressionReward reward : criteria.getRewards()) {
+        for (IReward reward : criteria.getRewards()) {
             ItemStack stack = reward.getIcon();
             if (background) EnchiridionAPI.draw.drawRectangle(position.getLeft() + x, position.getTop(), position.getLeft() + x + 17, position.getTop() + 17, 0xFFD2C9B5);
             EnchiridionAPI.draw.drawStack(stack, position.getLeft() + x, position.getTop(), 1F);
@@ -49,7 +49,7 @@ public class FeatureRewards extends FeatureCriteria implements ISimpleEditorFiel
         int x = 0;
         int offsetMouseX = mouseX - position.getLeft();
         int offsetMouseY = mouseY - position.getTop();
-        for (IProgressionReward reward : criteria.getRewards()) {
+        for (IReward reward : criteria.getRewards()) {
             ItemStack stack = reward.getIcon();
             if (offsetMouseX >= x && offsetMouseX <= x + 17) {
                 tooltip.addAll(stack.getTooltip(MCClientHelper.getPlayer(), false));

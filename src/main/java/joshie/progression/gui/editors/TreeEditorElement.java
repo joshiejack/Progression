@@ -1,7 +1,7 @@
 package joshie.progression.gui.editors;
 
-import joshie.progression.api.criteria.IProgressionCriteria;
-import joshie.progression.api.criteria.IProgressionReward;
+import joshie.progression.api.criteria.ICriteria;
+import joshie.progression.api.criteria.IReward;
 import joshie.progression.gui.core.FeatureTooltip;
 import joshie.progression.gui.core.GuiCore;
 import joshie.progression.helpers.MCClientHelper;
@@ -23,7 +23,7 @@ import java.util.List;
 
 public class TreeEditorElement {
     private static final GuiTreeEditor gui = GuiTreeEditor.INSTANCE;
-    private final IProgressionCriteria criteria;
+    private final ICriteria criteria;
     private boolean isSelected;
     private boolean isHeld;
     private int prevX;
@@ -35,7 +35,7 @@ public class TreeEditorElement {
     protected int width = 200;
     protected int height = 25;
 
-    public TreeEditorElement(IProgressionCriteria criteria) {
+    public TreeEditorElement(ICriteria criteria) {
         this.criteria = criteria;
     }
 
@@ -84,16 +84,16 @@ public class TreeEditorElement {
         else return PlayerTracker.getClientPlayer().getMappings().getCompletedCriteria().keySet().containsAll(criteria.getPreReqs());
     }
 
-    public boolean isCriteriaCompleteable(IProgressionCriteria criteria) {
-        HashMap<IProgressionCriteria, Integer> completedMap = PlayerTracker.getClientPlayer().getMappings().getCompletedCriteria();
+    public boolean isCriteriaCompleteable(ICriteria criteria) {
+        HashMap<ICriteria, Integer> completedMap = PlayerTracker.getClientPlayer().getMappings().getCompletedCriteria();
         boolean completeable = true;
         //Check the conflicts of this criteria
-        for (IProgressionCriteria conflicts : criteria.getConflicts()) {
+        for (ICriteria conflicts : criteria.getConflicts()) {
             if (completedMap.containsKey(conflicts)) return false;
         }
 
         //Check the requirements, if they aren't completable return false
-        for (IProgressionCriteria requirements : criteria.getPreReqs()) {
+        for (ICriteria requirements : criteria.getPreReqs()) {
             if (requirements.equals(criteria)) return false;
             if (!isCriteriaCompleteable(requirements)) return false;
         }
@@ -106,12 +106,12 @@ public class TreeEditorElement {
         if (highlight != 0) {
             GuiCore.INSTANCE.drawRectWithBorder(x + left, top, x + right, bottom, Theme.INSTANCE.invisible, highlight);
         } else {
-            HashMap<IProgressionCriteria, Integer> completedMap = PlayerTracker.getClientPlayer().getMappings().getCompletedCriteria();
+            HashMap<ICriteria, Integer> completedMap = PlayerTracker.getClientPlayer().getMappings().getCompletedCriteria();
             boolean isCompleted = completedMap.containsKey(criteria);
             boolean anyConflicts = false;
             boolean allRequires = false;
             int requires = 0;
-            for (IProgressionCriteria c : criteria.getConflicts()) {
+            for (ICriteria c : criteria.getConflicts()) {
                 if (completedMap.containsKey(c)) {
                     anyConflicts = true;
                     break;
@@ -119,7 +119,7 @@ public class TreeEditorElement {
             }
 
             if (!anyConflicts) {
-                for (IProgressionCriteria c : criteria.getPreReqs()) {
+                for (ICriteria c : criteria.getPreReqs()) {
                     if (completedMap.containsKey(c)) {
                         requires++;
                     }
@@ -148,7 +148,7 @@ public class TreeEditorElement {
             }
 
             if (isSelected) textureY = 100;
-            IProgressionCriteria selected = GuiTreeEditor.INSTANCE.lastClicked;
+            ICriteria selected = GuiTreeEditor.INSTANCE.lastClicked;
             if (!isCompleted) {
                 if (!isCriteriaCompleteable(criteria)) {
                     textureY = 75;
@@ -180,7 +180,7 @@ public class TreeEditorElement {
             GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
             //Draw in the rewards
             int xOffset = 0;
-            for (IProgressionReward reward : criteria.getRewards()) {
+            for (IReward reward : criteria.getRewards()) {
                 ItemStack icon = reward.getIcon();
                 if (icon == null || icon.getItem() == null) continue; //Protection against null icons
                 GuiCore.INSTANCE.drawStack(icon, x + 4 + left + (xOffset * 12), top + 12, 0.75F);
@@ -192,7 +192,7 @@ public class TreeEditorElement {
             GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
             xOffset = 0;
             boolean hoveredReward = false;
-            for (IProgressionReward reward : criteria.getRewards()) {
+            for (IReward reward : criteria.getRewards()) {
                 int x1 = 3 + left + (xOffset * 12);
                 int x2 = x1 + 11;
                 int y1 = bottom - 13;
@@ -219,7 +219,7 @@ public class TreeEditorElement {
                         list.add("I + Click to Hide/Unhide");
                     }
 
-                    for (IProgressionCriteria c : criteria.getPreReqs()) {
+                    for (ICriteria c : criteria.getPreReqs()) {
                         if (c.getTab() != criteria.getTab()) {
                             list.add(EnumChatFormatting.RED + "Requires: " + c.getDisplayName() + " from the \"" + c.getTab().getDisplayName() + "\" tab");
                         }
@@ -249,7 +249,7 @@ public class TreeEditorElement {
         GuiTreeEditor.INSTANCE.previous = criteria;
     }
 
-    private IProgressionCriteria getPrevious() {
+    private ICriteria getPrevious() {
         return GuiTreeEditor.INSTANCE.previous;
     }
 
@@ -257,10 +257,10 @@ public class TreeEditorElement {
         return x >= left && x <= right && y >= top && y <= bottom;
     }
 
-    private void remove(List<IProgressionCriteria> list, IProgressionCriteria criteria) {
-        Iterator<IProgressionCriteria> it = list.iterator();
+    private void remove(List<ICriteria> list, ICriteria criteria) {
+        Iterator<ICriteria> it = list.iterator();
         while (it.hasNext()) {
-            IProgressionCriteria c = it.next();
+            ICriteria c = it.next();
             if (c.equals(criteria)) {
                 it.remove();
                 break;
@@ -276,7 +276,7 @@ public class TreeEditorElement {
         return false;
     }
 
-    public boolean isAssignableTo(IProgressionCriteria to, IProgressionCriteria from) {
+    public boolean isAssignableTo(ICriteria to, ICriteria from) {
         if (to.equals(from)) return false; //If they are the same criteria we can't assign them
         if (from.getPreReqs().contains(to)) return false; //If the criteria we are trying to assign has this one in it, we can't
         //We need to check down the chain to stop the assignments
@@ -287,9 +287,9 @@ public class TreeEditorElement {
     public boolean click(int x, int y, boolean isDouble) {
         if (isOver(x, y)) {
             if (noOtherSelected()) {
-                IProgressionCriteria previous = getPrevious();
+                ICriteria previous = getPrevious();
                 if (previous != null && MCClientHelper.isInEditMode()) {
-                    List<IProgressionCriteria> list = null;
+                    List<ICriteria> list = null;
                     boolean isConflict = false;
                     if (GuiScreen.isShiftKeyDown()) {
                         list = previous.getPreReqs();

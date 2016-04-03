@@ -2,7 +2,7 @@ package joshie.progression.criteria.triggers;
 
 import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.criteria.IProgressionTrigger;
+import joshie.progression.api.criteria.ITrigger;
 import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.IHasEventBus;
 import joshie.progression.helpers.DimensionHelper;
@@ -22,7 +22,7 @@ public class TriggerChangeDimension extends TriggerBaseCounter implements IHasEv
     }
 
     @Override
-    public IProgressionTrigger copy() {
+    public ITrigger copy() {
         TriggerChangeDimension trigger = new TriggerChangeDimension();
         trigger.checkFrom = checkFrom;
         trigger.from = from;

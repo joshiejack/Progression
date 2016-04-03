@@ -1,7 +1,7 @@
 package joshie.progression.gui.editors;
 
-import joshie.progression.api.criteria.IProgressionCriteria;
-import joshie.progression.api.criteria.IProgressionTab;
+import joshie.progression.api.criteria.ICriteria;
+import joshie.progression.api.criteria.ITab;
 import joshie.progression.api.event.TabVisibleEvent;
 import joshie.progression.gui.core.GuiCore;
 import joshie.progression.gui.tree.buttons.ButtonNewCriteria;
@@ -22,17 +22,17 @@ import java.util.*;
 
 public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
     public static final GuiTreeEditor INSTANCE = new GuiTreeEditor();
-    private HashMap<IProgressionCriteria, TreeEditorElement> elements;
-    public IProgressionCriteria selected = null;
-    public IProgressionCriteria previous = null;
+    private HashMap<ICriteria, TreeEditorElement> elements;
+    public ICriteria selected = null;
+    public ICriteria previous = null;
     public UUID currentTabID;
-    public IProgressionTab currentTab;
+    public ITab currentTab;
 
     private static class SortIndex implements Comparator {
         @Override
         public int compare(Object o1, Object o2) {
-            IProgressionTab tab1 = ((IProgressionTab) o1);
-            IProgressionTab tab2 = ((IProgressionTab) o2);
+            ITab tab1 = ((ITab) o1);
+            ITab tab2 = ((ITab) o2);
             if (tab1.getSortIndex() == tab2.getSortIndex()) {
                 return tab1.getDisplayName().compareTo(tab2.getDisplayName());
             }
@@ -59,10 +59,10 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
         }
 
         //Sort tabs alphabetically or by sort index
-        ArrayList<IProgressionTab> tabs = new ArrayList(APIHandler.getTabs().values());
+        ArrayList<ITab> tabs = new ArrayList(APIHandler.getTabs().values());
         Collections.sort(tabs, new SortIndex());
 
-        for (IProgressionTab tab : tabs) {
+        for (ITab tab : tabs) {
             if (isTabVisible(tab) || MCClientHelper.isInEditMode()) {
                 if (number <= 8) {
                     buttonList.add(new ButtonTab(tab, 0, pos));
@@ -84,7 +84,7 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
 
         currentTab = APIHandler.getTabFromName(currentTabID);
         if (currentTab == null) {
-            for (IProgressionTab tab : APIHandler.getTabs().values()) {
+            for (ITab tab : APIHandler.getTabs().values()) {
                 currentTab = tab;
                 break;
             }
@@ -104,23 +104,23 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
     public void rebuildCriteria() {
         //Rebuild
         elements = new HashMap();
-        for (IProgressionCriteria criteria : currentTab.getCriteria()) {
+        for (ICriteria criteria : currentTab.getCriteria()) {
             elements.put(criteria, new TreeEditorElement(criteria));
         }
     }
 
-    public TreeEditorElement getElement(IProgressionCriteria criteria) {
+    public TreeEditorElement getElement(ICriteria criteria) {
         return elements.get(criteria);
     }
 
-    public void addCriteria(IProgressionCriteria criteria, int x, int y, int offsetX) {
+    public void addCriteria(ICriteria criteria, int x, int y, int offsetX) {
         elements.put(criteria, new TreeEditorElement(criteria));
         getElement(criteria).draw(x, y, offsetX);
         getElement(criteria).click(x, y, false);
         lastClicked = criteria;
     }
 
-    public static boolean isTabVisible(IProgressionTab tab) {
+    public static boolean isTabVisible(ITab tab) {
         TabVisibleEvent event = new TabVisibleEvent(MCClientHelper.getPlayer(), tab.getUniqueID());
         if (MinecraftForge.EVENT_BUS.post(event)) return false;
         return tab.isVisible();
@@ -134,11 +134,11 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
     @Override
     public void drawGuiForeground(boolean overlayvisible, int mouseX, int mouseY) {
         if (!MCClientHelper.isInEditMode() && !isTabVisible(currentTab)) return;
-        for (IProgressionCriteria criteria : currentTab.getCriteria()) {
+        for (ICriteria criteria : currentTab.getCriteria()) {
             if (getElement(criteria).isCriteriaVisible() || MCClientHelper.isInEditMode()) {
                 TreeEditorElement editor = getElement(criteria);
-                List<IProgressionCriteria> prereqs = criteria.getPreReqs();
-                for (IProgressionCriteria c : prereqs) {
+                List<ICriteria> prereqs = criteria.getPreReqs();
+                for (ICriteria c : prereqs) {
                     int y1 = getElement(c).getY();
                     int y2 = editor.getY();
                     int x1 = getElement(c).getX();
@@ -163,19 +163,19 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
         }
 
         GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
-        for (IProgressionCriteria criteria : currentTab.getCriteria()) {
+        for (ICriteria criteria : currentTab.getCriteria()) {
             if (getElement(criteria).isCriteriaVisible() || MCClientHelper.isInEditMode()) {
                 getElement(criteria).draw(0, screenTop, GuiCore.INSTANCE.offsetX);
             }
         }
     }
 
-    public IProgressionTab previousTab = null;
+    public ITab previousTab = null;
 
     @Override
     public void keyTyped(char character, int key) {
-        IProgressionCriteria toRemove = null;
-        for (IProgressionCriteria criteria : currentTab.getCriteria()) {
+        ICriteria toRemove = null;
+        for (ICriteria criteria : currentTab.getCriteria()) {
             if (getElement(criteria).isCriteriaVisible() || MCClientHelper.isInEditMode()) {
                 if (getElement(criteria).keyTyped(character, key)) {
                     toRemove = criteria;
@@ -199,7 +199,7 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
 
     @Override
     public void guiMouseReleased(int mouseX, int mouseY, int button) {
-        for (IProgressionCriteria criteria : currentTab.getCriteria()) {
+        for (ICriteria criteria : currentTab.getCriteria()) {
             getElement(criteria).release(mouseX, mouseY);
         }
 
@@ -208,7 +208,7 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
 
     public long lastClick;
     public int lastType;
-    public IProgressionCriteria lastClicked = null;
+    public ICriteria lastClicked = null;
     public int drag = 0;
     public boolean isDragging = false;
 
@@ -223,7 +223,7 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
         
         lastClicked = null;
         if (button == 0) {
-            for (IProgressionCriteria criteria : currentTab.getCriteria()) {
+            for (ICriteria criteria : currentTab.getCriteria()) {
                 if (getElement(criteria).isCriteriaVisible() || MCClientHelper.isInEditMode()) {
                     if (getElement(criteria).click(mouseX, mouseY, isDoubleClick)) {
                         lastClicked = criteria;
@@ -256,7 +256,7 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
         }
 
         if (lastClicked != null) {
-            for (IProgressionCriteria criteria : currentTab.getCriteria()) {
+            for (ICriteria criteria : currentTab.getCriteria()) {
                 getElement(criteria).follow(mouseX, mouseY);
                 int wheel = Mouse.getDWheel();
                 if (wheel != 0) {

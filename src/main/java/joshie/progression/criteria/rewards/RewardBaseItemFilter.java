@@ -1,6 +1,6 @@
 package joshie.progression.criteria.rewards;
 
-import joshie.progression.api.criteria.IProgressionFilter;
+import joshie.progression.api.criteria.IFilter;
 import joshie.progression.api.special.IHasFilters;
 import joshie.progression.helpers.ItemHelper;
 import net.minecraft.client.gui.GuiScreen;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class RewardBaseItemFilter extends RewardBase implements IHasFilters {
-    public List<IProgressionFilter> filters = new ArrayList();
+    public List<IFilter> filters = new ArrayList();
     protected ItemStack BROKEN;
     protected ItemStack preview;
     protected int ticker;
@@ -27,7 +27,7 @@ public abstract class RewardBaseItemFilter extends RewardBase implements IHasFil
     }
     
     @Override
-    public List<IProgressionFilter> getAllFilters() {
+    public List<IFilter> getAllFilters() {
         return filters;
     }
     

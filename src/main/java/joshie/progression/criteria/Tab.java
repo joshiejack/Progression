@@ -1,21 +1,21 @@
 package joshie.progression.criteria;
 
-import joshie.progression.api.criteria.IProgressionCriteria;
-import joshie.progression.api.criteria.IProgressionTab;
+import joshie.progression.api.criteria.ICriteria;
+import joshie.progression.api.criteria.ITab;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Tab implements IProgressionTab {
+public class Tab implements ITab {
     private UUID uuid;
     private String displayName;
     private boolean isVisible;
     private ItemStack stack;
     private int sortIndex;
     
-    private List<IProgressionCriteria> criteria = new ArrayList();
+    private List<ICriteria> criteria = new ArrayList();
     
     public Tab setUniqueName(UUID uuid) {
         this.uuid = uuid;
@@ -53,7 +53,7 @@ public class Tab implements IProgressionTab {
     }
     
     @Override
-    public List<IProgressionCriteria> getCriteria() {
+    public List<ICriteria> getCriteria() {
         return criteria;
     }
 

@@ -1,7 +1,7 @@
 package joshie.progression.criteria.filters.item;
 
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.criteria.IProgressionFilterSelector;
+import joshie.progression.api.criteria.IFilterType;
 import joshie.progression.criteria.filters.FilterBase;
 import joshie.progression.helpers.ItemHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,7 +23,7 @@ public abstract class FilterBaseItem extends FilterBase {
     }
     
     @Override
-    public IProgressionFilterSelector getType() {
+    public IFilterType getType() {
         return ProgressionAPI.filters.getItemStackFilter();
     }
     

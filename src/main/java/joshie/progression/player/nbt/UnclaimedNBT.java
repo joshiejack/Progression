@@ -1,7 +1,7 @@
 package joshie.progression.player.nbt;
 
 import com.google.common.collect.Multimap;
-import joshie.progression.api.criteria.IProgressionReward;
+import joshie.progression.api.criteria.IReward;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.NBTHelper.IMapHelper;
 import net.minecraft.nbt.NBTTagCompound;
@@ -37,11 +37,11 @@ public class UnclaimedNBT implements IMapHelper {
     @Override
     public Object readValue(NBTTagCompound tag) {
         NBTTagList list = tag.getTagList("RewardList", 8);
-        Set<IProgressionReward> rewards = new HashSet();
+        Set<IReward> rewards = new HashSet();
         for (int i = 0; i < list.tagCount(); i++) {
             String s = list.getStringTagAt(i);
             UUID uuid = UUID.fromString(s);
-            IProgressionReward reward = APIHandler.getCache().getRewardFromUUID(uuid);
+            IReward reward = APIHandler.getCache().getRewardFromUUID(uuid);
             rewards.add(reward);
         }
 
@@ -57,9 +57,9 @@ public class UnclaimedNBT implements IMapHelper {
 
     @Override
     public void writeValue(NBTTagCompound tag, Object o) {
-        Set<IProgressionReward> rewards = (Set<IProgressionReward>) o;
+        Set<IReward> rewards = (Set<IReward>) o;
         NBTTagList list = new NBTTagList();
-        for (IProgressionReward reward: rewards) {
+        for (IReward reward: rewards) {
             NBTTagString string = new NBTTagString(reward.getUniqueID().toString());
             list.appendTag(string);
         }

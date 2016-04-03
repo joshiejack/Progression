@@ -1,5 +1,6 @@
 package joshie.progression.player;
 
+import joshie.progression.api.IPlayerTeam;
 import joshie.progression.gui.editors.ITextEditable;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.network.PacketHandler;
@@ -12,12 +13,9 @@ import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
-public class PlayerTeam implements ITextEditable {
+public class PlayerTeam implements ITextEditable, IPlayerTeam {
     public static enum TeamType {
         SINGLE, TEAM;
     }
@@ -28,7 +26,10 @@ public class PlayerTeam implements ITextEditable {
     private boolean isActive = true;
     private boolean multipleRewards = true;
     private boolean isPublic = false;
+    private boolean isTrueTeam = true;
     private String name;
+
+    private transient HashMap<UUID, EntityPlayer> teamCache = new HashMap();
 
     public PlayerTeam() {}
 
@@ -49,8 +50,53 @@ public class PlayerTeam implements ITextEditable {
         return name;
     }
 
+    @Override
     public UUID getOwner() {
         return owner;
+    }
+
+    @Override
+    public EntityPlayer getOwnerEntity() {
+        return (EntityPlayer) PlayerHelper.getPlayerFromUUID(getOwner());
+    }
+
+    //For quicker access
+    public void rebuildTeamCache() {
+        teamCache = new HashMap();
+        EntityPlayer owner = PlayerHelper.getPlayerFromUUID(getOwner());
+        if (owner != null) teamCache.put(getOwner(), owner);
+        for (UUID uuid: getMembers()) {
+            EntityPlayer member = (EntityPlayer) PlayerHelper.getPlayerFromUUID(uuid);
+            if (member != null) teamCache.put(uuid, member);
+        }
+    }
+
+    private boolean hasIllegalUUIDInCache() {
+        for (UUID uuid: teamCache.keySet()) {
+            if (getOwner() == uuid || getMembers().contains(uuid)) continue;
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public Collection<EntityPlayer> getTeamEntities() {
+        if (teamCache.isEmpty() || hasIllegalUUIDInCache()) {
+            rebuildTeamCache();
+        }
+
+        return teamCache.values();
+    }
+
+    @Override
+    public boolean isTrueTeam() {
+        return isTrueTeam;
+    }
+
+    @Override
+    public boolean isSingle() {
+        return type == TeamType.SINGLE;
     }
     
     public boolean giveMultipleRewards() {
@@ -138,6 +184,7 @@ public class PlayerTeam implements ITextEditable {
         name = tag.getString("Name");
         isPublic = tag.getBoolean("IsPublic");
         multipleRewards = tag.getBoolean("MultipleRewards");
+        isTrueTeam = tag.getBoolean("CountWholeTeam");
         type = tag.getBoolean("IsSingleTeam") ? TeamType.SINGLE : TeamType.TEAM;
         if (tag.hasKey("Owner")) owner = UUID.fromString(tag.getString("Owner"));
         else if (tag.hasKey("UUID-Most")) owner = new UUID(tag.getLong("UUID-Most"), tag.getLong("UUID-Least"));
@@ -154,6 +201,7 @@ public class PlayerTeam implements ITextEditable {
         tag.setString("Name", name);
         tag.setBoolean("IsPublic", isPublic);
         tag.setBoolean("MultipleRewards", multipleRewards);
+        tag.setBoolean("CountWholeTeam", isTrueTeam);
         tag.setBoolean("IsSingleTeam", type == TeamType.SINGLE);
         tag.setString("Owner", owner.toString());
         tag.setBoolean("IsActive", isActive);

@@ -2,8 +2,8 @@ package joshie.progression.gui.editors.insert;
 
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.IFieldProvider;
-import joshie.progression.api.criteria.IProgressionCriteria;
-import joshie.progression.api.criteria.IProgressionTrigger;
+import joshie.progression.api.criteria.ICriteria;
+import joshie.progression.api.criteria.ITrigger;
 import joshie.progression.gui.core.FeatureAbstract;
 import joshie.progression.gui.core.GuiCore;
 import joshie.progression.gui.editors.GuiConditionEditor;
@@ -17,8 +17,8 @@ import java.util.*;
 
 public abstract class FeatureNew<T> extends FeatureAbstract {
     public static boolean IS_OPEN = false;
-    protected IProgressionCriteria criteria;
-    protected IProgressionTrigger trigger;
+    protected ICriteria criteria;
+    protected ITrigger trigger;
     protected ItemFilterField field;
     private final List<IFieldProvider> sorted;
 
@@ -68,16 +68,16 @@ public abstract class FeatureNew<T> extends FeatureAbstract {
 
     @Override
     public void drawFeature(int mouseX, int mouseY) {
-        int maxY = (sorted.size() / 2);
+        int maxY = ((sorted.size() - 3) / 2);
         GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
-        offset.drawRectangle(150, 50, 200, 50 + maxY * 12, 0xFF222222, theme.newBox2);
+        offset.drawRectangle(150, 50, 200, 43 + maxY * 12, 0xFF222222, theme.newBox2);
         offset.drawGradient(150, 50, 200, 15, getColor(), 0xFF111111, theme.newBorder);
         offset.drawText(Progression.translate("new." + text), 155, 54, theme.newFont);
         drawForeground(mouseX, mouseY);
     }
 
     public void drawForeground(int mouseX, int mouseY) {
-        int maxY = sorted.size() / 2;
+        int maxY = ((sorted.size() - 1) / 2);
         int yPos = 0;
         int xPos = 0;
         for (IFieldProvider provider : sorted) {
@@ -102,7 +102,7 @@ public abstract class FeatureNew<T> extends FeatureAbstract {
 
     @Override
     public boolean mouseClicked(int mouseX, int mouseY, int button) {
-        int maxY = sorted.size() / 2;
+        int maxY = ((sorted.size() - 1) / 2);
         int yPos = 0;
         int xPos = 0;
         for (IFieldProvider provider : sorted) {

@@ -1,7 +1,7 @@
 package joshie.progression.items;
 
 import joshie.progression.Progression;
-import joshie.progression.api.criteria.IProgressionCriteria;
+import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.crafting.Crafter;
 import joshie.progression.crafting.CraftingRegistry;
 import joshie.progression.crafting.CraftingUnclaimed;
@@ -75,7 +75,7 @@ public class ItemCriteria extends Item {
         setCreativeTab(tab);
     }
 
-    public static IProgressionCriteria getCriteriaFromStack(ItemStack stack) {
+    public static ICriteria getCriteriaFromStack(ItemStack stack) {
         if (!stack.hasTagCompound()) return null;
         if (stack.getItemDamage() != ItemMeta.criteria.ordinal()) return null;
         String uuid = stack.getTagCompound().getString("Criteria");
@@ -87,14 +87,14 @@ public class ItemCriteria extends Item {
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
         if (stack.getItemDamage() == ItemMeta.criteria.ordinal()) {
-            IProgressionCriteria criteria = getCriteriaFromStack(stack);
+            ICriteria criteria = getCriteriaFromStack(stack);
             return criteria == null ? "BROKEN ITEM" : criteria.getDisplayName();
         } else return Progression.translate("item." + ItemMeta.values()[Math.min(ItemMeta.values().length - 1, stack.getItemDamage())].name());
     }
 
     @SideOnly(Side.CLIENT)
     public int getColorFromItemStack(ItemStack stack, int renderPass) {
-        IProgressionCriteria criteria = getCriteriaFromStack(stack);
+        ICriteria criteria = getCriteriaFromStack(stack);
         if (criteria != null) {
             return criteria.getIcon().getItem().getColorFromItemStack(criteria.getIcon(), renderPass);
         }
@@ -125,7 +125,7 @@ public class ItemCriteria extends Item {
                 }
             }
         } else {
-            IProgressionCriteria criteria = getCriteriaFromStack(stack);
+            ICriteria criteria = getCriteriaFromStack(stack);
             if (criteria != null) {
                 Result completed = PlayerTracker.getServerPlayer(PlayerHelper.getUUIDForPlayer(player)).getMappings().fireAllTriggers("forced-complete", criteria);
                 if (!player.capabilities.isCreativeMode && completed == Result.ALLOW) {
@@ -148,7 +148,7 @@ public class ItemCriteria extends Item {
 
             player.openGui(Progression.instance, guiid, null, 0, 0, 0);
         } else if (!world.isRemote) {
-            IProgressionCriteria criteria = getCriteriaFromStack(stack);
+            ICriteria criteria = getCriteriaFromStack(stack);
             if (criteria != null) {
                 Result completed = PlayerTracker.getServerPlayer(PlayerHelper.getUUIDForPlayer(player)).getMappings().fireAllTriggers("forced-complete", criteria);
                 if (!player.capabilities.isCreativeMode && completed == Result.ALLOW) {
@@ -187,7 +187,7 @@ public class ItemCriteria extends Item {
         list.add(new ItemStack(item, 1, ItemMeta.edit.ordinal()));
         list.add(new ItemStack(item, 1, ItemMeta.claim.ordinal()));
 
-        for (IProgressionCriteria c : APIHandler.getCriteria().values()) {
+        for (ICriteria c : APIHandler.getCriteria().values()) {
             ItemStack stack = new ItemStack(item);
             stack.setTagCompound(new NBTTagCompound());
             stack.getTagCompound().setString("Criteria", c.getUniqueID().toString());

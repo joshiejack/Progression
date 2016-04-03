@@ -2,10 +2,10 @@ package joshie.progression.gui.editors.insert;
 
 import java.util.Collection;
 
-import joshie.progression.api.criteria.IProgressionFilter;
+import joshie.progression.api.criteria.IFilter;
 import joshie.progression.handlers.APIHandler;
 
-public class FeatureNewItemFilter extends FeatureNew<IProgressionFilter> {
+public class FeatureNewItemFilter extends FeatureNew<IFilter> {
     public static final FeatureNewItemFilter INSTANCE = new FeatureNewItemFilter();
 
     public FeatureNewItemFilter() {
@@ -13,18 +13,18 @@ public class FeatureNewItemFilter extends FeatureNew<IProgressionFilter> {
     }
 
     @Override
-    public Collection<IProgressionFilter> getFields() {
+    public Collection<IFilter> getFields() {
         return APIHandler.filterTypes.values();
     }
 
     @Override
-    public void clone(IProgressionFilter provider) {
+    public void clone(IFilter provider) {
         APIHandler.cloneFilter(field, provider);
         //GuiFilterEditor.INSTANCE.initGui(); //Refresh the gui
     }
 
     @Override
-    public boolean isValid(IProgressionFilter filter) {
+    public boolean isValid(IFilter filter) {
         return field.isAccepted(filter);
     }
 }

@@ -1,6 +1,6 @@
 package joshie.progression.gui.editors;
 
-import joshie.progression.api.criteria.IProgressionField;
+import joshie.progression.api.criteria.IField;
 import joshie.progression.gui.core.GuiCore;
 import joshie.progression.gui.core.IGuiFeature;
 import joshie.progression.json.Theme;
@@ -13,7 +13,7 @@ import java.util.HashMap;
 
 public abstract class GuiBaseEditor implements IEditorMode {
     public ArrayList<IGuiFeature> features;
-    public HashMap<String, IProgressionField> fields;
+    public HashMap<String, IField> fields;
     public ScaledResolution res;
     public Minecraft mc;
     public GuiCore core;

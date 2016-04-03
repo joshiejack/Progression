@@ -4,7 +4,7 @@ import joshie.progression.gui.core.DrawHelper;
 
 import java.util.List;
 
-public interface IProgressionFilterSelector {
+public interface IFilterType {
     /** Return an unlocalized name for this selector **/
     public String getName();
 

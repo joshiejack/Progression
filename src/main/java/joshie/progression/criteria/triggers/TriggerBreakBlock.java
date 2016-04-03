@@ -1,7 +1,7 @@
 package joshie.progression.criteria.triggers;
 
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.criteria.IProgressionTrigger;
+import joshie.progression.api.criteria.ITrigger;
 import joshie.progression.api.special.IHasEventBus;
 import net.minecraft.block.Block;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
@@ -15,7 +15,7 @@ public class TriggerBreakBlock extends TriggerBaseBlock implements IHasEventBus 
     }
 
     @Override
-    public IProgressionTrigger copy() {
+    public ITrigger copy() {
         TriggerBreakBlock trigger = new TriggerBreakBlock();
         trigger.cancel = cancel;
         return copyBase(copyCounter(copyFilter(trigger)));

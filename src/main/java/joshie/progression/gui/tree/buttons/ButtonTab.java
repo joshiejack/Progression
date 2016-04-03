@@ -1,12 +1,12 @@
 package joshie.progression.gui.tree.buttons;
 
-import joshie.progression.api.criteria.IProgressionCriteria;
-import joshie.progression.api.criteria.IProgressionTab;
+import joshie.progression.api.criteria.ICriteria;
+import joshie.progression.api.criteria.ITab;
 import joshie.progression.gui.core.FeatureTooltip;
 import joshie.progression.gui.core.GuiCore;
 import joshie.progression.gui.editors.*;
 import joshie.progression.gui.editors.FeatureItemSelector.Position;
-import joshie.progression.gui.filters.FilterSelectorItem;
+import joshie.progression.gui.filters.FilterTypeItem;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.json.Options;
@@ -22,9 +22,9 @@ import org.lwjgl.input.Keyboard;
 import java.util.ArrayList;
 
 public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelectable {
-    private IProgressionTab tab;
+    private ITab tab;
 
-    public ButtonTab(IProgressionTab tab, int x, int y) {
+    public ButtonTab(ITab tab, int x, int y) {
         super(0, x, y, 25, 25, "");
         this.tab = tab;
     }
@@ -80,14 +80,14 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
         boolean donestuff = false;
         if (MCClientHelper.isInEditMode()) {
             if (Keyboard.isKeyDown(Keyboard.KEY_DELETE)) {
-                IProgressionTab newTab = GuiTreeEditor.INSTANCE.currentTab;
+                ITab newTab = GuiTreeEditor.INSTANCE.currentTab;
                 if (tab == GuiTreeEditor.INSTANCE.currentTab) {
                     newTab = GuiTreeEditor.INSTANCE.previousTab;
                 }
 
                 if (newTab != null) {
                     if (!APIHandler.getTabs().containsKey(newTab.getUniqueID())) {
-                        for (IProgressionTab tab : APIHandler.getTabs().values()) {
+                        for (ITab tab : APIHandler.getTabs().values()) {
                             newTab = tab;
                             break;
                         }
@@ -98,7 +98,7 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
                 GuiTreeEditor.INSTANCE.previous = null;
                 GuiTreeEditor.INSTANCE.lastClicked = null;
                 GuiTreeEditor.INSTANCE.currentTab = newTab;
-                for (IProgressionCriteria c : tab.getCriteria()) {
+                for (ICriteria c : tab.getCriteria()) {
                     APIHandler.removeCriteria(c.getUniqueID(), true);
                 }
 
@@ -111,7 +111,7 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
                 TextEditor.INSTANCE.setEditable(this);
                 donestuff = true;
             } else if (GuiScreen.isCtrlKeyDown() || FeatureItemSelector.INSTANCE.isVisible()) {
-                FeatureItemSelector.INSTANCE.select(FilterSelectorItem.INSTANCE, this, Position.TOP);
+                FeatureItemSelector.INSTANCE.select(FilterTypeItem.INSTANCE, this, Position.TOP);
             } else if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
                 boolean current = tab.isVisible();
                 tab.setVisibility(!current);

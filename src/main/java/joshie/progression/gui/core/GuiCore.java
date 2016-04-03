@@ -1,7 +1,7 @@
 package joshie.progression.gui.core;
 
 import joshie.progression.Progression;
-import joshie.progression.api.criteria.IProgressionField;
+import joshie.progression.api.criteria.IField;
 import joshie.progression.gui.editors.*;
 import joshie.progression.gui.editors.insert.*;
 import joshie.progression.helpers.MCClientHelper;
@@ -36,7 +36,7 @@ import static joshie.progression.network.core.PacketPart.SEND_SIZE;
 public class GuiCore extends GuiScreen {
     public static final GuiCore INSTANCE = new GuiCore();
     public ArrayList<IGuiFeature> features = new ArrayList<IGuiFeature>();
-    public HashMap<String, IProgressionField> fields = new HashMap();
+    public HashMap<String, IField> fields = new HashMap();
     public HashMap<Object, Integer> offsetCache = new HashMap();
     public ScaledResolution res;
     public IEditorMode lastGui;

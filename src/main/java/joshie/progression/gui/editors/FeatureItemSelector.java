@@ -3,10 +3,10 @@ package joshie.progression.gui.editors;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import joshie.progression.Progression;
-import joshie.progression.api.criteria.IProgressionFilterSelector;
+import joshie.progression.api.criteria.IFilterType;
 import joshie.progression.gui.core.FeatureAbstract;
 import joshie.progression.gui.filters.FeatureItemPreview;
-import joshie.progression.gui.filters.FilterSelectorItem;
+import joshie.progression.gui.filters.FilterTypeItem;
 import joshie.progression.helpers.ItemHelper;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL11;
@@ -17,7 +17,7 @@ import java.util.concurrent.Callable;
 public class FeatureItemSelector extends FeatureAbstract implements ITextEditable {
     public static FeatureItemSelector INSTANCE = new FeatureItemSelector();
     public IItemSelectable selectable = null;
-    private IProgressionFilterSelector filter = FilterSelectorItem.INSTANCE;
+    private IFilterType filter = FilterTypeItem.INSTANCE;
     public ArrayList<Object> sorted;
     private String search = "";
     private Position position;
@@ -39,13 +39,13 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
         }
     }
 
-    public void select(IProgressionFilterSelector filter, IItemSelectable selectable, Position type) {
+    public void select(IFilterType filter, IItemSelectable selectable, Position type) {
         ItemHelper.addInventory();
         TextEditor.INSTANCE.setEditable(this);
         this.filter = filter;
         this.selectable = selectable;
         this.position = type;
-        if (filter == null) this.filter = FilterSelectorItem.INSTANCE;
+        if (filter == null) this.filter = FilterTypeItem.INSTANCE;
         updateSearch();
     }
 

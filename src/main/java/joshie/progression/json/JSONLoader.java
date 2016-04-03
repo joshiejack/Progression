@@ -169,7 +169,7 @@ public class JSONLoader {
                 stack = new ItemStack(Items.book);
             }
 
-            IProgressionTab iTab = APIHandler.newTab(data.uuid);
+            ITab iTab = APIHandler.newTab(data.uuid);
             iTab.setDisplayName(data.displayName).setVisibility(data.isVisible).setStack(stack).setSortIndex(data.sortIndex);
 
             /** Step 1: we create add all instances of criteria to the registry **/
@@ -179,14 +179,14 @@ public class JSONLoader {
 
             /** Step 2 : Register all the conditions and triggers for this criteria **/
             for (DataCriteria criteria : data.criteria) {
-                IProgressionCriteria theCriteria = APIHandler.getCriteriaFromName(criteria.uuid);
+                ICriteria theCriteria = APIHandler.getCriteriaFromName(criteria.uuid);
                 if (theCriteria == null) {
                     throw new CriteriaNotFoundException(criteria.uuid);
                 }
 
                 if (criteria.triggers != null) {
                     for (DataTrigger trigger: criteria.triggers) {
-                        IProgressionTrigger iTrigger = APIHandler.newTrigger(theCriteria, trigger.uuid, trigger.type, trigger.data);
+                        ITrigger iTrigger = APIHandler.newTrigger(theCriteria, trigger.uuid, trigger.type, trigger.data);
                         if (trigger.conditions != null) {
                             for (DataGeneric generic : trigger.conditions) {
                                 APIHandler.newCondition(iTrigger, generic.uuid, generic.type, generic.data);
@@ -205,22 +205,22 @@ public class JSONLoader {
 
             /** Step 3, nAdd the extra data **/
             for (DataCriteria criteria : data.criteria) {
-                IProgressionCriteria theCriteria = APIHandler.getCriteriaFromName(criteria.uuid);
+                ICriteria theCriteria = APIHandler.getCriteriaFromName(criteria.uuid);
                 if (theCriteria == null) {
                     Progression.logger.log(org.apache.logging.log4j.Level.WARN, "Criteria was not found, do not report this.");
                     throw new CriteriaNotFoundException(criteria.uuid);
                 }
 
-                IProgressionCriteria[] thePrereqs = new IProgressionCriteria[0];
+                ICriteria[] thePrereqs = new ICriteria[0];
                 if (criteria.prereqs != null) {
-                    thePrereqs = new IProgressionCriteria[criteria.prereqs.length];
+                    thePrereqs = new ICriteria[criteria.prereqs.length];
                     for (int i = 0; i < thePrereqs.length; i++)
                         thePrereqs[i] = APIHandler.getCriteriaFromName(criteria.prereqs[i]);
                 }
 
-                IProgressionCriteria[] theConflicts = new IProgressionCriteria[0];
+                ICriteria[] theConflicts = new ICriteria[0];
                 if (criteria.conflicts != null) {
-                    theConflicts = new IProgressionCriteria[criteria.conflicts.length];
+                    theConflicts = new ICriteria[criteria.conflicts.length];
                     for (int i = 0; i < theConflicts.length; i++)
                         theConflicts[i] = APIHandler.getCriteriaFromName(criteria.conflicts[i]);
                 }
@@ -255,32 +255,32 @@ public class JSONLoader {
         }
         
         //Now that everything has been loaded in, we should go and init all the data
-        for (IProgressionTab tab : APIHandler.getTabs().values()) {
-            for (IProgressionCriteria criteria: tab.getCriteria()) {
-                for (IProgressionTrigger trigger: criteria.getTriggers()) {
+        for (ITab tab : APIHandler.getTabs().values()) {
+            for (ICriteria criteria: tab.getCriteria()) {
+                for (ITrigger trigger: criteria.getTriggers()) {
                     if (trigger instanceof IInit) ((IInit)trigger).init();
                     if (trigger instanceof IHasFilters) {
-                        for (IProgressionFilter filter: ((IHasFilters)trigger).getAllFilters()) {
+                        for (IFilter filter: ((IHasFilters)trigger).getAllFilters()) {
                             if (filter instanceof IInit) ((IInit)filter).init();
                         }
                     }
                     
                     EventsManager.onAdded(trigger);
                     
-                    for (IProgressionCondition condition: trigger.getConditions()) {
+                    for (ICondition condition: trigger.getConditions()) {
                         if (condition instanceof IInit) ((IInit)condition).init();
                         if (condition instanceof IHasFilters) {
-                            for (IProgressionFilter filter: ((IHasFilters)condition).getAllFilters()) {
+                            for (IFilter filter: ((IHasFilters)condition).getAllFilters()) {
                                 if (filter instanceof IInit) ((IInit)filter).init();
                             }
                         }
                     }
                  }
                 
-                for (IProgressionReward reward: criteria.getRewards()) {
+                for (IReward reward: criteria.getRewards()) {
                     if (reward instanceof IInit) ((IInit)reward).init();
                     if (reward instanceof IHasFilters) {
-                        for (IProgressionFilter filter: ((IHasFilters)reward).getAllFilters()) {
+                        for (IFilter filter: ((IHasFilters)reward).getAllFilters()) {
                             if (filter instanceof IInit) ((IInit)filter).init();
                         }
                     }
@@ -308,10 +308,10 @@ public class JSONLoader {
     public static void saveData() {
         if (Options.debugMode) Progression.logger.log(Level.INFO, "Begin logging");
         HashSet<UUID> tabNames = new HashSet();
-        Collection<IProgressionTab> allTabs = APIHandler.getTabs().values();
+        Collection<ITab> allTabs = APIHandler.getTabs().values();
         HashSet<UUID> names = new HashSet();
         DefaultSettings forJSONTabs = new DefaultSettings();
-        for (IProgressionTab tab : allTabs) {
+        for (ITab tab : allTabs) {
             ArrayList<DataCriteria> list = new ArrayList();
             if (!tabNames.add(tab.getUniqueID())) continue;
             DataTab tabData = new DataTab();
@@ -320,7 +320,7 @@ public class JSONLoader {
             tabData.sortIndex = tab.getSortIndex();
             tabData.isVisible = tab.isVisible();
             tabData.stack = StackHelper.getStringFromStack(tab.getStack());
-            for (IProgressionCriteria c : tab.getCriteria()) {
+            for (ICriteria c : tab.getCriteria()) {
                 if (!names.add(c.getUniqueID())) continue;
                 if (c.getIcon() == null) continue;
                 DataCriteria data = new DataCriteria();          
@@ -338,19 +338,19 @@ public class JSONLoader {
                 if (Options.debugMode) Progression.logger.log(Level.INFO, "Saved the display name " + c.getDisplayName());
                 data.uuid = c.getUniqueID();
                 data.displayStack = StackHelper.getStringFromStack(c.getIcon());
-                List<IProgressionTrigger> triggers = c.getTriggers();
-                List<IProgressionReward> rewards = c.getRewards();
-                List<IProgressionCriteria> prereqs = c.getPreReqs();
-                List<IProgressionCriteria> conflicts = c.getConflicts();
+                List<ITrigger> triggers = c.getTriggers();
+                List<IReward> rewards = c.getRewards();
+                List<ICriteria> prereqs = c.getPreReqs();
+                List<ICriteria> conflicts = c.getConflicts();
 
                 ArrayList<DataTrigger> theTriggers = new ArrayList();
                 ArrayList<DataGeneric> theRewards = new ArrayList();
                 if (triggers.size() > 0) {
-                    for (IProgressionTrigger trigger : triggers) {
+                    for (ITrigger trigger : triggers) {
                         ArrayList<DataGeneric> theConditions = null;
                         if (trigger.getConditions().size() > 0) {
                             theConditions = new ArrayList();
-                            for (IProgressionCondition condition : trigger.getConditions()) {
+                            for (ICondition condition : trigger.getConditions()) {
                                 JsonObject conditionData = new JsonObject();
                                 JSONHelper.writeJSON(conditionData, condition);
                                 DataGeneric dCondition = new DataGeneric(condition.getUniqueID(), condition.getUnlocalisedName(), conditionData);
@@ -366,7 +366,7 @@ public class JSONLoader {
                 }
 
                 if (rewards.size() > 0) {
-                    for (IProgressionReward reward : rewards) {
+                    for (IReward reward : rewards) {
                         JsonObject rewardData = new JsonObject();
                         JSONHelper.writeJSON(rewardData, reward);
                         DataGeneric dReward = new DataGeneric(reward.getUniqueID(), reward.getUnlocalisedName(), rewardData);

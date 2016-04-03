@@ -1,7 +1,7 @@
 package joshie.progression.gui.tree.buttons;
 
-import joshie.progression.api.criteria.IProgressionCriteria;
-import joshie.progression.api.criteria.IProgressionTab;
+import joshie.progression.api.criteria.ICriteria;
+import joshie.progression.api.criteria.ITab;
 import joshie.progression.gui.core.FeatureTooltip;
 import joshie.progression.gui.core.GuiCore;
 import joshie.progression.gui.editors.GuiTreeEditor;
@@ -53,11 +53,11 @@ public class ButtonNewCriteria extends ButtonBase {
             GuiTreeEditor.INSTANCE.selected = null;
             GuiTreeEditor.INSTANCE.lastClicked = null;
             GuiTreeEditor.INSTANCE.isDragging = false;
-            IProgressionTab currentTab = GuiTreeEditor.INSTANCE.currentTab;
+            ITab currentTab = GuiTreeEditor.INSTANCE.currentTab;
             int mouseX = GuiCore.INSTANCE.mouseX;
             int mouseY = GuiCore.INSTANCE.mouseY;
             int offsetX = GuiCore.INSTANCE.offsetX;
-            IProgressionCriteria criteria = APIHandler.newCriteria(currentTab, UUID.randomUUID(), true);
+            ICriteria criteria = APIHandler.newCriteria(currentTab, UUID.randomUUID(), true);
             criteria.setCoordinates(mouseX - 50 - offsetX, mouseY - 10);
             GuiTreeEditor.INSTANCE.addCriteria(criteria, mouseX - 50, mouseY - 10, offsetX);
         }

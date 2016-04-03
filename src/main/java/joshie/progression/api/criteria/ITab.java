@@ -5,9 +5,9 @@ import net.minecraft.item.ItemStack;
 import java.util.List;
 import java.util.UUID;
 
-public interface IProgressionTab {
+public interface ITab {
     /** Returns a list of all the criteria in this tab **/
-    public List<IProgressionCriteria> getCriteria();
+    public List<ICriteria> getCriteria();
     
     /** Returns the unique name for this tab **/
     public UUID getUniqueID();
@@ -24,8 +24,8 @@ public interface IProgressionTab {
     /** Whether this tab is currently visible or not **/
     public boolean isVisible();
 
-    public IProgressionTab setDisplayName(String name);
-    public IProgressionTab setStack(ItemStack icon);
-    public IProgressionTab setSortIndex(int value);
-    public IProgressionTab setVisibility(boolean isVisible);  
+    public ITab setDisplayName(String name);
+    public ITab setStack(ItemStack icon);
+    public ITab setSortIndex(int value);
+    public ITab setVisibility(boolean isVisible);
 }

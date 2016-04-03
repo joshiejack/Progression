@@ -1,9 +1,9 @@
 package joshie.progression.criteria.triggers;
 
 import joshie.progression.Progression;
-import joshie.progression.api.criteria.IProgressionCondition;
-import joshie.progression.api.criteria.IProgressionCriteria;
-import joshie.progression.api.criteria.IProgressionTrigger;
+import joshie.progression.api.criteria.ICondition;
+import joshie.progression.api.criteria.ICriteria;
+import joshie.progression.api.criteria.ITrigger;
 import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.ICancelable;
 import net.minecraft.init.Blocks;
@@ -15,9 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class TriggerBase implements IProgressionTrigger {
-    private List<IProgressionCondition> conditions = new ArrayList();
-    private IProgressionCriteria criteria;
+public abstract class TriggerBase implements ITrigger {
+    private List<ICondition> conditions = new ArrayList();
+    private ICriteria criteria;
     private UUID uuid;
     private String name;
     private int color;
@@ -56,17 +56,17 @@ public abstract class TriggerBase implements IProgressionTrigger {
     }
 
     @Override
-    public List<IProgressionCondition> getConditions() {
+    public List<ICondition> getConditions() {
         return conditions;
     }
     
     @Override
-    public IProgressionCriteria getCriteria() {
+    public ICriteria getCriteria() {
         return criteria;
     }
 
     @Override
-    public void setCriteria(IProgressionCriteria criteria, UUID uuid) {
+    public void setCriteria(ICriteria criteria, UUID uuid) {
         this.criteria = criteria;
         this.uuid = uuid;
     }
@@ -128,9 +128,9 @@ public abstract class TriggerBase implements IProgressionTrigger {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || !(o instanceof IProgressionTrigger)) return false;
+        if (o == null || !(o instanceof ITrigger)) return false;
 
-        IProgressionTrigger that = (IProgressionTrigger) o;
+        ITrigger that = (ITrigger) o;
         return getUniqueID() != null ? getUniqueID().equals(that.getUniqueID()) : that.getUniqueID() == null;
 
     }

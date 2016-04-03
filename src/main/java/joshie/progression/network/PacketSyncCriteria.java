@@ -1,7 +1,7 @@
 package joshie.progression.network;
 
 import io.netty.buffer.ByteBuf;
-import joshie.progression.api.criteria.IProgressionCriteria;
+import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.network.core.PenguinPacket;
 import joshie.progression.player.PlayerTracker;
@@ -11,13 +11,13 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import java.util.UUID;
 
 public class PacketSyncCriteria extends PenguinPacket {
-    private IProgressionCriteria[] criteria;
+    private ICriteria[] criteria;
     private Integer[] integers;
     private boolean overwrite;
 
     public PacketSyncCriteria() {}
 
-    public PacketSyncCriteria(boolean overwrite, Integer[] values, IProgressionCriteria[] criteria) {
+    public PacketSyncCriteria(boolean overwrite, Integer[] values, ICriteria[] criteria) {
         this.criteria = criteria;
         this.integers = values;
         this.overwrite = overwrite;
@@ -27,7 +27,7 @@ public class PacketSyncCriteria extends PenguinPacket {
     public void toBytes(ByteBuf buf) {
         buf.writeBoolean(overwrite);
         buf.writeInt(criteria.length);
-        for (IProgressionCriteria tech : criteria) {
+        for (ICriteria tech : criteria) {
             ByteBufUtils.writeUTF8String(buf, tech.getUniqueID().toString());
         }
 
@@ -40,7 +40,7 @@ public class PacketSyncCriteria extends PenguinPacket {
     public void fromBytes(ByteBuf buf) {
         overwrite = buf.readBoolean();
         int size = buf.readInt();
-        criteria = new IProgressionCriteria[size];
+        criteria = new ICriteria[size];
         for (int i = 0; i < size; i++) {
             criteria[i] = APIHandler.getCriteriaFromName(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
         }

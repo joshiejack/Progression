@@ -1,7 +1,7 @@
 package joshie.progression.criteria.triggers;
 
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.criteria.IProgressionTrigger;
+import joshie.progression.api.criteria.ITrigger;
 import joshie.progression.api.special.DisplayMode;
 import joshie.progression.items.ItemCriteria;
 
@@ -18,7 +18,7 @@ public class TriggerBoolean extends TriggerBaseBoolean {
     }
 
     @Override
-    public IProgressionTrigger copy() {
+    public ITrigger copy() {
         TriggerBoolean trigger = new TriggerBoolean();
         trigger.description = description;
         trigger.displayWidth = displayWidth;

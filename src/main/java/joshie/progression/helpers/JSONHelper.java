@@ -3,7 +3,8 @@ package joshie.progression.helpers;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import joshie.progression.api.criteria.IFieldProvider;
-import joshie.progression.api.criteria.IProgressionFilter;
+import joshie.progression.api.criteria.IFilter;
+import joshie.progression.api.special.IEnum;
 import joshie.progression.api.special.ISpecialJSON;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.lib.ProgressionInfo;
@@ -19,10 +20,11 @@ import java.util.List;
 
 public class JSONHelper {
     public static Enum getEnum(JsonObject data, String string, Enum default_) {
-        if (data.get(string) != null) {
+        System.out.println("FETCHING ENUM");
+        if (data.get("enum:" + string) != null) {
             try {
                 return Enum.valueOf((Class)default_.getClass(), getString(data, "enum:" + string, default_.name()));
-            } catch (Exception e) {}
+            } catch (Exception e) { e.printStackTrace(); }
         }
 
         return default_;
@@ -180,15 +182,15 @@ public class JSONHelper {
         }
     }
 
-    public static List<IProgressionFilter> getItemFilters(JsonObject data, String name) {
-        ArrayList<IProgressionFilter> filters = new ArrayList();
+    public static List<IFilter> getItemFilters(JsonObject data, String name) {
+        ArrayList<IFilter> filters = new ArrayList();
         if (data.get(name) == null) return filters;
         JsonArray array = data.get(name).getAsJsonArray();
         for (int i = 0; i < array.size(); i++) {
             JsonObject object = array.get(i).getAsJsonObject();
             String typeName = object.get("type").getAsString();
             JsonObject typeData = object.get("data").getAsJsonObject();
-            IProgressionFilter filter = APIHandler.newFilter(typeName, typeData);
+            IFilter filter = APIHandler.newFilter(typeName, typeData);
             if (filter != null) {
                 filters.add(filter);
             }
@@ -197,9 +199,9 @@ public class JSONHelper {
         return filters;
     }
 
-    public static void setItemFilters(JsonObject data, String name, List<IProgressionFilter> filters) {
+    public static void setItemFilters(JsonObject data, String name, List<IFilter> filters) {
         JsonArray array = new JsonArray();
-        for (IProgressionFilter filter : filters) {
+        for (IFilter filter : filters) {
             if (filter == null) continue;
             JsonObject object = new JsonObject();
             object.addProperty("type", filter.getUnlocalisedName());
@@ -260,7 +262,7 @@ public class JSONHelper {
         try {
             for (Field field : provider.getClass().getFields()) {
                 Object defaultValue = field.get(provider);
-                if (field.getClass().isEnum()) readEnum(json, field, provider, (Enum) defaultValue);
+                if (provider instanceof IEnum && ((IEnum)provider).isEnum(field.getName())) readEnum(json, field, provider, (Enum) defaultValue);
                 if (field.getType() == boolean.class) readBoolean(json, field, provider, (Boolean) defaultValue);
                 if (field.getType() == String.class) readString(json, field, provider, (String) defaultValue);
                 if (field.getType() == int.class) readInteger(json, field, provider, (Integer) defaultValue);
@@ -300,7 +302,7 @@ public class JSONHelper {
     }
 
     private static void writeItemFilters(JsonObject json, Field field, Object object) throws IllegalArgumentException, IllegalAccessException {
-        setItemFilters(json, field.getName(), (List<IProgressionFilter>) field.get(object));
+        setItemFilters(json, field.getName(), (List<IFilter>) field.get(object));
     }
 
     private static void writeItemStack(JsonObject json, Field field, Object object, ItemStack dflt) throws IllegalArgumentException, IllegalAccessException {
@@ -323,7 +325,7 @@ public class JSONHelper {
         try {
             for (Field field : object.getClass().getFields()) {
                 Object defaultValue = field.get(APIHandler.getDefault(object));
-                if (field.getClass().isEnum()) writeEnum(json, field, object, (Enum) defaultValue);
+                if (object instanceof IEnum && ((IEnum)object).isEnum(field.getName())) writeEnum(json, field, object, (Enum) defaultValue);
                 if (field.getType() == boolean.class) writeBoolean(json, field, object, (Boolean) defaultValue);
                 if (field.getType() == String.class) writeString(json, field, object, (String) defaultValue);
                 if (field.getType() == int.class) writeInteger(json, field, object, (Integer) defaultValue);

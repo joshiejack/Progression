@@ -2,7 +2,7 @@ package joshie.progression.criteria.triggers;
 
 import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.criteria.IProgressionTrigger;
+import joshie.progression.api.criteria.ITrigger;
 import joshie.progression.api.special.ICancelable;
 import joshie.progression.api.special.IInit;
 import joshie.progression.items.ItemCriteria;
@@ -28,7 +28,7 @@ public class TriggerChat extends TriggerBaseBoolean implements IInit, ICancelabl
     }
 
     @Override
-    public IProgressionTrigger copy() {
+    public ITrigger copy() {
         TriggerChat trigger = new TriggerChat();
         trigger.matchString = matchString;
         trigger.matchBoth = matchBoth;

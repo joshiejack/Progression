@@ -1,6 +1,6 @@
 package joshie.progression.gui.fields;
 
-import joshie.progression.api.criteria.IProgressionField;
+import joshie.progression.api.criteria.IField;
 import joshie.progression.api.special.IAdditionalTooltip;
 import joshie.progression.gui.core.DrawHelper;
 import joshie.progression.gui.core.FeatureTooltip;
@@ -15,7 +15,7 @@ import net.minecraft.entity.boss.BossStatus;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntityFilterFieldPreview extends ItemFilterField implements IProgressionField {
+public class EntityFilterFieldPreview extends ItemFilterField implements IField {
     private final int x;
     private final int y;
     private final float scale;

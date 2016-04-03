@@ -1,8 +1,8 @@
 package joshie.progression.criteria.triggers;
 
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.criteria.IProgressionField;
-import joshie.progression.api.criteria.IProgressionTrigger;
+import joshie.progression.api.criteria.IField;
+import joshie.progression.api.criteria.ITrigger;
 import joshie.progression.api.special.*;
 import joshie.progression.items.ItemCriteria;
 import net.minecraft.init.Items;
@@ -26,7 +26,7 @@ public class TriggerAchievement extends TriggerBaseBoolean implements IHasEventB
     }
 
     @Override
-    public IProgressionTrigger copy() {
+    public ITrigger copy() {
         TriggerAchievement trigger = new TriggerAchievement();
         trigger.id = id;
         return copyBase(copyBoolean(trigger));
@@ -48,7 +48,7 @@ public class TriggerAchievement extends TriggerBaseBoolean implements IHasEventB
     }
 
     @Override
-    public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
+    public void addSpecialFields(List<IField> fields, DisplayMode mode) {
         if (mode == DisplayMode.DISPLAY) fields.add(ProgressionAPI.fields.getItem(this, "id", 20, 42, 2F));
     }
     

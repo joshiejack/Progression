@@ -1,8 +1,8 @@
 package joshie.progression.network;
 
 import io.netty.buffer.ByteBuf;
-import joshie.progression.api.criteria.IProgressionCriteria;
-import joshie.progression.api.criteria.IProgressionReward;
+import joshie.progression.api.criteria.ICriteria;
+import joshie.progression.api.criteria.IReward;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.network.core.PenguinPacket;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,13 +14,13 @@ import java.util.List;
 import java.util.UUID;
 
 public class PacketClaimReward extends PenguinPacket {
-    private IProgressionCriteria criteria;
+    private ICriteria criteria;
     private int rewardId;
     private boolean randomReward;
 
     public PacketClaimReward() {}
 
-    public PacketClaimReward(IProgressionCriteria criteria, int rewardId, boolean randomReward) {
+    public PacketClaimReward(ICriteria criteria, int rewardId, boolean randomReward) {
         this.criteria = criteria;
         this.rewardId = rewardId;
         this.randomReward = randomReward;
@@ -42,7 +42,7 @@ public class PacketClaimReward extends PenguinPacket {
 
     @Override
     public void handlePacket(EntityPlayer player) {
-        List<IProgressionReward> rewards = criteria.getRewards();
+        List<IReward> rewards = criteria.getRewards();
         if (rewards != null && rewards.size() > 0) {
             if (randomReward) Collections.shuffle(rewards);
             int selected = 0;

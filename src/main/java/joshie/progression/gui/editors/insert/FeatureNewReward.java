@@ -2,10 +2,10 @@ package joshie.progression.gui.editors.insert;
 
 import java.util.Collection;
 
-import joshie.progression.api.criteria.IProgressionReward;
+import joshie.progression.api.criteria.IReward;
 import joshie.progression.handlers.APIHandler;
 
-public class FeatureNewReward extends FeatureNew<IProgressionReward> {
+public class FeatureNewReward extends FeatureNew<IReward> {
     public static final FeatureNewReward INSTANCE = new FeatureNewReward();
 
     public FeatureNewReward() {
@@ -13,12 +13,12 @@ public class FeatureNewReward extends FeatureNew<IProgressionReward> {
     }
 
     @Override
-    public Collection<IProgressionReward> getFields() {
+    public Collection<IReward> getFields() {
         return APIHandler.rewardTypes.values();
     }
 
     @Override
-    public void clone(IProgressionReward reward) {
+    public void clone(IReward reward) {
         APIHandler.cloneReward(criteria, reward);
         // GuiCriteriaEditor.INSTANCE.initGui(); //Refresh the gui
     }

@@ -1,7 +1,7 @@
 package joshie.progression.gui.editors;
 
 import joshie.progression.Progression;
-import joshie.progression.api.criteria.IProgressionCriteria;
+import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.gui.core.FeatureBarsX2;
 import joshie.progression.gui.core.FeatureTooltip;
 import joshie.progression.gui.core.GuiCore;
@@ -13,7 +13,7 @@ import joshie.progression.gui.fields.BooleanField;
 import joshie.progression.gui.fields.BooleanFieldHideable;
 import joshie.progression.gui.fields.TextField;
 import joshie.progression.gui.fields.TextFieldHideable;
-import joshie.progression.gui.filters.FilterSelectorItem;
+import joshie.progression.gui.filters.FilterTypeItem;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.item.ItemStack;
@@ -21,15 +21,15 @@ import net.minecraft.util.EnumChatFormatting;
 
 public class GuiCriteriaEditor extends GuiBaseEditor implements IBarProvider, IItemSelectable, IEditorMode {
     public static final GuiCriteriaEditor INSTANCE = new GuiCriteriaEditor();
-    private IProgressionCriteria criteria;
+    private ICriteria criteria;
 
     private GuiCriteriaEditor() {}
 
-    public void setCriteria(IProgressionCriteria criteria) {
+    public void setCriteria(ICriteria criteria) {
         this.criteria = criteria;
     }
 
-    public IProgressionCriteria getCriteria() {
+    public ICriteria getCriteria() {
         return criteria;
     }
 
@@ -78,6 +78,7 @@ public class GuiCriteriaEditor extends GuiBaseEditor implements IBarProvider, II
 
     @Override
     public void drawGuiForeground(boolean overlayvisible, int mouseX, int mouseY) {
+        if (criteria == null) return; //Don't draw if no criteria!
         drawStack(criteria.getIcon(), 1, 4, 1F);
         String unformatted = fields.get("name").getField();
         String displayName = MCClientHelper.isInEditMode() ? Progression.translate("name.display") + ": " + unformatted : unformatted;
@@ -165,7 +166,7 @@ public class GuiCriteriaEditor extends GuiBaseEditor implements IBarProvider, II
                     fields.get("name").click();
                     return true;
                 } else if (mouseX > 0 && mouseX < 18 && mouseY >= 4 && mouseY <= 20) {
-                    FeatureItemSelector.INSTANCE.select(FilterSelectorItem.INSTANCE, this, Position.TOP);
+                    FeatureItemSelector.INSTANCE.select(FilterTypeItem.INSTANCE, this, Position.TOP);
                     return true;
                 }
             }

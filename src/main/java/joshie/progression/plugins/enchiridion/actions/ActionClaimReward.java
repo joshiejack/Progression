@@ -3,7 +3,7 @@ package joshie.progression.plugins.enchiridion.actions;
 import com.google.gson.JsonObject;
 
 import joshie.enchiridion.api.book.IButtonAction;
-import joshie.progression.api.criteria.IProgressionCriteria;
+import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.JSONHelper;
 import joshie.progression.network.PacketClaimReward;
@@ -14,7 +14,7 @@ import java.util.UUID;
 public class ActionClaimReward extends AbstractAction implements IButtonAction {
     public transient String displayName;
     public transient UUID criteriaID;
-    public transient IProgressionCriteria criteria;
+    public transient ICriteria criteria;
     public transient boolean randomReward;
     public transient int rewardPosition;
 
@@ -22,7 +22,7 @@ public class ActionClaimReward extends AbstractAction implements IButtonAction {
         super("reward");
     }
 
-    public ActionClaimReward(String displayName, UUID criteriaID, IProgressionCriteria criteria, int rewardPosition) {
+    public ActionClaimReward(String displayName, UUID criteriaID, ICriteria criteria, int rewardPosition) {
         super("reward");
         this.displayName = displayName;
         this.criteriaID = criteriaID;
@@ -51,13 +51,13 @@ public class ActionClaimReward extends AbstractAction implements IButtonAction {
         return new ActionClaimReward("New Criteria", UUID.randomUUID(), null, 1);
     }
 
-    private IProgressionCriteria getCriteria() {
+    private ICriteria getCriteria() {
         if (criteria != null) {
             if (criteria.getDisplayName().equals(displayName)) return criteria;
         }
 
         //Attempt to grab the criteria based on the displayname
-        for (IProgressionCriteria c : APIHandler.getCriteria().values()) {
+        for (ICriteria c : APIHandler.getCriteria().values()) {
             String display = c.getDisplayName();
             if (c.getDisplayName().equals(displayName)) {
                 criteria = c;
@@ -71,7 +71,7 @@ public class ActionClaimReward extends AbstractAction implements IButtonAction {
 
     @Override
     public void performAction() {
-        IProgressionCriteria criteria = getCriteria();
+        ICriteria criteria = getCriteria();
         if (criteria != null) {
             PacketHandler.sendToServer(new PacketClaimReward(criteria, rewardPosition - 1, randomReward));
         }

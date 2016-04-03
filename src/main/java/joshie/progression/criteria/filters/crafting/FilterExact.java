@@ -1,7 +1,7 @@
 package joshie.progression.criteria.filters.crafting;
 
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.criteria.IProgressionField;
+import joshie.progression.api.criteria.IField;
 import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.ISpecialFieldProvider;
 import joshie.progression.crafting.ActionType;
@@ -24,7 +24,7 @@ public class FilterExact extends FilterBaseCrafting implements ISpecialFieldProv
     }
 
     @Override
-    public void addSpecialFields(List<IProgressionField> fields, DisplayMode mode) {
+    public void addSpecialFields(List<IField> fields, DisplayMode mode) {
         if (mode == DisplayMode.EDIT) fields.add(ProgressionAPI.fields.getItem(this, "stack", 5, 25, 2.8F));
     }
 

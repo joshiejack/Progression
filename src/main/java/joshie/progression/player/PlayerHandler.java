@@ -1,7 +1,7 @@
 package joshie.progression.player;
 
 import joshie.progression.api.IPlayerData;
-import joshie.progression.api.criteria.IProgressionCriteria;
+import joshie.progression.api.criteria.ICriteria;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -36,7 +36,7 @@ public class PlayerHandler implements IPlayerData {
     }
 
     @Override
-    public Set<IProgressionCriteria> getCompletedCriteriaList(UUID uuid) {
+    public Set<ICriteria> getCompletedCriteriaList(UUID uuid) {
         return PlayerTracker.getPlayerData(uuid).getMappings().getCompletedCriteria().keySet();
     }
 
