@@ -3,8 +3,6 @@ package joshie.progression;
 import joshie.progression.gui.core.GuiCore;
 import joshie.progression.gui.editors.GuiGroupEditor;
 import joshie.progression.helpers.RenderItemHelper;
-import joshie.progression.items.ItemCriteria;
-import joshie.progression.items.RenderItemCriteria;
 import joshie.progression.lib.GuiIDs;
 import joshie.progression.lib.ProgressionInfo;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -18,7 +16,7 @@ public class PClientProxy extends PCommonProxy {
 
     @Override
     public void initClient() {
-        MinecraftForge.EVENT_BUS.register(new RenderItemCriteria());
+        MinecraftForge.EVENT_BUS.register(new ItemProgressionRenderer());
     }
 
     private ModelResourceLocation getLocation(String name) {
@@ -28,8 +26,8 @@ public class PClientProxy extends PCommonProxy {
     @Override
     public void registerRendering() {
         RenderItemHelper.register(Progression.item, 0, criteria);
-        for (ItemCriteria.ItemMeta meta: ItemCriteria.ItemMeta.values()) {
-            if (meta == ItemCriteria.ItemMeta.criteria) continue;
+        for (ItemProgression.ItemMeta meta: ItemProgression.ItemMeta.values()) {
+            if (meta == ItemProgression.ItemMeta.criteria) continue;
             RenderItemHelper.register(Progression.item, meta.ordinal(), getLocation(meta.name()));
         }
     }

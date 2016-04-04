@@ -1,4 +1,4 @@
-package joshie.progression.criteria.filters.crafting;
+package joshie.progression.criteria.filters.action;
 
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IFilterType;
@@ -6,7 +6,7 @@ import joshie.progression.crafting.ActionType;
 import joshie.progression.criteria.filters.FilterBase;
 import net.minecraft.item.ItemStack;
 
-public abstract class FilterBaseCrafting extends FilterBase {
+public abstract class FilterBaseAction extends FilterBase {
     @Override
     public boolean matches(Object object) {
         if (!(object instanceof ItemStack)) return false;
@@ -24,7 +24,7 @@ public abstract class FilterBaseCrafting extends FilterBase {
 
     @Override
     public IFilterType getType() {
-        return ProgressionAPI.filters.getCraftingFilter();
+        return ProgressionAPI.filters.getActionFilter();
     }
 
     protected abstract boolean matches(ItemStack stack);

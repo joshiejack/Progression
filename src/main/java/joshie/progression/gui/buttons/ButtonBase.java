@@ -1,4 +1,4 @@
-package joshie.progression.gui.tree.buttons;
+package joshie.progression.gui.buttons;
 
 
 import joshie.progression.gui.core.GuiCore;

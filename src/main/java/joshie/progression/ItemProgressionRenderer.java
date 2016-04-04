@@ -1,9 +1,5 @@
-package joshie.progression.items;
+package joshie.progression;
 
-import java.util.List;
-
-import joshie.progression.PClientProxy;
-import joshie.progression.Progression;
 import joshie.progression.api.criteria.ICriteria;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemModelMesher;
@@ -18,7 +14,9 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.ISmartItemModel;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class RenderItemCriteria implements ISmartItemModel {
+import java.util.List;
+
+public class ItemProgressionRenderer implements ISmartItemModel {
 	private ItemStack broken = new ItemStack(Items.book);
 	private ItemModelMesher mesher;
 	
@@ -30,7 +28,7 @@ public class RenderItemCriteria implements ISmartItemModel {
 	@Override
 	public IBakedModel handleItemState(ItemStack stack) {
 		if (mesher == null) mesher  = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
-		ICriteria criteria = ItemCriteria.getCriteriaFromStack(stack);
+		ICriteria criteria = ItemProgression.getCriteriaFromStack(stack);
 		if (criteria != null && criteria.getIcon().getItem() != stack.getItem() && criteria.getIcon().getItem() != Progression.item) {
 			return mesher.getItemModel(criteria.getIcon());
 		}

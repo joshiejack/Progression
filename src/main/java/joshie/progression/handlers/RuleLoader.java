@@ -3,7 +3,7 @@ package joshie.progression.handlers;
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.*;
 import joshie.progression.helpers.StackHelper;
-import joshie.progression.items.ItemCriteria.ItemMeta;
+import joshie.progression.ItemProgression.ItemMeta;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
@@ -33,6 +33,7 @@ public class RuleLoader {
                 int color = (Integer) data.get("color");
                 String icon = (String) data.get("icon");
                 String meta = (String) data.get("meta");
+                boolean isCancelable = (Boolean) data.get("cancelable");
 
                 ItemStack stack = StackHelper.getStackFromString(icon);
                 if (stack == null) stack = new ItemStack(Progression.item);
@@ -48,7 +49,10 @@ public class RuleLoader {
                 if (instance instanceof IReward) {
                     APIHandler.registerRewardType(instance, name, color).setIcon(stack);
                 } else if (instance instanceof ITrigger) {
-                    APIHandler.registerTriggerType(instance, name, color).setIcon(stack);
+                    ITriggerProvider provider = APIHandler.registerTriggerType(instance, name, color).setIcon(stack);
+                    if (isCancelable) {
+                        provider.setCancelable();
+                    }
                 } else if (instance instanceof ICondition) {
                     APIHandler.registerConditionType(instance, name, color).setIcon(stack);
                 } else if (instance instanceof IFilter) {

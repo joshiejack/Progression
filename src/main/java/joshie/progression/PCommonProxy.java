@@ -9,8 +9,7 @@ import joshie.progression.handlers.APIHandler;
 import joshie.progression.handlers.CraftingEvents;
 import joshie.progression.handlers.RemappingHandler;
 import joshie.progression.handlers.RuleLoader;
-import joshie.progression.items.ItemCriteria;
-import joshie.progression.items.ItemCriteria.ItemMeta;
+import joshie.progression.ItemProgression.ItemMeta;
 import joshie.progression.json.Options;
 import joshie.progression.network.*;
 import joshie.progression.player.PlayerHandler;
@@ -43,11 +42,11 @@ public class PCommonProxy implements IGuiHandler {
         MinecraftForge.EVENT_BUS.register(new CraftingEvents());
 
         //Register the items
-        Progression.item = new ItemCriteria().setUnlocalizedName("item");
+        Progression.item = new ItemProgression().setUnlocalizedName("item");
         GameRegistry.registerItem(Progression.item, "item");
 
         if (Options.tileClaimerRecipe) {
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Progression.item, 1, ItemCriteria.ItemMeta.claim.ordinal()), new Object[] { "F", "P", 'F', Items.flint, 'P', "plankWood" }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Progression.item, 1, ItemProgression.ItemMeta.claim.ordinal()), new Object[] { "F", "P", 'F', Items.flint, 'P', "plankWood" }));
         }
 
         registerFilters();
@@ -151,7 +150,7 @@ public class PCommonProxy implements IGuiHandler {
     }*/
 
     private ItemStack getIcon(ItemMeta meta) {
-        return ItemCriteria.getStackFromMeta(meta);
+        return ItemProgression.getStackFromMeta(meta);
     }
 
     public void initClient() {}

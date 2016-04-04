@@ -1,4 +1,4 @@
-package joshie.progression.items;
+package joshie.progression;
 
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.ICriteria;
@@ -30,7 +30,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.List;
 import java.util.UUID;
 
-public class ItemCriteria extends Item {
+public class ItemProgression extends Item {
     public static ItemStack getStackFromMeta(ItemMeta meta) {
         return new ItemStack(Progression.item, 1, meta.ordinal());
     }
@@ -45,7 +45,7 @@ public class ItemCriteria extends Item {
 
     public static CreativeTabs tab;
 
-    public ItemCriteria() {
+    public ItemProgression() {
         final Item item = this;
         tab = new CreativeTabs("progression") {
             private ItemStack stack = new ItemStack(item, 1, ItemMeta.book.ordinal());

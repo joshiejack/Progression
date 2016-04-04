@@ -11,4 +11,7 @@ public @interface ProgressionRule {
 
     /** This one should be used if a mod is required **/
     public String mod() default "progression";
+
+    /** This should only be used on triggers **/
+    public boolean cancelable() default false;
 }

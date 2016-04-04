@@ -84,4 +84,14 @@ public class ActionType {
             return ActionType.CRAFTING;
         } else return type;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return this.getClass() == o.getClass();
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getClass().getSimpleName().hashCode();
+    }
 }

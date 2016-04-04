@@ -1,4 +1,4 @@
-package joshie.progression.criteria.filters.crafting;
+package joshie.progression.criteria.filters.action;
 
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IField;
@@ -15,7 +15,7 @@ import net.minecraft.item.ItemStack;
 import java.util.List;
 
 @ProgressionRule(name="exact", color=0xFF663300)
-public class FilterExact extends FilterBaseCrafting implements ICustomWidth, ICustomDescription, ISpecialFieldProvider {
+public class FilterExact extends FilterBaseAction implements ICustomWidth, ICustomDescription, ISpecialFieldProvider {
     public ItemStack stack = new ItemStack(Blocks.crafting_table);
 
     @Override

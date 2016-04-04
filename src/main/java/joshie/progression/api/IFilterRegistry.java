@@ -19,5 +19,5 @@ public interface IFilterRegistry {
     public IFilterType getItemStackFilter();
     
     /** Returns a filter selector that will select actions **/
-    public IFilterType getCraftingFilter();
+    public IFilterType getActionFilter();
 }

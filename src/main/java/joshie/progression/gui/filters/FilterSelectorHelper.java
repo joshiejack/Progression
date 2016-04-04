@@ -30,7 +30,7 @@ public class FilterSelectorHelper implements IFilterRegistry {
     }
 
     @Override
-    public IFilterType getCraftingFilter() {
+    public IFilterType getActionFilter() {
         return FilterTypeAction.INSTANCE;
     }
 }
