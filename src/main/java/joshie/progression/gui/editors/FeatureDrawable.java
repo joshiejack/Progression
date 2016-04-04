@@ -1,9 +1,7 @@
 package joshie.progression.gui.editors;
 
 import joshie.progression.Progression;
-import joshie.progression.api.criteria.IField;
-import joshie.progression.api.criteria.IRuleProvider;
-import joshie.progression.api.criteria.IRewardProvider;
+import joshie.progression.api.criteria.*;
 import joshie.progression.api.gui.ICustomDrawGuiDisplay;
 import joshie.progression.api.gui.ICustomDrawGuiEditor;
 import joshie.progression.api.gui.Position;
@@ -88,7 +86,14 @@ public class FeatureDrawable<T extends IRuleProvider> extends FeatureAbstract {
         Position type = provider instanceof IRewardProvider ? TOP : BOTTOM;
         for (Field field : provider.getClass().getFields()) {
             try {
-                if (field.getType() == boolean.class) fields.add(new BooleanField(field.getName(), provider));
+                if (field.getType() == boolean.class) {
+                    if (provider instanceof ITriggerProvider) {
+                        if (field.getName().equals("isCanceling") && !((ITriggerProvider)provider).isCancelable()) continue;
+                    }
+
+                    fields.add(new BooleanField(field.getName(), provider));
+                }
+
                 else if (field.getType() == String.class) fields.add(new TextField(field.getName(), provider, type));
                 else if (field.getType() == int.class) fields.add(new TextField(field.getName(), provider, type));
                 else if (field.getType() == float.class) fields.add(new TextField(field.getName(), provider, type));
