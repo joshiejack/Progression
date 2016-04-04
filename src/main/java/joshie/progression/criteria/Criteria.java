@@ -1,9 +1,6 @@
 package joshie.progression.criteria;
 
-import joshie.progression.api.criteria.ICriteria;
-import joshie.progression.api.criteria.IReward;
-import joshie.progression.api.criteria.ITab;
-import joshie.progression.api.criteria.ITrigger;
+import joshie.progression.api.criteria.*;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
@@ -14,8 +11,8 @@ import java.util.UUID;
 
 public class Criteria implements ICriteria {
     /** All the data for this **/
-    public List<ITrigger> triggers = new ArrayList();
-    public List<IReward> rewards = new ArrayList();
+    public List<ITriggerProvider> triggers = new ArrayList();
+    public List<IRewardProvider> rewards = new ArrayList();
     public List<ICriteria> prereqs = new ArrayList();
     public List<ICriteria> conflicts = new ArrayList();
 
@@ -90,12 +87,12 @@ public class Criteria implements ICriteria {
     }
 
     @Override
-    public List<ITrigger> getTriggers() {
+    public List<ITriggerProvider> getTriggers() {
         return triggers;
     }
 
     @Override
-    public List<IReward> getRewards() {
+    public List<IRewardProvider> getRewards() {
         return rewards;
     }
 
@@ -120,7 +117,7 @@ public class Criteria implements ICriteria {
     }
 
     @Override
-    public String getDisplayName() {
+    public String getLocalisedName() {
         return displayName;
     }
 

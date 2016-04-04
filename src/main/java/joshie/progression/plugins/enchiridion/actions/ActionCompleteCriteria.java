@@ -49,13 +49,13 @@ public class ActionCompleteCriteria extends AbstractAction implements IButtonAct
 
     private ICriteria getCriteria() {
         if (criteria != null) {
-            if (criteria.getDisplayName().equals(displayName)) return criteria;
+            if (criteria.getLocalisedName().equals(displayName)) return criteria;
         }
 
         //Attempt to grab the criteria based on the displayname
         for (ICriteria c : APIHandler.getCriteria().values()) {
-            String display = c.getDisplayName();
-            if (c.getDisplayName().equals(displayName)) {
+            String display = c.getLocalisedName();
+            if (c.getLocalisedName().equals(displayName)) {
                 criteria = c;
                 criteriaID = c.getUniqueID();
                 return criteria;

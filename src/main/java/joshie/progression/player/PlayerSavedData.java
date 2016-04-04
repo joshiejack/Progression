@@ -2,7 +2,7 @@ package joshie.progression.player;
 
 import com.google.common.collect.Maps;
 import joshie.progression.api.criteria.ICriteria;
-import joshie.progression.api.criteria.IReward;
+import joshie.progression.api.criteria.IRewardProvider;
 import joshie.progression.api.criteria.ITab;
 import joshie.progression.api.special.IStoreNBTData;
 import joshie.progression.criteria.filters.location.FilterPlayerLastBroken;
@@ -117,9 +117,9 @@ public class PlayerSavedData extends WorldSavedData {
             //Loop through all the rewards loaded and init them with player data
             for (ITab tab : APIHandler.getTabs().values()) {
                 for (ICriteria criteria : tab.getCriteria()) {
-                    for (IReward reward : criteria.getRewards()) {
-                        if (reward instanceof IStoreNBTData) {
-                            IStoreNBTData storage = (IStoreNBTData) reward;
+                    for (IRewardProvider provider : criteria.getRewards()) {
+                        if (provider.getProvided() instanceof IStoreNBTData) {
+                            IStoreNBTData storage = (IStoreNBTData) provider.getProvided();
                             data.getCustomStats().setCustomData(storage.getNBTKey(), storage.getDefaultTags(new NBTTagCompound()));
                         }
                     }

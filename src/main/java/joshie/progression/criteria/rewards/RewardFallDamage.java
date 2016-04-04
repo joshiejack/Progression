@@ -1,9 +1,8 @@
 package joshie.progression.criteria.rewards;
 
 import joshie.progression.Progression;
-import joshie.progression.api.special.DisplayMode;
-import joshie.progression.api.special.IHasEventBus;
-import joshie.progression.items.ItemCriteria;
+import joshie.progression.api.criteria.ProgressionRule;
+import joshie.progression.api.special.*;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -13,11 +12,23 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.List;
 
-public class RewardFallDamage extends RewardBaseAbility implements IHasEventBus {
+@ProgressionRule(name="fallDamage", color=0xFF661A00, meta="fallResistance")
+public class RewardFallDamage extends RewardBaseAbility implements ICustomTooltip {
     public int absorption = 1;
 
-    public RewardFallDamage() {
-        super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.fallResistance), "fallDamage", 0xFF661A00);
+    @Override
+    public String getDescription() {
+        return Progression.format(getProvider().getUnlocalisedName() + ".description", absorption);
+    }
+
+    @Override
+    public int getWidth(DisplayMode mode) {
+        return mode == DisplayMode.EDIT ? 85 : 75;
+    }
+
+    @Override
+    public void addAbilityTooltip(List list) {
+        list.add(EnumChatFormatting.GRAY + getProvider().getLocalisedName() + " " + absorption);
     }
 
     @SubscribeEvent
@@ -39,19 +50,9 @@ public class RewardFallDamage extends RewardBaseAbility implements IHasEventBus 
         PlayerTracker.getServerPlayer(player).addFallDamagePrevention(absorption);
     }
 
-    @Override
-    public void addTooltip(List list) {
-        list.add(EnumChatFormatting.WHITE + "Ability Gain");
-        list.add("Fall Resistance: " + absorption);
-    }
 
-    @Override
-    public int getWidth(DisplayMode mode) {
-        return mode == DisplayMode.EDIT ? 85 : 75;
-    }
 
-    @Override
-    public String getDescription() {
-        return Progression.format(getUnlocalisedName() + ".description", absorption);
-    }
+
+
+
 }

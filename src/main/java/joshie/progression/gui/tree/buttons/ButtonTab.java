@@ -1,11 +1,12 @@
 package joshie.progression.gui.tree.buttons;
 
+import joshie.progression.Progression;
 import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.ITab;
 import joshie.progression.gui.core.FeatureTooltip;
 import joshie.progression.gui.core.GuiCore;
 import joshie.progression.gui.editors.*;
-import joshie.progression.gui.editors.FeatureItemSelector.Position;
+import joshie.progression.api.gui.Position;
 import joshie.progression.gui.filters.FilterTypeItem;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.MCClientHelper;
@@ -78,17 +79,17 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
 
         if (k == 2 || displayTooltip) {
             ArrayList<String> name = new ArrayList();
-            String hidden = tab.isVisible() ? "" : "(Hidden)";
+            String hidden = tab.isVisible() ? "" : "(" + Progression.translate("tab.hidden") + ")";
             name.add(TextEditor.INSTANCE.getText(this) + hidden);
             if (MCClientHelper.isInEditMode()) {
-                name.add(EnumChatFormatting.GRAY + "(Sort Index) " + tab.getSortIndex());
-                name.add(EnumChatFormatting.GRAY + "Shift + Click to rename");
-                name.add(EnumChatFormatting.GRAY + "Ctrl + Click to select item icon");
-                name.add(EnumChatFormatting.GRAY + "Alt + Click to make this tab the default");
-                name.add(EnumChatFormatting.GRAY + "I + Click to hide/unhide");
-                name.add(EnumChatFormatting.GRAY + "Arrow keys to move up/down");
-                name.add(EnumChatFormatting.GRAY + "Delete + Click to delete");
-                name.add(EnumChatFormatting.RED + "  Deleting a tab, deletes all criteria in it");
+                name.add(EnumChatFormatting.GRAY + "(" + Progression.translate("tab.sort") + ") " + tab.getSortIndex());
+                name.add(EnumChatFormatting.GRAY + Progression.translate("tab.shift"));
+                name.add(EnumChatFormatting.GRAY + Progression.translate("tab.ctrl"));
+                name.add(EnumChatFormatting.GRAY + Progression.translate("tab.alt"));
+                name.add(EnumChatFormatting.GRAY + Progression.translate("tab.i"));
+                name.add(EnumChatFormatting.GRAY + Progression.translate("tab.arrow"));
+                name.add(EnumChatFormatting.GRAY + Progression.translate("tab.delete"));
+                name.add(EnumChatFormatting.RED + "  " + Progression.translate("tab.warning"));
             }
 
             FeatureTooltip.INSTANCE.clear();

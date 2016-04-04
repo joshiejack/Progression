@@ -2,9 +2,11 @@ package joshie.progression.criteria.filters.block;
 
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IField;
-import joshie.progression.api.criteria.IFilterType;
-import joshie.progression.api.special.*;
-import joshie.progression.gui.filters.FilterTypeBlock;
+import joshie.progression.api.criteria.ProgressionRule;
+import joshie.progression.api.special.DisplayMode;
+import joshie.progression.api.special.IItemGetterCallback;
+import joshie.progression.api.special.ISetterCallback;
+import joshie.progression.api.special.ISpecialFieldProvider;
 import joshie.progression.helpers.ItemHelper;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -12,17 +14,9 @@ import net.minecraft.item.ItemStack;
 
 import java.util.List;
 
-public class FilterBlock extends FilterBaseBlock implements IItemGetterCallback, ISetterCallback, ISpecialFilters, ISpecialFieldProvider {
+@ProgressionRule(name="blockOnly", color=0xFFCCCCCC)
+public class FilterBlock extends FilterBaseBlock implements IItemGetterCallback, ISetterCallback, ISpecialFieldProvider {
     public Block filterBlock = Blocks.sandstone;
-
-    public FilterBlock() {
-        super("blockOnly", 0xFFCCCCCC);
-    }
-
-    @Override
-    public IFilterType getFilterForField(String fieldName) {
-        return FilterTypeBlock.INSTANCE;
-    }
 
     @Override
     public void addSpecialFields(List<IField> fields, DisplayMode mode) {

@@ -8,13 +8,9 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
 public abstract class FilterBaseEntity extends FilterBase {
-    public FilterBaseEntity(String string, int color) {
-        super(string, color);
-    }
-
     @Override
     public EntityLivingBase getRandom(EntityPlayer player) {
-        return EntityHelper.getRandomEntity(this);
+        return EntityHelper.getRandomEntity(this.getProvider());
     }
 
     @Override

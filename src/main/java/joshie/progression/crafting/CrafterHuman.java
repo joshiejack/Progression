@@ -2,7 +2,7 @@ package joshie.progression.crafting;
 
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.ICriteria;
-import joshie.progression.api.criteria.IFilter;
+import joshie.progression.api.criteria.IFilterProvider;
 import joshie.progression.json.Options;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -23,17 +23,17 @@ public class CrafterHuman extends Crafter {
 
     @Override
     public boolean canUseItemWithAction(ActionType type, ItemStack stack) {
-        Set<IFilter> filters = CraftingRegistry.getFiltersForStack(type, stack);
-        List<IFilter> matched = new ArrayList();
-        for (IFilter filter : filters) {
-            if (filter.matches(stack)) {
+        Set<IFilterProvider> filters = CraftingRegistry.getFiltersForStack(type, stack);
+        List<IFilterProvider> matched = new ArrayList();
+        for (IFilterProvider filter : filters) {
+            if (filter.getProvided().matches(stack)) {
                 matched.add(filter); //Add all matches so we can check all criteria
             }
         }
 
         if (matched.size() == 0) return !Options.settings.disableUsageUntilRewardAdded;
         Set<ICriteria> completed = ProgressionAPI.player.getCompletedCriteriaList(uuid);
-        for (IFilter filter : matched) {
+        for (IFilterProvider filter : matched) {
             ICriteria criteria = CraftingRegistry.getCriteriaForFilter(type, filter);
             if (criteria != null && completed.contains(criteria)) return true;
         }

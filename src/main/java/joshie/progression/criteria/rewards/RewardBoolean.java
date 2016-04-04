@@ -2,25 +2,28 @@ package joshie.progression.criteria.rewards;
 
 import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
+import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.DisplayMode;
-import joshie.progression.items.ItemCriteria;
+import joshie.progression.api.special.ICustomTooltip;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumChatFormatting;
 
 import java.util.List;
 
-public class RewardBoolean extends RewardBaseSingular {
+@ProgressionRule(name="boolean", color=0xFF99B3FF, meta="booleanValue")
+public class RewardBoolean extends RewardBaseSingular implements ICustomTooltip {
     public String variable = "default";
     public String display = "Free Research:\nDefault";
     public boolean value = true;
 
-    public RewardBoolean() {
-        super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.booleanValue), "boolean", 0xFF99B3FF);
+    @Override
+    public String getDescription() {
+        return Progression.format("reward.boolean.description", variable, value);
     }
 
     @Override
-    public void reward(EntityPlayerMP player) {
-        ProgressionAPI.player.setBoolean(player, variable, value);
+    public int getWidth(DisplayMode mode) {
+        return mode == DisplayMode.DISPLAY ? 75: 100;
     }
 
     @Override
@@ -32,12 +35,7 @@ public class RewardBoolean extends RewardBaseSingular {
     }
 
     @Override
-    public int getWidth(DisplayMode mode) {
-        return mode == DisplayMode.DISPLAY ? 75: super.getWidth(mode);
-    }
-
-    @Override
-    public String getDescription() {
-        return Progression.format("reward.boolean.description", variable, value);
+    public void reward(EntityPlayerMP player) {
+        ProgressionAPI.player.setBoolean(player, variable, value);
     }
 }

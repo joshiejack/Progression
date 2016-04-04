@@ -1,10 +1,10 @@
 package joshie.progression.player.nbt;
 
-import java.util.Collection;
-
 import joshie.progression.helpers.NBTHelper.ICollectionHelper;
 
-public abstract class AbstractUniqueNBT implements ICollectionHelper {	
+import java.util.Collection;
+
+public abstract class AbstractUniqueNBT<T> implements ICollectionHelper {
 	private Collection collection;
 	
 	public AbstractUniqueNBT setCollection(Collection collection) {

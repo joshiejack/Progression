@@ -1,5 +1,6 @@
 package joshie.progression.criteria.filters.entity;
 
+import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.IEnum;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityOwnable;
@@ -12,12 +13,9 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityWaterMob;
 import net.minecraft.entity.player.EntityPlayer;
 
+@ProgressionRule(name="entitytype", color=0xFFB25900)
 public class FilterEntityType extends FilterBaseEntity implements IEnum {
     public EntityType type = EntityType.ANIMAL;
-
-    public FilterEntityType() {
-        super("entitytype", 0xFFB25900);
-    }
 
     @Override
     protected boolean matches(EntityLivingBase entity) {

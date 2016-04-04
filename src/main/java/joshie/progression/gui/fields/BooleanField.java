@@ -25,16 +25,20 @@ public class BooleanField extends AbstractField {
         this.lies = lies;
     }
 
-    public boolean getBoolean() throws IllegalArgumentException, IllegalAccessException {
-        return field.getBoolean(object);
+    public boolean getBoolean() {
+        try {
+            return field.getBoolean(object);
+        } catch (Exception e) { return false; }
     }
 
-    public void setBoolean(boolean bool) throws IllegalArgumentException, IllegalAccessException {
-        field.set(object, bool);
-        //Init the object after we've set it
-        if (object instanceof IInit) {
-            ((IInit) object).init();
-        }
+    public void setBoolean(boolean bool) {
+        try {
+            field.set(object, bool);
+            //Init the object after we've set it
+            if (object instanceof IInit) {
+                ((IInit) object).init();
+            }
+        } catch (Exception e) {}
     }
 
     public BooleanField(String name, Object object) {

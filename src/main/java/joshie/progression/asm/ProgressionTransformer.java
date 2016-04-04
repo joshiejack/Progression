@@ -1,15 +1,14 @@
 package joshie.progression.asm;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import net.minecraft.launchwrapper.IClassTransformer;
+import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 
-import net.minecraft.launchwrapper.IClassTransformer;
-import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class ProgressionTransformer implements IFMLLoadingPlugin, IClassTransformer {
     public static boolean isObfuscated = false;

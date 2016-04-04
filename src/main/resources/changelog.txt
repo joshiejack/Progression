@@ -35,6 +35,7 @@ Progression 0.5.0
   The Criteria Reward can now make Criteria Impossible to complete, an example of use would be to remove crafting criteria and never be able to complete it again
   Repeating quests now resets any trigger data. So if you want someone to kill 5 pigs, when it's completed, this counter will be reset, and in order to complete the quest they will need to kill another 5 pigs, instead of just another 1
   Added the ability to hide triggers, conditions and rewards from display mode
+  Tabs will now run along the horizontal axis if you create more than 17.
   You can now double click to insert a new criteria
 
 Progression 0.4.1

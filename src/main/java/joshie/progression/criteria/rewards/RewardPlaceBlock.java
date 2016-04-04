@@ -2,13 +2,8 @@ package joshie.progression.criteria.rewards;
 
 import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.criteria.IField;
-import joshie.progression.api.criteria.IFilter;
-import joshie.progression.api.criteria.IFilterType;
-import joshie.progression.api.special.DisplayMode;
-import joshie.progression.api.special.ISpecialFieldProvider;
-import joshie.progression.api.special.ISpecialFilters;
-import joshie.progression.criteria.filters.FilterBase;
+import joshie.progression.api.criteria.*;
+import joshie.progression.api.special.*;
 import joshie.progression.gui.fields.ItemFilterField;
 import joshie.progression.gui.fields.ItemFilterFieldPreview;
 import joshie.progression.gui.filters.FilterTypeBlock;
@@ -16,7 +11,6 @@ import joshie.progression.gui.filters.FilterTypeLocation;
 import joshie.progression.helpers.ItemHelper;
 import joshie.progression.lib.WorldLocation;
 import net.minecraft.block.Block;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
@@ -26,13 +20,29 @@ import net.minecraftforge.common.DimensionManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RewardPlaceBlock extends RewardBaseItemFilter implements ISpecialFieldProvider, ISpecialFilters {
-    public List<IFilter> locations = new ArrayList();
-    protected transient IFilter locationpreview;
-    protected transient int locationticker;
+@ProgressionRule(name="placeBlock", color=0xFF00680A)
+public class RewardPlaceBlock extends RewardBaseItemFilter implements ICustomDescription, ICustomWidth, ICustomTooltip, ISpecialFieldProvider {
+    public List<IFilterProvider> locations = new ArrayList();
+    protected transient IField field;
 
     public RewardPlaceBlock() {
-        super("placeBlock", 0xFF00680A);
+        field = new ItemFilterField("locations", this);
+    }
+
+    @Override
+    public String getDescription() {
+        return Progression.translate("reward.placeBlock.description") + " \n" + field.getField();
+    }
+
+    @Override
+    public int getWidth(DisplayMode mode) {
+        return mode == DisplayMode.DISPLAY ? 116: 100;
+    }
+
+    @Override
+    public void addTooltip(List list) {
+        list.add(EnumChatFormatting.WHITE + Progression.translate("block.place"));
+        list.add(getIcon().getDisplayName());
     }
 
     @Override
@@ -44,19 +54,19 @@ public class RewardPlaceBlock extends RewardBaseItemFilter implements ISpecialFi
     }
 
     @Override
+    public List<IFilterProvider> getAllFilters() {
+        ArrayList<IFilterProvider> all = new ArrayList();
+        all.addAll(locations);
+        all.addAll(filters);
+        return all;
+    }
+
+    @Override
     public IFilterType getFilterForField(String fieldName) {
         if (fieldName.equals("locations")) return FilterTypeLocation.INSTANCE;
         if (fieldName.equals("filters")) return FilterTypeBlock.INSTANCE;
 
         return null;
-    }
-
-    @Override
-    public List<IFilter> getAllFilters() {
-        ArrayList<IFilter> all = new ArrayList();
-        all.addAll(locations);
-        all.addAll(filters);
-        return all;
     }
 
     @Override
@@ -75,32 +85,5 @@ public class RewardPlaceBlock extends RewardBaseItemFilter implements ISpecialFi
             int damage = stack.getItemDamage();
             world.setBlockState(location.pos, block.getStateFromMeta(damage));
         }
-    }
-
-    @Override
-    public int getWidth(DisplayMode mode) {
-        return mode == DisplayMode.DISPLAY ? 116: super.getWidth(mode);
-    }
-
-    @Override
-    public void addTooltip(List list) {
-        list.add(EnumChatFormatting.WHITE + Progression.translate("block.place"));
-        list.add(getIcon().getDisplayName());
-    }
-
-    public String getFilter() {
-        if (locationticker == 0 || locationticker >= 200) {
-            locationpreview = FilterBase.getRandomFilterFromFilters(locations);
-            locationticker = 1;
-        }
-
-        if (!GuiScreen.isShiftKeyDown()) locationticker++;
-
-        return locationpreview == null ? "Nowhere": locationpreview.getDescription();
-    }
-
-    @Override
-    public String getDescription() {
-        return Progression.translate("reward.placeBlock.description") + " \n" + getFilter();
     }
 }

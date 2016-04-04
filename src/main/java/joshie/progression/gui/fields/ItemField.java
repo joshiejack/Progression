@@ -1,12 +1,12 @@
 package joshie.progression.gui.fields;
 
-import joshie.progression.api.criteria.IFilter;
+import joshie.progression.api.criteria.IFilterProvider;
 import joshie.progression.api.criteria.IFilterType;
+import joshie.progression.api.gui.Position;
 import joshie.progression.api.special.*;
 import joshie.progression.gui.core.DrawHelper;
 import joshie.progression.gui.core.FeatureTooltip;
 import joshie.progression.gui.editors.FeatureItemSelector;
-import joshie.progression.gui.editors.FeatureItemSelector.Position;
 import joshie.progression.gui.editors.IItemSelectable;
 import joshie.progression.gui.filters.FeatureItemPreview;
 import joshie.progression.gui.filters.FilterTypeItem;
@@ -39,10 +39,10 @@ public class ItemField extends AbstractField implements IItemSelectable {
         this.mouseY1 = y - 2;
         this.mouseY2 = (int) (y + 15 * scale);
 
-        if (object instanceof IFilter) {
-            this.filter = ((IFilter)object).getType();
-        } else if (object instanceof ISpecialFilters) {
-            this.filter = ((ISpecialFilters) object).getFilterForField(fieldName);
+        if (object instanceof IFilterProvider) {
+            this.filter = ((IFilterProvider)object).getProvided().getType();
+        } else if (object instanceof IHasFilters) {
+            this.filter = ((IHasFilters) object).getFilterForField(fieldName);
         } else this.filter = FilterTypeItem.INSTANCE;
 
         try {

@@ -7,10 +7,17 @@ public class BooleanFieldHideable extends BooleanField implements IHideable {
     public BooleanFieldHideable(String name, Object object) {
         super(name, object);
     }
-    
+
     @Override
     public String getField() {
         return isVisible() ? Progression.translate("hideable." + name) : "";
+    }
+
+    @Override
+    public void click() {
+        if (isVisible()) {
+            super.click();
+        }
     }
 
     @Override

@@ -1,14 +1,15 @@
 package joshie.progression.criteria.filters.item;
 
-import java.util.Set;
-
 import com.google.common.collect.HashMultimap;
-
+import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.IInit;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
+import java.util.Set;
+
+@ProgressionRule(name="oreDictionary", color=0xFFB25900)
 public class FilterItemOre extends FilterBaseItem implements IInit {
     private static HashMultimap<String, String> cache = HashMultimap.create();
     private String checkName = "block";
@@ -18,14 +19,6 @@ public class FilterItemOre extends FilterBaseItem implements IInit {
     
     public String oreName = "block*";
 
-    public FilterItemOre() {
-        super("oreDictionary", 0xFFB25900);
-    }
-    
-    public FilterItemOre(String string, int color) {
-        super(string, color);
-    }
-   
     @Override
     public void init() {
         if (oreName.startsWith("*")) matchFront = true;

@@ -1,23 +1,28 @@
 package joshie.progression.gui.fields;
 
 import joshie.progression.Progression;
-import joshie.progression.api.criteria.IFilter;
+import joshie.progression.api.criteria.IFilterProvider;
 import joshie.progression.api.criteria.IFilterType;
+import joshie.progression.api.special.DisplayMode;
+import joshie.progression.api.special.IHasFilters;
 import joshie.progression.api.special.IInit;
 import joshie.progression.api.special.ISetterCallback;
-import joshie.progression.api.special.ISpecialFilters;
 import joshie.progression.gui.core.DrawHelper;
 import joshie.progression.gui.core.GuiCore;
 import joshie.progression.gui.editors.GuiFilterEditor;
 import joshie.progression.gui.filters.FeatureItemPreview;
 import joshie.progression.gui.filters.FilterTypeItem;
 import joshie.progression.helpers.CollectionHelper;
+import joshie.progression.helpers.MCClientHelper;
+import net.minecraft.client.gui.GuiScreen;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class ItemFilterField extends AbstractField {
+    private static final Random rand = new Random();
     private IFilterType selector;
     private Field field;
 
@@ -33,8 +38,8 @@ public class ItemFilterField extends AbstractField {
             } catch (Exception e1) {}
         }
 
-        if (object instanceof ISpecialFilters) {
-            selector = ((ISpecialFilters) object).getFilterForField(getFieldName());
+        if (object instanceof IHasFilters) {
+            selector = ((IHasFilters) object).getFilterForField(getFieldName());
         } else selector = FilterTypeItem.INSTANCE;
     }
 
@@ -43,18 +48,40 @@ public class ItemFilterField extends AbstractField {
         return field.getName();
     }
 
+    private transient int ticker = 0;
+    private transient String name;
+
+    public IFilterProvider getRandomFilter() {
+        List<IFilterProvider> filters = getFilters();
+        int size = filters.size();
+        if (size == 0) return null;
+        if (size == 1) return filters.get(0);
+        else {
+            return filters.get(rand.nextInt(size));
+        }
+    }
+
     @Override
     public String getField() {
-        return "";
+        if (ticker %200 == 0) {
+            IFilterProvider filter = getRandomFilter();
+            if (filter == null) name = null;
+            else name = filter.getDescription();
+        }
+
+        if (!GuiScreen.isShiftKeyDown()) ticker++;
+        return name == null ? "No Valid Filter Set" : name;
     }
 
     @Override
     public void draw(DrawHelper helper, int renderX, int renderY, int color, int yPos, int mouseX, int mouseY) {
-        helper.drawSplitText(renderX, renderY, Progression.translate("filter." + selector.getName()), 4, yPos, 105, color, 0.75F);
+        if (MCClientHelper.getMode() == DisplayMode.EDIT) {
+            helper.drawSplitText(renderX, renderY, Progression.translate("filter." + selector.getName()), 4, yPos, 105, color, 0.75F);
+        }
     }
 
-    public boolean isAccepted(IFilter filter) {
-        if (filter.getType() != selector) return false;
+    public boolean isAccepted(IFilterProvider filter) {
+        if (filter.getProvided().getType() != selector) return false;
         return true;
     }
 
@@ -74,7 +101,7 @@ public class ItemFilterField extends AbstractField {
         return false;
     }
 
-    public void setFilters(List<IFilter> filters) {
+    public void setFilters(List<IFilterProvider> filters) {
         try {
             if (object instanceof ISetterCallback) {
                 ((ISetterCallback) object).setField(field.getName(), filters);
@@ -90,17 +117,17 @@ public class ItemFilterField extends AbstractField {
         } catch (Exception e) {}
     }
 
-    public List<IFilter> getFilters() {
+    public List<IFilterProvider> getFilters() {
         try {
-            return (List<IFilter>) field.get(object);
+            return (List<IFilterProvider>) field.get(object);
         } catch (Exception e) {}
 
         //Return a blank list yo!
         return new ArrayList();
     }
 
-    public void add(IFilter filter) {
-        List<IFilter> filters = getFilters();
+    public void add(IFilterProvider filter) {
+        List<IFilterProvider> filters = getFilters();
         filters.add(filter);
         if (object instanceof ISetterCallback) {
             ((ISetterCallback) object).setField(field.getName(), filters);
@@ -115,8 +142,8 @@ public class ItemFilterField extends AbstractField {
         FeatureItemPreview.INSTANCE.updateSearch();
     }
 
-    public void remove(IFilter filter) {
-        List<IFilter> filters = getFilters();
+    public void remove(IFilterProvider filter) {
+        List<IFilterProvider> filters = getFilters();
         CollectionHelper.remove(filters, filter);
         if (object instanceof ISetterCallback) {
             ((ISetterCallback) object).setField(field.getName(), filters);

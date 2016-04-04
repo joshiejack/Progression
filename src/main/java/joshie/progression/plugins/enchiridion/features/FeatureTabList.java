@@ -24,7 +24,7 @@ public class FeatureTabList extends FeatureProgression {
     private IFeature getButtonFromTab(final ITab tab, final IBook book, final int y) {
         FeatureButton button = (FeatureButton) EnchiridionAPI.editor.getJumpPageButton(TRANSPARENT, TRANSPARENT, y + 50);
         button.update(position);
-        //button.textUnhover = new FeatureText(tab.getDisplayName());
+        //button.textUnhover = new FeatureText(tab.getLocalisedName());
 
         return button;
         /*

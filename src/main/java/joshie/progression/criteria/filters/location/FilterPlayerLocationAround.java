@@ -1,16 +1,14 @@
 package joshie.progression.criteria.filters.location;
 
+import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.lib.WorldLocation;
 import net.minecraft.entity.player.EntityPlayer;
 
+@ProgressionRule(name="playerPos", color=0xFFBBBBBB)
 public class FilterPlayerLocationAround extends FilterLocationBase {
     public int randomX = 8;
     public int randomY = 2;
     public int randomZ = 8;
-
-    public FilterPlayerLocationAround() {
-        super("playerPos", 0xFFBBBBBB);
-    }
 
     @Override
     public WorldLocation getRandom(EntityPlayer player) {

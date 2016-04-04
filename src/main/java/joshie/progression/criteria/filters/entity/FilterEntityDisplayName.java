@@ -1,8 +1,10 @@
 package joshie.progression.criteria.filters.entity;
 
+import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.IInit;
 import net.minecraft.entity.EntityLivingBase;
 
+@ProgressionRule(name="displayName", color=0xFFB25900)
 public class FilterEntityDisplayName extends FilterBaseEntity implements IInit {
     private String checkName = "Girafi";
     private boolean matchBoth;
@@ -10,10 +12,6 @@ public class FilterEntityDisplayName extends FilterBaseEntity implements IInit {
     private boolean matchBack;
 
     public String entityName = "Girafi";
-
-    public FilterEntityDisplayName() {
-        super("displayName", 0xFFB25900);
-    }
 
     @Override
     public void init() {

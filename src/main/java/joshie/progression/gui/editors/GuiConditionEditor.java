@@ -1,6 +1,6 @@
 package joshie.progression.gui.editors;
 
-import joshie.progression.api.criteria.ITrigger;
+import joshie.progression.api.criteria.ITriggerProvider;
 import joshie.progression.gui.core.FeatureBarsX1;
 import joshie.progression.gui.core.GuiCore;
 import joshie.progression.gui.core.IBarProvider;
@@ -10,15 +10,15 @@ import joshie.progression.handlers.APIHandler;
 
 public class GuiConditionEditor extends GuiBaseEditor implements IBarProvider {
     public static final GuiConditionEditor INSTANCE = new GuiConditionEditor();
-    private ITrigger trigger;
+    private ITriggerProvider trigger;
 
     private GuiConditionEditor() {}
 
-    public void setTrigger(ITrigger trigger) {
+    public void setTrigger(ITriggerProvider trigger) {
         this.trigger = trigger;
     }
     
-    public ITrigger getTrigger() {
+    public ITriggerProvider getTrigger() {
         return trigger;
     }
 

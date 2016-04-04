@@ -51,7 +51,7 @@ public class Progression {
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         ModLogHelper.log("enchiridion", "The more that you read, the more things you will know. The more that you learn, the more places you'll go.");
-        ModLogHelper.log("Mariculture", "Just Keep Swimming...");
+        //ModLogHelper.log("Mariculture", "Just Keep Swimming...");
         
         //Init the action types
         try {
@@ -66,7 +66,7 @@ public class Progression {
 
         Options.init(new Configuration(new File(root, "options.cfg")));
         
-        proxy.preInit();
+        proxy.preInit(event.getAsmData());
         proxy.initClient();
     }
     

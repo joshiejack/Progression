@@ -2,23 +2,52 @@ package joshie.progression.criteria.rewards;
 
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.IField;
-import joshie.progression.api.criteria.IFilter;
-import joshie.progression.api.special.DisplayMode;
-import joshie.progression.api.special.ISpecialFieldProvider;
+import joshie.progression.api.criteria.IFilterProvider;
+import joshie.progression.api.criteria.ProgressionRule;
+import joshie.progression.api.special.*;
 import joshie.progression.gui.fields.ItemFilterFieldPreview;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.items.ItemCriteria;
+import joshie.progression.items.ItemCriteria.ItemMeta;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
 import java.util.List;
 
-public class RewardClear extends RewardBaseItemFilter implements ISpecialFieldProvider {
+@ProgressionRule(name="clear", color=0xFF69008C, meta="clearInventory")
+public class RewardClear extends RewardBaseItemFilter implements ICustomDisplayName, ICustomDescription, ICustomWidth, ICustomTooltip, ISpecialFieldProvider {
     public int stackSize = 1;
 
     public RewardClear() {
-        super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.clearInventory), "clear", 0xFF69008C);
+        BROKEN = ItemCriteria.getStackFromMeta(ItemMeta.clearInventory);
+    }
+
+    @Override
+    public String getDisplayName() {
+        return MCClientHelper.isInEditMode() ? Progression.translate(getProvider().getUnlocalisedName()) : Progression.translate(getProvider().getUnlocalisedName() + ".display");
+    }
+
+    @Override
+    public String getDescription() {
+        return "";
+    }
+
+    @Override
+    public ItemStack getIcon() {
+        return BROKEN;
+    }
+
+    @Override
+    public int getWidth(DisplayMode mode) {
+        return mode == DisplayMode.EDIT ? 100 : 60;
+    }
+
+    @Override
+    public void addTooltip(List list) {
+        list.add(EnumChatFormatting.WHITE + "Remove Item");
+        ItemStack stack = preview == null ? BROKEN : preview;
+        list.add(stack.getDisplayName() + " x" + stack.stackSize);
     }
 
     @Override
@@ -36,8 +65,8 @@ public class RewardClear extends RewardBaseItemFilter implements ISpecialFieldPr
 
             if (check != null) {
                 for (int j = 0; j < check.stackSize && taken < stackSize; j++) {
-                    for (IFilter filter : filters) {
-                        if (filter.matches(check)) {
+                    for (IFilterProvider filter : filters) {
+                        if (filter.getProvided().matches(check)) {
                             decrease++;
                             taken++;
                         }
@@ -47,32 +76,5 @@ public class RewardClear extends RewardBaseItemFilter implements ISpecialFieldPr
                 if (decrease > 0) player.inventory.decrStackSize(i, decrease);
             }
         }
-    }
-
-    @Override
-    public String getLocalisedName() {
-        return MCClientHelper.isInEditMode() ? Progression.translate(getUnlocalisedName()) : Progression.translate(getUnlocalisedName() + ".display");
-    }
-
-    @Override
-    public ItemStack getIcon() {
-        return BROKEN;
-    }
-
-    @Override
-    public String getDescription() {
-        return "";
-    }
-
-    @Override
-    public int getWidth(DisplayMode mode) {
-        return mode == DisplayMode.EDIT ? super.getWidth(mode) : 60;
-    }
-
-    @Override
-    public void addTooltip(List list) {
-        list.add(EnumChatFormatting.WHITE + "Remove Item");
-        ItemStack stack = preview == null ? BROKEN : preview;
-        list.add(stack.getDisplayName() + " x" + stack.stackSize);
     }
 }

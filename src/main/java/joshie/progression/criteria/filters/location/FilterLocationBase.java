@@ -6,10 +6,6 @@ import joshie.progression.criteria.filters.FilterBase;
 import joshie.progression.lib.WorldLocation;
 
 public abstract class FilterLocationBase extends FilterBase {
-    public FilterLocationBase(String name, int color) {
-        super(name, color);
-    }
-
     @Override
     public boolean matches(Object object) {
         if (!(object instanceof WorldLocation)) return false;

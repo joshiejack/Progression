@@ -5,20 +5,24 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import joshie.progression.Progression;
 import joshie.progression.api.IPlayerTeam;
+import joshie.progression.api.criteria.ProgressionRule;
+import joshie.progression.api.special.ICustomDescription;
 import joshie.progression.api.special.ISetterCallback;
 import joshie.progression.api.special.ISpecialJSON;
-import joshie.progression.items.ItemCriteria;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 
-public class ConditionBiomeType extends ConditionBase implements ISetterCallback, ISpecialJSON {
+@ProgressionRule(name="biomeType", color=0xFF00B200, meta="ifIsBiome")
+public class ConditionBiomeType extends ConditionBase implements ICustomDescription, ISetterCallback, ISpecialJSON {
     private Type[] theBiomeTypes = new Type[] { Type.FOREST };
     public String biomeTypes = "forest";
 
-    public ConditionBiomeType() {
-        super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.ifIsBiome), "biomeType", 0xFF00B200);
+    @Override
+    public String getDescription() {
+        if (getProvider().isInverted()) return Progression.format(getProvider().getUnlocalisedName() + ".description.inverted", biomeTypes);
+        return Progression.format(getProvider().getUnlocalisedName() + ".description", biomeTypes);
     }
 
     @Override
@@ -41,9 +45,21 @@ public class ConditionBiomeType extends ConditionBase implements ISetterCallback
     }
 
     @Override
-    public String getConditionDescription() {
-        if (inverted) return Progression.format(getUnlocalisedName() + ".description.inverted", biomeTypes);
-        return Progression.format(getUnlocalisedName() + ".description", biomeTypes);
+    public boolean setField(String fieldName, Object object) {
+        String fieldValue = (String) object;
+        String[] split = fieldValue.split(",");
+        StringBuilder fullString = new StringBuilder();
+        try {
+            Type[] types = new Type[split.length];
+            for (int i = 0; i < types.length; i++) {
+                types[i] = Type.getType(split[i].trim());
+            }
+
+            theBiomeTypes = types;
+        } catch (Exception e) {}
+
+        biomeTypes = fieldValue;
+        return true;
     }
 
     @Override
@@ -66,23 +82,5 @@ public class ConditionBiomeType extends ConditionBase implements ISetterCallback
         }
 
         data.add("types", array);
-    }
-
-    @Override
-    public boolean setField(String fieldName, Object object) {
-        String fieldValue = (String) object;
-        String[] split = fieldValue.split(",");
-        StringBuilder fullString = new StringBuilder();
-        try {
-            Type[] types = new Type[split.length];
-            for (int i = 0; i < types.length; i++) {
-                types[i] = Type.getType(split[i].trim());
-            }
-
-            theBiomeTypes = types;
-        } catch (Exception e) {}
-
-        biomeTypes = fieldValue;
-        return true;
     }
 }

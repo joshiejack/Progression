@@ -1,19 +1,17 @@
 package joshie.progression.criteria.filters.item;
 
+import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.IEnum;
 import joshie.progression.api.special.IInit;
 import joshie.progression.api.special.ISetterCallback;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+@ProgressionRule(name="tagsingle", color=0xFF00B2B2)
 public class FilterItemNBTFuzzy extends FilterBaseItem implements IInit, ISetterCallback, IEnum {
     public String name = "";
     public String value = "";
     public NBTType type = NBTType.STRING;
-
-    public FilterItemNBTFuzzy() {
-        super("tagsingle", 0xFF00B2B2);
-    }
 
     @Override
     public boolean matches(ItemStack check) { //TODO: Add Partial matching

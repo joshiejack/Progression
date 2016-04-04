@@ -1,8 +1,8 @@
 package joshie.progression.criteria.rewards;
 
 import joshie.progression.Progression;
+import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.DisplayMode;
-import joshie.progression.items.ItemCriteria;
 import joshie.progression.player.PlayerTracker;
 import joshie.progression.player.data.AbilityStats.SpeedType;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,14 +15,26 @@ import java.util.List;
 
 import static joshie.progression.player.data.AbilityStats.SpeedType.*;
 
+@ProgressionRule(name="speed", color=0xFFFFBF00, meta="speed")
 public class RewardSpeed extends RewardBaseAbility {
     public float speed = 0.1F;
     public boolean land = true;
     public boolean air = false;
     public boolean water = true;
 
-    public RewardSpeed() {
-        super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.speed), "speed", 0xFFFFBF00);
+    @Override
+    public String getDescription() {
+        return Progression.format("reward.speed.description", speed, getType());
+    }
+
+    @Override
+    public int getWidth(DisplayMode mode) {
+        return mode == DisplayMode.EDIT ? 100 : 55;
+    }
+
+    @Override
+    public void addAbilityTooltip(List list) {
+        list.add(EnumChatFormatting.GRAY + getProvider().getLocalisedName() + ": " + speed + " " + getType());
     }
 
     @SubscribeEvent
@@ -47,6 +59,8 @@ public class RewardSpeed extends RewardBaseAbility {
         if (water) PlayerTracker.getServerPlayer(player).addSpeed(WATER, speed);
     }
 
+
+    //Helper methods
     public String[] translate(String... text) {
         String[] translated = new String[text.length];
         for (int i = 0; i < translated.length; i++) {
@@ -65,21 +79,5 @@ public class RewardSpeed extends RewardBaseAbility {
         else if (water) return Progression.translate("reward.speed.water.description");
         else if (air) return Progression.translate("reward.speed.air.description");
         else return Progression.translate("reward.speed.never");
-    }
-
-    @Override
-    public void addTooltip(List list) {
-        list.add(EnumChatFormatting.WHITE + "Ability Gain");
-        list.add("Speed: " + speed + " " + getType());
-    }
-
-    @Override
-    public int getWidth(DisplayMode mode) {
-        return mode == DisplayMode.EDIT ? super.getWidth(mode) : 55;
-    }
-
-    @Override
-    public String getDescription() {
-        return Progression.format("reward.speed.description", speed, getType());
     }
 }

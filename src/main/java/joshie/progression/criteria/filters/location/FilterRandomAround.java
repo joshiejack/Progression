@@ -1,12 +1,15 @@
 package joshie.progression.criteria.filters.location;
 
 import joshie.progression.Progression;
+import joshie.progression.api.criteria.ProgressionRule;
+import joshie.progression.api.special.ICustomDescription;
 import joshie.progression.api.special.IEnum;
 import joshie.progression.api.special.IInit;
 import joshie.progression.lib.WorldLocation;
 import net.minecraft.entity.player.EntityPlayer;
 
-public class FilterRandomAround extends FilterLocationBase implements IInit, IEnum {
+@ProgressionRule(name="randomaround", color=0xFFBBBBBB)
+public class FilterRandomAround extends FilterLocationBase implements IInit, ICustomDescription, IEnum {
     public LocationOperator xoperator = LocationOperator.RADIUS;
     public LocationOperator yoperator = LocationOperator.RADIUS;
     public LocationOperator zoperator = LocationOperator.RADIUS;
@@ -22,10 +25,6 @@ public class FilterRandomAround extends FilterLocationBase implements IInit, IEn
     private transient FilterRandomY dummyY = new FilterRandomY();
     private transient FilterRandomZ dummyZ = new FilterRandomZ();
 
-    public FilterRandomAround() {
-        super("randomaround", 0xFFBBBBBB);
-    }
-
     @Override
     public void init() {
         dummyX.operator = xoperator;
@@ -40,16 +39,16 @@ public class FilterRandomAround extends FilterLocationBase implements IInit, IEn
     }
 
     @Override
+    public String getDescription() {
+        return Progression.format("filter.location.randomaround.description", xCoordinate, yCoordinate, zCoordinate);
+    }
+
+    @Override
     public WorldLocation getRandom(EntityPlayer player) {
         int randX = dummyX.getRandom(player).pos.getX();
         int randY = dummyY.getRandom(player).pos.getY();
         int randZ = dummyZ.getRandom(player).pos.getZ();
         return new WorldLocation(dimensionID, randX, randY, randZ);
-    }
-
-    @Override
-    public String getDescription() {
-        return Progression.format("filter.location.randomaround.description", xCoordinate, yCoordinate, zCoordinate);
     }
 
     @Override

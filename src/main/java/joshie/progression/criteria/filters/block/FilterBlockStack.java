@@ -2,6 +2,7 @@ package joshie.progression.criteria.filters.block;
 
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IField;
+import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.IInit;
 import joshie.progression.api.special.ISpecialFieldProvider;
@@ -12,16 +13,13 @@ import net.minecraft.item.ItemStack;
 
 import java.util.List;
 
+@ProgressionRule(name="blockStack", color=0xFF663300)
 public class FilterBlockStack extends FilterBaseBlock implements ISpecialFieldProvider, IInit {
     public ItemStack stack = new ItemStack(Blocks.anvil);
     public boolean matchState = true;
     private Block filterBlock = Blocks.anvil;
     private int filterMeta = 0;
 
-    public FilterBlockStack() {
-        super("blockStack", 0xFF663300);
-    }
-    
     @Override
     public void init() {
         try {

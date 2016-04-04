@@ -1,14 +1,12 @@
 package joshie.progression.criteria.filters.entity;
 
+import joshie.progression.api.criteria.ProgressionRule;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntitySkeleton;
 
+@ProgressionRule(name="witherskeleton", color=0xFFB25900)
 public class FilterSkeletonType extends FilterBaseEntity {
     public boolean wither = true;
-
-    public FilterSkeletonType() {
-        super("witherskeleton", 0xFFB25900);
-    }
 
     @Override
     protected boolean matches(EntityLivingBase entity) {

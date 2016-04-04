@@ -1,17 +1,15 @@
 package joshie.progression.criteria.filters.potion;
 
+import joshie.progression.api.criteria.ProgressionRule;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
 
 import java.util.Arrays;
 import java.util.Collection;
 
+@ProgressionRule(name="potioneffect", color=0xFFFF73FF)
 public class FilterPotionEffectID extends FilterPotionBase {
     public int effectID = 1;
-
-    public FilterPotionEffectID() {
-        super("potioneffect", 0xFFFF73FF);
-    }
 
     @Override
     public boolean matches(PotionEffect effect) {

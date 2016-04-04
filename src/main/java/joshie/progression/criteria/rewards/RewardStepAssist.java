@@ -1,23 +1,35 @@
 package joshie.progression.criteria.rewards;
 
 import joshie.progression.Progression;
+import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.DisplayMode;
+import joshie.progression.api.special.ICustomTooltip;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.List;
 
-public class RewardStepAssist extends RewardBaseAbility {
+@ProgressionRule(name="stepAssist", color=0xFF661A00, meta="stepAssist")
+public class RewardStepAssist extends RewardBaseAbility implements ICustomTooltip {
     public float steps = 0.5F;
 
-    public RewardStepAssist() {
-        super(new ItemStack(Items.leather_boots), "stepAssist", 0xFF661A00);
+    @Override
+    public String getDescription() {
+        return Progression.format("reward.stepAssist.description", steps);
+    }
+
+    @Override
+    public int getWidth(DisplayMode mode) {
+        return mode == DisplayMode.EDIT ? 100 : 65;
+    }
+
+    @Override
+    public void addAbilityTooltip(List list) {
+        list.add(EnumChatFormatting.GRAY + getProvider().getLocalisedName() + ": " + steps);
     }
 
     @SubscribeEvent
@@ -41,21 +53,5 @@ public class RewardStepAssist extends RewardBaseAbility {
     @Override
     public void reward(EntityPlayerMP player) {
         PlayerTracker.getServerPlayer(player).addStepAssist(steps);
-    }
-
-    @Override
-    public void addTooltip(List list) {
-        list.add(EnumChatFormatting.WHITE + "Ability Gain");
-        list.add("Step Assist: " + steps);
-    }
-
-    @Override
-    public int getWidth(DisplayMode mode) {
-        return mode == DisplayMode.EDIT ? super.getWidth(mode) : 65;
-    }
-
-    @Override
-    public String getDescription() {
-        return Progression.format("reward.stepAssist.description", steps);
     }
 }

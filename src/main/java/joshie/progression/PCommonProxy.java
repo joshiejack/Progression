@@ -2,25 +2,15 @@ package joshie.progression;
 
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.commands.*;
-import joshie.progression.criteria.conditions.*;
-import joshie.progression.criteria.filters.block.*;
-import joshie.progression.criteria.filters.crafting.FilterExact;
-import joshie.progression.criteria.filters.entity.FilterEntityDisplayName;
-import joshie.progression.criteria.filters.entity.FilterEntityName;
-import joshie.progression.criteria.filters.entity.FilterEntityType;
-import joshie.progression.criteria.filters.entity.FilterSkeletonType;
-import joshie.progression.criteria.filters.item.*;
-import joshie.progression.criteria.filters.location.*;
-import joshie.progression.criteria.filters.potion.FilterPotionEffectID;
-import joshie.progression.criteria.filters.potion.FilterPotionItem;
-import joshie.progression.criteria.rewards.*;
-import joshie.progression.criteria.triggers.*;
+import joshie.progression.criteria.filters.location.FilterPlayerLastBroken;
 import joshie.progression.gui.fields.FieldRegistry;
 import joshie.progression.gui.filters.FilterSelectorHelper;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.handlers.CraftingEvents;
 import joshie.progression.handlers.RemappingHandler;
+import joshie.progression.handlers.RuleLoader;
 import joshie.progression.items.ItemCriteria;
+import joshie.progression.items.ItemCriteria.ItemMeta;
 import joshie.progression.json.Options;
 import joshie.progression.network.*;
 import joshie.progression.player.PlayerHandler;
@@ -31,6 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -38,7 +29,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 public class PCommonProxy implements IGuiHandler {
-    public void preInit() {
+    public void preInit(ASMDataTable asm) {
       //Create the API
         RemappingHandler.resetRegistries();
         ProgressionAPI.registry = new APIHandler();
@@ -60,9 +51,11 @@ public class PCommonProxy implements IGuiHandler {
         }
 
         registerFilters();
-        registerTriggers();
-        registerConditions();
-        registerRewards();
+        RuleLoader.registerRules(asm);
+
+        //registerTriggers();
+        //registerConditions();
+        //registerRewards();
         
         //Register Commands
         CommandManager.INSTANCE.registerCommand(new CommandHelp());
@@ -112,7 +105,7 @@ public class PCommonProxy implements IGuiHandler {
 
     private void registerFilters() {
         //Item Filters
-        ProgressionAPI.registry.registerFilter(new FilterItemStack());
+        /*ProgressionAPI.registry.registerFilter(new FilterItemStack());
         ProgressionAPI.registry.registerFilter(new FilterItem());
         ProgressionAPI.registry.registerFilter(new FilterItemMeta());
         ProgressionAPI.registry.registerFilter(new FilterItemNBT());
@@ -145,61 +138,20 @@ public class PCommonProxy implements IGuiHandler {
         ProgressionAPI.registry.registerFilter(new FilterDimension());
         ProgressionAPI.registry.registerFilter(new FilterRandomX());
         ProgressionAPI.registry.registerFilter(new FilterRandomY());
-        ProgressionAPI.registry.registerFilter(new FilterRandomZ());
+        ProgressionAPI.registry.registerFilter(new FilterRandomZ()); */
         MinecraftForge.EVENT_BUS.register(new FilterPlayerLastBroken());
 
         //Crafting Filters
-        ProgressionAPI.registry.registerFilter(new FilterExact());
+        //ProgressionAPI.registry.registerFilter(new FilterExact());
     }
-    
-    private void registerTriggers() {
-        ProgressionAPI.registry.registerTriggerType(new TriggerBreakBlock());
-        ProgressionAPI.registry.registerTriggerType(new TriggerCrafting());
-        ProgressionAPI.registry.registerTriggerType(new TriggerItemEaten());
-        ProgressionAPI.registry.registerTriggerType(new TriggerKill());
-        ProgressionAPI.registry.registerTriggerType(new TriggerLogin());
-        ProgressionAPI.registry.registerTriggerType(new TriggerChangeGui());
-        ProgressionAPI.registry.registerTriggerType(new TriggerBoolean());
-        ProgressionAPI.registry.registerTriggerType(new TriggerClickBlock());
-        ProgressionAPI.registry.registerTriggerType(new TriggerPoints());
-        ProgressionAPI.registry.registerTriggerType(new TriggerChangeDimension());
-        ProgressionAPI.registry.registerTriggerType(new TriggerAchievement());
-        ProgressionAPI.registry.registerTriggerType(new TriggerTick());
-        ProgressionAPI.registry.registerTriggerType(new TriggerChat());
-    }
-    
+
+    /*
     private void registerConditions() {
-        ProgressionAPI.registry.registerConditionType(new ConditionBiomeType());
-        ProgressionAPI.registry.registerConditionType(new ConditionRandom());
-        ProgressionAPI.registry.registerConditionType(new ConditionDaytime());
-        ProgressionAPI.registry.registerConditionType(new ConditionInInventory());
-        ProgressionAPI.registry.registerConditionType(new ConditionHasPotionEffect());
-        ProgressionAPI.registry.registerConditionType(new ConditionHasCriteria());
-        ProgressionAPI.registry.registerConditionType(new ConditionBoolean());
-        ProgressionAPI.registry.registerConditionType(new ConditionPoints());
-        ProgressionAPI.registry.registerConditionType(new ConditionAchievement());
-        ProgressionAPI.registry.registerConditionType(new ConditionLocation());
-    }
-    
-    private void registerRewards() {
-        ProgressionAPI.registry.registerRewardType(new RewardCommand());
-        ProgressionAPI.registry.registerRewardType(new RewardCriteria());
-        ProgressionAPI.registry.registerRewardType(new RewardFallDamage());
-        ProgressionAPI.registry.registerRewardType(new RewardItem());
-        ProgressionAPI.registry.registerRewardType(new RewardBoolean());
-        ProgressionAPI.registry.registerRewardType(new RewardPoints());
-        ProgressionAPI.registry.registerRewardType(new RewardSpeed());
-        ProgressionAPI.registry.registerRewardType(new RewardTime()); 
-        ProgressionAPI.registry.registerRewardType(new RewardCraftability());
-        ProgressionAPI.registry.registerRewardType(new RewardClear());
-        ProgressionAPI.registry.registerRewardType(new RewardPotion());
-        ProgressionAPI.registry.registerRewardType(new RewardPlaceBlock());
-        ProgressionAPI.registry.registerRewardType(new RewardTeleport());
-        ProgressionAPI.registry.registerRewardType(new RewardSpawnEntity());
-        ProgressionAPI.registry.registerRewardType(new RewardShowTab());
-        ProgressionAPI.registry.registerRewardType(new RewardStepAssist());
-        ProgressionAPI.registry.registerRewardType(new RewardHurt());
-        ProgressionAPI.registry.registerRewardType(new RewardSpawnItem());
+        ProgressionAPI.registry.registerConditionType(ConditionInInventory.class, "ininventory", 0xFF660000);
+    }*/
+
+    private ItemStack getIcon(ItemMeta meta) {
+        return ItemCriteria.getStackFromMeta(meta);
     }
 
     public void initClient() {}

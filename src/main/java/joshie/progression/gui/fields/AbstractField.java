@@ -14,6 +14,12 @@ public abstract class AbstractField implements IField {
         return false;
     }
 
+    public void click(int button) {
+        click();
+    }
+
+    public void click() {}
+
     public void setObject(Object object) {
         this.object = object;
     }

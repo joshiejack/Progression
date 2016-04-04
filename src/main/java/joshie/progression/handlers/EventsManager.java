@@ -1,25 +1,27 @@
 package joshie.progression.handlers;
 
 import joshie.progression.Progression;
-import joshie.progression.api.criteria.ICanHaveEvents;
+import joshie.progression.api.criteria.IRule;
+import joshie.progression.api.criteria.IRuleProvider;
 import joshie.progression.api.criteria.IReward;
 import joshie.progression.api.special.IHasEventBus;
+import joshie.progression.json.Options;
 import net.minecraftforge.fml.common.eventhandler.EventBus;
 import org.apache.logging.log4j.Level;
 
 import java.util.HashSet;
 
 public class EventsManager {
-    private static HashSet<ICanHaveEvents> active;
+    private static HashSet<IRule> active;
 
     public static void create() {
         if (active != null) {
-            for (ICanHaveEvents type: active) {
+            for (IRule type: active) {
                 try {
                     if (type instanceof IHasEventBus) {
                         EventBus bus = ((IHasEventBus) type).getEventBus();
                         if (bus != null) {
-                            Progression.logger.log(Level.INFO, "Unregistered the object " + type + " from the event bus");
+                            if (Options.debugMode) Progression.logger.log(Level.INFO, "Unregistered the object " + type + " from the event bus");
                             bus.unregister(type);
                         }
                     }
@@ -31,16 +33,17 @@ public class EventsManager {
     }
 
 
-    public static void onAdded(ICanHaveEvents eventType) {
+    public static void onAdded(IRule eventType) {
         active.add(APIHandler.getGenericFromType(eventType));
         HashSet activeTypes = new HashSet();
-        for (ICanHaveEvents existing: active) {
-            activeTypes.add(existing.getUnlocalisedName());
+        for (IRule existing: active) {
+            activeTypes.add(existing.getProvider().getUnlocalisedName());
         }
 
-        for (ICanHaveEvents type: APIHandler.getCollectionFromType(eventType)) {
-            if (activeTypes.contains(type.getUnlocalisedName())) {
+        for (IRuleProvider provider: APIHandler.getCollectionFromType(eventType)) {
+            if (activeTypes.contains(provider.getUnlocalisedName())) {
                 try {
+                    IRule type = provider.getProvided();
                     if (type instanceof IHasEventBus) {
                         EventBus bus = ((IHasEventBus) type).getEventBus();
                         if (bus != null) {
@@ -56,16 +59,17 @@ public class EventsManager {
         }
     }
 
-    public static void onRemoved(ICanHaveEvents eventType) {
+    public static void onRemoved(IRule eventType) {
         active.remove(APIHandler.getGenericFromType(eventType));
         HashSet activeTypes = new HashSet();
-        for (ICanHaveEvents existing: active) {
-            activeTypes.add(existing.getUnlocalisedName());
+        for (IRule existing: active) {
+            activeTypes.add(existing.getProvider().getUnlocalisedName());
         }
 
-        for (ICanHaveEvents type: APIHandler.getCollectionFromType(eventType)) {
-            if (!activeTypes.contains(type.getUnlocalisedName())) {
+        for (IRuleProvider provider: APIHandler.getCollectionFromType(eventType)) {
+            if (!activeTypes.contains(provider.getUnlocalisedName())) {
                 try {
+                    IRule type = provider.getProvided();
                     if (type instanceof IHasEventBus) {
                         EventBus bus = ((IHasEventBus) type).getEventBus();
                         if (bus != null) {

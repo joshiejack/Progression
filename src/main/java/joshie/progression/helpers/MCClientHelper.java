@@ -1,5 +1,6 @@
 package joshie.progression.helpers;
 
+import joshie.progression.api.special.DisplayMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -26,5 +27,9 @@ public class MCClientHelper {
 
     public static boolean isShiftPressed() {
         return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
+    }
+
+    public static DisplayMode getMode() {
+        return isInEditMode() ? DisplayMode.EDIT : DisplayMode.DISPLAY;
     }
 }

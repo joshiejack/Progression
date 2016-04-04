@@ -2,35 +2,29 @@ package joshie.progression.criteria.conditions;
 
 import joshie.progression.api.IPlayerTeam;
 import joshie.progression.api.ProgressionAPI;
+import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.DisplayMode;
-import joshie.progression.items.ItemCriteria;
+import joshie.progression.api.special.ICustomDescription;
+import joshie.progression.api.special.ICustomWidth;
 
-public class ConditionBoolean extends ConditionBase {
+@ProgressionRule(name="boolean", color=0xFF00FFBF, meta="ifHasBoolean")
+public class ConditionBoolean extends ConditionBase implements ICustomDescription, ICustomWidth {
     public String variable = "default";
     public String description = "Has done something.";
     public int displayWidth = 85;
 
-    public ConditionBoolean() {
-        super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.ifHasBoolean), "boolean", 0xFF00FFBF);
-    }
-
     @Override
-    public boolean isSatisfied(IPlayerTeam team) {
-        boolean check = ProgressionAPI.player.getBoolean(team.getOwner(), variable);
-        if (check == !inverted) {
-            return true;
-        }
-
-        return false;
+    public String getDescription() {
+        return description;
     }
 
     @Override
     public int getWidth(DisplayMode mode) {
-        return mode == DisplayMode.DISPLAY ? displayWidth : super.getWidth(mode);
+        return mode == DisplayMode.DISPLAY ? displayWidth : 100;
     }
 
     @Override
-    public String getConditionDescription() {
-        return description;
+    public boolean isSatisfied(IPlayerTeam team) {
+        return ProgressionAPI.player.getBoolean(team.getOwner(), variable) == !getProvider().isInverted();
     }
 }

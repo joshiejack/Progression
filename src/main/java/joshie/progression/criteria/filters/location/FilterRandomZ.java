@@ -1,10 +1,12 @@
 package joshie.progression.criteria.filters.location;
 
+import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.IEnum;
 import joshie.progression.lib.WorldLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
 
+@ProgressionRule(name="randomz", color=0xFFBBBBBB)
 public class FilterRandomZ extends FilterRandomCoordinate implements IEnum {
     public FilterRandomZ() {
         super("randomz");

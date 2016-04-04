@@ -1,28 +1,18 @@
 package joshie.progression.criteria.rewards;
 
 import joshie.progression.Progression;
-import joshie.progression.api.criteria.IField;
-import joshie.progression.api.criteria.IFilter;
-import joshie.progression.api.criteria.IFilterType;
-import joshie.progression.api.special.DisplayMode;
-import joshie.progression.api.special.IHasFilters;
-import joshie.progression.api.special.ISpecialFieldProvider;
-import joshie.progression.api.special.ISpecialFilters;
-import joshie.progression.criteria.filters.FilterBase;
+import joshie.progression.api.criteria.*;
+import joshie.progression.api.special.*;
 import joshie.progression.gui.fields.ItemFilterField;
 import joshie.progression.gui.filters.FilterTypeLocation;
 import joshie.progression.lib.WorldLocation;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.S07PacketRespawn;
 import net.minecraft.network.play.server.S1DPacketEntityEffect;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
@@ -34,17 +24,22 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class RewardTeleport extends RewardBase implements ISpecialFilters, IHasFilters, ISpecialFieldProvider {
-    public List<IFilter> locations = new ArrayList();
-    protected transient IFilter preview;
-    protected transient int ticker;
+@ProgressionRule(name="teleport", color=0xFFDDDDDD, icon="minecraft:ender_pearl")
+public class RewardTeleport extends RewardBase implements ICustomDescription, IHasFilters, ISpecialFieldProvider {
+    public List<IFilterProvider> locations = new ArrayList();
+    protected transient IField field;
 
     public RewardTeleport() {
-        super(new ItemStack(Items.ender_pearl), "teleport", 0xFFDDDDDD);
+        field = new ItemFilterField("locations", this);
     }
 
     @Override
-    public List<IFilter> getAllFilters() {
+    public String getDescription() {
+        return Progression.translate(getProvider().getUnlocalisedName() + ".description") + " \n" + field.getField();
+    }
+
+    @Override
+    public List<IFilterProvider> getAllFilters() {
         return locations;
     }
 
@@ -55,9 +50,7 @@ public class RewardTeleport extends RewardBase implements ISpecialFilters, IHasF
 
     @Override
     public void addSpecialFields(List<IField> fields, DisplayMode mode) {
-        if (mode == DisplayMode.EDIT) {
-            fields.add(new ItemFilterField("locations", this));
-        }
+        fields.add(new ItemFilterField("locations", this));
     }
 
     @Override
@@ -131,6 +124,7 @@ public class RewardTeleport extends RewardBase implements ISpecialFilters, IHasF
         }
     }
 
+    //Helper Methods
     private boolean isValidLocation(World world, BlockPos pos) {
         Material posfloor = world.getBlockState(pos).getBlock().getMaterial();
         Material posfeet = world.getBlockState(pos.up()).getBlock().getMaterial();
@@ -139,26 +133,5 @@ public class RewardTeleport extends RewardBase implements ISpecialFilters, IHasF
         if (poshead.blocksMovement()) return false;
         if (posfloor.isLiquid() || posfeet.isLiquid() || poshead.isLiquid()) return false;
         return posfloor.blocksMovement();
-    }
-
-    @Override
-    public void addTooltip(List list) {
-        list.add(EnumChatFormatting.WHITE + Progression.translate("teleport"));
-    }
-
-    public String getFilter() {
-        if (ticker == 0 || ticker >= 200) {
-            preview = FilterBase.getRandomFilterFromFilters(locations);
-            ticker = 1;
-        }
-
-        if (!GuiScreen.isShiftKeyDown()) ticker++;
-
-        return preview == null ? "Nowhere": preview.getDescription();
-    }
-
-    @Override
-    public String getDescription() {
-        return Progression.translate("reward.teleport.description") + " \n" + getFilter();
     }
 }

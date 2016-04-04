@@ -7,12 +7,12 @@ import java.util.UUID;
 
 /** This is just a wrapper interface
  *  Don't use it for anything. */
-public interface ICriteria {
+public interface ICriteria extends IUnique {
     /** Returns a list of all the triggers in this criteria **/
-    public List<ITrigger> getTriggers();
+    public List<ITriggerProvider> getTriggers();
     
     /** Returns a list of all the reward in this criteria **/
-    public List<IReward> getRewards();
+    public List<IRewardProvider> getRewards();
 
     /** Returns the unique id for this criteria **/
     public UUID getUniqueID();
@@ -23,7 +23,7 @@ public interface ICriteria {
 
     public boolean displayAchievement();
 
-    public String getDisplayName();
+
 
     public ItemStack getIcon();
 

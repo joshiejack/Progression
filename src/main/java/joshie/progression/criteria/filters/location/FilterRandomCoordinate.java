@@ -1,6 +1,7 @@
 package joshie.progression.criteria.filters.location;
 
 import joshie.progression.Progression;
+import joshie.progression.api.special.ICustomDescription;
 import joshie.progression.api.special.IEnum;
 import joshie.progression.lib.WorldLocation;
 import net.minecraft.entity.player.EntityPlayer;
@@ -8,17 +9,20 @@ import net.minecraft.util.BlockPos;
 
 import static joshie.progression.criteria.filters.location.FilterLocationBase.LocationOperator.*;
 
-public abstract class FilterRandomCoordinate extends FilterLocationBase implements IEnum {
+public abstract class FilterRandomCoordinate extends FilterLocationBase implements ICustomDescription, IEnum {
     public LocationOperator operator = LocationOperator.RADIUS;
     public int coordinate = 8;
     public int distance = 32;
     public String coordstring;
 
     public FilterRandomCoordinate(String name) {
-        super(name, 0xFFBBBBBB);
         this.coordstring = name;
     }
 
+    @Override
+    public String getDescription() {
+        return Progression.format("filter.location." + coordstring + "description", coordinate);
+    }
     public boolean isInCircle(int coord) {
         for(int i = -distance; i <= distance; i++) {
             for (int k = -distance; k <= distance; k++) {
@@ -44,11 +48,6 @@ public abstract class FilterRandomCoordinate extends FilterLocationBase implemen
     }
 
     public abstract BlockPos getLocation(EntityPlayer player, int random);
-
-    @Override
-    public String getDescription() {
-        return Progression.format("filter.location." + coordstring + "description", coordinate);
-    }
 
     public abstract int getCoordinate(WorldLocation location);
 

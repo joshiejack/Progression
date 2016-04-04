@@ -2,7 +2,7 @@ package joshie.progression.api.criteria;
 
 import net.minecraft.entity.player.EntityPlayer;
 
-public interface IFilter<T> extends ICanHaveEvents {
+public interface IFilter<O> extends IRule<IFilterProvider> {
     /** Return true if the pass in object, matches this filter.
      *  Keep in mind this can pass in entities, itemstack,
      *  Lists or anything really, so make sure to validate
@@ -11,7 +11,7 @@ public interface IFilter<T> extends ICanHaveEvents {
     
     /** Returns a list of all things that match this filter
      *  May pass in something, or it can be null **/
-    public T getRandom(EntityPlayer player);
+    public O getRandom(EntityPlayer player);
     
     /** Returns the type of filter this is **/
     public IFilterType getType();

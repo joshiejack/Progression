@@ -4,18 +4,17 @@ import joshie.progression.Progression;
 import joshie.progression.api.IPlayerTeam;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IField;
-import joshie.progression.api.criteria.IFilter;
-import joshie.progression.api.special.DisplayMode;
-import joshie.progression.api.special.IEnum;
-import joshie.progression.api.special.ISpecialFieldProvider;
-import joshie.progression.api.special.IStackSizeable;
+import joshie.progression.api.criteria.IFilterProvider;
+import joshie.progression.api.criteria.ProgressionRule;
+import joshie.progression.api.special.*;
 import joshie.progression.gui.fields.ItemFilterFieldPreview;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 import java.util.List;
 
-public class ConditionInInventory extends ConditionBaseItemFilter implements IEnum, ISpecialFieldProvider, IStackSizeable {
+@ProgressionRule(name="ininventory", color=0xFF660000)
+public class ConditionInInventory extends ConditionBaseItemFilter implements ICustomDescription, IEnum, ISpecialFieldProvider, IStackSizeable {
     private static enum CheckSlots {
         HELD, ARMOR, HOTBAR, INVENTORY;
     }
@@ -23,8 +22,10 @@ public class ConditionInInventory extends ConditionBaseItemFilter implements IEn
     public int stackSize = 1;
     public CheckSlots slotType = CheckSlots.INVENTORY;
 
-    public ConditionInInventory() {
-        super("ininventory", 0xFF660000);
+    @Override
+    public String getDescription() {
+        if (getProvider().isInverted()) return Progression.format(getProvider().getUnlocalisedName() + ".description." + slotType.toString().toLowerCase() + ".inverted");
+        else return Progression.format(getProvider().getUnlocalisedName() + ".description." + slotType.toString().toLowerCase());
     }
 
     @Override
@@ -39,6 +40,11 @@ public class ConditionInInventory extends ConditionBaseItemFilter implements IEn
     }
 
     @Override
+    public boolean isEnum(String name) {
+        return name.equals("slotType");
+    }
+
+    @Override
     public Enum next(String name) {
         int id = slotType.ordinal() + 1;
         if (id < CheckSlots.values().length) {
@@ -46,40 +52,6 @@ public class ConditionInInventory extends ConditionBaseItemFilter implements IEn
         }
 
         return CheckSlots.values()[0];
-    }
-
-    @Override
-    public boolean isEnum(String name) {
-        return name.equals("slotType");
-    }
-
-    private boolean matches(ItemStack check) {
-        for (IFilter filter : filters) {
-            if (filter.matches(check)) return true;
-        }
-
-        return false;
-    }
-
-    private int getAmount(EntityPlayer player, int slots) {
-        boolean hasItem = false;
-        for (int i = 0; i < slots; i++) {
-            if (matches(player.inventory.mainInventory[i])) {
-                hasItem = true;
-                break;
-            }
-        }
-
-        if (!hasItem) return 0;
-        int amount = 0;
-        for (int i = 0; i < slots; i++) {
-            ItemStack stack = player.inventory.mainInventory[i];
-            if (matches(stack)) {
-                amount += stack.stackSize;
-            }
-        }
-
-        return amount;
     }
 
     @Override
@@ -111,14 +83,33 @@ public class ConditionInInventory extends ConditionBaseItemFilter implements IEn
         return false;
     }
 
-    @Override
-    public int getWidth(DisplayMode mode) {
-        return mode == DisplayMode.EDIT ? super.getWidth(mode) : 100;
+    //Helper Methods
+    private boolean matches(ItemStack check) {
+        for (IFilterProvider filter : filters) {
+            if (filter.getProvided().matches(check)) return true;
+        }
+
+        return false;
     }
 
-    @Override
-    public String getConditionDescription() {
-        if (inverted) return Progression.format(getUnlocalisedName() + ".description." + slotType.toString().toLowerCase() + ".inverted");
-        else return Progression.format(getUnlocalisedName() + ".description." + slotType.toString().toLowerCase());
+    private int getAmount(EntityPlayer player, int slots) {
+        boolean hasItem = false;
+        for (int i = 0; i < slots; i++) {
+            if (matches(player.inventory.mainInventory[i])) {
+                hasItem = true;
+                break;
+            }
+        }
+
+        if (!hasItem) return 0;
+        int amount = 0;
+        for (int i = 0; i < slots; i++) {
+            ItemStack stack = player.inventory.mainInventory[i];
+            if (matches(stack)) {
+                amount += stack.stackSize;
+            }
+        }
+
+        return amount;
     }
 }

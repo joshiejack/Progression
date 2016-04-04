@@ -1,11 +1,12 @@
 package joshie.progression.gui.editors.insert;
 
-import java.util.Collection;
-
-import joshie.progression.api.criteria.IFilter;
+import joshie.progression.api.criteria.IFilterProvider;
+import joshie.progression.gui.editors.GuiFilterEditor;
 import joshie.progression.handlers.APIHandler;
 
-public class FeatureNewItemFilter extends FeatureNew<IFilter> {
+import java.util.Collection;
+
+public class FeatureNewItemFilter extends FeatureNew<IFilterProvider> {
     public static final FeatureNewItemFilter INSTANCE = new FeatureNewItemFilter();
 
     public FeatureNewItemFilter() {
@@ -13,18 +14,18 @@ public class FeatureNewItemFilter extends FeatureNew<IFilter> {
     }
 
     @Override
-    public Collection<IFilter> getFields() {
+    public Collection<IFilterProvider> getFields() {
         return APIHandler.filterTypes.values();
     }
 
     @Override
-    public void clone(IFilter provider) {
-        APIHandler.cloneFilter(field, provider);
+    public void clone(IFilterProvider provider) {
+        APIHandler.cloneFilter(GuiFilterEditor.INSTANCE.getField(), provider);
         //GuiFilterEditor.INSTANCE.initGui(); //Refresh the gui
     }
 
     @Override
-    public boolean isValid(IFilter filter) {
-        return field.isAccepted(filter);
+    public boolean isValid(IFilterProvider filter) {
+        return GuiFilterEditor.INSTANCE.getField().isAccepted(filter);
     }
 }

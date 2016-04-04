@@ -3,7 +3,7 @@ package joshie.progression.gui.editors;
 import org.lwjgl.opengl.GL11;
 
 import joshie.progression.gui.core.FeatureAbstract;
-import joshie.progression.gui.editors.FeatureItemSelector.Position;
+import joshie.progression.api.gui.Position;
 import net.minecraft.client.renderer.GlStateManager;
 
 public class FeatureFullTextEditor extends FeatureAbstract implements ITextEditable {

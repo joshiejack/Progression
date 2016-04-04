@@ -6,25 +6,23 @@ import joshie.enchiridion.api.event.FeatureVisibleEvent;
 import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.special.IGetterCallback;
+import joshie.progression.api.special.IHasEventBus;
 import joshie.progression.api.special.IInit;
 import joshie.progression.api.special.IStoreNBTData;
-import joshie.progression.criteria.rewards.RewardBaseAbility;
-import joshie.progression.items.ItemCriteria;
+import joshie.progression.criteria.rewards.RewardBaseSingular;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class RewardShowLayer extends RewardBaseAbility implements IStoreNBTData, IInit, IGetterCallback {
+public class RewardShowLayer extends RewardBaseSingular implements IInit, IGetterCallback, IHasEventBus, IStoreNBTData {
     private transient IBook theBook;
     public boolean hideByDefault = true;
     public String bookid = "";
     public int page = 1;
     public int layer = 1;
-
-    public RewardShowLayer() {
-        super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.showLayer), "layer.show", 0xFFCCCCCC);
-    }
 
     @Override
     public void init() {
@@ -32,31 +30,23 @@ public class RewardShowLayer extends RewardBaseAbility implements IStoreNBTData,
     }
 
     @Override
+    public EventBus getEventBus() {
+        return MinecraftForge.EVENT_BUS;
+    }
+
+    @Override
+    public String getDescription() {
+        if (theBook != null) {
+            String end = hideByDefault ? "show" : "hide";
+            return Progression.format("reward.layer.show.description." + end, theBook.getDisplayName(), page);
+        } else return "Invalid Book setup";
+    }
+
+    @Override
     public String getField(String fieldName) {
         if (fieldName.equals("layer")) return "" + layer;
         else if (fieldName.equals("page")) return "" + page;
         else return theBook != null ? EnumChatFormatting.GREEN + bookid : EnumChatFormatting.RED + bookid;
-    }
-
-    @SubscribeEvent
-    public void onFeatureRender(FeatureVisibleEvent event) {
-        NBTTagCompound tag = ProgressionAPI.player.getCustomData(event.entityPlayer, "enchiridion.hidden");
-        if (tag != null) {
-            if (tag.hasKey(event.bookid)) {
-                NBTTagCompound bookData = tag.getCompoundTag(event.bookid);
-                if (bookData.hasKey("" + event.page)) {
-                    NBTTagCompound pageData = bookData.getCompoundTag("" + event.page);
-                    if (pageData.hasKey("" + event.layer)) event.setCanceled(true);
-                }
-            }
-        }
-    }
-
-    public NBTTagCompound getTag(NBTTagCompound tag, String name) {
-        if (tag.hasKey(name)) return tag.getCompoundTag(name);
-        NBTTagCompound nbt = new NBTTagCompound();
-        tag.setTag(name, nbt);
-        return nbt;
     }
 
     @Override
@@ -75,6 +65,20 @@ public class RewardShowLayer extends RewardBaseAbility implements IStoreNBTData,
         return tag;
     }
 
+    @SubscribeEvent
+    public void onFeatureRender(FeatureVisibleEvent event) {
+        NBTTagCompound tag = ProgressionAPI.player.getCustomData(event.entityPlayer, "enchiridion.hidden");
+        if (tag != null) {
+            if (tag.hasKey(event.bookid)) {
+                NBTTagCompound bookData = tag.getCompoundTag(event.bookid);
+                if (bookData.hasKey("" + event.page)) {
+                    NBTTagCompound pageData = bookData.getCompoundTag("" + event.page);
+                    if (pageData.hasKey("" + event.layer)) event.setCanceled(true);
+                }
+            }
+        }
+    }
+
     @Override
     public void reward(EntityPlayerMP player) {
         NBTTagCompound tag = ProgressionAPI.player.getCustomData(player, "enchiridion.hidden");
@@ -87,11 +91,11 @@ public class RewardShowLayer extends RewardBaseAbility implements IStoreNBTData,
         ProgressionAPI.player.setCustomData(player, "enchiridion.hidden", tag);
     }
 
-    @Override
-    public String getDescription() {
-        if (theBook != null) {
-            String end = hideByDefault ? "show" : "hide";
-            return Progression.format("reward.layer.show.description." + end, theBook.getDisplayName(), page);
-        } else return "Invalid Book setup";
+    //Helper Methods
+    public NBTTagCompound getTag(NBTTagCompound tag, String name) {
+        if (tag.hasKey(name)) return tag.getCompoundTag(name);
+        NBTTagCompound nbt = new NBTTagCompound();
+        tag.setTag(name, nbt);
+        return nbt;
     }
 }

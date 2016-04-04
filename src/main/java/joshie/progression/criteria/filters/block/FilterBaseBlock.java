@@ -9,13 +9,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 public abstract class FilterBaseBlock extends FilterBase {
-    public FilterBaseBlock(String string, int color) {
-        super(string, color);
-    }
-
     @Override
     public ItemStack getRandom(EntityPlayer player) {
-        return ItemHelper.getRandomItem(this);
+        return ItemHelper.getRandomItem(this.getProvider());
     }
 
     @Override

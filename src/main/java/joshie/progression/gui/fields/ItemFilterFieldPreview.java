@@ -36,11 +36,6 @@ public class ItemFilterFieldPreview extends ItemFilterField implements IField {
         this.mouseY2 = (int) (y + 15 * scale);
     }
 
-    @Override
-    public String getField() {
-        return "";
-    }
-
     private static final ItemStack BROKEN = new ItemStack(Items.baked_potato);
 
     public ItemStack getStack(boolean hovered) {

@@ -1,7 +1,7 @@
 package joshie.progression.gui.editors;
 
 import joshie.progression.api.criteria.ICriteria;
-import joshie.progression.api.criteria.IReward;
+import joshie.progression.api.criteria.IRewardProvider;
 import joshie.progression.gui.core.FeatureTooltip;
 import joshie.progression.gui.core.GuiCore;
 import joshie.progression.helpers.MCClientHelper;
@@ -63,7 +63,7 @@ public class TreeEditorElement {
     }
 
     private void recalculate(int x) {
-        int textWidth = gui.mc.fontRendererObj.getStringWidth(criteria.getDisplayName());
+        int textWidth = gui.mc.fontRendererObj.getStringWidth(criteria.getLocalisedName());
         int iconWidth = 9 + (criteria.getRewards().size() * 12);
         if (textWidth >= iconWidth) {
             width = textWidth + 9;
@@ -175,12 +175,12 @@ public class TreeEditorElement {
             GuiCore.INSTANCE.drawTexture(ProgressionInfo.textures, x + right - 10, top, textureX + 90, textureY, 10, 25);
 
             //gui.drawTexturedModalRect(x + left, y + top, textureX, textureY, 100, 25);
-            GuiCore.INSTANCE.drawText(criteria.getDisplayName(), x + left + 4, top + 3, Theme.INSTANCE.criteriaDisplayNameColor);
+            GuiCore.INSTANCE.drawText(criteria.getLocalisedName(), x + left + 4, top + 3, Theme.INSTANCE.criteriaDisplayNameColor);
 
             GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
             //Draw in the rewards
             int xOffset = 0;
-            for (IReward reward : criteria.getRewards()) {
+            for (IRewardProvider reward : criteria.getRewards()) {
                 ItemStack icon = reward.getIcon();
                 if (icon == null || icon.getItem() == null) continue; //Protection against null icons
                 GuiCore.INSTANCE.drawStack(icon, x + 4 + left + (xOffset * 12), top + 12, 0.75F);
@@ -192,7 +192,7 @@ public class TreeEditorElement {
             GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
             xOffset = 0;
             boolean hoveredReward = false;
-            for (IReward reward : criteria.getRewards()) {
+            for (IRewardProvider reward : criteria.getRewards()) {
                 int x1 = 3 + left + (xOffset * 12);
                 int x2 = x1 + 11;
                 int y1 = bottom - 13;
@@ -221,7 +221,7 @@ public class TreeEditorElement {
 
                     for (ICriteria c : criteria.getPreReqs()) {
                         if (c.getTab() != criteria.getTab()) {
-                            list.add(EnumChatFormatting.RED + "Requires: " + c.getDisplayName() + " from the \"" + c.getTab().getDisplayName() + "\" tab");
+                            list.add(EnumChatFormatting.RED + "Requires: " + c.getLocalisedName() + " from the \"" + c.getTab().getDisplayName() + "\" tab");
                         }
                     }
 

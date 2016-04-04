@@ -3,6 +3,7 @@ package joshie.progression.criteria.conditions;
 import joshie.progression.api.IPlayerTeam;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IField;
+import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.*;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,14 +18,11 @@ import org.apache.commons.lang3.text.WordUtils;
 
 import java.util.List;
 
-public class ConditionAchievement extends ConditionBase implements IInit, ISpecialFieldProvider, IItemGetterCallback, IAdditionalTooltip {
+@ProgressionRule(name="achievement", color=0xFFFFFF00, meta="ifHasAchievement")
+public class ConditionAchievement extends ConditionBase implements IInit, ICustomWidth, ISpecialFieldProvider, IItemGetterCallback, IAdditionalTooltip {
     public String id = "mineWood";
     private transient Achievement achievement;
-    
-    public ConditionAchievement() {
-        super("achievement", 0xFFFFFF00);
-    }
-    
+
     @Override
     public void init() {
         for (Achievement a: AchievementList.achievementList) {
@@ -36,6 +34,11 @@ public class ConditionAchievement extends ConditionBase implements IInit, ISpeci
     }
 
     @Override
+    public int getWidth(DisplayMode mode) {
+        return mode == DisplayMode.EDIT ? 100 : 92;
+    }
+
+    @Override
     public void addSpecialFields(List<IField> fields, DisplayMode mode) {
         if (mode == DisplayMode.DISPLAY) fields.add(ProgressionAPI.fields.getItem(this, "id", 20, 42, 2F));
     }
@@ -43,23 +46,6 @@ public class ConditionAchievement extends ConditionBase implements IInit, ISpeci
     @Override
     public ItemStack getItem(String fieldName) {
         return achievement != null ? achievement.theItemStack : new ItemStack(Items.golden_hoe);
-    }
-    
-    @Override
-    public boolean isSatisfied(IPlayerTeam team) {
-        if (achievement != null) {
-            for (EntityPlayer player: team.getTeamEntities()) { //If any team member has the achievement
-                if (player.worldObj.isRemote && ((EntityPlayerSP)player).getStatFileWriter().hasAchievementUnlocked(achievement)) return true;
-                else if (!player.worldObj.isRemote && ((EntityPlayerMP)player).getStatFile().hasAchievementUnlocked(achievement)) return true;
-            }
-        }
-
-        return false;
-    }
-
-    @Override
-    public int getWidth(DisplayMode mode) {
-        return mode == DisplayMode.EDIT ? super.getWidth(mode) : 92;
     }
 
     @Override
@@ -72,5 +58,17 @@ public class ConditionAchievement extends ConditionBase implements IInit, ISpeci
                 tooltip.add(s.trim());
             }
         }
+    }
+    
+    @Override
+    public boolean isSatisfied(IPlayerTeam team) {
+        if (achievement != null) {
+            for (EntityPlayer player: team.getTeamEntities()) { //If any team member has the achievement
+                if (player.worldObj.isRemote && ((EntityPlayerSP)player).getStatFileWriter().hasAchievementUnlocked(achievement)) return true;
+                else if (!player.worldObj.isRemote && ((EntityPlayerMP)player).getStatFile().hasAchievementUnlocked(achievement)) return true;
+            }
+        }
+
+        return false;
     }
 }

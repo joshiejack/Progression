@@ -1,15 +1,12 @@
 package joshie.progression.api;
 
-import java.util.UUID;
-
-import joshie.progression.api.criteria.ICondition;
-import joshie.progression.api.criteria.IFilter;
-import joshie.progression.api.criteria.IReward;
-import joshie.progression.api.criteria.ITrigger;
+import joshie.progression.api.criteria.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
+
+import java.util.UUID;
 
 /** The registry is where you register new types of rewards, triggers and
  *  conditions, and the criteria. All triggers and rewards should be registered before any criteria, and conditions before triggers */
@@ -36,19 +33,7 @@ public interface IProgressionAPI {
      *  Keep in mind you need to pass the same string
      *  to fireTrigger for this to work correctly. **/
     public void registerCustomDataBuilder(String trigger, ICustomDataBuilder builder);
-    
-    /** Register a condition with the registry **/
-    public ICondition registerConditionType(ICondition reward);
-    
-    /** Register a trigger with the registry **/
-    public ITrigger registerTriggerType(ITrigger trigger);
-    
-    /** Register a reward with the registry **/
-    public IReward registerRewardType(IReward reward);
-    
-    /** Register a filter type with the registry **/
-    public IFilter registerFilter(IFilter filter);
-    
+
     /** Register a new crafting type **/
     public void registerActionType(String unlocalised);
     

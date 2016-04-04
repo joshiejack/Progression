@@ -2,9 +2,7 @@ package joshie.progression.criteria.triggers;
 
 import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.criteria.IField;
-import joshie.progression.api.criteria.IFilter;
-import joshie.progression.api.criteria.ITrigger;
+import joshie.progression.api.criteria.*;
 import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.ISpecialFieldProvider;
 import net.minecraft.item.ItemStack;
@@ -15,30 +13,35 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 import java.util.List;
 import java.util.UUID;
 
+@ProgressionRule(name="crafting", color=0xFF663300)
 public class TriggerCrafting extends TriggerBaseItemFilter implements ISpecialFieldProvider {
     public int timesCrafted = 1;
     protected transient int timesItemCrafted;
-
-    public TriggerCrafting() {
-        super("crafting", 0xFF663300, "crafting");
-    }
 
     @Override
     public ITrigger copy() {
         TriggerCrafting trigger = new TriggerCrafting();
         trigger.timesCrafted = timesCrafted;
-        return copyBase(copyCounter(copyFilter(trigger)));
+        return copyCounter(copyFilter(trigger));
     }
 
-    @SubscribeEvent
-    public void onEvent(ItemCraftedEvent event) {
-        ProgressionAPI.registry.fireTrigger(event.player, getUnlocalisedName(), event.crafting.copy());
+    @Override
+    public String getDescription() {
+        int percentageItemTotal = (counter * 100) / amount;
+        int percentageCraftedTotal = (timesItemCrafted * 100) / timesCrafted;
+        int percentageTotal = (percentageItemTotal + percentageCraftedTotal) / 2;
+        return Progression.format("trigger.crafting.description", amount) + "\n\n" + Progression.format("completed", percentageTotal);
     }
 
     @Override
     public void addSpecialFields(List<IField> fields, DisplayMode mode) {
         if (mode == DisplayMode.EDIT) fields.add(ProgressionAPI.fields.getItemPreview(this, "filters", 30, 35, 1.9F));
         else fields.add(ProgressionAPI.fields.getItemPreview(this, "filters", 65, 35, 1.9F));
+    }
+
+    @SubscribeEvent
+    public void onEvent(ItemCraftedEvent event) {
+        ProgressionAPI.registry.fireTrigger(event.player, getProvider().getUnlocalisedName(), event.crafting.copy());
     }
 
     @Override
@@ -49,8 +52,8 @@ public class TriggerCrafting extends TriggerBaseItemFilter implements ISpecialFi
     @Override
     public boolean onFired(UUID uuid, Object... additional) {
         ItemStack crafted = (ItemStack) (additional[0]);
-        for (IFilter filter : filters) {
-            if (filter.matches(crafted)) {
+        for (IFilterProvider filter : filters) {
+            if (filter.getProvided().matches(crafted)) {
                 counter += crafted.stackSize;
                 timesItemCrafted++;
                 return true;
@@ -58,14 +61,6 @@ public class TriggerCrafting extends TriggerBaseItemFilter implements ISpecialFi
         }
 
         return true;
-    }
-
-    @Override
-    public String getDescription() {
-        int percentageItemTotal = (counter * 100) / amount;
-        int percentageCraftedTotal = (timesItemCrafted * 100) / timesCrafted;
-        int percentageTotal = (percentageItemTotal + percentageCraftedTotal) / 2;
-        return Progression.format("trigger.crafting.description", amount) + "\n\n" + Progression.format("completed", percentageTotal);
     }
 
     @Override

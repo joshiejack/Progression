@@ -142,7 +142,9 @@ progression.reward.criteria.possibility.description=Toggles whether %s is possib
 progression.reward.criteria.remove=If this is true, the criteria will be removed from the player, if it's false, the criteria will be added
 progression.reward.criteria.possibility=If this is true this will toggle whether the player can actually complete the criteria once again.\n\nAn example use would be to remove a criteria that allows you to craft something after you've crafted say five times. By toggling the possibility, you would make that criteria impossible to complete therefore only allowing players to ever craft 5 of something.
 progression.reward.criteria.displayName=This is the display name of the criteria you wish to apply this reward to. It's suggested you use different names for each criteria so that it can find the correct one.
+progression.reward.criteria.incorrect=Reward Criteria was incorrectly setup
 progression.reward.command=Command
+progression.reward.execute=Execute Command
 progression.reward.command.description=The following command will be executed where @u is the player\n\n%s
 progression.reward.command.command=This is the command to execute without the leading /
 progression.reward.entity=Spawn Entity
@@ -177,6 +179,7 @@ progression.reward.potioneffect.particles=This is whether particles should be di
 progression.reward.potioneffect.filters=Click this to open the potion selector
 progression.reward.spawnItem=Spawn Item
 progression.reward.spawnItem.description=Spawns %s of these items:
+progression.reward.spawnItem.tooltip=Spawns an item: %s
 progression.reward.spawnItem.stackSize=This is the size of the stack in the entity this should spawn
 progression.reward.spawnItem.filters=Click to open the item filtering editor\n\nWhich allows you to pick the items that qualify
 progression.reward.spawnItem.locations=Click to open the location selector\n\nWhich allows you to select where these entities should spawn
@@ -253,6 +256,7 @@ progression.filter.item.modid=Mod
 progression.filter.item.itemStack=Item Stacks
 progression.filter.item.metadata=Metadata
 progression.filter.item.oreDictionary=Ore Dictionary
+progression.filter.item.tagsingle=Specific NBT
 progression.filter.potioneffect.potioneffect=Potion Effect
 progression.filter.block.blockOnly=Block Only
 progression.filter.block.blockStack=Block Stacks
@@ -286,9 +290,10 @@ achievement.criteria=Criteria Complete
 progression.name.display=Name
 progression.required=Required
 progression.given=Given
-progression.tab.expand=E X P A N D
-progression.tab.close=C O L L A P S E
-progression.requirements=Tasks
+progression.remove=Remove
+progression.add=Add
+
+#Editor Stuff
 progression.footer.line1=Use arrow keys to scroll sideways, or use the scroll wheel. (Down to go right)
 progression.footer.line2=Hold shift with arrow keys to scroll faster.
 progression.selector.items=Select Item - Click elsewhere to close
@@ -301,7 +306,21 @@ progression.hideable.infinite=Infinite
 progression.preview=Preview
 progression.item.free=Free Item
 progression.completed=%s%% completed
+progression.ability=Ability Gain!
+
+#Universal Field Provider Text
 progression.isVisible=Whether this should show up when viewing the criteria in display mode or not
 progression.mustClaim=If this is set to true, rewards will not be automatically rewarded and must instead be claimed somehow
 progression.inverted=If this is true, when checking the condition if everything in the condition is true, it will be considered false, instead of true
 progression.truth=Currently %s
+
+#Tab Tooltips
+progression.tab.hidden=Hidden
+progression.tab.sort=Sort Index
+progression.tab.shift=Shift + Click to rename
+progression.tab.ctrl=Ctrl + Click to select item icon
+progression.tab.alt=Alt + Click to make this tab the default
+progression.tab.i=I + Click to hide/unhide
+progression.tab.arrow=Arrow keys to move up/down
+progression.tab.delete=Delete + Click to delete
+progression.tab.warning=Deleting a tab, deletes all criteria in it

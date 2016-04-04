@@ -3,23 +3,21 @@ package joshie.progression.criteria.triggers;
 import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.ITrigger;
+import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.DisplayMode;
-import joshie.progression.api.special.IHasEventBus;
+import joshie.progression.api.special.ICustomDescription;
+import joshie.progression.api.special.ICustomWidth;
 import joshie.progression.helpers.DimensionHelper;
-import joshie.progression.items.ItemCriteria;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 
-public class TriggerChangeDimension extends TriggerBaseCounter implements IHasEventBus {
+@ProgressionRule(name="changeDimension", color=0xFF4C0000, meta="onChangeDimension")
+public class TriggerChangeDimension extends TriggerBaseCounter implements ICustomDescription, ICustomWidth {
     public boolean checkFrom = false;
     public int from = 0;
     public boolean checkTo = true;
     public int to = -1;
-
-    public TriggerChangeDimension() {
-        super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.onChangeDimension), "changeDimension", 0xFF4C0000);
-    }
 
     @Override
     public ITrigger copy() {
@@ -28,12 +26,28 @@ public class TriggerChangeDimension extends TriggerBaseCounter implements IHasEv
         trigger.from = from;
         trigger.checkTo = checkTo;
         trigger.to = to;
-        return copyBase(copyCounter(trigger));
+        return copyCounter(trigger);
+    }
+
+    @Override
+    public String getDescription() {
+        StringBuilder builder = new StringBuilder();
+        if (checkTo) builder.append(Progression.translate("trigger.changeDimension.go") + " " + DimensionHelper.getDimensionNameFromID(to));
+        if (checkFrom && checkTo) builder.append("\n");
+        if (checkFrom) builder.append(Progression.translate("trigger.changeDimension.leave")+ " " + DimensionHelper.getDimensionNameFromID(from));
+        if (!checkTo && !checkFrom) builder.append(Progression.translate("trigger.changeDimension.change"));
+        builder.append("\n\n" + Progression.format("completed", getPercentage()));
+        return  builder.toString();
+    }
+
+    @Override
+    public int getWidth(DisplayMode mode) {
+        return mode == DisplayMode.EDIT ? 100 : 80;
     }
     
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onEvent(PlayerChangedDimensionEvent event) {
-        ProgressionAPI.registry.fireTrigger(event.player, getUnlocalisedName(), event.fromDim, event.toDim);
+        ProgressionAPI.registry.fireTrigger(event.player, getProvider().getUnlocalisedName(), event.fromDim, event.toDim);
     }
 
     @Override
@@ -49,21 +63,5 @@ public class TriggerChangeDimension extends TriggerBaseCounter implements IHasEv
         }
 
         return true;
-    }
-
-    @Override
-    public int getWidth(DisplayMode mode) {
-        return mode == DisplayMode.EDIT ? super.getWidth(mode) : 80;
-    }
-
-    @Override
-    public String getDescription() {
-        StringBuilder builder = new StringBuilder();
-        if (checkTo) builder.append(Progression.translate("trigger.changeDimension.go") + " " + DimensionHelper.getDimensionNameFromID(to));
-        if (checkFrom && checkTo) builder.append("\n");
-        if (checkFrom) builder.append(Progression.translate("trigger.changeDimension.leave")+ " " + DimensionHelper.getDimensionNameFromID(from));
-        if (!checkTo && !checkFrom) builder.append(Progression.translate("trigger.changeDimension.change"));
-        builder.append("\n\n" + Progression.format("completed", getPercentage()));
-        return  builder.toString();
     }
 }

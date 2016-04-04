@@ -2,14 +2,8 @@ package joshie.progression.criteria.rewards;
 
 import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.criteria.IField;
-import joshie.progression.api.criteria.IFilter;
-import joshie.progression.api.criteria.IFilterType;
-import joshie.progression.api.special.DisplayMode;
-import joshie.progression.api.special.IHasFilters;
-import joshie.progression.api.special.ISpecialFieldProvider;
-import joshie.progression.api.special.ISpecialFilters;
-import joshie.progression.criteria.filters.FilterBase;
+import joshie.progression.api.criteria.*;
+import joshie.progression.api.special.*;
 import joshie.progression.gui.fields.ItemFilterField;
 import joshie.progression.gui.filters.FilterTypeItem;
 import joshie.progression.gui.filters.FilterTypeLocation;
@@ -17,23 +11,46 @@ import joshie.progression.helpers.ItemHelper;
 import joshie.progression.helpers.SpawnItemHelper;
 import joshie.progression.lib.WorldLocation;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.text.WordUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RewardSpawnItem extends RewardBaseItemFilter implements ISpecialFilters, IHasFilters, ISpecialFieldProvider {
-    public List<IFilter> locations = new ArrayList();
+@ProgressionRule(name="spawnItem", color=0xFFE599FF)
+public class RewardSpawnItem extends RewardBaseItemFilter implements ICustomDescription, ICustomWidth, ICustomTooltip, IHasFilters, ISpecialFieldProvider {
+    public List<IFilterProvider> locations = new ArrayList();
     public int stackSize = 1;
 
-    protected transient IFilter locationpreview;
-    protected transient int locationticker;
+    protected transient IField field;
 
     public RewardSpawnItem() {
-        super("spawnItem", 0xFFE599FF);
+        field = new ItemFilterField("locations", this);
+    }
+
+    @Override
+    public String getDescription() {
+        return Progression.format(getProvider().getUnlocalisedName() + ".description", stackSize) + " \n" + field.getField();
+    }
+
+    @Override
+    public int getWidth(DisplayMode mode) {
+        return mode == DisplayMode.DISPLAY ? 111: 100;
+    }
+
+    @Override
+    public void addTooltip(List list) {
+        String[] tooltip = WordUtils.wrap(StringEscapeUtils.unescapeJava(Progression.format(getProvider().getUnlocalisedName() + ".tooltip", field.getField())), 42).replace("\r", "").split("\n");
+        for (String s: tooltip) {
+            list.add(s);
+        }
+
+        list.add("");
+        list.add(EnumChatFormatting.GRAY + getIcon().getDisplayName() + " x" + stackSize);
     }
 
     @Override
@@ -45,21 +62,19 @@ public class RewardSpawnItem extends RewardBaseItemFilter implements ISpecialFil
     }
     
     @Override
-    public List<IFilter> getAllFilters() {
-        ArrayList<IFilter> all = new ArrayList();
+    public List<IFilterProvider> getAllFilters() {
+        ArrayList<IFilterProvider> all = new ArrayList();
         all.addAll(locations);
         all.addAll(filters);
         return all;
     }
 
-    private boolean isValidLocation(World world, BlockPos pos) {
-        Material posfloor = world.getBlockState(pos).getBlock().getMaterial();
-        Material posfeet = world.getBlockState(pos.up()).getBlock().getMaterial();
-        Material poshead = world.getBlockState(pos.up(2)).getBlock().getMaterial();
-        if (posfeet.blocksMovement()) return false;
-        if (poshead.blocksMovement()) return false;
-        if (posfloor.isLiquid() || posfeet.isLiquid() || poshead.isLiquid()) return false;
-        return posfloor.blocksMovement();
+    @Override
+    public IFilterType getFilterForField(String fieldName) {
+        if (fieldName.equals("locations")) return FilterTypeLocation.INSTANCE;
+        if (fieldName.equals("filters")) return FilterTypeItem.INSTANCE;
+
+        return null;
     }
     
     @Override
@@ -79,38 +94,14 @@ public class RewardSpawnItem extends RewardBaseItemFilter implements ISpecialFil
         }
     }
 
-    @Override
-    public void addTooltip(List list) {
-        // list.add(EnumChatFormatting.WHITE + Progression.translate("item.free"));
-        // list.add(getIcon().getDisplayName() + " x" + spawnNumber);
-    }
-
-    public String getFilter() {
-        if (locationticker == 0 || locationticker >= 200) {
-            locationpreview = FilterBase.getRandomFilterFromFilters(locations);
-            locationticker = 1;
-        }
-
-        if (!GuiScreen.isShiftKeyDown()) locationticker++;
-
-        return locationpreview == null ? "Nowhere": locationpreview.getDescription();
-    }
-
-    @Override
-    public String getDescription() {
-        return Progression.format("reward.spawnItem.description", stackSize) + " \n" + getFilter();
-    }
-
-    @Override
-    public int getWidth(DisplayMode mode) {
-        return mode == DisplayMode.DISPLAY ? 111: super.getWidth(mode);
-    }
-
-    @Override
-    public IFilterType getFilterForField(String fieldName) {
-        if (fieldName.equals("locations")) return FilterTypeLocation.INSTANCE;
-        if (fieldName.equals("filters")) return FilterTypeItem.INSTANCE;
-
-        return null;
+    //Helper Methods
+    private boolean isValidLocation(World world, BlockPos pos) {
+        Material floor = world.getBlockState(pos).getBlock().getMaterial();
+        Material feet = world.getBlockState(pos.up()).getBlock().getMaterial();
+        Material head = world.getBlockState(pos.up(2)).getBlock().getMaterial();
+        if (feet.blocksMovement()) return false;
+        if (head.blocksMovement()) return false;
+        if (floor.isLiquid() || feet.isLiquid() || head.isLiquid()) return false;
+        return floor.blocksMovement();
     }
 }

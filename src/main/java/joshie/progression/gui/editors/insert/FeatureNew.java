@@ -1,15 +1,9 @@
 package joshie.progression.gui.editors.insert;
 
 import joshie.progression.Progression;
-import joshie.progression.api.criteria.IFieldProvider;
-import joshie.progression.api.criteria.ICriteria;
-import joshie.progression.api.criteria.ITrigger;
+import joshie.progression.api.criteria.IRuleProvider;
 import joshie.progression.gui.core.FeatureAbstract;
 import joshie.progression.gui.core.GuiCore;
-import joshie.progression.gui.editors.GuiConditionEditor;
-import joshie.progression.gui.editors.GuiCriteriaEditor;
-import joshie.progression.gui.editors.GuiFilterEditor;
-import joshie.progression.gui.fields.ItemFilterField;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL11;
 
@@ -17,10 +11,7 @@ import java.util.*;
 
 public abstract class FeatureNew<T> extends FeatureAbstract {
     public static boolean IS_OPEN = false;
-    protected ICriteria criteria;
-    protected ITrigger trigger;
-    protected ItemFilterField field;
-    private final List<IFieldProvider> sorted;
+    private final List<IRuleProvider> sorted;
 
     public String text;
 
@@ -33,8 +24,8 @@ public abstract class FeatureNew<T> extends FeatureAbstract {
     private static class Alphabetical implements Comparator {
         @Override
         public int compare(Object o1, Object o2) {
-            IFieldProvider provider1 = ((IFieldProvider) o1);
-            IFieldProvider provider2 = ((IFieldProvider) o2);
+            IRuleProvider provider1 = ((IRuleProvider) o1);
+            IRuleProvider provider2 = ((IRuleProvider) o2);
             return provider1.getLocalisedName().compareTo(provider2.getLocalisedName());
         }
     }
@@ -51,9 +42,6 @@ public abstract class FeatureNew<T> extends FeatureAbstract {
     public FeatureAbstract init(GuiCore core) {
         super.init(core);
         setVisibility(false);
-        criteria = GuiCriteriaEditor.INSTANCE.getCriteria();
-        trigger = GuiConditionEditor.INSTANCE.getTrigger();
-        field = GuiFilterEditor.INSTANCE.getField();
         return this;
     }
 
@@ -80,7 +68,7 @@ public abstract class FeatureNew<T> extends FeatureAbstract {
         int maxY = ((sorted.size() - 1) / 2);
         int yPos = 0;
         int xPos = 0;
-        for (IFieldProvider provider : sorted) {
+        for (IRuleProvider provider : sorted) {
             if (!isValid((T) provider)) continue;
             int color = theme.newFont;
             if (mouseX >= (xPos * 100) + 155 && mouseX <= (xPos * 100) + 255) {
@@ -105,7 +93,7 @@ public abstract class FeatureNew<T> extends FeatureAbstract {
         int maxY = ((sorted.size() - 1) / 2);
         int yPos = 0;
         int xPos = 0;
-        for (IFieldProvider provider : sorted) {
+        for (IRuleProvider provider : sorted) {
             if (!isValid((T) provider)) continue;
             if (mouseX >= (xPos * 100) + 155 && mouseX <= (xPos * 100) + 255) {
                 if (mouseY >= 67 + (yPos * 12) && mouseY < 67 + (yPos * 12) + 12) {

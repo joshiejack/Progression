@@ -161,7 +161,7 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
                     int x2 = editor.getX();
 
                     int width = 0;
-                    int textWidth = mc.fontRendererObj.getStringWidth(c.getDisplayName());
+                    int textWidth = mc.fontRendererObj.getStringWidth(c.getLocalisedName());
                     int iconWidth = 9 + (c.getRewards().size() * 12);
                     if (textWidth >= iconWidth) {
                         width = textWidth + 9;

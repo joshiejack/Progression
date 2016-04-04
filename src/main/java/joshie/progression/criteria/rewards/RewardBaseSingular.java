@@ -1,10 +1,13 @@
 package joshie.progression.criteria.rewards;
 
-import net.minecraft.item.ItemStack;
+import joshie.progression.api.special.DisplayMode;
+import joshie.progression.api.special.ICustomDescription;
+import joshie.progression.api.special.ICustomWidth;
 
-public class RewardBaseSingular extends RewardBase {
-    public RewardBaseSingular(ItemStack stack, String name, int color) {
-        super(stack, name, color);
+public abstract class RewardBaseSingular extends RewardBase implements ICustomDescription, ICustomWidth {
+    @Override
+    public int getWidth(DisplayMode mode) {
+        return 100;
     }
 
     @Override

@@ -1,7 +1,7 @@
 package joshie.progression.network;
 
 import io.netty.buffer.ByteBuf;
-import joshie.progression.api.criteria.ITrigger;
+import joshie.progression.api.criteria.ITriggerProvider;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.network.core.PenguinPacket;
 import joshie.progression.player.PlayerTracker;
@@ -13,16 +13,16 @@ import java.util.Set;
 import java.util.UUID;
 
 public class PacketSyncTriggers extends PenguinPacket {
-    private Set<ITrigger> triggers;
+    private Set<ITriggerProvider> triggers;
     private boolean overwrite;
 
     public PacketSyncTriggers() {}
-    public PacketSyncTriggers(Set<ITrigger> triggers) {
+    public PacketSyncTriggers(Set<ITriggerProvider> triggers) {
         this.overwrite = true;
         this.triggers = triggers;
     }
 
-    public PacketSyncTriggers(ITrigger trigger) {
+    public PacketSyncTriggers(ITriggerProvider trigger) {
         this.overwrite = false;
         this.triggers = new HashSet();
         this.triggers.add(trigger);
@@ -32,7 +32,7 @@ public class PacketSyncTriggers extends PenguinPacket {
     public void toBytes(ByteBuf buf) {
         buf.writeBoolean(overwrite);
         buf.writeInt(triggers.size());
-        for (ITrigger trigger: triggers) {
+        for (ITriggerProvider trigger: triggers) {
             ByteBufUtils.writeUTF8String(buf, trigger.getUniqueID().toString());
         }
     }
@@ -43,7 +43,7 @@ public class PacketSyncTriggers extends PenguinPacket {
         int size = buf.readInt();
         triggers = new HashSet();
         for (int i = 0; i < size; i++) {
-            ITrigger trigger = APIHandler.getCache().getTriggerFromUUID(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
+            ITriggerProvider trigger = APIHandler.getCache().getTriggerFromUUID(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
             if (trigger != null) {
                 triggers.add(trigger);
             }

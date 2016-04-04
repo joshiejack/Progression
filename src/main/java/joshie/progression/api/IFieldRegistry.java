@@ -1,7 +1,6 @@
 package joshie.progression.api;
 
 import joshie.progression.api.criteria.IField;
-import joshie.progression.api.criteria.IFieldProvider;
 
 public interface IFieldRegistry {
     /** Returns an IField that will display lists of IFilter
@@ -10,7 +9,7 @@ public interface IFieldRegistry {
      *  @x    the xcoordinate to display the field
      *  @y    the ycoordinate to display the field
      *  @scale the scale to display the field **/
-    public IField getItemPreview(IFieldProvider provider, String string, int x, int y, float scale);
+    public IField getItemPreview(Object provider, String string, int x, int y, float scale);
 
     /** Returns an IField that will display a single item
      *  @param provider the provider, normally a reward, trigger, condition or filter
@@ -18,5 +17,17 @@ public interface IFieldRegistry {
      *  @x    the xcoordinate to display the field
      *  @y    the ycoordinate to display the field
      *  @scale the scale to display the field **/
-    public IField getItem(IFieldProvider provider, String string, int x, int y, float scale);
+    public IField getItem(Object provider, String string, int x, int y, float scale);
+
+    /** Returns an item filter field **/
+    public IField getFilter(Object provider, String name);
+
+    /** Returns a boolean field **/
+    public IField getBoolean(Object provider, String name);
+
+    /** returns a field that will toggle between reading/writing a boolean and a string **/
+    public IField getToggleBoolean(Object provider, String booleanName, String stringName);
+
+    /** Returns a text field, this is used for integers, string, float and doubles **/
+    public IField getText(Object criteria, String name);
 }

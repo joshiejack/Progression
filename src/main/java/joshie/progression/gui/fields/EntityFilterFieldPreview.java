@@ -37,11 +37,6 @@ public class EntityFilterFieldPreview extends ItemFilterField implements IField 
         this.mouseY2 = y;
     }
 
-    @Override
-    public String getField() {
-        return "";
-    }
-
     public EntityLivingBase getEntity() {
         return entity != null ? entity : MCClientHelper.getPlayer();
     }

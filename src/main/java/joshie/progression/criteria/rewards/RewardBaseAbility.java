@@ -1,17 +1,24 @@
 package joshie.progression.criteria.rewards;
 
+import joshie.progression.Progression;
+import joshie.progression.api.special.ICustomTooltip;
 import joshie.progression.api.special.IHasEventBus;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.EventBus;
 
-public class RewardBaseAbility extends RewardBaseSingular implements IHasEventBus {
-    public RewardBaseAbility(ItemStack stack, String name, int color) {
-        super(stack, name, color);
-    }
+import java.util.List;
 
+public abstract class RewardBaseAbility extends RewardBaseSingular implements ICustomTooltip, IHasEventBus {
     @Override
     public EventBus getEventBus() {
         return MinecraftForge.EVENT_BUS;
     }
+
+    @Override
+    public void addTooltip(List list) {
+        list.add(Progression.translate("ability"));
+        addAbilityTooltip(list);
+    }
+
+    public abstract void addAbilityTooltip(List list);
 }

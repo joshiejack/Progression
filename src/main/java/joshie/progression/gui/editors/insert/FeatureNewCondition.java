@@ -1,12 +1,12 @@
 package joshie.progression.gui.editors.insert;
 
-import joshie.progression.api.criteria.ICondition;
+import joshie.progression.api.criteria.IConditionProvider;
 import joshie.progression.gui.editors.GuiConditionEditor;
 import joshie.progression.handlers.APIHandler;
 
 import java.util.Collection;
 
-public class FeatureNewCondition extends FeatureNew<ICondition> {
+public class FeatureNewCondition extends FeatureNew<IConditionProvider> {
     public static final FeatureNewCondition INSTANCE = new FeatureNewCondition();
 
     public FeatureNewCondition() {
@@ -14,7 +14,7 @@ public class FeatureNewCondition extends FeatureNew<ICondition> {
     }
 
     @Override
-    public Collection<ICondition> getFields() {
+    public Collection<IConditionProvider> getFields() {
         return APIHandler.conditionTypes.values();
     }
 
@@ -24,8 +24,7 @@ public class FeatureNewCondition extends FeatureNew<ICondition> {
     }
 
     @Override
-    public void clone(ICondition provider) {
-        APIHandler.cloneCondition(trigger, provider);
-       // GuiConditionEditor.INSTANCE.initGui(); //Refresh the gui
+    public void clone(IConditionProvider provider) {
+        APIHandler.cloneCondition(GuiConditionEditor.INSTANCE.getTrigger(), provider);
     }
 }

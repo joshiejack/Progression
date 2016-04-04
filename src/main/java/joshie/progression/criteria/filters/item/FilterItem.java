@@ -2,6 +2,7 @@ package joshie.progression.criteria.filters.item;
 
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IField;
+import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.IItemGetterCallback;
 import joshie.progression.api.special.ISetterCallback;
@@ -12,12 +13,9 @@ import net.minecraft.item.ItemStack;
 
 import java.util.List;
 
+@ProgressionRule(name="itemOnly", color=0xFFCCCCCC)
 public class FilterItem extends FilterBaseItem implements IItemGetterCallback, ISetterCallback, ISpecialFieldProvider {
     public Item item = Items.beef;
-
-    public FilterItem() {
-        super("itemOnly", 0xFFCCCCCC);
-    }
 
     @Override
     public void addSpecialFields(List<IField> fields, DisplayMode mode) {

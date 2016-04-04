@@ -64,17 +64,17 @@ public class NBTHelper {
 		return nbt;
 	}
 	
-	public static interface ICollectionHelper {
+	public static interface ICollectionHelper<T> {
 		Collection getSet();
-		Object read(NBTTagList list, int i);
-		NBTBase write(Object s);
+		T read(NBTTagList list, int i);
+		NBTBase write(T s);
 	}
 	
-	public static interface IMapHelper {
-		Map getMap();
-		Object readKey(NBTTagCompound tag);
-		Object readValue(NBTTagCompound tag);
-		void writeKey(NBTTagCompound tag, Object o);
-		void writeValue(NBTTagCompound tag, Object o);
+	public static interface IMapHelper<K, V> {
+		Map<K, V> getMap();
+		void writeKey(NBTTagCompound tag, K o);
+		K readKey(NBTTagCompound tag);
+		V readValue(NBTTagCompound tag);
+		void writeValue(NBTTagCompound tag, V o);
 	}
 }

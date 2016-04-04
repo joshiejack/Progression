@@ -2,7 +2,7 @@ package joshie.progression.gui.fields;
 
 import joshie.progression.api.special.IGetterCallback;
 import joshie.progression.gui.core.DrawHelper;
-import joshie.progression.gui.editors.FeatureItemSelector.Position;
+import joshie.progression.api.gui.Position;
 import joshie.progression.gui.fields.FieldHelper.DoubleFieldHelper;
 import joshie.progression.gui.fields.FieldHelper.FloatFieldHelper;
 import joshie.progression.gui.fields.FieldHelper.IntegerFieldHelper;
@@ -50,7 +50,7 @@ public class TextField extends AbstractField {
         helper.drawSplitText(renderX, renderY, name + ": " + datatext, 4, yPos, 125, color, 0.75F);
     }
 
-    public static FieldHelper getField(String name, Object object, joshie.progression.gui.editors.FeatureItemSelector.Position type) {
+    public static FieldHelper getField(String name, Object object, Position type) {
         try {
             Class clazz = object.getClass().getField(name).getType();
             String className = clazz.getSimpleName();

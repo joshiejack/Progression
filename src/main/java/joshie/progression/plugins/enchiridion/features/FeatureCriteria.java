@@ -37,8 +37,8 @@ public abstract class FeatureCriteria extends FeatureProgression implements ISim
 
         try {
             for (ICriteria c : APIHandler.getCriteria().values()) {
-                String display = c.getDisplayName();
-                if (c.getDisplayName().equals(displayName)) {
+                String display = c.getLocalisedName();
+                if (c.getLocalisedName().equals(displayName)) {
                     criteria = c;
                     criteriaID = c.getUniqueID();
                     return;

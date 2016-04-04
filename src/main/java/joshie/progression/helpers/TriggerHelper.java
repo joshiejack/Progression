@@ -1,11 +1,11 @@
 package joshie.progression.helpers;
 
-import joshie.progression.api.criteria.ITrigger;
+import joshie.progression.api.criteria.ITriggerProvider;
 
 public class TriggerHelper {
-    public static int getInternalID(ITrigger trigger) {
+    public static int getInternalID(ITriggerProvider trigger) {
         for (int id = 0; id < trigger.getCriteria().getTriggers().size(); id++) {
-            ITrigger aTrigger = trigger.getCriteria().getTriggers().get(id);
+            ITriggerProvider aTrigger = trigger.getCriteria().getTriggers().get(id);
             if (aTrigger.equals(trigger)) return id;
         }
 

@@ -3,8 +3,8 @@ package joshie.progression.criteria.triggers;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IField;
 import joshie.progression.api.criteria.ITrigger;
+import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.*;
-import joshie.progression.items.ItemCriteria;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Achievement;
@@ -17,19 +17,16 @@ import org.apache.commons.lang3.text.WordUtils;
 
 import java.util.List;
 
-public class TriggerAchievement extends TriggerBaseBoolean implements IHasEventBus, IInit, ISpecialFieldProvider, IItemGetterCallback, IAdditionalTooltip {
+@ProgressionRule(name="achievement", color=0xFF00D9D9, meta="onReceivedAchiement")
+public class TriggerAchievement extends TriggerBaseBoolean implements IInit, ICustomWidth, ISpecialFieldProvider, IItemGetterCallback, IAdditionalTooltip {
     public String id = "openInventory";
     private transient Achievement achievement;
-
-    public TriggerAchievement() {
-        super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.onReceivedAchiement), "achievement", 0xFF00D9D9);
-    }
 
     @Override
     public ITrigger copy() {
         TriggerAchievement trigger = new TriggerAchievement();
         trigger.id = id;
-        return copyBase(copyBoolean(trigger));
+        return copyBoolean(trigger);
     }
 
     @Override
@@ -43,28 +40,18 @@ public class TriggerAchievement extends TriggerBaseBoolean implements IHasEventB
     }
 
     @Override
-    public ItemStack getItem(String fieldName) {
-        return achievement != null ? achievement.theItemStack : new ItemStack(Items.golden_hoe);
+    public int getWidth(DisplayMode mode) {
+        return mode == DisplayMode.EDIT ? 100 : 70;
     }
 
     @Override
     public void addSpecialFields(List<IField> fields, DisplayMode mode) {
         if (mode == DisplayMode.DISPLAY) fields.add(ProgressionAPI.fields.getItem(this, "id", 20, 42, 2F));
     }
-    
-    @SubscribeEvent
-    public void onAchievementGet(AchievementEvent event) {
-        ProgressionAPI.registry.fireTrigger(event.entityPlayer, getUnlocalisedName(), event.achievement);
-    }
 
     @Override
-    protected boolean isTrue(Object... data) {
-        return ((Achievement) data[0]).statId.equals("achievement." + id);
-    }
-
-    @Override
-    public int getWidth(DisplayMode mode) {
-        return mode == DisplayMode.EDIT ? super.getWidth(mode) : 70;
+    public ItemStack getItem(String fieldName) {
+        return achievement != null ? achievement.theItemStack : new ItemStack(Items.golden_hoe);
     }
 
     @Override
@@ -77,5 +64,15 @@ public class TriggerAchievement extends TriggerBaseBoolean implements IHasEventB
                 tooltip.add(s.trim());
             }
         }
+    }
+    
+    @SubscribeEvent
+    public void onAchievementGet(AchievementEvent event) {
+        ProgressionAPI.registry.fireTrigger(event.entityPlayer, getProvider().getUnlocalisedName(), event.achievement);
+    }
+
+    @Override
+    protected boolean isTrue(Object... data) {
+        return ((Achievement) data[0]).statId.equals("achievement." + id);
     }
 }

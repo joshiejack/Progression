@@ -1,6 +1,6 @@
 package joshie.progression.helpers;
 
-import joshie.progression.api.criteria.IFilter;
+import joshie.progression.api.criteria.IFilterProvider;
 import joshie.progression.api.criteria.IFilterType;
 import joshie.progression.gui.filters.FilterTypeBlock;
 import net.minecraft.block.Block;
@@ -71,23 +71,23 @@ public class ItemHelper {
         return block != null;
     }
 
-    public static ItemStack getRandomItem(IFilter filter) {
+    public static ItemStack getRandomItem(IFilterProvider filter) {
         if (shuffledItemsCache == null) shuffledItemsCache = new ArrayList(getCreativeItems());
         Collections.shuffle(shuffledItemsCache);
         for (ItemStack stack : shuffledItemsCache) {
-            if (filter.getType() != null && !filter.getType().isAcceptable(stack)) continue;
-            if (filter.matches(stack)) return stack;
+            if (filter.getProvided().getType() != null && !filter.getProvided().getType().isAcceptable(stack)) continue;
+            if (filter.getProvided().matches(stack)) return stack;
         }
 
         //In theory if set up correctly this should be no issue
         return null;
     }
 
-    public static ItemStack getRandomItem(List<IFilter> filters) {
+    public static ItemStack getRandomItem(List<IFilterProvider> filters) {
         return getRandomItem(filters, null);
     }
 
-    public static ItemStack getRandomItemOfSize(List<IFilter> filters, int stackSize) {
+    public static ItemStack getRandomItemOfSize(List<IFilterProvider> filters, int stackSize) {
         ItemStack item = getRandomItem(filters, null);
         if (item == null) return null;
         else item = item.copy();
@@ -95,19 +95,19 @@ public class ItemHelper {
         return item;
     }
 
-    public static ItemStack getRandomBlock(List<IFilter> filters) {
+    public static ItemStack getRandomBlock(List<IFilterProvider> filters) {
         return getRandomItem(filters, FilterTypeBlock.INSTANCE);
     }
 
-    public static ItemStack getRandomItem(List<IFilter> filters, IFilterType selector) {
-        ArrayList<IFilter> shuffledFilters = new ArrayList(filters);
+    public static ItemStack getRandomItem(List<IFilterProvider> filters, IFilterType selector) {
+        ArrayList<IFilterProvider> shuffledFilters = new ArrayList(filters);
         if (shuffledItemsCache == null) shuffledItemsCache = new ArrayList(getCreativeItems());
         Collections.shuffle(shuffledItemsCache);
         Collections.shuffle(shuffledFilters);
         for (ItemStack stack : shuffledItemsCache) {
             if (selector != null && !selector.isAcceptable(stack)) continue;
-            for (IFilter filter : shuffledFilters) {
-                if (filter.matches(stack)) return stack;
+            for (IFilterProvider filter : shuffledFilters) {
+                if (filter.getProvided().matches(stack)) return stack;
             }
         }
 
@@ -115,10 +115,10 @@ public class ItemHelper {
         return null;
     }
 
-    public static List<ItemStack> getAllMatchingItems(IFilter filter) {
+    public static List<ItemStack> getAllMatchingItems(IFilterProvider filter) {
         ArrayList<ItemStack> stacks = new ArrayList();
         for (ItemStack stack : getAllItems()) {
-            if (filter.matches(stack)) {
+            if (filter.getProvided().matches(stack)) {
                 stacks.add(stack.copy());
             }
         }
@@ -126,13 +126,13 @@ public class ItemHelper {
         return stacks;
     }
 
-    public static List<ItemStack> getMatches(IFilter filter) {
+    public static List<ItemStack> getMatches(IFilterProvider filter) {
         return ItemHelper.getAllMatchingItems(filter);
     }
 
-    public static List<ItemStack> getAllMatchingItems(List<IFilter> filters) {
+    public static List<ItemStack> getAllMatchingItems(List<IFilterProvider> filters) {
         ArrayList<ItemStack> stacks = new ArrayList();
-        for (IFilter filter : filters) {
+        for (IFilterProvider filter : filters) {
             stacks.addAll(getMatches(filter));
         }
 

@@ -2,7 +2,7 @@ package joshie.progression.network;
 
 import io.netty.buffer.ByteBuf;
 import joshie.progression.api.criteria.ICriteria;
-import joshie.progression.api.criteria.IReward;
+import joshie.progression.api.criteria.IRewardProvider;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.network.core.PenguinPacket;
 import net.minecraft.entity.player.EntityPlayer;
@@ -42,7 +42,7 @@ public class PacketClaimReward extends PenguinPacket {
 
     @Override
     public void handlePacket(EntityPlayer player) {
-        List<IReward> rewards = criteria.getRewards();
+        List<IRewardProvider> rewards = criteria.getRewards();
         if (rewards != null && rewards.size() > 0) {
             if (randomReward) Collections.shuffle(rewards);
             int selected = 0;
@@ -54,7 +54,7 @@ public class PacketClaimReward extends PenguinPacket {
                 }
             }
 
-            rewards.get(selected).reward((EntityPlayerMP)player);
+            rewards.get(selected).getProvided().reward((EntityPlayerMP)player);
         }
     }
 }

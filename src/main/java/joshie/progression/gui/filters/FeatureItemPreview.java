@@ -2,12 +2,12 @@ package joshie.progression.gui.filters;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import joshie.progression.api.criteria.IFilter;
+import joshie.progression.api.criteria.IFilterProvider;
 import joshie.progression.api.criteria.IFilterType;
+import joshie.progression.api.gui.Position;
 import joshie.progression.gui.core.FeatureAbstract;
 import joshie.progression.gui.core.GuiCore;
 import joshie.progression.gui.editors.FeatureItemSelector;
-import joshie.progression.gui.editors.FeatureItemSelector.Position;
 import joshie.progression.gui.editors.GuiFilterEditor;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL11;
@@ -63,8 +63,8 @@ public class FeatureItemPreview extends FeatureAbstract {
         if (GuiFilterEditor.INSTANCE.getField() == null) return; //NO UPDATES!!!
         sorted = new ArrayList();
         for (Object stack: getAllItems()) {
-            for (IFilter filter: GuiFilterEditor.INSTANCE.getField().getFilters()) {
-                if (filter.matches(stack)) {
+            for (IFilterProvider filter: GuiFilterEditor.INSTANCE.getField().getFilters()) {
+                if (filter.getProvided().matches(stack)) {
                     sorted.add(stack);
                 }
             }

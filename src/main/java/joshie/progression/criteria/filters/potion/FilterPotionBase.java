@@ -1,7 +1,7 @@
 package joshie.progression.criteria.filters.potion;
 
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.criteria.IFilter;
+import joshie.progression.api.criteria.IFilterProvider;
 import joshie.progression.api.criteria.IFilterType;
 import joshie.progression.criteria.filters.FilterBase;
 import net.minecraft.init.Items;
@@ -13,10 +13,6 @@ import java.util.*;
 public abstract class FilterPotionBase extends FilterBase {
     protected static final Random rand = new Random();
     protected static final List<PotionEffect> EMPTY = new ArrayList();
-
-    public FilterPotionBase(String name, int color) {
-        super(name, color);
-    }
 
     @Override
     public IFilterType getType() {
@@ -58,10 +54,10 @@ public abstract class FilterPotionBase extends FilterBase {
         return false;
     }
 
-    public static Collection<PotionEffect> getRandomEffects(List<IFilter> filters) {
+    public static Collection<PotionEffect> getRandomEffects(List<IFilterProvider> filters) {
         int size = filters.size();
         if (size == 0) return null;
-        if (size == 1) return (Collection<PotionEffect>) filters.get(0).getRandom(null);
+        if (size == 1) return (Collection<PotionEffect>) filters.get(0).getProvided().getRandom(null);
         else {
             return (Collection<PotionEffect>) filters.get(rand.nextInt(size));
         }

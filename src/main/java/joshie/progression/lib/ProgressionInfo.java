@@ -12,7 +12,7 @@ public class ProgressionInfo {
     public static final String ASMPATH = "joshie/progression/";
     public static final String VERSION = "@VERSION@";
     public static final String BOOKPATH = "progression:textures/books/";
-    public static final String FILTER = "joshie.progression.api.criteria.IFilter";
+    public static final String FILTER = "joshie.progression.api.criteria.IFilterProvider";
     
     @SideOnly(Side.CLIENT)
     public static final ResourceLocation textures = new ResourceLocation(MODPATH, "textures/gui/textures.png");

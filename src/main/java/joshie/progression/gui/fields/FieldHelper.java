@@ -1,13 +1,13 @@
 package joshie.progression.gui.fields;
 
-import java.lang.reflect.Field;
-
+import joshie.progression.api.gui.Position;
 import joshie.progression.api.special.IInit;
 import joshie.progression.api.special.ISetterCallback;
 import joshie.progression.gui.editors.FeatureFullTextEditor;
 import joshie.progression.gui.editors.ITextEditable;
-import joshie.progression.gui.editors.FeatureItemSelector.Position;
 import net.minecraft.item.ItemStack;
+
+import java.lang.reflect.Field;
 
 public class FieldHelper implements ITextEditable {
     public Position type;

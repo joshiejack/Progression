@@ -2,14 +2,18 @@ package joshie.progression.gui.editors;
 
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.IField;
-import joshie.progression.api.criteria.IFieldProvider;
-import joshie.progression.api.criteria.IReward;
+import joshie.progression.api.criteria.IRuleProvider;
+import joshie.progression.api.criteria.IRewardProvider;
 import joshie.progression.api.gui.ICustomDrawGuiDisplay;
 import joshie.progression.api.gui.ICustomDrawGuiEditor;
+import joshie.progression.api.gui.Position;
 import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.IEnum;
 import joshie.progression.api.special.ISpecialFieldProvider;
-import joshie.progression.gui.core.*;
+import joshie.progression.gui.core.DrawHelper;
+import joshie.progression.gui.core.FeatureAbstract;
+import joshie.progression.gui.core.FeatureTooltip;
+import joshie.progression.gui.core.IGuiFeature;
 import joshie.progression.gui.editors.insert.FeatureNew;
 import joshie.progression.gui.fields.BooleanField;
 import joshie.progression.gui.fields.EnumField;
@@ -30,16 +34,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static joshie.progression.api.gui.Position.BOTTOM;
+import static joshie.progression.api.gui.Position.TOP;
 import static joshie.progression.api.special.DisplayMode.DISPLAY;
 import static joshie.progression.api.special.DisplayMode.EDIT;
-import static joshie.progression.gui.editors.FeatureItemSelector.Position.BOTTOM;
-import static joshie.progression.gui.editors.FeatureItemSelector.Position.TOP;
 
-public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
+public class FeatureDrawable<T extends IRuleProvider> extends FeatureAbstract {
     protected static final Theme theme = Theme.INSTANCE;
     private int color;
-    private List<IFieldProvider> drawable;
-    private HashMap<IFieldProvider, List<IField>> fieldsMap;
+    private List<IRuleProvider> drawable;
+    private HashMap<IRuleProvider, List<IField>> fieldsMap;
     private IGuiFeature newDrawable;
     private int gradient1, gradient2, fontColor;
     private int offsetY;
@@ -60,16 +64,18 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
         this.color = color;
     }
 
-    private int ticker = 0;
-
-    private List<IField> getFields(IFieldProvider provider) {
+    private List<IField> getFields(IRuleProvider provider) {
         if (fieldsMap.containsKey(provider)) return fieldsMap.get(provider);
         else {
             List<IField> fields = new ArrayList();
-            if (mode == EDIT) addFieldsViaReflection(provider, fields);
+            if (mode == EDIT) {
+                addFieldsViaReflection(provider, fields);
+                addFieldsViaReflection(provider.getProvided(), fields);
+            }
+
             boolean hideitemfields = false;
-            if (provider instanceof ISpecialFieldProvider) {
-                ISpecialFieldProvider special = (ISpecialFieldProvider) provider;
+            if (provider.getProvided() instanceof ISpecialFieldProvider) {
+                ISpecialFieldProvider special = (ISpecialFieldProvider) provider.getProvided();
                 special.addSpecialFields(fields, mode);
             }
 
@@ -78,8 +84,8 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
         }
     }
 
-    private void addFieldsViaReflection(IFieldProvider provider, List<IField> fields) {
-        FeatureItemSelector.Position type = provider instanceof IReward ? TOP : BOTTOM;
+    private void addFieldsViaReflection(Object provider, List<IField> fields) {
+        Position type = provider instanceof IRewardProvider ? TOP : BOTTOM;
         for (Field field : provider.getClass().getFields()) {
             try {
                 if (field.getType() == boolean.class) fields.add(new BooleanField(field.getName(), provider));
@@ -92,14 +98,7 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
         }
     }
 
-    protected void drawingDraw(IFieldProvider drawing, DrawHelper helper, int renderX, int renderY, int mouseX, int mouseY) {
-        //For updating the render ticker
-        ticker++;
-        if (ticker == 0 || ticker >= 200) {
-            drawing.updateDraw();
-            ticker = 1;
-        }
-
+    protected void drawingDraw(IRuleProvider drawing, DrawHelper helper, int renderX, int renderY, int mouseX, int mouseY) {
         int width = drawing.getWidth(mode) - 1;
         helper.drawGradient(renderX, renderY, 1, 2, width, 15, drawing.getColor(), gradient1, gradient2);
         helper.drawText(renderX, renderY, drawing.getLocalisedName(), 6, 6, fontColor);
@@ -150,7 +149,7 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
     @Override
     public void drawFeature(int mouseX, int mouseY) {
         int offsetX = 0;
-        for (IFieldProvider drawing: drawable) {
+        for (IRuleProvider drawing: drawable) {
             int mouseOffsetX = mouseX - offset.getGui().getOffsetX() - offsetX;
             int mouseOffsetY = mouseY - this.offsetY;
             if ((drawing.isVisible() && mode == DISPLAY) || mode == EDIT) {
@@ -193,7 +192,7 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
         }
     }
 
-    private boolean drawingMouseClicked(IFieldProvider provider, int mouseX, int mouseY, int button) {
+    private boolean drawingMouseClicked(IRuleProvider provider, int mouseX, int mouseY, int button) {
         ICustomDrawGuiEditor editor = provider instanceof ICustomDrawGuiEditor ? ((ICustomDrawGuiEditor) provider) : null;
         if (editor == null || (editor != null && !editor.hideDefaultEditor())) {
             int yStart = 18;
@@ -207,7 +206,7 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
                 int yPos = yStart + (index * 6);
                 if (mouseX >= 1 && mouseX <= provider.getWidth(mode) - 1) {
                     if (mouseY >= yPos && mouseY < yPos + 6) {
-                        t.click();
+                        t.click(button);
 
                         //Update the item preview when selecting toggling something
                         FeatureItemPreview.INSTANCE.updateSearch();
@@ -238,7 +237,7 @@ public class FeatureDrawable<T extends IFieldProvider> extends FeatureAbstract {
         if (FeatureItemSelector.INSTANCE.isVisible()) return false; //If the item selector is visible, don't process clicks
         if (FeatureNew.IS_OPEN) return false;
         int offsetX = 0;
-        for (IFieldProvider provider: drawable) {
+        for (IRuleProvider provider: drawable) {
             if (!provider.isVisible() && mode == DISPLAY) continue;
             int mouseOffsetX = mouseX - offset.getGui().getOffsetX() - offsetX;
             int mouseOffsetY = mouseY - this.offsetY;

@@ -2,8 +2,8 @@ package joshie.progression.helpers;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import joshie.progression.api.criteria.IFieldProvider;
-import joshie.progression.api.criteria.IFilter;
+import joshie.progression.api.criteria.IFilterProvider;
+import joshie.progression.api.criteria.IRule;
 import joshie.progression.api.special.IEnum;
 import joshie.progression.api.special.ISpecialJSON;
 import joshie.progression.handlers.APIHandler;
@@ -20,7 +20,6 @@ import java.util.List;
 
 public class JSONHelper {
     public static Enum getEnum(JsonObject data, String string, Enum default_) {
-        System.out.println("FETCHING ENUM");
         if (data.get("enum:" + string) != null) {
             try {
                 return Enum.valueOf((Class)default_.getClass(), getString(data, "enum:" + string, default_.name()));
@@ -182,15 +181,15 @@ public class JSONHelper {
         }
     }
 
-    public static List<IFilter> getItemFilters(JsonObject data, String name) {
-        ArrayList<IFilter> filters = new ArrayList();
+    public static List<IFilterProvider> getItemFilters(JsonObject data, String name, IRule master) {
+        ArrayList<IFilterProvider> filters = new ArrayList();
         if (data.get(name) == null) return filters;
         JsonArray array = data.get(name).getAsJsonArray();
         for (int i = 0; i < array.size(); i++) {
             JsonObject object = array.get(i).getAsJsonObject();
             String typeName = object.get("type").getAsString();
             JsonObject typeData = object.get("data").getAsJsonObject();
-            IFilter filter = APIHandler.newFilter(typeName, typeData);
+            IFilterProvider filter = APIHandler.newFilter(master.getProvider(), typeName, typeData);
             if (filter != null) {
                 filters.add(filter);
             }
@@ -199,14 +198,14 @@ public class JSONHelper {
         return filters;
     }
 
-    public static void setItemFilters(JsonObject data, String name, List<IFilter> filters) {
+    public static void setItemFilters(JsonObject data, String name, List<IFilterProvider> filters) {
         JsonArray array = new JsonArray();
-        for (IFilter filter : filters) {
-            if (filter == null) continue;
+        for (IFilterProvider provider : filters) {
+            if (provider == null) continue;
             JsonObject object = new JsonObject();
-            object.addProperty("type", filter.getUnlocalisedName());
+            object.addProperty("type", provider.getUnlocalisedName());
             JsonObject typeData = new JsonObject();
-            writeJSON(typeData, filter);
+            writeJSON(typeData, provider.getProvided());
             object.add("data", typeData);
             array.add(object);
         }
@@ -214,51 +213,51 @@ public class JSONHelper {
         data.add(name, array);
     }
 
-    private static void readEnum(JsonObject json, Field field, IFieldProvider object, Enum dflt) throws IllegalArgumentException, IllegalAccessException {
+    private static void readEnum(JsonObject json, Field field, Object object, Enum dflt) throws IllegalArgumentException, IllegalAccessException {
         field.set(object, getEnum(json, field.getName(), dflt));
     }
 
-    private static void readBoolean(JsonObject json, Field field, IFieldProvider object, boolean dflt) throws IllegalArgumentException, IllegalAccessException {
+    private static void readBoolean(JsonObject json, Field field, IRule object, boolean dflt) throws IllegalArgumentException, IllegalAccessException {
         field.set(object, getBoolean(json, field.getName(), dflt));
     }
 
-    private static void readString(JsonObject json, Field field, IFieldProvider object, String dflt) throws IllegalArgumentException, IllegalAccessException {
+    private static void readString(JsonObject json, Field field, IRule object, String dflt) throws IllegalArgumentException, IllegalAccessException {
         field.set(object, getString(json, field.getName(), dflt));
     }
 
-    private static void readInteger(JsonObject json, Field field, IFieldProvider object, int dflt) throws IllegalArgumentException, IllegalAccessException {
+    private static void readInteger(JsonObject json, Field field, IRule object, int dflt) throws IllegalArgumentException, IllegalAccessException {
         field.set(object, getInteger(json, field.getName(), dflt));
     }
 
-    private static void readFloat(JsonObject json, Field field, IFieldProvider object, float dflt) throws IllegalArgumentException, IllegalAccessException {
+    private static void readFloat(JsonObject json, Field field, IRule object, float dflt) throws IllegalArgumentException, IllegalAccessException {
         field.set(object, getFloat(json, field.getName(), dflt));
     }
 
-    private static void readDouble(JsonObject json, Field field, IFieldProvider object, double dflt) throws IllegalArgumentException, IllegalAccessException {
+    private static void readDouble(JsonObject json, Field field, IRule object, double dflt) throws IllegalArgumentException, IllegalAccessException {
         field.set(object, getDouble(json, field.getName(), dflt));
     }
 
-    private static void readItemFilters(JsonObject json, Field field, IFieldProvider object) throws IllegalArgumentException, IllegalAccessException {
-        field.set(object, getItemFilters(json, field.getName()));
+    private static void readItemFilters(JsonObject json, Field field, IRule object) throws IllegalArgumentException, IllegalAccessException {
+        field.set(object, getItemFilters(json, field.getName(), object));
     }
 
-    private static void readItemStack(JsonObject json, Field field, IFieldProvider object, ItemStack dflt) throws IllegalArgumentException, IllegalAccessException {
+    private static void readItemStack(JsonObject json, Field field, IRule object, ItemStack dflt) throws IllegalArgumentException, IllegalAccessException {
         field.set(object, getItemStack(json, field.getName(), dflt));
     }
 
-    private static void readItem(JsonObject json, Field field, IFieldProvider object, Item dflt) throws IllegalArgumentException, IllegalAccessException {
+    private static void readItem(JsonObject json, Field field, IRule object, Item dflt) throws IllegalArgumentException, IllegalAccessException {
         field.set(object, getItem(json, field.getName(), dflt));
     }
 
-    private static void readBlock(JsonObject json, Field field, IFieldProvider object, Block dflt) throws IllegalArgumentException, IllegalAccessException {
+    private static void readBlock(JsonObject json, Field field, IRule object, Block dflt) throws IllegalArgumentException, IllegalAccessException {
         field.set(object, getBlock(json, field.getName(), dflt));
     }
 
-    private static void readNBT(JsonObject json, Field field, IFieldProvider object, NBTTagCompound dflt) throws IllegalArgumentException, IllegalAccessException {
+    private static void readNBT(JsonObject json, Field field, IRule object, NBTTagCompound dflt) throws IllegalArgumentException, IllegalAccessException {
         field.set(object, getNBT(json, field.getName(), dflt));
     }
 
-    public static void readVariables(JsonObject json, IFieldProvider provider) {
+    public static void readVariables(JsonObject json, IRule provider) {
         try {
             for (Field field : provider.getClass().getFields()) {
                 Object defaultValue = field.get(provider);
@@ -277,54 +276,54 @@ public class JSONHelper {
         } catch (Exception e) {}
     }
 
-    private static void writeEnum(JsonObject json, Field field, Object object, Enum dflt) throws IllegalArgumentException, IllegalAccessException {
+    private static void writeEnum(JsonObject json, Field field, IRule object, Enum dflt) throws IllegalArgumentException, IllegalAccessException {
         setEnum(json, field.getName(), (Enum) field.get(object), dflt);
     }
 
-    private static void writeBoolean(JsonObject json, Field field, Object object, boolean dflt) throws IllegalArgumentException, IllegalAccessException {
+    private static void writeBoolean(JsonObject json, Field field, IRule object, boolean dflt) throws IllegalArgumentException, IllegalAccessException {
         setBoolean(json, field.getName(), (Boolean) field.get(object), dflt);
     }
 
-    private static void writeString(JsonObject json, Field field, Object object, String dflt) throws IllegalArgumentException, IllegalAccessException {
+    private static void writeString(JsonObject json, Field field, IRule object, String dflt) throws IllegalArgumentException, IllegalAccessException {
         setString(json, field.getName(), (String) field.get(object), dflt);
     }
 
-    private static void writeInteger(JsonObject json, Field field, Object object, int dflt) throws IllegalArgumentException, IllegalAccessException {
+    private static void writeInteger(JsonObject json, Field field, IRule object, int dflt) throws IllegalArgumentException, IllegalAccessException {
         setInteger(json, field.getName(), (Integer) field.get(object), dflt);
     }
 
-    private static void writeFloat(JsonObject json, Field field, Object object, float dflt) throws IllegalArgumentException, IllegalAccessException {
+    private static void writeFloat(JsonObject json, Field field, IRule object, float dflt) throws IllegalArgumentException, IllegalAccessException {
         setFloat(json, field.getName(), (Float) field.get(object), dflt);
     }
 
-    private static void writeDouble(JsonObject json, Field field, Object object, double dflt) throws IllegalArgumentException, IllegalAccessException {
+    private static void writeDouble(JsonObject json, Field field, IRule object, double dflt) throws IllegalArgumentException, IllegalAccessException {
         setDouble(json, field.getName(), (Double) field.get(object), dflt);
     }
 
-    private static void writeItemFilters(JsonObject json, Field field, Object object) throws IllegalArgumentException, IllegalAccessException {
-        setItemFilters(json, field.getName(), (List<IFilter>) field.get(object));
+    private static void writeItemFilters(JsonObject json, Field field, IRule object) throws IllegalArgumentException, IllegalAccessException {
+        setItemFilters(json, field.getName(), (List<IFilterProvider>) field.get(object));
     }
 
-    private static void writeItemStack(JsonObject json, Field field, Object object, ItemStack dflt) throws IllegalArgumentException, IllegalAccessException {
+    private static void writeItemStack(JsonObject json, Field field, IRule object, ItemStack dflt) throws IllegalArgumentException, IllegalAccessException {
         setItemStack(json, field.getName(), (ItemStack) field.get(object), dflt);
     }
 
-    private static void writeItem(JsonObject json, Field field, Object object, Item dflt) throws IllegalArgumentException, IllegalAccessException {
+    private static void writeItem(JsonObject json, Field field, IRule object, Item dflt) throws IllegalArgumentException, IllegalAccessException {
         setItem(json, field.getName(), (Item) field.get(object), dflt);
     }
 
-    private static void writeBlock(JsonObject json, Field field, Object object, Block dflt) throws IllegalArgumentException, IllegalAccessException {
+    private static void writeBlock(JsonObject json, Field field, IRule object, Block dflt) throws IllegalArgumentException, IllegalAccessException {
         setBlock(json, field.getName(), (Block) field.get(object), dflt);
     }
 
-    private static void writeNBT(JsonObject json, Field field, Object object, NBTTagCompound dflt) throws IllegalArgumentException, IllegalAccessException {
+    private static void writeNBT(JsonObject json, Field field, IRule object, NBTTagCompound dflt) throws IllegalArgumentException, IllegalAccessException {
         setNBT(json, field.getName(), (NBTTagCompound) field.get(object), dflt);
     }
 
-    public static void writeVariables(JsonObject json, IFieldProvider object) {
+    public static void writeVariables(JsonObject json, IRule object) {
         try {
             for (Field field : object.getClass().getFields()) {
-                Object defaultValue = field.get(APIHandler.getDefault(object));
+                Object defaultValue = field.get(APIHandler.getDefault(object).getProvided());
                 if (object instanceof IEnum && ((IEnum)object).isEnum(field.getName())) writeEnum(json, field, object, (Enum) defaultValue);
                 if (field.getType() == boolean.class) writeBoolean(json, field, object, (Boolean) defaultValue);
                 if (field.getType() == String.class) writeString(json, field, object, (String) defaultValue);
@@ -337,10 +336,10 @@ public class JSONHelper {
                 if (field.getType() == NBTTagCompound.class) writeNBT(json, field, object, (NBTTagCompound) defaultValue);
                 if (field.getGenericType().toString().equals("java.util.List<" + ProgressionInfo.FILTER + ">")) writeItemFilters(json, field, object);
             }
-        } catch (Exception e) {}
+        } catch (Exception e) { e.printStackTrace(); }
     }
 
-    public static void readJSON(JsonObject data, IFieldProvider provider) {
+    public static void readJSON(JsonObject data, IRule provider) {
         boolean specialOnly = false;
         if (provider instanceof ISpecialJSON) {
             ISpecialJSON special = ((ISpecialJSON) provider);
@@ -351,7 +350,7 @@ public class JSONHelper {
         if (!specialOnly) JSONHelper.readVariables(data, provider);
     }
 
-    public static void writeJSON(JsonObject data, IFieldProvider provider) {
+    public static void writeJSON(JsonObject data, IRule provider) {
         boolean specialOnly = false;
         if (provider instanceof ISpecialJSON) {
             ISpecialJSON special = ((ISpecialJSON) provider);

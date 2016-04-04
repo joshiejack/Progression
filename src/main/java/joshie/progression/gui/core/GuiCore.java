@@ -336,10 +336,10 @@ public class GuiCore extends GuiScreen {
     }
 
     public void drawTexture(ResourceLocation resource, int left, int top, int u, int v, int width, int height) {
-        GlStateManager.color(1F, 1F, 1F); //Fix Colours
         mc.getTextureManager().bindTexture(resource);
         top = screenTop + top; //Adjust for the screenHeight
         drawTexturedModalRect(left, top, u, v, width, height);
+        GlStateManager.color(1F, 1F, 1F); //Fix Colours
     }
 
     public void drawLine(int left, int top, int right, int bottom, int thickness, int color) {

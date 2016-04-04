@@ -3,9 +3,9 @@ package joshie.progression.criteria.triggers;
 import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.ITrigger;
-import joshie.progression.api.special.ICancelable;
+import joshie.progression.api.criteria.ProgressionRule;
+import joshie.progression.api.special.ICustomDescription;
 import joshie.progression.api.special.IInit;
-import joshie.progression.items.ItemCriteria;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
@@ -14,18 +14,14 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.UUID;
 
-public class TriggerChat extends TriggerBaseBoolean implements IInit, ICancelable {
+@ProgressionRule(name="chat", color=0xFFCC6600, meta="onSentMessage")
+public class TriggerChat extends TriggerBaseBoolean implements IInit, ICustomDescription {
     private String matchString;
     private boolean matchBoth;
     private boolean matchFront;
     private boolean matchBack;
 
     public String toMatch = "*help*";
-    public boolean cancel = false;
-
-    public TriggerChat() {
-        super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.onSentMessage), "chat", 0xFFCC6600);
-    }
 
     @Override
     public ITrigger copy() {
@@ -35,8 +31,12 @@ public class TriggerChat extends TriggerBaseBoolean implements IInit, ICancelabl
         trigger.matchFront = matchFront;
         trigger.matchBack = matchBack;
         trigger.toMatch = toMatch;
-        trigger.cancel = cancel;
-        return copyBase(copyBoolean(trigger));
+        return copyBoolean(trigger);
+    }
+
+    @Override
+    public String getDescription() {
+        return Progression.format(getProvider().getUnlocalisedName() + ".description", toMatch);
     }
 
     @Override
@@ -49,19 +49,9 @@ public class TriggerChat extends TriggerBaseBoolean implements IInit, ICancelabl
         matchString = toMatch.replaceAll("\\*", "");
     }
 
-    @Override
-    public boolean isCanceling() {
-        return cancel;
-    }
-
-    @Override
-    public void setCanceling(boolean isCanceled) {
-        cancel = isCanceled;
-    }
-
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onCommandSend(ServerChatEvent event) {
-        if (ProgressionAPI.registry.fireTrigger((EntityPlayer) event.player.getCommandSenderEntity(), getUnlocalisedName(), event.message) == Result.DENY) {
+        if (ProgressionAPI.registry.fireTrigger((EntityPlayer) event.player.getCommandSenderEntity(), getProvider().getUnlocalisedName(), event.message) == Result.DENY) {
             event.setCanceled(true);
         }
     }
@@ -80,10 +70,5 @@ public class TriggerChat extends TriggerBaseBoolean implements IInit, ICancelabl
         else if (!matchFront && matchBack && matchString.startsWith(text)) return true;
         else if (matchString.equals(text)) return true;
         else return false;
-    }
-
-    @Override
-    public String getTriggerDescription() {
-        return Progression.format(getUnlocalisedName() + ".description", toMatch);
     }
 }

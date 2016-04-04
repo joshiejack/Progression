@@ -7,10 +7,6 @@ import joshie.progression.criteria.filters.FilterBase;
 import net.minecraft.item.ItemStack;
 
 public abstract class FilterBaseCrafting extends FilterBase {
-    public FilterBaseCrafting(String string, int color) {
-        super(string, color);
-    }
-
     @Override
     public boolean matches(Object object) {
         if (!(object instanceof ItemStack)) return false;

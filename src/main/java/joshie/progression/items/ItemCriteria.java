@@ -39,7 +39,8 @@ public class ItemCriteria extends Item {
         criteria, claim, book, edit, booleanValue, clearInventory, clearOrReceiveOrBlockCriteria, fallResistance,
         ifCriteriaCompleted, ifDayOrNight, ifHasAchievement, ifHasBoolean, ifHasPoints, ifIsAtCoordinates,
         ifIsBiome, ifRandom, onChangeDimension, onLogin, onReceivedAchiement, onReceivedBoolean,
-        onReceivedPoints, onSecond, onSentMessage, points, speed, showTab, showLayer, sun, moon;
+        onReceivedPoints, onSecond, onSentMessage, points, speed, showTab, showLayer, sun, moon, stepAssist,
+        attackPlayer, onGUIChange;
     }
 
     public static CreativeTabs tab;
@@ -88,7 +89,7 @@ public class ItemCriteria extends Item {
     public String getItemStackDisplayName(ItemStack stack) {
         if (stack.getItemDamage() == ItemMeta.criteria.ordinal()) {
             ICriteria criteria = getCriteriaFromStack(stack);
-            return criteria == null ? "BROKEN ITEM" : criteria.getDisplayName();
+            return criteria == null ? "BROKEN ITEM" : criteria.getLocalisedName();
         } else return Progression.translate("item." + ItemMeta.values()[Math.min(ItemMeta.values().length - 1, stack.getItemDamage())].name());
     }
 

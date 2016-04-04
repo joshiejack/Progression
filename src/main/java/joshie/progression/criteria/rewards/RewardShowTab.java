@@ -3,29 +3,25 @@ package joshie.progression.criteria.rewards;
 import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.ITab;
+import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.event.TabVisibleEvent;
-import joshie.progression.api.special.IGetterCallback;
-import joshie.progression.api.special.IHasEventBus;
-import joshie.progression.api.special.IInit;
-import joshie.progression.api.special.IStoreNBTData;
+import joshie.progression.api.special.*;
 import joshie.progression.handlers.APIHandler;
-import joshie.progression.items.ItemCriteria;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.UUID;
 
-public class RewardShowTab extends RewardBaseAbility implements IStoreNBTData, IHasEventBus, IInit, IGetterCallback {
+@ProgressionRule(name="tab.show", color=0xFFCCCCCC, meta="showTab")
+public class RewardShowTab extends RewardBaseSingular implements IInit, IGetterCallback, IStoreNBTData, IHasEventBus  {
     public boolean hideByDefault = true;
     public String displayName = "";
     private UUID tabID = UUID.randomUUID();
     private ITab tab;
-
-    public RewardShowTab() {
-        super(ItemCriteria.getStackFromMeta(ItemCriteria.ItemMeta.showTab), "tab.show", 0xFFCCCCCC);
-    }
 
     @Override
     public void init() {
@@ -41,8 +37,23 @@ public class RewardShowTab extends RewardBaseAbility implements IStoreNBTData, I
         } catch (Exception e) {}
     }
 
-    public ITab getAssignedTab() {
-        return APIHandler.getTabFromName(tabID);
+
+    @Override
+    public String getDescription() {
+        if (tab != null) {
+            String end = hideByDefault ? "show" : "hide";
+            return Progression.format("reward.layer.show.description." + end, tab.getDisplayName());
+        } else return "Invalid Book setup";
+    }
+
+    @Override
+    public String getField(String fieldName) {
+        return tab != null ? EnumChatFormatting.GREEN + displayName : EnumChatFormatting.RED + displayName;
+    }
+
+    @Override
+    public EventBus getEventBus() {
+        return MinecraftForge.EVENT_BUS;
     }
 
     @SubscribeEvent
@@ -72,11 +83,6 @@ public class RewardShowTab extends RewardBaseAbility implements IStoreNBTData, I
     }
 
     @Override
-    public String getField(String fieldName) {
-        return tab != null ? EnumChatFormatting.GREEN + displayName : EnumChatFormatting.RED + displayName;
-    }
-
-    @Override
     public void reward(EntityPlayerMP player) {
         if (tab == null) return; //Do not give the reward
 
@@ -86,13 +92,5 @@ public class RewardShowTab extends RewardBaseAbility implements IStoreNBTData, I
         else tag.setBoolean(tab.getUniqueID().toString(), true);
 
         ProgressionAPI.player.setCustomData(player, "progression.tab.hidden", tag);
-    }
-
-    @Override
-    public String getDescription() {
-        if (tab != null) {
-            String end = hideByDefault ? "show" : "hide";
-            return Progression.format("reward.layer.show.description." + end, tab.getDisplayName());
-        } else return "Invalid Book setup";
     }
 }

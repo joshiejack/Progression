@@ -1,5 +1,6 @@
 package joshie.progression.criteria.filters.location;
 
+import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.IHasEventBus;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.lib.WorldLocation;
@@ -16,11 +17,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import java.util.HashMap;
 import java.util.UUID;
 
+@ProgressionRule(name="playerBroken", color=0xFFBBBBBB)
 public class FilterPlayerLastBroken extends FilterLocationBase implements IHasEventBus {
-    public FilterPlayerLastBroken() {
-        super("playerBroken", 0xFFBBBBBB);
-    }
-
     private static final HashMap<UUID, BlockPos> cache = new HashMap();
 
     @SubscribeEvent(priority = EventPriority.LOWEST)

@@ -4,6 +4,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.IFilterType;
+import joshie.progression.api.gui.Position;
 import joshie.progression.gui.core.FeatureAbstract;
 import joshie.progression.gui.filters.FeatureItemPreview;
 import joshie.progression.gui.filters.FilterTypeItem;
@@ -27,16 +28,6 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
 
     public IItemSelectable getEditable() {
         return selectable;
-    }
-
-    public static enum Position {
-        TOP(0), BOTTOM(95);
-
-        public int yOffset;
-
-        private Position(int offset) {
-            this.yOffset = offset;
-        }
     }
 
     public void select(IFilterType filter, IItemSelectable selectable, Position type) {

@@ -186,8 +186,8 @@ public class JSONLoader {
 
                 if (criteria.triggers != null) {
                     for (DataTrigger trigger: criteria.triggers) {
-                        ITrigger iTrigger = APIHandler.newTrigger(theCriteria, trigger.uuid, trigger.type, trigger.data);
-                        if (trigger.conditions != null) {
+                        ITriggerProvider iTrigger = APIHandler.newTrigger(theCriteria, trigger.uuid, trigger.type, trigger.data);
+                        if (trigger.conditions != null && iTrigger != null) {
                             for (DataGeneric generic : trigger.conditions) {
                                 APIHandler.newCondition(iTrigger, generic.uuid, generic.type, generic.data);
                             }
@@ -257,35 +257,37 @@ public class JSONLoader {
         //Now that everything has been loaded in, we should go and init all the data
         for (ITab tab : APIHandler.getTabs().values()) {
             for (ICriteria criteria: tab.getCriteria()) {
-                for (ITrigger trigger: criteria.getTriggers()) {
+                for (ITriggerProvider provider: criteria.getTriggers()) {
+                    ITrigger trigger = provider.getProvided();
                     if (trigger instanceof IInit) ((IInit)trigger).init();
                     if (trigger instanceof IHasFilters) {
-                        for (IFilter filter: ((IHasFilters)trigger).getAllFilters()) {
-                            if (filter instanceof IInit) ((IInit)filter).init();
+                        for (IFilterProvider filter: ((IHasFilters)trigger).getAllFilters()) {
+                            if (filter.getProvided() instanceof IInit) ((IInit)filter.getProvided()).init();
                         }
                     }
                     
                     EventsManager.onAdded(trigger);
                     
-                    for (ICondition condition: trigger.getConditions()) {
+                    for (IConditionProvider conditionProvider: provider.getConditions()) {
+                        ICondition condition = conditionProvider.getProvided();
                         if (condition instanceof IInit) ((IInit)condition).init();
                         if (condition instanceof IHasFilters) {
-                            for (IFilter filter: ((IHasFilters)condition).getAllFilters()) {
-                                if (filter instanceof IInit) ((IInit)filter).init();
+                            for (IFilterProvider filter: ((IHasFilters)condition).getAllFilters()) {
+                                if (filter.getProvided() instanceof IInit) ((IInit)filter.getProvided()).init();
                             }
                         }
                     }
                  }
                 
-                for (IReward reward: criteria.getRewards()) {
-                    if (reward instanceof IInit) ((IInit)reward).init();
-                    if (reward instanceof IHasFilters) {
-                        for (IFilter filter: ((IHasFilters)reward).getAllFilters()) {
-                            if (filter instanceof IInit) ((IInit)filter).init();
+                for (IRewardProvider provider: criteria.getRewards()) {
+                    if (provider.getProvided() instanceof IInit) ((IInit)provider.getProvided()).init();
+                    if (provider.getProvided() instanceof IHasFilters) {
+                        for (IFilterProvider filter: ((IHasFilters)provider.getProvided()).getAllFilters()) {
+                            if (filter.getProvided() instanceof IInit) ((IInit)filter.getProvided()).init();
                         }
                     }
                     
-                    EventsManager.onAdded(reward);
+                    EventsManager.onAdded(provider.getProvided());
                 }
             }
         }
@@ -330,46 +332,49 @@ public class JSONLoader {
                 data.displayAchievement = c.displayAchievement();
                 data.repeatable = c.getRepeatAmount();
                 data.infinite = c.canRepeatInfinite();
-                data.displayName = c.getDisplayName();
+                data.displayName = c.getLocalisedName();
                 data.tasksRequired = c.getTasksRequired();
                 data.allTasks = c.getIfRequiresAllTasks();
                 data.rewardsGiven = c.getAmountOfRewards();
                 data.allRewards = c.givesAllRewards();
-                if (Options.debugMode) Progression.logger.log(Level.INFO, "Saved the display name " + c.getDisplayName());
+                if (Options.debugMode) Progression.logger.log(Level.INFO, "Saved the display name " + c.getLocalisedName());
                 data.uuid = c.getUniqueID();
                 data.displayStack = StackHelper.getStringFromStack(c.getIcon());
-                List<ITrigger> triggers = c.getTriggers();
-                List<IReward> rewards = c.getRewards();
+                List<ITriggerProvider> triggers = c.getTriggers();
+                List<IRewardProvider> rewards = c.getRewards();
                 List<ICriteria> prereqs = c.getPreReqs();
                 List<ICriteria> conflicts = c.getConflicts();
 
                 ArrayList<DataTrigger> theTriggers = new ArrayList();
                 ArrayList<DataGeneric> theRewards = new ArrayList();
                 if (triggers.size() > 0) {
-                    for (ITrigger trigger : triggers) {
+                    for (ITriggerProvider provider : triggers) {
                         ArrayList<DataGeneric> theConditions = null;
-                        if (trigger.getConditions().size() > 0) {
+                        if (provider.getConditions().size() > 0) {
                             theConditions = new ArrayList();
-                            for (ICondition condition : trigger.getConditions()) {
+                            for (IConditionProvider conditionProvider : provider.getConditions()) {
                                 JsonObject conditionData = new JsonObject();
-                                JSONHelper.writeJSON(conditionData, condition);
-                                DataGeneric dCondition = new DataGeneric(condition.getUniqueID(), condition.getUnlocalisedName(), conditionData);
+                                conditionProvider.writeToJSON(conditionData);
+                                JSONHelper.writeJSON(conditionData, conditionProvider.getProvided());
+                                DataGeneric dCondition = new DataGeneric(conditionProvider.getUniqueID(), conditionProvider.getUnlocalisedName(), conditionData);
                                 theConditions.add(dCondition);
                             }
                         }
 
                         JsonObject triggerData = new JsonObject();
-                        JSONHelper.writeJSON(triggerData, trigger);
-                        DataTrigger dTrigger = new DataTrigger(trigger.getUniqueID(), trigger.getUnlocalisedName(), triggerData, theConditions);
+                        provider.writeToJSON(triggerData);
+                        JSONHelper.writeJSON(triggerData, provider.getProvided());
+                        DataTrigger dTrigger = new DataTrigger(provider.getUniqueID(), provider.getUnlocalisedName(), triggerData, theConditions);
                         theTriggers.add(dTrigger);
                     }
                 }
 
                 if (rewards.size() > 0) {
-                    for (IReward reward : rewards) {
+                    for (IRewardProvider provider : rewards) {
                         JsonObject rewardData = new JsonObject();
-                        JSONHelper.writeJSON(rewardData, reward);
-                        DataGeneric dReward = new DataGeneric(reward.getUniqueID(), reward.getUnlocalisedName(), rewardData);
+                        provider.writeToJSON(rewardData);
+                        JSONHelper.writeJSON(rewardData, provider.getProvided());
+                        DataGeneric dReward = new DataGeneric(provider.getUniqueID(), provider.getUnlocalisedName(), rewardData);
                         theRewards.add(dReward);
                     }
                 }

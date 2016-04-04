@@ -1,17 +1,12 @@
 package joshie.progression.criteria.triggers;
 
 import joshie.progression.api.special.IStoreTriggerData;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.UUID;
 
 public abstract class TriggerBaseBoolean extends TriggerBase implements IStoreTriggerData {
     protected transient boolean value;
-
-    public TriggerBaseBoolean(ItemStack stack, String name, int color) {
-        super(stack, name, color);
-    }
 
     @Override
     public boolean isCompleted() {
@@ -24,19 +19,7 @@ public abstract class TriggerBaseBoolean extends TriggerBase implements IStoreTr
         return true;
     }
 
-    public TriggerBaseBoolean copyBoolean(TriggerBaseBoolean trigger) {
-        trigger.value = value;
-        return trigger;
-    }
-
-    protected boolean isTrue(Object... data) {
-        return false;
-    }
-
-    protected void markTrue() {
-        value = true;
-    }
-
+    @Override
     public int getPercentage() {
         return value ? 100: 0;
     }
@@ -49,5 +32,19 @@ public abstract class TriggerBaseBoolean extends TriggerBase implements IStoreTr
     @Override
     public void writeDataToNBT(NBTTagCompound tag) {
         tag.setBoolean("Value", value);
+    }
+
+    //Helper Methods
+    public TriggerBaseBoolean copyBoolean(TriggerBaseBoolean trigger) {
+        trigger.value = value;
+        return trigger;
+    }
+
+    protected boolean isTrue(Object... data) {
+        return false;
+    }
+
+    protected void markTrue() {
+        value = true;
     }
 }
