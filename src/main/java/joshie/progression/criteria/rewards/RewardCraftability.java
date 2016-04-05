@@ -86,7 +86,6 @@ public class RewardCraftability extends RewardBaseItemFilter implements ICustomD
                 }
             }
 
-            
             CraftingRegistry.removeRequirement(type, getProvider().getCriteria(), filters);
         }
     }

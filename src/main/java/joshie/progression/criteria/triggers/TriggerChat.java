@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.UUID;
 
-@ProgressionRule(name="chat", color=0xFFCC6600, meta="onSentMessage")
+@ProgressionRule(name = "chat", color = 0xFFCC6600, meta = "onSentMessage", cancelable = true)
 public class TriggerChat extends TriggerBaseBoolean implements IInit, ICustomDescription {
     private String matchString;
     private boolean matchBoth;

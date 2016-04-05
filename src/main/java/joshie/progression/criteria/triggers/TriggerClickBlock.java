@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-@ProgressionRule(name="clickBlock", color=0xFF69008C)
+@ProgressionRule(name = "clickBlock", color = 0xFF69008C, cancelable = true)
 public class TriggerClickBlock extends TriggerBaseBlock {
     @Override
     public ITrigger copy() {
