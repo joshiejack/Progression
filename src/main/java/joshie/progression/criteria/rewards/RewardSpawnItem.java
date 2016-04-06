@@ -2,7 +2,10 @@ package joshie.progression.criteria.rewards;
 
 import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.criteria.*;
+import joshie.progression.api.criteria.IField;
+import joshie.progression.api.criteria.IFilterProvider;
+import joshie.progression.api.criteria.IFilterType;
+import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.*;
 import joshie.progression.gui.fields.ItemFilterField;
 import joshie.progression.gui.filters.FilterTypeItem;
@@ -11,7 +14,9 @@ import joshie.progression.helpers.ItemHelper;
 import joshie.progression.helpers.SpawnItemHelper;
 import joshie.progression.lib.WorldLocation;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
@@ -22,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ProgressionRule(name="spawnItem", color=0xFFE599FF)
-public class RewardSpawnItem extends RewardBaseItemFilter implements ICustomDescription, ICustomWidth, ICustomTooltip, IHasFilters, ISpecialFieldProvider {
+public class RewardSpawnItem extends RewardBaseItemFilter implements ICustomDescription, ICustomWidth, ICustomTooltip, IHasFilters, ISpecialFieldProvider, IRequestItem {
     public List<IFilterProvider> locations = new ArrayList();
     public int stackSize = 1;
 
@@ -76,9 +81,14 @@ public class RewardSpawnItem extends RewardBaseItemFilter implements ICustomDesc
 
         return null;
     }
-    
+
     @Override
-    public void reward(EntityPlayerMP player) {
+    public ItemStack getRequestedStack() {
+        return ItemHelper.getRandomItemOfSize(filters, stackSize);
+    }
+
+    @Override
+    public void reward(EntityPlayer player, ItemStack stack) {
         boolean notspawned = true;
         for (int j = 0; j < 10 && notspawned; j++) {
             WorldLocation location = WorldLocation.getRandomLocationFromFilters(locations, player);
@@ -87,11 +97,16 @@ public class RewardSpawnItem extends RewardBaseItemFilter implements ICustomDesc
                 if (player.worldObj.isBlockLoaded(pos)) {
                     if (isValidLocation(player.worldObj, pos)) {
                         notspawned = false;
-                        SpawnItemHelper.spawnItem(player.worldObj, pos.getX(), pos.getY(), pos.getZ(), ItemHelper.getRandomItemOfSize(filters, stackSize));
+                        SpawnItemHelper.spawnItem(player.worldObj, pos.getX(), pos.getY(), pos.getZ(), stack);
                     }
                 }
             }
         }
+    }
+
+    @Override
+    public void reward(EntityPlayerMP player) {
+        ProgressionAPI.registry.requestItem(this, player);
     }
 
     //Helper Methods

@@ -14,11 +14,26 @@ public abstract class FilterBaseBlock extends FilterBase {
         return ItemHelper.getRandomItem(this.getProvider());
     }
 
+    public static Block getBlock(ItemStack check) {
+        return isBlock(check) ? Block.getBlockFromItem(check.getItem()) : null;
+    }
+
+    private static boolean isBlock(ItemStack stack) {
+        Block block = null;
+        int meta = 0;
+        try {
+            block = Block.getBlockFromItem(stack.getItem());
+            meta = stack.getItemDamage();
+        } catch (Exception e) {}
+
+        return block != null;
+    }
+
     @Override
     public boolean matches(Object object) {
         if (!(object instanceof ItemStack)) return false;
         ItemStack check = (ItemStack) object;
-        Block block = ItemHelper.getBlock(check);
+        Block block = getBlock(check);
         int meta = 0;
         
         try {

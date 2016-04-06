@@ -6,6 +6,7 @@ import joshie.progression.api.IProgressionAPI;
 import joshie.progression.api.criteria.*;
 import joshie.progression.api.special.IHasFilters;
 import joshie.progression.api.special.IInit;
+import joshie.progression.api.special.IRequestItem;
 import joshie.progression.crafting.ActionType;
 import joshie.progression.criteria.*;
 import joshie.progression.criteria.rewards.RewardHurt;
@@ -15,6 +16,7 @@ import joshie.progression.helpers.JSONHelper;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.network.PacketFireTrigger;
 import joshie.progression.network.PacketHandler;
+import joshie.progression.network.PacketRequestItem;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -25,6 +27,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.*;
+
+import static com.sun.media.jfxmediaimpl.AudioClipProvider.getProvider;
 
 public class APIHandler implements IProgressionAPI {
     //Caches
@@ -351,9 +355,8 @@ public class APIHandler implements IProgressionAPI {
     }
 
     @Override
-    public boolean canObtainFromAction(String actionType, ItemStack stack, Object tileOrPlayer) {
-        ActionType type = ActionType.getCraftingActionFromName(actionType);
-        return CraftingHelper.canPerformActionAbstract(type, tileOrPlayer, stack);
+    public void requestItem(IRequestItem reward, EntityPlayer player) {
+        PacketHandler.sendToClient(new PacketRequestItem(reward.getProvider().getUniqueID()), player);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package joshie.progression.api;
 
 import joshie.progression.api.criteria.*;
+import joshie.progression.api.special.IRequestItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
@@ -28,6 +29,10 @@ public interface IProgressionAPI {
      *  Then use the ICustomDataBuilder to build your objects again from the data you passed,
      *  Keep note that */
     public void fireTriggerClientside(String trigger, Object... data);
+
+    /** Call this on rewards that need access to an item
+     *  These rewards should implement IRequestItem **/
+    public void requestItem(IRequestItem reward, EntityPlayer player);
     
     /** Register an ICustomDataBuilder
      *  Keep in mind you need to pass the same string
@@ -39,15 +44,7 @@ public interface IProgressionAPI {
     
     /** Register a damage source **/
     public void registerDamageSource(DamageSource source);
-    
-    /** Convenience method for calling, which calls the crafting events
-     *  @param     the type of action, either furnace or crafting normally, could be breakBlock
-     *             if you wish to call this from a new machine, register it
-     *             on startup with the method above.
-     *  @param     the stack you are attempting to craft/use/whatever
-     *  @param     either a player, or a tile entity **/
-    public boolean canObtainFromAction(String actionType, ItemStack stack, Object tileOrPlayer);
-    
+
     /** Similiar to above, but this is whether the item can be used to perform, the action
      *  e.g. for crafting it would be whether you can use the item for crafting, or with blocks
      *  it's whether you can use x item to harvest a block.

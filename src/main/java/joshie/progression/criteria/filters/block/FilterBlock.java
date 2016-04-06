@@ -7,7 +7,6 @@ import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.IItemGetterCallback;
 import joshie.progression.api.special.ISetterCallback;
 import joshie.progression.api.special.ISpecialFieldProvider;
-import joshie.progression.helpers.ItemHelper;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -36,7 +35,7 @@ public class FilterBlock extends FilterBaseBlock implements IItemGetterCallback,
     @Override
     public boolean setField(String fieldName, Object stack) {
         try {
-            filterBlock = ItemHelper.getBlock(((ItemStack) stack));
+            filterBlock = getBlock(((ItemStack) stack));
         } catch (Exception e) {}
 
         return true;

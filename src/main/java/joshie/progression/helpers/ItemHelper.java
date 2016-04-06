@@ -3,7 +3,6 @@ package joshie.progression.helpers;
 import joshie.progression.api.criteria.IFilterProvider;
 import joshie.progression.api.criteria.IFilterType;
 import joshie.progression.gui.filters.FilterTypeBlock;
-import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -17,6 +16,7 @@ public class ItemHelper {
     private static final ArrayList<ItemStack> itemsWithoutInventory = new ArrayList();
     private static final ArrayList<ItemStack> itemsWithInventory = new ArrayList();
     private static ArrayList<ItemStack> shuffledItemsCache;
+
 
     static {
         Iterator iterator = Item.itemRegistry.iterator();
@@ -54,21 +54,6 @@ public class ItemHelper {
                 }
             }
         }
-    }
-
-    public static Block getBlock(ItemStack check) {
-        return isBlock(check) ? Block.getBlockFromItem(check.getItem()) : null;
-    }
-
-    private static boolean isBlock(ItemStack stack) {
-        Block block = null;
-        int meta = 0;
-        try {
-            block = Block.getBlockFromItem(stack.getItem());
-            meta = stack.getItemDamage();
-        } catch (Exception e) {}
-
-        return block != null;
     }
 
     public static ItemStack getRandomItem(IFilterProvider filter) {
@@ -113,29 +98,5 @@ public class ItemHelper {
 
         //In theory if set up correctly this should be no issue
         return null;
-    }
-
-    public static List<ItemStack> getAllMatchingItems(IFilterProvider filter) {
-        ArrayList<ItemStack> stacks = new ArrayList();
-        for (ItemStack stack : getAllItems()) {
-            if (filter.getProvided().matches(stack)) {
-                stacks.add(stack.copy());
-            }
-        }
-
-        return stacks;
-    }
-
-    public static List<ItemStack> getMatches(IFilterProvider filter) {
-        return ItemHelper.getAllMatchingItems(filter);
-    }
-
-    public static List<ItemStack> getAllMatchingItems(List<IFilterProvider> filters) {
-        ArrayList<ItemStack> stacks = new ArrayList();
-        for (IFilterProvider filter : filters) {
-            stacks.addAll(getMatches(filter));
-        }
-
-        return stacks;
     }
 }

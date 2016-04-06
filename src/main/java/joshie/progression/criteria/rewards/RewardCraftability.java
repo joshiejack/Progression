@@ -85,8 +85,6 @@ public class RewardCraftability extends RewardBaseItemFilter implements ICustomD
                     bus.getEventBus().unregister(bus);
                 }
             }
-
-            CraftingRegistry.removeRequirement(type, getProvider().getCriteria(), filters);
         }
     }
 

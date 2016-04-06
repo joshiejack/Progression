@@ -2,8 +2,12 @@ package joshie.progression.criteria.rewards;
 
 import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.criteria.*;
+import joshie.progression.api.criteria.IField;
+import joshie.progression.api.criteria.IFilterProvider;
+import joshie.progression.api.criteria.IFilterType;
+import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.*;
+import joshie.progression.criteria.filters.block.FilterBaseBlock;
 import joshie.progression.gui.fields.ItemFilterField;
 import joshie.progression.gui.fields.ItemFilterFieldPreview;
 import joshie.progression.gui.filters.FilterTypeBlock;
@@ -11,6 +15,7 @@ import joshie.progression.gui.filters.FilterTypeLocation;
 import joshie.progression.helpers.ItemHelper;
 import joshie.progression.lib.WorldLocation;
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
@@ -21,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ProgressionRule(name="placeBlock", color=0xFF00680A)
-public class RewardPlaceBlock extends RewardBaseItemFilter implements ICustomDescription, ICustomWidth, ICustomTooltip, ISpecialFieldProvider {
+public class RewardPlaceBlock extends RewardBaseItemFilter implements ICustomDescription, ICustomWidth, ICustomTooltip, ISpecialFieldProvider, IRequestItem {
     public List<IFilterProvider> locations = new ArrayList();
     protected transient IField field;
 
@@ -75,15 +80,23 @@ public class RewardPlaceBlock extends RewardBaseItemFilter implements ICustomDes
     }
 
     @Override
-    public void reward(EntityPlayerMP player) {
+    public ItemStack getRequestedStack() {
+        return ItemHelper.getRandomBlock(filters);
+    }
+
+    @Override
+    public void reward(EntityPlayer player, ItemStack stack) {
         WorldLocation location = WorldLocation.getRandomLocationFromFilters(locations, player);
         if (location != null) {
             World world = DimensionManager.getWorld(location.dimension);
-
-            ItemStack stack = ItemHelper.getRandomBlock(filters);
-            Block block = ItemHelper.getBlock(stack);
+            Block block = FilterBaseBlock.getBlock(stack);
             int damage = stack.getItemDamage();
             world.setBlockState(location.pos, block.getStateFromMeta(damage));
         }
+    }
+
+    @Override
+    public void reward(EntityPlayerMP player) {
+        ProgressionAPI.registry.requestItem(this, player);
     }
 }

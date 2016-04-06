@@ -1,6 +1,7 @@
 package joshie.progression.criteria.rewards;
 
 import joshie.progression.Progression;
+import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IField;
 import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.*;
@@ -10,6 +11,7 @@ import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.SpawnItemHelper;
 import joshie.progression.network.PacketHandler;
 import joshie.progression.network.PacketRewardItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
@@ -17,7 +19,7 @@ import net.minecraft.util.EnumChatFormatting;
 import java.util.List;
 
 @ProgressionRule(name="item", color=0xFFE599FF)
-public class RewardItem extends RewardBaseItemFilter implements ICustomDisplayName, ICustomDescription, ICustomWidth, ICustomTooltip, ISpecialFieldProvider, IStackSizeable {
+public class RewardItem extends RewardBaseItemFilter implements ICustomDisplayName, ICustomDescription, ICustomWidth, ICustomTooltip, ISpecialFieldProvider, IStackSizeable, IRequestItem {
     public int stackSize = 1;
 
     @Override
@@ -53,11 +55,20 @@ public class RewardItem extends RewardBaseItemFilter implements ICustomDisplayNa
     }
 
     @Override
-    public void reward(EntityPlayerMP player) {
-        ItemStack stack = ItemHelper.getRandomItemOfSize(filters, stackSize);
+    public ItemStack getRequestedStack() {
+        return ItemHelper.getRandomItemOfSize(filters, stackSize);
+    }
+
+    @Override
+    public void reward(EntityPlayer player, ItemStack stack) {
         if (stack != null) {
             PacketHandler.sendToClient(new PacketRewardItem(stack.copy()), (EntityPlayerMP) player);
             SpawnItemHelper.addToPlayerInventory(player, stack.copy());
         }
+    }
+
+    @Override
+    public void reward(EntityPlayerMP player) {
+        ProgressionAPI.registry.requestItem(this, player);
     }
 }

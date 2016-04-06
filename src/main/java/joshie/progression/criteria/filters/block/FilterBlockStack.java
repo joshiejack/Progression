@@ -6,7 +6,6 @@ import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.IInit;
 import joshie.progression.api.special.ISpecialFieldProvider;
-import joshie.progression.helpers.ItemHelper;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -23,7 +22,7 @@ public class FilterBlockStack extends FilterBaseBlock implements ISpecialFieldPr
     @Override
     public void init() {
         try {
-            filterBlock = ItemHelper.getBlock(stack);
+            filterBlock = getBlock(stack);
             filterMeta = filterBlock.getMetaFromState(filterBlock.getStateFromMeta((stack).getItemDamage()));
         } catch (Exception e) {}
     }
