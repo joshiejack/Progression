@@ -69,16 +69,9 @@ public class APIHandler implements IProgressionAPI {
 
     public static void resetAPIHandler() {
         serverCache = new APICache();
-        clientCache = new APICache();
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static APICache getClientCache() {
-        return clientCache;
-    }
-
-    public static APICache getServerCache() {
-        return serverCache;
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+            clientCache = new APICache();
+        }
     }
 
     public static APICache getCache() {

@@ -1,16 +1,16 @@
 package joshie.progression.handlers;
 
+import joshie.progression.ItemProgression.ItemMeta;
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.*;
 import joshie.progression.helpers.StackHelper;
-import joshie.progression.ItemProgression.ItemMeta;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.discovery.ASMDataTable.ASMData;
-import org.apache.logging.log4j.Level;
 
 import javax.annotation.Nonnull;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,7 +19,7 @@ public class RuleLoader {
     public static void registerRules(@Nonnull ASMDataTable asmDataTable) {
         Class annotationClass = ProgressionRule.class;
         String annotationClassName = annotationClass.getCanonicalName();
-        Set<ASMData> asmDatas = asmDataTable.getAll(annotationClassName);
+        Set<ASMData> asmDatas = new HashSet<ASMData>(asmDataTable.getAll(annotationClassName));
         for (ASMDataTable.ASMData asmData : asmDatas) {
             try {
                 Class<?> asmClass = Class.forName(asmData.getClassName());
@@ -33,7 +33,10 @@ public class RuleLoader {
                 int color = (Integer) data.get("color");
                 String icon = (String) data.get("icon");
                 String meta = (String) data.get("meta");
-                boolean isCancelable = (Boolean) data.get("cancelable");
+                boolean isCancelable = false;
+                if (data.get("cancelable") != null) {
+                    isCancelable = (Boolean) data.get("cancelable");
+                }
 
                 ItemStack stack = StackHelper.getStackFromString(icon);
                 if (stack == null) stack = new ItemStack(Progression.item);
@@ -58,11 +61,7 @@ public class RuleLoader {
                 } else if (instance instanceof IFilter) {
                     APIHandler.registerFilterType(instance, name, color);
                 }
-
-
-            } catch (Exception e) {
-                Progression.logger.log(Level.ERROR, "Failed to load: {}", asmData.getClassName(), e);
-            }
+            } catch (Exception e) { e.printStackTrace(); }
         }
     }
 }

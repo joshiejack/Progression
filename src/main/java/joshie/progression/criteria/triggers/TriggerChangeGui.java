@@ -10,10 +10,13 @@ import joshie.progression.helpers.ChatHelper;
 import net.minecraft.client.gui.Gui;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @ProgressionRule(name="openContainer", color=0xFFFFFF00, meta="onGUIChange")
 public class TriggerChangeGui extends TriggerBaseBoolean implements ICustomDescription, ICustomWidth {
     private static boolean DEBUG = false;
+    @SideOnly(Side.CLIENT)
     private static Gui lastGui;
 
     public String className = "joshie.progression.gui.core.GuiCore";
@@ -39,6 +42,7 @@ public class TriggerChangeGui extends TriggerBaseBoolean implements ICustomDescr
         return mode == DisplayMode.EDIT ? 100 : displayWidth;
     }
 
+    @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onEvent(GuiOpenEvent event) {
         if (lastGui != event.gui) {

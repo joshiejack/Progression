@@ -10,13 +10,14 @@ import joshie.progression.api.special.IInit;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.handlers.EventsManager;
 import joshie.progression.handlers.RemappingHandler;
+import joshie.progression.helpers.FileHelper;
 import joshie.progression.helpers.JSONHelper;
 import joshie.progression.helpers.StackHelper;
 import joshie.progression.lib.CriteriaNotFoundException;
-import joshie.progression.lib.ProgressionInfo;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.io.FileUtils;
@@ -62,11 +63,7 @@ public class JSONLoader {
     public static String getClientTabJsonData() {
         DefaultSettings loader = null;
         try {
-            File file = new File("config" + File.separator + ProgressionInfo.MODPATH + File.separator + serverName + File.separator + "criteria.json");
-            if (!file.getParentFile().exists()) {
-                file.getParentFile().mkdir();
-            }
-
+            File file = FileHelper.getCriteriaFile(serverName, true);
             if (!file.exists()) {
                 return "";
             } else {
@@ -79,47 +76,22 @@ public class JSONLoader {
         }
     }
 
-    public static DefaultSettings getTabs() {
+    public static DefaultSettings getServerTabData() {
         DefaultSettings loader = null;
         try {
-            File fileNew = new File("config" + File.separator + ProgressionInfo.MODPATH + File.separator + RemappingHandler.getHostName() + File.separator + "criteria.json");
-            File fileOld = new File("config" + File.separator + ProgressionInfo.MODPATH + File.separator + "criteria.json"); //Attempt to copy from the ssp or smp folders
-            boolean sspToSmpConversion = false;
-            if (!RemappingHandler.getHostName().equals("ssp")) { //Only copy from the ssp folder if we're a live server
-                if (!fileOld.exists()) {
-                    fileOld = new File("config" + File.separator + ProgressionInfo.MODPATH + File.separator + "ssp" + File.separator + "criteria.json");
-                    sspToSmpConversion = true;
-                }
-            }
-
-            if (fileOld.exists()) { //If we still have the old file
-                if (!fileNew.exists()) {
-                    FileUtils.copyFile(fileOld, fileNew); //Copy it to it's new directory
-                }
-
-                fileOld.delete(); //And then delete the old one
-                if (sspToSmpConversion) { //Delete the folder if we're converting from ssp to smp
-                    fileOld.getParentFile().delete();
-                }
-            }
-
-            //Make the directory if it doesn't exist yet
-            if (!fileNew.getParentFile().exists()) {
-                fileNew.getParentFile().mkdir();
-            }
-
-            if (!fileNew.exists()) {
+            File file = FileHelper.getCriteriaFile(RemappingHandler.getHostName(), false);
+            if (!file.exists()) {
                 loader = new DefaultSettings().setDefaults();
                 String json = gson.toJson(loader);
                 serverHashcode = json.hashCode();
                 serverTabJsonData = splitStringEvery(json, MAX_LENGTH);
-                if (Options.debugMode) Progression.logger.log(Level.INFO, "Writing to the file is being done at getTabs(");
-                Writer writer = new OutputStreamWriter(new FileOutputStream(fileNew), "UTF-8");
+                if (Options.debugMode) Progression.logger.log(Level.INFO, "Writing to the file is being done at getServerTabData(");
+                Writer writer = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
                 writer.write(json);
                 writer.close();
                 return loader;
             } else {
-                String json = FileUtils.readFileToString(fileNew);
+                String json = FileUtils.readFileToString(file);
                 serverHashcode = json.hashCode();
                 serverTabJsonData = splitStringEvery(json, MAX_LENGTH);
                 return gson.fromJson(json, DefaultSettings.class);
@@ -140,7 +112,7 @@ public class JSONLoader {
             if (create) {
                 if (Options.debugMode) Progression.logger.log(Level.INFO, "Writing to the file is being done at setTabsAndCriteriaFromString");
                 //Attempt to write
-                File file = new File("config" + File.separator + ProgressionInfo.MODPATH + File.separator + serverName + File.separator + "criteria.json");
+                File file = FileHelper.getCriteriaFile(serverName, true);
                 Writer writer = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
                 writer.write(json);
                 writer.close();
@@ -294,7 +266,7 @@ public class JSONLoader {
     }
 
     public static void saveJSON(DefaultSettings toSave) {
-        File file = new File("config" + File.separator + ProgressionInfo.MODPATH + File.separator + serverName + File.separator + "criteria.json");
+        File file = FileHelper.getCriteriaFile(serverName, FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT); //Even when saving on the client, force it to always save to the criteria.json
         try {
             if (Options.debugMode) Progression.logger.log(Level.INFO, "Writing to the file is being done at saveJSON");
             Writer writer = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");

@@ -15,7 +15,7 @@ import net.minecraftforge.fml.relauncher.Side;
 public class PacketReload extends PacketAction {
     @Override
     public void handlePacket(EntityPlayer player) {
-        PacketReload.handle(JSONLoader.getTabs());
+        PacketReload.handle(JSONLoader.getServerTabData());
     }
 
     public static void handle(DefaultSettings settings) {

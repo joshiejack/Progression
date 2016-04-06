@@ -15,7 +15,7 @@ public class CommandReload extends AbstractCommand {
     public boolean processCommand(ICommandSender sender, String[] parameters) {
         if (sender.getEntityWorld().isRemote) {
             PacketHandler.sendToServer(new PacketReload());
-        } else PacketReload.handle(JSONLoader.getTabs());
+        } else PacketReload.handle(JSONLoader.getServerTabData());
 
         return true;
     }

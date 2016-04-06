@@ -2,10 +2,10 @@ package joshie.progression;
 
 import joshie.progression.commands.CommandManager;
 import joshie.progression.handlers.RemappingHandler;
+import joshie.progression.helpers.FileHelper;
 import joshie.progression.helpers.ModLogHelper;
 import joshie.progression.json.JSONLoader;
 import joshie.progression.json.Options;
-import joshie.progression.lib.ProgressionInfo;
 import joshie.progression.player.PlayerSavedData;
 import joshie.progression.plugins.enchiridion.EnchiridionSupport;
 import net.minecraft.command.ICommandManager;
@@ -50,6 +50,7 @@ public class Progression {
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        FileHelper.root = new File(event.getModConfigurationDirectory(), MODPATH);
         ModLogHelper.log("enchiridion", "The more that you read, the more things you will know. The more that you learn, the more places you'll go.");
         //ModLogHelper.log("Mariculture", "Just Keep Swimming...");
         
@@ -59,12 +60,7 @@ public class Progression {
         } catch (ClassNotFoundException e) {}
 
         /** Create the config directory **/
-        File root = new File("config" + File.separator + ProgressionInfo.MODPATH);
-        if (!root.exists()) {
-            root.mkdir();
-        }
-
-        Options.init(new Configuration(new File(root, "options.cfg")));
+        Options.init(new Configuration(FileHelper.getOptions()));
         
         proxy.preInit(event.getAsmData());
         proxy.initClient();
@@ -92,7 +88,7 @@ public class Progression {
 
         
         //Remap all relevant data
-        RemappingHandler.reloadServerData(JSONLoader.getTabs());
+        RemappingHandler.reloadServerData(JSONLoader.getServerTabData());
         
         World world = MinecraftServer.getServer().worldServers[0];
         data = (PlayerSavedData) world.loadItemData(PlayerSavedData.class, MODNAME);
