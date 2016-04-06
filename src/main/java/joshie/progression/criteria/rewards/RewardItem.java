@@ -3,6 +3,7 @@ package joshie.progression.criteria.rewards;
 import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IField;
+import joshie.progression.api.criteria.IFilterProvider;
 import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.*;
 import joshie.progression.gui.fields.ItemFilterFieldPreview;
@@ -62,8 +63,13 @@ public class RewardItem extends RewardBaseItemFilter implements ICustomDisplayNa
     @Override
     public void reward(EntityPlayer player, ItemStack stack) {
         if (stack != null) {
-            PacketHandler.sendToClient(new PacketRewardItem(stack.copy()), (EntityPlayerMP) player);
-            SpawnItemHelper.addToPlayerInventory(player, stack.copy());
+            for (IFilterProvider filter: filters) {
+                if (filter.getProvided().matches(stack)) {
+                    PacketHandler.sendToClient(new PacketRewardItem(stack.copy()), (EntityPlayerMP) player);
+                    SpawnItemHelper.addToPlayerInventory(player, stack.copy());
+                    return;
+                }
+            }
         }
     }
 

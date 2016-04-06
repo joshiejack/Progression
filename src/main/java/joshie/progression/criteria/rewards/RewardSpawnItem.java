@@ -89,15 +89,22 @@ public class RewardSpawnItem extends RewardBaseItemFilter implements ICustomDesc
 
     @Override
     public void reward(EntityPlayer player, ItemStack stack) {
-        boolean notspawned = true;
-        for (int j = 0; j < 10 && notspawned; j++) {
-            WorldLocation location = WorldLocation.getRandomLocationFromFilters(locations, player);
-            if (location != null) {
-                BlockPos pos = new BlockPos(location.pos);
-                if (player.worldObj.isBlockLoaded(pos)) {
-                    if (isValidLocation(player.worldObj, pos)) {
-                        notspawned = false;
-                        SpawnItemHelper.spawnItem(player.worldObj, pos.getX(), pos.getY(), pos.getZ(), stack);
+        if (stack != null) {
+            for (IFilterProvider filter: filters) {
+                if (filter.getProvided().matches(stack)) {
+                    for (int j = 0; j < 10; j++) {
+                        WorldLocation location = WorldLocation.getRandomLocationFromFilters(locations, player);
+                        if (location != null) {
+                            BlockPos pos = new BlockPos(location.pos);
+                            if (player.worldObj.isBlockLoaded(pos)) {
+                                if (isValidLocation(player.worldObj, pos)) {
+                                    SpawnItemHelper.spawnItem(player.worldObj, pos.getX(), pos.getY(), pos.getZ(), stack);
+
+                                    //RETURN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                                    return;
+                                }
+                            }
+                        }
                     }
                 }
             }

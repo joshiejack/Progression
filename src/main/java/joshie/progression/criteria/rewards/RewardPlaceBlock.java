@@ -86,13 +86,23 @@ public class RewardPlaceBlock extends RewardBaseItemFilter implements ICustomDes
 
     @Override
     public void reward(EntityPlayer player, ItemStack stack) {
-        WorldLocation location = WorldLocation.getRandomLocationFromFilters(locations, player);
-        if (location != null) {
-            World world = DimensionManager.getWorld(location.dimension);
-            Block block = FilterBaseBlock.getBlock(stack);
-            int damage = stack.getItemDamage();
-            world.setBlockState(location.pos, block.getStateFromMeta(damage));
+        if (stack != null) {
+            for (IFilterProvider filter: filters) {
+                if (filter.getProvided().matches(stack)) {
+                    WorldLocation location = WorldLocation.getRandomLocationFromFilters(locations, player);
+                    if (location != null) {
+                        World world = DimensionManager.getWorld(location.dimension);
+                        Block block = FilterBaseBlock.getBlock(stack);
+                        int damage = stack.getItemDamage();
+                        world.setBlockState(location.pos, block.getStateFromMeta(damage));
+                        return;
+                    }
+                }
+            }
         }
+
+
+
     }
 
     @Override
