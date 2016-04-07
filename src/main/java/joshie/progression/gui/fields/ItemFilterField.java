@@ -1,6 +1,7 @@
 package joshie.progression.gui.fields;
 
 import joshie.progression.Progression;
+import joshie.progression.api.criteria.IFilter;
 import joshie.progression.api.criteria.IFilterProvider;
 import joshie.progression.api.criteria.IFilterType;
 import joshie.progression.api.special.DisplayMode;
@@ -38,8 +39,11 @@ public class ItemFilterField extends AbstractField {
             } catch (Exception e1) {}
         }
 
+
         if (object instanceof IHasFilters) {
             selector = ((IHasFilters) object).getFilterForField(getFieldName());
+        } else if (object instanceof IFilter) {
+            selector = ((IFilter)object).getType();
         } else selector = FilterTypeItem.INSTANCE;
     }
 

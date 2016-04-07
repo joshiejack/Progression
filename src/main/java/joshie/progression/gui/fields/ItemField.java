@@ -1,5 +1,6 @@
 package joshie.progression.gui.fields;
 
+import joshie.progression.api.criteria.IFilter;
 import joshie.progression.api.criteria.IFilterProvider;
 import joshie.progression.api.criteria.IFilterType;
 import joshie.progression.api.gui.Position;
@@ -39,7 +40,9 @@ public class ItemField extends AbstractField implements IItemSelectable {
         this.mouseY1 = y - 2;
         this.mouseY2 = (int) (y + 15 * scale);
 
-        if (object instanceof IFilterProvider) {
+        if (object instanceof IFilter) {
+            this.filter = ((IFilter)object).getType();
+        } else if (object instanceof IFilterProvider) {
             this.filter = ((IFilterProvider)object).getProvided().getType();
         } else if (object instanceof IHasFilters) {
             this.filter = ((IHasFilters) object).getFilterForField(fieldName);

@@ -100,9 +100,6 @@ public class RewardPlaceBlock extends RewardBaseItemFilter implements ICustomDes
                 }
             }
         }
-
-
-
     }
 
     @Override
