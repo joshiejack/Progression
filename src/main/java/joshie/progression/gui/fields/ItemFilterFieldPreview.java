@@ -63,9 +63,10 @@ public class ItemFilterFieldPreview extends ItemFilterField implements IField {
 
             if (hovered) {
                 List<String> tooltip = new ArrayList();
-                tooltip.addAll(getStack(hovered).getTooltip(MCClientHelper.getPlayer(), false));
+                ItemStack stack = getStack(hovered);
+                tooltip.addAll(stack.getTooltip(MCClientHelper.getPlayer(), false));
                 if (object instanceof IAdditionalTooltip) {
-                    ((IAdditionalTooltip)object).addHoverTooltip(tooltip);
+                    ((IAdditionalTooltip)object).addHoverTooltip(getFieldName(), stack, tooltip);
                 }
 
                 FeatureTooltip.INSTANCE.addTooltip(tooltip);

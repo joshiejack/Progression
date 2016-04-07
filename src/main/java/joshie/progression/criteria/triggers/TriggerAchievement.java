@@ -18,7 +18,7 @@ import org.apache.commons.lang3.text.WordUtils;
 import java.util.List;
 
 @ProgressionRule(name="achievement", color=0xFF00D9D9, meta="onReceivedAchiement")
-public class TriggerAchievement extends TriggerBaseBoolean implements IInit, ICustomWidth, ISpecialFieldProvider, IItemGetterCallback, IAdditionalTooltip {
+public class TriggerAchievement extends TriggerBaseBoolean implements IInit, ICustomWidth, ISpecialFieldProvider, IItemGetterCallback, IAdditionalTooltip<ItemStack> {
     public String id = "openInventory";
     private transient Achievement achievement;
 
@@ -55,7 +55,7 @@ public class TriggerAchievement extends TriggerBaseBoolean implements IInit, ICu
     }
 
     @Override
-    public void addHoverTooltip(List<String> tooltip) {
+    public void addHoverTooltip(String field, ItemStack stack, List<String> tooltip) {
         tooltip.clear();
         if (achievement != null) {
             tooltip.add(EnumChatFormatting.DARK_AQUA + StatCollector.translateToLocal(achievement.statId));

@@ -19,7 +19,7 @@ import org.apache.commons.lang3.text.WordUtils;
 import java.util.List;
 
 @ProgressionRule(name="achievement", color=0xFFFFFF00, meta="ifHasAchievement")
-public class ConditionAchievement extends ConditionBase implements IInit, ICustomWidth, ISpecialFieldProvider, IItemGetterCallback, IAdditionalTooltip {
+public class ConditionAchievement extends ConditionBase implements IInit, ICustomWidth, ISpecialFieldProvider, IItemGetterCallback, IAdditionalTooltip<ItemStack> {
     public String id = "mineWood";
     private transient Achievement achievement;
 
@@ -49,7 +49,7 @@ public class ConditionAchievement extends ConditionBase implements IInit, ICusto
     }
 
     @Override
-    public void addHoverTooltip(List<String> tooltip) {
+    public void addHoverTooltip(String field, ItemStack stack, List<String> tooltip) {
         tooltip.clear();
         if (achievement != null) {
             tooltip.add(EnumChatFormatting.DARK_AQUA + StatCollector.translateToLocal(achievement.statId));

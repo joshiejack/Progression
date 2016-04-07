@@ -1,6 +1,9 @@
 package joshie.progression.criteria.rewards;
 
-import joshie.progression.api.criteria.*;
+import joshie.progression.api.criteria.IField;
+import joshie.progression.api.criteria.IFilterProvider;
+import joshie.progression.api.criteria.IFilterType;
+import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.*;
 import joshie.progression.crafting.ActionType;
 import joshie.progression.crafting.CraftingRegistry;
@@ -8,14 +11,17 @@ import joshie.progression.gui.fields.ItemFilterField;
 import joshie.progression.gui.fields.ItemFilterFieldPreview;
 import joshie.progression.gui.filters.FilterTypeAction;
 import joshie.progression.gui.filters.FilterTypeItem;
+import joshie.progression.helpers.MCClientHelper;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
 @ProgressionRule(name="crafting", color=0xFF660000)
-public class RewardCraftability extends RewardBaseItemFilter implements ICustomDescription, ICustomWidth, ICustomTooltip, ISpecialFieldProvider {
+public class RewardCraftability extends RewardBaseItemFilter implements ICustomDescription, ICustomWidth, ICustomTooltip, ISpecialFieldProvider, IAdditionalTooltip<ItemStack> {
     private static final HashSet<IHasEventBus> craftRegistry = new HashSet();
     public List<IFilterProvider> actionfilters = new ArrayList();
 
@@ -38,7 +44,25 @@ public class RewardCraftability extends RewardBaseItemFilter implements ICustomD
     @Override
     public void addTooltip(List list) {
         ItemStack stack = preview == null ? BROKEN : preview;
-        list.add(stack.getDisplayName());
+        list.add(EnumChatFormatting.BLUE + "Action Unlocked!");
+        if (actionfilters.size() >= 1) { //Always add the first 5 actions
+            for (int i = 0; i < Math.min(5, actionfilters.size()); i++) {
+                list.add("• " + ActionType.getCraftingActionFromIcon((ItemStack) actionfilters.get(i).getProvided().getRandom(MCClientHelper.getPlayer())).getDisplayName());
+            }
+
+            //Now if we have more than 5 actions, add some extra text
+            if (actionfilters.size() > 5) {
+                if (GuiScreen.isShiftKeyDown()) {
+                    for (int i = 5; i < actionfilters.size(); i++) {
+                        list.add("• " + ActionType.getCraftingActionFromIcon((ItemStack) actionfilters.get(i).getProvided().getRandom(MCClientHelper.getPlayer())).getDisplayName());
+                    }
+                } else list.add(EnumChatFormatting.AQUA + "" + EnumChatFormatting.ITALIC + " Hold Shift for list of additional Actions");
+            }
+        } else list.add(EnumChatFormatting.AQUA + "" + EnumChatFormatting.ITALIC + " This reward is broken");
+
+        list.add("------");
+        list.add(EnumChatFormatting.GOLD + "Item");
+        list.add(EnumChatFormatting.GRAY + " " +  stack.getDisplayName());
     }
 
     @Override
@@ -109,5 +133,13 @@ public class RewardCraftability extends RewardBaseItemFilter implements ICustomD
         }
 
         return list;
+    }
+
+    @Override
+    public void addHoverTooltip(String field, ItemStack stack, List<String> tooltip) {
+        if (field.equals("actionfilters")) {
+            tooltip.clear(); //How dare you try to display the itemstacks tooltip!
+            tooltip.add(ActionType.getCraftingActionFromIcon(stack).getDisplayName());
+        }
     }
 }

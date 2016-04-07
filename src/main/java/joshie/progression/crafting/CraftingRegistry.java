@@ -1,7 +1,9 @@
 package joshie.progression.crafting;
 
+import com.google.common.cache.CacheBuilder;
 import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.IFilterProvider;
+import joshie.progression.handlers.CraftingEvents;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,6 +17,7 @@ public class CraftingRegistry {
     private static volatile HashMap<ActionType, HashMap<IFilterProvider, ICriteria>> filterToCriteriaMapCrafting;
 
     public static void create() {
+        CraftingEvents.tooltipCache = CacheBuilder.newBuilder().maximumSize(128).build();
         filterToCriteriaMapCrafting = new HashMap();
         itemToFilterCache = new HashMap();
         actionCache = new HashMap();
@@ -67,10 +70,26 @@ public class CraftingRegistry {
         return getFilterToCriteriaForType(type).get(filter);
     }
 
-    private static HashMap<ActionType, HashMap<ItemStack, Set>> actionCache = new HashMap();
+    private static HashMap<ActionType, HashMap<ItemStack, Set<ICriteria>>> actionCache = new HashMap();
 
     public static Set<ICriteria> getRequirements(ActionType type, ItemStack stack) {
-        HashMap<ItemStack, Set> cache = actionCache.get(type);
+        Set<ICriteria> matched = new HashSet();
+        Set<IFilterProvider> filters = CraftingRegistry.getFiltersForStack(type, stack);
+        System.out.println(filters.size());
+        System.out.println(type);
+
+        for (IFilterProvider filter : filters) {
+            System.out.println(filter.getProvided());
+            if (filter.getProvided().matches(stack)) {
+                matched.add(getCriteriaForFilter(type, filter));
+            }
+        }
+
+        return matched;
+
+        /*
+
+        HashMap<ItemStack, Set<ICriteria>> cache = actionCache.get(type);
         if (cache == null) {
             cache = new HashMap();
             actionCache.put(type, cache);
@@ -86,7 +105,7 @@ public class CraftingRegistry {
         }
 
         cache.put(stack, matched);
-        return matched;
+        return matched; */
     }
 
     public static Crafter getCrafterFromPlayer(EntityPlayer player) {

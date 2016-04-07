@@ -10,9 +10,7 @@ import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class ActionBreakBlock extends ActionForgeEvent {
-    public ActionBreakBlock(String name) {
-        super(name);
-    }
+    public static final ActionBreakBlock INSTANCE = new ActionBreakBlock();
 
     @SubscribeEvent
     public void onBreakSpeed(BreakSpeed event) {

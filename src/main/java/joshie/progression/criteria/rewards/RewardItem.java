@@ -40,7 +40,7 @@ public class RewardItem extends RewardBaseItemFilter implements ICustomDisplayNa
 
     @Override
     public void addTooltip(List list) {
-        list.add(EnumChatFormatting.WHITE + Progression.translate("item.free"));
+        list.add(EnumChatFormatting.BLUE + Progression.translate("item.free"));
         list.add(getIcon().getDisplayName() + " x" + stackSize);
     }
 

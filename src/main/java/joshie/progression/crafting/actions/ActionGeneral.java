@@ -19,9 +19,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import java.util.Collection;
 
 public class ActionGeneral extends ActionForgeEvent {
-    public ActionGeneral(String name) {
-        super(name);
-    }
+    public static final ActionGeneral INSTANCE = new ActionGeneral();
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onPlayerAttack(AttackEntityEvent event) {

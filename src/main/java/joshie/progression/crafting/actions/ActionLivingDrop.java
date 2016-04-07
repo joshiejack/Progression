@@ -12,9 +12,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import java.util.Iterator;
 
 public class ActionLivingDrop extends ActionForgeEvent {
-    public ActionLivingDrop(String name) {
-        super(name);
-    }
+    public static final ActionLivingDrop INSTANCE = new ActionLivingDrop();
 
     @SubscribeEvent
     public void onLivingDrop(LivingDropsEvent event) {

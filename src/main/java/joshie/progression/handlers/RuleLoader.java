@@ -37,12 +37,12 @@ public class RuleLoader {
                 if (data.get("cancelable") != null) {
                     isCancelable = (Boolean) data.get("cancelable");
                 }
-
+                
                 ItemStack stack = StackHelper.getStackFromString(icon);
                 if (stack == null) stack = new ItemStack(Progression.item);
                 if (meta != null) {
                     for (ItemMeta item: ItemMeta.values()) {
-                        if (name.equalsIgnoreCase(meta)) {
+                        if (item.name().equalsIgnoreCase(meta)) {
                             stack.setItemDamage(item.ordinal());
                             break;
                         }

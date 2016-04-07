@@ -144,7 +144,7 @@ progression.reward.criteria.possibility=If this is true this will toggle whether
 progression.reward.criteria.displayName=This is the display name of the criteria you wish to apply this reward to. It's suggested you use different names for each criteria so that it can find the correct one.
 progression.reward.criteria.incorrect=Reward Criteria was incorrectly setup
 progression.reward.command=Command
-progression.reward.execute=Execute Command
+progression.reward.command.execute=Execute Command
 progression.reward.command.description=The following command will be executed where @u is the player\n\n%s
 progression.reward.command.command=This is the command to execute without the leading /
 progression.reward.entity=Spawn Entity
@@ -304,7 +304,7 @@ progression.hideable.allTasks=All
 progression.hideable.allRewards=All
 progression.hideable.infinite=Infinite
 progression.preview=Preview
-progression.item.free=Free Item
+progression.=item.freeFree Item!
 progression.completed=%s%% completed
 progression.ability=Ability Gain!
 

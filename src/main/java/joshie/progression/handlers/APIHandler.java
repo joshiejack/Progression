@@ -28,8 +28,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.*;
 
-import static com.sun.media.jfxmediaimpl.AudioClipProvider.getProvider;
-
 public class APIHandler implements IProgressionAPI {
     //Caches
 
@@ -271,8 +269,8 @@ public class APIHandler implements IProgressionAPI {
     }
 
     @Override
-    public void registerActionType(String name) {
-        new ActionType(name.toUpperCase()); //WOOT!
+    public IAction registerActionType(String name) {
+        return new ActionType(name.toUpperCase()); //WOOT!
     }
 
     public static ICriteria getCriteriaFromName(UUID name) {

@@ -181,8 +181,9 @@ public class TreeEditorElement {
             //Draw in the rewards
             int xOffset = 0;
             for (IRewardProvider reward : criteria.getRewards()) {
-                ItemStack icon = reward.getIcon();
+                ItemStack icon = reward.getIcon().copy();
                 if (icon == null || icon.getItem() == null) continue; //Protection against null icons
+                icon.stackSize = 1; //Force it to 1
                 GuiCore.INSTANCE.drawStack(icon, x + 4 + left + (xOffset * 12), top + 12, 0.75F);
                 xOffset++;
             }

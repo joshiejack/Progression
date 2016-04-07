@@ -62,7 +62,7 @@ public class EntityFilterFieldPreview extends ItemFilterField implements IField 
                 List<String> tooltip = new ArrayList();
                 tooltip.add(entity.getName());
                 if (object instanceof IAdditionalTooltip) {
-                    ((IAdditionalTooltip)object).addHoverTooltip(tooltip);
+                    ((IAdditionalTooltip)object).addHoverTooltip(getFieldName(), entity, tooltip);
                 }
 
                 FeatureTooltip.INSTANCE.addTooltip(tooltip);

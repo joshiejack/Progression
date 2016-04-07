@@ -10,9 +10,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import java.util.Iterator;
 
 public class ActionHarvestDrop extends ActionForgeEvent {
-    public ActionHarvestDrop(String name) {
-        super(name);
-    }
+    public static final ActionHarvestDrop INSTANCE = new ActionHarvestDrop();
 
     @SubscribeEvent
     public void onHarvestDrop(HarvestDropsEvent event) {

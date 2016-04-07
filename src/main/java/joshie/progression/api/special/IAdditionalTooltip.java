@@ -2,6 +2,7 @@ package joshie.progression.api.special;
 
 import java.util.List;
 
-public interface IAdditionalTooltip {
-    public void addHoverTooltip(List<String> tooltip);
+/** T is normally an entity or an itemstack **/
+public interface IAdditionalTooltip<T> {
+    public void addHoverTooltip(String field, T object, List<String> tooltip);
 }

@@ -99,9 +99,10 @@ public class ItemField extends AbstractField implements IItemSelectable {
             boolean hovered = mouseX >= mouseX1 && mouseX <= mouseX2 && mouseY >= mouseY1 && mouseY <= mouseY2;
             if (hovered) {
                 List<String> tooltip = new ArrayList();
-                tooltip.addAll(getStack().getTooltip(MCClientHelper.getPlayer(), false));
+                ItemStack stack = getStack();
+                tooltip.addAll(stack.getTooltip(MCClientHelper.getPlayer(), false));
                 if (object instanceof IAdditionalTooltip) {
-                    ((IAdditionalTooltip)object).addHoverTooltip(tooltip);
+                    ((IAdditionalTooltip)object).addHoverTooltip(getFieldName(), stack, tooltip);
                 }
 
                 FeatureTooltip.INSTANCE.addTooltip(tooltip);

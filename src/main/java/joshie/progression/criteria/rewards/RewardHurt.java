@@ -29,8 +29,8 @@ public class RewardHurt extends RewardBase implements IInit, ICustomDescription,
     @Override
     public String getDescription() {
         if (source != null) {
-            String s = WordUtils.capitalizeFully(StringUtils.join(StringUtils.splitByCharacterTypeCamelCase(source.damageType), ' '));
-            return Progression.format(getProvider().getUnlocalisedName() + ".description", damage, s);
+            String s = EnumChatFormatting.GREEN + WordUtils.capitalizeFully(StringUtils.join(StringUtils.splitByCharacterTypeCamelCase(source.damageType), ' '));
+            return Progression.format(getProvider().getUnlocalisedName() + ".description", EnumChatFormatting.RED + "" + damage + EnumChatFormatting.WHITE, s);
         } else return "Incorrectly setup damage source";
     }
 

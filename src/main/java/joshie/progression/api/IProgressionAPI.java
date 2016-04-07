@@ -40,7 +40,7 @@ public interface IProgressionAPI {
     public void registerCustomDataBuilder(String trigger, ICustomDataBuilder builder);
 
     /** Register a new crafting type **/
-    public void registerActionType(String unlocalised);
+    public IAction registerActionType(String unlocalised);
     
     /** Register a damage source **/
     public void registerDamageSource(DamageSource source);
