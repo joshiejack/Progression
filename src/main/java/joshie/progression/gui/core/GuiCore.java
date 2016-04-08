@@ -1,7 +1,6 @@
 package joshie.progression.gui.core;
 
 import joshie.progression.Progression;
-import joshie.progression.api.criteria.IField;
 import joshie.progression.gui.editors.*;
 import joshie.progression.gui.editors.insert.*;
 import joshie.progression.helpers.MCClientHelper;
@@ -36,7 +35,6 @@ import static joshie.progression.network.core.PacketPart.SEND_SIZE;
 public class GuiCore extends GuiScreen {
     public static final GuiCore INSTANCE = new GuiCore();
     public ArrayList<IGuiFeature> features = new ArrayList<IGuiFeature>();
-    public HashMap<String, IField> fields = new HashMap();
     public HashMap<Object, Integer> offsetCache = new HashMap();
     public ScaledResolution res;
     public IEditorMode lastGui;
@@ -87,7 +85,6 @@ public class GuiCore extends GuiScreen {
         } else offsetX = 0;
 
         features.clear(); // Clear out the features
-        fields.clear(); //Clear out the fields
         features.add(new FeatureBackground()); // Readd the background
         if (openGui != null) openGui.initData(this);
         features.add(new FeatureFooter()); // Add the footer
@@ -169,7 +166,7 @@ public class GuiCore extends GuiScreen {
     protected void mouseClicked(int x, int y, int button) throws IOException {
         if (markedForInit) return; //Dont process clicks while active
         boolean overlayvisible = false;
-        if (button == 0 && MCClientHelper.isInEditMode()) {
+        if (button == 0) {
             for (IGuiFeature feature : features) {
                 if (feature.isVisible()) { //Don't process hidden features
                     if (feature.mouseClicked(mouseX, mouseY, button)) {

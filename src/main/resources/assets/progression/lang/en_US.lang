@@ -309,6 +309,24 @@ progression.completed=%s%% completed
 progression.ability=Ability Gain!
 progression.block.place=Place a Block!
 
+#Criteria Editor
+progression.criteria.popup=Popup Displayed
+progression.criteria.popup.tooltip=Whether an achievement style popup will appear for this criteria or not.
+progression.criteria.repeat=Repeatability
+progression.criteria.repeat.tooltip=How many times this criteria can be completed to obtain the rewards given.\n\n
+progression.criteria.repeat.infinite=Right click for infinite
+progression.criteria.repeat.numbers=Right click to edit numbers
+progression.criteria.icon=Criteria Icon
+progression.criteria.icon.tooltip=Click to Edit
+progression.criteria.tasks=Tasks Required
+progression.criteria.tasks.tooltip=Number of tasks required to complete this criteria.\n\n
+progression.criteria.tasks.all=Right click to make all required
+progression.criteria.tasks.amount=Right click to edit amount
+progression.criteria.rewards=Rewards Given
+progression.criteria.rewards.tooltip=Number of rewards to give to players on completion of tasks.\n\n
+progression.criteria.rewards.all=Right click to give all rewards
+progression.criteria.rewards.amount=Right click to edit amount
+
 #Universal Field Provider Text
 progression.isVisible=Whether this should show up when viewing the criteria in display mode or not
 progression.mustClaim=If this is set to true, rewards will not be automatically rewarded and must instead be claimed somehow

@@ -90,13 +90,14 @@ public class ItemFilterField extends AbstractField {
     }
 
     @Override
-    public void click() {
+    public boolean click() {
         try {
             GuiFilterEditor.INSTANCE.setPrevious(GuiCore.INSTANCE.openGui).setFilterSet(this); //Adjust this filter object
             FeatureItemPreview.INSTANCE.select(selector); //Allow for selection of multiple items 
             GuiCore.INSTANCE.setEditor(GuiFilterEditor.INSTANCE);
+            return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            return false;
         }
     }
 

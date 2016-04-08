@@ -55,9 +55,6 @@ public class ItemField extends AbstractField implements IItemSelectable {
     }
 
     @Override
-    public void click() {}
-
-    @Override
     public String getFieldName() {
         return field.getName();
     }

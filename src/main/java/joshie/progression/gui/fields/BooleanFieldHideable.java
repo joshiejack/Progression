@@ -14,10 +14,12 @@ public class BooleanFieldHideable extends BooleanField implements IHideable {
     }
 
     @Override
-    public void click() {
+    public boolean click() {
         if (isVisible()) {
-            super.click();
+            return  super.click();
         }
+
+        return false;
     }
 
     @Override

@@ -1,0 +1,52 @@
+package joshie.progression.network;
+
+import io.netty.buffer.ByteBuf;
+import joshie.progression.api.criteria.IRewardProvider;
+import joshie.progression.handlers.APIHandler;
+import joshie.progression.network.core.PenguinPacket;
+import joshie.progression.player.CriteriaMappings;
+import joshie.progression.player.PlayerTracker;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.UUID;
+
+public class PacketSelectRewards extends PenguinPacket {
+    private Set<IRewardProvider> rewards;
+
+    public PacketSelectRewards() {}
+
+    public PacketSelectRewards(Set<IRewardProvider> rewards) {
+        this.rewards = rewards;
+    }
+
+    @Override
+    public void toBytes(ByteBuf buf) {
+        buf.writeInt(rewards.size());
+        for (IRewardProvider provider: rewards) {
+            ByteBufUtils.writeUTF8String(buf, provider.getUniqueID().toString());
+        }
+    }
+
+    @Override
+    public void fromBytes(ByteBuf buf) {
+        rewards = new LinkedHashSet();
+        int length = buf.readInt();
+        for (int i = 0; i < length; i++) {
+            rewards.add(APIHandler.getCache(false).getRewardFromUUID(UUID.fromString(ByteBufUtils.readUTF8String(buf))));
+        }
+    }
+
+    @Override
+    public void handlePacket(EntityPlayer player) {
+        for (IRewardProvider reward: rewards) {
+            CriteriaMappings mappings = PlayerTracker.getServerPlayer(player).getMappings();
+            if (mappings.claimReward((EntityPlayerMP) player, reward)) {
+                mappings.remapAfterClaiming(reward.getCriteria());
+            }
+        }
+    }
+}

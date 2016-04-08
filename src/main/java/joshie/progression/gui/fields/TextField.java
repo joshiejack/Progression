@@ -28,8 +28,9 @@ public class TextField extends AbstractField {
     }
 
     @Override
-    public void click() {
+    public boolean click() {
         data.select();
+        return true;
     }
 
     @Override

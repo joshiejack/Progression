@@ -22,13 +22,16 @@ public class TextFieldHideable extends TextField implements IHideable {
     }
 
     @Override
-    public void click(int button) {
+    public boolean click(int button) {
         if (button != 0) {
             field.setBoolean(!field.getBoolean()); //Set the stuff
-        } else if (isVisible()) super.click();
+            return true;
+        } else if (isVisible()) return super.click();
         else if (button != 0 && !isVisible()) {
-            field.click();
+            return field.click();
         }
+
+        return false;
     }
 
     @Override

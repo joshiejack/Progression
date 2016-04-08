@@ -1,5 +1,8 @@
 package joshie.progression.helpers;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.text.WordUtils;
+
 public class SplitHelper {
     public static String[] splitStringEvery(String string, int interval) {
         int arrayLength = (int) Math.ceil(((string.length() / (double) interval)));
@@ -14,5 +17,9 @@ public class SplitHelper {
 
         result[lastIndex] = string.substring(j);
         return result;
+    }
+
+    public static String[] splitTooltip(String text, int value) {
+        return  WordUtils.wrap(StringEscapeUtils.unescapeJava(text), value).replace("\r", "").split("\n");
     }
 }

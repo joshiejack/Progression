@@ -1,15 +1,14 @@
 package joshie.progression;
 
+import joshie.progression.ItemProgression.ItemMeta;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.commands.*;
-import joshie.progression.criteria.filters.location.FilterPlayerLastBroken;
 import joshie.progression.gui.fields.FieldRegistry;
 import joshie.progression.gui.filters.FilterSelectorHelper;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.handlers.CraftingEvents;
 import joshie.progression.handlers.RemappingHandler;
 import joshie.progression.handlers.RuleLoader;
-import joshie.progression.ItemProgression.ItemMeta;
 import joshie.progression.json.Options;
 import joshie.progression.network.*;
 import joshie.progression.player.PlayerHandler;
@@ -49,13 +48,8 @@ public class PCommonProxy implements IGuiHandler {
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Progression.item, 1, ItemProgression.ItemMeta.claim.ordinal()), new Object[] { "F", "P", 'F', Items.flint, 'P', "plankWood" }));
         }
 
-        registerFilters();
         RuleLoader.registerRules(asm);
 
-        //registerTriggers();
-        //registerConditions();
-        //registerRewards();
-        
         //Register Commands
         CommandManager.INSTANCE.registerCommand(new CommandHelp());
         CommandManager.INSTANCE.registerCommand(new CommandEdit());
@@ -77,6 +71,7 @@ public class PCommonProxy implements IGuiHandler {
         PacketHandler.registerPacket(PacketOpenEditor.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketDebugGUI.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketFireTrigger.class, Side.SERVER);
+        PacketHandler.registerPacket(PacketSelectRewards.class, Side.SERVER);
         PacketHandler.registerPacket(PacketRequestItem.class);
         PacketHandler.registerPacket(PacketSyncTeam.class);
         PacketHandler.registerPacket(PacketReload.class);
@@ -102,53 +97,6 @@ public class PCommonProxy implements IGuiHandler {
         ProgressionAPI.registry.registerDamageSource(DamageSource.wither);
         NetworkRegistry.INSTANCE.registerGuiHandler(Progression.instance, Progression.proxy);
     }
-
-    private void registerFilters() {
-        //Item Filters
-        /*ProgressionAPI.registry.registerFilter(new FilterItemStack());
-        ProgressionAPI.registry.registerFilter(new FilterItem());
-        ProgressionAPI.registry.registerFilter(new FilterItemMeta());
-        ProgressionAPI.registry.registerFilter(new FilterItemNBT());
-        ProgressionAPI.registry.registerFilter(new FilterItemNBTFuzzy());
-        ProgressionAPI.registry.registerFilter(new FilterItemMod());
-        ProgressionAPI.registry.registerFilter(new FilterItemOre());
-
-        //Block Filters
-        ProgressionAPI.registry.registerFilter(new FilterBlockStack());
-        ProgressionAPI.registry.registerFilter(new FilterBlock());
-        ProgressionAPI.registry.registerFilter(new FilterBlockState());
-        ProgressionAPI.registry.registerFilter(new FilterBlockMod());
-        ProgressionAPI.registry.registerFilter(new FilterBlockOre());
-
-        //Potion Filters
-        ProgressionAPI.registry.registerFilter(new FilterPotionItem());
-        ProgressionAPI.registry.registerFilter(new FilterPotionEffectID());
-
-        //Entity Filterss
-        ProgressionAPI.registry.registerFilter(new FilterEntityName());
-        ProgressionAPI.registry.registerFilter(new FilterEntityDisplayName());
-        ProgressionAPI.registry.registerFilter(new FilterEntityType());
-        ProgressionAPI.registry.registerFilter(new FilterSkeletonType());
-
-        //Location Filters
-        ProgressionAPI.registry.registerFilter(new FilterPlayerLocationAround());
-        ProgressionAPI.registry.registerFilter(new FilterPlayerLocationLooking());
-        ProgressionAPI.registry.registerFilter(new FilterPlayerLastBroken());
-        ProgressionAPI.registry.registerFilter(new FilterRandomAround());
-        ProgressionAPI.registry.registerFilter(new FilterDimension());
-        ProgressionAPI.registry.registerFilter(new FilterRandomX());
-        ProgressionAPI.registry.registerFilter(new FilterRandomY());
-        ProgressionAPI.registry.registerFilter(new FilterRandomZ()); */
-        MinecraftForge.EVENT_BUS.register(new FilterPlayerLastBroken());
-
-        //Crafting Filters
-        //ProgressionAPI.registry.registerFilter(new FilterExact());
-    }
-
-    /*
-    private void registerConditions() {
-        ProgressionAPI.registry.registerConditionType(ConditionInInventory.class, "ininventory", 0xFF660000);
-    }*/
 
     private ItemStack getIcon(ItemMeta meta) {
         return ItemProgression.getStackFromMeta(meta);

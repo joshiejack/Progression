@@ -14,13 +14,20 @@ public abstract class AbstractField implements IField {
         return false;
     }
 
-    public void click(int button) {
-        click();
+    public boolean click(int button) {
+        return click();
     }
 
-    public void click() {}
+    public boolean click() {
+        return true;
+    }
 
     public void setObject(Object object) {
         this.object = object;
+    }
+
+    @Override
+    public String toString() {
+        return (String) getField();
     }
 }

@@ -30,7 +30,7 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
         return selectable;
     }
 
-    public void select(IFilterType filter, IItemSelectable selectable, Position type) {
+    public boolean select(IFilterType filter, IItemSelectable selectable, Position type) {
         ItemHelper.addInventory();
         TextEditor.INSTANCE.setEditable(this);
         this.filter = filter;
@@ -38,6 +38,7 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
         this.position = type;
         if (filter == null) this.filter = FilterTypeItem.INSTANCE;
         updateSearch();
+        return true;
     }
 
     public void clearEditable() {

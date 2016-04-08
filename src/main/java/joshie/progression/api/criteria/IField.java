@@ -10,7 +10,7 @@ public interface IField<T> {
     public boolean attemptClick(int mouseX, int mouseY);
 
     /** Performs a click of attempt click fails and it was clicked in a specific range **/
-    public void click(int button);
+    public boolean click(int button);
 
     /** Draw this field **/
     public void draw(DrawHelper helper, int renderX, int renderY, int color, int yPos, int mouseX, int mouseY);

@@ -3,6 +3,7 @@ package joshie.progression.gui.editors;
 import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.ITab;
 import joshie.progression.api.event.TabVisibleEvent;
+import joshie.progression.api.special.DisplayMode;
 import joshie.progression.gui.core.GuiCore;
 import joshie.progression.gui.buttons.ButtonNewCriteria;
 import joshie.progression.gui.buttons.ButtonTab;
@@ -252,7 +253,7 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
                 }
             }
 
-            if (isDoubleClick) {
+            if (isDoubleClick && MCClientHelper.getMode() == DisplayMode.EDIT) {
                 GuiTreeEditor.INSTANCE.previous = null;
                 GuiTreeEditor.INSTANCE.selected = null;
                 GuiTreeEditor.INSTANCE.lastClicked = null;

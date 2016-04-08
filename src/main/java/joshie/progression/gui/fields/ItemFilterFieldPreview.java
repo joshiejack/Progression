@@ -79,9 +79,6 @@ public class ItemFilterFieldPreview extends ItemFilterField implements IField {
     }
 
     @Override
-    public void click() {}
-
-    @Override
     public boolean attemptClick(int mouseX, int mouseY) {
         boolean clicked = mouseX >= mouseX1 && mouseX <= mouseX2 && mouseY >= mouseY1 && mouseY <= mouseY2;
         if (clicked) {

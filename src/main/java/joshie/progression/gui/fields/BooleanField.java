@@ -51,10 +51,12 @@ public class BooleanField extends AbstractField {
     }
 
     @Override
-    public void click() {
+    public boolean click() {
         try {
             setBoolean(!getBoolean());
-        } catch (Exception e) {}
+
+            return true;
+        } catch (Exception e) { return false; }
     }
 
     @Override

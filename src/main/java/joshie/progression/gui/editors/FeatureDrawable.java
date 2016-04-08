@@ -1,7 +1,10 @@
 package joshie.progression.gui.editors;
 
 import joshie.progression.Progression;
-import joshie.progression.api.criteria.*;
+import joshie.progression.api.criteria.IField;
+import joshie.progression.api.criteria.IRewardProvider;
+import joshie.progression.api.criteria.IRuleProvider;
+import joshie.progression.api.criteria.ITriggerProvider;
 import joshie.progression.api.gui.ICustomDrawGuiDisplay;
 import joshie.progression.api.gui.ICustomDrawGuiEditor;
 import joshie.progression.api.gui.Position;
@@ -246,17 +249,24 @@ public class FeatureDrawable<T extends IRuleProvider> extends FeatureAbstract {
             if (!provider.isVisible() && mode == DISPLAY) continue;
             int mouseOffsetX = mouseX - offset.getGui().getOffsetX() - offsetX;
             int mouseOffsetY = mouseY - this.offsetY;
+
+            if (clickSpecial((T) provider, mouseOffsetX, mouseOffsetY)) return true;
+
             //Delete Button
-            if (mouseOffsetX >= provider.getWidth(mode) - 13 && mouseOffsetX <= provider.getWidth(mode) - 3 && mouseOffsetY >= 4 && mouseOffsetY <= 14) {
-                CollectionHelper.removeAndUpdate(drawable, provider);
-                return true;
+            if(mode == EDIT) {
+                if (mouseOffsetX >= provider.getWidth(mode) - 13 && mouseOffsetX <= provider.getWidth(mode) - 3 && mouseOffsetY >= 4 && mouseOffsetY <= 14) {
+                    CollectionHelper.removeAndUpdate(drawable, provider);
+                    return true;
+                }
+
+                if (drawingMouseClicked(provider, mouseOffsetX, mouseOffsetY, button)) return true;
             }
 
-            if (clickSpecial((T)provider, mouseOffsetX, mouseOffsetY)) return true;
-            if (drawingMouseClicked(provider, mouseOffsetX, mouseOffsetY, button)) return true;
             offsetX += provider.getWidth(mode);
         }
 
+        //If we're in display return
+        if (mode == DISPLAY) return false;
         //Now that we've tried all, let's try the new button
         int mouseOffsetX = mouseX - offset.getGui().getOffsetX() - offsetX;
         int mouseOffsetY = mouseY - this.offsetY;

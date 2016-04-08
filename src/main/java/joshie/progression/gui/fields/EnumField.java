@@ -42,10 +42,11 @@ public class EnumField extends AbstractField {
     }
 
     @Override
-    public void click() {
+    public boolean click() {
         try {
             setField(object.next(getFieldName()));
-        } catch (Exception e) {}
+            return true;
+        } catch (Exception e) { return false;}
     }
 
     @Override

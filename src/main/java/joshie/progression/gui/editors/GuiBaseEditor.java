@@ -1,20 +1,22 @@
 package joshie.progression.gui.editors;
 
-import joshie.progression.api.criteria.IField;
+import joshie.progression.api.special.DisplayMode;
+import joshie.progression.gui.core.FeatureTooltip;
 import joshie.progression.gui.core.GuiCore;
 import joshie.progression.gui.core.IGuiFeature;
+import joshie.progression.helpers.MCClientHelper;
+import joshie.progression.helpers.SplitHelper;
 import joshie.progression.json.Theme;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public abstract class GuiBaseEditor implements IEditorMode {
     public ArrayList<IGuiFeature> features;
-    public HashMap<String, IField> fields;
     public ScaledResolution res;
+    public DisplayMode mode;
     public Minecraft mc;
     public GuiCore core;
     public Theme theme;
@@ -28,9 +30,8 @@ public abstract class GuiBaseEditor implements IEditorMode {
         this.core = core;
         this.res = core.res;
         this.mc = core.mc;
-        //this.offsetX = core.offsetX;
+        this.mode = MCClientHelper.getMode();
         this.features = core.features;
-        this.fields = core.fields;
         this.theme = core.theme;
         this.screenTop = core.screenTop;
         this.screenWidth = core.screenWidth;
@@ -63,5 +64,16 @@ public abstract class GuiBaseEditor implements IEditorMode {
     //Convenience methods - Line
     public void drawLine(int left, int top, int right, int bottom, int thickness, int color) {
         core.drawLine(left, top, right, bottom, thickness, color);
+    }
+
+    //Convenience methods - Tooltip
+    public void addTooltip(String string) {
+        FeatureTooltip.INSTANCE.addTooltip(string);
+    }
+
+    //Convenience methods - Tooltip Advanced
+    public void addTooltip(String tooltip, int length) {
+        String[] strings = SplitHelper.splitTooltip(tooltip, length);
+        for (String s: strings) FeatureTooltip.INSTANCE.addTooltip("  " + s);
     }
 }

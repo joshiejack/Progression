@@ -154,7 +154,6 @@ public class CriteriaMappings {
 
     public void sendTriggerDataToClient(ITriggerProvider trigger) {
         if (trigger.getProvided() instanceof IStoreTriggerData) {
-            System.out.println("It was an instance of sttore trigger data, so we are sending that data now");
             sendTriggerDataToClient(trigger.getUniqueID(), (IStoreTriggerData) trigger.getProvided());
         }
     }
@@ -218,7 +217,6 @@ public class CriteriaMappings {
         //Fire the trigger
         Collections.shuffle(toTrigger);
         for (ITriggerProvider trigger : toTrigger) {
-            System.out.println("Firing a trigger: " + trigger.getUniqueID());
             if (trigger.isCancelable()) {
                 boolean isCancelingEnabled = trigger.isCanceling();
                 if ((trigger.getProvided().onFired(uuid, triggerData))) {
@@ -242,7 +240,6 @@ public class CriteriaMappings {
         for (ITriggerProvider trigger : triggers) {
             if (cantContinue.contains(trigger)) continue; //If we're bypassing mark all triggers as fired
             if (trigger.getProvided().isCompleted()) {
-                System.out.println("MARKING A TRIGGER AS COMPLETE");
                 completedTriggers.add(trigger);
                 toRemove.add(trigger);
                 PacketHandler.sendToTeam(new PacketSyncTriggers(trigger), master.team);
@@ -312,27 +309,20 @@ public class CriteriaMappings {
         //Now we should try and dish out any automatic rewards
         for (UUID uuid: unclaimedRewards.keySet()) {
             List<IRewardProvider> list = Lists.newArrayList(unclaimedRewards.get(uuid));
-            Set<IRewardProvider> remove = new HashSet();
             Collections.shuffle(list);
             for (IRewardProvider reward: list) {
                 if (!reward.mustClaim()) {
                     EntityPlayerMP aPlayer = (EntityPlayerMP) PlayerHelper.getPlayerFromUUID(uuid);
-                    System.out.println(aPlayer);
                     if (aPlayer != null) {
                         if(claimReward(aPlayer, reward)) {
                             completed.add(reward.getCriteria());
                         }
-
-                        remove.add(reward); //Remove this from unclaimed list, once we have claimed it
                     }
                 }
             }
-
-            CollectionHelper.removeAll(unclaimedRewards.get(uuid), list);
         }
 
         for (ICriteria criteria: completed) {
-            System.out.println("WE CLAIMED THE CRITERIA: " + criteria.getLocalisedName());
             remapAfterClaiming(criteria);
         }
 
@@ -380,9 +370,8 @@ public class CriteriaMappings {
             rewardsGiven++; //Increase the amount
         }
 
-        System.out.println("ATTEMPTED TO CLAIM REWARDS");
-
         setRewardsGiven(uuid, criteria, rewardsGiven);
+        CollectionHelper.remove(unclaimedRewards.get(uuid), reward);
         if ((!criteria.givesAllRewards() && rewardsGiven >= criteria.getAmountOfRewards()) || (criteria.givesAllRewards() && rewardsGiven >= criteria.getRewards().size())) { //If all the rewards have been given out, then do some remapping of everything
             return true;
         }
@@ -489,7 +478,7 @@ public class CriteriaMappings {
             completedTriggers.removeAll(criteria.getTriggers());
             //Remove all data for the triggers too
             for (ITriggerProvider trigger: criteria.getTriggers()) {
-                if (trigger instanceof IStoreTriggerData) {
+                if (trigger.getProvided() instanceof IStoreTriggerData) {
                     triggerDataMap.get(trigger.getUniqueID()).readDataFromNBT(new NBTTagCompound());
                     sendTriggerDataToClient(trigger); //Let the client know it was wiped
                 }

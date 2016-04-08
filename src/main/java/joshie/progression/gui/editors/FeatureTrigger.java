@@ -9,6 +9,7 @@ import joshie.progression.gui.editors.insert.FeatureNewTrigger;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.json.Theme;
 
+import static joshie.progression.api.special.DisplayMode.DISPLAY;
 import static joshie.progression.api.special.DisplayMode.EDIT;
 
 public class FeatureTrigger extends FeatureDrawable<ITriggerProvider> {
@@ -44,6 +45,7 @@ public class FeatureTrigger extends FeatureDrawable<ITriggerProvider> {
 
     @Override
     public boolean clickSpecial(ITriggerProvider provider, int mouseOffsetX, int mouseOffsetY) {
+        if (mode == DISPLAY) return false;
         if (mouseOffsetX >= 2 && mouseOffsetX <= provider.getWidth(mode) - 3 && mouseOffsetY >= 66 && mouseOffsetY <= 77) {
             GuiConditionEditor.INSTANCE.setTrigger(provider);
             GuiCore.INSTANCE.setEditor(GuiConditionEditor.INSTANCE);

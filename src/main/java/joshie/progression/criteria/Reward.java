@@ -7,9 +7,8 @@ import joshie.progression.api.criteria.IReward;
 import joshie.progression.api.criteria.IRewardProvider;
 import joshie.progression.api.special.*;
 import joshie.progression.helpers.JSONHelper;
+import joshie.progression.helpers.SplitHelper;
 import net.minecraft.item.ItemStack;
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.commons.lang3.text.WordUtils;
 
 import java.util.List;
 import java.util.UUID;
@@ -88,7 +87,7 @@ public class Reward implements IRewardProvider {
     public void addTooltip(List list) {
         if (reward instanceof ICustomTooltip) ((ICustomTooltip)reward).addTooltip(list);
         else{
-            for (String s : WordUtils.wrap(StringEscapeUtils.unescapeJava(getDescription()), 42).replace("\r", "").split("\n")) {
+            for (String s : SplitHelper.splitTooltip(getDescription(), 42)) {
                 list.add(s);
             }
         }
