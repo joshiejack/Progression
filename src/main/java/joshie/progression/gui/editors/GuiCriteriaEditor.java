@@ -126,8 +126,8 @@ public class GuiCriteriaEditor extends GuiBaseEditor implements IBarProvider, II
         drawText(displayName, 21, 9, theme.criteriaEditDisplayNameColor);
         drawStack(criteria.getIcon(), 1, 4, 1F);
 
-        if (mode == EDIT) drawText(translate("popup") + ": " + popup, screenWidth - 170, 9, theme.criteriaEditDisplayNameColor);
-        drawText(translate("repeat") + ": " + (returnedBoolean(repeat) ? repeat : repeat + "x"), screenWidth - 90, 9, theme.criteriaEditDisplayNameColor);
+        if (mode == EDIT) drawText(translate("popup") + ": " + popup, core.screenWidth - 170, 9, theme.criteriaEditDisplayNameColor);
+        drawText(translate("repeat") + ": " + (returnedBoolean(repeat) ? repeat : repeat + "x"), core.screenWidth - 90, 9, theme.criteriaEditDisplayNameColor);
         if (!overlay && mouseY >= 4 && mouseY <= 20) {
             if (mouseY >= 8 && mouseY <= 18) {
                 if (mouseX >= 100 && mouseX <= 90) {
@@ -199,7 +199,7 @@ public class GuiCriteriaEditor extends GuiBaseEditor implements IBarProvider, II
     @Override
     public void drawGuiForeground(boolean overlayvisible, int mouseX, int mouseY) {
         if (criteria == null) return; //Don't draw if no criteria!
-        drawHeader(overlayvisible, screenWidth - mouseX, mouseY);
+        drawHeader(overlayvisible, core.screenWidth - mouseX, mouseY);
         drawTriggers(overlayvisible, mouseX, mouseY);
         drawRewards(overlayvisible, mouseX, mouseY);
     }
@@ -207,7 +207,7 @@ public class GuiCriteriaEditor extends GuiBaseEditor implements IBarProvider, II
     @Override
     public boolean guiMouseClicked(boolean overlayvisible, int mouseLeft, int mouseY, int button) {
         if (mode == DISPLAY || overlayvisible) return false;
-        if (clickHeader(mouseLeft, screenWidth - mouseLeft, mouseY, button)) return true;
+        if (clickHeader(mouseLeft, core.screenWidth - mouseLeft, mouseY, button)) return true;
         if (clickTriggers(mouseLeft, mouseY, button)) return true;
         if (clickRewards(mouseLeft, mouseY, button)) return true;
         else return false;

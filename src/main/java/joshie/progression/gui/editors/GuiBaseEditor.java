@@ -21,10 +21,6 @@ public abstract class GuiBaseEditor implements IEditorMode {
     public GuiCore core;
     public Theme theme;
 
-    //public int offsetX;
-    public int screenTop;
-    public int screenWidth;
-
     @Override
     public void initData(GuiCore core) {
         this.core = core;
@@ -33,8 +29,6 @@ public abstract class GuiBaseEditor implements IEditorMode {
         this.mode = MCClientHelper.getMode();
         this.features = core.features;
         this.theme = core.theme;
-        this.screenTop = core.screenTop;
-        this.screenWidth = core.screenWidth;
     }
 
     @Override

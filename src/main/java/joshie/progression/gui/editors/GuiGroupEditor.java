@@ -1,14 +1,8 @@
 package joshie.progression.gui.editors;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.Callable;
-
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.mojang.authlib.GameProfile;
-
 import joshie.progression.gui.core.FeatureBarsFull;
 import joshie.progression.gui.core.FeatureTooltip;
 import joshie.progression.gui.core.GuiCore;
@@ -24,6 +18,11 @@ import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.UsernameCache;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.Callable;
 
 public class GuiGroupEditor extends GuiBaseEditor implements IBarProvider {
     public static final GuiGroupEditor INSTANCE = new GuiGroupEditor();
@@ -52,19 +51,20 @@ public class GuiGroupEditor extends GuiBaseEditor implements IBarProvider {
 
     @Override
     public void drawGuiForeground(boolean overlayvisible, int mouseX, int mouseY) {
-        drawGradientRectWithBorder(2, 25, (screenWidth / 2) - 2, 25 + 15, 0xFFCCCCCC, theme.conditionEditorGradient1, theme.conditionEditorBorder);
+        int screenCentre = core.screenWidth / 2;
+        drawGradientRectWithBorder(2, 25, screenCentre - 2, 25 + 15, 0xFFCCCCCC, theme.conditionEditorGradient1, theme.conditionEditorBorder);
         drawText("Team Editor", 10, 29, 0xFFFFFFFF);
 
-        drawGradientRectWithBorder((screenWidth / 2) + 2, 25, screenWidth - 2, 25 + 15, 0xFFCCCCCC, theme.conditionEditorGradient1, theme.conditionEditorBorder);
+        drawGradientRectWithBorder(screenCentre + 2, 25, core.screenWidth - 2, 25 + 15, 0xFFCCCCCC, theme.conditionEditorGradient1, theme.conditionEditorBorder);
         String text = "Team Selector";
-        drawText(text, (int) (screenWidth - (text.length() * 6.5)), 29, 0xFFFFFFFF);
+        drawText(text, (int) (core.screenWidth - (text.length() * 6.5)), 29, 0xFFFFFFFF);
 
         PlayerTeam team = PlayerTracker.getClientPlayer().getTeam();
         drawText("Team Type:", 5, 45, 0xFFFFFFFF);
         drawText(team.getType().name(), 85, 45, 0xFFFFFFFF);
         drawText("Team Name:", 5, 55, 0xFFFFFFFF);
         drawText(TextEditor.INSTANCE.getText(team), 85, 55, 0xFFFFFFFF);
-        if (mouseX >= 85 && mouseX <= (screenWidth / 2) - 2) {
+        if (mouseX >= 85 && mouseX <= screenCentre - 2) {
             if (mouseY >= 55 && mouseY < 65) {
                 if (team.isOwner(MCClientHelper.getPlayer())) {
                     FeatureTooltip.INSTANCE.addTooltip(EnumChatFormatting.BOLD + "Click to edit name");
@@ -76,18 +76,18 @@ public class GuiGroupEditor extends GuiBaseEditor implements IBarProvider {
         try {
             int xPos = 0;
             for (EntityPlayer player : getPlayers(team)) {
-                GuiInventory.drawEntityOnScreen(20 + xPos, 120 + screenTop, 20, 5, 10, player);
+                GuiInventory.drawEntityOnScreen(20 + xPos, 120 + GuiCore.INSTANCE.screenTop, 20, 5, 10, player);
                 xPos += 30;
             }
         } catch (Exception e) {}
 
-        drawGradientRectWithBorder((screenWidth / 2) + 2, 45, screenWidth - 2, 85, 0xFFCCCCCC, theme.conditionEditorGradient1, 0xFF000000);
+        drawGradientRectWithBorder(screenCentre + 2, 45, core.screenWidth - 2, 85, 0xFFCCCCCC, theme.conditionEditorGradient1, 0xFF000000);
         text = "Create New Team";
-        drawText(text, (screenWidth / 2) + 12, 59, 0xFFFFFFFF);
+        drawText(text, screenCentre + 12, 59, 0xFFFFFFFF);
 
-        drawGradientRectWithBorder((screenWidth / 2) + 2, 90, screenWidth - 2, 105, 0xFFCCCCCC, theme.conditionEditorGradient1, 0xFF000000);
+        drawGradientRectWithBorder(screenCentre + 2, 90, core.screenWidth - 2, 105, 0xFFCCCCCC, theme.conditionEditorGradient1, 0xFF000000);
         text = "Current Invites";
-        drawText(text, (screenWidth / 2) + 12, 59, 0xFFFFFFFF);
+        drawText(text, screenCentre + 12, 59, 0xFFFFFFFF);
     }
 
     public Set<AbstractClientPlayer> getPlayers(final PlayerTeam team) {
@@ -118,7 +118,7 @@ public class GuiGroupEditor extends GuiBaseEditor implements IBarProvider {
     public boolean guiMouseClicked(boolean overlayvisible, int mouseX, int mouseY, int button) {
         PlayerTeam team = PlayerTracker.getClientPlayer().getTeam();
         if (team.isOwner(MCClientHelper.getPlayer())) {
-            if (mouseX >= 85 && mouseX <= (screenWidth / 2) - 2) {
+            if (mouseX >= 85 && mouseX <= (core.screenWidth / 2) - 2) {
                 if (mouseY >= 55 && mouseY < 65) {
                     TextEditor.INSTANCE.setEditable(team);
                     return true;

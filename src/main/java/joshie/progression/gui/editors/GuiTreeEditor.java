@@ -182,7 +182,7 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
         GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
         for (ICriteria criteria : currentTab.getCriteria()) {
             if (getElement(criteria).isCriteriaVisible() || MCClientHelper.isInEditMode()) {
-                getElement(criteria).draw(0, screenTop, GuiCore.INSTANCE.getOffsetX());
+                getElement(criteria).draw(0, core.screenTop, GuiCore.INSTANCE.getOffsetX());
             }
         }
     }
