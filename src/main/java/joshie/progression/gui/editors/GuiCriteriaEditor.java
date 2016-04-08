@@ -3,6 +3,7 @@ package joshie.progression.gui.editors;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.IField;
+import joshie.progression.api.criteria.IRewardProvider;
 import joshie.progression.api.criteria.ITriggerProvider;
 import joshie.progression.api.gui.Position;
 import joshie.progression.gui.core.FeatureBarsX2;
@@ -19,6 +20,7 @@ import net.minecraft.item.ItemStack;
 import static joshie.progression.Progression.translate;
 import static joshie.progression.api.special.DisplayMode.DISPLAY;
 import static joshie.progression.api.special.DisplayMode.EDIT;
+import static joshie.progression.gui.editors.FeatureReward.selected;
 import static net.minecraft.util.EnumChatFormatting.BOLD;
 import static net.minecraft.util.EnumChatFormatting.ITALIC;
 
@@ -166,24 +168,30 @@ public class GuiCriteriaEditor extends GuiBaseEditor implements IBarProvider, II
 
     private void drawRewards(boolean overlay, int mouseX, int mouseY) {
         //Universal Mode
-        drawText("             " + translate("given") + ": " + rewards.getField(), 100, 124, theme.criteriaEditDisplayNameColor);
-        if (!overlay) {
-            if (mouseX >= 140 && mouseX <= 240 && mouseY >= 123 && mouseY <= 133) {
-                addCriteriaTooltip("rewards");
-                if (returnedBoolean(rewards)) addTooltip(ITALIC + "  " + translateCriteria("rewards.all"));
-                else addTooltip(ITALIC + "  " + translateCriteria("rewards.amount"));
+        if (mode == EDIT) {
+            drawText(translate("given") + ": " + rewards.getField(), 140, 124, theme.criteriaEditDisplayNameColor);
+            if (!overlay) {
+                if (mouseX >= 140 && mouseX <= 240 && mouseY >= 123 && mouseY <= 133) {
+                    addCriteriaTooltip("rewards");
+                    if (returnedBoolean(rewards)) addTooltip(ITALIC + "  " + translateCriteria("rewards.all"));
+                    else addTooltip(ITALIC + "  " + translateCriteria("rewards.amount"));
+                }
             }
-        }
-
-        //Display Mode
-        if (mode == DISPLAY) {
-            boolean allTrue = true;
+        } else  {
             for (ITriggerProvider provider: getCriteria().getTriggers()) {
-                if (!provider.getProvided().isCompleted()) allTrue = false;
+                if (!provider.getProvided().isCompleted()) return; //Don't continue processing if we can't claim any rewards
             }
 
-            if (allTrue) {
-                drawText("Please Select Rewards", 0, 0, 0xFF000000);
+            int maximum = criteria.givesAllRewards() ? criteria.getRewards().size(): criteria.getAmountOfRewards();
+            int standard = 0;
+            for (IRewardProvider reward: criteria.getRewards()) {
+                if (!reward.mustClaim()) standard++;
+            }
+
+            int current = selected.size() + standard;
+            int number = maximum - current;
+            if (number > 0) {
+                drawText("Please Select " + number + " Rewards", 140, 124, 0xFFFFFFFF);
             }
         }
     }

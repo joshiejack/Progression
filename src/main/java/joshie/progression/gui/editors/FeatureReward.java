@@ -14,7 +14,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class FeatureReward extends FeatureDrawable<IRewardProvider> {
-    public Set<IRewardProvider> selected;
+    public static Set<IRewardProvider> selected;
 
     public FeatureReward(ICriteria criteria) {
         super("reward", criteria.getRewards(), 140, FeatureNewReward.INSTANCE, theme.rewardBoxGradient1, theme.rewardBoxGradient2, theme.rewardBoxFont, theme.rewardBoxGradient2);
