@@ -25,7 +25,7 @@ public class RewardShowLayer extends RewardBaseSingular implements IInit, IGette
     public int layer = 1;
 
     @Override
-    public void init() {
+    public void init(boolean isClient) {
         theBook = EnchiridionAPI.instance.getBook(bookid);
     }
 

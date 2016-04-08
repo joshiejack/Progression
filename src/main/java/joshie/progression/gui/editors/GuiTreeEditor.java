@@ -59,7 +59,7 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
         }
 
         //Sort tabs alphabetically or by sort index
-        ArrayList<ITab> tabs = new ArrayList(APIHandler.getTabs().values());
+        ArrayList<ITab> tabs = new ArrayList(APIHandler.getCache(true).getTabs().values());
         Collections.sort(tabs, new SortIndex());
         for (ITab tab : tabs) {
             if (isTabVisible(tab) || MCClientHelper.isInEditMode()) {
@@ -92,21 +92,21 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
     @Override
     public void initData(GuiCore core) {
         super.initData(core);
-        addButtons(core, APIHandler.getTabs().size() > 17);
+        addButtons(core, APIHandler.getCache(true).getTabs().size() > 17);
 
         if (currentTabID == null) {
             currentTabID = Options.settings.defaultTabID;
         }
 
-        currentTab = APIHandler.getTabFromName(currentTabID);
+        currentTab = APIHandler.getCache(true).getTabs().get(currentTabID);
         if (currentTab == null) {
-            for (ITab tab : APIHandler.getTabs().values()) {
+            for (ITab tab : APIHandler.getCache(true).getTabs().values()) {
                 currentTab = tab;
                 break;
             }
 
             if (currentTab == null) {
-                currentTab = APIHandler.newTab(UUID.randomUUID()).setDisplayName("New Tab").setStack(new ItemStack(Items.book)).setVisibility(true);
+                currentTab = APIHandler.newTab(UUID.randomUUID(), true).setDisplayName("New Tab").setStack(new ItemStack(Items.book)).setVisibility(true);
                 currentTabID = currentTab.getUniqueID();
                 core.initGui(); //Reset things
             }
@@ -201,7 +201,7 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
         }
 
         if (toRemove != null) {
-            APIHandler.removeCriteria(toRemove.getUniqueID(), false);
+            APIHandler.removeCriteria(toRemove.getUniqueID(), false, true);
         }
 
         if (key == Keyboard.KEY_UP) {

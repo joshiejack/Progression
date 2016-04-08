@@ -26,7 +26,7 @@ public class FilterRandomAround extends FilterLocationBase implements IInit, ICu
     private transient FilterRandomZ dummyZ = new FilterRandomZ();
 
     @Override
-    public void init() {
+    public void init(boolean isClient) {
         dummyX.operator = xoperator;
         dummyX.coordinate = xCoordinate;
         dummyX.distance = randomX;

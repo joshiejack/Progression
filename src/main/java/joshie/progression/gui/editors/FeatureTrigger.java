@@ -18,6 +18,7 @@ public class FeatureTrigger extends FeatureDrawable<ITriggerProvider> {
 
     @Override
     public int drawSpecial(ITriggerProvider drawing, int offsetX, int offsetY, int mouseOffsetX, int mouseOffsetY) {
+        //System.out.println("Reading in the trigger: " + drawing + " for uuid " + drawing.getUniqueID());
         //We have drawn the deleted button now we check for conditions for triggers.
         if (mode == EDIT) {
             int color = Theme.INSTANCE.blackBarBorder;

@@ -38,7 +38,7 @@ public class RewardSpawnEntity extends RewardBase implements IInit, ICustomDescr
     }
 
     @Override
-    public void init() {
+    public void init(boolean isClient) {
         tagValue = StackHelper.getTag(new String[] { nbtData }, 0);
     }
 

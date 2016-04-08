@@ -30,7 +30,7 @@ public class TriggerAchievement extends TriggerBaseBoolean implements IInit, ICu
     }
 
     @Override
-    public void init() {
+    public void init(boolean isClient) {
         for (Achievement a: AchievementList.achievementList) {
             if (a.statId.equals("achievement." + id)) {
                 achievement = a;

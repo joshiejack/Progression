@@ -34,6 +34,7 @@ public class PlayerTeam implements ITextEditable, IPlayerTeam {
     public PlayerTeam() {}
 
     public PlayerTeam(TeamType type, UUID owner) {
+        System.out.println("Created a team with the uuid: as the owner: + " + owner);
         this.owner = owner;
         this.type = type;
         EntityPlayer player = PlayerHelper.getPlayerFromUUID(owner);

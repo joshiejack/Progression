@@ -75,6 +75,7 @@ public class PlayerHelper {
     public static EntityPlayer getPlayerFromUUID(UUID uuid) {
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) return MCClientHelper.getPlayer();
         for (EntityPlayerMP player : getAllPlayers()) {
+            System.out.println(getUUIDForPlayer(player));
             if (getUUIDForPlayer(player).equals(uuid)) {
                 return player;
             }

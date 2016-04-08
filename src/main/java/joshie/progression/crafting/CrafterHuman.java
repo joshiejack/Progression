@@ -6,6 +6,7 @@ import joshie.progression.api.criteria.IFilterProvider;
 import joshie.progression.json.Options;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,7 @@ public class CrafterHuman extends Crafter {
     }
 
     @Override
-    public boolean canUseItemWithAction(ActionType type, ItemStack stack) {
+    public boolean canUseItemWithAction(World world, ActionType type, ItemStack stack) {
         Set<IFilterProvider> filters = CraftingRegistry.getFiltersForStack(type, stack);
         List<IFilterProvider> matched = new ArrayList();
         for (IFilterProvider filter : filters) {
@@ -32,7 +33,7 @@ public class CrafterHuman extends Crafter {
         }
 
         if (matched.size() == 0) return !Options.settings.disableUsageUntilRewardAdded;
-        Set<ICriteria> completed = ProgressionAPI.player.getCompletedCriteriaList(uuid);
+        Set<ICriteria> completed = ProgressionAPI.player.getCompletedCriteriaList(uuid, world.isRemote);
         for (IFilterProvider filter : matched) {
             ICriteria criteria = CraftingRegistry.getCriteriaForFilter(type, filter);
             if (criteria != null && completed.contains(criteria)) return true;

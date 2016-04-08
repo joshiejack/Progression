@@ -26,7 +26,7 @@ public class CriteriaNBT implements IMapHelper {
 	@Override
 	public Object readKey(NBTTagCompound tag) {
 		String name = tag.getString("Name");
-		return APIHandler.getCriteriaFromName(UUID.fromString(name));
+		return APIHandler.getCache(false).getCriteria().get(UUID.fromString(name));
 	}
 
 	@Override

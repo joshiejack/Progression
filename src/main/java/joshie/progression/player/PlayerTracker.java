@@ -1,22 +1,20 @@
 package joshie.progression.player;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.UUID;
-
 import com.google.common.collect.Maps;
-
 import joshie.progression.Progression;
 import joshie.progression.helpers.PlayerHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.UUID;
 
 public class PlayerTracker {
     private static final HashMap<TileEntity, UUID> owners = Maps.newHashMap();
@@ -39,12 +37,12 @@ public class PlayerTracker {
         return Progression.data.getServerPlayer(uuid);
     }
 
-    public static PlayerDataCommon getPlayerData(UUID uuid) {
-        return FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT ? getClientPlayer() : getServerPlayer(uuid);
+    public static PlayerDataCommon getPlayerData(UUID uuid, boolean isClient) {
+        return isClient ? getClientPlayer() : getServerPlayer(uuid);
     }
 
     public static PlayerDataCommon getPlayerData(EntityPlayer player) {
-        return getPlayerData(PlayerHelper.getUUIDForPlayer(player));
+        return getPlayerData(PlayerHelper.getUUIDForPlayer(player), player.worldObj.isRemote);
     }
     
     @SubscribeEvent(priority = EventPriority.LOWEST)

@@ -7,7 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 @ProgressionRule(name="playerPos", color=0xFFBBBBBB)
 public class FilterPlayerLocationAround extends FilterLocationBase {
     public int randomX = 8;
-    public int randomY = 2;
+    public int randomY = 0;
     public int randomZ = 8;
 
     @Override

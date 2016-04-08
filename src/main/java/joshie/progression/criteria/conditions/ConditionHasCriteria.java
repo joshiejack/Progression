@@ -20,9 +20,9 @@ public class ConditionHasCriteria extends ConditionBase implements IInit, ICusto
     public String displayName = "";
 
     @Override
-    public void init() {
+    public void init(boolean isClient) {
         try {
-            for (ICriteria c : APIHandler.getCriteria().values()) {
+            for (ICriteria c : APIHandler.getCache(isClient).getCriteria().values()) {
                 String display = c.getLocalisedName();
                 if (c.getLocalisedName().equals(displayName)) {
                     criteria = c;

@@ -52,7 +52,7 @@ public class GuiCriteriaEditor extends GuiBaseEditor implements IBarProvider, II
 
     @Override
     public void initData(GuiCore core) {
-        criteria = APIHandler.getCriteriaFromName(criteria.getUniqueID()); //Reload the criteria from the cache
+        criteria = APIHandler.getCache(true).getCriteria().get(criteria.getUniqueID()); //Reload the criteria from the cache
         if (criteria == null) {
             GuiCore.INSTANCE.setEditor(GuiTreeEditor.INSTANCE);
             return;

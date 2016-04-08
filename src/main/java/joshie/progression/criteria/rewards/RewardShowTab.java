@@ -24,9 +24,9 @@ public class RewardShowTab extends RewardBaseSingular implements IInit, IGetterC
     private ITab tab;
 
     @Override
-    public void init() {
+    public void init(boolean isClient) {
         try {
-            for (ITab t : APIHandler.getTabs().values()) {
+            for (ITab t : APIHandler.getCache(isClient).getTabs().values()) {
                 String display = t.getDisplayName();
                 if (t.getDisplayName().equals(displayName)) {
                     tab = t;

@@ -23,6 +23,7 @@ public abstract class TriggerBaseCounter extends TriggerBase implements ICustomD
 
     @Override
     public int getPercentage() {
+        System.out.println("Counter: " + counter + " " + this);
         return (counter * 100) / amount;
     }
 
@@ -43,6 +44,7 @@ public abstract class TriggerBaseCounter extends TriggerBase implements ICustomD
     @Override
     public void readDataFromNBT(NBTTagCompound tag) {
         counter = tag.getInteger("Count");
+        System.out.println("Counter: " + counter + " " + this);
     }
 
     @Override

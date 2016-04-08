@@ -50,7 +50,7 @@ public class FeatureTabList extends FeatureProgression {
     public int getCompletionAmount(ITab tab) {
         int totaltasks = tab.getCriteria().size();
         if (totaltasks == 0) return 100;
-        Set<ICriteria> completed = ProgressionAPI.player.getCompletedCriteriaList(PlayerHelper.getClientUUID());
+        Set<ICriteria> completed = ProgressionAPI.player.getCompletedCriteriaList(PlayerHelper.getClientUUID(), true);
 
         int tasksdone = 0;
         for (ICriteria criteria: completed) {
@@ -63,8 +63,8 @@ public class FeatureTabList extends FeatureProgression {
     @Override
     public void draw(int mouseX, int mouseY) {
         int pos = 0;
-        position.setHeight(APIHandler.getTabs().values().size() * 20);
-        for (ITab tab: APIHandler.getTabs().values()) {
+        position.setHeight(APIHandler.getCache(true).getTabs().values().size() * 20);
+        for (ITab tab: APIHandler.getCache(true).getTabs().values()) {
             EnchiridionAPI.draw.drawSplitScaledString((pos + 1) + ".  " + tab.getDisplayName(), position.getLeft(), position.getTop() + pos * 20, 100, 0xFF404040, 1F);
             EnchiridionAPI.draw.drawSplitScaledString(getCompletionAmount(tab) + "% Completed", position.getLeft() + 13, position.getTop() + 10 + pos * 20, 100, 0xFF404040, 0.75F);
 

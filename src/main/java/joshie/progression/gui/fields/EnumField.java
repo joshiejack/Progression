@@ -32,7 +32,7 @@ public class EnumField extends AbstractField {
 
         //Init the object after we've set it
         if (object instanceof IInit) {
-            ((IInit) object).init();
+            ((IInit) object).init(true);
         }
     }
 

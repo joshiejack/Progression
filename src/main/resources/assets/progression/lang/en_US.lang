@@ -304,9 +304,10 @@ progression.hideable.allTasks=All
 progression.hideable.allRewards=All
 progression.hideable.infinite=Infinite
 progression.preview=Preview
-progression.=item.freeFree Item!
+progression.item.free=Free Item!
 progression.completed=%s%% completed
 progression.ability=Ability Gain!
+progression.block.place=Place a Block!
 
 #Universal Field Provider Text
 progression.isVisible=Whether this should show up when viewing the criteria in display mode or not

@@ -57,7 +57,7 @@ public class ActionClaimReward extends AbstractAction implements IButtonAction {
         }
 
         //Attempt to grab the criteria based on the displayname
-        for (ICriteria c : APIHandler.getCriteria().values()) {
+        for (ICriteria c : APIHandler.getCache(true).getCriteria().values()) {
             String display = c.getLocalisedName();
             if (c.getLocalisedName().equals(displayName)) {
                 criteria = c;

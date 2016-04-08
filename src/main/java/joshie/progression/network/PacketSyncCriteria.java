@@ -42,7 +42,7 @@ public class PacketSyncCriteria extends PenguinPacket {
         int size = buf.readInt();
         criteria = new ICriteria[size];
         for (int i = 0; i < size; i++) {
-            criteria[i] = APIHandler.getCriteriaFromName(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
+            criteria[i] = APIHandler.getCache(true).getCriteria().get(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
         }
 
         integers = new Integer[size];

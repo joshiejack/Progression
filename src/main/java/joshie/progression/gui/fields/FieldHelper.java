@@ -71,7 +71,7 @@ public class FieldHelper implements ITextEditable {
 
             //Init the object after we've set it
             if (o instanceof IInit) {
-                ((IInit) o).init();
+                ((IInit) o).init(true);
             }
         } catch (Exception e) {}
     }

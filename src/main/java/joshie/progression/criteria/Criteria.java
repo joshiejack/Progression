@@ -30,7 +30,7 @@ public class Criteria implements ICriteria {
     public ItemStack stack = new ItemStack(Blocks.stone);
     public int x, y;
 
-    public Criteria(ITab tab, UUID uuid, boolean isClientside) {
+    public Criteria(ITab tab, UUID uuid) {
         this.tab = tab;
         this.uuid = uuid;
         this.isRepeatable = 1;

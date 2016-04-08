@@ -13,13 +13,13 @@ public interface IPlayerData {
     public NBTTagCompound getCustomData(EntityPlayer player, String string);
     
     /** Returns the tag compound with this string id **/
-    public NBTTagCompound getCustomData(UUID uuid, String string);
+    public NBTTagCompound getCustomData(UUID uuid, String string, boolean isClient);
 
     /** Returns a stored doubled with this name **/
-    public double getDouble(UUID uuid, String name);
+    public double getDouble(UUID uuid, String name, boolean isClient);
 
     /** Get a boolean **/
-    public boolean getBoolean(UUID uuid, String name);
+    public boolean getBoolean(UUID uuid, String name, boolean isClient);
     
     
     /** Only call any of these setters serverside, client side will break **/
@@ -32,5 +32,5 @@ public interface IPlayerData {
     public void addDouble(EntityPlayerMP player, String name, double value);
 
     /** Returns a list of all the completed criteria for this player **/
-    public Set<ICriteria> getCompletedCriteriaList(UUID uuid);
+    public Set<ICriteria> getCompletedCriteriaList(UUID uuid, boolean isClient);
 }

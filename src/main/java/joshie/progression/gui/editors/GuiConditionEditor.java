@@ -34,7 +34,7 @@ public class GuiConditionEditor extends GuiBaseEditor implements IBarProvider {
 
     @Override
     public void initData(GuiCore core) {
-        trigger = APIHandler.getCache().getTriggerFromUUID(trigger.getUniqueID()); //Reload the trigger from the cache
+        trigger = APIHandler.getCache(true).getTriggerFromUUID(trigger.getUniqueID()); //Reload the trigger from the cache
         if (trigger == null) {
             GuiCore.INSTANCE.setEditor(GuiCriteriaEditor.INSTANCE);
             return;

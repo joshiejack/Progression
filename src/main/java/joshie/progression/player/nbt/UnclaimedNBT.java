@@ -45,7 +45,7 @@ public class UnclaimedNBT implements IMapHelper<UUID, Set<IRewardProvider>> {
         for (int i = 0; i < list.tagCount(); i++) {
             String s = list.getStringTagAt(i);
             UUID uuid = UUID.fromString(s);
-            IRewardProvider reward = APIHandler.getCache().getRewardFromUUID(uuid);
+            IRewardProvider reward = APIHandler.getCache(false).getRewardFromUUID(uuid);
             rewards.add(reward);
         }
 

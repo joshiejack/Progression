@@ -17,7 +17,6 @@ import joshie.progression.lib.CriteriaNotFoundException;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.io.FileUtils;
@@ -141,7 +140,7 @@ public class JSONLoader {
                 stack = new ItemStack(Items.book);
             }
 
-            ITab iTab = APIHandler.newTab(data.uuid);
+            ITab iTab = APIHandler.newTab(data.uuid, isClientside);
             iTab.setDisplayName(data.displayName).setVisibility(data.isVisible).setStack(stack).setSortIndex(data.sortIndex);
 
             /** Step 1: we create add all instances of criteria to the registry **/
@@ -151,17 +150,17 @@ public class JSONLoader {
 
             /** Step 2 : Register all the conditions and triggers for this criteria **/
             for (DataCriteria criteria : data.criteria) {
-                ICriteria theCriteria = APIHandler.getCriteriaFromName(criteria.uuid);
+                ICriteria theCriteria = APIHandler.getCache(isClientside).getCriteria().get(criteria.uuid);
                 if (theCriteria == null) {
                     throw new CriteriaNotFoundException(criteria.uuid);
                 }
 
                 if (criteria.triggers != null) {
                     for (DataTrigger trigger: criteria.triggers) {
-                        ITriggerProvider iTrigger = APIHandler.newTrigger(theCriteria, trigger.uuid, trigger.type, trigger.data);
+                        ITriggerProvider iTrigger = APIHandler.newTrigger(theCriteria, trigger.uuid, trigger.type, trigger.data, isClientside);
                         if (trigger.conditions != null && iTrigger != null) {
                             for (DataGeneric generic : trigger.conditions) {
-                                APIHandler.newCondition(iTrigger, generic.uuid, generic.type, generic.data);
+                                APIHandler.newCondition(iTrigger, generic.uuid, generic.type, generic.data, isClientside);
                             }
                         }
                     }
@@ -170,14 +169,14 @@ public class JSONLoader {
                 //Add the Rewards
                 if (criteria.rewards != null) {
                     for (DataGeneric reward : criteria.rewards) {
-                        APIHandler.newReward(theCriteria, reward.uuid, reward.type, reward.data);
+                        APIHandler.newReward(theCriteria, reward.uuid, reward.type, reward.data, isClientside);
                     }
                 }
             }
 
             /** Step 3, nAdd the extra data **/
             for (DataCriteria criteria : data.criteria) {
-                ICriteria theCriteria = APIHandler.getCriteriaFromName(criteria.uuid);
+                ICriteria theCriteria = APIHandler.getCache(isClientside).getCriteria().get(criteria.uuid);
                 if (theCriteria == null) {
                     Progression.logger.log(org.apache.logging.log4j.Level.WARN, "Criteria was not found, do not report this.");
                     throw new CriteriaNotFoundException(criteria.uuid);
@@ -187,14 +186,14 @@ public class JSONLoader {
                 if (criteria.prereqs != null) {
                     thePrereqs = new ICriteria[criteria.prereqs.length];
                     for (int i = 0; i < thePrereqs.length; i++)
-                        thePrereqs[i] = APIHandler.getCriteriaFromName(criteria.prereqs[i]);
+                        thePrereqs[i] = APIHandler.getCache(isClientside).getCriteria().get(criteria.prereqs[i]);
                 }
 
                 ICriteria[] theConflicts = new ICriteria[0];
                 if (criteria.conflicts != null) {
                     theConflicts = new ICriteria[criteria.conflicts.length];
                     for (int i = 0; i < theConflicts.length; i++)
-                        theConflicts[i] = APIHandler.getCriteriaFromName(criteria.conflicts[i]);
+                        theConflicts[i] = APIHandler.getCache(isClientside).getCriteria().get(criteria.conflicts[i]);
                 }
 
                 boolean allRequired = criteria.allTasks;
@@ -227,14 +226,14 @@ public class JSONLoader {
         }
         
         //Now that everything has been loaded in, we should go and init all the data
-        for (ITab tab : APIHandler.getTabs().values()) {
+        for (ITab tab : APIHandler.getCache(isClientside).getTabs().values()) {
             for (ICriteria criteria: tab.getCriteria()) {
                 for (ITriggerProvider provider: criteria.getTriggers()) {
                     ITrigger trigger = provider.getProvided();
-                    if (trigger instanceof IInit) ((IInit)trigger).init();
+                    if (trigger instanceof IInit) ((IInit)trigger).init(isClientside);
                     if (trigger instanceof IHasFilters) {
                         for (IFilterProvider filter: ((IHasFilters)trigger).getAllFilters()) {
-                            if (filter.getProvided() instanceof IInit) ((IInit)filter.getProvided()).init();
+                            if (filter.getProvided() instanceof IInit) ((IInit)filter.getProvided()).init(isClientside);
                         }
                     }
                     
@@ -242,20 +241,20 @@ public class JSONLoader {
                     
                     for (IConditionProvider conditionProvider: provider.getConditions()) {
                         ICondition condition = conditionProvider.getProvided();
-                        if (condition instanceof IInit) ((IInit)condition).init();
+                        if (condition instanceof IInit) ((IInit)condition).init(isClientside);
                         if (condition instanceof IHasFilters) {
                             for (IFilterProvider filter: ((IHasFilters)condition).getAllFilters()) {
-                                if (filter.getProvided() instanceof IInit) ((IInit)filter.getProvided()).init();
+                                if (filter.getProvided() instanceof IInit) ((IInit)filter.getProvided()).init(isClientside);
                             }
                         }
                     }
                  }
                 
                 for (IRewardProvider provider: criteria.getRewards()) {
-                    if (provider.getProvided() instanceof IInit) ((IInit)provider.getProvided()).init();
+                    if (provider.getProvided() instanceof IInit) ((IInit)provider.getProvided()).init(isClientside);
                     if (provider.getProvided() instanceof IHasFilters) {
                         for (IFilterProvider filter: ((IHasFilters)provider.getProvided()).getAllFilters()) {
-                            if (filter.getProvided() instanceof IInit) ((IInit)filter.getProvided()).init();
+                            if (filter.getProvided() instanceof IInit) ((IInit)filter.getProvided()).init(isClientside);
                         }
                     }
                     
@@ -265,8 +264,8 @@ public class JSONLoader {
         }
     }
 
-    public static void saveJSON(DefaultSettings toSave) {
-        File file = FileHelper.getCriteriaFile(serverName, FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT); //Even when saving on the client, force it to always save to the criteria.json
+    public static void saveJSON(DefaultSettings toSave, boolean isClient) {
+        File file = FileHelper.getCriteriaFile(serverName, isClient); //Even when saving on the client, force it to always save to the criteria.json
         try {
             if (Options.debugMode) Progression.logger.log(Level.INFO, "Writing to the file is being done at saveJSON");
             Writer writer = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
@@ -279,10 +278,10 @@ public class JSONLoader {
         if (Options.debugMode) Progression.logger.log(Level.INFO, "Saved JSON at " + System.currentTimeMillis());
     }
 
-    public static void saveData() {
+    public static void saveData(boolean isClient) {
         if (Options.debugMode) Progression.logger.log(Level.INFO, "Begin logging");
         HashSet<UUID> tabNames = new HashSet();
-        Collection<ITab> allTabs = APIHandler.getTabs().values();
+        Collection<ITab> allTabs = APIHandler.getCache(isClient).getTabs().values();
         HashSet<UUID> names = new HashSet();
         DefaultSettings forJSONTabs = new DefaultSettings();
         for (ITab tab : allTabs) {
@@ -368,6 +367,6 @@ public class JSONLoader {
             forJSONTabs.tabs.add(tabData);
         }
 
-        saveJSON(forJSONTabs);
+        saveJSON(forJSONTabs, isClient);
     }
 }

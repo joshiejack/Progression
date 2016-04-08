@@ -36,7 +36,7 @@ public abstract class FeatureCriteria extends FeatureProgression implements ISim
         super.onFieldsSet();
 
         try {
-            for (ICriteria c : APIHandler.getCriteria().values()) {
+            for (ICriteria c : APIHandler.getCache(true).getCriteria().values()) {
                 String display = c.getLocalisedName();
                 if (c.getLocalisedName().equals(displayName)) {
                     criteria = c;
@@ -52,7 +52,7 @@ public abstract class FeatureCriteria extends FeatureProgression implements ISim
     @Override
     public void draw(int mouseX, int mouseY) {
         if (criteriaID.equals("")) onFieldsSet();
-        criteria = APIHandler.getCriteriaFromName(criteriaID);
+        criteria = APIHandler.getCache(true).getCriteria().get(criteriaID);
         if (criteria != null) {
             drawFeature(mouseX, mouseY);
         }

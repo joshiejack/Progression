@@ -22,9 +22,9 @@ public class RewardCriteria extends RewardBaseSingular implements IInit, ICustom
     public String displayName = "";
 
     @Override
-    public void init() {
+    public void init(boolean isClient) {
         try {
-            for (ICriteria c : APIHandler.getCriteria().values()) {
+            for (ICriteria c : APIHandler.getCache(isClient).getCriteria().values()) {
                 if (c.getLocalisedName().equals(displayName)) {
                     criteria = c;
                     break;

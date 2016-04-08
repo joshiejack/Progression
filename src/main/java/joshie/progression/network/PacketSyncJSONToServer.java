@@ -1,10 +1,5 @@
 package joshie.progression.network;
 
-import static joshie.progression.network.core.PacketPart.REQUEST_DATA;
-import static joshie.progression.network.core.PacketPart.SEND_DATA;
-
-import java.util.HashMap;
-
 import io.netty.buffer.ByteBuf;
 import joshie.progression.helpers.SplitHelper;
 import joshie.progression.json.DefaultSettings;
@@ -13,6 +8,11 @@ import joshie.progression.json.Options;
 import joshie.progression.network.core.PacketPart;
 import joshie.progression.network.core.PacketSyncStringArray;
 import net.minecraft.entity.player.EntityPlayer;
+
+import java.util.HashMap;
+
+import static joshie.progression.network.core.PacketPart.REQUEST_DATA;
+import static joshie.progression.network.core.PacketPart.SEND_DATA;
 
 public class PacketSyncJSONToServer extends PacketSyncStringArray {
     private static HashMap<Long, String[]> serverList = new HashMap();
@@ -92,8 +92,8 @@ public class PacketSyncJSONToServer extends PacketSyncStringArray {
                 JSONLoader.serverHashcode = (int) timestamp; //For resyncing purposes < and v
                 JSONLoader.serverTabJsonData = SplitHelper.splitStringEvery(json, JSONLoader.MAX_LENGTH);
                 //Now that we have saved the newer data, we should reload it all
-                PacketReload.handle(settings); //Reload everything
-                JSONLoader.saveData(); //Save to the server
+                PacketReload.handle(settings, false); //Reload everything
+                JSONLoader.saveData(false); //Save to the server
                 serverList.remove(timestamp); //Reset
             }
         }

@@ -28,7 +28,7 @@ public class FilterPotionItem extends FilterPotionBase implements IInit, ISpecia
     }
 
     @Override
-    public void init() {
+    public void init(boolean isClient) {
         ids = getIds(getEffects(stack.getItemDamage()));
     }
 

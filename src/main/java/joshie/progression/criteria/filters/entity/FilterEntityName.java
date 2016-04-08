@@ -19,7 +19,7 @@ public class FilterEntityName extends FilterBaseEntity implements IInit {
     public String entityName = "Pig";
 
     @Override
-    public void init() {
+    public void init(boolean isClient) {
         if (entityName.startsWith("*")) matchFront = true;
         else matchFront = false;
         if (entityName.endsWith("*")) matchBack = true;

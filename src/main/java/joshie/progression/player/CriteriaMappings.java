@@ -47,7 +47,6 @@ public class CriteriaMappings {
 
     public void syncToClient(EntityPlayerMP player) {
         //remap(); //Remap the data, before the client gets sent the data
-
         PacketHandler.sendToClient(new PacketSyncTeam(master.getTeam()), player);
         PacketHandler.sendToClient(new PacketSyncAbilities(master.getAbilities()), player);
         PacketHandler.sendToClient(new PacketSyncCustomData(master.getCustomStats()), player);
@@ -66,7 +65,7 @@ public class CriteriaMappings {
             UUID uuid = UUID.fromString(tag.getString("UUID"));
             NBTTagCompound triggerNBT = tag.getCompoundTag("Data");
             if (triggerDataMap.get(uuid) == null) {
-                ITriggerProvider trigger = APIHandler.getCache().getTriggerFromUUID(uuid);
+                ITriggerProvider trigger = APIHandler.getCache(false).getTriggerFromUUID(uuid);
                 if (trigger != null) {
                     IStoreTriggerData triggerData = (IStoreTriggerData)trigger.copy().getProvided();
                     triggerData.readDataFromNBT(triggerNBT);
@@ -138,7 +137,7 @@ public class CriteriaMappings {
     public void setTriggerData(boolean overwrite, PacketSyncTriggerData.DataPair[] pairs) {
         if (overwrite) triggerDataMap = new HashMap();
         for (PacketSyncTriggerData.DataPair pair: pairs) {
-            ITriggerProvider trigger = APIHandler.getCache().getTriggerFromUUID(pair.uuid);
+            ITriggerProvider trigger = APIHandler.getCache(true).getTriggerFromUUID(pair.uuid);
             if (trigger != null) {
                 ((IStoreTriggerData)trigger.getProvided()).readDataFromNBT(pair.data); //Fuck with local cache
             }
@@ -155,6 +154,7 @@ public class CriteriaMappings {
 
     public void sendTriggerDataToClient(ITriggerProvider trigger) {
         if (trigger.getProvided() instanceof IStoreTriggerData) {
+            System.out.println("It was an instance of sttore trigger data, so we are sending that data now");
             sendTriggerDataToClient(trigger.getUniqueID(), (IStoreTriggerData) trigger.getProvided());
         }
     }
@@ -187,6 +187,7 @@ public class CriteriaMappings {
     /** Called to fire a trigger type, Triggers are only ever called on criteria that is activated **/
     public Result fireAllTriggers(String type, Object... triggerData) {
         if (activeTriggers == null) return Result.DEFAULT; //If the remapping hasn't occured yet, say goodbye!
+        System.out.println("We got this far in to the triggers");
         //If the trigger is a forced removal, then force remve it
         if (type.equals("forced-remove")) {
             ICriteria criteria = (ICriteria) triggerData[0];
@@ -217,6 +218,7 @@ public class CriteriaMappings {
         //Fire the trigger
         Collections.shuffle(toTrigger);
         for (ITriggerProvider trigger : toTrigger) {
+            System.out.println("Firing a trigger: " + trigger.getUniqueID());
             if (trigger.isCancelable()) {
                 boolean isCancelingEnabled = trigger.isCanceling();
                 if ((trigger.getProvided().onFired(uuid, triggerData))) {
@@ -240,6 +242,7 @@ public class CriteriaMappings {
         for (ITriggerProvider trigger : triggers) {
             if (cantContinue.contains(trigger)) continue; //If we're bypassing mark all triggers as fired
             if (trigger.getProvided().isCompleted()) {
+                System.out.println("MARKING A TRIGGER AS COMPLETE");
                 completedTriggers.add(trigger);
                 toRemove.add(trigger);
                 PacketHandler.sendToTeam(new PacketSyncTriggers(trigger), master.team);
@@ -271,6 +274,7 @@ public class CriteriaMappings {
             //Complete the criteria and bypass any requirements
             if ((allFired && allRequired) || (!allRequired && firedCount >= countRequired)) {
                 completedAnyCriteria = true;
+                System.out.println("Added a criteria to the completed list");
                 toComplete.add(criteria);
             }
         }
@@ -313,6 +317,7 @@ public class CriteriaMappings {
             for (IRewardProvider reward: list) {
                 if (!reward.mustClaim()) {
                     EntityPlayerMP aPlayer = (EntityPlayerMP) PlayerHelper.getPlayerFromUUID(uuid);
+                    System.out.println(aPlayer);
                     if (aPlayer != null) {
                         if(claimReward(aPlayer, reward)) {
                             completed.add(reward.getCriteria());
@@ -327,6 +332,7 @@ public class CriteriaMappings {
         }
 
         for (ICriteria criteria: completed) {
+            System.out.println("WE CLAIMED THE CRITERIA: " + criteria.getLocalisedName());
             remapAfterClaiming(criteria);
         }
 
@@ -373,6 +379,8 @@ public class CriteriaMappings {
             reward.getProvided().reward(player);
             rewardsGiven++; //Increase the amount
         }
+
+        System.out.println("ATTEMPTED TO CLAIM REWARDS");
 
         setRewardsGiven(uuid, criteria, rewardsGiven);
         if ((!criteria.givesAllRewards() && rewardsGiven >= criteria.getAmountOfRewards()) || (criteria.givesAllRewards() && rewardsGiven >= criteria.getRewards().size())) { //If all the rewards have been given out, then do some remapping of everything
@@ -515,7 +523,7 @@ public class CriteriaMappings {
         Set<ICriteria> availableCriteria = new HashSet(); //Recreate the available mappings
         activeTriggers = HashMultimap.create(); //Recreate the trigger mappings
 
-        Collection<ICriteria> allCriteria = APIHandler.getCriteria().values();
+        Collection<ICriteria> allCriteria = APIHandler.getCache(false).getCriteria().values();
         for (ICriteria criteria : allCriteria) {
             //If the criteria has been marked as impossible don't attach it to anything
             if (impossible.contains(criteria)) continue;

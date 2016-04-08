@@ -134,7 +134,7 @@ public class PacketFireTrigger extends PenguinPacket {
                         data[i] = ByteBufUtils.readTag(buf);
                         break;
                     case CRITERIA:
-                        data[i] = APIHandler.getCriteriaFromName(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
+                        data[i] = APIHandler.getCache(false).getCriteria().get(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
                         break;
                     case BLOCK:
                         data[i] = Block.blockRegistry.getObject(new ResourceLocation(ByteBufUtils.readUTF8String(buf), ByteBufUtils.readUTF8String(buf)));

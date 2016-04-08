@@ -72,7 +72,7 @@ public class FilterItemNBTFuzzy extends FilterBaseItem implements IInit, ISetter
     }
 
     @Override
-    public void init() {
+    public void init(boolean isClient) {
         switch (type) {
             case BYTE: parseByte();
                 break;
@@ -92,7 +92,7 @@ public class FilterItemNBTFuzzy extends FilterBaseItem implements IInit, ISetter
     @Override
     public boolean setField(String fieldName, Object object) {
         if (fieldName.equals(value)) {
-            init(); //PARSE
+            init(true); //PARSE
             return true;
         }
 

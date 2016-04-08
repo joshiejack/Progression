@@ -1,9 +1,9 @@
 package joshie.progression.commands;
 
-import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.network.PacketHandler;
 import joshie.progression.network.PacketReset;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
 
 public class CommandReset extends AbstractCommand {
     @Override
@@ -21,9 +21,9 @@ public class CommandReset extends AbstractCommand {
         if (sender.getEntityWorld().isRemote) {
             if (parameters.length >= 1) PacketHandler.sendToServer(new PacketReset(parameters[0]));
             else PacketHandler.sendToServer(new PacketReset());
-        } else {
-            if (parameters.length >= 1) PacketReset.handle(MCClientHelper.getPlayer(), true, parameters[0]);
-            else PacketReset.handle(MCClientHelper.getPlayer(), false, null);
+        } else if (sender instanceof EntityPlayer) {
+            if (parameters.length >= 1) PacketReset.handle((EntityPlayer)sender, true, parameters[0]);
+            else PacketReset.handle((EntityPlayer)sender, false, null);
         }
 
         return true;

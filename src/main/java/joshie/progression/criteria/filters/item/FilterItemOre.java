@@ -20,7 +20,7 @@ public class FilterItemOre extends FilterBaseItem implements IInit {
     public String oreName = "block*";
 
     @Override
-    public void init() {
+    public void init(boolean isClient) {
         if (oreName.startsWith("*")) matchFront = true;
         else matchFront = false;
         if (oreName.endsWith("*")) matchBack = true;

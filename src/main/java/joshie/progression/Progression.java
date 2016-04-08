@@ -84,11 +84,14 @@ public class Progression {
             ((ServerCommandManager) manager).registerCommand(CommandManager.INSTANCE);
         }
 
-        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) return;
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+            Progression.logger.log(Level.INFO, "How did a client get in the server start?");
+            return;
+        }
 
         
         //Remap all relevant data
-        RemappingHandler.reloadServerData(JSONLoader.getServerTabData());
+        RemappingHandler.reloadServerData(JSONLoader.getServerTabData(), false);
         
         World world = MinecraftServer.getServer().worldServers[0];
         data = (PlayerSavedData) world.loadItemData(PlayerSavedData.class, MODNAME);

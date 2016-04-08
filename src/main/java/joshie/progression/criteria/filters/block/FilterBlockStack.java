@@ -20,7 +20,7 @@ public class FilterBlockStack extends FilterBaseBlock implements ISpecialFieldPr
     private int filterMeta = 0;
 
     @Override
-    public void init() {
+    public void init(boolean isClient) {
         try {
             filterBlock = getBlock(stack);
             filterMeta = filterBlock.getMetaFromState(filterBlock.getStateFromMeta((stack).getItemDamage()));

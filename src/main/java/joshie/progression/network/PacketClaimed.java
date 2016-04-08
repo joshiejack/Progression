@@ -5,8 +5,6 @@ import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.network.core.PenguinPacket;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
 
 public class PacketClaimed extends PenguinPacket {
     private int x, y, z;
@@ -34,7 +32,7 @@ public class PacketClaimed extends PenguinPacket {
     
 	@Override
 	public void handlePacket(EntityPlayer player) {
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+		if (player.worldObj.isRemote) {
             MCClientHelper.getPlayer().addChatComponentMessage(new ChatComponentText("You have claimed the Tile Entity at " + x + " " + y + " " + z));
         }
 	}

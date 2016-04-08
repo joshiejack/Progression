@@ -36,7 +36,7 @@ public class BooleanField extends AbstractField {
             field.set(object, bool);
             //Init the object after we've set it
             if (object instanceof IInit) {
-                ((IInit) object).init();
+                ((IInit) object).init(true);
             }
         } catch (Exception e) {}
     }

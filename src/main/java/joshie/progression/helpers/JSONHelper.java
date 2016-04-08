@@ -181,7 +181,7 @@ public class JSONHelper {
         }
     }
 
-    public static List<IFilterProvider> getItemFilters(JsonObject data, String name, IRule master) {
+    public static List<IFilterProvider> getItemFilters(JsonObject data, String name, IRule master, boolean isClientside) {
         ArrayList<IFilterProvider> filters = new ArrayList();
         if (data.get(name) == null) return filters;
         JsonArray array = data.get(name).getAsJsonArray();
@@ -189,7 +189,7 @@ public class JSONHelper {
             JsonObject object = array.get(i).getAsJsonObject();
             String typeName = object.get("type").getAsString();
             JsonObject typeData = object.get("data").getAsJsonObject();
-            IFilterProvider filter = APIHandler.newFilter(master.getProvider(), typeName, typeData);
+            IFilterProvider filter = APIHandler.newFilter(master.getProvider(), typeName, typeData, isClientside);
             if (filter != null) {
                 filters.add(filter);
             }
@@ -237,8 +237,8 @@ public class JSONHelper {
         field.set(object, getDouble(json, field.getName(), dflt));
     }
 
-    private static void readItemFilters(JsonObject json, Field field, IRule object) throws IllegalArgumentException, IllegalAccessException {
-        field.set(object, getItemFilters(json, field.getName(), object));
+    private static void readItemFilters(JsonObject json, Field field, IRule object, boolean isClientside) throws IllegalArgumentException, IllegalAccessException {
+        field.set(object, getItemFilters(json, field.getName(), object, isClientside));
     }
 
     private static void readItemStack(JsonObject json, Field field, IRule object, ItemStack dflt) throws IllegalArgumentException, IllegalAccessException {
@@ -257,7 +257,7 @@ public class JSONHelper {
         field.set(object, getNBT(json, field.getName(), dflt));
     }
 
-    public static void readVariables(JsonObject json, IRule provider) {
+    public static void readVariables(JsonObject json, IRule provider, boolean isClientside) {
         try {
             for (Field field : provider.getClass().getFields()) {
                 Object defaultValue = field.get(provider);
@@ -271,7 +271,7 @@ public class JSONHelper {
                 if (field.getType() == Block.class) readBlock(json, field, provider, (Block) defaultValue);
                 if (field.getType() == Item.class) readItem(json, field, provider, (Item) defaultValue);
                 if (field.getType() == NBTTagCompound.class) readNBT(json, field, provider, (NBTTagCompound) defaultValue);
-                if (field.getGenericType().toString().equals("java.util.List<" + ProgressionInfo.FILTER + ">")) readItemFilters(json, field, provider);
+                if (field.getGenericType().toString().equals("java.util.List<" + ProgressionInfo.FILTER + ">")) readItemFilters(json, field, provider, isClientside);
             }
         } catch (Exception e) {}
     }
@@ -339,7 +339,7 @@ public class JSONHelper {
         } catch (Exception e) { e.printStackTrace(); }
     }
 
-    public static void readJSON(JsonObject data, IRule provider) {
+    public static void readJSON(JsonObject data, IRule provider, boolean isClientside) {
         boolean specialOnly = false;
         if (provider instanceof ISpecialJSON) {
             ISpecialJSON special = ((ISpecialJSON) provider);
@@ -347,7 +347,7 @@ public class JSONHelper {
             specialOnly = special.onlySpecial();
         }
 
-        if (!specialOnly) JSONHelper.readVariables(data, provider);
+        if (!specialOnly) JSONHelper.readVariables(data, provider, isClientside);
     }
 
     public static void writeJSON(JsonObject data, IRule provider) {

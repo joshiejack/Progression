@@ -19,6 +19,7 @@ public class TriggerBreakBlock extends TriggerBaseBlock implements IHasEventBus 
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onEvent(BreakEvent event) {
+        System.out.println("Firing the event");
         Block block = event.state.getBlock();
         int meta = block.getMetaFromState(event.state);
         if (ProgressionAPI.registry.fireTrigger(event.getPlayer(), getProvider().getUnlocalisedName(), block, meta) == Result.DENY) {

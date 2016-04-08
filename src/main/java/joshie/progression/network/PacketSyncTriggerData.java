@@ -78,6 +78,7 @@ public class PacketSyncTriggerData extends PenguinPacket {
 
     @Override
     public void handlePacket(EntityPlayer player) {
+        System.out.println("Packet read in");
         PlayerTracker.getClientPlayer().getMappings().setTriggerData(overwrite, data);
     }
 }

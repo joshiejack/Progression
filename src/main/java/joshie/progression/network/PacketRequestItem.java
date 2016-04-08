@@ -1,7 +1,6 @@
 package joshie.progression.network;
 
 import io.netty.buffer.ByteBuf;
-import joshie.progression.api.criteria.IReward;
 import joshie.progression.api.criteria.IRewardProvider;
 import joshie.progression.api.special.IRequestItem;
 import joshie.progression.handlers.APIHandler;
@@ -44,17 +43,11 @@ public class PacketRequestItem extends PenguinPacket {
 
     @Override
     public void handlePacket(EntityPlayer player) {
-        IRewardProvider provider = APIHandler.getCache().getRewardFromUUID(uuid);
+        IRewardProvider provider = APIHandler.getCache(player.worldObj.isRemote).getRewardFromUUID(uuid);
         if (provider.getProvided() instanceof IRequestItem) {
             IRequestItem request = ((IRequestItem)provider.getProvided());
             if (player.worldObj.isRemote) PacketHandler.sendToServer(new PacketRequestItem(uuid, request.getRequestedStack()));
             else request.reward(player, stack);
-        }
-
-        IReward reward = APIHandler.getCache().getRewardFromUUID(uuid).getProvided();
-        if (player.worldObj.isRemote) {
-
-
         }
     }
 }

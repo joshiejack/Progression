@@ -58,7 +58,7 @@ public class ButtonNewCriteria extends ButtonBase {
         GuiCore.INSTANCE.clickedButton = true;
         
         if (GuiScreen.isShiftKeyDown()) {
-            APIHandler.newTab(UUID.randomUUID()).setDisplayName("New Tab").setStack(new ItemStack(Items.book)).setVisibility(true);
+            APIHandler.newTab(UUID.randomUUID(), true).setDisplayName("New Tab").setStack(new ItemStack(Items.book)).setVisibility(true);
             GuiCore.INSTANCE.initGui();
         } else {
             GuiTreeEditor.INSTANCE.previous = null;

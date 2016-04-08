@@ -66,7 +66,6 @@ public class Reward implements IRewardProvider {
 
     @Override
     public ItemStack getIcon() {
-        System.out.println(stack);
         return reward instanceof ICustomIcon ? ((ICustomIcon)reward).getIcon() : stack;
     }
 

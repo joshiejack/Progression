@@ -46,7 +46,7 @@ public class RewardPlaceBlock extends RewardBaseItemFilter implements ICustomDes
 
     @Override
     public void addTooltip(List list) {
-        list.add(EnumChatFormatting.WHITE + Progression.translate("block.place"));
+        list.add(EnumChatFormatting.BLUE + Progression.translate("block.place"));
         list.add(getIcon().getDisplayName());
     }
 

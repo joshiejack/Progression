@@ -27,7 +27,7 @@ public class ConditionPoints extends ConditionBase implements ICustomDescription
 
     @Override
     public boolean isSatisfied(IPlayerTeam team) {
-        return isValidValue(ProgressionAPI.player.getDouble(team.getOwner(), variable));
+        return isValidValue(ProgressionAPI.player.getDouble(team.getOwner(), variable, false));
     }
 
     //Helper Methods

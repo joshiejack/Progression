@@ -12,7 +12,7 @@ public class FilterItemNBT extends FilterBaseItem implements IInit {
     public String tagText = "";
 
     @Override
-    public void init() {
+    public void init(boolean isClient) {
         tagValue = StackHelper.getTag(new String[] { tagText }, 0);
     }
 

@@ -28,7 +28,7 @@ public class ItemProgressionRenderer implements ISmartItemModel {
 	@Override
 	public IBakedModel handleItemState(ItemStack stack) {
 		if (mesher == null) mesher  = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
-		ICriteria criteria = ItemProgression.getCriteriaFromStack(stack);
+		ICriteria criteria = ItemProgression.getCriteriaFromStack(stack, true);
 		if (criteria != null && criteria.getIcon().getItem() != stack.getItem() && criteria.getIcon().getItem() != Progression.item) {
 			return mesher.getItemModel(criteria.getIcon());
 		}

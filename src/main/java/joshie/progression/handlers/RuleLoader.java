@@ -37,7 +37,7 @@ public class RuleLoader {
                 if (data.get("cancelable") != null) {
                     isCancelable = (Boolean) data.get("cancelable");
                 }
-                
+
                 ItemStack stack = StackHelper.getStackFromString(icon);
                 if (stack == null) stack = new ItemStack(Progression.item);
                 if (meta != null) {

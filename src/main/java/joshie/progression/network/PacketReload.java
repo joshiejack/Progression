@@ -9,22 +9,20 @@ import joshie.progression.json.Options;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
 
 public class PacketReload extends PacketAction {
     @Override
     public void handlePacket(EntityPlayer player) {
-        PacketReload.handle(JSONLoader.getServerTabData());
+        PacketReload.handle(JSONLoader.getServerTabData(), player.worldObj.isRemote);
     }
 
-    public static void handle(DefaultSettings settings) {
-        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+    public static void handle(DefaultSettings settings, boolean isClient) {
+        if (isClient) {
             ChatHelper.displayChat("Progression data was reloaded", "   Use " + EnumChatFormatting.BLUE + "/progression reset" + EnumChatFormatting.RESET + " if you wish to reset player data");
         } else {
             if (Options.editor) {
                 //Perform a reset of all the data serverside
-                RemappingHandler.reloadServerData(settings);
+                RemappingHandler.reloadServerData(settings, false);
                 for (EntityPlayer player : PlayerHelper.getAllPlayers()) {
                     RemappingHandler.onPlayerConnect((EntityPlayerMP) player);
                 }

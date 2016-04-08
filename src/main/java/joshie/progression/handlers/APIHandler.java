@@ -21,7 +21,6 @@ import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -69,27 +68,14 @@ public class APIHandler implements IProgressionAPI {
         return null;
     }
 
-    public static void resetAPIHandler() {
-        serverCache = new APICache();
-        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+    public static void resetAPIHandler(boolean isClient) {
+        if (isClient) {
             clientCache = new APICache();
-        }
+        } else serverCache = new APICache();
     }
 
-    public static APICache getCache() {
-        return isClientSide() ? clientCache : serverCache;
-    }
-
-    public static HashMap<UUID, ICriteria> getCriteria() {
-        return getCache().getCriteria();
-    }
-
-    public static HashMap<UUID, ITab> getTabs() {
-        return getCache().getTabs();
-    }
-
-    private static boolean isClientSide() {
-        return FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT;
+    public static APICache getCache(boolean isServer) {
+        return isServer ? serverCache : clientCache;
     }
 
     @Override
@@ -159,75 +145,75 @@ public class APIHandler implements IProgressionAPI {
         RewardHurt.sources.put(source.damageType, source);
     }
 
-    public static ICriteria newCriteria(ITab tab, UUID name, boolean isClientside) {
-        ICriteria theCriteria = new Criteria(tab, name, isClientside);
+    public static ICriteria newCriteria(ITab tab, UUID name, boolean isClient) {
+        ICriteria theCriteria = new Criteria(tab, name);
         tab.getCriteria().add(theCriteria);
-        getCriteria().put(name, theCriteria);
+        getCache(isClient).getCriteria().put(name, theCriteria);
         return theCriteria;
     }
 
-    public static ITab newTab(UUID name) {
+    public static ITab newTab(UUID name, boolean isClient) {
         ITab iTab = new Tab().setUniqueName(name);
-        getTabs().put(name, iTab);
+        getCache(isClient).getTabs().put(name, iTab);
         return iTab;
     }
 
-    public static IConditionProvider newCondition(ITriggerProvider trigger, UUID uuid, String type, JsonObject data) {
+    public static IConditionProvider newCondition(ITriggerProvider trigger, UUID uuid, String type, JsonObject data, boolean isClient) {
         IConditionProvider dummy = conditionTypes.get(type);
         if (dummy == null) return null;
         try {
             if (uuid == null) uuid = UUID.randomUUID();
             ICondition newConditionType = dummy.getProvided().getClass().newInstance(); //Create a new instance of the trigger
-            JSONHelper.readJSON(data, newConditionType);
+            JSONHelper.readJSON(data, newConditionType, isClient);
             IConditionProvider provider = new Condition(trigger, uuid, newConditionType, dummy.getIcon(), dummy.getUnlocalisedName(), dummy.getColor());
             provider.readFromJSON(data);
             EventsManager.onAdded(newConditionType);
             trigger.getConditions().add(provider);
-            if (newConditionType instanceof IInit) ((IInit) newConditionType).init();
+            if (newConditionType instanceof IInit) ((IInit) newConditionType).init(isClient);
             return provider;
         } catch (Exception e) { return null; }
     }
 
-    public static ITriggerProvider newTrigger(ICriteria criteria, UUID uuid, String type, JsonObject data) {
+    public static ITriggerProvider newTrigger(ICriteria criteria, UUID uuid, String type, JsonObject data, boolean isClient) {
         ITriggerProvider dummy = triggerTypes.get(type);
         if (dummy == null) return null;
         try {
             if (uuid == null) uuid = UUID.randomUUID();
             ITrigger newTriggerType = dummy.getProvided().getClass().newInstance(); //Create a new instance of the trigger
-            JSONHelper.readJSON(data, newTriggerType);
+            JSONHelper.readJSON(data, newTriggerType, isClient);
             ITriggerProvider provider = new Trigger(criteria, uuid, newTriggerType, dummy.getIcon(), dummy.getUnlocalisedName(), dummy.getColor(), dummy.isCancelable());
             provider.readFromJSON(data);
             criteria.getTriggers().add(provider);
             EventsManager.onAdded(newTriggerType);
-            if (newTriggerType instanceof IInit) ((IInit) newTriggerType).init();
+            if (newTriggerType instanceof IInit) ((IInit) newTriggerType).init(isClient);
             return provider;
         } catch (Exception e) { return null; }
     }
 
-    public static void newReward(ICriteria criteria, UUID uuid, String type, JsonObject data) {
+    public static void newReward(ICriteria criteria, UUID uuid, String type, JsonObject data, boolean isClient) {
         IRewardProvider dummy = rewardTypes.get(type);
         if (dummy == null) return;
         try {
             if (uuid == null) uuid = UUID.randomUUID();
             IReward newRewardType = dummy.getProvided().getClass().newInstance(); //Create a new instance of the reward
-            JSONHelper.readJSON(data, newRewardType);
+            JSONHelper.readJSON(data, newRewardType, isClient);
             IRewardProvider provider = new Reward(criteria, uuid, newRewardType, dummy.getIcon(), dummy.getUnlocalisedName(), dummy.getColor());
             provider.readFromJSON(data);
             criteria.getRewards().add(provider);
             EventsManager.onAdded(newRewardType);
-            if (newRewardType instanceof IInit) ((IInit) newRewardType).init();
+            if (newRewardType instanceof IInit) ((IInit) newRewardType).init(isClient);
         } catch (Exception e) {}
     }
 
-    public static IFilterProvider newFilter(IRuleProvider master, String type, JsonObject data) {
+    public static IFilterProvider newFilter(IRuleProvider master, String type, JsonObject data, boolean isClient) {
         IFilterProvider dummy = filterTypes.get(type);
         if (dummy == null) return null;
         try {
             IFilter newFilterType = dummy.getProvided().getClass().newInstance(); //Create a new instance of the reward
-            JSONHelper.readJSON(data, newFilterType);
+            JSONHelper.readJSON(data, newFilterType, isClient);
             IFilterProvider provider = new Filter(master, UUID.randomUUID(), newFilterType, dummy.getUnlocalisedName(), dummy.getColor());
             EventsManager.onAdded(newFilterType);
-            if (newFilterType instanceof IInit) ((IInit) newFilterType).init();
+            if (newFilterType instanceof IInit) ((IInit) newFilterType).init(isClient);
             return provider;
         } catch (Exception e) { e.printStackTrace();  return  null; }
     }
@@ -237,7 +223,7 @@ public class APIHandler implements IProgressionAPI {
             ITrigger newTriggerType = dummy.getProvided().getClass().newInstance();
             criteria.getTriggers().add(new Trigger(criteria, UUID.randomUUID(), newTriggerType, dummy.getIcon(), dummy.getUnlocalisedName(), dummy.getColor(), dummy.isCancelable()));
             EventsManager.onAdded(newTriggerType);
-            if (newTriggerType instanceof IInit) ((IInit) newTriggerType).init();
+            if (newTriggerType instanceof IInit) ((IInit) newTriggerType).init(true);
         } catch (Exception e) { e.printStackTrace(); }
     }
 
@@ -246,7 +232,7 @@ public class APIHandler implements IProgressionAPI {
             IReward newRewardType = dummy.getProvided().getClass().newInstance();
             criteria.getRewards().add(new Reward(criteria, UUID.randomUUID(), newRewardType, dummy.getIcon(), dummy.getUnlocalisedName(), dummy.getColor()));
             EventsManager.onAdded(newRewardType);
-            if (newRewardType instanceof IInit) ((IInit) newRewardType).init();
+            if (newRewardType instanceof IInit) ((IInit) newRewardType).init(true);
         } catch (Exception e) { e.printStackTrace(); }
     }
 
@@ -255,7 +241,7 @@ public class APIHandler implements IProgressionAPI {
             ICondition newConditionType = dummy.getProvided().getClass().newInstance();
             trigger.getConditions().add(new Condition(trigger, UUID.randomUUID(), newConditionType, dummy.getIcon(), dummy.getUnlocalisedName(), dummy.getColor()));
             EventsManager.onAdded(newConditionType);
-            if (newConditionType instanceof IInit) ((IInit) newConditionType).init();
+            if (newConditionType instanceof IInit) ((IInit) newConditionType).init(true);
         } catch (Exception e) { e.printStackTrace(); }
     }
 
@@ -264,7 +250,7 @@ public class APIHandler implements IProgressionAPI {
             IFilter newFilter = dummy.getProvided().getClass().newInstance();
             field.add(new Filter(dummy.getMaster(), UUID.randomUUID(), newFilter, dummy.getUnlocalisedName(), dummy.getColor()));
             EventsManager.onAdded(newFilter);
-            if (newFilter instanceof IInit) ((IInit) newFilter).init();
+            if (newFilter instanceof IInit) ((IInit) newFilter).init(true);
         } catch (Exception e) { e.printStackTrace(); }
     }
 
@@ -273,16 +259,8 @@ public class APIHandler implements IProgressionAPI {
         return new ActionType(name.toUpperCase()); //WOOT!
     }
 
-    public static ICriteria getCriteriaFromName(UUID name) {
-        return getCache().getCriteria().get(name);
-    }
-
-    public static ITab getTabFromName(UUID name) {
-        return getCache().getTabs().get(name);
-    }
-
-    public static void removeCriteria(UUID uuid, boolean skipTab) {
-        ICriteria c = getCriteria().get(uuid);
+    public static void removeCriteria(UUID uuid, boolean skipTab, boolean isClient) {
+        ICriteria c = getCache(isClient).getCriteria().get(uuid);
         //Remove the criteria from the tab
         if (!skipTab) {
             Iterator<ICriteria> itC = c.getTab().getCriteria().iterator();
@@ -306,7 +284,7 @@ public class APIHandler implements IProgressionAPI {
         }
 
         //Remove this from all the requirement lists
-        for (ICriteria require : getCriteria().values()) {
+        for (ICriteria require : getCache(isClient).getCriteria().values()) {
             Iterator<ICriteria> it = require.getPreReqs().iterator();
             while (it.hasNext()) {
                 ICriteria ct = it.next();
@@ -349,7 +327,7 @@ public class APIHandler implements IProgressionAPI {
         }
 
         //Remove it in general
-        getCriteria().remove(uuid);
+        getCache(isClient).getCriteria().remove(uuid);
     }
 
     @Override

@@ -40,7 +40,7 @@ public class TriggerPoints extends TriggerBaseBoolean implements ICustomDescript
 
     @Override
     public boolean onFired(UUID uuid, Object... data) {
-        double total = ProgressionAPI.player.getDouble(uuid, variable);
+        double total = ProgressionAPI.player.getDouble(uuid, variable, false);
         if (total >= amount) {
             markTrue();
             if (consume) {

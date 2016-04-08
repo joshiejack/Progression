@@ -11,9 +11,7 @@ import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChatComponentText;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.relauncher.Side;
 
 public class PacketReset extends PacketAction {
     private boolean singlePlayer;
@@ -30,6 +28,7 @@ public class PacketReset extends PacketAction {
 
     @Override
     public void handlePacket(EntityPlayer player) {
+        System.out.println("RECEIVED");
         PacketReset.handle(player, singlePlayer, username);
     }
 
@@ -50,14 +49,16 @@ public class PacketReset extends PacketAction {
     }
 
     public static void handle(EntityPlayer sender, boolean singlePlayer, String username) {
-        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+        if (sender.worldObj.isRemote) {
+            System.out.println("STRAGITH TTO CLIENT");
             if (!singlePlayer) MCClientHelper.getPlayer().addChatComponentMessage(new ChatComponentText("All player data for Progression was reset."));
             else MCClientHelper.getPlayer().addChatComponentMessage(new ChatComponentText("All player data for " + username + " was reset."));
         } else {
             if (Options.editor) {
                 if (!singlePlayer) {
                     Progression.instance.createWorldData(); //Recreate the world data, Wiping out any saved information for players
-                    RemappingHandler.reloadServerData(JSONLoader.getServerTabData());
+                    RemappingHandler.reloadServerData(JSONLoader.getServerTabData(), false);
+                    System.out.println("RESET AND DELETED DATA");
                     for (EntityPlayerMP player : PlayerHelper.getAllPlayers()) {
                         //Reset all the data to default
                         RemappingHandler.onPlayerConnect(player);

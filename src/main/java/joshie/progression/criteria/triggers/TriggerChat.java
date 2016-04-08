@@ -40,7 +40,7 @@ public class TriggerChat extends TriggerBaseBoolean implements IInit, ICustomDes
     }
 
     @Override
-    public void init() {
+    public void init(boolean isClient) {
         if (toMatch.startsWith("*")) matchFront = true;
         else matchFront = false;
         if (toMatch.endsWith("*")) matchBack = true;

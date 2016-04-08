@@ -19,7 +19,7 @@ public class RewardHurt extends RewardBase implements IInit, ICustomDescription,
     public float damage = 1F;
 
     @Override
-    public void init() {
+    public void init(boolean isClient) {
         if (damageSource.equals("magic")) source = DamageSource.magic;
         else {
             source = sources.get(damageSource);

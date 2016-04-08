@@ -10,7 +10,6 @@ import joshie.progression.handlers.APIHandler;
 import joshie.progression.handlers.RemappingHandler;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.player.PlayerTeam.TeamType;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -86,21 +85,6 @@ public class PlayerSavedData extends WorldSavedData {
     public PlayerDataServer getServerPlayer(UUID uuid) {
         PlayerTeam team = teams.get(uuid);
         if (team == null) {
-            //IF this player couldn't be found via this uiid
-            //If this UUID was not found, Search the username cache for this players username
-            //Once we've found it, then use the cache value as the uuid instead
-            EntityPlayer player = PlayerHelper.getPlayerFromUUID(uuid);
-            if (player != null) {
-                String name = player.getGameProfile().getName();
-                for (Map.Entry<UUID, String> entry : UsernameCache.getMap().entrySet()) {
-                    if (entry.getValue().equals(name)) {
-                        uuid = entry.getKey();
-                        team = teams.get(uuid);
-                        break;
-                    }
-                }
-            }
-
             //If all else fails create a new one
             if (team == null) {
                 team = new PlayerTeam(TeamType.SINGLE, uuid);
@@ -115,7 +99,7 @@ public class PlayerSavedData extends WorldSavedData {
             this.markDirty();
             //If this team never existed before
             //Loop through all the rewards loaded and init them with player data
-            for (ITab tab : APIHandler.getTabs().values()) {
+            for (ITab tab : APIHandler.getCache(false).getTabs().values()) {
                 for (ICriteria criteria : tab.getCriteria()) {
                     for (IRewardProvider provider : criteria.getRewards()) {
                         if (provider.getProvided() instanceof IStoreNBTData) {

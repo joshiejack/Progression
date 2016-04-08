@@ -16,8 +16,8 @@ public class PlayerHandler implements IPlayerData {
     }
 
     @Override
-    public NBTTagCompound getCustomData(UUID uuid, String key) {
-        return PlayerTracker.getPlayerData(uuid).getCustomStats().getCustomData(key);
+    public NBTTagCompound getCustomData(UUID uuid, String key, boolean isClient) {
+        return PlayerTracker.getPlayerData(uuid, isClient).getCustomStats().getCustomData(key);
     }
 
     @Override
@@ -36,13 +36,13 @@ public class PlayerHandler implements IPlayerData {
     }
 
     @Override
-    public Set<ICriteria> getCompletedCriteriaList(UUID uuid) {
-        return PlayerTracker.getPlayerData(uuid).getMappings().getCompletedCriteria().keySet();
+    public Set<ICriteria> getCompletedCriteriaList(UUID uuid, boolean isClient) {
+        return PlayerTracker.getPlayerData(uuid, isClient).getMappings().getCompletedCriteria().keySet();
     }
 
     @Override
-    public double getDouble(UUID uuid, String name) {
-        return PlayerTracker.getPlayerData(uuid).getPoints().getDouble(name);
+    public double getDouble(UUID uuid, String name, boolean isClient) {
+        return PlayerTracker.getPlayerData(uuid, isClient).getPoints().getDouble(name);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class PlayerHandler implements IPlayerData {
     }
 
     @Override
-    public boolean getBoolean(UUID uuid, String name) {
-        return PlayerTracker.getPlayerData(uuid).getPoints().getBoolean(name);
+    public boolean getBoolean(UUID uuid, String name, boolean isClient) {
+        return PlayerTracker.getPlayerData(uuid, isClient).getPoints().getBoolean(name);
     }
 }

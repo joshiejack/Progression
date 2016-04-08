@@ -123,7 +123,7 @@ public class ItemField extends AbstractField implements IItemSelectable {
 
                 //Init the object after we've set it
                 if (this.object instanceof IInit) {
-                    ((IInit) this.object).init();
+                    ((IInit) this.object).init(true);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

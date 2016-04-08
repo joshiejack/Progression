@@ -105,6 +105,7 @@ public class Trigger implements ITriggerProvider {
 
     @Override
     public String getDescription() {
+        //System.out.println(this);
         if(isCancelable && isCanceling) return Progression.format(getUnlocalisedName() + ".cancel");
         else return getTriggerDescription() + "\n\n" + Progression.format("completed", trigger.getPercentage());
     }

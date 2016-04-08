@@ -1,12 +1,15 @@
 package joshie.progression.network;
 
-import static joshie.progression.network.PacketSyncJSONToClient.Section.COMPLETE;
-import static joshie.progression.network.PacketSyncJSONToClient.Section.FAILED_HASH;
-import static joshie.progression.network.PacketSyncJSONToClient.Section.RECEIVED_LENGTH;
-import static joshie.progression.network.PacketSyncJSONToClient.Section.RESYNC;
-import static joshie.progression.network.PacketSyncJSONToClient.Section.SEND_HASH;
-import static joshie.progression.network.PacketSyncJSONToClient.Section.SEND_LENGTH;
-import static joshie.progression.network.PacketSyncJSONToClient.Section.SEND_STRING;
+import com.google.common.io.CharStreams;
+import io.netty.buffer.ByteBuf;
+import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.RemappingHandler;
+import joshie.progression.helpers.PlayerHelper;
+import joshie.progression.json.JSONLoader;
+import joshie.progression.network.core.PenguinPacket;
+import joshie.progression.player.PlayerTracker;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -16,18 +19,7 @@ import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import com.google.common.io.CharStreams;
-
-import io.netty.buffer.ByteBuf;
-import joshie.progression.handlers.RemappingHandler;
-import joshie.progression.helpers.PlayerHelper;
-import joshie.progression.json.JSONLoader;
-import joshie.progression.network.core.PenguinPacket;
-import joshie.progression.player.PlayerTracker;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import static joshie.progression.network.PacketSyncJSONToClient.Section.*;
 
 public class PacketSyncJSONToClient extends PenguinPacket {
     public static enum Section {
@@ -118,6 +110,7 @@ public class PacketSyncJSONToClient extends PenguinPacket {
             PacketHandler.sendToClient(new PacketSyncJSONToClient(Section.SEND_LENGTH, JSONLoader.serverTabJsonData.length), thePlayer);
         } else if (section == SEND_LENGTH) { //Clientside set the data for receival of this packet
             JSONLoader.clientTabJsonData = new String[integer];
+            APIHandler.resetAPIHandler(true); //Reset the cache once we've received the length
             PacketHandler.sendToServer(new PacketSyncJSONToClient(RECEIVED_LENGTH));
         } else if (section == RECEIVED_LENGTH) {
             for (int i = 0; i < JSONLoader.serverTabJsonData.length; i++) {
@@ -142,7 +135,7 @@ public class PacketSyncJSONToClient extends PenguinPacket {
         } else if (section == Section.COMPLETE) {
             UUID uuid = PlayerHelper.getUUIDForPlayer(thePlayer);
             //Sends all the data to do with this player to the client, so it's up to date
-            PlayerTracker.getPlayerData(uuid).getMappings().syncToClient((EntityPlayerMP) thePlayer);
+            PlayerTracker.getPlayerData(uuid, false).getMappings().syncToClient((EntityPlayerMP) thePlayer);
         }
     }
 }

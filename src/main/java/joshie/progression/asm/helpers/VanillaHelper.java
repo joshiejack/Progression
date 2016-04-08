@@ -11,9 +11,7 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import net.minecraftforge.fml.relauncher.Side;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -56,9 +54,10 @@ public class VanillaHelper {
     }
 
     public static void onContainerChanged(InventoryCrafting matrix, IInventory inventory, World world) {
+        if (world == null) return; //Why would the world be null!
         ItemStack result = CraftingManager.getInstance().findMatchingRecipe(matrix, world);
         if (result != null) {
-            for (Object o : getPlayers(matrix, FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)) {
+            for (Object o : getPlayers(matrix, world.isRemote)) {
                 if (!CraftingHelper.canPerformActionAbstract(ActionType.CRAFTING, o, result)) {
                     result = null;
                 }

@@ -4,5 +4,5 @@ package joshie.progression.api.special;
  *  or when fields are changed */
 public interface IInit {
     /** Perform init stuff **/
-    public void init();
+    public void init(boolean isClient);
 }

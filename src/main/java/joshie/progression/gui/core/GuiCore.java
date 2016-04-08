@@ -122,7 +122,7 @@ public class GuiCore extends GuiScreen {
                 Progression.logger.log(Level.INFO, "Saving JSON Data");
             }
 
-            JSONLoader.saveData(); //Save the data clientside
+            JSONLoader.saveData(true); //Save the data clientside
             String json = JSONLoader.getClientTabJsonData();
             int length = SplitHelper.splitStringEvery(json, 5000).length;
             PacketHandler.sendToServer(new PacketSyncJSONToServer(SEND_SIZE, "", length, System.currentTimeMillis()));

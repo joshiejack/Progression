@@ -22,6 +22,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -41,8 +42,12 @@ public class CraftingEvents {
         if (event.stack == null) return;
         Crafter crafter = event.player != null ? CraftingRegistry.getCrafterFromPlayer(event.player) : CraftingRegistry.getCrafterFromTile(event.tile);
         if (crafter.canDoAnything()) return;
-        if (!crafter.canUseItemWithAction(event.type, event.stack)) {
-            event.setCanceled(true);
+
+        World world = event.player != null ? event.player.worldObj : event.tile != null ? event.tile.getWorld() : null;
+        if (world != null) {
+            if (!crafter.canUseItemWithAction(world, event.type, event.stack)) {
+                event.setCanceled(true);
+            }
         }
     }
 
@@ -59,7 +64,7 @@ public class CraftingEvents {
                     for (ActionType type: ActionType.values()) {
                         Set<ICriteria> required = CraftingRegistry.getRequirements(type, event.itemStack);
                         if (required.size() == 0) continue;;
-                        Set<ICriteria> completed = ProgressionAPI.player.getCompletedCriteriaList(PlayerHelper.getClientUUID());
+                        Set<ICriteria> completed = ProgressionAPI.player.getCompletedCriteriaList(PlayerHelper.getClientUUID(), true);
                         if (completed.contains(required)) continue; //Don't add this as a requirement if it's already completed
                         criteria.get(type).addAll(required);
                     }
@@ -68,20 +73,7 @@ public class CraftingEvents {
                 }
             });
 
-            //Option 1
-            //Ignore the cache
-            requirements = HashMultimap.create();
-            for (ActionType type: ActionType.values()) {
-                Set<ICriteria> required = CraftingRegistry.getRequirements(type, event.itemStack);
-                System.out.println(required.size());
-                if (required.size() == 0) continue;;
-                Set<ICriteria> completed = ProgressionAPI.player.getCompletedCriteriaList(PlayerHelper.getClientUUID());
-                if (completed.contains(required)) continue; //Don't add this as a requirement if it's already completed
-                requirements.get(type).addAll(required);
-                System.out.println(type.getUnlocalisedName());
-            }
-
-            //Option 1
+           //Option 1
             if (requirements.size() >= 1) {
                 event.toolTip.add(EnumChatFormatting.AQUA + "Actions Currently Locked");
                 if (GuiScreen.isShiftKeyDown()) {

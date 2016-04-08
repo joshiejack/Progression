@@ -25,6 +25,6 @@ public class ConditionBoolean extends ConditionBase implements ICustomDescriptio
 
     @Override
     public boolean isSatisfied(IPlayerTeam team) {
-        return ProgressionAPI.player.getBoolean(team.getOwner(), variable) == !getProvider().isInverted();
+        return ProgressionAPI.player.getBoolean(team.getOwner(), variable, false) == !getProvider().isInverted();
     }
 }

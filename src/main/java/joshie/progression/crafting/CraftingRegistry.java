@@ -75,11 +75,7 @@ public class CraftingRegistry {
     public static Set<ICriteria> getRequirements(ActionType type, ItemStack stack) {
         Set<ICriteria> matched = new HashSet();
         Set<IFilterProvider> filters = CraftingRegistry.getFiltersForStack(type, stack);
-        System.out.println(filters.size());
-        System.out.println(type);
-
         for (IFilterProvider filter : filters) {
-            System.out.println(filter.getProvided());
             if (filter.getProvided().matches(stack)) {
                 matched.add(getCriteriaForFilter(type, filter));
             }

@@ -38,7 +38,7 @@ public class TriggerBoolean extends TriggerBaseBoolean implements ICustomDescrip
 
     @Override
     public boolean onFired(UUID uuid, Object... data) {
-        boolean check = ProgressionAPI.player.getBoolean(uuid, variable);
+        boolean check = ProgressionAPI.player.getBoolean(uuid, variable, false);
         if (check == isTrue) {
             markTrue();
         }

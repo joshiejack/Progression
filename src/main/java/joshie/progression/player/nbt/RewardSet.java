@@ -21,6 +21,6 @@ public class RewardSet extends AbstractUniqueNBT {
     @Override
     public Object read(NBTTagList list, int i) {
         NBTTagCompound tag = list.getCompoundTagAt(i);
-        return APIHandler.getCache().getRewardFromUUID(UUID.fromString(tag.getString("Reward")));
+        return APIHandler.getCache(false).getRewardFromUUID(UUID.fromString(tag.getString("Reward")));
     }
 }

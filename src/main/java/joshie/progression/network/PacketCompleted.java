@@ -31,7 +31,7 @@ public class PacketCompleted extends PenguinPacket {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        criteria = APIHandler.getCriteriaFromName(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
+        criteria = APIHandler.getCache(true).getCriteria().get(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
     }
 
     @Override

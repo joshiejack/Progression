@@ -24,7 +24,7 @@ public class ConditionAchievement extends ConditionBase implements IInit, ICusto
     private transient Achievement achievement;
 
     @Override
-    public void init() {
+    public void init(boolean isClient) {
         for (Achievement a: AchievementList.achievementList) {
             if (a.statId.equals("achievement." + id)) {
                 achievement = a;
