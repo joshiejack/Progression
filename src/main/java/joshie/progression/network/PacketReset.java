@@ -28,7 +28,6 @@ public class PacketReset extends PacketAction {
 
     @Override
     public void handlePacket(EntityPlayer player) {
-        System.out.println("RECEIVED");
         PacketReset.handle(player, singlePlayer, username);
     }
 
@@ -50,7 +49,6 @@ public class PacketReset extends PacketAction {
 
     public static void handle(EntityPlayer sender, boolean singlePlayer, String username) {
         if (sender.worldObj.isRemote) {
-            System.out.println("STRAGITH TTO CLIENT");
             if (!singlePlayer) MCClientHelper.getPlayer().addChatComponentMessage(new ChatComponentText("All player data for Progression was reset."));
             else MCClientHelper.getPlayer().addChatComponentMessage(new ChatComponentText("All player data for " + username + " was reset."));
         } else {
@@ -58,7 +56,6 @@ public class PacketReset extends PacketAction {
                 if (!singlePlayer) {
                     Progression.instance.createWorldData(); //Recreate the world data, Wiping out any saved information for players
                     RemappingHandler.reloadServerData(JSONLoader.getServerTabData(), false);
-                    System.out.println("RESET AND DELETED DATA");
                     for (EntityPlayerMP player : PlayerHelper.getAllPlayers()) {
                         //Reset all the data to default
                         RemappingHandler.onPlayerConnect(player);

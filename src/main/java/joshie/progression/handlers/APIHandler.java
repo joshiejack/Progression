@@ -102,10 +102,10 @@ public class APIHandler implements IProgressionAPI {
         PacketFireTrigger.handlers.put(trigger, builder);
     }
 
-    public static IConditionProvider registerConditionType(IRule rule, String unlocalised, int color) {
+    public static IConditionProvider registerConditionType(IRule rule, String unlocalised) {
         try {
             String name = "condition." + unlocalised;
-            IConditionProvider dummy = new Condition((ICondition)rule.getClass().newInstance(), name, color);
+            IConditionProvider dummy = new Condition((ICondition)rule.getClass().newInstance(), name);
             conditionTypes.put(name, dummy);
             return dummy;
         } catch (Exception e) {return null; }
@@ -165,7 +165,7 @@ public class APIHandler implements IProgressionAPI {
             if (uuid == null) uuid = UUID.randomUUID();
             ICondition newConditionType = dummy.getProvided().getClass().newInstance(); //Create a new instance of the trigger
             JSONHelper.readJSON(data, newConditionType, isClient);
-            IConditionProvider provider = new Condition(trigger, uuid, newConditionType, dummy.getIcon(), dummy.getUnlocalisedName(), dummy.getColor());
+            IConditionProvider provider = new Condition(trigger, uuid, newConditionType, dummy.getIcon(), dummy.getUnlocalisedName());
             provider.readFromJSON(data);
             EventsManager.onAdded(newConditionType);
             trigger.getConditions().add(provider);
@@ -239,7 +239,7 @@ public class APIHandler implements IProgressionAPI {
     public static void cloneCondition(ITriggerProvider trigger, IConditionProvider dummy) {
         try {
             ICondition newConditionType = dummy.getProvided().getClass().newInstance();
-            trigger.getConditions().add(new Condition(trigger, UUID.randomUUID(), newConditionType, dummy.getIcon(), dummy.getUnlocalisedName(), dummy.getColor()));
+            trigger.getConditions().add(new Condition(trigger, UUID.randomUUID(), newConditionType, dummy.getIcon(), dummy.getUnlocalisedName()));
             EventsManager.onAdded(newConditionType);
             if (newConditionType instanceof IInit) ((IInit) newConditionType).init(true);
         } catch (Exception e) { e.printStackTrace(); }

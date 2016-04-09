@@ -55,6 +55,7 @@ public class CriteriaMappings {
         PacketHandler.sendToClient(new PacketSyncTriggers(completedTriggers), player); //Sync all trigger that are completed to the client
         PacketHandler.sendToClient(new PacketSyncTriggerData(triggerDataMap), player); //Sync all trigger data
         PacketHandler.sendToClient(new PacketSyncCriteria(true, completedCritera.values().toArray(new Integer[completedCritera.size()]), completedCritera.keySet().toArray(new ICriteria[completedCritera.size()])), player); //Sync all conditions to the client
+        PacketHandler.sendToClient(new PacketLockUnlockSaving(false), player); //Allow players to edit the book
     }
 
     private void readTriggerData(NBTTagCompound nbt) {
@@ -186,7 +187,6 @@ public class CriteriaMappings {
     /** Called to fire a trigger type, Triggers are only ever called on criteria that is activated **/
     public Result fireAllTriggers(String type, Object... triggerData) {
         if (activeTriggers == null) return Result.DEFAULT; //If the remapping hasn't occured yet, say goodbye!
-        System.out.println("We got this far in to the triggers");
         //If the trigger is a forced removal, then force remve it
         if (type.equals("forced-remove")) {
             ICriteria criteria = (ICriteria) triggerData[0];
@@ -271,7 +271,6 @@ public class CriteriaMappings {
             //Complete the criteria and bypass any requirements
             if ((allFired && allRequired) || (!allRequired && firedCount >= countRequired)) {
                 completedAnyCriteria = true;
-                System.out.println("Added a criteria to the completed list");
                 toComplete.add(criteria);
             }
         }

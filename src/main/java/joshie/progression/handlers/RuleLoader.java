@@ -30,7 +30,11 @@ public class RuleLoader {
                 if (mod != null && !Loader.isModLoaded(mod)) continue;
 
                 String name = (String) data.get("name");
-                int color = (Integer) data.get("color");
+                int color = 0xFFCCCCCC;
+                if (data.get("color") != null) {
+                    color = (Integer) data.get("color");
+                }
+
                 String icon = (String) data.get("icon");
                 String meta = (String) data.get("meta");
                 boolean isCancelable = false;
@@ -57,7 +61,7 @@ public class RuleLoader {
                         provider.setCancelable();
                     }
                 } else if (instance instanceof ICondition) {
-                    APIHandler.registerConditionType(instance, name, color).setIcon(stack);
+                    APIHandler.registerConditionType(instance, name).setIcon(stack);
                 } else if (instance instanceof IFilter) {
                     APIHandler.registerFilterType(instance, name, color);
                 }

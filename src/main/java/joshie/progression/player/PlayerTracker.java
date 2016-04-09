@@ -3,6 +3,7 @@ package joshie.progression.player;
 import com.google.common.collect.Maps;
 import joshie.progression.Progression;
 import joshie.progression.helpers.PlayerHelper;
+import joshie.progression.player.PlayerSavedData.TeamAction;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -35,6 +36,10 @@ public class PlayerTracker {
 
     public static PlayerDataServer getServerPlayer(UUID uuid) {
         return Progression.data.getServerPlayer(uuid);
+    }
+
+    public static void joinTeam(EntityPlayer player, TeamAction action, UUID team) {
+        Progression.data.joinTeam(player, action, team);
     }
 
     public static PlayerDataCommon getPlayerData(UUID uuid, boolean isClient) {

@@ -1,16 +1,13 @@
 package joshie.progression.gui.core;
 
-import joshie.progression.Progression;
+import joshie.progression.PClientProxy;
 import joshie.progression.gui.editors.*;
 import joshie.progression.gui.editors.insert.*;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.RenderItemHelper;
-import joshie.progression.helpers.SplitHelper;
-import joshie.progression.json.JSONLoader;
-import joshie.progression.json.Options;
 import joshie.progression.json.Theme;
+import joshie.progression.network.PacketLockUnlockSaving;
 import joshie.progression.network.PacketHandler;
-import joshie.progression.network.PacketSyncJSONToServer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -21,7 +18,6 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import org.apache.logging.log4j.Level;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -30,7 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static joshie.progression.network.core.PacketPart.SEND_SIZE;
+import static joshie.progression.api.special.DisplayMode.EDIT;
 
 public class GuiCore extends GuiScreen {
     public static final GuiCore INSTANCE = new GuiCore();
@@ -86,8 +82,9 @@ public class GuiCore extends GuiScreen {
 
         features.clear(); // Clear out the features
         features.add(new FeatureBackground()); // Readd the background
+        screenTop = (height - ySize) / 2;
         if (openGui != null) openGui.initData(this);
-        features.add(new FeatureFooter()); // Add the footer
+        if (openGui != GuiGroupEditor.INSTANCE) features.add(new FeatureFooter()); // Add the footer
 
         // Init all the features
         FeatureTooltip.INSTANCE.init(this); //Damn you tooltip feature!
@@ -115,16 +112,9 @@ public class GuiCore extends GuiScreen {
     public void onGuiClosed() {
         Keyboard.enableRepeatEvents(false);
         if (MCClientHelper.isInEditMode()) {
-            if (Options.debugMode) {
-                Progression.logger.log(Level.INFO, "Saving JSON Data");
-            }
-
-            JSONLoader.saveData(true); //Save the data clientside
-            String json = JSONLoader.getClientTabJsonData();
-            int length = SplitHelper.splitStringEvery(json, 5000).length;
-            PacketHandler.sendToServer(new PacketSyncJSONToServer(SEND_SIZE, "", length, System.currentTimeMillis()));
-            //Send the packet to the server about the new json
-            clearEditors();
+            //Don't allow this gui to be reopened until the server is ready
+            PClientProxy.isSaver = true; //Mark us as being the one who saved
+            PacketHandler.sendToServer(new PacketLockUnlockSaving(true));
         }
     }
 
@@ -158,7 +148,7 @@ public class GuiCore extends GuiScreen {
         }
 
         //Draw the tooltip in the right place
-        if (openGui == GuiTreeEditor.INSTANCE) super.drawScreen(cursorX, cursorY - screenTop, partialTicks);
+        if (openGui == GuiTreeEditor.INSTANCE || openGui == GuiGroupEditor.INSTANCE) super.drawScreen(cursorX, cursorY - screenTop, partialTicks);
         FeatureTooltip.INSTANCE.drawFeature(cursorX, cursorY);
     }
 
@@ -178,7 +168,7 @@ public class GuiCore extends GuiScreen {
             }
         }
 
-        if (openGui == GuiTreeEditor.INSTANCE) super.mouseClicked(mouseX, mouseY, button);
+        if (openGui == GuiTreeEditor.INSTANCE || openGui == GuiGroupEditor.INSTANCE) super.mouseClicked(mouseX, mouseY, button);
         if (clickedButton) {
             clickedButton = false;
             return;
@@ -220,7 +210,7 @@ public class GuiCore extends GuiScreen {
             }
         }
 
-        if (openGui != null) openGui.keyTyped(character, key);
+        if (openGui != null && MCClientHelper.getMode() == EDIT) openGui.keyTyped(character, key);
 
         TextEditor.INSTANCE.keyTyped(character, key);
         super.keyTyped(character, key);

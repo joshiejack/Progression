@@ -1,9 +1,9 @@
 package joshie.progression.gui.editors;
 
-import java.util.HashMap;
-
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ChatAllowedCharacters;
+
+import java.util.HashMap;
 
 public class TextEditor {
     public static final TextEditor INSTANCE = new TextEditor();
@@ -14,7 +14,7 @@ public class TextEditor {
     private boolean white;
     private int tick;
 
-    public void setEditable(ITextEditable editable) {
+    public boolean setEditable(ITextEditable editable) {
         this.isTextEditing = true;
         this.editable = editable;
        // i//f (editable != null && editable.getTextField() != null) {
@@ -22,6 +22,8 @@ public class TextEditor {
             //if (last == null) lastPosition = maximumLength;
             this.position = editable.getTextField().length();
        // }
+
+        return true;
     }
     
     public ITextEditable getEditable() {

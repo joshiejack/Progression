@@ -34,7 +34,6 @@ public class PlayerTeam implements ITextEditable, IPlayerTeam {
     public PlayerTeam() {}
 
     public PlayerTeam(TeamType type, UUID owner) {
-        System.out.println("Created a team with the uuid: as the owner: + " + owner);
         this.owner = owner;
         this.type = type;
         EntityPlayer player = PlayerHelper.getPlayerFromUUID(owner);
@@ -152,18 +151,26 @@ public class PlayerTeam implements ITextEditable, IPlayerTeam {
         if (sync) syncChanges(Side.CLIENT);
     }
 
-    @SideOnly(Side.CLIENT)
-    public void removeMember(UUID uuid) {
-        if (members.remove(uuid)) {
-            syncChanges(Side.CLIENT);
-        }
+    public void addMember(UUID uuid) {
+        members.add(uuid);
     }
 
-    @SideOnly(Side.CLIENT)
-    public void addMember(UUID uuid) {
-        if (members.add(uuid)) {
-            syncChanges(Side.CLIENT);
-        }
+    //Returns false if this team no longer exists
+    public boolean removeMember(UUID uuid) {
+        if (uuid == getOwner() && members.size() == 0) {
+            return false;
+        } else if (uuid == getOwner()) { //If the owner leaves, then the next level member becomes the owner
+            for (UUID member: members) {
+                owner = member;
+                break;
+            }
+
+            //Remove the new leader from members
+            members.remove(owner);
+        } else members.remove(uuid);
+
+        //Otherwise, Remove
+        return true;
     }
 
     /** Whether or not this data is used by anyone **/

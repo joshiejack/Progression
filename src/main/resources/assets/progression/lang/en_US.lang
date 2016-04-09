@@ -308,6 +308,7 @@ progression.item.free=Free Item!
 progression.completed=%s%% completed
 progression.ability=Ability Gain!
 progression.block.place=Place a Block!
+progression.group=Team Editor
 
 #Criteria Editor
 progression.criteria.popup=Popup Displayed

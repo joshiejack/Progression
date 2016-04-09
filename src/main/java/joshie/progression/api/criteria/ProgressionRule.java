@@ -1,8 +1,13 @@
 package joshie.progression.api.criteria;
 
 public @interface ProgressionRule {
+    /** The name to register this rule as, must be unique **/
     public String name();
+
+    /** The colour to use for this rule **/
     public int color() default 0xFFCCCCCC;
+
+    /** The icon to use for this rule **/
     public String icon() default "progression:item";
 
     /** This one should be ignored by you,

@@ -20,6 +20,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.comparator.LastModifiedFileComparator;
 import org.apache.logging.log4j.Level;
 
 import java.io.File;
@@ -266,8 +267,24 @@ public class JSONLoader {
 
     public static void saveJSON(DefaultSettings toSave, boolean isClient) {
         File file = FileHelper.getCriteriaFile(serverName, isClient); //Even when saving on the client, force it to always save to the criteria.json
+
         try {
             if (Options.debugMode) Progression.logger.log(Level.INFO, "Writing to the file is being done at saveJSON");
+
+            //Make a backup
+            if (Options.enableCriteriaBackups) {
+                File backup = FileHelper.getBackupFile(serverName, isClient);
+                FileUtils.copyFile(file, backup);
+                File[] files = FileHelper.getBackup().listFiles();
+                if (files.length > Options.maximumCriteriaBackups) {
+                    Arrays.sort(files, LastModifiedFileComparator.LASTMODIFIED_COMPARATOR);
+                    for (File filez : files) {
+                        filez.delete();
+                        break;
+                    }
+                }
+            }
+
             Writer writer = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
             writer.write(gson.toJson(toSave));
             writer.close();

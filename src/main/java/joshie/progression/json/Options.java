@@ -10,6 +10,8 @@ public class Options {
     public static boolean editor = true;
     public static boolean tileClaimerRecipe = false;
     public static boolean overwriteCriteriaJSONForClients = false;
+    public static boolean enableCriteriaBackups = true;
+    public static int maximumCriteriaBackups = 25;
     public static DefaultSettings settings;
 
     public static void init(Configuration config) {
@@ -22,6 +24,8 @@ public class Options {
                                 "by default this is false, which means clients will create a new json file for every server they join, so that the data," +
                                 "is cached instead of being recreated everytime they join a new server. This setting being false means that if you are editing" +
                                 "criteria on a server, for editing a pack, then you need to give users the serverside criteria.json and not the one in your client folder");
+            enableCriteriaBackups = config.getBoolean("Settings", "Enable Criteria Backups", true, "Criteria will be backed up, whenever it's saved if this is true");
+            maximumCriteriaBackups = config.getInt("Settings", "Maximum Criteria Backups", 25, 1, 100, "This is the maximum number of backups to keep for criteria, maximum 100");
         } catch (Exception e) {
             Progression.logger.log(Level.ERROR, "Progression failed to load it's config");
             e.printStackTrace();

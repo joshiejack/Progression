@@ -13,7 +13,7 @@ import net.minecraft.util.EnumChatFormatting;
 
 import java.util.UUID;
 
-@ProgressionRule(name="criteria", color=0xFF00FFBF, meta="ifCriteriaCompleted")
+@ProgressionRule(name="criteria", meta="ifCriteriaCompleted")
 public class ConditionHasCriteria extends ConditionBase implements IInit, ICustomDescription, IGetterCallback {
     private ICriteria criteria = null;
     private UUID criteriaID = UUID.randomUUID();

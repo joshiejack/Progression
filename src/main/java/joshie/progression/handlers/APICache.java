@@ -2,13 +2,17 @@ package joshie.progression.handlers;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import joshie.progression.api.criteria.*;
+import joshie.progression.api.criteria.ICriteria;
+import joshie.progression.api.criteria.IRewardProvider;
+import joshie.progression.api.criteria.ITab;
+import joshie.progression.api.criteria.ITriggerProvider;
 
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 public class APICache {
+    private final Cache<Boolean, ArrayList<ITab>> sortedCache = CacheBuilder.newBuilder().maximumSize(1).expireAfterWrite(1, TimeUnit.MINUTES).build();
     private final Cache<UUID, ITriggerProvider> triggerCache = CacheBuilder.newBuilder().maximumSize(8096).build();
     private final Cache<UUID, IRewardProvider> rewardCache = CacheBuilder.newBuilder().maximumSize(8096).build();
     private final HashMap<UUID, ICriteria> criteriaCache = new HashMap();
@@ -58,5 +62,40 @@ public class APICache {
 
     public HashMap<UUID,ITab> getTabs() {
         return tabCache;
+    }
+
+    public void clearSorted() {
+        sortedCache.cleanUp();
+    }
+
+    public ArrayList<ITab> getSortedTabs() {
+
+        ArrayList<ITab> tabs = new ArrayList(tabCache.values());
+        Collections.sort(tabs, new SortIndex());
+        return tabs;
+        /*
+        try {
+            return sortedCache.get(true, new Callable<ArrayList<ITab>>() {
+                @Override
+                public ArrayList<ITab> call() throws Exception {
+                    ArrayList<ITab> tabs = new ArrayList(tabCache.values());
+                    Collections.sort(tabs, new SortIndex());
+                    return tabs;
+                }
+            });
+        } catch (Exception e) { return  new ArrayList(); } */
+    }
+
+    private static class SortIndex implements Comparator {
+        @Override
+        public int compare(Object o1, Object o2) {
+            ITab tab1 = ((ITab) o1);
+            ITab tab2 = ((ITab) o2);
+            if (tab1.getSortIndex() == tab2.getSortIndex()) {
+                return tab1.getDisplayName().compareTo(tab2.getDisplayName());
+            }
+
+            return tab1.getSortIndex() < tab2.getSortIndex() ? 1 : -1;
+        }
     }
 }

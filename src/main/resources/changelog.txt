@@ -37,6 +37,8 @@ Progression 0.5.0
   Added the ability to hide triggers, conditions and rewards from display mode
   Tabs will now run along the horizontal axis if you create more than 17.
   You can now double click to insert a new criteria
+  You can no longer open the gui to continue editing if saving has not completed
+  Progression will create backups everytime it saves in the backup folder, (Can be turned off in config, Can also configure how many files)
 
 Progression 0.4.1
   Add On Second Trigger

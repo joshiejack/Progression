@@ -64,8 +64,16 @@ public class FeatureTabList extends FeatureProgression {
     public void draw(int mouseX, int mouseY) {
         int pos = 0;
         position.setHeight(APIHandler.getCache(true).getTabs().values().size() * 20);
-        for (ITab tab: APIHandler.getCache(true).getTabs().values()) {
-            EnchiridionAPI.draw.drawSplitScaledString((pos + 1) + ".  " + tab.getDisplayName(), position.getLeft(), position.getTop() + pos * 20, 100, 0xFF404040, 1F);
+        for (ITab tab: APIHandler.getCache(true).getSortedTabs()) {
+            int color = 0xFF404040;
+            if (mouseX >= position.getLeft() && mouseX <= position.getRight()) {
+                if (mouseY>= position.getTop() + (pos * 20) && mouseY <= position.getTop() + 8 + (pos * 20)) {
+                    color = 0xFFCCCCCC;
+                }
+            }
+
+            EnchiridionAPI.draw.drawSplitScaledString((pos + 1) + ".", position.getLeft(), position.getTop() + pos * 20, 100, color, 1F);
+            EnchiridionAPI.draw.drawSplitScaledString(tab.getDisplayName(), position.getLeft() + 18, position.getTop() + pos * 20, 100, color, 1F);
             EnchiridionAPI.draw.drawSplitScaledString(getCompletionAmount(tab) + "% Completed", position.getLeft() + 13, position.getTop() + 10 + pos * 20, 100, 0xFF404040, 0.75F);
 
             pos++;

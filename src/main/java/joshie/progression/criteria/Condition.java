@@ -15,7 +15,6 @@ import java.util.UUID;
 public class Condition implements IConditionProvider {
     private final ICondition condition;
     private final String unlocalised;
-    private final int color;
 
     private ITriggerProvider provider;
     private UUID uuid;
@@ -26,19 +25,17 @@ public class Condition implements IConditionProvider {
     public boolean inverted = false;
 
     //Dummy constructor for storing the default values
-    public Condition(ICondition condition, String unlocalised, int color) {
+    public Condition(ICondition condition, String unlocalised) {
         this.condition = condition;
         this.unlocalised = unlocalised;
-        this.color = color;
         this.condition.setProvider(this);
     }
 
-    public Condition(ITriggerProvider trigger, UUID uuid, ICondition condition, ItemStack stack, String unlocalised, int color) {
+    public Condition(ITriggerProvider trigger, UUID uuid, ICondition condition, ItemStack stack, String unlocalised) {
         this.provider = trigger;
         this.uuid = uuid;
         this.condition = condition;
         this.unlocalised = unlocalised;
-        this.color = color;
         this.stack = stack;
         this.condition.setProvider(this);
     }
@@ -60,7 +57,7 @@ public class Condition implements IConditionProvider {
 
     @Override
     public int getColor() {
-        return color;
+        return getTrigger().getColor();
     }
 
     @Override

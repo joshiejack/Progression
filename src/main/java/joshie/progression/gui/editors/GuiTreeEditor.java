@@ -4,9 +4,9 @@ import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.ITab;
 import joshie.progression.api.event.TabVisibleEvent;
 import joshie.progression.api.special.DisplayMode;
-import joshie.progression.gui.core.GuiCore;
 import joshie.progression.gui.buttons.ButtonNewCriteria;
 import joshie.progression.gui.buttons.ButtonTab;
+import joshie.progression.gui.core.GuiCore;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.json.Options;
@@ -19,7 +19,9 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
     public static final GuiTreeEditor INSTANCE = new GuiTreeEditor();
@@ -29,19 +31,6 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
     public UUID currentTabID;
     public ITab currentTab;
 
-    private static class SortIndex implements Comparator {
-        @Override
-        public int compare(Object o1, Object o2) {
-            ITab tab1 = ((ITab) o1);
-            ITab tab2 = ((ITab) o2);
-            if (tab1.getSortIndex() == tab2.getSortIndex()) {
-                return tab1.getDisplayName().compareTo(tab2.getDisplayName());
-            }
-
-            return tab1.getSortIndex() < tab2.getSortIndex() ? 1 : -1;
-        }
-    }
-    
     @Override
     public Object getKey() {
         return currentTab;
@@ -60,9 +49,7 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
         }
 
         //Sort tabs alphabetically or by sort index
-        ArrayList<ITab> tabs = new ArrayList(APIHandler.getCache(true).getTabs().values());
-        Collections.sort(tabs, new SortIndex());
-        for (ITab tab : tabs) {
+        for (ITab tab : APIHandler.getCache(true).getSortedTabs()) {
             if (isTabVisible(tab) || MCClientHelper.isInEditMode()) {
                 if (!sideWays) {
                     if (position <= 8) {
@@ -93,7 +80,7 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
     @Override
     public void initData(GuiCore core) {
         super.initData(core);
-        addButtons(core, APIHandler.getCache(true).getTabs().size() > 17);
+        addButtons(core, APIHandler.getCache(true).getSortedTabs().size() > 17);
 
         if (currentTabID == null) {
             currentTabID = Options.settings.defaultTabID;
@@ -207,9 +194,11 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
 
         if (key == Keyboard.KEY_UP) {
             currentTab.setSortIndex(currentTab.getSortIndex() + 1);
+            APIHandler.getCache(true).clearSorted(); //Clear the sorted
             core.initGui();
         } else if (key == Keyboard.KEY_DOWN) {
             currentTab.setSortIndex(currentTab.getSortIndex() - 1);
+            APIHandler.getCache(true).clearSorted(); //Clear the sorted
             core.initGui();
         }
     }

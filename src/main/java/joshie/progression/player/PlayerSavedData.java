@@ -10,13 +10,18 @@ import joshie.progression.handlers.APIHandler;
 import joshie.progression.handlers.RemappingHandler;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.player.PlayerTeam.TeamType;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.WorldSavedData;
 import net.minecraftforge.common.UsernameCache;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.*;
+
+import static joshie.progression.player.PlayerSavedData.TeamAction.LEAVE;
+import static joshie.progression.player.PlayerSavedData.TeamAction.NEW;
 
 public class PlayerSavedData extends WorldSavedData {
     private HashMap<UUID, PlayerTeam> teams = Maps.newHashMap();
@@ -82,14 +87,56 @@ public class PlayerSavedData extends WorldSavedData {
         return false;
     }
 
+    public static enum  TeamAction {
+        LEAVE, NEW, JOIN;
+    }
+
+    //Packet calls this
+    public void joinTeam(EntityPlayer player, TeamAction action, UUID owner) {
+        UUID uuid = PlayerHelper.getUUIDForPlayer(player);
+        PlayerTeam original = teams.get(uuid);
+        if (!original.removeMember(uuid) && !original.isSingle()) { //If the team no longer exists and isn't a single player team, let's delete the data for it
+            data.remove(original); //Remove the data
+            teams.remove(original.getOwner()); //Remove the association
+        } else original.syncChanges(Side.SERVER); //Sync the information about the original team to all members
+
+        //Now that the player has left the old team, and updated all the players about such details,
+        //We should add the player to the new team that they are joining
+        PlayerTeam newTeam = null;
+        if (action == LEAVE) { //If the player is leaving the team to go back to single player
+            for (PlayerTeam team: data.keySet()) { //Let's find where we are the owner
+                if (team.isSingle() && team.getOwner().equals(uuid)) {
+                    newTeam = team; //If we've found our original single player team, readd it
+                    break;
+                }
+            }
+        } else if (action == NEW) { //If we are creating a new team
+            newTeam = new PlayerTeam(TeamType.TEAM, uuid);
+        } else newTeam = teams.get(owner);
+
+        //Now that we have our newteam selected, we need to add ourself as a member
+        if (!newTeam.isSingle() && !newTeam.getOwner().equals(uuid)) {
+            newTeam.addMember(uuid); //Add ourselves to this new team
+        }
+
+        //Mark the new team for this uuid, instead of the old
+        teams.put(uuid, newTeam);
+        //Sync the changes to all team members
+        newTeam.syncChanges(Side.SERVER);
+        //Force create the player data
+        getServerPlayer(uuid); //We've remapped
+
+        //Reload the data for this player about his new team, and his new statistics
+        RemappingHandler.onPlayerConnect((EntityPlayerMP) player);
+        //Save
+        markDirty();
+    }
+
     public PlayerDataServer getServerPlayer(UUID uuid) {
         PlayerTeam team = teams.get(uuid);
         if (team == null) {
-            //If all else fails create a new one
-            if (team == null) {
-                team = new PlayerTeam(TeamType.SINGLE, uuid);
-                teams.put(uuid, team);
-            }
+            team = new PlayerTeam(TeamType.SINGLE, uuid);
+            teams.put(uuid, team);
         }
 
         PlayerDataServer data = this.data.get(team);
