@@ -5,7 +5,12 @@ import com.google.common.cache.CacheBuilder;
 import joshie.enchiridion.api.EnchiridionAPI;
 import joshie.enchiridion.api.book.IBook;
 import joshie.enchiridion.api.book.IFeature;
+import joshie.enchiridion.api.book.IPage;
+import joshie.enchiridion.data.book.Page;
+import joshie.enchiridion.gui.book.GuiBook;
 import joshie.enchiridion.gui.book.features.FeatureButton;
+import joshie.enchiridion.helpers.DefaultHelper;
+import joshie.enchiridion.helpers.JumpHelper;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.ITab;
@@ -60,6 +65,36 @@ public class FeatureTabList extends FeatureProgression {
         return (tasksdone * 100) / totaltasks;
     }
 
+    private IPage getPageByNumber(IBook book, int number) {
+        for (IPage page: book.getPages()) {
+            if (page.getPageNumber() == number) {
+                return page;
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public void performClick(int mouseX, int mouseY) {
+        int pos = 0;
+        for (ITab tab: APIHandler.getCache(true).getSortedTabs()) {
+            if (mouseX >= position.getLeft() && mouseX <= position.getRight()) {
+                if (mouseY >= position.getTop() + (pos * 20) && mouseY <= position.getTop() + 8 + (pos * 20)) {
+                    int number = 20 + pos;
+                    IPage page = JumpHelper.getPageByNumber(EnchiridionAPI.book.getBook(), number);
+                    if (page == null) {
+                        page = DefaultHelper.addDefaults(GuiBook.INSTANCE.getBook(), new Page(number).setBook(GuiBook.INSTANCE.getBook()));
+                        EnchiridionAPI.book.getBook().addPage(page);
+                        JumpHelper.jumpToPageByNumber(number);
+                    }
+                }
+            }
+
+            pos++;
+        }
+    }
+
     @Override
     public void draw(int mouseX, int mouseY) {
         int pos = 0;
@@ -72,8 +107,8 @@ public class FeatureTabList extends FeatureProgression {
                 }
             }
 
-            EnchiridionAPI.draw.drawSplitScaledString((pos + 1) + ".", position.getLeft(), position.getTop() + pos * 20, 100, color, 1F);
-            EnchiridionAPI.draw.drawSplitScaledString(tab.getDisplayName(), position.getLeft() + 18, position.getTop() + pos * 20, 100, color, 1F);
+            EnchiridionAPI.draw.drawSplitScaledString((pos + 1) + ".", position.getLeft(), position.getTop() + pos * 20, 200, color, 1F);
+            EnchiridionAPI.draw.drawSplitScaledString(tab.getDisplayName(), position.getLeft() + 18, position.getTop() + pos * 20, 200, color, 1F);
             EnchiridionAPI.draw.drawSplitScaledString(getCompletionAmount(tab) + "% Completed", position.getLeft() + 13, position.getTop() + 10 + pos * 20, 100, 0xFF404040, 0.75F);
 
             pos++;

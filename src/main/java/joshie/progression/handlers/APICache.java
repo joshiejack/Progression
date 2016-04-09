@@ -70,10 +70,6 @@ public class APICache {
 
     public ArrayList<ITab> getSortedTabs() {
 
-        ArrayList<ITab> tabs = new ArrayList(tabCache.values());
-        Collections.sort(tabs, new SortIndex());
-        return tabs;
-        /*
         try {
             return sortedCache.get(true, new Callable<ArrayList<ITab>>() {
                 @Override
@@ -83,7 +79,7 @@ public class APICache {
                     return tabs;
                 }
             });
-        } catch (Exception e) { return  new ArrayList(); } */
+        } catch (Exception e) { return  new ArrayList(); }
     }
 
     private static class SortIndex implements Comparator {
