@@ -6,8 +6,8 @@ import joshie.progression.gui.editors.insert.*;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.RenderItemHelper;
 import joshie.progression.json.Theme;
-import joshie.progression.network.PacketLockUnlockSaving;
 import joshie.progression.network.PacketHandler;
+import joshie.progression.network.PacketLockUnlockSaving;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -332,7 +332,7 @@ public class GuiCore extends GuiScreen {
     public void drawLine(int left, int top, int right, int bottom, int thickness, int color) {
         top = screenTop + top; //Adjust
         bottom = screenTop + bottom; //Adjust
-        
+
         float f3 = (float) (color >> 24 & 255) / 255.0F;
         float f = (float) (color >> 16 & 255) / 255.0F;
         float f1 = (float) (color >> 8 & 255) / 255.0F;

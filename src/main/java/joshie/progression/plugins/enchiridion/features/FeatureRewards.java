@@ -38,7 +38,7 @@ public class FeatureRewards extends FeatureCriteria implements ISimpleEditorFiel
         int x = 0;
         for (IRewardProvider reward : criteria.getRewards()) {
             ItemStack stack = reward.getIcon();
-            if (background) EnchiridionAPI.draw.drawRectangle(position.getLeft() + x, position.getTop(), position.getLeft() + x + 17, position.getTop() + 17, 0xFFD2C9B5);
+            if (background) EnchiridionAPI.draw.drawRectangle(position.getLeft() + x, position.getTop(), position.getLeft() + x + 16, position.getTop() + 16, 0xFFD2C9B5);
             EnchiridionAPI.draw.drawStack(stack, position.getLeft() + x, position.getTop(), 1F);
             x += 20;
         }

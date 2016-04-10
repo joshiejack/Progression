@@ -4,6 +4,8 @@ import joshie.enchiridion.api.EnchiridionAPI;
 import joshie.enchiridion.api.book.IFeatureProvider;
 import joshie.enchiridion.api.gui.ISimpleEditorFieldProvider;
 import joshie.progression.api.criteria.ITriggerProvider;
+import joshie.progression.api.special.ICustomTooltip;
+import joshie.progression.helpers.SplitHelper;
 import net.minecraft.item.ItemStack;
 
 import java.util.List;
@@ -37,7 +39,7 @@ public class FeatureTasks extends FeatureCriteria implements ISimpleEditorFieldP
         int x = 0;
         for (ITriggerProvider trigger : criteria.getTriggers()) {
             ItemStack stack = trigger.getIcon();
-            if (background) EnchiridionAPI.draw.drawRectangle(position.getLeft() + x, position.getTop(), position.getLeft() + x + 17, position.getTop() + 17, 0xFFD2C9B5);
+            if (background) EnchiridionAPI.draw.drawRectangle(position.getLeft() + x, position.getTop(), position.getLeft() + x + 16, position.getTop() + 16, 0xFFD2C9B5);
             EnchiridionAPI.draw.drawStack(stack, position.getLeft() + x, position.getTop(), 1F);
             x += 20;
         }
@@ -51,8 +53,12 @@ public class FeatureTasks extends FeatureCriteria implements ISimpleEditorFieldP
         for (ITriggerProvider trigger : criteria.getTriggers()) {
             ItemStack stack = trigger.getIcon();
             if (offsetMouseX >= x && offsetMouseX <= x + 17) {
-                tooltip.add(trigger.getDescription());
-                //tooltip.addAll(stack.getTooltip(MCClientHelper.getPlayer(), false));
+                if (trigger instanceof ICustomTooltip) ((ICustomTooltip)trigger).addTooltip(tooltip);
+                else{
+                    for (String s : SplitHelper.splitTooltip(trigger.getDescription(), 32)) {
+                        tooltip.add(s);
+                    }
+                }
             }
             
             x += 20;

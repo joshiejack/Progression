@@ -84,7 +84,7 @@ public class TreeEditorElement {
         else return PlayerTracker.getClientPlayer().getMappings().getCompletedCriteria().keySet().containsAll(criteria.getPreReqs());
     }
 
-    public boolean isCriteriaCompleteable(ICriteria criteria) {
+    public static boolean isCriteriaCompleteable(ICriteria criteria) {
         HashMap<ICriteria, Integer> completedMap = PlayerTracker.getClientPlayer().getMappings().getCompletedCriteria();
         boolean completeable = true;
         //Check the conflicts of this criteria
@@ -101,70 +101,89 @@ public class TreeEditorElement {
         return true;
     }
 
+    public static enum ColorMode {
+        DEFAULT(0), COMPLETED(25), AVAILABLE(50), ERROR(75), SELECTED(100), INVISIBLE(0);
+
+        public final int y;
+
+        private ColorMode(int y) {
+            this.y = y;
+        }
+    }
+
+    public static ColorMode getModeForCriteria(ICriteria criteria, boolean isSelected) {
+        ColorMode mode = ColorMode.DEFAULT;
+        HashMap<ICriteria, Integer> completedMap = PlayerTracker.getClientPlayer().getMappings().getCompletedCriteria();
+        boolean isCompleted = completedMap.containsKey(criteria);
+        boolean anyConflicts = false;
+        boolean allRequires = false;
+        int requires = 0;
+        for (ICriteria c : criteria.getConflicts()) {
+            if (completedMap.containsKey(c)) {
+                anyConflicts = true;
+                break;
+            }
+        }
+
+        if (!anyConflicts) {
+            for (ICriteria c : criteria.getPreReqs()) {
+                if (completedMap.containsKey(c)) {
+                    requires++;
+                }
+            }
+
+            allRequires = criteria.getPreReqs().size() == requires;
+        }
+
+        boolean available = allRequires && !anyConflicts;
+        if (isCompleted) mode = ColorMode.COMPLETED;
+        else if (available) mode = ColorMode.AVAILABLE;
+
+        if (!criteria.isVisible()) {
+            if (!MCClientHelper.isInEditMode()) {
+                if (available || isCompleted) {
+
+                } else return ColorMode.INVISIBLE;
+            }
+        }
+
+        if (isSelected) mode = ColorMode.SELECTED;
+        ICriteria selected = GuiTreeEditor.INSTANCE.lastClicked;
+        if (!isCompleted) {
+            if (!isCriteriaCompleteable(criteria)) {
+                mode = ColorMode.ERROR;
+            }
+        }
+
+        if (selected != null) {
+            if (selected.getConflicts().contains(criteria)) {
+                mode = ColorMode.ERROR;
+            }
+        }
+
+        if (PlayerTracker.getClientPlayer().getMappings().isImpossible(criteria)) {
+            mode = ColorMode.ERROR;
+        }
+
+        return mode;
+    }
+
     public void draw(int x, int y, int offsetX, int highlight) {
         recalculate(offsetX);
         if (highlight != 0) {
             GuiCore.INSTANCE.drawRectWithBorder(x + left, top, x + right, bottom, Theme.INSTANCE.invisible, highlight);
         } else {
-            HashMap<ICriteria, Integer> completedMap = PlayerTracker.getClientPlayer().getMappings().getCompletedCriteria();
-            boolean isCompleted = completedMap.containsKey(criteria);
-            boolean anyConflicts = false;
-            boolean allRequires = false;
-            int requires = 0;
-            for (ICriteria c : criteria.getConflicts()) {
-                if (completedMap.containsKey(c)) {
-                    anyConflicts = true;
-                    break;
-                }
-            }
-
-            if (!anyConflicts) {
-                for (ICriteria c : criteria.getPreReqs()) {
-                    if (completedMap.containsKey(c)) {
-                        requires++;
-                    }
-                }
-
-                allRequires = criteria.getPreReqs().size() == requires;
-            }
-
-            boolean available = allRequires && !anyConflicts;
-
-            int textureY = 0;
+            ColorMode mode = getModeForCriteria(criteria, isSelected);
+            if (mode == ColorMode.INVISIBLE) return; //If we returned invisible, don't show it
             int textureX = 0;
-            if (isCompleted) textureY = 25;
-            else if (available) textureY = 50;
-
-            GlStateManager.enableBlend();
-            //GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-            if (!criteria.isVisible()) {
+            int textureY = mode.y;
+            if (!criteria.isVisible()) { //Make the texture transparent if this is edit mode
                 if (MCClientHelper.isInEditMode()) {
                     textureX = 100;
-                } else {
-                    if (available || isCompleted) {
-                        textureX = 0;
-                    } else return; //If it's not completed, or available then hide it entirely
                 }
             }
 
-            if (isSelected) textureY = 100;
-            ICriteria selected = GuiTreeEditor.INSTANCE.lastClicked;
-            if (!isCompleted) {
-                if (!isCriteriaCompleteable(criteria)) {
-                    textureY = 75;
-                }
-            }
-
-            if (selected != null) {
-                if (selected.getConflicts().contains(criteria)) {
-                    textureY = 75;
-                }
-            }
-            
-            if (PlayerTracker.getClientPlayer().getMappings().isImpossible(criteria)) {
-                textureY = 75;
-            }
-
+            GlStateManager.enableBlend();
             GlStateManager.color(1F, 1F, 1F, 1F);
             gui.mc.getTextureManager().bindTexture(ProgressionInfo.textures);
             GuiCore.INSTANCE.drawTexture(ProgressionInfo.textures, x + left, top, textureX, textureY, 10, 25);
