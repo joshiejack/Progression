@@ -5,6 +5,7 @@ import joshie.enchiridion.api.book.IFeatureProvider;
 import joshie.enchiridion.api.gui.ISimpleEditorFieldProvider;
 import joshie.progression.api.criteria.ITriggerProvider;
 import joshie.progression.api.special.ICustomTooltip;
+import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.SplitHelper;
 import net.minecraft.item.ItemStack;
 
@@ -53,7 +54,9 @@ public class FeatureTasks extends FeatureCriteria implements ISimpleEditorFieldP
         for (ITriggerProvider trigger : criteria.getTriggers()) {
             ItemStack stack = trigger.getIcon();
             if (offsetMouseX >= x && offsetMouseX <= x + 17) {
-                if (trigger instanceof ICustomTooltip) ((ICustomTooltip)trigger).addTooltip(tooltip);
+                tooltip.addAll(stack.getTooltip(MCClientHelper.getPlayer(), false));
+                tooltip.add("---");
+                if (trigger.getProvided() instanceof ICustomTooltip) ((ICustomTooltip)trigger.getProvided()).addTooltip(tooltip);
                 else{
                     for (String s : SplitHelper.splitTooltip(trigger.getDescription(), 32)) {
                         tooltip.add(s);

@@ -4,7 +4,9 @@ import joshie.enchiridion.api.EnchiridionAPI;
 import joshie.enchiridion.api.book.IFeatureProvider;
 import joshie.enchiridion.api.gui.ISimpleEditorFieldProvider;
 import joshie.progression.api.criteria.IRewardProvider;
+import joshie.progression.api.special.ICustomTooltip;
 import joshie.progression.helpers.MCClientHelper;
+import joshie.progression.helpers.SplitHelper;
 import net.minecraft.item.ItemStack;
 
 import java.util.List;
@@ -53,6 +55,13 @@ public class FeatureRewards extends FeatureCriteria implements ISimpleEditorFiel
             ItemStack stack = reward.getIcon();
             if (offsetMouseX >= x && offsetMouseX <= x + 17) {
                 tooltip.addAll(stack.getTooltip(MCClientHelper.getPlayer(), false));
+                tooltip.add("---");
+                if (reward.getProvided() instanceof ICustomTooltip) ((ICustomTooltip)reward.getProvided()).addTooltip(tooltip);
+                else{
+                    for (String s : SplitHelper.splitTooltip(reward.getDescription(), 32)) {
+                        tooltip.add(s);
+                    }
+                }
             }
             
             x += 20;
