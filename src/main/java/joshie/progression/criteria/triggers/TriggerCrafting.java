@@ -30,7 +30,7 @@ public class TriggerCrafting extends TriggerBaseItemFilter implements ISpecialFi
         int percentageItemTotal = (counter * 100) / amount;
         int percentageCraftedTotal = (timesItemCrafted * 100) / timesCrafted;
         int percentageTotal = (percentageItemTotal + percentageCraftedTotal) / 2;
-        return Progression.format("trigger.crafting.description", amount) + "\n\n" + Progression.format("completed", percentageTotal);
+        return Progression.format("trigger.crafting.description", amount);
     }
 
     @Override

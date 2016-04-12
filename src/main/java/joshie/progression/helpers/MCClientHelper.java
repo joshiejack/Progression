@@ -3,7 +3,6 @@ package joshie.progression.helpers;
 import joshie.progression.api.special.DisplayMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.World;
 
 public class MCClientHelper {
     public static boolean FORCE_EDIT = false;
@@ -16,10 +15,6 @@ public class MCClientHelper {
 		return Minecraft.getMinecraft();
 	}
 
-    public static World getWorld() {
-        return getPlayer().worldObj;
-    }
-    
     private static boolean isInEditMode() {
         return FORCE_EDIT ? true: getPlayer().capabilities.isCreativeMode;
     }

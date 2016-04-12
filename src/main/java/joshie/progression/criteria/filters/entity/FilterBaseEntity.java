@@ -10,7 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 public abstract class FilterBaseEntity extends FilterBase {
     @Override
     public EntityLivingBase getRandom(EntityPlayer player) {
-        return EntityHelper.getRandomEntity(this.getProvider());
+        return EntityHelper.getRandomEntity(player.worldObj, this.getProvider());
     }
 
     @Override

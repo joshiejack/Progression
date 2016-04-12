@@ -89,7 +89,7 @@ public class RewardSpawnEntity extends RewardBase implements IInit, ICustomDescr
                             if (isValidLocation(player.worldObj, pos)) {
                                 notspawned = false;
                                 //Now that we have a random location, let's grab a random Entity
-                                EntityLivingBase entity = EntityHelper.getRandomEntityForFilters(entities);
+                                EntityLivingBase entity = EntityHelper.getRandomEntityFromFilters(entities, player);
                                 EntityLivingBase clone = (EntityLivingBase) EntityList.createEntityByName(EntityHelper.getNameForEntity(entity), player.worldObj);
                                 if (clone instanceof EntityLiving) {
                                     ((EntityLiving) clone).onInitialSpawn(player.worldObj.getDifficultyForLocation(new BlockPos(clone)), (IEntityLivingData) null);

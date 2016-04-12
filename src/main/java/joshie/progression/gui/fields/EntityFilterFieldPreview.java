@@ -44,7 +44,7 @@ public class EntityFilterFieldPreview extends ItemFilterField implements IField 
 
     public EntityLivingBase getEntity(boolean hovered) {
         if (ticker >= 200 || ticker == 0) {
-            entity = EntityHelper.getRandomEntityForFilters(getFilters());
+            entity = EntityHelper.getRandomEntityFromFilters(getFilters(), MCClientHelper.getPlayer());
             ticker = 1;
         }
 

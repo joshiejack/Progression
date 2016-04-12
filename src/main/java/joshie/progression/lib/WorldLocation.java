@@ -5,10 +5,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
 
 import java.util.List;
-import java.util.Random;
 
 public class WorldLocation {
-    private static final Random rand = new Random();
     public EntityPlayer player;
     public int dimension;
     public BlockPos pos;
@@ -38,7 +36,7 @@ public class WorldLocation {
         if (size == 0) return null;
         if (size == 1) return (WorldLocation) locality.get(0).getProvided().getRandom(player);
         else {
-            return (WorldLocation) locality.get(rand.nextInt(size));
+            return (WorldLocation) locality.get(player.worldObj.rand.nextInt(size)).getProvided().getRandom(player);
         }
     }
 
