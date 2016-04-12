@@ -1,26 +1,27 @@
 package joshie.progression.gui.core;
 
-import static joshie.progression.gui.core.IBarProvider.BarColorType.BAR1_BORDER;
-import static joshie.progression.gui.core.IBarProvider.BarColorType.BAR1_FONT;
-import static joshie.progression.gui.core.IBarProvider.BarColorType.BAR1_GRADIENT1;
-import static joshie.progression.gui.core.IBarProvider.BarColorType.BAR1_GRADIENT2;
-import static joshie.progression.gui.core.IBarProvider.BarColorType.BAR1_UNDERLINE;
-
 import joshie.progression.Progression;
+
+import static joshie.progression.gui.core.GuiList.THEME;
+import static joshie.progression.gui.core.IBarProvider.BarColorType.*;
 
 public class FeatureBarsFull extends FeatureAbstract {
     protected IBarProvider provider;
-    private String bar1;
+    protected String bar1;
     
-    public FeatureBarsFull(IBarProvider provider, String bar1) {
-        this.provider = provider;
+    public FeatureBarsFull(String bar1) {
         this.bar1 = bar1;
+    }
+
+    public FeatureBarsFull setProvider(IBarProvider provider) {
+        this.provider = provider;
+        return this;
     }
 
     @Override
     public void drawFeature(int mouseX, int mouseY) {
         offset.drawGradient(-1, 5, screenWidth, 15, provider.getColorForBar(BAR1_GRADIENT1), provider.getColorForBar(BAR1_GRADIENT2), provider.getColorForBar(BAR1_BORDER));
-        offset.drawRectangle(-1, 20, screenWidth, 1, provider.getColorForBar(BAR1_UNDERLINE), theme.invisible);
+        offset.drawRectangle(-1, 20, screenWidth, 1, provider.getColorForBar(BAR1_UNDERLINE), THEME.invisible);
         offset.drawText(Progression.translate(bar1), 9, 9, provider.getColorForBar(BAR1_FONT)); //Removing the offsetX in order to reposition everything back at 0
     }
 

@@ -6,10 +6,7 @@ import joshie.progression.api.criteria.IFilterType;
 import joshie.progression.api.gui.Position;
 import joshie.progression.api.special.*;
 import joshie.progression.gui.core.DrawHelper;
-import joshie.progression.gui.core.FeatureTooltip;
-import joshie.progression.gui.editors.FeatureItemSelector;
 import joshie.progression.gui.editors.IItemSelectable;
-import joshie.progression.gui.filters.FeatureItemPreview;
 import joshie.progression.gui.filters.FilterTypeItem;
 import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.item.ItemStack;
@@ -17,6 +14,8 @@ import net.minecraft.item.ItemStack;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+
+import static joshie.progression.gui.core.GuiList.*;
 
 public class ItemField extends AbstractField implements IItemSelectable {
     private final IFilterType filter;
@@ -63,7 +62,7 @@ public class ItemField extends AbstractField implements IItemSelectable {
     public boolean attemptClick(int mouseX, int mouseY) {
         boolean clicked = mouseX >= mouseX1 && mouseX <= mouseX2 && mouseY >= mouseY1 && mouseY <= mouseY2;
         if (clicked) {
-            FeatureItemSelector.INSTANCE.select(filter, this, Position.BOTTOM);
+            ITEM_EDITOR.select(filter, this, Position.BOTTOM);
             return true;
         } else return false;
     }
@@ -102,7 +101,7 @@ public class ItemField extends AbstractField implements IItemSelectable {
                     ((IAdditionalTooltip)object).addHoverTooltip(getFieldName(), stack, tooltip);
                 }
 
-                FeatureTooltip.INSTANCE.addTooltip(tooltip);
+                TOOLTIP.add(tooltip);
             }
 
             helper.drawStack(renderX, renderY, getStack(), x, y, scale);
@@ -127,7 +126,7 @@ public class ItemField extends AbstractField implements IItemSelectable {
             }
 
             //Update
-            FeatureItemPreview.INSTANCE.updateSearch();
+            PREVIEW.updateSearch();
         }
     }
 }

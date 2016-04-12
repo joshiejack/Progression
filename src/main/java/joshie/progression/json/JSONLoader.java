@@ -9,7 +9,6 @@ import joshie.progression.api.special.IHasFilters;
 import joshie.progression.api.special.IInit;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.handlers.EventsManager;
-import joshie.progression.handlers.RemappingHandler;
 import joshie.progression.helpers.FileHelper;
 import joshie.progression.helpers.JSONHelper;
 import joshie.progression.helpers.StackHelper;
@@ -76,10 +75,10 @@ public class JSONLoader {
         }
     }
 
-    public static DefaultSettings getServerTabData() {
+    public static DefaultSettings getServerTabData(String hostname) {
         DefaultSettings loader = null;
         try {
-            File file = FileHelper.getCriteriaFile(RemappingHandler.getHostName(), false);
+            File file = FileHelper.getCriteriaFile(hostname, false);
             if (!file.exists()) {
                 loader = new DefaultSettings().setDefaults();
                 String json = gson.toJson(loader);

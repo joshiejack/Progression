@@ -1,7 +1,7 @@
 package joshie.progression.gui.core;
 
 public interface IGuiFeature {
-	public IGuiFeature init(GuiCore gui);
+	public IGuiFeature init();
 	public void draw(int mouseX, int mouseY);
 	public boolean mouseClicked(int mouseX, int mouseY, int button);
     public boolean isVisible();

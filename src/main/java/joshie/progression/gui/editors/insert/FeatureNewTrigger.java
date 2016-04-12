@@ -1,13 +1,13 @@
 package joshie.progression.gui.editors.insert;
 
 import joshie.progression.api.criteria.ITriggerProvider;
-import joshie.progression.gui.editors.GuiCriteriaEditor;
 import joshie.progression.handlers.APIHandler;
 
 import java.util.Collection;
 
+import static joshie.progression.gui.core.GuiList.CRITERIA_EDITOR;
+
 public class FeatureNewTrigger extends FeatureNew<ITriggerProvider> {
-    public static final FeatureNewTrigger INSTANCE = new FeatureNewTrigger();
 
     public FeatureNewTrigger() {
         super("trigger");
@@ -20,7 +20,7 @@ public class FeatureNewTrigger extends FeatureNew<ITriggerProvider> {
 
     @Override
     public void clone(ITriggerProvider trigger) {
-        APIHandler.cloneTrigger(GuiCriteriaEditor.INSTANCE.getCriteria(), trigger);
-        //GuiCriteriaEditor.INSTANCE.initGui()
+        APIHandler.cloneTrigger(CRITERIA_EDITOR.get(), trigger);
+        //GuiCriteriaEditor.GROUP_EDITOR.initGui()
     }
 }

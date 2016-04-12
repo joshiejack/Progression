@@ -1,30 +1,28 @@
 package joshie.progression.gui.core;
 
-import joshie.progression.json.Theme;
+import static joshie.progression.gui.core.GuiList.CORE;
 
 public abstract class FeatureAbstract implements IGuiFeature {
     protected DrawHelper offset;
     protected DrawHelper draw;
 
     // Variables used when drawing shizz
-    protected Theme theme;
     protected int screenWidth;
     protected int guiHeight;
     private boolean isHidden;
 
     @Override
-    public FeatureAbstract init(GuiCore core) {
-        offset = new DrawHelper(core);
-        draw = new DrawHelperOffset(core);
+    public FeatureAbstract init() {
+        offset = new DrawHelper();
+        draw = new DrawHelperOffset();
         return this;
     }
 
     @Override
     public final void draw(int mouseX, int mouseY) {
         if (draw == null || offset == null) return; //Avoid crashes
-        theme = Theme.INSTANCE; // Grab that theme?
-        guiHeight = draw.getGui().ySize; // Set that gui height
-        screenWidth = draw.getGui().screenWidth; // Mark the size of the screen
+        guiHeight = CORE.ySize; // Set that gui height
+        screenWidth = CORE.screenWidth; // Mark the size of the screen
         drawFeature(mouseX, mouseY); // Draw the features
     }
 

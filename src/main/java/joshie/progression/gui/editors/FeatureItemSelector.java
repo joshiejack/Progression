@@ -6,7 +6,6 @@ import joshie.progression.Progression;
 import joshie.progression.api.criteria.IFilterType;
 import joshie.progression.api.gui.Position;
 import joshie.progression.gui.core.FeatureAbstract;
-import joshie.progression.gui.filters.FeatureItemPreview;
 import joshie.progression.gui.filters.FilterTypeItem;
 import joshie.progression.helpers.ItemHelper;
 import net.minecraft.client.renderer.GlStateManager;
@@ -15,8 +14,9 @@ import org.lwjgl.opengl.GL11;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
+import static joshie.progression.gui.core.GuiList.*;
+
 public class FeatureItemSelector extends FeatureAbstract implements ITextEditable {
-    public static FeatureItemSelector INSTANCE = new FeatureItemSelector();
     public IItemSelectable selectable = null;
     private IFilterType filter = FilterTypeItem.INSTANCE;
     public ArrayList<Object> sorted;
@@ -32,7 +32,7 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
 
     public boolean select(IFilterType filter, IItemSelectable selectable, Position type) {
         ItemHelper.addInventory();
-        TextEditor.INSTANCE.setEditable(this);
+        TEXT_EDITOR_SIMPLE.setEditable(this);
         this.filter = filter;
         this.selectable = selectable;
         this.position = type;
@@ -143,7 +143,7 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
                     selectable = null;
 
                     //Update the item preview when selecting an item
-                    FeatureItemPreview.INSTANCE.updateSearch();
+                    PREVIEW.updateSearch();
                     return true;
                 }
 
@@ -167,19 +167,19 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
         }
 
         mouseY -= position.yOffset;
-        offset.drawGradient(-1, 25 + position.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 15, theme.blackBarGradient1, theme.blackBarGradient2, theme.blackBarBorder);
-        offset.drawRectangle(-1, 40 + position.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 73, theme.blackBarUnderLine, theme.blackBarUnderLineBorder);
+        offset.drawGradient(-1, 25 + position.yOffset, CORE.mc.displayWidth, 15, THEME.blackBarGradient1, THEME.blackBarGradient2, THEME.blackBarBorder);
+        offset.drawRectangle(-1, 40 + position.yOffset, CORE.mc.displayWidth, 73, THEME.blackBarUnderLine, THEME.blackBarUnderLineBorder);
 
-        offset.drawText(Progression.translate("selector.items"), 5, 29 + position.yOffset, theme.blackBarFontColor);
-        offset.drawRectangle(285 - offset.getGui().getOffsetX(), 27 + position.yOffset, 200, 12, theme.blackBarUnderLine, theme.blackBarUnderLineBorder);
-        offset.drawText(TextEditor.INSTANCE.getText(this), 290, 29 + position.yOffset, theme.blackBarFontColor);
+        offset.drawText(Progression.translate("selector.items"), 5, 29 + position.yOffset, THEME.blackBarFontColor);
+        offset.drawRectangle(285 - CORE.getOffsetX(), 27 + position.yOffset, 200, 12, THEME.blackBarUnderLine, THEME.blackBarUnderLineBorder);
+        offset.drawText(TEXT_EDITOR_SIMPLE.getText(this), 290, 29 + position.yOffset, THEME.blackBarFontColor);
 
         int width = (int) ((double) (screenWidth - 10) / 16.133333334D);
         int j = 0;
         int k = 0;
         for (int i = index; i < index + (width * 4); i++) {
             if (i >= 0 && i < sorted.size()) {
-                filter.draw(offset, sorted.get(i), offset.getGui().getOffsetX(), j, position.yOffset, k, mouseX, mouseY);
+                filter.draw(offset, sorted.get(i), CORE.getOffsetX(), j, position.yOffset, k, mouseX, mouseY);
 
                 j++;
 

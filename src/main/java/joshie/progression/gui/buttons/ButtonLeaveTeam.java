@@ -1,10 +1,10 @@
 package joshie.progression.gui.buttons;
 
-import joshie.progression.gui.core.FeatureTooltip;
 import joshie.progression.helpers.SplitHelper;
 import joshie.progression.network.PacketChangeTeam;
 import joshie.progression.network.PacketHandler;
 
+import static joshie.progression.gui.core.GuiList.TOOLTIP;
 import static joshie.progression.player.PlayerSavedData.TeamAction.LEAVE;
 import static net.minecraft.util.EnumChatFormatting.BOLD;
 
@@ -20,7 +20,7 @@ public class ButtonLeaveTeam extends ButtonBaseTeam {
 
     @Override
     public void addTooltip() {
-        FeatureTooltip.INSTANCE.addTooltip(BOLD + "Leave Team");
-        FeatureTooltip.INSTANCE.addTooltip(SplitHelper.splitTooltip("Clicking this button will make you leave your current team and return to single player", 40));
+        TOOLTIP.add(BOLD + "Leave Team");
+        TOOLTIP.add(SplitHelper.splitTooltip("Clicking this button will make you leave your current team and return to single player", 40));
     }
 }

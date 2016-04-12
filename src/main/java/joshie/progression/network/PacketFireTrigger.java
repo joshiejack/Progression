@@ -143,7 +143,7 @@ public class PacketFireTrigger extends PenguinPacket {
                         data[i] = Item.itemRegistry.getObject(new ResourceLocation(ByteBufUtils.readUTF8String(buf), ByteBufUtils.readUTF8String(buf)));
                         break;
                     case ENTITY:
-                        data[i] = MCClientHelper.getWorld().getEntityByID(buf.readInt());
+                        data[i] = MCClientHelper.getMinecraft().theWorld.getEntityByID(buf.readInt());
                         break;
                     default:
                         break;

@@ -3,11 +3,12 @@ package joshie.progression.gui.fields;
 import joshie.progression.api.gui.Position;
 import joshie.progression.api.special.IInit;
 import joshie.progression.api.special.ISetterCallback;
-import joshie.progression.gui.editors.FeatureFullTextEditor;
 import joshie.progression.gui.editors.ITextEditable;
 import net.minecraft.item.ItemStack;
 
 import java.lang.reflect.Field;
+
+import static joshie.progression.gui.core.GuiList.TEXT_EDITOR_FULL;
 
 public class FieldHelper implements ITextEditable {
     public Position type;
@@ -26,11 +27,11 @@ public class FieldHelper implements ITextEditable {
     }
 
     public void select() {
-        FeatureFullTextEditor.INSTANCE.select(this, type);
+        TEXT_EDITOR_FULL.select(this, type);
     }
 
     public String getText() {
-        return FeatureFullTextEditor.INSTANCE.getText(this);
+        return TEXT_EDITOR_FULL.getText(this);
     }
 
     public float getFloat() {

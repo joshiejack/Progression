@@ -1,9 +1,10 @@
 package joshie.progression.gui.buttons;
 
 
-import joshie.progression.gui.core.GuiCore;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+
+import static joshie.progression.gui.core.GuiList.CORE;
 
 public abstract class ButtonBase extends GuiButton {
     protected boolean isSideways;
@@ -21,7 +22,7 @@ public abstract class ButtonBase extends GuiButton {
 
     @Override
     public boolean mousePressed(Minecraft mc, int x, int y) {
-        if (isSideways) x = x - GuiCore.INSTANCE.getOffsetX();
+        if (isSideways) x = x - CORE.getOffsetX();
         if (super.mousePressed(mc, x, y)) {
             onClicked();
             return true;

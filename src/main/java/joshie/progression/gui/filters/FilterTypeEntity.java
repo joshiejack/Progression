@@ -2,8 +2,6 @@ package joshie.progression.gui.filters;
 
 import joshie.progression.api.criteria.IFilterType;
 import joshie.progression.gui.core.DrawHelper;
-import joshie.progression.gui.core.FeatureTooltip;
-import joshie.progression.gui.core.GuiCore;
 import joshie.progression.helpers.EntityHelper;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.EntityList;
@@ -12,6 +10,9 @@ import net.minecraft.entity.boss.BossStatus;
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;
+
+import static joshie.progression.gui.core.GuiList.CORE;
+import static joshie.progression.gui.core.GuiList.TOOLTIP;
 
 public class FilterTypeEntity extends FilterTypeBase {
     public static final IFilterType INSTANCE = new FilterTypeEntity();
@@ -57,13 +58,13 @@ public class FilterTypeEntity extends FilterTypeBase {
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1F); //Using state manager doesn't fix this
             boolean hovered = (mouseX >= 10 + (j * 32) && mouseX <= 9 + ((j + 1) * 32) && mouseY >= 40 && mouseY <= 120);
             if (hovered) {
-                FeatureTooltip.INSTANCE.addTooltip("Localised: " + entity.getName());
-                FeatureTooltip.INSTANCE.addTooltip("Name: " + EntityHelper.getNameForEntity(entity));
+                TOOLTIP.add("Localised: " + entity.getName());
+                TOOLTIP.add("Name: " + EntityHelper.getNameForEntity(entity));
             }
 
             int entitySize = (EntityHelper.getNameForEntity(entity).equals("Thaumcraft.Taintacle") ? 15 : EntityHelper.getSizeForEntity(entity));//;
             int entityY = EntityHelper.getNameForEntity(entity).equals("Thaumcraft.Taintacle") ? -45: 0;
-            GuiInventory.drawEntityOnScreen(offsetX + 24 + (j * 32), GuiCore.INSTANCE.screenTop + 105 + (k * 32) + yOffset + entityY, entitySize, 25F, -5F, entity);
+            GuiInventory.drawEntityOnScreen(offsetX + 24 + (j * 32), CORE.screenTop + 105 + (k * 32) + yOffset + entityY, entitySize, 25F, -5F, entity);
             BossStatus.bossName = null; //Reset boss
         } catch (Exception e) {}
     }

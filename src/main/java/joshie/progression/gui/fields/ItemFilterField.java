@@ -4,23 +4,21 @@ import joshie.progression.Progression;
 import joshie.progression.api.criteria.IFilter;
 import joshie.progression.api.criteria.IFilterProvider;
 import joshie.progression.api.criteria.IFilterType;
-import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.IHasFilters;
 import joshie.progression.api.special.IInit;
 import joshie.progression.api.special.ISetterCallback;
 import joshie.progression.gui.core.DrawHelper;
-import joshie.progression.gui.core.GuiCore;
-import joshie.progression.gui.editors.GuiFilterEditor;
-import joshie.progression.gui.filters.FeatureItemPreview;
 import joshie.progression.gui.filters.FilterTypeItem;
 import joshie.progression.helpers.CollectionHelper;
-import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.client.gui.GuiScreen;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import static joshie.progression.api.special.DisplayMode.EDIT;
+import static joshie.progression.gui.core.GuiList.*;
 
 public class ItemFilterField extends AbstractField {
     private static final Random rand = new Random();
@@ -79,7 +77,7 @@ public class ItemFilterField extends AbstractField {
 
     @Override
     public void draw(DrawHelper helper, int renderX, int renderY, int color, int yPos, int mouseX, int mouseY) {
-        if (MCClientHelper.getMode() == DisplayMode.EDIT) {
+        if (MODE == EDIT) {
             helper.drawSplitText(renderX, renderY, Progression.translate("filter." + selector.getName()), 4, yPos, 105, color, 0.75F);
         }
     }
@@ -92,9 +90,9 @@ public class ItemFilterField extends AbstractField {
     @Override
     public boolean click() {
         try {
-            GuiFilterEditor.INSTANCE.setPrevious(GuiCore.INSTANCE.openGui).setFilterSet(this); //Adjust this filter object
-            FeatureItemPreview.INSTANCE.select(selector); //Allow for selection of multiple items 
-            GuiCore.INSTANCE.setEditor(GuiFilterEditor.INSTANCE);
+            FILTER_EDITOR.setPrevious(CORE.openGui).set(this); //Adjust this filter object
+            PREVIEW.select(selector); //Allow for selection of multiple items
+            CORE.setEditor(FILTER_EDITOR);
             return true;
         } catch (Exception e) {
             return false;
@@ -118,7 +116,7 @@ public class ItemFilterField extends AbstractField {
             }
 
             //Update
-            FeatureItemPreview.INSTANCE.updateSearch();
+            PREVIEW.updateSearch();
         } catch (Exception e) {}
     }
 
@@ -144,7 +142,7 @@ public class ItemFilterField extends AbstractField {
         }
 
         //Update
-        FeatureItemPreview.INSTANCE.updateSearch();
+        PREVIEW.updateSearch();
     }
 
     public void remove(IFilterProvider filter) {
@@ -160,6 +158,6 @@ public class ItemFilterField extends AbstractField {
         }
 
         //Update
-        FeatureItemPreview.INSTANCE.updateSearch();
+        PREVIEW.updateSearch();
     }
 }

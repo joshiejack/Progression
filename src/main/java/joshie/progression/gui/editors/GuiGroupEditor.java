@@ -5,8 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import com.mojang.authlib.GameProfile;
 import joshie.progression.gui.buttons.ButtonLeaveTeam;
 import joshie.progression.gui.buttons.ButtonNewTeam;
-import joshie.progression.gui.core.FeatureBarsFull;
-import joshie.progression.gui.core.GuiCore;
+import joshie.progression.gui.core.GuiList;
 import joshie.progression.gui.core.IBarProvider;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.PlayerHelper;
@@ -28,14 +27,24 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
+import static joshie.progression.gui.core.GuiList.*;
 import static net.minecraft.util.EnumChatFormatting.BOLD;
 import static net.minecraft.util.EnumChatFormatting.ITALIC;
 
 public class GuiGroupEditor extends GuiBaseEditor implements IBarProvider, ITextEditable {
-    public static final GuiGroupEditor INSTANCE = new GuiGroupEditor();
     private static Cache<PlayerTeam, Set<AbstractClientPlayer>> playerList;
     private boolean isPopup;
     private String username;
+
+    public GuiGroupEditor() {
+        features.add(BACKGROUND);
+        features.add(GROUP_BG);
+    }
+
+    @Override
+    public boolean hasButtons() {
+        return true;
+    }
 
     @Override
     public IEditorMode getPreviousGui() {
@@ -52,19 +61,18 @@ public class GuiGroupEditor extends GuiBaseEditor implements IBarProvider, IText
     }
 
     @Override
-    public void initData(GuiCore core) {
-        super.initData(core);
-        core.scrollingEnabled = false;
-        List<GuiButton> buttons = core.getButtonNewList();
-        buttons.add(new ButtonNewTeam("New Team", 5, core.screenTop + 25));
-        buttons.add(new ButtonLeaveTeam("Leave Team", 75, core.screenTop + 25));
-        features.add(new FeatureBarsFull(this, "group"));
+    public void initData() {
+        CORE.scrollingEnabled = false;
+        List<GuiButton> buttons = CORE.getButtonNewList();
+        buttons.add(new ButtonNewTeam("New Team", 5, CORE.screenTop + 25));
+        buttons.add(new ButtonLeaveTeam("Leave Team", 75, CORE.screenTop + 25));
+        GROUP_BG.setProvider(this);
     }
 
     private boolean clickLeft(int screenCentre, int mouseX, int mouseY) {
         PlayerTeam team = PlayerTracker.getClientPlayer().getTeam();
         if (!isPopup && mouseY >= 90 && mouseY < 100) {
-            return TextEditor.INSTANCE.setEditable(team);
+            return TEXT_EDITOR_SIMPLE.setEditable(team);
         }
 
         if (!team.isSingle() && team.isOwner(MCClientHelper.getPlayer())) {
@@ -73,12 +81,12 @@ public class GuiGroupEditor extends GuiBaseEditor implements IBarProvider, IText
                 username = ""; //Reset the username everytime you click this
                 if (isPopup) {
                     //If we had the popup and clicked this button
-                } else TextEditor.INSTANCE.setEditable(this);
+                } else TEXT_EDITOR_SIMPLE.setEditable(this);
 
                 isPopup = !isPopup;
                 return true;
             } else {
-                TextEditor.INSTANCE.clearEditable();
+                TEXT_EDITOR_SIMPLE.clearEditable();
                 isPopup = false;
             }
         }
@@ -87,7 +95,7 @@ public class GuiGroupEditor extends GuiBaseEditor implements IBarProvider, IText
     }
 
     private void drawLeft(int screenCentre, int mouseX, int mouseY) {
-        drawGradientRectWithBorder(-2, 50, core.screenWidth + 4, 50 + 15, 0xFF6C00D9, 0xFF330066, 0xFF330066);
+        drawGradientRectWithBorder(-2, 50, CORE.screenWidth + 4, 50 + 15, 0xFF6C00D9, 0xFF330066, 0xFF330066);
         drawText("Team Info", 10, 54, 0xFFFFFFFF);
 
         PlayerTeam team = PlayerTracker.getClientPlayer().getTeam();
@@ -98,11 +106,11 @@ public class GuiGroupEditor extends GuiBaseEditor implements IBarProvider, IText
         drawText(UsernameCache.getLastKnownUsername(team.getOwner()), 105, 80, 0xFFFFFFFF);
 
         drawText("Team Name:", 5, 90, 0xFFFFFFFF);
-        drawText(TextEditor.INSTANCE.getText(team), 105, 90, 0xFFFFFFFF);
+        drawText(GuiList.TEXT_EDITOR_SIMPLE.getText(team), 105, 90, 0xFFFFFFFF);
 
         if (isPopup) {
-            core.drawRectWithBorder(100, 86, 300, 86 + 15, 0xFF000000, 0xFFFFFFFF);
-            String display = username.equals("") ? "Enter a Username..." : TextEditor.INSTANCE.getText(this);
+            CORE.drawRectWithBorder(100, 86, 300, 86 + 15, 0xFF000000, 0xFFFFFFFF);
+            String display = username.equals("") ? "Enter a Username..." : GuiList.TEXT_EDITOR_SIMPLE.getText(this);
             drawText(display, 110, 90, 0xFFFFFFFF);
         }
 
@@ -128,12 +136,12 @@ public class GuiGroupEditor extends GuiBaseEditor implements IBarProvider, IText
             } else addTooltip(BOLD + "Only owner can rename the team");
         }
 
-        drawGradientRectWithBorder(-2, 141, core.screenWidth + 4, 141 + 15, 0xFF6C00D9, 0xFF330066, 0xFF330066);
+        drawGradientRectWithBorder(-2, 141, CORE.screenWidth + 4, 141 + 15, 0xFF6C00D9, 0xFF330066, 0xFF330066);
         drawText("Team Members", 10, 145, 0xFFFFFFFF);
         try {
             int xPos = 0;
             for (EntityPlayer player : getPlayers(team)) {
-                GuiInventory.drawEntityOnScreen(20 + xPos, 230 + core.screenTop, 35, 5, 10, player);
+                GuiInventory.drawEntityOnScreen(20 + xPos, 230 + CORE.screenTop, 35, 5, 10, player);
                 if (mouseX >= xPos && mouseX <= xPos + 39 && mouseY >= 164 && mouseY <= 231) {
                     addTooltip(player.getDisplayNameString());
                 }
@@ -155,7 +163,7 @@ public class GuiGroupEditor extends GuiBaseEditor implements IBarProvider, IText
                 float green = (color >> 8 & 255) / 255.0F;
                 float blue = (color & 255) / 255.0F;
                 GlStateManager.color(red, green, blue, 1F);
-                core.drawTexture(ProgressionInfo.textures, xPos + 10, 170, 201, crossY, 55, 55);
+                CORE.drawTexture(ProgressionInfo.textures, xPos + 10, 170, 201, crossY, 55, 55);
             }
         } catch (Exception e) {}
     }
@@ -169,14 +177,14 @@ public class GuiGroupEditor extends GuiBaseEditor implements IBarProvider, IText
 
         }
 
-        //drawGradientRectWithBorder(screenCentre + 2, 90, core.screenWidth - 2, 105, 0xFFCCCCCC, theme.conditionEditorGradient1, 0xFF000000);
+        //drawGradientRectWithBorder(screenCentre + 2, 90, core.screenWidth - 2, 105, 0xFFCCCCCC, THEME.conditionEditorGradient1, 0xFF000000);
         //text = "Current Invites";
         //drawText(text, screenCentre + 12, 59, 0xFFFFFFFF);
     }
 
     @Override
     public void drawGuiForeground(boolean overlayvisible, int mouseX, int mouseY) {
-        int screenCentre = core.screenWidth / 2;
+        int screenCentre = CORE.screenWidth / 2;
         drawLeft(screenCentre, mouseX, mouseY);
         drawRight(screenCentre, mouseX, mouseY);
     }
@@ -207,7 +215,7 @@ public class GuiGroupEditor extends GuiBaseEditor implements IBarProvider, IText
 
     @Override
     public boolean guiMouseClicked(boolean overlayvisible, int mouseX, int mouseY, int button) {
-        int screenCentre = core.screenWidth / 2;
+        int screenCentre = CORE.screenWidth / 2;
         PlayerTeam team = PlayerTracker.getClientPlayer().getTeam();
         if (team.isOwner(MCClientHelper.getPlayer()) && clickLeft(screenCentre, mouseX, mouseY)) return true;
         else if (clickRight(screenCentre, mouseX, mouseY)) return true;
@@ -224,7 +232,7 @@ public class GuiGroupEditor extends GuiBaseEditor implements IBarProvider, IText
             case BAR1_BORDER:
                 return 0xFF330066;
             case BAR1_FONT:
-                return theme.conditionEditorFont;
+                return THEME.conditionEditorFont;
             case BAR1_UNDERLINE:
                 return 0x00330066;
             default:

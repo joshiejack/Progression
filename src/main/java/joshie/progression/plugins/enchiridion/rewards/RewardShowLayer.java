@@ -67,13 +67,15 @@ public class RewardShowLayer extends RewardBaseSingular implements IInit, IGette
 
     @SubscribeEvent
     public void onFeatureRender(FeatureVisibleEvent event) {
-        NBTTagCompound tag = ProgressionAPI.player.getCustomData(event.entityPlayer, "enchiridion.hidden");
-        if (tag != null) {
-            if (tag.hasKey(event.bookid)) {
-                NBTTagCompound bookData = tag.getCompoundTag(event.bookid);
-                if (bookData.hasKey("" + event.page)) {
-                    NBTTagCompound pageData = bookData.getCompoundTag("" + event.page);
-                    if (pageData.hasKey("" + event.layer)) event.setCanceled(true);
+        if (event.isVisible) {
+            NBTTagCompound tag = ProgressionAPI.player.getCustomData(event.entityPlayer, "enchiridion.hidden");
+            if (tag != null) {
+                if (tag.hasKey(event.bookid)) {
+                    NBTTagCompound bookData = tag.getCompoundTag(event.bookid);
+                    if (bookData.hasKey("" + event.page)) {
+                        NBTTagCompound pageData = bookData.getCompoundTag("" + event.page);
+                        if (pageData.hasKey("" + event.layer)) event.isVisible = false;
+                    }
                 }
             }
         }

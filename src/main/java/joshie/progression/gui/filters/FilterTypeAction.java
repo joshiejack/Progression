@@ -3,11 +3,12 @@ package joshie.progression.gui.filters;
 import joshie.progression.api.criteria.IFilterType;
 import joshie.progression.crafting.ActionType;
 import joshie.progression.gui.core.DrawHelper;
-import joshie.progression.gui.core.FeatureTooltip;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static joshie.progression.gui.core.GuiList.TOOLTIP;
 
 public class FilterTypeAction extends FilterTypeItem {
     public static final IFilterType INSTANCE = new FilterTypeAction();
@@ -42,7 +43,7 @@ public class FilterTypeAction extends FilterTypeItem {
         offset.drawStack(stack, -offsetX + 8 + (j * 16), yOffset + 45 + (k * 16), 1F);
         if (mouseX >= 8 + (j * 16) && mouseX < 8 + (j * 16) + 16) {
             if (mouseY >= 45 + (k * 16) && mouseY < 45 + (k * 16) + 16) {
-                FeatureTooltip.INSTANCE.addTooltip(ActionType.getCraftingActionFromIcon(stack).getDisplayName());
+                TOOLTIP.add(ActionType.getCraftingActionFromIcon(stack).getDisplayName());
             }
         }
 

@@ -1,8 +1,8 @@
 package joshie.progression.gui.core;
 
 import joshie.progression.PClientProxy;
-import joshie.progression.gui.editors.*;
-import joshie.progression.gui.editors.insert.*;
+import joshie.progression.gui.editors.IEditorMode;
+import joshie.progression.gui.editors.insert.FeatureNew;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.RenderItemHelper;
 import joshie.progression.json.Theme;
@@ -27,10 +27,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import static joshie.progression.api.special.DisplayMode.EDIT;
+import static joshie.progression.gui.core.GuiList.*;
 
 public class GuiCore extends GuiScreen {
-    public static final GuiCore INSTANCE = new GuiCore();
-    public ArrayList<IGuiFeature> features = new ArrayList<IGuiFeature>();
     public HashMap<Object, Integer> offsetCache = new HashMap();
     public ScaledResolution res;
     public IEditorMode lastGui;
@@ -38,14 +37,12 @@ public class GuiCore extends GuiScreen {
     public IEditorMode nextGui;
     public int mouseX = 0;
     public int mouseY = 0;
-    public Theme theme;
 
     private int offsetX; // Offset position
     public int ySize = 240; // Height of the Gui :O
     public int screenTop; // Top of the screen :D
     public int screenWidth; //Width of the screen
 
-    
     public boolean clickedButton = false;
     public boolean scrollingEnabled = true;
     public boolean markedForInit = false;
@@ -53,7 +50,7 @@ public class GuiCore extends GuiScreen {
     public GuiCore setEditor(IEditorMode editor) {
         this.markedForInit = true;
         this.nextGui = editor;
-        if (this.nextGui != GuiGroupEditor.INSTANCE) {
+        if (this.nextGui != GuiList.GROUP_EDITOR) {
             this.lastGui = this.nextGui;
         }
         
@@ -70,37 +67,34 @@ public class GuiCore extends GuiScreen {
 
     @Override
     public void initGui() {
-        if (openGui == null) openGui = GuiTreeEditor.INSTANCE;
+        MODE = MCClientHelper.getMode(); //Update the mode
+        if (openGui == null) openGui = TREE_EDITOR;
         mc = Minecraft.getMinecraft();
         res = new ScaledResolution(mc);
         screenWidth = res.getScaledWidth();
         Keyboard.enableRepeatEvents(true);
-        theme = Theme.INSTANCE;
         if (offsetCache.containsKey(getKey())) {
             offsetX = offsetCache.get(getKey());
         } else offsetX = 0;
 
-        features.clear(); // Clear out the features
-        features.add(new FeatureBackground()); // Readd the background
         screenTop = (height - ySize) / 2;
-        if (openGui != null) openGui.initData(this);
-        if (openGui != GuiGroupEditor.INSTANCE) features.add(new FeatureFooter()); // Add the footer
-
-        // Init all the features
-        FeatureTooltip.INSTANCE.init(this); //Damn you tooltip feature!
-        for (IGuiFeature feature : features) {
-            feature.init(this);
+        if (openGui != null) {
+            openGui.initData();
+            TOOLTIP.init();
+            for (IGuiFeature feature : openGui.getFeatures()) {
+                feature.init();
+            }
         }
     }
 
     public void clearEditors() {
-        FeatureItemSelector.INSTANCE.clearEditable();
-        FeatureFullTextEditor.INSTANCE.clearEditable();
-        TextEditor.INSTANCE.clearEditable();
-        FeatureNewTrigger.INSTANCE.setVisibility(false);
-        FeatureNewReward.INSTANCE.setVisibility(false);
-        FeatureNewItemFilter.INSTANCE.setVisibility(false);
-        FeatureNewCondition.INSTANCE.setVisibility(false);
+        ITEM_EDITOR.clearEditable();
+        TEXT_EDITOR_FULL.clearEditable();
+        TEXT_EDITOR_SIMPLE.clearEditable();
+        NEW_TRIGGER.setVisibility(false);
+        NEW_REWARD.setVisibility(false);
+        NEW_FILTER.setVisibility(false);
+        NEW_CONDITION.setVisibility(false);
     }
 
     public List<GuiButton> getButtonNewList() {
@@ -111,7 +105,7 @@ public class GuiCore extends GuiScreen {
     @Override
     public void onGuiClosed() {
         Keyboard.enableRepeatEvents(false);
-        if (MCClientHelper.isInEditMode()) {
+        if (MODE == EDIT) {
             //Don't allow this gui to be reopened until the server is ready
             PClientProxy.isSaver = true; //Mark us as being the one who saved
             PacketHandler.sendToServer(new PacketLockUnlockSaving(true));
@@ -127,10 +121,10 @@ public class GuiCore extends GuiScreen {
             initGui();
         }
 
-        FeatureTooltip.INSTANCE.clear();
+        TOOLTIP.clear();
         screenTop = (height - ySize) / 2;
         boolean overlayvisible = false;
-        for (IGuiFeature feature : features) {
+        for (IGuiFeature feature : openGui.getFeatures()) {
             if (feature.isVisible() && !feature.isOverlay()) { //Only draw visible stuff
                 feature.draw(cursorX, cursorY - screenTop);
             }
@@ -139,17 +133,17 @@ public class GuiCore extends GuiScreen {
         }
 
         if (openGui != null) openGui.drawGuiForeground(overlayvisible, mouseX, mouseY);
-        if (overlayvisible) FeatureTooltip.INSTANCE.clear();
+        if (overlayvisible) TOOLTIP.clear();
 
-        for (IGuiFeature feature : features) {
+        for (IGuiFeature feature : openGui.getFeatures()) {
             if (feature.isVisible() && feature.isOverlay()) { //Only new Stuff
                 feature.draw(cursorX, cursorY - screenTop);
             }
         }
 
         //Draw the tooltip in the right place
-        if (openGui == GuiTreeEditor.INSTANCE || openGui == GuiGroupEditor.INSTANCE) super.drawScreen(cursorX, cursorY - screenTop, partialTicks);
-        FeatureTooltip.INSTANCE.drawFeature(cursorX, cursorY);
+        if (openGui.hasButtons()) super.drawScreen(cursorX, cursorY - screenTop, partialTicks);
+        TOOLTIP.drawFeature(cursorX, cursorY);
     }
 
     @Override
@@ -157,7 +151,7 @@ public class GuiCore extends GuiScreen {
         if (markedForInit) return; //Dont process clicks while active
         boolean overlayvisible = false;
         if (button == 0) {
-            for (IGuiFeature feature : features) {
+            for (IGuiFeature feature : openGui.getFeatures()) {
                 if (feature.isVisible()) { //Don't process hidden features
                     if (feature.mouseClicked(mouseX, mouseY, button)) {
                         return; // Don't continue if a mouse click was processed
@@ -168,7 +162,7 @@ public class GuiCore extends GuiScreen {
             }
         }
 
-        if (openGui == GuiTreeEditor.INSTANCE || openGui == GuiGroupEditor.INSTANCE) super.mouseClicked(mouseX, mouseY, button);
+        if (openGui.hasButtons()) super.mouseClicked(mouseX, mouseY, button);
         if (clickedButton) {
             clickedButton = false;
             return;
@@ -180,7 +174,7 @@ public class GuiCore extends GuiScreen {
 
         if (button == 1) {
             if (!FeatureNew.IS_OPEN) {
-                if (openGui != null && openGui != GuiGroupEditor.INSTANCE) {
+                if (openGui != null && openGui != GROUP_EDITOR) {
                     setEditor(openGui.getPreviousGui());
                 }
             }
@@ -202,7 +196,7 @@ public class GuiCore extends GuiScreen {
             jump = 100; //Shift Jump
         }
 
-        if (!TextEditor.INSTANCE.isEditing()) {
+        if (!TEXT_EDITOR_SIMPLE.isEditing()) {
             if (key == 203) {
                 scroll(jump);
             } else if (key == 205) {
@@ -210,9 +204,9 @@ public class GuiCore extends GuiScreen {
             }
         }
 
-        if (openGui != null && MCClientHelper.getMode() == EDIT) openGui.keyTyped(character, key);
+        if (openGui != null && MODE == EDIT) openGui.keyTyped(character, key);
 
-        TextEditor.INSTANCE.keyTyped(character, key);
+        TEXT_EDITOR_SIMPLE.keyTyped(character, key);
         super.keyTyped(character, key);
     }
 
@@ -226,7 +220,7 @@ public class GuiCore extends GuiScreen {
         boolean down = wheel < 0;
         if (wheel != 0) {
             boolean scrolled = false;
-            for (IGuiFeature feature : features) {
+            for (IGuiFeature feature : openGui.getFeatures()) {
                 if (feature.isVisible()) { //Must be visible of course!
                     if (feature.scroll(mouseX, mouseY, down)) {
                         scrolled = true;
@@ -377,7 +371,7 @@ public class GuiCore extends GuiScreen {
     }
 
     public Theme getTheme() {
-        return theme;
+        return THEME;
     }
 
     public void setZLevel(float f) {

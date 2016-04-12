@@ -1,13 +1,14 @@
 package joshie.progression.plugins.enchiridion.features;
 
 import joshie.enchiridion.api.EnchiridionAPI;
+import joshie.enchiridion.api.book.IFeature;
 import joshie.enchiridion.api.book.IFeatureProvider;
+import joshie.enchiridion.api.book.IPage;
 import joshie.enchiridion.api.gui.ISimpleEditorFieldProvider;
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.ITriggerProvider;
 import joshie.progression.handlers.APIHandler;
-import joshie.progression.json.Theme;
 import joshie.progression.lib.ProgressionInfo;
 import net.minecraft.util.ResourceLocation;
 
@@ -20,6 +21,7 @@ import static net.minecraft.util.EnumChatFormatting.GOLD;
 
 public class FeatureCriteria extends FeatureProgression implements ISimpleEditorFieldProvider {
     protected transient ICriteria criteria = null;
+    protected transient boolean isInit = false;
     protected UUID criteriaID = UUID.randomUUID();
     public String displayName = "";
     public boolean background = true;
@@ -52,6 +54,7 @@ public class FeatureCriteria extends FeatureProgression implements ISimpleEditor
                 if (c.getLocalisedName().equals(displayName)) {
                     criteria = c;
                     criteriaID = c.getUniqueID();
+                    update(position);
                     return;
                 }
             }
@@ -70,8 +73,6 @@ public class FeatureCriteria extends FeatureProgression implements ISimpleEditor
 
         return null;
     }
-
-    private static final Theme theme = Theme.INSTANCE;
 
     private static final ResourceLocation unlocked = new ResourceLocation(ProgressionInfo.BOOKPATH + "hexunlocked.png");
     private static final ResourceLocation locked = new ResourceLocation(ProgressionInfo.BOOKPATH + "hexlocked.png");
@@ -101,8 +102,6 @@ public class FeatureCriteria extends FeatureProgression implements ISimpleEditor
                     int x2 = position.getLeft();
 
                     EnchiridionAPI.draw.drawLine(x1 + 8, 8 + y1 - 1, 8 + x2, 8 + y2 - 1, 2, 0xFF404040);
-                    //EnchiridionAPI.draw.drawLine(x1 + 8, 8 + y1 + 1, 8 + x2, 8 + y2 + 1, 1, theme.connectLineColor2); //#636C69
-                    //EnchiridionAPI.draw.drawLine(x1 + 8, 8 + y1, 8 + x2, 8 + y2, 1, theme.connectLineColor3);
                 }
             }
 
@@ -111,9 +110,29 @@ public class FeatureCriteria extends FeatureProgression implements ISimpleEditor
         }
     }
 
+    private static final String ARROWPATH = "enchiridion:textures/books/arrow_left_";
+
+    @Override
+    public void performClick(int mouseX, int mouseY) {
+        if (criteria != null) {
+            int number = (criteria.getUniqueID().hashCode() / 100) + 50;
+            IPage page = EnchiridionAPI.book.getPageIfNotExists(number);
+            if (page != null) {
+                IFeature button = EnchiridionAPI.editor.getJumpPageButton(ARROWPATH + "off.png", ARROWPATH + "on.png", number);
+                page.addFeature(button, 21, 200, 18, 10, true, false);
+            }
+
+            EnchiridionAPI.book.jumpToPageIfExists(number);
+        }
+    }
+
     @Override
     public void draw(int mouseX, int mouseY) {
-        if (criteriaID.equals("")) onFieldsSet();
+        if (criteriaID.equals("") || !isInit) {
+            isInit = true;
+            onFieldsSet();
+        }
+
         criteria = APIHandler.getCache(true).getCriteria().get(criteriaID);
         if (criteria != null) {
             drawFeature(mouseX, mouseY);

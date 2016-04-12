@@ -1,13 +1,15 @@
 package joshie.progression.gui.editors;
 
+import joshie.progression.api.gui.Position;
+import joshie.progression.gui.core.FeatureAbstract;
+import joshie.progression.gui.core.GuiList;
+import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL11;
 
-import joshie.progression.gui.core.FeatureAbstract;
-import joshie.progression.api.gui.Position;
-import net.minecraft.client.renderer.GlStateManager;
+import static joshie.progression.gui.core.GuiList.CORE;
+import static joshie.progression.gui.core.GuiList.TEXT_EDITOR_SIMPLE;
 
 public class FeatureFullTextEditor extends FeatureAbstract implements ITextEditable {
-    public static FeatureFullTextEditor INSTANCE = new FeatureFullTextEditor();
     private ITextEditable editable = null;
     private Position type;
 
@@ -20,7 +22,7 @@ public class FeatureFullTextEditor extends FeatureAbstract implements ITextEdita
     public void select(ITextEditable editable, Position type) {
         this.type = type;
         this.editable = editable;
-        TextEditor.INSTANCE.setEditable(this);
+        TEXT_EDITOR_SIMPLE.setEditable(this);
     }
 
     public void clearEditable() {
@@ -43,7 +45,7 @@ public class FeatureFullTextEditor extends FeatureAbstract implements ITextEdita
     }
     
     public String getText(ITextEditable editable) {
-        return TextEditor.INSTANCE.getText(editable);
+        return TEXT_EDITOR_SIMPLE.getText(editable);
     }
 
     @Override
@@ -59,11 +61,11 @@ public class FeatureFullTextEditor extends FeatureAbstract implements ITextEdita
     @Override
     public void drawFeature(int mouseX, int mouseY) {
         GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
-        offset.drawGradient(-1, 25 + type.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 15, theme.blackBarGradient1, theme.blackBarGradient2, theme.blackBarBorder);
-        offset.drawRectangle(-1, 40 + type.yOffset, GuiTreeEditor.INSTANCE.mc.displayWidth, 81, theme.blackBarUnderLine, theme.blackBarUnderLineBorder);
+        offset.drawGradient(-1, 25 + type.yOffset, CORE.mc.displayWidth, 15, GuiList.THEME.blackBarGradient1, GuiList.THEME.blackBarGradient2, GuiList.THEME.blackBarBorder);
+        offset.drawRectangle(-1, 40 + type.yOffset, CORE.mc.displayWidth, 81, GuiList.THEME.blackBarUnderLine, GuiList.THEME.blackBarUnderLineBorder);
 
-        offset.drawText("Text Editor", 5, 29 + type.yOffset, theme.blackBarFontColor);
-        offset.drawSplitText(TextEditor.INSTANCE.getText(this), 5, 45 + type.yOffset, screenWidth - 5, theme.blackBarFontColor);
+        offset.drawText("Text Editor", 5, 29 + type.yOffset, GuiList.THEME.blackBarFontColor);
+        offset.drawSplitText(TEXT_EDITOR_SIMPLE.getText(this), 5, 45 + type.yOffset, screenWidth - 5, GuiList.THEME.blackBarFontColor);
     }
 
     @Override

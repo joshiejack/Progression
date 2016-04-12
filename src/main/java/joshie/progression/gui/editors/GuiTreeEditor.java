@@ -3,10 +3,10 @@ package joshie.progression.gui.editors;
 import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.ITab;
 import joshie.progression.api.event.TabVisibleEvent;
-import joshie.progression.api.special.DisplayMode;
 import joshie.progression.gui.buttons.ButtonNewCriteria;
 import joshie.progression.gui.buttons.ButtonTab;
 import joshie.progression.gui.core.GuiCore;
+import joshie.progression.gui.core.GuiList;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.json.Options;
@@ -23,24 +23,37 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import static joshie.progression.api.special.DisplayMode.DISPLAY;
+import static joshie.progression.api.special.DisplayMode.EDIT;
+import static joshie.progression.gui.core.GuiList.*;
+
 public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
-    public static final GuiTreeEditor INSTANCE = new GuiTreeEditor();
     private HashMap<ICriteria, TreeEditorElement> elements;
     public ICriteria selected = null;
     public ICriteria previous = null;
     public UUID currentTabID;
     public ITab currentTab;
 
+    public GuiTreeEditor() {
+        features.add(BACKGROUND);
+        features.add(TREE_ELEMENT);
+    }
+
     @Override
     public Object getKey() {
         return currentTab;
+    }
+
+    @Override
+    public boolean hasButtons() {
+        return true;
     }
 
     public void addButtons(GuiCore core, boolean sideWays) {
         List<GuiButton> buttonList = core.getButtonNewList(); //Recreate the button list, in order to reposition it
         int position = 0;
         int posY = -5;
-        if (MCClientHelper.isInEditMode()) {
+        if (MODE == EDIT) {
             if (!sideWays) {
                 buttonList.add(new ButtonNewCriteria(0, posY));
                 posY += 28;
@@ -50,11 +63,11 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
 
         //Sort tabs alphabetically or by sort index
         for (ITab tab : APIHandler.getCache(true).getSortedTabs()) {
-            if (isTabVisible(tab) || MCClientHelper.isInEditMode()) {
+            if (isTabVisible(tab) || MODE == EDIT) {
                 if (!sideWays) {
                     if (position <= 8) {
                         buttonList.add(new ButtonTab(tab, 0, posY));
-                    } else buttonList.add(new ButtonTab(tab, res.getScaledWidth() - 25, posY));
+                    } else buttonList.add(new ButtonTab(tab, core.res.getScaledWidth() - 25, posY));
 
                     posY += 28;
                     if (position == 8) {
@@ -78,9 +91,8 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
     }
 
     @Override
-    public void initData(GuiCore core) {
-        super.initData(core);
-        addButtons(core, APIHandler.getCache(true).getSortedTabs().size() > 17);
+    public void initData() {
+        addButtons(CORE, APIHandler.getCache(true).getSortedTabs().size() > 17);
 
         if (currentTabID == null) {
             currentTabID = Options.settings.defaultTabID;
@@ -96,12 +108,11 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
             if (currentTab == null) {
                 currentTab = APIHandler.newTab(UUID.randomUUID(), true).setDisplayName("New Tab").setStack(new ItemStack(Items.book)).setVisibility(true);
                 currentTabID = currentTab.getUniqueID();
-                core.initGui(); //Reset things
+                CORE.initGui(); //Reset things
             }
         }
 
         currentTabID = currentTab.getUniqueID();
-        features.add(FeatureItemSelectorTree.INSTANCE);
         rebuildCriteria();
     }
 
@@ -137,9 +148,9 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
 
     @Override
     public void drawGuiForeground(boolean overlayvisible, int mouseX, int mouseY) {
-        if (!MCClientHelper.isInEditMode() && !isTabVisible(currentTab)) return;
+        if (MODE == DISPLAY && !isTabVisible(currentTab)) return;
         for (ICriteria criteria : currentTab.getCriteria()) {
-            if (getElement(criteria).isCriteriaVisible() || MCClientHelper.isInEditMode()) {
+            if (getElement(criteria).isCriteriaVisible() || MODE == EDIT) {
                 TreeEditorElement editor = getElement(criteria);
                 List<ICriteria> prereqs = criteria.getPreReqs();
                 for (ICriteria c : prereqs) {
@@ -149,7 +160,7 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
                     int x2 = editor.getX();
 
                     int width = 0;
-                    int textWidth = mc.fontRendererObj.getStringWidth(c.getLocalisedName());
+                    int textWidth = CORE.mc.fontRendererObj.getStringWidth(c.getLocalisedName());
                     int iconWidth = 9 + (c.getRewards().size() * 12);
                     if (textWidth >= iconWidth) {
                         width = textWidth + 9;
@@ -158,9 +169,9 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
                     width -= 3;
 
                     if (c.getTab() == criteria.getTab()) {
-                        drawLine(GuiCore.INSTANCE.getOffsetX() + width + x1, 12 + y1 - 1, GuiCore.INSTANCE.getOffsetX() + 5 + x2, 12 + y2 - 1, 1, theme.connectLineColor1);
-                        drawLine(GuiCore.INSTANCE.getOffsetX() + width + x1, 12 + y1 + 1, GuiCore.INSTANCE.getOffsetX() + 5 + x2, 12 + y2 + 1, 1, theme.connectLineColor2); //#636C69
-                        drawLine(GuiCore.INSTANCE.getOffsetX() + width + x1, 12 + y1, GuiCore.INSTANCE.getOffsetX() + 5 + x2, 12 + y2, 1, theme.connectLineColor3);
+                        drawLine(CORE.getOffsetX() + width + x1, 12 + y1 - 1, CORE.getOffsetX() + 5 + x2, 12 + y2 - 1, 1, GuiList.THEME.connectLineColor1);
+                        drawLine(CORE.getOffsetX() + width + x1, 12 + y1 + 1, CORE.getOffsetX() + 5 + x2, 12 + y2 + 1, 1, GuiList.THEME.connectLineColor2); //#636C69
+                        drawLine(CORE.getOffsetX() + width + x1, 12 + y1, CORE.getOffsetX() + 5 + x2, 12 + y2, 1, GuiList.THEME.connectLineColor3);
                     }
                 }
             }
@@ -168,8 +179,8 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
 
         GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
         for (ICriteria criteria : currentTab.getCriteria()) {
-            if (getElement(criteria).isCriteriaVisible() || MCClientHelper.isInEditMode()) {
-                getElement(criteria).draw(0, core.screenTop, GuiCore.INSTANCE.getOffsetX());
+            if (getElement(criteria).isCriteriaVisible() || MODE == EDIT) {
+                getElement(criteria).draw(0, CORE.screenTop, CORE.getOffsetX());
             }
         }
     }
@@ -180,7 +191,7 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
     public void keyTyped(char character, int key) {
         ICriteria toRemove = null;
         for (ICriteria criteria : currentTab.getCriteria()) {
-            if (getElement(criteria).isCriteriaVisible() || MCClientHelper.isInEditMode()) {
+            if (getElement(criteria).isCriteriaVisible() || MODE == EDIT) {
                 if (getElement(criteria).keyTyped(character, key)) {
                     toRemove = criteria;
                     break;
@@ -195,11 +206,11 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
         if (key == Keyboard.KEY_UP) {
             currentTab.setSortIndex(currentTab.getSortIndex() + 1);
             APIHandler.getCache(true).clearSorted(); //Clear the sorted
-            core.initGui();
+            CORE.initGui();
         } else if (key == Keyboard.KEY_DOWN) {
             currentTab.setSortIndex(currentTab.getSortIndex() - 1);
             APIHandler.getCache(true).clearSorted(); //Clear the sorted
-            core.initGui();
+            CORE.initGui();
         }
     }
 
@@ -234,7 +245,7 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
 
         if (button == 0) {
             for (ICriteria criteria : currentTab.getCriteria()) {
-                if (getElement(criteria).isCriteriaVisible() || MCClientHelper.isInEditMode()) {
+                if (getElement(criteria).isCriteriaVisible() || MODE == EDIT) {
                     if (getElement(criteria).click(mouseX, mouseY, isDoubleClick)) {
                         lastClicked = criteria;
                         return true;
@@ -242,16 +253,16 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
                 }
             }
 
-            if (isDoubleClick && MCClientHelper.getMode() == DisplayMode.EDIT) {
-                GuiTreeEditor.INSTANCE.previous = null;
-                GuiTreeEditor.INSTANCE.selected = null;
-                GuiTreeEditor.INSTANCE.lastClicked = null;
-                GuiTreeEditor.INSTANCE.isDragging = false;
-                ITab currentTab = GuiTreeEditor.INSTANCE.currentTab;
-                int offsetX = GuiCore.INSTANCE.getOffsetX();
+            if (isDoubleClick && MODE == EDIT) {
+                GuiList.TREE_EDITOR.previous = null;
+                GuiList.TREE_EDITOR.selected = null;
+                GuiList.TREE_EDITOR.lastClicked = null;
+                GuiList.TREE_EDITOR.isDragging = false;
+                ITab currentTab = GuiList.TREE_EDITOR.currentTab;
+                int offsetX = CORE.getOffsetX();
                 ICriteria criteria = APIHandler.newCriteria(currentTab, UUID.randomUUID(), true);
                 criteria.setCoordinates(mouseX - 50 - offsetX, mouseY - 10);
-                GuiTreeEditor.INSTANCE.addCriteria(criteria, mouseX - 50, mouseY - 10, offsetX);
+                GuiList.TREE_EDITOR.addCriteria(criteria, mouseX - 50, mouseY - 10, offsetX);
                 return true;
             }
             
@@ -274,7 +285,7 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
             drag = mouseX;
 
             if (difference != 0) {
-                core.scroll(difference);
+                CORE.scroll(difference);
             }
         }
 

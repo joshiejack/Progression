@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import joshie.progression.api.ICustomDataBuilder;
 import joshie.progression.api.IProgressionAPI;
 import joshie.progression.api.criteria.*;
+import joshie.progression.api.special.ICustomIcon;
 import joshie.progression.api.special.IHasFilters;
 import joshie.progression.api.special.IInit;
 import joshie.progression.api.special.IRequestItem;
@@ -19,18 +20,14 @@ import joshie.progression.network.PacketHandler;
 import joshie.progression.network.PacketRequestItem;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.*;
 
 public class APIHandler implements IProgressionAPI {
-    //Caches
-
-
     //This is the registry for trigger type and reward type creation
     public static final HashMap<String, ITriggerProvider> triggerTypes = new HashMap();
     public static final HashMap<String, IRewardProvider> rewardTypes = new HashMap();
@@ -55,7 +52,6 @@ public class APIHandler implements IProgressionAPI {
 
     //These four maps are registries for fetching the various types
     public static APICache serverCache;
-    @SideOnly(Side.CLIENT)
     public static APICache clientCache;
 
     public static IRuleProvider getDefault(IRule provider) {
@@ -74,8 +70,8 @@ public class APIHandler implements IProgressionAPI {
         } else serverCache = new APICache();
     }
 
-    public static APICache getCache(boolean isServer) {
-        return isServer ? serverCache : clientCache;
+    public static APICache getCache(boolean isClient) {
+        return isClient ? clientCache : serverCache;
     }
 
     @Override
@@ -165,7 +161,8 @@ public class APIHandler implements IProgressionAPI {
             if (uuid == null) uuid = UUID.randomUUID();
             ICondition newConditionType = dummy.getProvided().getClass().newInstance(); //Create a new instance of the trigger
             JSONHelper.readJSON(data, newConditionType, isClient);
-            IConditionProvider provider = new Condition(trigger, uuid, newConditionType, dummy.getIcon(), dummy.getUnlocalisedName());
+            ItemStack icon = dummy.getProvided() instanceof ICustomIcon ? new ItemStack(Items.written_book) : dummy.getIcon();
+            IConditionProvider provider = new Condition(trigger, uuid, newConditionType, icon, dummy.getUnlocalisedName());
             provider.readFromJSON(data);
             EventsManager.onAdded(newConditionType);
             trigger.getConditions().add(provider);
@@ -181,7 +178,8 @@ public class APIHandler implements IProgressionAPI {
             if (uuid == null) uuid = UUID.randomUUID();
             ITrigger newTriggerType = dummy.getProvided().getClass().newInstance(); //Create a new instance of the trigger
             JSONHelper.readJSON(data, newTriggerType, isClient);
-            ITriggerProvider provider = new Trigger(criteria, uuid, newTriggerType, dummy.getIcon(), dummy.getUnlocalisedName(), dummy.getColor(), dummy.isCancelable());
+            ItemStack icon = dummy.getProvided() instanceof ICustomIcon ? new ItemStack(Items.rabbit_foot) : dummy.getIcon();
+            ITriggerProvider provider = new Trigger(criteria, uuid, newTriggerType, icon, dummy.getUnlocalisedName(), dummy.getColor(), dummy.isCancelable());
             provider.readFromJSON(data);
             criteria.getTriggers().add(provider);
             EventsManager.onAdded(newTriggerType);
@@ -197,7 +195,8 @@ public class APIHandler implements IProgressionAPI {
             if (uuid == null) uuid = UUID.randomUUID();
             IReward newRewardType = dummy.getProvided().getClass().newInstance(); //Create a new instance of the reward
             JSONHelper.readJSON(data, newRewardType, isClient);
-            IRewardProvider provider = new Reward(criteria, uuid, newRewardType, dummy.getIcon(), dummy.getUnlocalisedName(), dummy.getColor());
+            ItemStack icon = dummy.getProvided() instanceof ICustomIcon ? new ItemStack(Items.gold_ingot) : dummy.getIcon();
+            IRewardProvider provider = new Reward(criteria, uuid, newRewardType, icon, dummy.getUnlocalisedName(), dummy.getColor());
             provider.readFromJSON(data);
             criteria.getRewards().add(provider);
             EventsManager.onAdded(newRewardType);

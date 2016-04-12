@@ -13,16 +13,13 @@ import joshie.progression.api.special.IEnum;
 import joshie.progression.api.special.ISpecialFieldProvider;
 import joshie.progression.gui.core.DrawHelper;
 import joshie.progression.gui.core.FeatureAbstract;
-import joshie.progression.gui.core.FeatureTooltip;
+import joshie.progression.gui.core.GuiList;
 import joshie.progression.gui.core.IGuiFeature;
 import joshie.progression.gui.editors.insert.FeatureNew;
 import joshie.progression.gui.fields.BooleanField;
 import joshie.progression.gui.fields.EnumField;
 import joshie.progression.gui.fields.TextField;
-import joshie.progression.gui.filters.FeatureItemPreview;
 import joshie.progression.helpers.CollectionHelper;
-import joshie.progression.helpers.MCClientHelper;
-import joshie.progression.json.Theme;
 import joshie.progression.lib.ProgressionInfo;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.EnumChatFormatting;
@@ -32,6 +29,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 
@@ -39,37 +37,45 @@ import static joshie.progression.api.gui.Position.BOTTOM;
 import static joshie.progression.api.gui.Position.TOP;
 import static joshie.progression.api.special.DisplayMode.DISPLAY;
 import static joshie.progression.api.special.DisplayMode.EDIT;
+import static joshie.progression.gui.core.GuiList.*;
 
-public class FeatureDrawable<T extends IRuleProvider> extends FeatureAbstract {
-    protected static final Theme theme = Theme.INSTANCE;
-    private int color;
+public abstract class FeatureDrawable<T extends IRuleProvider> extends FeatureAbstract {
+    protected int color;
     private List<IRuleProvider> drawable;
-    private HashMap<IRuleProvider, List<IField>> fieldsMap;
+    private EnumMap<DisplayMode, HashMap<IRuleProvider, List<IField>>> displayMap;
     private IGuiFeature newDrawable;
     private int gradient1, gradient2, fontColor;
     private int offsetY;
     private String text;
 
-    protected DisplayMode mode;
-
-    public FeatureDrawable(String text, List drawable, int offsetY, IGuiFeature newDrawable, int gradient1, int gradient2, int fontColor, int color) {
+    public FeatureDrawable(String text, int offsetY, IGuiFeature newDrawable, int gradient1, int gradient2, int fontColor, int color) {
         this.text = EnumChatFormatting.BOLD + Progression.translate("new." + text);
-        this.drawable = drawable;
         this.offsetY = offsetY;
         this.newDrawable = newDrawable;
         this.gradient1 = gradient1;
         this.gradient2 = gradient2;
         this.fontColor = fontColor;
-        this.fieldsMap = new HashMap();
-        this.mode = MCClientHelper.isInEditMode() ? EDIT: DISPLAY;
+        this.displayMap = new EnumMap<DisplayMode, HashMap<IRuleProvider, List<IField>>>(DisplayMode.class);
+        this.displayMap.put(DISPLAY, new HashMap<IRuleProvider, List<IField>>());
+        this.displayMap.put(EDIT, new HashMap<IRuleProvider, List<IField>>());
         this.color = color;
     }
 
+    protected FeatureDrawable setDrawable(List drawable) {
+        this.drawable = drawable;
+        return this;
+    }
+
+    private HashMap<IRuleProvider, List<IField>> getFieldsMap() {
+        return displayMap.get(MODE);
+    }
+
     private List<IField> getFields(IRuleProvider provider) {
+        HashMap<IRuleProvider, List<IField>> fieldsMap = getFieldsMap();
         if (fieldsMap.containsKey(provider)) return fieldsMap.get(provider);
         else {
             List<IField> fields = new ArrayList();
-            if (mode == EDIT) {
+            if (MODE == EDIT) {
                 addFieldsViaReflection(provider, fields);
                 addFieldsViaReflection(provider.getProvided(), fields);
             }
@@ -77,7 +83,7 @@ public class FeatureDrawable<T extends IRuleProvider> extends FeatureAbstract {
             boolean hideitemfields = false;
             if (provider.getProvided() instanceof ISpecialFieldProvider) {
                 ISpecialFieldProvider special = (ISpecialFieldProvider) provider.getProvided();
-                special.addSpecialFields(fields, mode);
+                special.addSpecialFields(fields, MODE);
             }
 
             fieldsMap.put(provider, fields);
@@ -107,7 +113,7 @@ public class FeatureDrawable<T extends IRuleProvider> extends FeatureAbstract {
     }
 
     protected void drawingDraw(IRuleProvider drawing, DrawHelper helper, int renderX, int renderY, int mouseX, int mouseY) {
-        int width = drawing.getWidth(mode) - 1;
+        int width = drawing.getWidth(MODE) - 1;
         helper.drawGradient(renderX, renderY, 1, 2, width, 15, drawing.getColor(), gradient1, gradient2);
         helper.drawText(renderX, renderY, drawing.getLocalisedName(), 6, 6, fontColor);
 
@@ -116,34 +122,37 @@ public class FeatureDrawable<T extends IRuleProvider> extends FeatureAbstract {
             int yStart = 18;
             int index = 0;
             for (IField t : getFields(drawing)) {
-                int color = Theme.INSTANCE.optionsFontColor;
+                int color = THEME.optionsFontColor;
                 int yPos = yStart + (index * 6);
-                if (mode == EDIT) {
-                    if (mouseX >= 1 && mouseX <= drawing.getWidth(mode) - 16) {
+                if (MODE == EDIT) {
+                    if (mouseX >= 1 && mouseX <= drawing.getWidth(MODE) - 16) {
                         if (mouseY >= yPos && mouseY < yPos + 6) {
-                            if (mode == EDIT) color = Theme.INSTANCE.optionsFontColorHover;
+                            color = THEME.optionsFontColorHover;
                             List<String> tooltip = new ArrayList();
                             String untranslated = drawing.getUnlocalisedName() + "." + t.getFieldName();
                             String translated = Progression.translate(untranslated);
                             if (!("progression." + untranslated).equals(translated) || t.getFieldName().equals("isVisible") || t.getFieldName().equals("mustClaim") || t.getFieldName().equals("inverted")) {
-                                if (t.getFieldName().equals("isVisible")) translated = Progression.translate("isVisible");
-                                if (t.getFieldName().equals("mustClaim")) translated = Progression.translate("mustClaim");
+                                if (t.getFieldName().equals("isVisible"))
+                                    translated = Progression.translate("isVisible");
+                                if (t.getFieldName().equals("mustClaim"))
+                                    translated = Progression.translate("mustClaim");
                                 if (t.getFieldName().equals("inverted")) translated = Progression.translate("inverted");
-                                FeatureTooltip.INSTANCE.addTooltip(WordUtils.wrap(StringEscapeUtils.unescapeJava(translated), 42).replace("\r", "").split("\n"));
+                                TOOLTIP.add(WordUtils.wrap(StringEscapeUtils.unescapeJava(translated), 42).replace("\r", "").split("\n"));
                             }
                         }
                     }
                 }
 
                 t.draw(helper, renderX, renderY, color, yPos, mouseX, mouseY);
+
                 index++;
             }
 
             if (editor != null) editor.drawEditor(offset, renderX, renderY, mouseX, mouseY);
-            if (mode == DISPLAY) {
+            if (MODE == DISPLAY) {
                 ICustomDrawGuiDisplay display = drawing instanceof ICustomDrawGuiDisplay ? ((ICustomDrawGuiDisplay) drawing) : null;
                 if (display == null) {
-                    helper.drawSplitText(renderX, renderY, drawing.getDescription(), 4, 20, drawing.getWidth(mode) + drawing.getWidth(mode) / 4, fontColor, 0.75F);
+                    helper.drawSplitText(renderX, renderY, drawing.getDescription(), 4, 20, drawing.getWidth(MODE) + drawing.getWidth(MODE) / 4, fontColor, 0.75F);
                     //Draw Shit
                 } else display.drawDisplay(offset, renderX, renderY, mouseX, mouseY);
             }
@@ -151,25 +160,25 @@ public class FeatureDrawable<T extends IRuleProvider> extends FeatureAbstract {
     }
 
     public int drawSpecial(T drawing, int offsetX, int offsetY, int mouseOffsetX, int mouseOffsetY) {
-        return offsetX + drawing.getWidth(mode);
+        return offsetX + drawing.getWidth(MODE);
     }
 
     @Override
     public void drawFeature(int mouseX, int mouseY) {
         int offsetX = 0;
         for (IRuleProvider drawing: drawable) {
-            int mouseOffsetX = mouseX - offset.getGui().getOffsetX() - offsetX;
+            int mouseOffsetX = mouseX - CORE.getOffsetX() - offsetX;
             int mouseOffsetY = mouseY - this.offsetY;
-            if ((drawing.isVisible() && mode == DISPLAY) || mode == EDIT) {
+            if ((drawing.isVisible() && MODE == DISPLAY) || MODE == EDIT) {
                 drawingDraw(drawing, offset, offsetX, this.offsetY, mouseOffsetX, mouseOffsetY);
                 //Draw The Delete Button
-                if (mode == EDIT) {
+                if (MODE == EDIT) {
                     int xXcoord = 234;
-                    if (mouseOffsetX >= drawing.getWidth(mode) - 13 && mouseOffsetX <= drawing.getWidth(mode) - 3 && mouseOffsetY >= 4 && mouseOffsetY <= 14) {
+                    if (mouseOffsetX >= drawing.getWidth(MODE) - 13 && mouseOffsetX <= drawing.getWidth(MODE) - 3 && mouseOffsetY >= 4 && mouseOffsetY <= 14) {
                         xXcoord += 11;
                     }
 
-                    offset.drawTexture(offsetX, offsetY, ProgressionInfo.textures, drawing.getWidth(mode) - 13, 4, xXcoord, 52, 11, 11);
+                    offset.drawTexture(offsetX, offsetY, ProgressionInfo.textures, drawing.getWidth(MODE) - 13, 4, xXcoord, 52, 11, 11);
                 }
             }
 
@@ -177,14 +186,14 @@ public class FeatureDrawable<T extends IRuleProvider> extends FeatureAbstract {
         }
 
         //Draw the addition texture
-        if (mode == EDIT) {
-            int mouseOffsetX = mouseX - offset.getGui().getOffsetX() - offsetX;
+        if (MODE == EDIT) {
+            int mouseOffsetX = mouseX - CORE.getOffsetX() - offsetX;
             int mouseOffsetY = mouseY - this.offsetY;
 
             int crossX = 201;
             int crossY = 64;
             if (mouseOffsetX >= 15 && mouseOffsetX <= 70 && mouseOffsetY >= 10 && mouseOffsetY <= 65) {
-                FeatureTooltip.INSTANCE.addTooltip(text);
+                TOOLTIP.add(text);
                 crossY = 119;
             }
 
@@ -210,14 +219,14 @@ public class FeatureDrawable<T extends IRuleProvider> extends FeatureAbstract {
                     return true;
                 }
 
-                int color = Theme.INSTANCE.optionsFontColor;
+                int color = THEME.optionsFontColor;
                 int yPos = yStart + (index * 6);
-                if (mouseX >= 1 && mouseX <= provider.getWidth(mode) - 1) {
+                if (mouseX >= 1 && mouseX <= provider.getWidth(MODE) - 1) {
                     if (mouseY >= yPos && mouseY < yPos + 6) {
                         t.click(button);
 
                         //Update the item preview when selecting toggling something
-                        FeatureItemPreview.INSTANCE.updateSearch();
+                        PREVIEW.updateSearch();
                         return true;
                     }
                 }
@@ -229,7 +238,7 @@ public class FeatureDrawable<T extends IRuleProvider> extends FeatureAbstract {
         if (1 == 1) return false;
 
         //Update the item preview when selecting toggling something
-        FeatureItemPreview.INSTANCE.updateSearch();
+        PREVIEW.updateSearch();
         if (editor != null && editor.mouseClicked(mouseX, mouseY)) return true;
 
 
@@ -242,19 +251,19 @@ public class FeatureDrawable<T extends IRuleProvider> extends FeatureAbstract {
 
     @Override //Only called in Edit Mode
     public boolean mouseClicked(final int mouseX, final int mouseY, int button) {
-        if (FeatureItemSelector.INSTANCE.isVisible()) return false; //If the item selector is visible, don't process clicks
+        if (GuiList.ITEM_EDITOR.isVisible()) return false; //If the item selector is visible, don't process clicks
         if (FeatureNew.IS_OPEN) return false;
         int offsetX = 0;
         for (IRuleProvider provider: drawable) {
-            if (!provider.isVisible() && mode == DISPLAY) continue;
-            int mouseOffsetX = mouseX - offset.getGui().getOffsetX() - offsetX;
+            if (!provider.isVisible() && MODE == DISPLAY) continue;
+            int mouseOffsetX = mouseX - CORE.getOffsetX() - offsetX;
             int mouseOffsetY = mouseY - this.offsetY;
 
             if (clickSpecial((T) provider, mouseOffsetX, mouseOffsetY)) return true;
 
             //Delete Button
-            if(mode == EDIT) {
-                if (mouseOffsetX >= provider.getWidth(mode) - 13 && mouseOffsetX <= provider.getWidth(mode) - 3 && mouseOffsetY >= 4 && mouseOffsetY <= 14) {
+            if(MODE == EDIT) {
+                if (mouseOffsetX >= provider.getWidth(MODE) - 13 && mouseOffsetX <= provider.getWidth(MODE) - 3 && mouseOffsetY >= 4 && mouseOffsetY <= 14) {
                     CollectionHelper.removeAndUpdate(drawable, provider);
                     return true;
                 }
@@ -262,16 +271,16 @@ public class FeatureDrawable<T extends IRuleProvider> extends FeatureAbstract {
                 if (drawingMouseClicked(provider, mouseOffsetX, mouseOffsetY, button)) return true;
             }
 
-            offsetX += provider.getWidth(mode);
+            offsetX += provider.getWidth(MODE);
         }
 
         //If we're in display return
-        if (mode == DISPLAY) return false;
+        if (MODE == DISPLAY) return false;
         //Now that we've tried all, let's try the new button
-        int mouseOffsetX = mouseX - offset.getGui().getOffsetX() - offsetX;
+        int mouseOffsetX = mouseX - CORE.getOffsetX() - offsetX;
         int mouseOffsetY = mouseY - this.offsetY;
         if (mouseOffsetX >= 15 && mouseOffsetX <= 70 && mouseOffsetY >= 10 && mouseOffsetY <= 65) {
-            newDrawable.init(offset.getGui());
+            newDrawable.init();
             newDrawable.setVisibility(true);
             return true;
         }

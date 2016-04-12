@@ -1,34 +1,28 @@
 package joshie.progression.gui.editors;
 
-import joshie.progression.api.special.DisplayMode;
-import joshie.progression.gui.core.FeatureTooltip;
-import joshie.progression.gui.core.GuiCore;
 import joshie.progression.gui.core.IGuiFeature;
-import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.SplitHelper;
-import joshie.progression.json.Theme;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
 
+import static joshie.progression.gui.core.GuiList.CORE;
+import static joshie.progression.gui.core.GuiList.TOOLTIP;
+
 public abstract class GuiBaseEditor implements IEditorMode {
-    public ArrayList<IGuiFeature> features;
-    public ScaledResolution res;
-    public DisplayMode mode;
-    public Minecraft mc;
-    public GuiCore core;
-    public Theme theme;
+    protected ArrayList<IGuiFeature> features = new ArrayList<IGuiFeature>();
 
     @Override
-    public void initData(GuiCore core) {
-        this.core = core;
-        this.res = core.res;
-        this.mc = core.mc;
-        this.mode = MCClientHelper.getMode();
-        this.features = core.features;
-        this.theme = core.theme;
+    public void initData() {}
+
+    @Override
+    public boolean hasButtons() {
+        return false;
+    }
+
+    @Override
+    public ArrayList<IGuiFeature> getFeatures() {
+        return features;
     }
 
     @Override
@@ -42,32 +36,32 @@ public abstract class GuiBaseEditor implements IEditorMode {
 
     //Convenience methods - Stacks
     public void drawStack(ItemStack stack, int x, int y, float scale) {
-        core.drawStack(stack, x, y, scale);
+        CORE.drawStack(stack, x, y, scale);
     }
 
     //Convenience methods - Text
     public void drawText(String text, int left, int top, int color) {
-        core.drawText(text, left, top, color);
+        CORE.drawText(text, left, top, color);
     }
 
     //Convenience methods - Gradient
     public void drawGradientRectWithBorder(int left, int top, int right, int bottom, int startColor, int endColor, int border) {
-        core.drawGradientRectWithBorder(left, top, right, bottom, startColor, endColor, border);
+        CORE.drawGradientRectWithBorder(left, top, right, bottom, startColor, endColor, border);
     }
 
     //Convenience methods - Line
     public void drawLine(int left, int top, int right, int bottom, int thickness, int color) {
-        core.drawLine(left, top, right, bottom, thickness, color);
+        CORE.drawLine(left, top, right, bottom, thickness, color);
     }
 
     //Convenience methods - Tooltip
     public void addTooltip(String string) {
-        FeatureTooltip.INSTANCE.addTooltip(string);
+        TOOLTIP.add(string);
     }
 
     //Convenience methods - Tooltip Advanced
     public void addTooltip(String tooltip, int length) {
         String[] strings = SplitHelper.splitTooltip(tooltip, length);
-        for (String s: strings) FeatureTooltip.INSTANCE.addTooltip("  " + s);
+        for (String s: strings) TOOLTIP.add("  " + s);
     }
 }

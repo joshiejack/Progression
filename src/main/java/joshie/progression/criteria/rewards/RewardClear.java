@@ -1,19 +1,21 @@
 package joshie.progression.criteria.rewards;
 
 import joshie.progression.ItemProgression;
+import joshie.progression.ItemProgression.ItemMeta;
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.IField;
 import joshie.progression.api.criteria.IFilterProvider;
 import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.*;
+import joshie.progression.gui.core.GuiList;
 import joshie.progression.gui.fields.ItemFilterFieldPreview;
-import joshie.progression.helpers.MCClientHelper;
-import joshie.progression.ItemProgression.ItemMeta;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
 import java.util.List;
+
+import static joshie.progression.api.special.DisplayMode.EDIT;
 
 @ProgressionRule(name="clear", color=0xFF69008C, meta="clearInventory")
 public class RewardClear extends RewardBaseItemFilter implements ICustomDisplayName, ICustomDescription, ICustomWidth, ICustomTooltip, ISpecialFieldProvider {
@@ -25,7 +27,7 @@ public class RewardClear extends RewardBaseItemFilter implements ICustomDisplayN
 
     @Override
     public String getDisplayName() {
-        return MCClientHelper.isInEditMode() ? Progression.translate(getProvider().getUnlocalisedName()) : Progression.translate(getProvider().getUnlocalisedName() + ".display");
+        return GuiList.MODE == EDIT ? Progression.translate(getProvider().getUnlocalisedName()) : Progression.translate(getProvider().getUnlocalisedName() + ".display");
     }
 
     @Override
@@ -40,7 +42,7 @@ public class RewardClear extends RewardBaseItemFilter implements ICustomDisplayN
 
     @Override
     public int getWidth(DisplayMode mode) {
-        return mode == DisplayMode.EDIT ? 100 : 60;
+        return mode == EDIT ? 100 : 60;
     }
 
     @Override
@@ -52,7 +54,7 @@ public class RewardClear extends RewardBaseItemFilter implements ICustomDisplayN
 
     @Override
     public void addSpecialFields(List<IField> fields, DisplayMode mode) {
-        if (mode == DisplayMode.EDIT) fields.add(new ItemFilterFieldPreview("filters", this, 25, 30, 2.8F));
+        if (mode == EDIT) fields.add(new ItemFilterFieldPreview("filters", this, 25, 30, 2.8F));
         else fields.add(new ItemFilterFieldPreview("filters", this, 5, 25, 2.8F));
     }
 

@@ -1,7 +1,5 @@
 package joshie.progression;
 
-import joshie.progression.gui.core.GuiCore;
-import joshie.progression.gui.editors.GuiGroupEditor;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.ChatHelper;
 import joshie.progression.helpers.RenderItemHelper;
@@ -13,6 +11,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 
+import static joshie.progression.gui.core.GuiList.CORE;
+import static joshie.progression.gui.core.GuiList.GROUP_EDITOR;
 import static net.minecraft.util.EnumChatFormatting.GOLD;
 
 public class PClientProxy extends PCommonProxy {
@@ -44,8 +44,8 @@ public class PClientProxy extends PCommonProxy {
         if (ID == GuiIDs.EDITOR) {
             if (bookLocked) {
                 ChatHelper.displayChat(GOLD + "Oi matey, be patient, Progression is currently syncing the latest changes.");
-            } else return GuiCore.INSTANCE.setEditor(GuiCore.INSTANCE.lastGui);
-        }  else if (ID == GuiIDs.GROUP) return GuiCore.INSTANCE.setEditor(GuiGroupEditor.INSTANCE);
+            } else return CORE.setEditor(CORE.lastGui);
+        }  else if (ID == GuiIDs.GROUP) return CORE.setEditor(GROUP_EDITOR);
 
 
         return null;

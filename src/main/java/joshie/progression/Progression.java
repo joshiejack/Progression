@@ -91,7 +91,7 @@ public class Progression {
 
         
         //Remap all relevant data
-        RemappingHandler.reloadServerData(JSONLoader.getServerTabData(), false);
+        RemappingHandler.reloadServerData(JSONLoader.getServerTabData(RemappingHandler.getHostName()), false);
         
         World world = MinecraftServer.getServer().worldServers[0];
         data = (PlayerSavedData) world.loadItemData(PlayerSavedData.class, MODNAME);

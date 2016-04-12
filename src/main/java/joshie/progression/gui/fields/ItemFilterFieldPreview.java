@@ -4,7 +4,6 @@ import joshie.progression.api.criteria.IField;
 import joshie.progression.api.special.IAdditionalTooltip;
 import joshie.progression.api.special.IStackSizeable;
 import joshie.progression.gui.core.DrawHelper;
-import joshie.progression.gui.core.FeatureTooltip;
 import joshie.progression.helpers.ItemHelper;
 import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.client.gui.GuiScreen;
@@ -13,6 +12,8 @@ import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static joshie.progression.gui.core.GuiList.TOOLTIP;
 
 public class ItemFilterFieldPreview extends ItemFilterField implements IField {
     private final int x;
@@ -69,7 +70,7 @@ public class ItemFilterFieldPreview extends ItemFilterField implements IField {
                     ((IAdditionalTooltip)object).addHoverTooltip(getFieldName(), stack, tooltip);
                 }
 
-                FeatureTooltip.INSTANCE.addTooltip(tooltip);
+                TOOLTIP.add(tooltip);
             }
 
             helper.drawStack(renderX, renderY, getStack(hovered), x, y, scale);

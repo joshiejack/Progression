@@ -1,17 +1,15 @@
 package joshie.progression.gui.editors;
 
-import org.lwjgl.opengl.GL11;
-
 import joshie.progression.gui.core.FeatureAbstract;
-import joshie.progression.gui.core.GuiCore;
 import joshie.progression.helpers.RenderItemHelper;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
+import org.lwjgl.opengl.GL11;
+
+import static joshie.progression.gui.core.GuiList.*;
 
 public class FeatureItemSelectorTree extends FeatureAbstract implements ITextEditable {
-    public static FeatureItemSelectorTree INSTANCE = new FeatureItemSelectorTree();
-
     @Override
     public boolean isOverlay() {
         return true;
@@ -19,23 +17,23 @@ public class FeatureItemSelectorTree extends FeatureAbstract implements ITextEdi
     
     @Override
     public boolean isVisible() {
-        return FeatureItemSelector.INSTANCE.getEditable() != null;
+        return ITEM_EDITOR.getEditable() != null;
     }
 
     @Override
     public boolean mouseClicked(int mouseX, int mouseY, int button) {
-        if (FeatureItemSelector.INSTANCE.sorted == null) {
-            FeatureItemSelector.INSTANCE.updateSearch();
+        if (ITEM_EDITOR.sorted == null) {
+            ITEM_EDITOR.updateSearch();
         }
 
         int width = (int) ((double) (screenWidth - 75) / 16.133333334D);
         int j = 0;
         int k = 0;
-        for (int i = FeatureItemSelector.INSTANCE.index; i < FeatureItemSelector.INSTANCE.index + (width * 10) + 10; i++) {
-            if (i >= 0 && i < FeatureItemSelector.INSTANCE.sorted.size()) {
+        for (int i = ITEM_EDITOR.index; i < ITEM_EDITOR.index + (width * 10) + 10; i++) {
+            if (i >= 0 && i < ITEM_EDITOR.sorted.size()) {
                 if (mouseX >= 32 + (j * 16) && mouseX <= 32 + (j * 16) + 16) {
                     if (mouseY >= 45 + (k * 16) && mouseY <= 45 + (k * 16) + 16) {
-                        FeatureItemSelector.INSTANCE.selectable.setObject(((ItemStack) FeatureItemSelector.INSTANCE.sorted.get(i)).copy());
+                        ITEM_EDITOR.selectable.setObject(((ItemStack) ITEM_EDITOR.sorted.get(i)).copy());
                         return true;
                     }
                 }
@@ -55,24 +53,24 @@ public class FeatureItemSelectorTree extends FeatureAbstract implements ITextEdi
     @Override
     public void drawFeature(int mouseX, int mouseY) {
         GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
-        if (FeatureItemSelector.INSTANCE.selectable != null) {
-            if (FeatureItemSelector.INSTANCE.sorted == null) {
-                FeatureItemSelector.INSTANCE.updateSearch();
+        if (ITEM_EDITOR.selectable != null) {
+            if (ITEM_EDITOR.sorted == null) {
+                ITEM_EDITOR.updateSearch();
             }
 
-            int offsetX = GuiCore.INSTANCE.getOffsetX();
-            ScaledResolution res = GuiTreeEditor.INSTANCE.res;
+            int offsetX = CORE.getOffsetX();
+            ScaledResolution res = CORE.res;
             int fullWidth = res.getScaledWidth() - 10;
 
-            GuiCore.INSTANCE.drawGradientRectWithBorder(30, 20, res.getScaledWidth() - 30, 40, theme.blackBarGradient1, theme.blackBarGradient2, theme.blackBarBorder);
-            GuiCore.INSTANCE.drawRectWithBorder(30, 40, res.getScaledWidth() - 30, 210, theme.blackBarUnderLine, theme.blackBarUnderLineBorder);
+            CORE.drawGradientRectWithBorder(30, 20, res.getScaledWidth() - 30, 40, THEME.blackBarGradient1, THEME.blackBarGradient2, THEME.blackBarBorder);
+            CORE.drawRectWithBorder(30, 40, res.getScaledWidth() - 30, 210, THEME.blackBarUnderLine, THEME.blackBarUnderLineBorder);
 
-            GuiTreeEditor.INSTANCE.mc.fontRendererObj.drawString("Select Item - Click elsewhere to close", 35 - offsetX, GuiCore.INSTANCE.screenTop + 27, theme.blackBarFontColor);
-            GuiCore.INSTANCE.drawRectWithBorder(res.getScaledWidth() - 180, 23, res.getScaledWidth() - 35, 38, theme.blackBarUnderLine, theme.blackBarUnderLineBorder);
+            CORE.mc.fontRendererObj.drawString("Select Item - Click elsewhere to close", 35 - offsetX, CORE.screenTop + 27, THEME.blackBarFontColor);
+            CORE.drawRectWithBorder(res.getScaledWidth() - 180, 23, res.getScaledWidth() - 35, 38, THEME.blackBarUnderLine, THEME.blackBarUnderLineBorder);
 
-            String text = TextEditor.INSTANCE.getText(this);
+            String text = TEXT_EDITOR_SIMPLE.getText(this);
             if (text.equals("")) text = "Type to search";
-            GuiTreeEditor.INSTANCE.mc.fontRendererObj.drawString(text + "...", res.getScaledWidth() - 175, GuiCore.INSTANCE.screenTop + 28, theme.blackBarFontColor);
+            CORE.mc.fontRendererObj.drawString(text + "...", res.getScaledWidth() - 175, CORE.screenTop + 28, THEME.blackBarFontColor);
 
             int width = (int) ((double) (screenWidth - 75) / 16.133333334D);
             //Switch 8 > 32 (-offsetX + 32)
@@ -80,9 +78,9 @@ public class FeatureItemSelectorTree extends FeatureAbstract implements ITextEdi
             //width * 4 to width *10
             int j = 0;
             int k = 0;
-            for (int i = FeatureItemSelector.INSTANCE.index; i < FeatureItemSelector.INSTANCE.index + (width * 10) + 10; i++) {
-                if (i >= 0 && i < FeatureItemSelector.INSTANCE.sorted.size()) {
-                    RenderItemHelper.drawStack((ItemStack) FeatureItemSelector.INSTANCE.sorted.get(i), 32 + (j * 16), GuiCore.INSTANCE.screenTop + 45 + (k * 16), 1F);
+            for (int i = ITEM_EDITOR.index; i < ITEM_EDITOR.index + (width * 10) + 10; i++) {
+                if (i >= 0 && i < ITEM_EDITOR.sorted.size()) {
+                    RenderItemHelper.drawStack((ItemStack) ITEM_EDITOR.sorted.get(i), 32 + (j * 16), CORE.screenTop + 45 + (k * 16), 1F);
 
                     j++;
 
@@ -97,11 +95,11 @@ public class FeatureItemSelectorTree extends FeatureAbstract implements ITextEdi
 
     @Override
     public String getTextField() {
-        return FeatureItemSelector.INSTANCE.getTextField();
+        return ITEM_EDITOR.getTextField();
     }
 
     @Override
     public void setTextField(String str) {
-        FeatureItemSelector.INSTANCE.setTextField(str);
+        ITEM_EDITOR.setTextField(str);
     }
 }

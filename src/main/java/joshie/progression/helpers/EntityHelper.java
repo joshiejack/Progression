@@ -8,6 +8,10 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.passive.EntityRabbit;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.*;
 import java.util.concurrent.Callable;
@@ -69,6 +73,11 @@ public class EntityHelper {
     }
 
     private static final ArrayList<EntityLivingBase> entities = new ArrayList();
+
+    @SideOnly(Side.CLIENT)
+    private static World getWorld() {
+        return FMLClientHandler.instance().getWorldClient();
+    }
 
     static {
         for (String name : (Set<String>) EntityList.stringToClassMapping.keySet()) {

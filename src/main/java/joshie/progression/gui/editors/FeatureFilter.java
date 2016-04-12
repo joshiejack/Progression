@@ -1,12 +1,19 @@
 package joshie.progression.gui.editors;
 
 import joshie.progression.api.criteria.IFilterProvider;
-import joshie.progression.gui.editors.insert.FeatureNewItemFilter;
 import joshie.progression.gui.fields.ItemFilterField;
 
+import static joshie.progression.gui.core.GuiList.NEW_FILTER;
+import static joshie.progression.gui.core.GuiList.THEME;
+
 public class FeatureFilter extends FeatureDrawable<IFilterProvider> {
-    public FeatureFilter(ItemFilterField field) {
-        super("filter", field.getFilters(), 45, FeatureNewItemFilter.INSTANCE, theme.conditionGradient1, theme.conditionGradient2, theme.conditionFontColor, 0xFFF9F462);
+    public FeatureFilter() {
+        super("filter", 45, NEW_FILTER, THEME.conditionGradient1, THEME.conditionGradient2, THEME.conditionFontColor, 0xFFF9F462);
+    }
+
+    public FeatureFilter setFilterField(ItemFilterField field) {
+        setDrawable(field.getFilters());
+        return this;
     }
 
     @Override

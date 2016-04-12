@@ -10,10 +10,10 @@ public interface IRuleProvider<T extends IRule> extends IUnique {
     public String getUnlocalisedName();
 
     /** Return a description of this thingy,
-     *  this is to be displayed in display mode */
+     *  this is to be displayed in display MODE */
     public String getDescription();
 
-    /** Called in draw mode to draw the width **/
+    /** Called in draw MODE to draw the width **/
     public int getWidth(DisplayMode mode);
 
     /** Return a colour to display this thingy as **/

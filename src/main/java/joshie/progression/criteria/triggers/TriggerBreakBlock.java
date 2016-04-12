@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-@ProgressionRule(name = "breakBlock", color = 0xFFCCCCCC, cancelable = true)
+@ProgressionRule(name = "breakBlock", color = 0xFFDDDDDD, cancelable = true)
 public class TriggerBreakBlock extends TriggerBaseBlock implements IHasEventBus {
     @Override
     public ITrigger copy() {

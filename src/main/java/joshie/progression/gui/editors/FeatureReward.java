@@ -3,22 +3,33 @@ package joshie.progression.gui.editors;
 import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.IRewardProvider;
 import joshie.progression.api.criteria.ITriggerProvider;
-import joshie.progression.gui.editors.insert.FeatureNewReward;
+import joshie.progression.gui.core.GuiList;
 import joshie.progression.helpers.CollectionHelper;
 import joshie.progression.network.PacketHandler;
 import joshie.progression.network.PacketSelectRewards;
 import joshie.progression.player.PlayerTracker;
 
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class FeatureReward extends FeatureDrawable<IRewardProvider> {
-    public static Set<IRewardProvider> selected;
+import static joshie.progression.gui.core.GuiList.NEW_REWARD;
+import static joshie.progression.gui.core.GuiList.THEME;
 
-    public FeatureReward(ICriteria criteria) {
-        super("reward", criteria.getRewards(), 140, FeatureNewReward.INSTANCE, theme.rewardBoxGradient1, theme.rewardBoxGradient2, theme.rewardBoxFont, theme.rewardBoxGradient2);
-        selected = new HashSet();
+public class FeatureReward extends FeatureDrawable<IRewardProvider> {
+    private Set<IRewardProvider> selected;
+
+    public FeatureReward() {
+        super("reward", 140, NEW_REWARD, THEME.rewardBoxGradient1, THEME.rewardBoxGradient2, THEME.rewardBoxFont, THEME.rewardBoxGradient2);
+    }
+
+    public FeatureReward setCriteria(ICriteria criteria) {
+        selected = new LinkedHashSet(); //Reset the selected
+        setDrawable(criteria.getRewards());
+        return this;
+    }
+
+    public Set<IRewardProvider> getSelected() {
+        return selected;
     }
 
     @Override
@@ -30,7 +41,7 @@ public class FeatureReward extends FeatureDrawable<IRewardProvider> {
 
         if (allTrue) {
             if (selected.contains(drawing) || !drawing.mustClaim()) {
-                offset.drawGradient(offsetX, offsetY, 1, 2, drawing.getWidth(mode) - 1, 75, 0x33222222, 0x00CCCCCC, 0x00000000);
+                offset.drawGradient(offsetX, offsetY, 1, 2, drawing.getWidth(GuiList.MODE) - 1, 75, 0x33222222, 0x00CCCCCC, 0x00000000);
             }
         }
 
@@ -47,7 +58,7 @@ public class FeatureReward extends FeatureDrawable<IRewardProvider> {
         ICriteria criteria = provider.getCriteria();
         if (!criteria.canRepeatInfinite() && PlayerTracker.getClientPlayer().getMappings().getCriteriaCount(criteria) >= criteria.getRepeatAmount()) return false;
 
-        if (mouseOffsetX > 0 && mouseOffsetX < provider.getWidth(mode) && provider.mustClaim()) {
+        if (mouseOffsetX > 0 && mouseOffsetX < provider.getWidth(GuiList.MODE) && provider.mustClaim()) {
             //Click processed as this item must be claimed, now we check the side of selected, vs other things
             if (selected.contains(provider)) {
                 CollectionHelper.remove(selected, provider);

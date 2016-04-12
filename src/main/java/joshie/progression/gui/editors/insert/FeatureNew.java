@@ -3,7 +3,7 @@ package joshie.progression.gui.editors.insert;
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.IRuleProvider;
 import joshie.progression.gui.core.FeatureAbstract;
-import joshie.progression.gui.core.GuiCore;
+import joshie.progression.gui.core.GuiList;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL11;
 
@@ -39,8 +39,8 @@ public abstract class FeatureNew<T> extends FeatureAbstract {
     }
 
     @Override
-    public FeatureAbstract init(GuiCore core) {
-        super.init(core);
+    public FeatureAbstract init() {
+        super.init();
         setVisibility(false);
         return this;
     }
@@ -58,9 +58,9 @@ public abstract class FeatureNew<T> extends FeatureAbstract {
     public void drawFeature(int mouseX, int mouseY) {
         int maxY = ((sorted.size() - 3) / 2);
         GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
-        offset.drawRectangle(150, 50, 200, 43 + maxY * 12, 0xFF222222, theme.newBox2);
-        offset.drawGradient(150, 50, 200, 15, getColor(), 0xFF111111, theme.newBorder);
-        offset.drawText(Progression.translate("new." + text), 155, 54, theme.newFont);
+        offset.drawRectangle(150, 50, 200, 43 + maxY * 12, 0xFF222222, GuiList.THEME.newBox2);
+        offset.drawGradient(150, 50, 200, 15, getColor(), 0xFF111111, GuiList.THEME.newBorder);
+        offset.drawText(Progression.translate("new." + text), 155, 54, GuiList.THEME.newFont);
         drawForeground(mouseX, mouseY);
     }
 
@@ -70,7 +70,7 @@ public abstract class FeatureNew<T> extends FeatureAbstract {
         int xPos = 0;
         for (IRuleProvider provider : sorted) {
             if (!isValid((T) provider)) continue;
-            int color = theme.newFont;
+            int color = GuiList.THEME.newFont;
             if (mouseX >= (xPos * 100) + 155 && mouseX <= (xPos * 100) + 255) {
                 if (mouseY >= 67 + (yPos * 12) && mouseY < 67 + (yPos * 12) + 12) {
                     color = 0xFF555555;

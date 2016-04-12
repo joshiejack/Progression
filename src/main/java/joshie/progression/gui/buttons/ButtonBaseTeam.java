@@ -1,10 +1,11 @@
 package joshie.progression.gui.buttons;
 
-import joshie.progression.gui.core.GuiCore;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
+
+import static joshie.progression.gui.core.GuiList.CORE;
 
 public abstract class ButtonBaseTeam extends GuiButton {
     public ButtonBaseTeam(String text, int x, int y) {
@@ -13,7 +14,7 @@ public abstract class ButtonBaseTeam extends GuiButton {
 
     @Override
     public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
-        mouseY = mouseY + GuiCore.INSTANCE.screenTop;
+        mouseY = mouseY + CORE.screenTop;
         if (super.mousePressed(mc, mouseX, mouseY)) {
             onClicked();
             return true;
@@ -25,7 +26,7 @@ public abstract class ButtonBaseTeam extends GuiButton {
 
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
-        mouseY = mouseY + GuiCore.INSTANCE.screenTop;
+        mouseY = mouseY + CORE.screenTop;
         FontRenderer fontrenderer = mc.fontRendererObj;
         mc.getTextureManager().bindTexture(buttonTextures);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);

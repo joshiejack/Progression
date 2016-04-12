@@ -1,9 +1,6 @@
 package joshie.progression.helpers;
 
-import joshie.progression.api.criteria.*;
-import joshie.progression.gui.editors.GuiConditionEditor;
-import joshie.progression.gui.editors.GuiCriteriaEditor;
-import joshie.progression.gui.editors.GuiFilterEditor;
+import joshie.progression.api.criteria.IRuleProvider;
 import joshie.progression.handlers.EventsManager;
 
 import java.util.Collection;
@@ -23,24 +20,21 @@ public class CollectionHelper {
     }
 
     public static void removeAndUpdate(List<IRuleProvider> drawable, IRuleProvider drawing) {
-        if (drawing instanceof IRewardProvider) {
-            EventsManager.onRemoved(((IRewardProvider) drawing).getProvided());
-            CollectionHelper.remove(GuiCriteriaEditor.INSTANCE.getCriteria().getRewards(), (IRewardProvider) drawing);
-            //GuiCriteriaEditor.INSTANCE.initGui();
+        /*if (drawing instanceof IRewardProvider) {
+            EventsManager.onRemoved(drawing.getProvided());
+            CollectionHelper.remove(CRITERIA_EDITOR.getCriteria().getRewards(), drawing);
         } else if (drawing instanceof ITriggerProvider) {
-            EventsManager.onRemoved(((ITriggerProvider) drawing).getProvided());
-            CollectionHelper.remove(GuiCriteriaEditor.INSTANCE.getCriteria().getTriggers(), (ITriggerProvider) drawing);
-            //GuiCriteriaEditor.INSTANCE.initGui();
+            EventsManager.onRemoved(drawing.getProvided());
+            CollectionHelper.remove(CRITERIA_EDITOR.getCriteria().getTriggers(), drawing);
         } else if (drawing instanceof IFilterProvider) {
-            EventsManager.onRemoved(((IFilterProvider) drawing).getProvided());
-            GuiFilterEditor.INSTANCE.getField().remove((IFilterProvider) drawing);
-            //GuiFilterEditor.INSTANCE.initGui();
+            EventsManager.onRemoved(drawing.getProvided());
+            FILTER_EDITOR.getField().remove((IFilterProvider) drawing);
         } else if (drawing instanceof IConditionProvider) {
-            EventsManager.onRemoved(((IConditionProvider) drawing).getProvided());
-            CollectionHelper.remove(GuiConditionEditor.INSTANCE.getTrigger().getConditions(), (IConditionProvider) drawing);
-            //GuiConditionEditor.INSTANCE.initGui();
-        }
+            EventsManager.onRemoved(drawing.getProvided());
+            CollectionHelper.remove(CONDITION_EDITOR.getTrigger().getConditions(), drawing);
+        } */
 
+        EventsManager.onRemoved(drawing.getProvided());
         CollectionHelper.remove(drawable, drawing);
     }
 

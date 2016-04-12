@@ -2,12 +2,12 @@ package joshie.progression.network;
 
 import io.netty.buffer.ByteBuf;
 import joshie.progression.PClientProxy;
-import joshie.progression.gui.core.GuiCore;
 import joshie.progression.helpers.SplitHelper;
 import joshie.progression.json.JSONLoader;
 import joshie.progression.network.core.PenguinPacket;
 import net.minecraft.entity.player.EntityPlayer;
 
+import static joshie.progression.gui.core.GuiList.CORE;
 import static joshie.progression.network.core.PacketPart.SEND_SIZE;
 
 public class PacketLockUnlockSaving extends PenguinPacket {
@@ -40,7 +40,7 @@ public class PacketLockUnlockSaving extends PenguinPacket {
 				int length = SplitHelper.splitStringEvery(json, 5000).length;
 				//Send the packet to the server about the new json
 				PacketHandler.sendToServer(new PacketSyncJSONToServer(SEND_SIZE, "", length, System.currentTimeMillis()));
-				GuiCore.INSTANCE.clearEditors();
+				CORE.clearEditors();
 			}
 		}
 	}

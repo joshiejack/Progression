@@ -1,13 +1,14 @@
 package joshie.progression.player;
 
-import java.util.UUID;
-
-import joshie.progression.gui.editors.GuiGroupEditor;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.player.data.AbilityStats;
 import joshie.progression.player.data.CustomStats;
 import joshie.progression.player.data.Points;
+
+import java.util.UUID;
+
+import static joshie.progression.gui.core.GuiList.GROUP_EDITOR;
 
 public class PlayerDataClient extends PlayerDataCommon {
     private static PlayerDataClient INSTANCE = new PlayerDataClient();
@@ -35,6 +36,6 @@ public class PlayerDataClient extends PlayerDataCommon {
     @Override
     public void setTeam(PlayerTeam team) {
         super.setTeam(team);
-        GuiGroupEditor.INSTANCE.clear();
+        GROUP_EDITOR.clear();
     }
 }

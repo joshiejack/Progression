@@ -6,7 +6,6 @@ import net.minecraft.util.ChatAllowedCharacters;
 import java.util.HashMap;
 
 public class TextEditor {
-    public static final TextEditor INSTANCE = new TextEditor();
     private HashMap<ITextEditable, Integer> cachedPosition = new HashMap();
     private ITextEditable editable = null;
     private boolean isTextEditing;

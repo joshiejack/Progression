@@ -6,17 +6,15 @@ import joshie.progression.api.criteria.IFilterProvider;
 import joshie.progression.api.criteria.IFilterType;
 import joshie.progression.api.gui.Position;
 import joshie.progression.gui.core.FeatureAbstract;
-import joshie.progression.gui.core.GuiCore;
-import joshie.progression.gui.editors.FeatureItemSelector;
-import joshie.progression.gui.editors.GuiFilterEditor;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
+import static joshie.progression.gui.core.GuiList.*;
+
 public class FeatureItemPreview extends FeatureAbstract {
-    public static FeatureItemPreview INSTANCE = new FeatureItemPreview();
     private IFilterType filter = FilterTypeItem.INSTANCE;
     private ArrayList<Object> sorted;
     private int position;
@@ -30,7 +28,7 @@ public class FeatureItemPreview extends FeatureAbstract {
 
     @Override
     public boolean scroll(int mouseX, int mouseY, boolean scrolledDown) {
-        if (FeatureItemSelector.INSTANCE.isVisible()) return false;
+        if (ITEM_EDITOR.isVisible()) return false;
         mouseY -= 95;
         if (mouseY >= 40 && mouseY <= 110) {
             if (scrolledDown) position = Math.min(sorted.size() - filter.getChange(), position + filter.getChange());
@@ -60,10 +58,10 @@ public class FeatureItemPreview extends FeatureAbstract {
         int size1 = sorted != null ? sorted.size() : 0;
         position = 0; //Reset the position on update
 
-        if (GuiFilterEditor.INSTANCE.getField() == null) return; //NO UPDATES!!!
+        if (FILTER_EDITOR.get() == null) return; //NO UPDATES!!!
         sorted = new ArrayList();
         for (Object stack: getAllItems()) {
-            for (IFilterProvider filter: GuiFilterEditor.INSTANCE.getField().getFilters()) {
+            for (IFilterProvider filter: FILTER_EDITOR.get().getFilters()) {
                 if (filter.getProvided().matches(stack)) {
                     sorted.add(stack);
                 }
@@ -71,14 +69,14 @@ public class FeatureItemPreview extends FeatureAbstract {
         }
 
         if (sorted.size() < size1) {
-            //GuiCore.INSTANCE.offsetX = 0; //Reset the offset on update
-            GuiCore.INSTANCE.resetX();
+            //GuiCore.GROUP_EDITOR.offsetX = 0; //Reset the offset on update
+            CORE.resetX();
         }
     }
 
     @Override
     public void drawFeature(int mouseX, int mouseY) {
-        if (FeatureItemSelector.INSTANCE.isVisible()) return;
+        if (ITEM_EDITOR.isVisible()) return;
         GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
         if (sorted == null) {
             updateSearch();

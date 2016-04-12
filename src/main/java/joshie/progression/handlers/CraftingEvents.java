@@ -10,8 +10,6 @@ import joshie.progression.api.event.ActionEvent;
 import joshie.progression.crafting.ActionType;
 import joshie.progression.crafting.Crafter;
 import joshie.progression.crafting.CraftingRegistry;
-import joshie.progression.gui.core.GuiCore;
-import joshie.progression.gui.editors.GuiCriteriaEditor;
 import joshie.progression.helpers.CraftingHelper;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.PlayerHelper;
@@ -30,6 +28,9 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 
 import java.util.Set;
 import java.util.concurrent.Callable;
+
+import static joshie.progression.gui.core.GuiList.CORE;
+import static joshie.progression.gui.core.GuiList.CRITERIA_EDITOR;
 
 public class CraftingEvents {
     @SubscribeEvent
@@ -100,9 +101,9 @@ public class CraftingEvents {
                     if (GuiScreen.isCtrlKeyDown()) {
                         for (ICriteria c: requirements.values()) {
                             MCClientHelper.FORCE_EDIT = false;
-                            GuiCore.INSTANCE.setEditor(GuiCriteriaEditor.INSTANCE);
-                            GuiCriteriaEditor.INSTANCE.setCriteria(c);
-                            MCClientHelper.getPlayer().openGui(Progression.instance, GuiIDs.EDITOR, MCClientHelper.getWorld(), 0, 0, 0);
+                            CORE.setEditor(CRITERIA_EDITOR);
+                            CRITERIA_EDITOR.set(c);
+                            event.entityPlayer.openGui(Progression.instance, GuiIDs.EDITOR, event.entityPlayer.worldObj, 0, 0, 0);
                             break;
                         }
                     }

@@ -2,10 +2,7 @@ package joshie.progression.gui.editors;
 
 import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.IRewardProvider;
-import joshie.progression.gui.core.FeatureTooltip;
-import joshie.progression.gui.core.GuiCore;
-import joshie.progression.helpers.MCClientHelper;
-import joshie.progression.json.Theme;
+import joshie.progression.gui.core.GuiList;
 import joshie.progression.lib.ProgressionInfo;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.client.gui.GuiScreen;
@@ -21,8 +18,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import static joshie.progression.api.special.DisplayMode.DISPLAY;
+import static joshie.progression.api.special.DisplayMode.EDIT;
+import static joshie.progression.gui.core.GuiList.*;
+import static joshie.progression.gui.editors.TreeEditorElement.ColorMode.*;
+
 public class TreeEditorElement {
-    private static final GuiTreeEditor gui = GuiTreeEditor.INSTANCE;
     private final ICriteria criteria;
     private boolean isSelected;
     private boolean isHeld;
@@ -63,7 +64,7 @@ public class TreeEditorElement {
     }
 
     private void recalculate(int x) {
-        int textWidth = gui.mc.fontRendererObj.getStringWidth(criteria.getLocalisedName());
+        int textWidth = CORE.mc.fontRendererObj.getStringWidth(criteria.getLocalisedName());
         int iconWidth = 9 + (criteria.getRewards().size() * 12);
         if (textWidth >= iconWidth) {
             width = textWidth + 9;
@@ -112,7 +113,7 @@ public class TreeEditorElement {
     }
 
     public static ColorMode getModeForCriteria(ICriteria criteria, boolean isSelected) {
-        ColorMode mode = ColorMode.DEFAULT;
+        ColorMode mode = DEFAULT;
         HashMap<ICriteria, Integer> completedMap = PlayerTracker.getClientPlayer().getMappings().getCompletedCriteria();
         boolean isCompleted = completedMap.containsKey(criteria);
         boolean anyConflicts = false;
@@ -136,33 +137,33 @@ public class TreeEditorElement {
         }
 
         boolean available = allRequires && !anyConflicts;
-        if (isCompleted) mode = ColorMode.COMPLETED;
-        else if (available) mode = ColorMode.AVAILABLE;
+        if (isCompleted) mode = COMPLETED;
+        else if (available) mode = AVAILABLE;
 
         if (!criteria.isVisible()) {
-            if (!MCClientHelper.isInEditMode()) {
+            if (MODE == DISPLAY) {
                 if (available || isCompleted) {
 
-                } else return ColorMode.INVISIBLE;
+                } else return INVISIBLE;
             }
         }
 
         if (isSelected) mode = ColorMode.SELECTED;
-        ICriteria selected = GuiTreeEditor.INSTANCE.lastClicked;
+        ICriteria selected = TREE_EDITOR.lastClicked;
         if (!isCompleted) {
             if (!isCriteriaCompleteable(criteria)) {
-                mode = ColorMode.ERROR;
+                mode = ERROR;
             }
         }
 
         if (selected != null) {
             if (selected.getConflicts().contains(criteria)) {
-                mode = ColorMode.ERROR;
+                mode = ERROR;
             }
         }
 
         if (PlayerTracker.getClientPlayer().getMappings().isImpossible(criteria)) {
-            mode = ColorMode.ERROR;
+            mode = ERROR;
         }
 
         return mode;
@@ -171,30 +172,30 @@ public class TreeEditorElement {
     public void draw(int x, int y, int offsetX, int highlight) {
         recalculate(offsetX);
         if (highlight != 0) {
-            GuiCore.INSTANCE.drawRectWithBorder(x + left, top, x + right, bottom, Theme.INSTANCE.invisible, highlight);
+            CORE.drawRectWithBorder(x + left, top, x + right, bottom, THEME.invisible, highlight);
         } else {
             ColorMode mode = getModeForCriteria(criteria, isSelected);
-            if (mode == ColorMode.INVISIBLE) return; //If we returned invisible, don't show it
+            if (mode == INVISIBLE) return; //If we returned invisible, don't show it
             int textureX = 0;
             int textureY = mode.y;
-            if (!criteria.isVisible()) { //Make the texture transparent if this is edit mode
-                if (MCClientHelper.isInEditMode()) {
+            if (!criteria.isVisible()) { //Make the texture transparent if this is edit MODE
+                if (MODE == EDIT) {
                     textureX = 100;
                 }
             }
 
             GlStateManager.enableBlend();
             GlStateManager.color(1F, 1F, 1F, 1F);
-            gui.mc.getTextureManager().bindTexture(ProgressionInfo.textures);
-            GuiCore.INSTANCE.drawTexture(ProgressionInfo.textures, x + left, top, textureX, textureY, 10, 25);
+            CORE.mc.getTextureManager().bindTexture(ProgressionInfo.textures);
+            CORE.drawTexture(ProgressionInfo.textures, x + left, top, textureX, textureY, 10, 25);
             for (int i = 0; i < width - 20; i++) {
-                GuiCore.INSTANCE.drawTexture(ProgressionInfo.textures, x + left + 10 + i, top, textureX + 10, textureY, 1, 25);
+                CORE.drawTexture(ProgressionInfo.textures, x + left + 10 + i, top, textureX + 10, textureY, 1, 25);
             }
 
-            GuiCore.INSTANCE.drawTexture(ProgressionInfo.textures, x + right - 10, top, textureX + 90, textureY, 10, 25);
+            CORE.drawTexture(ProgressionInfo.textures, x + right - 10, top, textureX + 90, textureY, 10, 25);
 
             //gui.drawTexturedModalRect(x + left, y + top, textureX, textureY, 100, 25);
-            GuiCore.INSTANCE.drawText(criteria.getLocalisedName(), x + left + 4, top + 3, Theme.INSTANCE.criteriaDisplayNameColor);
+            CORE.drawText(criteria.getLocalisedName(), x + left + 4, top + 3, THEME.criteriaDisplayNameColor);
 
             GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
             //Draw in the rewards
@@ -203,12 +204,12 @@ public class TreeEditorElement {
                 ItemStack icon = reward.getIcon().copy();
                 if (icon == null || icon.getItem() == null) continue; //Protection against null icons
                 icon.stackSize = 1; //Force it to 1
-                GuiCore.INSTANCE.drawStack(icon, x + 4 + left + (xOffset * 12), top + 12, 0.75F);
+                CORE.drawStack(icon, x + 4 + left + (xOffset * 12), top + 12, 0.75F);
                 xOffset++;
             }
 
-            int mouseX = GuiCore.INSTANCE.mouseX;
-            int mouseY = GuiCore.INSTANCE.mouseY;
+            int mouseX = CORE.mouseX;
+            int mouseY = CORE.mouseY;
             GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
             xOffset = 0;
             boolean hoveredReward = false;
@@ -220,7 +221,7 @@ public class TreeEditorElement {
                 if (isOver(mouseX, mouseY, x1, x2, y1, y2)) {
                     List list = new ArrayList();
                     reward.addTooltip(list);
-                    FeatureTooltip.INSTANCE.addTooltip(list);
+                    GuiList.TOOLTIP.add(list);
                     hoveredReward = true;
                 }
 
@@ -232,8 +233,8 @@ public class TreeEditorElement {
             if (!hoveredReward) { //If we weren't hovering over the reward, display the requirements
                 if (isOver(mouseX, mouseY)) {
                     List list = new ArrayList();
-                    if (MCClientHelper.isInEditMode()) {
-                        list.add("Double Click to edit "/* + (Hold shift for display mode) */);
+                    if (MODE == EDIT) {
+                        list.add("Double Click to edit "/* + (Hold shift for display MODE) */);
                         list.add("Shift + Click to make something a requirement");
                         list.add("Ctrl + Click to make something conflict");
                         list.add("I + Click to Hide/Unhide");
@@ -245,7 +246,7 @@ public class TreeEditorElement {
                         }
                     }
 
-                    FeatureTooltip.INSTANCE.addTooltip(list);
+                    GuiList.TOOLTIP.add(list);
                     RenderHelper.disableStandardItemLighting();
                 }
             }
@@ -257,20 +258,20 @@ public class TreeEditorElement {
     }
 
     private boolean noOtherSelected() {
-        return GuiTreeEditor.INSTANCE.selected == null;
+        return TREE_EDITOR.selected == null;
     }
 
     private void clearSelected() {
-        GuiTreeEditor.INSTANCE.selected = null;
+        TREE_EDITOR.selected = null;
     }
 
     private void setSelected() {
-        GuiTreeEditor.INSTANCE.selected = criteria;
-        GuiTreeEditor.INSTANCE.previous = criteria;
+        TREE_EDITOR.selected = criteria;
+        TREE_EDITOR.previous = criteria;
     }
 
     private ICriteria getPrevious() {
-        return GuiTreeEditor.INSTANCE.previous;
+        return TREE_EDITOR.previous;
     }
 
     private boolean isOver(int x, int y) {
@@ -289,7 +290,7 @@ public class TreeEditorElement {
     }
 
     public boolean keyTyped(char character, int key) {
-        if (isSelected && MCClientHelper.isInEditMode()) {
+        if (isSelected && MODE == EDIT) {
             return key == 211 || key == 14;
         }
 
@@ -308,7 +309,7 @@ public class TreeEditorElement {
         if (isOver(x, y)) {
             if (noOtherSelected()) {
                 ICriteria previous = getPrevious();
-                if (previous != null && MCClientHelper.isInEditMode()) {
+                if (previous != null && MODE == EDIT) {
                     List<ICriteria> list = null;
                     boolean isConflict = false;
                     if (GuiScreen.isShiftKeyDown()) {
@@ -341,19 +342,19 @@ public class TreeEditorElement {
                     }
                 }
 
-                if (MCClientHelper.isInEditMode()) {
+                if (MODE == EDIT) {
                     if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
                         criteria.setVisiblity(!criteria.isVisible());
                         return true;
                     }
                 }
 
-                if (isDouble && GuiTreeEditor.INSTANCE.previous == criteria) {
+                if (isDouble && TREE_EDITOR.previous == criteria) {
                     isHeld = false;
                     isSelected = false;
 
-                    GuiCriteriaEditor.INSTANCE.setCriteria(criteria);
-                    GuiCore.INSTANCE.setEditor(GuiCriteriaEditor.INSTANCE);
+                    CRITERIA_EDITOR.set(criteria);
+                    CORE.setEditor(CRITERIA_EDITOR);
                     return true;
                 }
 
@@ -385,7 +386,7 @@ public class TreeEditorElement {
     }
 
     public void follow(int x, int y) {
-        if (isHeld && MCClientHelper.isInEditMode()) {
+        if (isHeld && MODE == EDIT) {
             criteria.setCoordinates(criteria.getX() + x - prevX, criteria.getY() + y - prevY);
             prevX = x;
             prevY = y;

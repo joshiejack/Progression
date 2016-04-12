@@ -1,53 +1,51 @@
 package joshie.progression.gui.editors;
 
 import joshie.progression.api.criteria.ITriggerProvider;
-import joshie.progression.gui.core.FeatureBarsX1;
-import joshie.progression.gui.core.GuiCore;
 import joshie.progression.gui.core.IBarProvider;
-import joshie.progression.gui.editors.insert.FeatureNewCondition;
-import joshie.progression.gui.editors.insert.FeatureNewReward;
 import joshie.progression.handlers.APIHandler;
 
-public class GuiConditionEditor extends GuiBaseEditor implements IBarProvider {
-    public static final GuiConditionEditor INSTANCE = new GuiConditionEditor();
+import static joshie.progression.gui.core.GuiList.*;
+
+public class GuiConditionEditor extends GuiBaseEditorRule<ITriggerProvider> implements IBarProvider {
     private ITriggerProvider trigger;
 
-    private GuiConditionEditor() {}
-
-    public void setTrigger(ITriggerProvider trigger) {
-        this.trigger = trigger;
-    }
-    
-    public ITriggerProvider getTrigger() {
-        return trigger;
+    public GuiConditionEditor() {
+        features.add(BACKGROUND);
+        features.add(CONDITION_BG);
+        features.add(CONDITIONS);
+        features.add(TEXT_EDITOR_FULL); //Add the text selector
+        features.add(ITEM_EDITOR); //Add the item selector
+        features.add(NEW_CONDITION); //Add new trigger popup
+        features.add(NEW_REWARD); //Add new reward popup
+        features.add(FOOTER);
     }
 
     @Override
-    public Object getKey() {
-        return trigger;
+    public ITriggerProvider get() {
+        return this.trigger;
+    }
+
+    @Override
+    public void set(ITriggerProvider trigger) {
+        this.trigger = trigger;
     }
 
     @Override
     public IEditorMode getPreviousGui() {
-        return GuiCriteriaEditor.INSTANCE;
+        return CRITERIA_EDITOR;
     }
 
     @Override
-    public void initData(GuiCore core) {
+    public void initData() {
         trigger = APIHandler.getCache(true).getTriggerFromUUID(trigger.getUniqueID()); //Reload the trigger from the cache
         if (trigger == null) {
-            GuiCore.INSTANCE.setEditor(GuiCriteriaEditor.INSTANCE);
+            CORE.setEditor(CRITERIA_EDITOR);
             return;
         }
 
-        super.initData(core);
         //Setup the features
-        features.add(new FeatureBarsX1(this, "condition"));
-        features.add(new FeatureCondition(trigger));
-        features.add(FeatureFullTextEditor.INSTANCE); //Add the text selector
-        features.add(FeatureItemSelector.INSTANCE); //Add the item selector
-        features.add(FeatureNewCondition.INSTANCE); //Add new trigger popup
-        features.add(FeatureNewReward.INSTANCE); //Add new reward popup
+        CONDITION_BG.setProvider(this);
+        CONDITIONS.setTrigger(trigger);
     }
 
     @Override
@@ -68,7 +66,7 @@ public class GuiConditionEditor extends GuiBaseEditor implements IBarProvider {
             case BAR1_BORDER:
                 return 0xFF000000;
             case BAR1_FONT:
-                return theme.conditionEditorFont;
+                return THEME.conditionEditorFont;
             case BAR1_UNDERLINE:
                 return 0xFF000000;
             default:

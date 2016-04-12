@@ -2,9 +2,10 @@ package joshie.progression.gui.filters;
 
 import joshie.progression.api.criteria.IFilterType;
 import joshie.progression.gui.core.DrawHelper;
-import joshie.progression.gui.core.FeatureTooltip;
 import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.item.ItemStack;
+
+import static joshie.progression.gui.core.GuiList.TOOLTIP;
 
 public abstract class FilterTypeBase implements IFilterType {
     @Override
@@ -37,7 +38,7 @@ public abstract class FilterTypeBase implements IFilterType {
         offset.drawStack(stack, -offsetX + 8 + (j * 16), yOffset + 45 + (k * 16), 1F);
         if (mouseX >= 8 + (j * 16) && mouseX < 8 + (j * 16) + 16) {
             if (mouseY >= 45 + (k * 16) && mouseY < 45 + (k * 16) + 16) {
-                FeatureTooltip.INSTANCE.addTooltip(stack.getTooltip(MCClientHelper.getPlayer(), false));
+                TOOLTIP.add(stack.getTooltip(MCClientHelper.getPlayer(), false));
             }
         }
 

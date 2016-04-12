@@ -1,12 +1,15 @@
 package joshie.progression.gui.editors;
 
-import joshie.progression.gui.core.GuiCore;
+import joshie.progression.gui.core.IGuiFeature;
+
+import java.util.ArrayList;
 
 public interface IEditorMode {
-    /** Called when initGui is, to reload any data for this gui 
-     * @param fields 
-     * @param features **/
-    public void initData(GuiCore core);
+    /** Grab them feature **/
+    public ArrayList<IGuiFeature> getFeatures();
+
+    /** Called when initGui is, to reload any data for this gui **/
+    public void initData();
 
     /** The key for this editor for saving the offset **/
     public Object getKey();
@@ -28,4 +31,6 @@ public interface IEditorMode {
 
     /** Handle Mouse **/
     public void handleMouseInput(int mouseX, int mouseY);
+
+    public boolean hasButtons();
 }

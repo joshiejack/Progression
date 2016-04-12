@@ -1,35 +1,39 @@
 package joshie.progression.gui.editors;
 
-import joshie.progression.gui.core.FeatureBarsX2;
-import joshie.progression.gui.core.GuiCore;
 import joshie.progression.gui.core.IBarProvider;
-import joshie.progression.gui.editors.insert.FeatureNewItemFilter;
 import joshie.progression.gui.fields.ItemFilterField;
-import joshie.progression.gui.filters.FeatureItemPreview;
 
-public class GuiFilterEditor extends GuiBaseEditor implements IBarProvider {
-    public static final GuiFilterEditor INSTANCE = new GuiFilterEditor();
-    private IEditorMode previous;
+import static joshie.progression.gui.core.GuiList.*;
+
+public class GuiFilterEditor extends GuiBaseEditorRule<ItemFilterField> implements IBarProvider {
     private ItemFilterField field;
+    private IEditorMode previous;
 
-    private GuiFilterEditor() {}
-    
-    public ItemFilterField getField() {
-        return field;
+    public GuiFilterEditor() {
+        //Setup the features
+        features.add(BACKGROUND);
+        features.add(FILTER_BG);
+        features.add(FILTERS);
+        features.add(PREVIEW);
+        features.add(TEXT_EDITOR_FULL);
+        features.add(ITEM_EDITOR);
+        features.add(NEW_FILTER);
+        features.add(FOOTER);
     }
 
-    public void setFilterSet(ItemFilterField field) {
+    @Override
+    public ItemFilterField get() {
+        return this.field;
+    }
+
+    @Override
+    public void set(ItemFilterField field) {
         this.field = field;
     }
-    
+
     public GuiFilterEditor setPrevious(IEditorMode editor) {
         this.previous = editor;
         return this;
-    }
-    
-    @Override
-    public Object getKey() {
-        return field;
     }
     
     @Override
@@ -38,21 +42,16 @@ public class GuiFilterEditor extends GuiBaseEditor implements IBarProvider {
     }
 
     @Override
-    public void initData(GuiCore core) {
-        super.initData(core);
+    public void initData() {
         //Setup the features
-        features.add(new FeatureBarsX2(this, "filter", "preview"));
-        features.add(new FeatureFilter(field));
-        features.add(FeatureItemPreview.INSTANCE);
-        features.add(FeatureFullTextEditor.INSTANCE); //Add the text selector
-        features.add(FeatureItemSelector.INSTANCE); //Add the item selector
-        features.add(FeatureNewItemFilter.INSTANCE); //Add new item filter screen
-        FeatureItemPreview.INSTANCE.updateSearch();
+        FILTER_BG.setProvider(this);
+        FILTERS.setFilterField(field);
+        PREVIEW.updateSearch();
     }
 
     @Override
     public void drawGuiForeground(boolean overlayvisible, int mouseX, int mouseY) {
-        //FeatureItemPreview.INSTANCE.updateSearch();
+        //FeatureItemPreview.GROUP_EDITOR.updateSearch();
     }
     
     @Override
@@ -70,7 +69,7 @@ public class GuiFilterEditor extends GuiBaseEditor implements IBarProvider {
             case BAR2_BORDER:
                 return 0xFF091D2F;
             case BAR1_FONT:
-                return theme.triggerBoxFont;
+                return THEME.triggerBoxFont;
             case BAR1_UNDERLINE:
                 return 0xFF091D2F;
             case BAR1_GRADIENT1:
@@ -80,7 +79,7 @@ public class GuiFilterEditor extends GuiBaseEditor implements IBarProvider {
             case BAR1_BORDER:
                 return 0xFF9A6721;
             case BAR2_FONT:
-                return theme.rewardBoxFont;
+                return THEME.rewardBoxFont;
             default:
                 return 0;
         }

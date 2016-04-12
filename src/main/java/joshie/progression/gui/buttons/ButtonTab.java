@@ -3,13 +3,11 @@ package joshie.progression.gui.buttons;
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.ITab;
-import joshie.progression.gui.core.FeatureTooltip;
-import joshie.progression.gui.core.GuiCore;
-import joshie.progression.gui.editors.*;
 import joshie.progression.api.gui.Position;
+import joshie.progression.gui.editors.IItemSelectable;
+import joshie.progression.gui.editors.ITextEditable;
 import joshie.progression.gui.filters.FilterTypeItem;
 import joshie.progression.handlers.APIHandler;
-import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.json.Options;
 import joshie.progression.lib.ProgressionInfo;
 import net.minecraft.client.Minecraft;
@@ -21,6 +19,9 @@ import net.minecraft.util.EnumChatFormatting;
 import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
+
+import static joshie.progression.api.special.DisplayMode.EDIT;
+import static joshie.progression.gui.core.GuiList.*;
 
 public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelectable {
     private ITab tab;
@@ -42,29 +43,29 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
         if (isSideways) {
             int yTexture = isBottom ? 234: 206;
             RenderHelper.disableStandardItemLighting();
-            int xTexture = GuiTreeEditor.INSTANCE.currentTab == tab ? 206 : 231;;
+            int xTexture = TREE_EDITOR.currentTab == tab ? 206 : 231;;
             if (xPosition == 0) xTexture = 206;
-            GuiCore.INSTANCE.drawTexture(ProgressionInfo.textures, xPosition + GuiCore.INSTANCE.getOffsetX(), yPosition, xTexture, yTexture, 25, 22);
+            CORE.drawTexture(ProgressionInfo.textures, xPosition + CORE.getOffsetX(), yPosition, xTexture, yTexture, 25, 22);
 
             int stackY = isBottom ? -3: 0;
             if (xPosition == 0) {
-                GuiCore.INSTANCE.drawStack(tab.getStack(), xPosition + GuiCore.INSTANCE.getOffsetX(), yPosition + 5 + stackY, 1F);
-            } else GuiCore.INSTANCE.drawStack(tab.getStack(), xPosition + 4 + GuiCore.INSTANCE.getOffsetX(), yPosition + 5 + stackY, 1F);
+                CORE.drawStack(tab.getStack(), xPosition + CORE.getOffsetX(), yPosition + 5 + stackY, 1F);
+            } else CORE.drawStack(tab.getStack(), xPosition + 4 + CORE.getOffsetX(), yPosition + 5 + stackY, 1F);
         } else {
-            int yTexture = GuiTreeEditor.INSTANCE.currentTab == tab ? 25 : 0;
+            int yTexture = TREE_EDITOR.currentTab == tab ? 25 : 0;
             RenderHelper.disableStandardItemLighting();
             int xTexture = 206;
             if (xPosition == 0) xTexture = 231;
-            GuiCore.INSTANCE.drawTexture(ProgressionInfo.textures, xPosition, yPosition, xTexture, yTexture, 25, 25);
+            CORE.drawTexture(ProgressionInfo.textures, xPosition, yPosition, xTexture, yTexture, 25, 25);
             if (xPosition == 0) {
-                GuiCore.INSTANCE.drawStack(tab.getStack(), xPosition + 2, yPosition + 5, 1F);
-            } else GuiCore.INSTANCE.drawStack(tab.getStack(), xPosition + 7, yPosition + 6, 1F);
+                CORE.drawStack(tab.getStack(), xPosition + 2, yPosition + 5, 1F);
+            } else CORE.drawStack(tab.getStack(), xPosition + 7, yPosition + 6, 1F);
         }
     }
 
     @Override
     public void drawButton(Minecraft mc, int x, int y) {
-        int xtra = isSideways ? GuiCore.INSTANCE.getOffsetX() : 0;
+        int xtra = isSideways ? CORE.getOffsetX() : 0;
         boolean hovering = hovered = x >= xPosition + xtra && y >= yPosition && x < xPosition + xtra + width && y < yPosition + height;
         int k = getHoverState(hovering);
         GlStateManager.enableBlend();
@@ -73,15 +74,15 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
         drawTexture(mc);
 
         boolean displayTooltip = false;
-        if (MCClientHelper.isInEditMode()) {
-            //displayTooltip = TextEditor.INSTANCE.getEditable() == this;
+        if (MODE == EDIT) {
+            //displayTooltip = TextEditor.GROUP_EDITOR.getEditable() == this;
         }
 
         if (k == 2 || displayTooltip) {
             ArrayList<String> name = new ArrayList();
             String hidden = tab.isVisible() ? "" : "(" + Progression.translate("tab.hidden") + ")";
-            name.add(TextEditor.INSTANCE.getText(this) + hidden);
-            if (MCClientHelper.isInEditMode()) {
+            name.add(TEXT_EDITOR_SIMPLE.getText(this) + hidden);
+            if (MODE == EDIT) {
                 name.add(EnumChatFormatting.GRAY + "(" + Progression.translate("tab.sort") + ") " + tab.getSortIndex());
                 name.add(EnumChatFormatting.GRAY + Progression.translate("tab.shift"));
                 name.add(EnumChatFormatting.GRAY + Progression.translate("tab.ctrl"));
@@ -92,23 +93,23 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
                 name.add(EnumChatFormatting.RED + "  " + Progression.translate("tab.warning"));
             }
 
-            FeatureTooltip.INSTANCE.clear();
-            FeatureTooltip.INSTANCE.addTooltip(name);
+            TOOLTIP.clear();
+            TOOLTIP.add(name);
         }
     }
 
     @Override
     public void onClicked() {
-        GuiCore.INSTANCE.clickedButton = true;
+        CORE.clickedButton = true;
         //MCClientHelper.getPlayer().closeScreen(); //Close everything first
         //If the tab is already selected, then we should edit it instead        
 
         boolean donestuff = false;
-        if (MCClientHelper.isInEditMode()) {
+        if (MODE == EDIT) {
             if (Keyboard.isKeyDown(Keyboard.KEY_DELETE)) {
-                ITab newTab = GuiTreeEditor.INSTANCE.currentTab;
-                if (tab == GuiTreeEditor.INSTANCE.currentTab) {
-                    newTab = GuiTreeEditor.INSTANCE.previousTab;
+                ITab newTab = TREE_EDITOR.currentTab;
+                if (tab == TREE_EDITOR.currentTab) {
+                    newTab = TREE_EDITOR.previousTab;
                 }
 
                 if (newTab != null) {
@@ -120,24 +121,24 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
                     }
                 }
 
-                GuiTreeEditor.INSTANCE.selected = null;
-                GuiTreeEditor.INSTANCE.previous = null;
-                GuiTreeEditor.INSTANCE.lastClicked = null;
-                GuiTreeEditor.INSTANCE.currentTab = newTab;
+                TREE_EDITOR.selected = null;
+                TREE_EDITOR.previous = null;
+                TREE_EDITOR.lastClicked = null;
+                TREE_EDITOR.currentTab = newTab;
                 for (ICriteria c : tab.getCriteria()) {
                     APIHandler.removeCriteria(c.getUniqueID(), true, true);
                 }
 
                 APIHandler.getCache(true).getTabs().remove(tab.getUniqueID()); //Reopen after removing
-                GuiCore.INSTANCE.setEditor(GuiTreeEditor.INSTANCE);
+                CORE.setEditor(TREE_EDITOR);
                 return;
             }
 
             if (GuiScreen.isShiftKeyDown()) {
-                TextEditor.INSTANCE.setEditable(this);
+                TEXT_EDITOR_SIMPLE.setEditable(this);
                 donestuff = true;
-            } else if (GuiScreen.isCtrlKeyDown() || FeatureItemSelector.INSTANCE.isVisible()) {
-                FeatureItemSelector.INSTANCE.select(FilterTypeItem.INSTANCE, this, Position.TOP);
+            } else if (GuiScreen.isCtrlKeyDown() || ITEM_EDITOR.isVisible()) {
+                ITEM_EDITOR.select(FilterTypeItem.INSTANCE, this, Position.TOP);
             } else if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
                 boolean current = tab.isVisible();
                 tab.setVisibility(!current);
@@ -148,13 +149,13 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
         }
 
         if (!donestuff) {
-            GuiTreeEditor.INSTANCE.previousTab = GuiTreeEditor.INSTANCE.currentTab;
-            GuiTreeEditor.INSTANCE.currentTab = tab;
-            GuiTreeEditor.INSTANCE.currentTabID = tab.getUniqueID(); //Reopen the gui
+            TREE_EDITOR.previousTab = TREE_EDITOR.currentTab;
+            TREE_EDITOR.currentTab = tab;
+            TREE_EDITOR.currentTabID = tab.getUniqueID(); //Reopen the gui
         }
 
         //Rebuild
-        GuiTreeEditor.INSTANCE.rebuildCriteria();
+        TREE_EDITOR.rebuildCriteria();
     }
 
     @Override

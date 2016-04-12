@@ -1,17 +1,14 @@
 package joshie.progression.gui.core;
 
-import static joshie.progression.gui.core.IBarProvider.BarColorType.BAR2_BORDER;
-import static joshie.progression.gui.core.IBarProvider.BarColorType.BAR2_FONT;
-import static joshie.progression.gui.core.IBarProvider.BarColorType.BAR2_GRADIENT1;
-import static joshie.progression.gui.core.IBarProvider.BarColorType.BAR2_GRADIENT2;
-
 import joshie.progression.Progression;
 
+import static joshie.progression.gui.core.IBarProvider.BarColorType.*;
+
 public class FeatureBarsX2 extends FeatureBarsX1 {
-	private String bar2;
+	protected String bar2;
 	
-	public FeatureBarsX2(IBarProvider provider, String bar1, String bar2) {
-		super(provider, bar1);
+	public FeatureBarsX2(String bar1, String bar2) {
+		super(bar1);
 		this.bar2 = bar2;
 	}
 

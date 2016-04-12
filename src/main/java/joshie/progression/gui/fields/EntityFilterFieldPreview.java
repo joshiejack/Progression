@@ -3,8 +3,6 @@ package joshie.progression.gui.fields;
 import joshie.progression.api.criteria.IField;
 import joshie.progression.api.special.IAdditionalTooltip;
 import joshie.progression.gui.core.DrawHelper;
-import joshie.progression.gui.core.FeatureTooltip;
-import joshie.progression.gui.core.GuiCore;
 import joshie.progression.helpers.EntityHelper;
 import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.client.gui.GuiScreen;
@@ -14,6 +12,9 @@ import net.minecraft.entity.boss.BossStatus;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static joshie.progression.gui.core.GuiList.CORE;
+import static joshie.progression.gui.core.GuiList.TOOLTIP;
 
 public class EntityFilterFieldPreview extends ItemFilterField implements IField {
     private final int x;
@@ -65,10 +66,10 @@ public class EntityFilterFieldPreview extends ItemFilterField implements IField 
                     ((IAdditionalTooltip)object).addHoverTooltip(getFieldName(), entity, tooltip);
                 }
 
-                FeatureTooltip.INSTANCE.addTooltip(tooltip);
+                TOOLTIP.add(tooltip);
             }
 
-            GuiInventory.drawEntityOnScreen(GuiCore.INSTANCE.getOffsetX() + renderX + 24 + x, GuiCore.INSTANCE.screenTop + renderY + y + EntityHelper.getOffsetForEntity(entity), EntityHelper.getSizeForEntity(entity), 25F, -5F, entity);
+            GuiInventory.drawEntityOnScreen(CORE.getOffsetX() + renderX + 24 + x, CORE.screenTop + renderY + y + EntityHelper.getOffsetForEntity(entity), EntityHelper.getSizeForEntity(entity), 25F, -5F, entity);
             BossStatus.bossName = null; //Reset boss
             //helper.drawStack(renderX, renderY, getEntity(hovered), x, y, scale);
         } catch (Exception e) {

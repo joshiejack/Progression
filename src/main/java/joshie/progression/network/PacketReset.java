@@ -55,7 +55,7 @@ public class PacketReset extends PacketAction {
             if (Options.editor) {
                 if (!singlePlayer) {
                     Progression.instance.createWorldData(); //Recreate the world data, Wiping out any saved information for players
-                    RemappingHandler.reloadServerData(JSONLoader.getServerTabData(), false);
+                    RemappingHandler.reloadServerData(JSONLoader.getServerTabData(RemappingHandler.getHostName()), false);
                     for (EntityPlayerMP player : PlayerHelper.getAllPlayers()) {
                         //Reset all the data to default
                         RemappingHandler.onPlayerConnect(player);

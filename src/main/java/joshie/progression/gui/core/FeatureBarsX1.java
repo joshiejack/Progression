@@ -6,11 +6,15 @@ import static joshie.progression.gui.core.IBarProvider.BarColorType.*;
 
 public class FeatureBarsX1 extends FeatureAbstract {
 	protected IBarProvider provider;
-	private String bar1;
+    protected String bar1;
 	
-	public FeatureBarsX1(IBarProvider provider, String bar1) {
-		this.provider = provider;
+	public FeatureBarsX1(String bar1) {
 		this.bar1 = bar1;
+	}
+
+	public FeatureBarsX1 setProvider(IBarProvider provider) {
+		this.provider = provider;
+		return this;
 	}
 
 	@Override

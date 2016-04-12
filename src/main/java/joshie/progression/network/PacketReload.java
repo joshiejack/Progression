@@ -13,7 +13,8 @@ import net.minecraft.util.EnumChatFormatting;
 public class PacketReload extends PacketAction {
     @Override
     public void handlePacket(EntityPlayer player) {
-        PacketReload.handle(JSONLoader.getServerTabData(), player.worldObj.isRemote);
+        String hostname = player.worldObj.isRemote ? JSONLoader.serverName : RemappingHandler.getHostName();
+        PacketReload.handle(JSONLoader.getServerTabData(hostname), player.worldObj.isRemote);
     }
 
     public static void handle(DefaultSettings settings, boolean isClient) {

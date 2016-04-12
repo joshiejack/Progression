@@ -1,23 +1,6 @@
 package joshie.progression.json;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import org.apache.commons.io.IOUtils;
-
-import joshie.progression.lib.ProgressionInfo;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.IResource;
-import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
-
 public class Theme {
-    protected static final ResourceLocation resource = new ResourceLocation(ProgressionInfo.MODPATH, "config.json");
-
-    public static Theme INSTANCE = new Theme();
-
     public int invisible = 0x00000000;
 
     public int criteriaDisplayNameColor = 0xFFFFFFFF;
@@ -82,27 +65,4 @@ public class Theme {
     public int newBorder = 0xFF000000;
     public int newFont = 0xFFFFFFFF;
     public int newFontHover = 0xFF2693FF;
-
-    static {
-        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
-            IResourceManager manager = Minecraft.getMinecraft().getResourceManager();
-            InputStream inputstream = null;
-            try {
-                IResource iresource = manager.getResource(resource);
-                inputstream = iresource.getInputStream();
-                INSTANCE = JSONLoader.gson.fromJson(IOUtils.toString(inputstream, "UTF-8"), Theme.class);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (inputstream != null) {
-                    try {
-                        inputstream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-
-    }
 }
