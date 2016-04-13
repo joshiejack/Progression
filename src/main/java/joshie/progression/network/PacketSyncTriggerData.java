@@ -23,12 +23,12 @@ public class PacketSyncTriggerData extends PenguinPacket {
         }
 
         public void toBytes(ByteBuf buf) {
-            ByteBufUtils.writeUTF8String(buf, uuid.toString());
+            writeGzipString(buf, uuid.toString());
             ByteBufUtils.writeTag(buf, data);
         }
 
         public void fromBytes(ByteBuf buf) {
-            uuid = UUID.fromString(ByteBufUtils.readUTF8String(buf));
+            uuid = UUID.fromString(readGzipString(buf));
             data = ByteBufUtils.readTag(buf);
         }
     }

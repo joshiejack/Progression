@@ -1,6 +1,5 @@
 package joshie.progression.network;
 
-import com.google.common.io.CharStreams;
 import io.netty.buffer.ByteBuf;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.handlers.RemappingHandler;
@@ -11,13 +10,7 @@ import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStreamReader;
 import java.util.UUID;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 
 import static joshie.progression.network.PacketSyncJSONToClient.Section.*;
 
@@ -47,29 +40,7 @@ public class PacketSyncJSONToClient extends PenguinPacket {
         this.string = data;
     }
 
-    public void writeGzipString(ByteBuf buf, String string) {
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            GZIPOutputStream gzip = new GZIPOutputStream(baos);
-            gzip.write(string.getBytes("UTF-8"));
-            gzip.close();
-            byte[] data = baos.toByteArray();
-            buf.writeInt(data.length);
-            buf.writeBytes(data);
-        } catch (Exception e) {}
-    }
 
-    public String readGzipString(ByteBuf buf) {
-        try {
-            int length = buf.readInt();
-            byte[] data = buf.readBytes(length).array();
-            GZIPInputStream gzip = new GZIPInputStream(new ByteArrayInputStream(data));
-            BufferedReader bf = new BufferedReader(new InputStreamReader(gzip, "UTF-8"));
-            return CharStreams.toString(bf);
-        } catch (Exception e) {
-            return "";
-        }
-    }
 
     @Override
     public void toBytes(ByteBuf buf) {

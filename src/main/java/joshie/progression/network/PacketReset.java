@@ -7,13 +7,14 @@ import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.json.JSONLoader;
 import joshie.progression.json.Options;
+import joshie.progression.network.core.PenguinPacket;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
-public class PacketReset extends PacketAction {
+public class PacketReset extends PenguinPacket {
     private boolean singlePlayer;
     private String username;
 

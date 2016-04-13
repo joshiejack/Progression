@@ -6,7 +6,6 @@ import joshie.progression.handlers.APIHandler;
 import joshie.progression.network.core.PenguinPacket;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import java.util.UUID;
 
@@ -23,7 +22,7 @@ public class PacketSyncImpossible extends PenguinPacket {
     public void toBytes(ByteBuf buf) {
         buf.writeInt(criteria.length);
         for (ICriteria tech : criteria) {
-            ByteBufUtils.writeUTF8String(buf, tech.getUniqueID().toString());
+            writeGzipString(buf, tech.getUniqueID().toString());
         }
     }
 
@@ -32,7 +31,7 @@ public class PacketSyncImpossible extends PenguinPacket {
         int size = buf.readInt();
         criteria = new ICriteria[size];
         for (int i = 0; i < size; i++) {
-            criteria[i] = APIHandler.getCache(true).getCriteria().get(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
+            criteria[i] = APIHandler.getCache(true).getCriteria().get(UUID.fromString(readGzipString(buf)));
         }
     }
 

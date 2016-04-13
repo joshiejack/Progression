@@ -1,14 +1,9 @@
 package joshie.progression.network.core;
 
-import static joshie.progression.network.core.PacketPart.REQUEST_DATA;
-import static joshie.progression.network.core.PacketPart.REQUEST_SIZE;
-import static joshie.progression.network.core.PacketPart.SEND_DATA;
-import static joshie.progression.network.core.PacketPart.SEND_HASH;
-import static joshie.progression.network.core.PacketPart.SEND_SIZE;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
+
+import static joshie.progression.network.core.PacketPart.*;
 
 public abstract class PacketSyncStringArray extends PenguinPacket {
     protected PacketPart part;
@@ -31,7 +26,7 @@ public abstract class PacketSyncStringArray extends PenguinPacket {
         to.writeByte(part.ordinal());
         if (part.sends()) {
             to.writeInt(integer);
-            ByteBufUtils.writeUTF8String(to, text);
+            writeGzipString(to, text);
         }
     }
 
@@ -40,7 +35,7 @@ public abstract class PacketSyncStringArray extends PenguinPacket {
         part = PacketPart.values()[from.readByte()];
         if (part.sends()) {
             integer = from.readInt();
-            text = ByteBufUtils.readUTF8String(from);
+            text = readGzipString(from);
         }
     }
     

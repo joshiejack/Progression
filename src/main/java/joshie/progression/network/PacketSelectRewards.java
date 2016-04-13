@@ -8,7 +8,6 @@ import joshie.progression.player.CriteriaMappings;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -27,7 +26,7 @@ public class PacketSelectRewards extends PenguinPacket {
     public void toBytes(ByteBuf buf) {
         buf.writeInt(rewards.size());
         for (IRewardProvider provider: rewards) {
-            ByteBufUtils.writeUTF8String(buf, provider.getUniqueID().toString());
+            writeGzipString(buf, provider.getUniqueID().toString());
         }
     }
 
@@ -36,7 +35,7 @@ public class PacketSelectRewards extends PenguinPacket {
         rewards = new LinkedHashSet();
         int length = buf.readInt();
         for (int i = 0; i < length; i++) {
-            rewards.add(APIHandler.getCache(false).getRewardFromUUID(UUID.fromString(ByteBufUtils.readUTF8String(buf))));
+            rewards.add(APIHandler.getCache(false).getRewardFromUUID(UUID.fromString(readGzipString(buf))));
         }
     }
 

@@ -6,11 +6,12 @@ import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.json.DefaultSettings;
 import joshie.progression.json.JSONLoader;
 import joshie.progression.json.Options;
+import joshie.progression.network.core.PenguinPacket;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumChatFormatting;
 
-public class PacketReload extends PacketAction {
+public class PacketReload extends PenguinPacket {
     @Override
     public void handlePacket(EntityPlayer player) {
         String hostname = player.worldObj.isRemote ? JSONLoader.serverName : RemappingHandler.getHostName();

@@ -6,7 +6,6 @@ import joshie.progression.handlers.APIHandler;
 import joshie.progression.network.core.PenguinPacket;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -33,7 +32,7 @@ public class PacketSyncTriggers extends PenguinPacket {
         buf.writeBoolean(overwrite);
         buf.writeInt(triggers.size());
         for (ITriggerProvider trigger: triggers) {
-            ByteBufUtils.writeUTF8String(buf, trigger.getUniqueID().toString());
+            writeGzipString(buf, trigger.getUniqueID().toString());
         }
     }
 
@@ -43,7 +42,7 @@ public class PacketSyncTriggers extends PenguinPacket {
         int size = buf.readInt();
         triggers = new HashSet();
         for (int i = 0; i < size; i++) {
-            ITriggerProvider trigger = APIHandler.getCache(true).getTriggerFromUUID(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
+            ITriggerProvider trigger = APIHandler.getCache(true).getTriggerFromUUID(UUID.fromString(readGzipString(buf)));
             if (trigger != null) {
                 triggers.add(trigger);
             }
