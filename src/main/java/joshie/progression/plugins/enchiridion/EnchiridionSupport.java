@@ -7,7 +7,7 @@ import joshie.progression.plugins.enchiridion.actions.ActionCompleteCriteria;
         import joshie.progression.plugins.enchiridion.features.*;
 
 public class EnchiridionSupport {
-    private static final Class[] classes = new Class[] { FeaturePoints.class, FeatureRewards.class, FeatureTasks.class, FeatureTabList.class, FeatureCriteria.class , FeatureTab.class};
+    private static final Class[] classes = new Class[] { FeaturePoints.class, FeatureRewards.class, FeatureTasks.class, FeatureCriteria.class , FeatureTab.class};
 
     public static void init() {
         EnchiridionAPI.instance.registerButtonAction(new ActionCompleteCriteria());
