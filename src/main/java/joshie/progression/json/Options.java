@@ -6,7 +6,7 @@ import joshie.progression.Progression;
 import net.minecraftforge.common.config.Configuration;
 
 public class Options {
-	public static transient boolean debugMode = true;
+    public static transient boolean debugMode = true;
     public static boolean editor = true;
     public static boolean tileClaimerRecipe = false;
     public static boolean overwriteCriteriaJSONForClients = false;

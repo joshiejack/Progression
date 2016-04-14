@@ -28,20 +28,20 @@ public class PacketLockUnlockSaving extends PenguinPacket {
         lock = from.readBoolean();
     }
 
-	@Override
-	public void handlePacket(EntityPlayer player) {
-		if (!player.worldObj.isRemote) PacketHandler.sendToEveryone(new PacketLockUnlockSaving(true)); //If we're server, tell everyone they CANNOT EDIT
-		else { //If we're client lets check some stuff
-			PClientProxy.bookLocked = lock; //Lock the book
-			if (PClientProxy.isSaver && lock) { //If we were the person saving
-				//Now save everything :)
-				JSONLoader.saveData(true); //Save the data clientside
-				String json = JSONLoader.getClientTabJsonData();
-				int length = SplitHelper.splitStringEvery(json, 5000).length;
-				//Send the packet to the server about the new json
-				PacketHandler.sendToServer(new PacketSyncJSONToServer(SEND_SIZE, "", length, System.currentTimeMillis()));
-				CORE.clearEditors();
-			}
-		}
-	}
+    @Override
+    public void handlePacket(EntityPlayer player) {
+        if (!player.worldObj.isRemote) PacketHandler.sendToEveryone(new PacketLockUnlockSaving(true)); //If we're server, tell everyone they CANNOT EDIT
+        else { //If we're client lets check some stuff
+            PClientProxy.bookLocked = lock; //Lock the book
+            if (PClientProxy.isSaver && lock) { //If we were the person saving
+                //Now save everything :)
+                JSONLoader.saveData(true); //Save the data clientside
+                String json = JSONLoader.getClientTabJsonData();
+                int length = SplitHelper.splitStringEvery(json, 5000).length;
+                //Send the packet to the server about the new json
+                PacketHandler.sendToServer(new PacketSyncJSONToServer(SEND_SIZE, "", length, System.currentTimeMillis()));
+                CORE.clearEditors();
+            }
+        }
+    }
 }

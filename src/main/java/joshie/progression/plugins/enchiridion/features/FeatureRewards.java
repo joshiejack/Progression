@@ -5,6 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import joshie.enchiridion.api.EnchiridionAPI;
 import joshie.enchiridion.api.book.IFeatureProvider;
 import joshie.enchiridion.api.gui.ISimpleEditorFieldProvider;
+import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.IRewardProvider;
 import joshie.progression.api.special.ICustomTooltip;
 import joshie.progression.helpers.MCClientHelper;
@@ -22,13 +23,13 @@ public class FeatureRewards extends FeatureCriteria implements ISimpleEditorFiel
 
     public FeatureRewards() {}
 
-    public FeatureRewards(String displayName, boolean background) {
-        super(displayName, background);
+    public FeatureRewards(ICriteria criteria, boolean background) {
+        super(criteria, background);
     }
 
     @Override
     public FeatureRewards copy() {
-        return new FeatureRewards(displayName, background);
+        return new FeatureRewards(criteria, background);
     }
 
     @Override

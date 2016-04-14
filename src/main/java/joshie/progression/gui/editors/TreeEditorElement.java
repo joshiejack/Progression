@@ -242,7 +242,7 @@ public class TreeEditorElement {
 
                     for (ICriteria c : criteria.getPreReqs()) {
                         if (c.getTab() != criteria.getTab()) {
-                            list.add(EnumChatFormatting.RED + "Requires: " + c.getLocalisedName() + " from the \"" + c.getTab().getDisplayName() + "\" tab");
+                            list.add(EnumChatFormatting.RED + "Requires: " + c.getLocalisedName() + " from the \"" + c.getTab().getLocalisedName() + "\" tab");
                         }
                     }
 

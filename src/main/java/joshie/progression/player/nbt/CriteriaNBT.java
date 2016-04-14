@@ -9,39 +9,39 @@ import java.util.Map;
 import java.util.UUID;
 
 public class CriteriaNBT implements IMapHelper {
-	public static final CriteriaNBT INSTANCE = new CriteriaNBT();
-	
-	public Map map;
-	
-	public IMapHelper setMap(Map map) {
-		this.map = map;
-		return this;
-	}
+    public static final CriteriaNBT INSTANCE = new CriteriaNBT();
 
-	@Override
-	public Map getMap() {
-		return map;
-	}
+    public Map map;
 
-	@Override
-	public Object readKey(NBTTagCompound tag) {
-		String name = tag.getString("Name");
-		return APIHandler.getCache(false).getCriteria().get(UUID.fromString(name));
-	}
+    public IMapHelper setMap(Map map) {
+        this.map = map;
+        return this;
+    }
 
-	@Override
-	public Object readValue(NBTTagCompound tag) {
-		return (Integer)tag.getInteger("Number");
-	}
+    @Override
+    public Map getMap() {
+        return map;
+    }
 
-	@Override
-	public void writeKey(NBTTagCompound tag, Object o) {
-		String name = ((ICriteria)o).getUniqueID().toString();
-		tag.setString("Name", name);
-	}
+    @Override
+    public Object readKey(NBTTagCompound tag) {
+        String name = tag.getString("Name");
+        return APIHandler.getCache(false).getCriteria().get(UUID.fromString(name));
+    }
 
-	@Override
-	public void writeValue(NBTTagCompound tag, Object o) {
-		tag.setInteger("Number", (Integer)o);
-	}
+    @Override
+    public Object readValue(NBTTagCompound tag) {
+        return (Integer)tag.getInteger("Number");
+    }
+
+    @Override
+    public void writeKey(NBTTagCompound tag, Object o) {
+        String name = ((ICriteria)o).getUniqueID().toString();
+        tag.setString("Name", name);
+    }
+
+    @Override
+    public void writeValue(NBTTagCompound tag, Object o) {
+        tag.setInteger("Number", (Integer)o);
+    }
 }

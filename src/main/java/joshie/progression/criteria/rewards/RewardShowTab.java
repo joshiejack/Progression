@@ -27,8 +27,8 @@ public class RewardShowTab extends RewardBaseSingular implements IInit, IGetterC
     public void init(boolean isClient) {
         try {
             for (ITab t : APIHandler.getCache(isClient).getTabs().values()) {
-                String display = t.getDisplayName();
-                if (t.getDisplayName().equals(displayName)) {
+                String display = t.getLocalisedName();
+                if (t.getLocalisedName().equals(displayName)) {
                     tab = t;
                     tabID = t.getUniqueID();
                     break;
@@ -42,7 +42,7 @@ public class RewardShowTab extends RewardBaseSingular implements IInit, IGetterC
     public String getDescription() {
         if (tab != null) {
             String end = hideByDefault ? "show" : "hide";
-            return Progression.format("reward.layer.show.description." + end, tab.getDisplayName());
+            return Progression.format("reward.layer.show.description." + end, tab.getLocalisedName());
         } else return "Invalid Book setup";
     }
 

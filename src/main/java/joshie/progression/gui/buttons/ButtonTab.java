@@ -165,7 +165,7 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
 
     @Override
     public String getTextField() {
-        return tab.getDisplayName();
+        return tab.getLocalisedName();
     }
 
     @Override

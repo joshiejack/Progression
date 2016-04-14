@@ -14,7 +14,7 @@ public class RenderItemHelper {
     
     public static void drawStack(ItemStack stack, int left, int top, float size) {
         try {
-        	GlStateManager.pushMatrix();
+            GlStateManager.pushMatrix();
             GlStateManager.scale(size, size, size);
             GlStateManager.disableLighting();
             GlStateManager.color(1F, 1F, 1F, 1F); //Forge: Reset color in case Items change it.
@@ -32,8 +32,8 @@ public class RenderItemHelper {
         } catch (Exception e) {}
     }
 
-	public static void register(Item item, int meta, ModelResourceLocation location) {
+    public static void register(Item item, int meta, ModelResourceLocation location) {
         Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, meta, location);
         ModelLoader.registerItemVariants(item, location);
-	}
+    }
 }

@@ -4,6 +4,7 @@ import joshie.enchiridion.api.EnchiridionAPI;
 import joshie.enchiridion.api.book.IFeatureProvider;
 import joshie.enchiridion.api.gui.ISimpleEditorFieldProvider;
 import joshie.progression.api.criteria.IConditionProvider;
+import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.ITriggerProvider;
 import joshie.progression.api.special.ICustomTooltip;
 import joshie.progression.helpers.MCClientHelper;
@@ -15,13 +16,13 @@ import java.util.List;
 public class FeatureTasks extends FeatureCriteria implements ISimpleEditorFieldProvider {
     public FeatureTasks() {}
 
-    public FeatureTasks(String displayName, boolean background) {
-        super(displayName, background);
+    public FeatureTasks(ICriteria criteria, boolean background) {
+        super(criteria, background);
     }
 
     @Override
     public FeatureTasks copy() {
-        return new FeatureTasks(displayName, background);
+        return new FeatureTasks(criteria, background);
     }
 
     @Override

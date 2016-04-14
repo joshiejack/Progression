@@ -305,7 +305,7 @@ public class JSONLoader {
             if (!tabNames.add(tab.getUniqueID())) continue;
             DataTab tabData = new DataTab();
             tabData.uuid = tab.getUniqueID();
-            tabData.displayName = tab.getDisplayName();
+            tabData.displayName = tab.getLocalisedName();
             tabData.sortIndex = tab.getSortIndex();
             tabData.isVisible = tab.isVisible();
             tabData.stack = StackHelper.getStringFromStack(tab.getStack());

@@ -74,7 +74,7 @@ public class Progression {
             } catch (Exception e) { logger.log(Level.ERROR, "Failed to load the Enchiridion Support"); }
         }
         
-    	proxy.registerRendering();
+        proxy.registerRendering();
     }
 
     @EventHandler
@@ -111,9 +111,9 @@ public class Progression {
         world.setItemData(MODNAME, data);
     }
 
-	public static String translate(String string) {
-		return StatCollector.translateToLocal("progression." + string);
-	}
+    public static String translate(String string) {
+        return StatCollector.translateToLocal("progression." + string);
+    }
 
     public static String format(String string, Object... object) {
         return StringEscapeUtils.unescapeJava(StatCollector.translateToLocalFormatted("progression." + string, object));

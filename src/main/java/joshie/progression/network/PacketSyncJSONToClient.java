@@ -62,7 +62,7 @@ public class PacketSyncJSONToClient extends PenguinPacket {
     }
 
     @Override
-	public void handlePacket(EntityPlayer thePlayer) {
+    public void handlePacket(EntityPlayer thePlayer) {
         if (section == RESYNC) {
             //Called from a command, sends all the data
             for (EntityPlayer player: PlayerHelper.getAllPlayers()) {

@@ -13,7 +13,7 @@ public interface ITab {
     public UUID getUniqueID();
     
     /** Returns the display name for this tab **/
-    public String getDisplayName();
+    public String getLocalisedName();
     
     /** Returns the display stack for this tab **/
     public ItemStack getStack();

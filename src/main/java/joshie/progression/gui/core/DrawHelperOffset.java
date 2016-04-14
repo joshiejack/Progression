@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 import static joshie.progression.gui.core.GuiList.CORE;
 
 public class DrawHelperOffset extends DrawHelper {   
-	@Override
+    @Override
     public void drawText(String text, int left, int top, int color) {
         CORE.drawText(text, CORE.getOffsetX() + left, top, color);
     }

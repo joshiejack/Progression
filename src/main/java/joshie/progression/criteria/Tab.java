@@ -48,7 +48,7 @@ public class Tab implements ITab {
     }
 
     @Override
-    public String getDisplayName() {
+    public String getLocalisedName() {
         return displayName;
     }
     

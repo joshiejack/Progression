@@ -17,6 +17,7 @@ import joshie.progression.api.criteria.ITab;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.lib.ProgressionInfo;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.Set;
 
@@ -24,10 +25,10 @@ public class FeatureTabList extends FeatureProgression {
     public FeatureTabList() {}
 
     private transient Cache<ITab, IFeature> tabToButtonCache = CacheBuilder.newBuilder().maximumSize(1024).build();
-    private static final String TRANSPARENT = ProgressionInfo.BOOKPATH + "transparent.png";
+    private static final ResourceLocation TRANSPARENT = new ResourceLocation(ProgressionInfo.BOOKPATH + "transparent.png");
 
     private IFeature getButtonFromTab(final ITab tab, final IBook book, final int y) {
-        FeatureButton button = (FeatureButton) EnchiridionAPI.editor.getJumpPageButton(TRANSPARENT, TRANSPARENT, y + 50);
+        FeatureButton button = (FeatureButton) EnchiridionAPI.editor.getJumpPageButton(y + 50).getAction().setResourceLocation(true, TRANSPARENT).setResourceLocation(false, TRANSPARENT);
         button.update(position);
         //button.textUnhover = new FeatureText(tab.getLocalisedName());
 
@@ -65,16 +66,6 @@ public class FeatureTabList extends FeatureProgression {
         return (tasksdone * 100) / totaltasks;
     }
 
-    private IPage getPageByNumber(IBook book, int number) {
-        for (IPage page: book.getPages()) {
-            if (page.getPageNumber() == number) {
-                return page;
-            }
-        }
-
-        return null;
-    }
-
     @Override
     public void performClick(int mouseX, int mouseY) {
         int pos = 0;
@@ -108,7 +99,7 @@ public class FeatureTabList extends FeatureProgression {
             }
 
             EnchiridionAPI.draw.drawSplitScaledString((pos + 1) + ".", position.getLeft(), position.getTop() + pos * 20, 200, color, 1F);
-            EnchiridionAPI.draw.drawSplitScaledString(tab.getDisplayName(), position.getLeft() + 18, position.getTop() + pos * 20, 200, color, 1F);
+            EnchiridionAPI.draw.drawSplitScaledString(tab.getLocalisedName(), position.getLeft() + 18, position.getTop() + pos * 20, 200, color, 1F);
             EnchiridionAPI.draw.drawSplitScaledString(getCompletionAmount(tab) + "% Completed", position.getLeft() + 13, position.getTop() + 10 + pos * 20, 100, 0xFF404040, 0.75F);
 
             pos++;

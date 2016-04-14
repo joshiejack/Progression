@@ -14,19 +14,19 @@ import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
 
 public class StackHelper {
-	private static HashMap<Item, String> modiditemcache = new HashMap();
-	private static HashMap<Block, String> modidblockcache = new HashMap();
-	
-	public static String getModFromItem(Item item) {
-		if (modiditemcache.containsKey(item)) return modiditemcache.get(item);
-		else {
-			String modid = Item.itemRegistry.getNameForObject(item).getResourceDomain();
-			modiditemcache.put(item, modid);
-			return modid;
-		}
-	}
-	
-	public static String getModFromBlock(Block item) {
+    private static HashMap<Item, String> modiditemcache = new HashMap();
+    private static HashMap<Block, String> modidblockcache = new HashMap();
+
+    public static String getModFromItem(Item item) {
+        if (modiditemcache.containsKey(item)) return modiditemcache.get(item);
+        else {
+            String modid = Item.itemRegistry.getNameForObject(item).getResourceDomain();
+            modiditemcache.put(item, modid);
+            return modid;
+        }
+    }
+
+    public static String getModFromBlock(Block item) {
         if (modidblockcache.containsKey(item)) return modidblockcache.get(item);
         else {
             String modid = Block.blockRegistry.getNameForObject(item).getResourceDomain();
@@ -34,7 +34,7 @@ public class StackHelper {
             return modid;
         }
     }
-	
+
     public static ItemStack getStackFromString(String str) {
         if (str == null || str.equals("")) return null;
         return getStackFromArray(str.trim().split(" "));

@@ -23,8 +23,8 @@ public class PacketChangeTeam extends PenguinPacket {
         this.team = team;
     }
 
-	@Override
-	public void toBytes(ByteBuf to) {
+    @Override
+    public void toBytes(ByteBuf to) {
         to.writeInt(action.ordinal());
         if (team != null) {
             to.writeBoolean(true);
@@ -32,16 +32,16 @@ public class PacketChangeTeam extends PenguinPacket {
         } else to.writeBoolean(false);
     }
 
-	@Override
-	public void fromBytes(ByteBuf from) {
+    @Override
+    public void fromBytes(ByteBuf from) {
         action = TeamAction.values()[from.readInt()];
         if (from.readBoolean()) {
             team = UUID.fromString(ByteBufUtils.readUTF8String(from));
         }
     }
 
-	@Override
-	public void handlePacket(EntityPlayer player) {
+    @Override
+    public void handlePacket(EntityPlayer player) {
         PlayerTracker.joinTeam(player, action, team);
-	}
+    }
 }

@@ -20,9 +20,9 @@ public class TriggerClickBlock extends TriggerBaseBlock {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onEvent(PlayerInteractEvent event) {
         if (event.pos != null) {
-        	IBlockState state = event.world.getBlockState(event.pos);
-        	Block block = state.getBlock();
-        	int meta = block.getMetaFromState(state);
+            IBlockState state = event.world.getBlockState(event.pos);
+            Block block = state.getBlock();
+            int meta = block.getMetaFromState(state);
     
             if (ProgressionAPI.registry.fireTrigger(event.entityPlayer, getProvider().getUnlocalisedName(), block, meta) == Result.DENY) {
                 event.setCanceled(true);

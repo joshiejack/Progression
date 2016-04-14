@@ -8,12 +8,12 @@ public class MCClientHelper {
     public static boolean FORCE_EDIT = false;
 
     public static EntityPlayer getPlayer() {
-		return Minecraft.getMinecraft().thePlayer;
-	}
+        return Minecraft.getMinecraft().thePlayer;
+    }
 
-	public static Minecraft getMinecraft() {
-		return Minecraft.getMinecraft();
-	}
+    public static Minecraft getMinecraft() {
+        return Minecraft.getMinecraft();
+    }
 
     private static boolean isInEditMode() {
         return FORCE_EDIT ? true: getPlayer().capabilities.isCreativeMode;

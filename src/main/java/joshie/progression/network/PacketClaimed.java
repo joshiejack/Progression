@@ -30,10 +30,10 @@ public class PacketClaimed extends PenguinPacket {
         z = buf.readInt();
     }
     
-	@Override
-	public void handlePacket(EntityPlayer player) {
-		if (player.worldObj.isRemote) {
+    @Override
+    public void handlePacket(EntityPlayer player) {
+        if (player.worldObj.isRemote) {
             MCClientHelper.getPlayer().addChatComponentMessage(new ChatComponentText("You have claimed the Tile Entity at " + x + " " + y + " " + z));
         }
-	}
+    }
 }

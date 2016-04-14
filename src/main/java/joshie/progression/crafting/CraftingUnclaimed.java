@@ -7,15 +7,15 @@ import net.minecraft.world.World;
 /** This class is returned when machines look for their owners
  *  And they cannot be find. */
 public class CraftingUnclaimed extends Crafter {
-	public static final Crafter INSTANCE = new CraftingUnclaimed();
-	
-	@Override
-	public boolean canUseItemWithAction(World world, ActionType type, ItemStack stack) {
-		return Options.settings.unclaimedTileCanDoAnything;
-	}
+    public static final Crafter INSTANCE = new CraftingUnclaimed();
 
-	@Override
-	public boolean canDoAnything() {
-		return Options.settings.unclaimedTileCanDoAnything;
-	}
+    @Override
+    public boolean canUseItemWithAction(World world, ActionType type, ItemStack stack) {
+        return Options.settings.unclaimedTileCanDoAnything;
+    }
+
+    @Override
+    public boolean canDoAnything() {
+        return Options.settings.unclaimedTileCanDoAnything;
+    }
 }

@@ -17,58 +17,58 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import java.util.List;
 
 public class ItemProgressionRenderer implements ISmartItemModel {
-	private ItemStack broken = new ItemStack(Items.book);
-	private ItemModelMesher mesher;
-	
-	@SubscribeEvent
-	public void onCookery(ModelBakeEvent event) {
-		event.modelRegistry.putObject(PClientProxy.criteria, this);
-	}
+    private ItemStack broken = new ItemStack(Items.book);
+    private ItemModelMesher mesher;
 
-	@Override
-	public IBakedModel handleItemState(ItemStack stack) {
-		if (mesher == null) mesher  = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
-		ICriteria criteria = ItemProgression.getCriteriaFromStack(stack, true);
-		if (criteria != null && criteria.getIcon().getItem() != stack.getItem() && criteria.getIcon().getItem() != Progression.item) {
-			return mesher.getItemModel(criteria.getIcon());
-		}
-		
-		return mesher.getItemModel(broken);
-	} 
-	
-	/** Redundant crap below :/ **/
-	@Override
-	public List<BakedQuad> getFaceQuads(EnumFacing facing) {
-		return null;
-	}
+    @SubscribeEvent
+    public void onCookery(ModelBakeEvent event) {
+        event.modelRegistry.putObject(PClientProxy.criteria, this);
+    }
 
-	@Override
-	public List<BakedQuad> getGeneralQuads() {
-		return null;
-	}
+    @Override
+    public IBakedModel handleItemState(ItemStack stack) {
+        if (mesher == null) mesher  = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
+        ICriteria criteria = ItemProgression.getCriteriaFromStack(stack, true);
+        if (criteria != null && criteria.getIcon().getItem() != stack.getItem() && criteria.getIcon().getItem() != Progression.item) {
+            return mesher.getItemModel(criteria.getIcon());
+        }
 
-	@Override
-	public boolean isAmbientOcclusion() {
-		return false;
-	}
+        return mesher.getItemModel(broken);
+    }
 
-	@Override
-	public boolean isGui3d() {
-		return false;
-	}
+    /** Redundant crap below :/ **/
+    @Override
+    public List<BakedQuad> getFaceQuads(EnumFacing facing) {
+        return null;
+    }
 
-	@Override
-	public boolean isBuiltInRenderer() {
-		return false;
-	}
+    @Override
+    public List<BakedQuad> getGeneralQuads() {
+        return null;
+    }
 
-	@Override
-	public TextureAtlasSprite getParticleTexture() {
-		return null;
-	}
+    @Override
+    public boolean isAmbientOcclusion() {
+        return false;
+    }
 
-	@Override
-	public ItemCameraTransforms getItemCameraTransforms() {
-		return null;
-	}
+    @Override
+    public boolean isGui3d() {
+        return false;
+    }
+
+    @Override
+    public boolean isBuiltInRenderer() {
+        return false;
+    }
+
+    @Override
+    public TextureAtlasSprite getParticleTexture() {
+        return null;
+    }
+
+    @Override
+    public ItemCameraTransforms getItemCameraTransforms() {
+        return null;
+    }
 }

@@ -10,36 +10,33 @@ import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.passive.EntityRabbit;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 public class EntityHelper {
-    private static final ArrayList<EntityLivingBase> entities = new ArrayList();
-    private static final HashMap<String, Integer> scalings = new HashMap();
-    private static final HashMap<String, Integer> offsetY = new HashMap();
-    private static ArrayList<EntityLivingBase> shuffledEntityCache = new ArrayList();
-
-    //Clientside Caches
     @SideOnly(Side.CLIENT)
-    private static final Cache<EntityLivingBase, Integer> scaleCache = CacheBuilder.newBuilder().maximumSize(1024).build();
-    @SideOnly(Side.CLIENT)
-    private static final Cache<EntityLivingBase, Integer> offsetCache = CacheBuilder.newBuilder().maximumSize(1024).build();
+    private static final Cache<EntityLivingBase, Pair<Integer, Integer>> cacheScaleOffset = CacheBuilder.newBuilder().maximumSize(16).build();
+    private static final HashMap<String, Pair<Integer, Integer>> scaleOffset = new HashMap<String, Pair<Integer, Integer>>();
+    private static List<EntityLivingBase> clientList;
+    private static List<EntityLivingBase> serverList;
 
     private static void register(String entity, int scale, int offset) {
-        scalings.put(entity, scale);
-        offsetY.put(entity, offset);
+        scaleOffset.put(entity, Pair.of(scale, offset));
     }
 
     static {
-        offsetY.put("Thaumcraft.TaintacleTiny", -15);
-        offsetY.put("Thaumcraft.Taintacle", -45);
-        scalings.put("Giant", 3);
-        scalings.put("WitherBoss", 10);
-        scalings.put("Thaumcraft.EldritchGolem", 11);
+        register("Thaumcraft.TaintacleTiny", 15, -15);
+        register("Thaumcraft.Taintacle", 15, -45);
+        register("Giant", 3, 0);
+        register("WitherBoss", 10, 0);
+        register("Thaumcraft.EldritchGolem", 11, 0);
         register("EnderDragon", 4, -4);
         register("Ghast", 5, -30);
         register("Thaumcraft.EldritchWarden", 4, 11);
@@ -47,37 +44,33 @@ public class EntityHelper {
 
     public static int getSizeForEntity(final EntityLivingBase entity) {
         try {
-            return offsetCache.get(entity, new Callable<Integer>() {
+            return cacheScaleOffset.get(entity, new Callable<Pair<Integer, Integer>>() {
                 @Override
-                public Integer call() throws Exception {
+                public Pair<Integer, Integer> call() throws Exception {
                     String name = (EntityList.getEntityString(entity));
-                    return scalings.containsKey(name) ? scalings.get(name) : 15;
+                    return scaleOffset.containsKey(name) ? scaleOffset.get(name) : Pair.of(15, 0);
                 }
-            });
+            }).getKey();
         } catch (Exception e) { return  15; }
     }
 
     public static int getOffsetForEntity(final EntityLivingBase entity) {
         try {
-            return scaleCache.get(entity, new Callable<Integer>() {
+            return cacheScaleOffset.get(entity, new Callable<Pair<Integer, Integer>>() {
                 @Override
-                public Integer call() throws Exception {
+                public Pair<Integer, Integer> call() throws Exception {
                     String name = (EntityList.getEntityString(entity));
-                    return offsetY.containsKey(name) ? offsetY.get(name) : 0;
+                    return scaleOffset.containsKey(name) ? scaleOffset.get(name) : Pair.of(15, 0);
                 }
-            });
+            }).getValue();
         } catch (Exception e) { return  0; }
     }
 
-
-
     @SideOnly(Side.CLIENT)
-    private static World getWorld() {
-        return FMLClientHandler.instance().getWorldClient();
-    }
+    public static List<EntityLivingBase> getEntities() {
+        if (clientList == null) clientList = init(MCClientHelper.getMinecraft().theWorld);
 
-    public static ArrayList<EntityLivingBase> getEntities() {
-        return entities;
+        return clientList;
     }
 
     public static EntityLivingBase getRandomEntityFromFilters(List<IFilterProvider> locality, EntityPlayer player) {
@@ -94,42 +87,39 @@ public class EntityHelper {
         return EntityList.getEntityString(living);
     }
 
-    public static boolean isInit = false;
+    private static List<EntityLivingBase> init(World world) {
+        List<EntityLivingBase> list = new ArrayList<EntityLivingBase>();
+        for (String name : EntityList.stringToClassMapping.keySet()) {
+            if (name.equals("Mob") || name.equals("Monster")) continue;
+            Entity entity = EntityList.createEntityByName(name, world);
+            if (entity instanceof EntityLivingBase) {
+                list.add((EntityLivingBase) entity);
+                //Special case addition of entities
+                //Wither Skeleton, Add to list
+                if (entity.getClass() == EntitySkeleton.class) {
+                    entity = EntityList.createEntityByName(name, world);
+                    ((EntitySkeleton) entity).setSkeletonType(1);
+                    list.add((EntityLivingBase) entity);
+                }
 
-    public static EntityLivingBase getRandomEntity(World world, IFilterProvider filter) {
-        if (!isInit) {
-            isInit = true;
-
-            for (String name : (Set<String>) EntityList.stringToClassMapping.keySet()) {
-                if (name.equals("Mob") || name.equals("Monster")) continue;
-                Entity entity = EntityList.createEntityByName(name, world);
-                if (entity instanceof EntityLivingBase) {
-                    entities.add((EntityLivingBase) entity);
-                    shuffledEntityCache.add((EntityLivingBase) entity);
-                    //Special case addition of entities
-                    //Wither Skeleton, Add to list
-                    if (entity.getClass() == EntitySkeleton.class) {
+                //Rabbit Variants
+                if (entity instanceof EntityRabbit) {
+                    for (int i = 0; i < 6; i++) {
                         entity = EntityList.createEntityByName(name, world);
-                        ((EntitySkeleton) entity).setSkeletonType(1);
-                        entities.add((EntityLivingBase) entity);
-                        shuffledEntityCache.add((EntityLivingBase) entity);
-                    }
-
-
-                    if (entity instanceof EntityRabbit) {
-                        for (int i = 0; i < 6; i++) {
-                            entity = EntityList.createEntityByName(name, world);
-                            ((EntityRabbit)entity).setRabbitType(i);
-                            entities.add((EntityLivingBase) entity);
-                            shuffledEntityCache.add((EntityLivingBase) entity);
-                        }
+                        ((EntityRabbit)entity).setRabbitType(i);
+                        list.add((EntityLivingBase) entity);
                     }
                 }
             }
         }
 
-        Collections.shuffle(shuffledEntityCache);
-        for (EntityLivingBase entity : shuffledEntityCache) {
+        return list;
+    }
+
+    public static EntityLivingBase getRandomEntity(World world, IFilterProvider filter) {
+        if (serverList == null) serverList = init(world);
+        Collections.shuffle(serverList);
+        for (EntityLivingBase entity : serverList) {
             if (filter.getProvided().matches(entity)) return entity;
         }
 

@@ -50,7 +50,7 @@ public class PacketSyncTriggers extends PenguinPacket {
     }
 
     @Override
-	public void handlePacket(EntityPlayer player) {   
+    public void handlePacket(EntityPlayer player) {
         PlayerTracker.getClientPlayer().getMappings().markTriggerAsCompleted(overwrite, triggers);
     }
 }

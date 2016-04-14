@@ -1,14 +1,17 @@
 package joshie.progression.plugins.enchiridion.features;
 
+import com.google.gson.JsonObject;
 import joshie.enchiridion.api.EnchiridionAPI;
-import joshie.enchiridion.api.book.IFeature;
+import joshie.enchiridion.api.book.IButtonActionProvider;
 import joshie.enchiridion.api.book.IFeatureProvider;
 import joshie.enchiridion.api.book.IPage;
 import joshie.enchiridion.api.gui.ISimpleEditorFieldProvider;
+import joshie.enchiridion.util.ELocation;
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.ITriggerProvider;
 import joshie.progression.handlers.APIHandler;
+import joshie.progression.helpers.JSONHelper;
 import joshie.progression.lib.ProgressionInfo;
 import net.minecraft.util.ResourceLocation;
 
@@ -20,22 +23,27 @@ import static net.minecraft.util.EnumChatFormatting.GOLD;
 
 
 public class FeatureCriteria extends FeatureProgression implements ISimpleEditorFieldProvider {
-    protected transient ICriteria criteria = null;
+    protected transient ICriteria criteria;
+    protected transient UUID uuid = UUID.randomUUID();
     protected transient boolean isInit = false;
-    protected UUID criteriaID = UUID.randomUUID();
-    public String displayName = "";
+    public String display = "New Criteria";
     public boolean background = true;
 
     public FeatureCriteria() {}
 
-    public FeatureCriteria(String displayName, boolean background) {
-        this.displayName = displayName;
+    public FeatureCriteria(ICriteria criteria, boolean background) {
+        this.criteria = criteria;
+        if (criteria != null) {
+            uuid = criteria.getUniqueID();
+            display = criteria.getLocalisedName();
+        }
+
         this.background = background;
     }
 
     @Override
     public FeatureCriteria copy() {
-        return new FeatureCriteria(displayName, background);
+        return new FeatureCriteria(criteria, background);
     }
 
     @Override
@@ -46,19 +54,20 @@ public class FeatureCriteria extends FeatureProgression implements ISimpleEditor
     }
 
     @Override
-    public void onFieldsSet() {
-        super.onFieldsSet();
+    public void onFieldsSet(String field) {
+        super.onFieldsSet(field);
 
-        try {
+        if (field.equals("")) {
+            criteria = APIHandler.getCache(true).getCriteria().get(uuid);
+            if (criteria != null) display = criteria.getLocalisedName();
+        } else if (field.equals("display")) {
             for (ICriteria c : APIHandler.getCache(true).getCriteria().values()) {
-                if (c.getLocalisedName().equals(displayName)) {
+                if (c.getLocalisedName().equals(display)) {
                     criteria = c;
-                    criteriaID = c.getUniqueID();
-                    update(position);
-                    return;
+                    uuid = c.getUniqueID();
                 }
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        }
     }
 
     public FeatureCriteria getFeatureFromCriteria(ICriteria criteria) {
@@ -110,15 +119,14 @@ public class FeatureCriteria extends FeatureProgression implements ISimpleEditor
         }
     }
 
-    private static final String ARROWPATH = "enchiridion:textures/books/arrow_left_";
-
     @Override
     public void performClick(int mouseX, int mouseY) {
         if (criteria != null) {
             int number = (criteria.getUniqueID().hashCode() / 100) + 50;
             IPage page = EnchiridionAPI.book.getPageIfNotExists(number);
             if (page != null) {
-                IFeature button = EnchiridionAPI.editor.getJumpPageButton(ARROWPATH + "off.png", ARROWPATH + "on.png", number);
+                IButtonActionProvider button = EnchiridionAPI.editor.getJumpPageButton(EnchiridionAPI.book.getPage().getPageNumber());
+                button.getAction().setResourceLocation(true, new ELocation("arrow_left_on")).setResourceLocation(false, new ELocation("arrow_left_off"));
                 page.addFeature(button, 21, 200, 18, 10, true, false);
             }
 
@@ -128,12 +136,11 @@ public class FeatureCriteria extends FeatureProgression implements ISimpleEditor
 
     @Override
     public void draw(int mouseX, int mouseY) {
-        if (criteriaID.equals("") || !isInit) {
+        if (!isInit) {
             isInit = true;
-            onFieldsSet();
+            onFieldsSet("");
         }
 
-        criteria = APIHandler.getCache(true).getCriteria().get(criteriaID);
         if (criteria != null) {
             drawFeature(mouseX, mouseY);
         }
@@ -163,5 +170,19 @@ public class FeatureCriteria extends FeatureProgression implements ISimpleEditor
     public boolean getAndSetEditMode() {
         EnchiridionAPI.editor.setSimpleEditorFeature(this);
         return true;
+    }
+
+    @Override
+    public void readFromJson(JsonObject object) {
+        try {
+            uuid = UUID.fromString(JSONHelper.getString(object, "uuid", "d977334a-a7e9-5e43-b87e-91df8eebfdff"));
+        } catch (Exception e){}
+    }
+
+    @Override
+    public void writeToJson(JsonObject object) {
+        if (uuid != null) {
+            JSONHelper.setString(object, "uuid", uuid.toString(), "d977334a-a7e9-5e43-b87e-91df8eebfdff");
+        }
     }
 }

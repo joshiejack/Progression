@@ -5,7 +5,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ProgressionInfo {
-	public static final String MODID = "progression";
+    public static final String MODID = "progression";
     public static final String MODNAME = "Progression";
     public static final String MODPATH = "progression";
     public static final String JAVAPATH = "joshie.progression.";

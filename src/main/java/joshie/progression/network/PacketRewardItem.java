@@ -28,7 +28,7 @@ public class PacketRewardItem extends PenguinPacket {
     }
 
     @Override
-	public void handlePacket(EntityPlayer player) {
+    public void handlePacket(EntityPlayer player) {
         SpawnItemHelper.addToPlayerInventory(MCClientHelper.getPlayer(), stack);
     }
 }

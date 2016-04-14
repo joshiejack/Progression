@@ -82,13 +82,21 @@ public class APICache {
         } catch (Exception e) { return  new ArrayList(); }
     }
 
+    public ICriteria getRandomCriteria() {
+        List<ICriteria> criteria = new ArrayList<ICriteria>(criteriaCache.values());
+        if (criteria.size() > 0) {
+            Collections.shuffle(criteria);
+            return criteria.get(0);
+        } else return null;
+    }
+
     private static class SortIndex implements Comparator {
         @Override
         public int compare(Object o1, Object o2) {
             ITab tab1 = ((ITab) o1);
             ITab tab2 = ((ITab) o2);
             if (tab1.getSortIndex() == tab2.getSortIndex()) {
-                return tab1.getDisplayName().compareTo(tab2.getDisplayName());
+                return tab1.getLocalisedName().compareTo(tab2.getLocalisedName());
             }
 
             return tab1.getSortIndex() < tab2.getSortIndex() ? 1 : -1;

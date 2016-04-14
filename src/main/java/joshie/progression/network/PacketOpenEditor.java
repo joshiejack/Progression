@@ -7,8 +7,8 @@ import joshie.progression.network.core.PenguinPacket;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class PacketOpenEditor extends PenguinPacket {
-	@Override
-	public void handlePacket(EntityPlayer player) {
-		MCClientHelper.getPlayer().openGui(Progression.instance, GuiIDs.EDITOR, null, 0, 0, 0);
-	}
+    @Override
+    public void handlePacket(EntityPlayer player) {
+        MCClientHelper.getPlayer().openGui(Progression.instance, GuiIDs.EDITOR, null, 0, 0, 0);
+    }
 }

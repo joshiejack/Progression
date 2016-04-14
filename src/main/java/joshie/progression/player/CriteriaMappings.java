@@ -477,9 +477,11 @@ public class CriteriaMappings {
             completedTriggers.removeAll(criteria.getTriggers());
             //Remove all data for the triggers too
             for (ITriggerProvider trigger: criteria.getTriggers()) {
-                if (trigger.getProvided() instanceof IStoreTriggerData) {
-                    triggerDataMap.get(trigger.getUniqueID()).readDataFromNBT(new NBTTagCompound());
-                    sendTriggerDataToClient(trigger); //Let the client know it was wiped
+                if (triggerDataMap.get(trigger.getUniqueID()) != null) {
+                    if (trigger.getProvided() instanceof IStoreTriggerData) {
+                        triggerDataMap.get(trigger.getUniqueID()).readDataFromNBT(new NBTTagCompound());
+                        sendTriggerDataToClient(trigger); //Let the client know it was wiped
+                    }
                 }
             }
         }

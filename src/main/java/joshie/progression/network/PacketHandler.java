@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import java.util.UUID;
 
 public class PacketHandler {
-	private static final PenguinNetwork INSTANCE = new PenguinNetwork(ProgressionInfo.MODID);
+    private static final PenguinNetwork INSTANCE = new PenguinNetwork(ProgressionInfo.MODID);
     public static void registerPacket(Class clazz) {
         registerPacket(clazz, Side.CLIENT);
         registerPacket(clazz, Side.SERVER);
@@ -42,10 +42,10 @@ public class PacketHandler {
     }
 
     public static void sendToClient(IMessage packet, UUID uuid) {
-    	EntityPlayerMP player = (EntityPlayerMP) PlayerHelper.getPlayerFromUUID(uuid);
-		if (player != null) {
-			sendToClient(packet, player);
-		}
+        EntityPlayerMP player = (EntityPlayerMP) PlayerHelper.getPlayerFromUUID(uuid);
+        if (player != null) {
+            sendToClient(packet, player);
+        }
     }
 
     public static void sendToTeam(IMessage packet, PlayerTeam team) {
