@@ -37,7 +37,7 @@ public class ActionTabList extends AbstractAction {
             int index = 0;
             for (ITab tab: APIHandler.getCache(true).getSortedTabs()) {
                 FeatureTab feature = new FeatureTab(tab);
-                page.addFeature(feature, 26, 23 + (30 * index), 150, 18, true, false);
+                page.addFeature(feature, 26, 23 + (20 * index), 150, 18, true, false);
                 index++;
             }
 
@@ -50,7 +50,7 @@ public class ActionTabList extends AbstractAction {
         if (page != null) {
             FeaturePreviewWindow preview = new FeaturePreviewWindow(2);
             page.addFeature(preview, 16, 18, 189, 183, true, false);
-            IButtonActionProvider button = EnchiridionAPI.editor.getJumpPageButton(1);
+            IButtonActionProvider button = EnchiridionAPI.editor.getJumpPageButton(0);
             button.getAction().setResourceLocation(true, new ELocation("arrow_left_on")).setResourceLocation(false, new ELocation("arrow_left_off"));
             page.addFeature(button, 21, 200, 18, 10, true, false);
         }
