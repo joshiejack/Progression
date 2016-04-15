@@ -509,6 +509,9 @@ public class CriteriaMappings {
     }
 
     public void remap() {
+        //Fix the completed
+        completedCritera.remove(null); //Remove any nulls
+
         if (Options.debugMode) Progression.logger.log(Level.INFO, "Progression began remapping for the uuid: " + uuid);
         Set<ICriteria> availableCriteria = new HashSet(); //Recreate the available mappings
         activeTriggers = HashMultimap.create(); //Recreate the trigger mappings

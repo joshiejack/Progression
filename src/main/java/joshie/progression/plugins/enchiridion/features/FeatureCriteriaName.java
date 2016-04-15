@@ -22,16 +22,16 @@ import static joshie.progression.gui.editors.TreeEditorElement.getModeForCriteri
 import static net.minecraft.util.EnumChatFormatting.GOLD;
 
 
-public class FeatureCriteria extends FeatureProgression implements ISimpleEditorFieldProvider {
+public class FeatureCriteriaName extends FeatureResizeable implements ISimpleEditorFieldProvider {
     protected transient ICriteria criteria;
     protected transient UUID uuid = UUID.randomUUID();
     protected transient boolean isInit = false;
     public String display = "New Criteria";
     public boolean background = true;
 
-    public FeatureCriteria() {}
+    public FeatureCriteriaName() {}
 
-    public FeatureCriteria(ICriteria criteria, boolean background) {
+    public FeatureCriteriaName(ICriteria criteria, boolean background) {
         this.criteria = criteria;
         if (criteria != null) {
             uuid = criteria.getUniqueID();
@@ -42,8 +42,8 @@ public class FeatureCriteria extends FeatureProgression implements ISimpleEditor
     }
 
     @Override
-    public FeatureCriteria copy() {
-        return new FeatureCriteria(criteria, background);
+    public FeatureCriteriaName copy() {
+        return new FeatureCriteriaName(criteria, background);
     }
 
     @Override
@@ -70,10 +70,10 @@ public class FeatureCriteria extends FeatureProgression implements ISimpleEditor
         }
     }
 
-    public FeatureCriteria getFeatureFromCriteria(ICriteria criteria) {
+    public FeatureCriteriaName getFeatureFromCriteria(ICriteria criteria) {
         for (IFeatureProvider feature: position.getPage().getFeatures()) {
-            if (feature.getFeature() instanceof FeatureCriteria) {
-                FeatureCriteria fC = ((FeatureCriteria)feature.getFeature());
+            if (feature.getFeature() instanceof FeatureCriteriaName) {
+                FeatureCriteriaName fC = ((FeatureCriteriaName)feature.getFeature());
                 if (fC.criteria != null) {
                     if (fC.criteria.getUniqueID().equals(criteria.getUniqueID())) return fC;
                 }
@@ -103,18 +103,18 @@ public class FeatureCriteria extends FeatureProgression implements ISimpleEditor
             //Large EnchiridionAPI.draw.drawImage(unlocked, position.getLeft() - 6, position.getTop() - 6 , position.getLeft() + 22, position.getTop() + 22);
             List<ICriteria> prereqs = criteria.getPreReqs();
             for (ICriteria c : prereqs) {
-                FeatureCriteria connected = getFeatureFromCriteria(c);
+                FeatureCriteriaName connected = getFeatureFromCriteria(c);
                 if (connected != null) {
                     int y1 = connected.position.getTop();
                     int y2 = position.getTop();
                     int x1 = connected.position.getLeft();
                     int x2 = position.getLeft();
 
-                    EnchiridionAPI.draw.drawLine(x1 + 8, 8 + y1, 8 + x2, 8 + y2, 2, 0xFF404040);
+                    EnchiridionAPI.draw.drawLine(x1 + 8, 8 + y1 - 1, 8 + x2, 8 + y2 - 1, 2, 0xFF404040);
                 }
             }
 
-            if (background) EnchiridionAPI.draw.drawImage(location, position.getLeft() - 2, position.getTop() - 3, position.getLeft() + 18, position.getTop() + 19);
+            EnchiridionAPI.draw.drawImage(location, position.getLeft() - 2, position.getTop() - 3, position.getLeft() + 18, position.getTop() + 19);
             EnchiridionAPI.draw.drawStack(criteria.getIcon(), position.getLeft(), position.getTop(), 1F);
         }
     }
@@ -122,7 +122,7 @@ public class FeatureCriteria extends FeatureProgression implements ISimpleEditor
     @Override
     public void performClick(int mouseX, int mouseY) {
         if (criteria != null) {
-            int number = criteria.getUniqueID().hashCode();
+            int number = (criteria.getUniqueID().hashCode() / 100) + 50;
             IPage page = EnchiridionAPI.book.getPageIfNotExists(number);
             if (page != null) {
                 IButtonActionProvider button = EnchiridionAPI.editor.getJumpPageButton(EnchiridionAPI.book.getPage().getPageNumber());
@@ -168,7 +168,6 @@ public class FeatureCriteria extends FeatureProgression implements ISimpleEditor
 
     @Override
     public boolean getAndSetEditMode() {
-        onFieldsSet(""); //When we reopen, reload the data
         EnchiridionAPI.editor.setSimpleEditorFeature(this);
         return true;
     }

@@ -10,6 +10,7 @@ import joshie.enchiridion.util.ELocation;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.ITab;
+import joshie.progression.gui.editors.GuiTreeEditor;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.JSONHelper;
 import joshie.progression.helpers.PlayerHelper;
@@ -104,22 +105,33 @@ public class FeatureTab extends FeatureProgression {
         EnchiridionAPI.draw.drawSplitScaledString(getCompletionAmount() + "% Completed", position.getLeft() + 13, position.getTop() + 10, 100, 0xFF404040, 0.75F);
     }
 
+    public static void addCriteriaToPage(IPage page, ICriteria criteria) {
+        FeatureCriteria feature = new FeatureCriteria(criteria, true);
+        page.addFeature(feature, new Random().nextInt(400), new Random().nextInt(200), 16, 16, false, false);
+        // ^ Put the stuff in a random position :D
+    }
+
     @Override
     public void performClick(int mouseX, int mouseY) {
         if (tab != null) {
             if (mouseX >= position.getLeft() && mouseX <= position.getRight()) {
                 if (mouseY >= position.getTop() && mouseY <= position.getTop() + 8) {
-                    int number = 10 + getTabNumber();
+                    int number = tab.getUniqueID().hashCode();
                     IPage page = EnchiridionAPI.book.getPageIfNotExists(number);
                     if (page != null) {
+                        //Add the back button
                         IButtonActionProvider button = EnchiridionAPI.editor.getJumpPageButton(EnchiridionAPI.book.getPage().getPageNumber());
                         button.getAction().setResourceLocation(true, new ELocation("arrow_left_on")).setResourceLocation(false, new ELocation("arrow_left_off"));
                         page.addFeature(button, 21, 200, 18, 10, true, false);
+
+                        //Add the criteria
                         for (ICriteria c: tab.getCriteria()) {
-                            FeatureCriteria criteria = new FeatureCriteria(c, true);
-                            page.addFeature(criteria, new Random().nextInt(400), new Random().nextInt(200), 16, 16, false, false);
-                            // ^ Put the stuff in a random position :D
+                            addCriteriaToPage(page, c);
                         }
+
+                        //Add the autoupdater
+                        FeatureTabUpdater updater = new FeatureTabUpdater(tab.getUniqueID());
+                        page.addFeature(updater, -250, -250, 1, 1, true, false);
                     }
 
                     EnchiridionAPI.book.jumpToPageIfExists(number);
@@ -135,7 +147,7 @@ public class FeatureTab extends FeatureProgression {
             onFieldsSet("");
         }
 
-        if (tab != null) {
+        if (tab != null && GuiTreeEditor.isTabVisible(tab)) {
             drawFeature(mouseX, mouseY);
         }
     }
