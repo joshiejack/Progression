@@ -2,18 +2,20 @@ package joshie.progression.plugins.enchiridion.features;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.google.gson.JsonObject;
 import joshie.enchiridion.api.EnchiridionAPI;
 import joshie.enchiridion.api.book.IButtonActionProvider;
+import joshie.enchiridion.api.book.IFeatureProvider;
 import joshie.enchiridion.api.book.IPage;
+import joshie.enchiridion.gui.book.features.FeatureButton;
+import joshie.enchiridion.gui.book.features.FeaturePreviewWindow;
 import joshie.enchiridion.util.ELocation;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.ITab;
 import joshie.progression.gui.editors.GuiTreeEditor;
 import joshie.progression.handlers.APIHandler;
-import joshie.progression.helpers.JSONHelper;
 import joshie.progression.helpers.PlayerHelper;
+import joshie.progression.plugins.enchiridion.actions.ActionJumpTab;
 
 import java.util.Random;
 import java.util.Set;
@@ -22,12 +24,10 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 
-public class FeatureTab extends FeatureProgression {
+public class FeatureTab extends FeatureTabGeneric {
     private static final Cache<UUID, Integer> numberCache = CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.MINUTES).build();
-    protected transient ITab tab;
-    protected transient UUID uuid = UUID.randomUUID();
-    protected transient boolean isInit = false;
-    public String display = "New Criteria";
+    protected transient boolean isSelected = false;
+    public int pageNumber = 0;
 
     public FeatureTab() {}
 
@@ -36,29 +36,13 @@ public class FeatureTab extends FeatureProgression {
         if (tab != null) {
             uuid = tab.getUniqueID();
             display = tab.getLocalisedName();
+            pageNumber = uuid.hashCode();
         }
     }
 
     @Override
     public FeatureTab copy() {
         return new FeatureTab(tab);
-    }
-
-    @Override
-    public void onFieldsSet(String field) {
-        super.onFieldsSet(field);
-
-        if (field.equals("")) {
-            tab = APIHandler.getCache(true).getTabs().get(uuid);
-            if (tab != null) display = tab.getLocalisedName();
-        } else if (field.equals("display")) {
-            for (ITab t : APIHandler.getCache(true).getTabs().values()) {
-                if (t.getLocalisedName().equals(display)) {
-                    tab = t;
-                    uuid = t.getUniqueID();
-                }
-            }
-        }
     }
 
     public int getTabNumber() {
@@ -92,19 +76,6 @@ public class FeatureTab extends FeatureProgression {
         return (tasksdone * 100) / totaltasks;
     }
 
-    public void drawFeature(int mouseX, int mouseY) {
-        int color = 0xFF404040;
-        if (mouseX >= position.getLeft() && mouseX <= position.getRight()) {
-            if (mouseY>= position.getTop() && mouseY <= position.getTop() + 8) {
-                color = 0xFFAAAAAA;
-            }
-        }
-
-        EnchiridionAPI.draw.drawSplitScaledString(getTabNumber() + ".", position.getLeft(), position.getTop(), 200, color, 1F);
-        EnchiridionAPI.draw.drawSplitScaledString(tab.getLocalisedName(), position.getLeft() + 18, position.getTop(), 200, color, 1F);
-        EnchiridionAPI.draw.drawSplitScaledString(getCompletionAmount() + "% Completed", position.getLeft() + 13, position.getTop() + 10, 100, 0xFF404040, 0.75F);
-    }
-
     public static void addCriteriaToPage(IPage page, ICriteria criteria) {
         FeatureCriteria feature = new FeatureCriteria(criteria, true);
         page.addFeature(feature, new Random().nextInt(400), new Random().nextInt(200), 16, 16, false, false);
@@ -115,9 +86,8 @@ public class FeatureTab extends FeatureProgression {
     public void performClick(int mouseX, int mouseY) {
         if (tab != null) {
             if (mouseX >= position.getLeft() && mouseX <= position.getRight()) {
-                if (mouseY >= position.getTop() && mouseY <= position.getTop() + 8) {
-                    int number = tab.getUniqueID().hashCode();
-                    IPage page = EnchiridionAPI.book.getPageIfNotExists(number);
+                if (mouseY >= position.getTop() && mouseY <= position.getBottom()) {
+                    IPage page = EnchiridionAPI.book.getPageIfNotExists(pageNumber);
                     if (page != null) {
                         //Add the back button
                         IButtonActionProvider button = EnchiridionAPI.editor.getJumpPageButton(EnchiridionAPI.book.getPage().getPageNumber());
@@ -134,35 +104,56 @@ public class FeatureTab extends FeatureProgression {
                         page.addFeature(updater, -250, -250, 1, 1, true, false);
                     }
 
-                    EnchiridionAPI.book.jumpToPageIfExists(number);
+                    for (IFeatureProvider feature: EnchiridionAPI.book.getPage().getFeatures()) {
+                        if (feature.getFeature() instanceof FeaturePreviewWindow) {
+                            FeaturePreviewWindow window = ((FeaturePreviewWindow)feature.getFeature());
+                            if (window.pageNumber > 10 || window.pageNumber < 0) {
+                                window.pageNumber = pageNumber + 1; //Update the preview text to the description
+                                window.update(feature);
+                            }
+                        } else if (feature.getFeature() instanceof FeatureTabInfo) {
+                            ((FeatureTabInfo)feature.getFeature()).tab = tab; //Change the tab being displayed to this one
+                        } else if (feature.getFeature() instanceof FeatureButton) {
+                            FeatureButton button = (FeatureButton)(feature.getFeature());
+                            if (button.action instanceof ActionJumpTab) {
+                                button.action.setTooltip("Open " + tab.getLocalisedName());
+                                ((ActionJumpTab) button.action).tempPage = pageNumber;
+                            }
+                        }
+                    }
+
+                    for (IFeatureProvider feature: position.getPage().getFeatures()) {
+                        if (feature.getFeature() instanceof FeatureTab) {
+                            ((FeatureTab)feature.getFeature()).isSelected = false;
+                        }
+                    }
+
+                    isSelected = true;
+                    //EnchiridionAPI.book.jumpToPageIfExists(number);
                 }
             }
         }
     }
 
     @Override
-    public void draw(int mouseX, int mouseY) {
-        if (!isInit) {
-            isInit = true;
-            onFieldsSet("");
+    public void drawFeature(int mouseX, int mouseY) {
+        int color = 0xFF404040;
+        if (mouseX >= position.getLeft() && mouseX <= position.getRight()) {
+            if (mouseY>= position.getTop() && mouseY <= position.getBottom()) {
+                color = 0xFFAAAAAA;
+            }
         }
 
-        if (tab != null && GuiTreeEditor.isTabVisible(tab)) {
-            drawFeature(mouseX, mouseY);
-        }
-    }
+        if (isSelected) color = 0xFF7C7C7C;
 
-    @Override
-    public void readFromJson(JsonObject object) {
-        try {
-            uuid = UUID.fromString(JSONHelper.getString(object, "uuid", "d977334a-a7e9-5e43-b87e-91df8eebfdff"));
-        } catch (Exception e){}
-    }
-
-    @Override
-    public void writeToJson(JsonObject object) {
-        if (uuid != null) {
-            JSONHelper.setString(object, "uuid", uuid.toString(), "d977334a-a7e9-5e43-b87e-91df8eebfdff");
+        String completion = getCompletionAmount() + "% Completed";
+        if (!GuiTreeEditor.isTabVisible(tab)) {
+            completion = "Invisible";
+            color = 0xFFCCCCCC;
         }
+
+        EnchiridionAPI.draw.drawSplitScaledString(getTabNumber() + ".", position.getLeft(), position.getTop(), 200, color, 1F);
+        EnchiridionAPI.draw.drawSplitScaledString(tab.getLocalisedName(), position.getLeft() + 12, position.getTop(), 200, color, 1F);
+        EnchiridionAPI.draw.drawSplitScaledString(completion, position.getLeft() + 9, position.getTop() + 10, 100, color, 0.75F);
     }
 }

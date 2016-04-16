@@ -15,6 +15,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class EnchiridionSupport {
     private static final Class[] classes = new Class[] { FeaturePoints.class, FeatureRewards.class, FeatureTasks.class, FeatureCriteria.class , FeatureTab.class};
+    public static final ResourceLocation TRANSPARENT = new ResourceLocation("progression:textures/books/transparent.png");
 
     public static void init() {
         EnchiridionAPI.instance.registerButtonAction(new ActionCompleteCriteria());
@@ -27,7 +28,7 @@ public class EnchiridionSupport {
         Page page = new Page(0);
         //Add the button
         FeatureButton button = new FeatureButton(new ActionTabList());
-        button.getAction().setResourceLocation(true, new ResourceLocation("progression:textures/books/transparent.png")).setResourceLocation(false, new ResourceLocation("progression:textures/books/transparent.png"));
+        button.getAction().setResourceLocation(true, TRANSPARENT).setResourceLocation(false, TRANSPARENT);
         button.getAction().setText(true, "[color=gray]Click here to start").setText(false, "Click here to start");
         button.size = 0.79999995F;
         page.addFeature(button, 63, 191, 91, 9, true, false);
