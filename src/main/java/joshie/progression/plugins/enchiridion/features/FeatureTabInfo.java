@@ -6,13 +6,19 @@ import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.ITab;
 import joshie.progression.gui.editors.TreeEditorElement;
 import joshie.progression.helpers.PlayerHelper;
+import net.minecraft.util.StatCollector;
 
 import java.util.Set;
 
-import static net.minecraft.util.EnumChatFormatting.*;
-
 
 public class FeatureTabInfo extends FeatureTabGeneric {
+    public boolean total = true;
+    public String totalText = "%s criteria total";
+    public boolean completed = true;
+    public String completedText = "[color=green]%s criteria completed";
+    public boolean ready = true;
+    public String readyText = "[color=blue]%s criteria ready for completion";
+
     public FeatureTabInfo() {}
 
     public FeatureTabInfo(ITab tab) {
@@ -25,11 +31,7 @@ public class FeatureTabInfo extends FeatureTabGeneric {
     }
 
     public String getTotalCriteria() {
-        return tab.getCriteria().size() + " criteria total";
-    }
-
-    public String getUnlockedCriteria() {
-        return AQUA + "";
+        return StatCollector.translateToLocalFormatted(totalText, tab.getCriteria().size());
     }
 
     public String getCompletedCriteria() {
@@ -42,7 +44,7 @@ public class FeatureTabInfo extends FeatureTabGeneric {
             }
         }
 
-        return DARK_GREEN + "" + tasksdone + " criteria completed";
+        return StatCollector.translateToLocalFormatted(completedText, tasksdone);
     }
 
     public String getCriteriaAvailable() {
@@ -54,13 +56,22 @@ public class FeatureTabInfo extends FeatureTabGeneric {
             }
         }
 
-        return BLUE + "" + taskssone + " criteria ready for completion";
+        return StatCollector.translateToLocalFormatted(readyText, taskssone);
     }
 
     @Override
     public void drawFeature(int mouseX, int mouseY) {
-        EnchiridionAPI.draw.drawSplitScaledString(getTotalCriteria(), position.getLeft(), position.getTop(), 200, 0xFF404040, 1F);
-        EnchiridionAPI.draw.drawSplitScaledString(getCompletedCriteria(), position.getLeft(), position.getTop() + 8, 200, 0xFF404040, 1F);
-        EnchiridionAPI.draw.drawSplitScaledString(getCriteriaAvailable(), position.getLeft(), position.getTop() + 16, 200, 0xFF404040, 1F);
+        int yOffset = 0;
+        if (total) {
+            EnchiridionAPI.draw.drawSplitScaledString(getTotalCriteria(), position.getLeft(), position.getTop(), 200, 0xFF404040, 1F);
+            yOffset += 8;
+        }
+
+        if (completed) {
+            EnchiridionAPI.draw.drawSplitScaledString(getCompletedCriteria(), position.getLeft(), position.getTop() + yOffset, 200, 0xFF404040, 1F);
+            yOffset += 8;
+        }
+
+        if (ready) EnchiridionAPI.draw.drawSplitScaledString(getCriteriaAvailable(), position.getLeft(), position.getTop() + yOffset, 200, 0xFF404040, 1F);
     }
 }
