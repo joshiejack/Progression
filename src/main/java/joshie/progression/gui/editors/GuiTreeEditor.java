@@ -200,7 +200,7 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
         }
 
         if (toRemove != null) {
-            APIHandler.removeCriteria(toRemove.getUniqueID(), false, true);
+            APIHandler.removeCriteria(toRemove.getUniqueID(), false);
         }
 
         if (key == Keyboard.KEY_UP) {

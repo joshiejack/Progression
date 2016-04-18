@@ -3,64 +3,44 @@ package joshie.progression.player.nbt;
 import com.google.common.collect.Multimap;
 import joshie.progression.api.criteria.IRewardProvider;
 import joshie.progression.handlers.APIHandler;
-import joshie.progression.helpers.NBTHelper.IMapHelper;
+import joshie.progression.helpers.NBTHelper.IMultimapHelper;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
-public class UnclaimedNBT implements IMapHelper<UUID, Set<IRewardProvider>> {
+public class UnclaimedNBT implements IMultimapHelper<UUID, IRewardProvider> {
     public static final UnclaimedNBT INSTANCE = new UnclaimedNBT();
 
-    public Multimap map;
+    public Multimap<UUID, IRewardProvider> map;
 
-    public IMapHelper setMap(Multimap map) {
+    public IMultimapHelper setMap(Multimap map) {
         this.map = map;
         return this;
     }
 
     @Override
-    public Map<UUID, Set<IRewardProvider>> getMap() {
-        return map.asMap();
+    public Multimap<UUID, IRewardProvider> getMap() {
+        return map;
     }
 
     @Override
     public UUID readKey(NBTTagCompound tag) {
-        return UUID.fromString(tag.getString("UUID"));
+        return UUID.fromString(tag.getString("PlayerUUID"));
     }
 
     @Override
     public void writeKey(NBTTagCompound tag, UUID uuid) {
-        tag.setString("UUID", uuid.toString());
+        tag.setString("PlayerUUID", uuid.toString());
     }
 
     @Override
-    public Set<IRewardProvider> readValue(NBTTagCompound tag) {
-        NBTTagList list = tag.getTagList("RewardList", 8);
-        Set<IRewardProvider> rewards = new HashSet();
-        for (int i = 0; i < list.tagCount(); i++) {
-            String s = list.getStringTagAt(i);
-            UUID uuid = UUID.fromString(s);
-            IRewardProvider reward = APIHandler.getCache(false).getRewardFromUUID(uuid);
-            rewards.add(reward);
-        }
-
-
-        return rewards;
+    public IRewardProvider readValue(NBTTagCompound tag) {
+        UUID uuid = UUID.fromString(tag.getString("RewardUUID"));
+        return APIHandler.getCache(false).getRewardFromUUID(uuid);
     }
 
     @Override
-    public void writeValue(NBTTagCompound tag, Set<IRewardProvider> rewards) {
-        NBTTagList list = new NBTTagList();
-        for (IRewardProvider reward: rewards) {
-            NBTTagString string = new NBTTagString(reward.getUniqueID().toString());
-            list.appendTag(string);
-        }
-
-        tag.setTag("RewardList", list);
+    public void writeValue(NBTTagCompound tag, IRewardProvider rewards) {
+        tag.setString("RewardUUID", rewards.getUniqueID().toString());
     }
 }

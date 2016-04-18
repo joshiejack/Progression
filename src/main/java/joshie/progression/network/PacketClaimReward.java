@@ -35,7 +35,7 @@ public class PacketClaimReward extends PenguinPacket {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        criteria = APIHandler.getCache(false).getCriteria().get(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
+        criteria = APIHandler.getServerCache().getCriteria(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
         rewardId = buf.readInt();
         randomReward = buf.readBoolean();
     }

@@ -39,7 +39,7 @@ public class FeatureTabUpdater extends FeatureProgression implements ISimpleEdit
         for (IFeatureProvider feature: position.getPage().getFeatures()) {
             if (feature.getFeature() instanceof FeatureCriteria) {
                 FeatureCriteria c = ((FeatureCriteria) feature.getFeature());
-                if (c.criteria != null && criteria.getUniqueID().equals(c.criteria.getUniqueID())) {
+                if (c.uuid != null && criteria.getUniqueID().equals(c.uuid)) {
                     return true;
                 }
             }
@@ -48,9 +48,9 @@ public class FeatureTabUpdater extends FeatureProgression implements ISimpleEdit
         return false;
     }
 
-    private boolean tabContainsCriteria(ITab tab, ICriteria criteria) {
+    private boolean tabContainsCriteria(ITab tab, UUID uuid) {
         for (ICriteria c: tab.getCriteria()) {
-            if (c.getUniqueID().equals(criteria.getUniqueID())) return true;
+            if (c.getUniqueID().equals(uuid)) return true;
         }
 
         return false;
@@ -73,7 +73,7 @@ public class FeatureTabUpdater extends FeatureProgression implements ISimpleEdit
             for (IFeatureProvider feature: position.getPage().getFeatures()) {
                 if (feature.getFeature() instanceof FeatureCriteria) {
                     FeatureCriteria c = ((FeatureCriteria) feature.getFeature());
-                    if (c.criteria == null || !tabContainsCriteria(tab, c.criteria)) {
+                    if (c.getCriteria() == null || !tabContainsCriteria(tab, c.uuid)) {
                         list.add(feature);
                     }
                 }

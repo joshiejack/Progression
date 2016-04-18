@@ -14,6 +14,8 @@ import net.minecraft.item.ItemStack;
 import java.util.List;
 
 public class FeatureTasks extends FeatureCriteria implements ISimpleEditorFieldProvider {
+    public boolean text = true;
+
     public FeatureTasks() {}
 
     public FeatureTasks(ICriteria criteria, boolean background) {
@@ -22,12 +24,13 @@ public class FeatureTasks extends FeatureCriteria implements ISimpleEditorFieldP
 
     @Override
     public FeatureTasks copy() {
-        return new FeatureTasks(criteria, background);
+        return new FeatureTasks(getCriteria(), background);
     }
 
     @Override
     public void update(IFeatureProvider position) {
         super.update(position);
+        ICriteria criteria = getCriteria();
         if (criteria != null) {
             int size = criteria.getTriggers().size();
             for (ITriggerProvider trigger: criteria.getTriggers()) {
@@ -35,65 +38,75 @@ public class FeatureTasks extends FeatureCriteria implements ISimpleEditorFieldP
             }
 
             position.setWidth((size * 17D) + ((size - 1) * 3D));
+            double height = 28D;
+            position.setHeight(height);
+        } else {
+            double width = position.getWidth();
+            position.setHeight(17D);
         }
-
-        double width = position.getWidth();
-        position.setHeight(17D);
     }
 
     @Override
-    public void drawFeature(int mouseX, int mouseY) {
+    public void drawFeature(ICriteria criteria, int mouseX, int mouseY) {
         int x = 0;
+        int offsetY = 10;
         for (ITriggerProvider trigger : criteria.getTriggers()) {
             if (trigger.getIcon() == null) continue;
             ItemStack stack = trigger.getIcon().copy();
             int color = trigger.getConditions().size() > 0 ? trigger.getColor() : 0xFFD0BD92;
-            if (background) EnchiridionAPI.draw.drawBorderedRectangle(position.getLeft() + x, position.getTop(), position.getLeft() + x + 16, position.getTop() + 16, 0xFFD0BD92, color);
-            EnchiridionAPI.draw.drawStack(stack, position.getLeft() + x, position.getTop(), 1F);
+            if (background) EnchiridionAPI.draw.drawBorderedRectangle(position.getLeft() + x, position.getTop() + offsetY, position.getLeft() + x + 16, position.getTop() + 16 + offsetY, 0xFFD0BD92, color);
+            EnchiridionAPI.draw.drawStack(stack, position.getLeft() + x, position.getTop() + offsetY, 1F);
             x += 20;
 
             for (IConditionProvider condition : trigger.getConditions()) {
                 stack = condition.getIcon().copy();
-                if (background) EnchiridionAPI.draw.drawBorderedRectangle(position.getLeft() + x, position.getTop(), position.getLeft() + x + 16, position.getTop() + 16, 0xFFD0BD92, condition.getColor());
-                EnchiridionAPI.draw.drawStack(stack, position.getLeft() + x, position.getTop(), 1F);
+                if (background) EnchiridionAPI.draw.drawBorderedRectangle(position.getLeft() + x, position.getTop() + offsetY, position.getLeft() + x + 16, position.getTop() + offsetY + 16, 0xFFD0BD92, condition.getColor());
+                EnchiridionAPI.draw.drawStack(stack, position.getLeft() + x, position.getTop() + offsetY, 1F);
                 x += 20;
             }
+        }
+
+        if (criteria.getTriggers().size() != 0) {
+            if (text) EnchiridionAPI.draw.drawSplitScaledString("Tasks", position.getLeft() - 2, position.getTop(), 200, 0x555555, 1F);
         }
     }
 
     @Override
-    public void addFeatureTooltip(List<String> tooltip, int mouseX, int mouseY) {
+    public void addFeatureTooltip(ICriteria criteria, List<String> tooltip, int mouseX, int mouseY) {
         int x = 0;
         int offsetMouseX = mouseX - position.getLeft();
         int offsetMouseY = mouseY - position.getTop();
+        int offsetY = 10;
         for (ITriggerProvider trigger : criteria.getTriggers()) {
-            if (offsetMouseX >= x && offsetMouseX <= x + 17) {
-                ItemStack stack = trigger.getIcon();
-                tooltip.addAll(stack.getTooltip(MCClientHelper.getPlayer(), false));
-                tooltip.add("---");
-                if (trigger.getProvided() instanceof ICustomTooltip) ((ICustomTooltip)trigger.getProvided()).addTooltip(tooltip);
-                else{
-                    for (String s : SplitHelper.splitTooltip(trigger.getDescription(), 32)) {
-                        tooltip.add(s);
-                    }
-                }
-            }
-
-            x += 20;
-            for (IConditionProvider condition: trigger.getConditions()) {
+            if(offsetMouseY >= 0 + offsetY && offsetMouseY <= 0 + offsetY + 16) {
                 if (offsetMouseX >= x && offsetMouseX <= x + 17) {
-                    ItemStack stack = condition.getIcon();
+                    ItemStack stack = trigger.getIcon();
                     tooltip.addAll(stack.getTooltip(MCClientHelper.getPlayer(), false));
                     tooltip.add("---");
-                    if (condition.getProvided() instanceof ICustomTooltip) ((ICustomTooltip)condition.getProvided()).addTooltip(tooltip);
+                    if (trigger.getProvided() instanceof ICustomTooltip) ((ICustomTooltip)trigger.getProvided()).addTooltip(tooltip);
                     else{
-                        for (String s : SplitHelper.splitTooltip(condition.getDescription(), 32)) {
+                        for (String s : SplitHelper.splitTooltip(trigger.getDescription(), 32)) {
                             tooltip.add(s);
                         }
                     }
                 }
 
                 x += 20;
+                for (IConditionProvider condition: trigger.getConditions()) {
+                    if (offsetMouseX >= x && offsetMouseX <= x + 17) {
+                        ItemStack stack = condition.getIcon();
+                        tooltip.addAll(stack.getTooltip(MCClientHelper.getPlayer(), false));
+                        tooltip.add("---");
+                        if (condition.getProvided() instanceof ICustomTooltip) ((ICustomTooltip)condition.getProvided()).addTooltip(tooltip);
+                        else{
+                            for (String s : SplitHelper.splitTooltip(condition.getDescription(), 32)) {
+                                tooltip.add(s);
+                            }
+                        }
+                    }
+
+                    x += 20;
+                }
             }
         }
     }

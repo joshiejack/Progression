@@ -43,7 +43,7 @@ public class RemappingHandler {
         JSONLoader.loadJSON(false, settings); //This fills out all the data once again
 
         //Now that mappings have been synced to the client reload the unlocks list
-        Collection<ICriteria> allCriteria = APIHandler.getCache(isClient).getCriteria().values();
+        Collection<ICriteria> allCriteria = APIHandler.getCache(isClient).getCriteriaSet();
         for (ICriteria criteria : allCriteria) { //Remap criteria to unlocks
             //We do not give a damn about whether this is available or not
             //The unlocking of criteria should happen no matter what

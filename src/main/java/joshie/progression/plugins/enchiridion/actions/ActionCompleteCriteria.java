@@ -19,7 +19,7 @@ public class ActionCompleteCriteria extends AbstractActionCriteria implements IB
 
     @Override
     public IButtonAction copy() {
-        return copyAbstract(new ActionCompleteCriteria(criteria, mustBeCompleted));
+        return copyAbstract(new ActionCompleteCriteria(getCriteria(), mustBeCompleted));
     }
 
     @Override
@@ -28,9 +28,12 @@ public class ActionCompleteCriteria extends AbstractActionCriteria implements IB
     }
 
     @Override
-    public void performAction() {
-        if (criteria != null) {
-            ProgressionAPI.registry.fireTriggerClientside("forced-complete", criteria);
+    public boolean performAction() {
+        if (getCriteria() != null) {
+            ProgressionAPI.registry.fireTriggerClientside("forced-complete", getCriteria());
+            return true;
         }
+
+        return false;
     }
 }

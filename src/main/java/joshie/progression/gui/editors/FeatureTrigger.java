@@ -4,6 +4,10 @@ import joshie.progression.Progression;
 import joshie.progression.api.criteria.IConditionProvider;
 import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.ITriggerProvider;
+import joshie.progression.handlers.APIHandler;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static joshie.progression.api.special.DisplayMode.DISPLAY;
 import static joshie.progression.api.special.DisplayMode.EDIT;
@@ -15,7 +19,12 @@ public class FeatureTrigger extends FeatureDrawable<ITriggerProvider> {
     }
 
     public FeatureTrigger setCriteria(ICriteria criteria) {
-        setDrawable(criteria.getTriggers());
+        List<ITriggerProvider> list = new ArrayList<ITriggerProvider>();
+        for (ITriggerProvider trigger: criteria.getTriggers()) {
+            list.add(APIHandler.getCache(true).getTriggerFromUUID(trigger.getUniqueID()));
+        }
+
+        setDrawable(list);
         return this;
     }
 

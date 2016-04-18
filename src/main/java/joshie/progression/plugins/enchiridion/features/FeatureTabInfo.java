@@ -27,14 +27,14 @@ public class FeatureTabInfo extends FeatureTabGeneric {
 
     @Override
     public FeatureTabInfo copy() {
-        return new FeatureTabInfo(tab);
+        return new FeatureTabInfo(getTab());
     }
 
-    public String getTotalCriteria() {
+    public String getTotalCriteria(ITab tab) {
         return StatCollector.translateToLocalFormatted(totalText, tab.getCriteria().size());
     }
 
-    public String getCompletedCriteria() {
+    public String getCompletedCriteria(ITab tab) {
         int tasksdone = 0;
         if (tab.getCriteria().size() > 0) {
             Set<ICriteria> completed = ProgressionAPI.player.getCompletedCriteriaList(PlayerHelper.getClientUUID(), true);
@@ -47,7 +47,7 @@ public class FeatureTabInfo extends FeatureTabGeneric {
         return StatCollector.translateToLocalFormatted(completedText, tasksdone);
     }
 
-    public String getCriteriaAvailable() {
+    public String getCriteriaAvailable(ITab tab) {
         Set<ICriteria> completed = ProgressionAPI.player.getCompletedCriteriaList(PlayerHelper.getClientUUID(), true);
         int taskssone = 0;
         if (tab.getCriteria().size() > 0) {
@@ -61,17 +61,21 @@ public class FeatureTabInfo extends FeatureTabGeneric {
 
     @Override
     public void drawFeature(int mouseX, int mouseY) {
-        int yOffset = 0;
-        if (total) {
-            EnchiridionAPI.draw.drawSplitScaledString(getTotalCriteria(), position.getLeft(), position.getTop(), 200, 0xFF404040, 1F);
-            yOffset += 8;
-        }
+        ITab tab = getTab();
+        if (tab != null) {
+            int yOffset = 0;
+            if (total) {
+                EnchiridionAPI.draw.drawSplitScaledString(getTotalCriteria(tab), position.getLeft(), position.getTop(), 200, 0xFF404040, 1F);
+                yOffset += 8;
+            }
 
-        if (completed) {
-            EnchiridionAPI.draw.drawSplitScaledString(getCompletedCriteria(), position.getLeft(), position.getTop() + yOffset, 200, 0xFF404040, 1F);
-            yOffset += 8;
-        }
+            if (completed) {
+                EnchiridionAPI.draw.drawSplitScaledString(getCompletedCriteria(tab), position.getLeft(), position.getTop() + yOffset, 200, 0xFF404040, 1F);
+                yOffset += 8;
+            }
 
-        if (ready) EnchiridionAPI.draw.drawSplitScaledString(getCriteriaAvailable(), position.getLeft(), position.getTop() + yOffset, 200, 0xFF404040, 1F);
+            if (ready)
+                EnchiridionAPI.draw.drawSplitScaledString(getCriteriaAvailable(tab), position.getLeft(), position.getTop() + yOffset, 200, 0xFF404040, 1F);
+        }
     }
 }

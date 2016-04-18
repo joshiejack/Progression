@@ -31,7 +31,7 @@ public class PacketSyncImpossible extends PenguinPacket {
         int size = buf.readInt();
         criteria = new ICriteria[size];
         for (int i = 0; i < size; i++) {
-            criteria[i] = APIHandler.getCache(true).getCriteria().get(UUID.fromString(readGzipString(buf)));
+            criteria[i] = APIHandler.getClientCache().getCriteria(UUID.fromString(readGzipString(buf)));
         }
     }
 

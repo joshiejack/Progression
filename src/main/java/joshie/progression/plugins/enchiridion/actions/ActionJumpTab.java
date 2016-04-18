@@ -26,7 +26,7 @@ public class ActionJumpTab extends ActionJumpPage {
     }
 
     @Override
-    public void performAction() {
+    public boolean performAction() {
         if(bookID != null) {
             IBook book = EnchiridionAPI.instance.getBook(bookID);
             if(book != null) {
@@ -34,6 +34,6 @@ public class ActionJumpTab extends ActionJumpPage {
             }
         }
 
-        EnchiridionAPI.book.jumpToPageIfExists(tempPage);
+        return EnchiridionAPI.book.jumpToPageIfExists(tempPage);
     }
 }

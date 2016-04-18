@@ -58,11 +58,13 @@ public class GuiCriteriaEditor extends GuiBaseEditorRule<ICriteria> implements I
 
     @Override
     public void initData() {
-        criteria = APIHandler.getCache(true).getCriteria().get(criteria.getUniqueID()); //Reload the criteria from the cache
         if (criteria == null) {
             CORE.setEditor(TREE_EDITOR);
             return;
         }
+
+        //Reload the criteria from the cache
+        criteria = APIHandler.getClientCache().getCriteria(criteria.getUniqueID());
 
         //Setup the features
         TRIGGERS.setCriteria(criteria);

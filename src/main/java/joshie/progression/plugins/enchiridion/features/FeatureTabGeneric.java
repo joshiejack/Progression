@@ -7,9 +7,10 @@ import joshie.progression.helpers.JSONHelper;
 
 import java.util.UUID;
 
+import static joshie.progression.ItemProgression.tab;
+
 
 public abstract class FeatureTabGeneric extends FeatureProgression {
-    protected transient ITab tab;
     protected transient UUID uuid = UUID.randomUUID();
     protected transient boolean isInit = false;
     public String display = "New Criteria";
@@ -17,11 +18,14 @@ public abstract class FeatureTabGeneric extends FeatureProgression {
     public FeatureTabGeneric() {}
 
     public FeatureTabGeneric(ITab tab) {
-        this.tab = tab;
         if (tab != null) {
             uuid = tab.getUniqueID();
             display = tab.getLocalisedName();
         }
+    }
+
+    public ITab getTab() {
+        return APIHandler.getCache(true).getTabs().get(uuid);
     }
 
     @Override
@@ -29,12 +33,11 @@ public abstract class FeatureTabGeneric extends FeatureProgression {
         super.onFieldsSet(field);
 
         if (field.equals("")) {
-            tab = APIHandler.getCache(true).getTabs().get(uuid);
+            ITab tab = getTab();
             if (tab != null) display = tab.getLocalisedName();
         } else if (field.equals("display")) {
             for (ITab t : APIHandler.getCache(true).getTabs().values()) {
                 if (t.getLocalisedName().equals(display)) {
-                    tab = t;
                     uuid = t.getUniqueID();
                 }
             }

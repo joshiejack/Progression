@@ -24,7 +24,7 @@ public class ActionClaimReward extends AbstractActionCriteria implements IButton
 
     @Override
     public IButtonAction copy() {
-        return copyAbstract(new ActionClaimReward(criteria, randomReward, rewardPosition));
+        return copyAbstract(new ActionClaimReward(getCriteria(), randomReward, rewardPosition));
     }
 
     @Override
@@ -33,10 +33,14 @@ public class ActionClaimReward extends AbstractActionCriteria implements IButton
     }
 
     @Override
-    public void performAction() {
+    public boolean performAction() {
+        ICriteria criteria = getCriteria();
         if (criteria != null) {
             PacketHandler.sendToServer(new PacketClaimReward(criteria, rewardPosition - 1, randomReward));
+            return true;
         }
+
+        return false;
     }
 
     @Override

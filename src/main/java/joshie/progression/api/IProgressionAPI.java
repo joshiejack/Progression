@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
 import java.util.UUID;
 
-/** The registry is where you register new types of rewards, triggers and
+/** The registry is where you addCriteria new types of rewards, triggers and
  *  conditions, and the criteria. All triggers and rewards should be registered before any criteria, and conditions before triggers */
 public interface IProgressionAPI {
     /** Fires all triggers, of the type specified, Triggers should only be fired

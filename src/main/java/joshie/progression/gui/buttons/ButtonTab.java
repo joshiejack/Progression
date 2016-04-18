@@ -126,7 +126,7 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
                 TREE_EDITOR.lastClicked = null;
                 TREE_EDITOR.currentTab = newTab;
                 for (ICriteria c : tab.getCriteria()) {
-                    APIHandler.removeCriteria(c.getUniqueID(), true, true);
+                    APIHandler.removeCriteria(c.getUniqueID(), true);
                 }
 
                 APIHandler.getCache(true).getTabs().remove(tab.getUniqueID()); //Reopen after removing

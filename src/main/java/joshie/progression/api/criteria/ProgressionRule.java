@@ -1,7 +1,7 @@
 package joshie.progression.api.criteria;
 
 public @interface ProgressionRule {
-    /** The name to register this rule as, must be unique **/
+    /** The name to addCriteria this rule as, must be unique **/
     public String name();
 
     /** The colour to use for this rule **/

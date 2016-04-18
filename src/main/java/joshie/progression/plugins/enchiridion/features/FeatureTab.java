@@ -32,7 +32,6 @@ public class FeatureTab extends FeatureTabGeneric {
     public FeatureTab() {}
 
     public FeatureTab(ITab tab) {
-        this.tab = tab;
         if (tab != null) {
             uuid = tab.getUniqueID();
             display = tab.getLocalisedName();
@@ -42,10 +41,10 @@ public class FeatureTab extends FeatureTabGeneric {
 
     @Override
     public FeatureTab copy() {
-        return new FeatureTab(tab);
+        return new FeatureTab(getTab());
     }
 
-    public int getTabNumber() {
+    public int getTabNumber(final ITab tab) {
         try {
             return numberCache.get(tab.getUniqueID(), new Callable<Integer>() {
                 @Override
@@ -63,7 +62,7 @@ public class FeatureTab extends FeatureTabGeneric {
         } catch (Exception e) { return 0; }
     }
 
-    public int getCompletionAmount() {
+    public int getCompletionAmount(ITab tab) {
         int totaltasks = tab.getCriteria().size();
         if (totaltasks == 0) return 100;
         Set<ICriteria> completed = ProgressionAPI.player.getCompletedCriteriaList(PlayerHelper.getClientUUID(), true);
@@ -83,7 +82,8 @@ public class FeatureTab extends FeatureTabGeneric {
     }
 
     @Override
-    public void performClick(int mouseX, int mouseY) {
+    public boolean performClick(int mouseX, int mouseY, int mouseButton) {
+        ITab tab = getTab();
         if (tab != null) {
             if (mouseX >= position.getLeft() && mouseX <= position.getRight()) {
                 if (mouseY >= position.getTop() && mouseY <= position.getBottom()) {
@@ -91,7 +91,7 @@ public class FeatureTab extends FeatureTabGeneric {
                     if (page != null) {
                         //Add the back button
                         IButtonActionProvider button = EnchiridionAPI.editor.getJumpPageButton(EnchiridionAPI.book.getPage().getPageNumber());
-                        button.getAction().setResourceLocation(true, new ELocation("arrow_left_on")).setResourceLocation(false, new ELocation("arrow_left_off"));
+                        button.setResourceLocation(true, new ELocation("arrow_left_on")).setResourceLocation(false, new ELocation("arrow_left_off"));
                         page.addFeature(button, 21, 200, 18, 10, true, false);
 
                         //Add the criteria
@@ -112,12 +112,12 @@ public class FeatureTab extends FeatureTabGeneric {
                                 window.update(feature);
                             }
                         } else if (feature.getFeature() instanceof FeatureTabInfo) {
-                            ((FeatureTabInfo)feature.getFeature()).tab = tab; //Change the tab being displayed to this one
+                            ((FeatureTabInfo)feature.getFeature()).uuid = tab.getUniqueID(); //Change the tab being displayed to this one
                         } else if (feature.getFeature() instanceof FeatureButton) {
                             FeatureButton button = (FeatureButton)(feature.getFeature());
-                            if (button.action instanceof ActionJumpTab) {
-                                button.action.setTooltip("Open " + tab.getLocalisedName());
-                                ((ActionJumpTab) button.action).tempPage = pageNumber;
+                            if (button.getAction() instanceof ActionJumpTab) {
+                                button.setTooltip("Open " + tab.getLocalisedName());
+                                ((ActionJumpTab) button.getAction()).tempPage = pageNumber;
                             }
                         }
                     }
@@ -129,10 +129,12 @@ public class FeatureTab extends FeatureTabGeneric {
                     }
 
                     isSelected = true;
-                    //EnchiridionAPI.book.jumpToPageIfExists(number);
+                    return true;
                 }
             }
         }
+
+        return false;
     }
 
     @Override
@@ -146,13 +148,14 @@ public class FeatureTab extends FeatureTabGeneric {
 
         if (isSelected) color = 0xFF7C7C7C;
 
-        String completion = getCompletionAmount() + "% Completed";
+        ITab tab = getTab();
+        String completion = getCompletionAmount(tab) + "% Completed";
         if (!GuiTreeEditor.isTabVisible(tab)) {
             completion = "Invisible";
             color = 0xFFCCCCCC;
         }
 
-        EnchiridionAPI.draw.drawSplitScaledString(getTabNumber() + ".", position.getLeft(), position.getTop(), 200, color, 1F);
+        EnchiridionAPI.draw.drawSplitScaledString(getTabNumber(tab) + ".", position.getLeft(), position.getTop(), 200, color, 1F);
         EnchiridionAPI.draw.drawSplitScaledString(tab.getLocalisedName(), position.getLeft() + 12, position.getTop(), 200, color, 1F);
         EnchiridionAPI.draw.drawSplitScaledString(completion, position.getLeft() + 9, position.getTop() + 10, 100, color, 0.75F);
     }

@@ -24,7 +24,7 @@ public class RewardCriteria extends RewardBaseSingular implements IInit, ICustom
     @Override
     public void init(boolean isClient) {
         try {
-            for (ICriteria c : APIHandler.getCache(isClient).getCriteria().values()) {
+            for (ICriteria c : APIHandler.getCache(isClient).getCriteriaSet()) {
                 if (c.getLocalisedName().equals(displayName)) {
                     criteria = c;
                     break;

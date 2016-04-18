@@ -81,7 +81,7 @@ public class ItemProgression extends Item {
         if (stack.getItemDamage() != ItemMeta.criteria.ordinal()) return null;
         String uuid = stack.getTagCompound().getString("Criteria");
         if (uuid.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
-            return APIHandler.getCache(isClient).getCriteria().get(UUID.fromString(uuid));
+            return APIHandler.getCache(isClient).getCriteria(UUID.fromString(uuid));
         } else return null;
     }
 
@@ -188,7 +188,7 @@ public class ItemProgression extends Item {
         list.add(new ItemStack(item, 1, ItemMeta.edit.ordinal()));
         list.add(new ItemStack(item, 1, ItemMeta.claim.ordinal()));
 
-        for (ICriteria c : APIHandler.getCache(true).getCriteria().values()) {
+        for (ICriteria c : APIHandler.getCache(true).getCriteriaSet()) {
             ItemStack stack = new ItemStack(item);
             stack.setTagCompound(new NBTTagCompound());
             stack.getTagCompound().setString("Criteria", c.getUniqueID().toString());

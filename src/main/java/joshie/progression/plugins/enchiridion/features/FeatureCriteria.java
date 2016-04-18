@@ -23,7 +23,6 @@ import static net.minecraft.util.EnumChatFormatting.GOLD;
 
 
 public class FeatureCriteria extends FeatureProgression implements ISimpleEditorFieldProvider {
-    protected transient ICriteria criteria;
     protected transient UUID uuid = UUID.randomUUID();
     protected transient boolean isInit = false;
     public String display = "New Criteria";
@@ -32,18 +31,21 @@ public class FeatureCriteria extends FeatureProgression implements ISimpleEditor
     public FeatureCriteria() {}
 
     public FeatureCriteria(ICriteria criteria, boolean background) {
-        this.criteria = criteria;
         if (criteria != null) {
             uuid = criteria.getUniqueID();
-            display = criteria.getLocalisedName();
+            display = getCriteria().getLocalisedName();
         }
 
         this.background = background;
     }
 
+    public ICriteria getCriteria() {
+        return APIHandler.getClientCache().getCriteria(uuid);
+    }
+
     @Override
     public FeatureCriteria copy() {
-        return new FeatureCriteria(criteria, background);
+        return new FeatureCriteria(getCriteria(), background);
     }
 
     @Override
@@ -58,12 +60,10 @@ public class FeatureCriteria extends FeatureProgression implements ISimpleEditor
         super.onFieldsSet(field);
 
         if (field.equals("")) {
-            criteria = APIHandler.getCache(true).getCriteria().get(uuid);
-            if (criteria != null) display = criteria.getLocalisedName();
+            if (getCriteria() != null) display = getCriteria().getLocalisedName();
         } else if (field.equals("display")) {
-            for (ICriteria c : APIHandler.getCache(true).getCriteria().values()) {
+            for (ICriteria c : APIHandler.getClientCache().getCriteriaSet()) {
                 if (c.getLocalisedName().equals(display)) {
-                    criteria = c;
                     uuid = c.getUniqueID();
                 }
             }
@@ -74,8 +74,8 @@ public class FeatureCriteria extends FeatureProgression implements ISimpleEditor
         for (IFeatureProvider feature: position.getPage().getFeatures()) {
             if (feature.getFeature() instanceof FeatureCriteria) {
                 FeatureCriteria fC = ((FeatureCriteria)feature.getFeature());
-                if (fC.criteria != null) {
-                    if (fC.criteria.getUniqueID().equals(criteria.getUniqueID())) return fC;
+                if (fC.uuid != null) {
+                    if (fC.uuid.equals(criteria.getUniqueID())) return fC;
                 }
             }
         }
@@ -89,7 +89,7 @@ public class FeatureCriteria extends FeatureProgression implements ISimpleEditor
     private static final ResourceLocation error = new ResourceLocation(ProgressionInfo.BOOKPATH + "hexerror.png");
 
     private ResourceLocation getResource() {
-        switch (getModeForCriteria(criteria, false)) {
+        switch (getModeForCriteria(getCriteria(), false)) {
             case DEFAULT: return locked;
             case COMPLETED: return completed;
             case AVAILABLE: return unlocked;
@@ -97,7 +97,7 @@ public class FeatureCriteria extends FeatureProgression implements ISimpleEditor
         }
     }
    
-    public void drawFeature(int mouseX, int mouseY) {
+    public void drawFeature(ICriteria criteria, int mouseX, int mouseY) {
         ResourceLocation location = getResource();
         if (location != null) {
             //Large EnchiridionAPI.draw.drawImage(unlocked, position.getLeft() - 6, position.getTop() - 6 , position.getLeft() + 22, position.getTop() + 22);
@@ -120,18 +120,21 @@ public class FeatureCriteria extends FeatureProgression implements ISimpleEditor
     }
 
     @Override
-    public void performClick(int mouseX, int mouseY) {
+    public boolean performClick(int mouseX, int mouseY, int mouseButton) {
+        ICriteria criteria = getCriteria();
         if (criteria != null) {
             int number = criteria.getUniqueID().hashCode();
             IPage page = EnchiridionAPI.book.getPageIfNotExists(number);
             if (page != null) {
                 IButtonActionProvider button = EnchiridionAPI.editor.getJumpPageButton(EnchiridionAPI.book.getPage().getPageNumber());
-                button.getAction().setResourceLocation(true, new ELocation("arrow_left_on")).setResourceLocation(false, new ELocation("arrow_left_off"));
+                button.setResourceLocation(true, new ELocation("arrow_left_on")).setResourceLocation(false, new ELocation("arrow_left_off"));
                 page.addFeature(button, 21, 200, 18, 10, true, false);
             }
 
-            EnchiridionAPI.book.jumpToPageIfExists(number);
+            return EnchiridionAPI.book.jumpToPageIfExists(number);
         }
+
+        return false;
     }
 
     @Override
@@ -141,19 +144,21 @@ public class FeatureCriteria extends FeatureProgression implements ISimpleEditor
             onFieldsSet("");
         }
 
+        ICriteria criteria = getCriteria();
         if (criteria != null) {
-            drawFeature(mouseX, mouseY);
+            drawFeature(criteria, mouseX, mouseY);
         }
     }
     
     @Override
     public void addTooltip(List<String> tooltip, int mouseX, int mouseY) {
+        ICriteria criteria = getCriteria();
         if (criteria != null) {
-            addFeatureTooltip(tooltip, mouseX, mouseY);
+            addFeatureTooltip(criteria, tooltip, mouseX, mouseY);
         }
     }
 
-    public void addFeatureTooltip(List<String> tooltip, int mouseX, int mouseY) {
+    public void addFeatureTooltip(ICriteria criteria, List<String> tooltip, int mouseX, int mouseY) {
         tooltip.add(GOLD + criteria.getLocalisedName());
 
         double completion = 0;

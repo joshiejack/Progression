@@ -7,6 +7,7 @@ import joshie.enchiridion.gui.book.features.FeatureButton;
 import joshie.enchiridion.gui.book.features.FeatureImage;
 import joshie.enchiridion.gui.book.features.FeaturePreviewWindow;
 import joshie.enchiridion.gui.book.features.FeatureText;
+import joshie.progression.plugins.enchiridion.actions.ActionClaimCriteria;
 import joshie.progression.plugins.enchiridion.actions.ActionClaimReward;
 import joshie.progression.plugins.enchiridion.actions.ActionCompleteCriteria;
 import joshie.progression.plugins.enchiridion.actions.ActionTabList;
@@ -18,6 +19,7 @@ public class EnchiridionSupport {
     public static final ResourceLocation TRANSPARENT = new ResourceLocation("progression:textures/books/transparent.png");
 
     public static void init() {
+        EnchiridionAPI.instance.registerButtonAction(new ActionClaimCriteria());
         EnchiridionAPI.instance.registerButtonAction(new ActionCompleteCriteria());
         EnchiridionAPI.instance.registerButtonAction(new ActionClaimReward());
         EnchiridionAPI.instance.registerButtonAction(new ActionTabList());
@@ -28,9 +30,9 @@ public class EnchiridionSupport {
         Page page = new Page(0);
         //Add the button
         FeatureButton button = new FeatureButton(new ActionTabList());
-        button.getAction().setResourceLocation(true, TRANSPARENT).setResourceLocation(false, TRANSPARENT);
-        button.getAction().setText(true, "[color=gray]Click here to start").setText(false, "Click here to start");
-        button.size = 0.79999995F;
+        button.setResourceLocation(true, TRANSPARENT).setResourceLocation(false, TRANSPARENT);
+        button.setText(true, "[color=gray]Click here to start").setText(false, "Click here to start");
+        button.setSize(0.79999995F);
         page.addFeature(button, 63, 191, 91, 9, true, false);
         //Add the logo
         FeatureImage image = new FeatureImage("progression:textures/books/logo.png");

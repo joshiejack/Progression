@@ -4,12 +4,15 @@ import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.IRewardProvider;
 import joshie.progression.api.criteria.ITriggerProvider;
 import joshie.progression.gui.core.GuiList;
+import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.CollectionHelper;
 import joshie.progression.network.PacketHandler;
 import joshie.progression.network.PacketSelectRewards;
 import joshie.progression.player.PlayerTracker;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import static joshie.progression.gui.core.GuiList.NEW_REWARD;
@@ -23,8 +26,29 @@ public class FeatureReward extends FeatureDrawable<IRewardProvider> {
     }
 
     public FeatureReward setCriteria(ICriteria criteria) {
-        selected = new LinkedHashSet(); //Reset the selected
-        setDrawable(criteria.getRewards());
+        if (selected == null) {
+            selected = new LinkedHashSet<IRewardProvider>();
+        } else {
+            if (selected.size() > 0) {
+                IRewardProvider first = null;
+                for (IRewardProvider reward: selected) {
+                    first = reward;
+                    break;
+                }
+
+                //If we are a different criteria, then reset everything
+                if (!first.getCriteria().getUniqueID().equals(criteria.getUniqueID())) {
+                    selected = new LinkedHashSet<IRewardProvider>();
+                }
+            }
+        }
+
+        List<IRewardProvider> list = new ArrayList<IRewardProvider>();
+        for (IRewardProvider reward: criteria.getRewards()) {
+            list.add(APIHandler.getCache(true).getRewardFromUUID(reward.getUniqueID()));
+        }
+
+        setDrawable(list);
         return this;
     }
 
@@ -59,28 +83,50 @@ public class FeatureReward extends FeatureDrawable<IRewardProvider> {
         if (!criteria.canRepeatInfinite() && PlayerTracker.getClientPlayer().getMappings().getCriteriaCount(criteria) >= criteria.getRepeatAmount()) return false;
 
         if (mouseOffsetX > 0 && mouseOffsetX < provider.getWidth(GuiList.MODE) && provider.mustClaim()) {
-            //Click processed as this item must be claimed, now we check the side of selected, vs other things
+            if (select(provider)) sendToServer();
+            return true;
+        }
+
+        return false;
+    }
+
+    public void sendToServer() {
+        PacketHandler.sendToServer(new PacketSelectRewards(selected));
+        selected = new LinkedHashSet<IRewardProvider>(); //Reset the hashset
+    }
+
+    public boolean isSelected(IRewardProvider provider) {
+        return selected == null? false: selected.contains(provider);
+    }
+
+    public boolean select(IRewardProvider provider) {
+        return select(provider, false);
+    }
+
+    public boolean select(IRewardProvider provider, boolean simulate) {
+        //Click processed as this item must be claimed, now we check the side of selected, vs other things
+        if (provider != null && !simulate) {
             if (selected.contains(provider)) {
                 CollectionHelper.remove(selected, provider);
-                return true;
+                return false;
             } //If we already had it, screw validation
+        }
 
-            int maximum = criteria.givesAllRewards() ? criteria.getRewards().size(): criteria.getAmountOfRewards();
-            int standard = 0;
-            for (IRewardProvider reward: criteria.getRewards()) {
-                if (!reward.mustClaim()) standard++;
-            }
+        int standard = 0;
+        ICriteria criteria = provider.getCriteria();
+        int maximum = criteria.givesAllRewards() ? criteria.getRewards().size() : criteria.getAmountOfRewards();
+        for (IRewardProvider reward : criteria.getRewards()) {
+            if (!reward.mustClaim()) standard++;
+        }
 
-            int current = selected.size() + standard;
-            if (current < maximum) {
-                selected.add(provider);
-                current++;
-            }
+        int current = selected.size() + standard;
+        if (current < maximum && !simulate) {
+            selected.add(provider);
+            current++;
+        }
 
-            if (current >= maximum) { //TODO: Automatic claiming, replace wth a button
-                PacketHandler.sendToServer(new PacketSelectRewards(selected));
-                selected = new LinkedHashSet(); //Reset the hashset
-            }
+        if (current >= maximum) { //TODO: Automatic claiming, replace wth a button
+            return true;
         }
 
         return false;

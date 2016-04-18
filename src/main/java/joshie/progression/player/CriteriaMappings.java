@@ -81,7 +81,7 @@ public class CriteriaMappings {
         NBTHelper.readTagCollection(nbt, "ClaimedRewards", RewardSet.INSTANCE.setCollection(claimedRewards));
         NBTHelper.readTagCollection(nbt, "ImpossibleCriteria", CriteriaSet.INSTANCE.setCollection(impossible));
         NBTHelper.readTagCollection(nbt, "CompletedTriggers", TriggerNBT.INSTANCE.setCollection(completedTriggers));
-        NBTHelper.readMap(nbt, "UnclaimedRewards", UnclaimedNBT.INSTANCE.setMap(unclaimedRewards));
+        NBTHelper.readMultimap(nbt, "UnclaimedRewards", UnclaimedNBT.INSTANCE.setMap(unclaimedRewards));
         NBTHelper.readMap(nbt, "CompletedCriteria", CriteriaNBT.INSTANCE.setMap(completedCritera));
         NBTHelper.readMap(nbt, "MemberRewardCounter", RewardCountNBT.INSTANCE.setMap(numberRewards));
         readTriggerData(nbt);
@@ -106,7 +106,7 @@ public class CriteriaMappings {
         NBTHelper.writeCollection(nbt, "ClaimedRewards", RewardSet.INSTANCE.setCollection(claimedRewards));
         NBTHelper.writeCollection(nbt, "ImpossibleCriteria", CriteriaSet.INSTANCE.setCollection(impossible));
         NBTHelper.writeCollection(nbt, "CompletedTriggers", TriggerNBT.INSTANCE.setCollection(completedTriggers));
-        NBTHelper.writeMap(nbt, "UnclaimedRewards", UnclaimedNBT.INSTANCE.setMap(unclaimedRewards));
+        NBTHelper.writeMultimap(nbt, "UnclaimedRewards", UnclaimedNBT.INSTANCE.setMap(unclaimedRewards));
         NBTHelper.writeMap(nbt, "CompletedCriteria", CriteriaNBT.INSTANCE.setMap(completedCritera));
         NBTHelper.writeMap(nbt, "MemberRewardCounter", RewardCountNBT.INSTANCE.setMap(numberRewards));
         writeTriggerData(nbt);
@@ -516,7 +516,7 @@ public class CriteriaMappings {
         Set<ICriteria> availableCriteria = new HashSet(); //Recreate the available mappings
         activeTriggers = HashMultimap.create(); //Recreate the trigger mappings
 
-        Collection<ICriteria> allCriteria = APIHandler.getCache(false).getCriteria().values();
+        Collection<ICriteria> allCriteria = APIHandler.getServerCache().getCriteriaSet();
         for (ICriteria criteria : allCriteria) {
             //If the criteria has been marked as impossible don't attach it to anything
             if (impossible.contains(criteria)) continue;

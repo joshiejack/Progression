@@ -9,33 +9,27 @@ import joshie.progression.helpers.JSONHelper;
 import java.util.UUID;
 
 public abstract class AbstractActionCriteria extends AbstractActionProgression {
-    protected transient ICriteria criteria;
-
     public AbstractActionCriteria() {}
     public AbstractActionCriteria(ICriteria criteria, String name) {
         super(name);
-        this.criteria = criteria;
         if (criteria != null) {
             uuid = criteria.getUniqueID();
             display = criteria.getLocalisedName();
         }
     }
 
-    public AbstractActionCriteria copyAbstract(AbstractActionCriteria action) {
-        super.copyAbstract(action);
-        action.criteria = criteria;
-        return this;
+    public ICriteria getCriteria() {
+        return APIHandler.getClientCache().getCriteria(uuid);
     }
 
     @Override
     public void onFieldsSet(String field) {
         if (field.equals("")) {
-            criteria = APIHandler.getCache(true).getCriteria().get(uuid);
+            ICriteria criteria = getCriteria();
             if (criteria != null) display = criteria.getLocalisedName();
         } else if (field.equals("display")) {
-            for (ICriteria c : APIHandler.getCache(true).getCriteria().values()) {
+            for (ICriteria c : APIHandler.getClientCache().getCriteriaSet()) {
                 if (c.getLocalisedName().equals(display)) {
-                    criteria = c;
                     uuid = c.getUniqueID();
                 }
             }

@@ -70,8 +70,16 @@ public class APIHandler implements IProgressionAPI {
         } else serverCache = new APICache();
     }
 
+    public static APICache getClientCache() {
+        return clientCache;
+    }
+
+    public static APICache getServerCache() {
+        return serverCache;
+    }
+
     public static APICache getCache(boolean isClient) {
-        return isClient ? clientCache : serverCache;
+        return isClient ? getClientCache() : getServerCache();
     }
 
     @Override
@@ -144,7 +152,7 @@ public class APIHandler implements IProgressionAPI {
     public static ICriteria newCriteria(ITab tab, UUID name, boolean isClient) {
         ICriteria theCriteria = new Criteria(tab, name);
         tab.getCriteria().add(theCriteria);
-        getCache(isClient).getCriteria().put(name, theCriteria);
+        getCache(isClient).addCriteria(theCriteria);
         return theCriteria;
     }
 
@@ -184,6 +192,8 @@ public class APIHandler implements IProgressionAPI {
             criteria.getTriggers().add(provider);
             EventsManager.onAdded(newTriggerType);
             if (newTriggerType instanceof IInit) ((IInit) newTriggerType).init(isClient);
+            //Register with the cache
+            getCache(isClient).addTrigger(provider);
             return provider;
         } catch (Exception e) { return null; }
     }
@@ -201,6 +211,8 @@ public class APIHandler implements IProgressionAPI {
             criteria.getRewards().add(provider);
             EventsManager.onAdded(newRewardType);
             if (newRewardType instanceof IInit) ((IInit) newRewardType).init(isClient);
+            //Register with the cache
+            getCache(isClient).addReward(provider);
         } catch (Exception e) {}
     }
 
@@ -258,8 +270,8 @@ public class APIHandler implements IProgressionAPI {
         return new ActionType(name.toUpperCase()); //WOOT!
     }
 
-    public static void removeCriteria(UUID uuid, boolean skipTab, boolean isClient) {
-        ICriteria c = getCache(isClient).getCriteria().get(uuid);
+    public static void removeCriteria(UUID uuid, boolean skipTab) {
+        ICriteria c = getClientCache().getCriteria(uuid);
         //Remove the criteria from the tab
         if (!skipTab) {
             Iterator<ICriteria> itC = c.getTab().getCriteria().iterator();
@@ -283,7 +295,7 @@ public class APIHandler implements IProgressionAPI {
         }
 
         //Remove this from all the requirement lists
-        for (ICriteria require : getCache(isClient).getCriteria().values()) {
+        for (ICriteria require : getClientCache().getCriteriaSet()) {
             Iterator<ICriteria> it = require.getPreReqs().iterator();
             while (it.hasNext()) {
                 ICriteria ct = it.next();
@@ -326,7 +338,7 @@ public class APIHandler implements IProgressionAPI {
         }
 
         //Remove it in general
-        getCache(isClient).getCriteria().remove(uuid);
+        getClientCache().removeCriteria(c);
     }
 
     @Override

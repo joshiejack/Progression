@@ -21,6 +21,6 @@ public class CriteriaSet extends AbstractUniqueNBT {
     @Override
     public Object read(NBTTagList list, int i) {
         NBTTagCompound tag = list.getCompoundTagAt(i);
-        return APIHandler.getCache(false).getCriteria().get(UUID.fromString(tag.getString("Criteria")));
+        return APIHandler.getServerCache().getCriteria(UUID.fromString(tag.getString("Criteria")));
     }
 }

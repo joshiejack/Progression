@@ -150,7 +150,7 @@ public class JSONLoader {
 
             /** Step 2 : Register all the conditions and triggers for this criteria **/
             for (DataCriteria criteria : data.criteria) {
-                ICriteria theCriteria = APIHandler.getCache(isClientside).getCriteria().get(criteria.uuid);
+                ICriteria theCriteria = APIHandler.getCache(isClientside).getCriteria(criteria.uuid);
                 if (theCriteria == null) {
                     throw new CriteriaNotFoundException(criteria.uuid);
                 }
@@ -176,7 +176,7 @@ public class JSONLoader {
 
             /** Step 3, nAdd the extra data **/
             for (DataCriteria criteria : data.criteria) {
-                ICriteria theCriteria = APIHandler.getCache(isClientside).getCriteria().get(criteria.uuid);
+                ICriteria theCriteria = APIHandler.getCache(isClientside).getCriteria(criteria.uuid);
                 if (theCriteria == null) {
                     Progression.logger.log(org.apache.logging.log4j.Level.WARN, "Criteria was not found, do not report this.");
                     throw new CriteriaNotFoundException(criteria.uuid);
@@ -186,14 +186,14 @@ public class JSONLoader {
                 if (criteria.prereqs != null) {
                     thePrereqs = new ICriteria[criteria.prereqs.length];
                     for (int i = 0; i < thePrereqs.length; i++)
-                        thePrereqs[i] = APIHandler.getCache(isClientside).getCriteria().get(criteria.prereqs[i]);
+                        thePrereqs[i] = APIHandler.getCache(isClientside).getCriteria(criteria.prereqs[i]);
                 }
 
                 ICriteria[] theConflicts = new ICriteria[0];
                 if (criteria.conflicts != null) {
                     theConflicts = new ICriteria[criteria.conflicts.length];
                     for (int i = 0; i < theConflicts.length; i++)
-                        theConflicts[i] = APIHandler.getCache(isClientside).getCriteria().get(criteria.conflicts[i]);
+                        theConflicts[i] = APIHandler.getCache(isClientside).getCriteria(criteria.conflicts[i]);
                 }
 
                 boolean allRequired = criteria.allTasks;

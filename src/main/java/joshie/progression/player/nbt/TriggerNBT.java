@@ -37,7 +37,7 @@ public class TriggerNBT implements ICollectionHelper<ITriggerProvider> {
     @Override
     public ITriggerProvider read(NBTTagList list, int i) {
         NBTTagCompound tag = list.getCompoundTagAt(i);
-        ICriteria criteria = APIHandler.getCache(false).getCriteria().get(UUID.fromString(tag.getString("Criteria")));
+        ICriteria criteria = APIHandler.getServerCache().getCriteria(UUID.fromString(tag.getString("Criteria")));
         if (criteria == null) return null;
         int value = tag.getInteger("Value");
         if (value < criteria.getTriggers().size()) {

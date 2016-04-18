@@ -17,6 +17,7 @@ import joshie.progression.plugins.enchiridion.features.FeatureTabListUpdater;
 import net.minecraft.util.ResourceLocation;
 
 import static joshie.progression.lib.ProgressionInfo.BOOKPATH;
+import static joshie.progression.plugins.enchiridion.EnchiridionSupport.TRANSPARENT;
 
 public class ActionTabList extends AbstractAction {
     public ActionTabList() {
@@ -34,7 +35,7 @@ public class ActionTabList extends AbstractAction {
     }
 
     @Override
-    public void performAction() {
+    public boolean performAction() {
         //Create page 3
         IPage page = EnchiridionAPI.book.getPageIfNotExists(2);
         if (page != null) {
@@ -79,12 +80,12 @@ public class ActionTabList extends AbstractAction {
                 page.addFeature(info, 230, 140, 171, 44, true, false);
 
                 //Jump to Next Page
-                IButtonActionProvider jump = new FeatureButton(new ActionJumpTab(first.hashCode() + 1));
-                jump.getAction().setResourceLocation(true, new ResourceLocation(BOOKPATH + "open_button_on.png")).setResourceLocation(false, new ResourceLocation(BOOKPATH + "open_button_off.png"));
-                jump.getAction().setTooltip("Open " + first.getLocalisedName());
-                jump.getAction().setText(true, "[color=gray]Open").setText(false, "Open");
-                jump.getAction().setTextOffsetX(true, 13).setTextOffsetX(false, 13);
-                jump.getAction().setTextOffsetY(true, 3).setTextOffsetY(false, 3);
+                IButtonActionProvider jump = new FeatureButton(new ActionJumpTab(first.hashCode()));
+                jump.setResourceLocation(true, new ResourceLocation(BOOKPATH + "open_button_on.png")).setResourceLocation(false, new ResourceLocation(BOOKPATH + "open_button_off.png"));
+                jump.setTooltip("Open " + first.getLocalisedName());
+                jump.setText(true, "[color=gray]Open").setText(false, "Open");
+                jump.setTextOffsetX(true, 13).setTextOffsetX(false, 13);
+                jump.setTextOffsetY(true, 3).setTextOffsetY(false, 3);
                 page.addFeature(jump, 313, 175, 50, 14, true, false);
             }
 
@@ -94,10 +95,15 @@ public class ActionTabList extends AbstractAction {
 
             //Return to homepage
             IButtonActionProvider button = EnchiridionAPI.editor.getJumpPageButton(0);
-            button.getAction().setResourceLocation(true, new ELocation("arrow_left_on")).setResourceLocation(false, new ELocation("arrow_left_off"));
+            button.setResourceLocation(true, new ELocation("arrow_left_on")).setResourceLocation(false, new ELocation("arrow_left_off"));
             page.addFeature(button, 21, 200, 18, 10, true, false);
+
+            //Return to homepage right click anywhere
+            IButtonActionProvider pageBack = EnchiridionAPI.editor.getJumpPageButton(0);
+            pageBack.setResourceLocation(true, TRANSPARENT).setResourceLocation(false, TRANSPARENT);
+            page.addFeature(pageBack, -10, -10, 450, 250, true, false);
         }
 
-        EnchiridionAPI.book.jumpToPageIfExists(1);
+        return EnchiridionAPI.book.jumpToPageIfExists(1);
     }
 }

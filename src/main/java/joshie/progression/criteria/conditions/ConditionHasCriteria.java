@@ -22,7 +22,7 @@ public class ConditionHasCriteria extends ConditionBase implements IInit, ICusto
     @Override
     public void init(boolean isClient) {
         try {
-            for (ICriteria c : APIHandler.getCache(isClient).getCriteria().values()) {
+            for (ICriteria c : APIHandler.getCache(isClient).getCriteriaSet()) {
                 String display = c.getLocalisedName();
                 if (c.getLocalisedName().equals(displayName)) {
                     criteria = c;
