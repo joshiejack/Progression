@@ -13,6 +13,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import static joshie.progression.api.special.DisplayMode.EDIT;
 import static joshie.progression.gui.core.GuiList.*;
 
 public class FeatureReward extends FeatureDrawable<IRewardProvider> {
@@ -68,6 +69,8 @@ public class FeatureReward extends FeatureDrawable<IRewardProvider> {
 
     @Override
     public boolean clickSpecial(IRewardProvider provider, int mouseOffsetX, int mouseOffsetY) {
+        if (MODE == EDIT) return false; //Don't you dare!
+
         if (mouseOffsetY < 2 || mouseOffsetY > 73) return false;
         for (ITriggerProvider trigger: provider.getCriteria().getTriggers()) {
             if (!trigger.getProvided().isCompleted()) return false;
@@ -76,7 +79,7 @@ public class FeatureReward extends FeatureDrawable<IRewardProvider> {
         ICriteria criteria = provider.getCriteria();
         if (!criteria.canRepeatInfinite() && PlayerTracker.getClientPlayer().getMappings().getCriteriaCount(criteria) >= criteria.getRepeatAmount()) return false;
 
-        if (mouseOffsetX > 0 && mouseOffsetX < provider.getWidth(GuiList.MODE) && provider.mustClaim()) {
+        if (mouseOffsetX > 0 && mouseOffsetX < provider.getWidth(MODE) && provider.mustClaim()) {
             if (select(provider)) sendToServer();
             return true;
         }

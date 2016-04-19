@@ -37,6 +37,7 @@ public class RewardClear extends RewardBaseItemFilter implements ICustomDisplayN
 
     @Override
     public ItemStack getIcon() {
+        super.getIcon(); //Update the preview
         return BROKEN;
     }
 
@@ -47,7 +48,7 @@ public class RewardClear extends RewardBaseItemFilter implements ICustomDisplayN
 
     @Override
     public void addTooltip(List list) {
-        list.add(EnumChatFormatting.WHITE + "Remove Item");
+        list.add(EnumChatFormatting.RED + "Remove Item");
         ItemStack stack = preview == null ? BROKEN : preview;
         list.add(stack.getDisplayName() + " x" + stack.stackSize);
     }

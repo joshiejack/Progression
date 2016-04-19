@@ -11,14 +11,12 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 @ProgressionRule(name="potionitem", color=0xFFFF73FF)
 public class FilterPotionItem extends FilterPotionBase implements IInit, ISpecialFieldProvider {
-    private static final List<PotionEffect> EMPTY = new ArrayList();
     public ItemStack stack = new ItemStack(Items.potionitem, 1, 16385); //Splash Potion of Regen, 33 seconds
     private Set<Integer> ids;
 
@@ -34,7 +32,7 @@ public class FilterPotionItem extends FilterPotionBase implements IInit, ISpecia
 
     @Override
     public boolean matches(PotionEffect effect) {
-        return (ids.contains(effect.getPotionID()));
+        return ids == null? false: (ids.contains(effect.getPotionID()));
     }
 
     @Override

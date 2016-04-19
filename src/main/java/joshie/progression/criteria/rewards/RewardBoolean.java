@@ -28,7 +28,7 @@ public class RewardBoolean extends RewardBaseSingular implements ICustomTooltip 
 
     @Override
     public void addTooltip(List list) {
-        String[] tooltip = display.split("/n");
+        String[] tooltip = display.split("\n");
         for (String string : tooltip) {
             list.add(EnumChatFormatting.WHITE + string);
         }

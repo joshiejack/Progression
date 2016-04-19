@@ -46,7 +46,7 @@ public abstract class FilterPotionBase extends FilterBase {
         if (object instanceof Collection) {
             return matches((Collection<PotionEffect>)object);
         } else if (object instanceof ItemStack && ((ItemStack)object).getItem() == Items.potionitem) {
-            matches(getEffects(((ItemStack)object).getItemDamage()));
+            return matches(getEffects(((ItemStack)object).getItemDamage()));
         } else if (object instanceof PotionEffect) {
             return matches(((PotionEffect)object));
         }
