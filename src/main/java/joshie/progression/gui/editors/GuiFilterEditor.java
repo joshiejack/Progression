@@ -45,7 +45,6 @@ public class GuiFilterEditor extends GuiBaseEditorRule<ItemFilterField> implemen
     public void initData() {
         //Setup the features
         FILTER_BG.setProvider(this);
-        FILTERS.setFilterField(field);
         PREVIEW.updateSearch();
     }
 

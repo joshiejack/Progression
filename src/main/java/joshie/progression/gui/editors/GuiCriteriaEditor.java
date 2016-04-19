@@ -12,6 +12,8 @@ import joshie.progression.gui.filters.FilterTypeItem;
 import joshie.progression.handlers.APIHandler;
 import net.minecraft.item.ItemStack;
 
+import java.util.UUID;
+
 import static joshie.progression.Progression.translate;
 import static joshie.progression.api.special.DisplayMode.DISPLAY;
 import static joshie.progression.api.special.DisplayMode.EDIT;
@@ -20,7 +22,8 @@ import static net.minecraft.util.EnumChatFormatting.BOLD;
 import static net.minecraft.util.EnumChatFormatting.ITALIC;
 
 public class GuiCriteriaEditor extends GuiBaseEditorRule<ICriteria> implements IBarProvider, IItemSelectable, IEditorMode {
-    private ICriteria criteria;
+    //The uuid of the criteria
+    private UUID uuid;
 
     //Fields
     private IField name;
@@ -43,12 +46,12 @@ public class GuiCriteriaEditor extends GuiBaseEditorRule<ICriteria> implements I
 
     @Override
     public ICriteria get() {
-        return this.criteria;
+        return APIHandler.getClientCache().getCriteria(uuid);
     }
 
     @Override
     public void set(ICriteria criteria) {
-        this.criteria = criteria;
+        this.uuid = criteria.getUniqueID();
     }
 
     @Override
@@ -58,17 +61,15 @@ public class GuiCriteriaEditor extends GuiBaseEditorRule<ICriteria> implements I
 
     @Override
     public void initData() {
+        ICriteria criteria = get();
         if (criteria == null) {
             CORE.setEditor(TREE_EDITOR);
             return;
         }
 
         //Reload the criteria from the cache
-        criteria = APIHandler.getClientCache().getCriteria(criteria.getUniqueID());
-
         //Setup the features
-        TRIGGERS.setCriteria(criteria);
-        REWARDS.setCriteria(criteria);
+        REWARDS.reset(criteria);
         CRITERIA_BG.setProvider(this);
 
         name = ProgressionAPI.fields.getText(criteria, "displayName");
@@ -119,7 +120,7 @@ public class GuiCriteriaEditor extends GuiBaseEditorRule<ICriteria> implements I
         return false;
     }
 
-    private void drawHeader(boolean overlay, int mouseX, int mouseY) {
+    private void drawHeader(ICriteria criteria, boolean overlay, int mouseX, int mouseY) {
         String displayName = MODE == EDIT ? translate("name.display") + ": " + name : name.toString();
         drawText(displayName, 21, 9, THEME.criteriaEditDisplayNameColor);
         drawStack(criteria.getIcon(), 1, 4, 1F);
@@ -164,7 +165,7 @@ public class GuiCriteriaEditor extends GuiBaseEditorRule<ICriteria> implements I
         return mouseX >= 140 && mouseX <= 240 && mouseY >= 123 && mouseY <= 133 ? rewards.click(button) : false;
     }
 
-    private void drawRewards(boolean overlay, int mouseX, int mouseY) {
+    private void drawRewards(ICriteria criteria, boolean overlay, int mouseX, int mouseY) {
         //Universal Mode
         if (MODE == EDIT) {
             drawText(translate("given") + ": " + rewards.getField(), 140, 124, THEME.criteriaEditDisplayNameColor);
@@ -196,10 +197,11 @@ public class GuiCriteriaEditor extends GuiBaseEditorRule<ICriteria> implements I
 
     @Override
     public void drawGuiForeground(boolean overlayvisible, int mouseX, int mouseY) {
+        ICriteria criteria = get();
         if (criteria == null) return; //Don't draw if no criteria!
-        drawHeader(overlayvisible, CORE.screenWidth - mouseX, mouseY);
+        drawHeader(criteria, overlayvisible, CORE.screenWidth - mouseX, mouseY);
         drawTriggers(overlayvisible, mouseX, mouseY);
-        drawRewards(overlayvisible, mouseX, mouseY);
+        drawRewards(criteria, overlayvisible, mouseX, mouseY);
     }
 
     @Override
@@ -213,7 +215,7 @@ public class GuiCriteriaEditor extends GuiBaseEditorRule<ICriteria> implements I
 
     @Override
     public void setObject(Object object) {
-        criteria.setIcon((ItemStack) object);
+        get().setIcon((ItemStack) object);
     }
 
     @Override

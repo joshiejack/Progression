@@ -27,6 +27,8 @@ import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
 import java.util.*;
 
+import static joshie.progression.gui.core.GuiList.CORE;
+
 public class APIHandler implements IProgressionAPI {
     //This is the registry for trigger type and reward type creation
     public static final HashMap<String, ITriggerProvider> triggerTypes = new HashMap();
@@ -232,18 +234,28 @@ public class APIHandler implements IProgressionAPI {
     public static void cloneTrigger(ICriteria criteria, ITriggerProvider dummy) {
         try {
             ITrigger newTriggerType = dummy.getProvided().getClass().newInstance();
-            criteria.getTriggers().add(new Trigger(criteria, UUID.randomUUID(), newTriggerType, dummy.getIcon(), dummy.getUnlocalisedName(), dummy.getColor(), dummy.isCancelable()));
+            ITriggerProvider clone = new Trigger(criteria, UUID.randomUUID(), newTriggerType, dummy.getIcon(), dummy.getUnlocalisedName(), dummy.getColor(), dummy.isCancelable());
+            criteria.getTriggers().add(clone);
             EventsManager.onAdded(newTriggerType);
             if (newTriggerType instanceof IInit) ((IInit) newTriggerType).init(true);
+
+            //Reinit the currently open gui
+            getClientCache().addTrigger(clone);
+            CORE.openGui.initData();
         } catch (Exception e) { e.printStackTrace(); }
     }
 
     public static void cloneReward(ICriteria criteria, IRewardProvider dummy) {
         try {
             IReward newRewardType = dummy.getProvided().getClass().newInstance();
-            criteria.getRewards().add(new Reward(criteria, UUID.randomUUID(), newRewardType, dummy.getIcon(), dummy.getUnlocalisedName(), dummy.getColor()));
+            IRewardProvider clone = new Reward(criteria, UUID.randomUUID(), newRewardType, dummy.getIcon(), dummy.getUnlocalisedName(), dummy.getColor());
+            criteria.getRewards().add(clone);
             EventsManager.onAdded(newRewardType);
             if (newRewardType instanceof IInit) ((IInit) newRewardType).init(true);
+
+            //Reinit the currently open gui
+            getClientCache().addReward(clone);
+            CORE.openGui.initData();
         } catch (Exception e) { e.printStackTrace(); }
     }
 
@@ -253,6 +265,9 @@ public class APIHandler implements IProgressionAPI {
             trigger.getConditions().add(new Condition(trigger, UUID.randomUUID(), newConditionType, dummy.getIcon(), dummy.getUnlocalisedName()));
             EventsManager.onAdded(newConditionType);
             if (newConditionType instanceof IInit) ((IInit) newConditionType).init(true);
+
+            //Reinit the currently open gui
+            CORE.openGui.initData();
         } catch (Exception e) { e.printStackTrace(); }
     }
 
@@ -262,6 +277,9 @@ public class APIHandler implements IProgressionAPI {
             field.add(new Filter(dummy.getMaster(), UUID.randomUUID(), newFilter, dummy.getUnlocalisedName(), dummy.getColor()));
             EventsManager.onAdded(newFilter);
             if (newFilter instanceof IInit) ((IInit) newFilter).init(true);
+
+            //Reinit the currently open gui
+            CORE.openGui.initData();
         } catch (Exception e) { e.printStackTrace(); }
     }
 

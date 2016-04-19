@@ -28,6 +28,7 @@ import static joshie.progression.api.special.DisplayMode.EDIT;
 import static joshie.progression.gui.core.GuiList.*;
 
 public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
+    private static final HashMap<ITab, Boolean> tabCache = new HashMap();
     private HashMap<ICriteria, TreeEditorElement> elements;
     public ICriteria selected = null;
     public ICriteria previous = null;
@@ -112,6 +113,7 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
             }
         }
 
+        tabCache.clear();
         currentTabID = currentTab.getUniqueID();
         rebuildCriteria();
     }
@@ -135,10 +137,14 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
         lastClicked = criteria;
     }
 
-    public static boolean isTabVisible(ITab tab) {
+    public static boolean isTabVisible(ITab tab) { //Use the cached value, which we update everytime this gui is reopened
+        if (tabCache.containsKey(tab)) return tabCache.get(tab);
+
+        boolean result = tab.isVisible();
         TabVisibleEvent event = new TabVisibleEvent(MCClientHelper.getPlayer(), tab.getUniqueID());
-        if (MinecraftForge.EVENT_BUS.post(event)) return false;
-        return tab.isVisible();
+        if (MinecraftForge.EVENT_BUS.post(event)) result = false;
+        tabCache.put(tab, result);
+        return result;
     }
     
     @Override

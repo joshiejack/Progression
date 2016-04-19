@@ -19,23 +19,10 @@ public class CollectionHelper {
         }
     }
 
-    public static void removeAndUpdate(List<IRuleProvider> drawable, IRuleProvider drawing) {
-        /*if (drawing instanceof IRewardProvider) {
-            EventsManager.onRemoved(drawing.getProvided());
-            CollectionHelper.remove(CRITERIA_EDITOR.getCriteria().getRewards(), drawing);
-        } else if (drawing instanceof ITriggerProvider) {
-            EventsManager.onRemoved(drawing.getProvided());
-            CollectionHelper.remove(CRITERIA_EDITOR.getCriteria().getTriggers(), drawing);
-        } else if (drawing instanceof IFilterProvider) {
-            EventsManager.onRemoved(drawing.getProvided());
-            FILTER_EDITOR.getField().remove((IFilterProvider) drawing);
-        } else if (drawing instanceof IConditionProvider) {
-            EventsManager.onRemoved(drawing.getProvided());
-            CollectionHelper.remove(CONDITION_EDITOR.getTrigger().getConditions(), drawing);
-        } */
-
+    public static boolean removeAndUpdate(List drawable, IRuleProvider drawing) {
         EventsManager.onRemoved(drawing.getProvided());
         CollectionHelper.remove(drawable, drawing);
+        return true;
     }
 
     public static void removeAll(Collection collection, List list) {

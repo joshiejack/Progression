@@ -125,16 +125,8 @@ public class FeatureRewards extends FeatureCriteria implements ISimpleEditorFiel
         } catch (Exception e) { return new ArrayList<IRewardProvider>(); }
     }
 
-    private int ticker;
-
     @Override
     public void drawFeature(ICriteria criteria, int mouseX, int mouseY) {
-        if (ticker %100 == 0) {
-            REWARDS.setCriteria(criteria);
-        }
-
-        ticker++;
-
         List<IRewardProvider> always = buildLists(criteria, true);
         List<IRewardProvider> claim = buildLists(criteria, false);
         int yOffsetClaimable = 0;

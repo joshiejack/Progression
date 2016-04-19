@@ -1,9 +1,7 @@
 package joshie.progression.crafting;
 
-import com.google.common.cache.CacheBuilder;
 import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.IFilterProvider;
-import joshie.progression.handlers.CraftingEvents;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,7 +15,6 @@ public class CraftingRegistry {
     private static volatile HashMap<ActionType, HashMap<IFilterProvider, ICriteria>> filterToCriteriaMapCrafting;
 
     public static void create() {
-        CraftingEvents.tooltipCache = CacheBuilder.newBuilder().maximumSize(128).build();
         filterToCriteriaMapCrafting = new HashMap();
         itemToFilterCache = new HashMap();
         actionCache = new HashMap();

@@ -21,6 +21,5 @@ public class FeatureNewTrigger extends FeatureNew<ITriggerProvider> {
     @Override
     public void clone(ITriggerProvider trigger) {
         APIHandler.cloneTrigger(CRITERIA_EDITOR.get(), trigger);
-        //GuiCriteriaEditor.GROUP_EDITOR.initGui()
     }
 }

@@ -1,5 +1,7 @@
 package joshie.progression;
 
+import gnu.trove.map.TIntObjectMap;
+import gnu.trove.map.hash.TIntObjectHashMap;
 import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.crafting.Crafter;
 import joshie.progression.crafting.CraftingRegistry;
@@ -31,8 +33,22 @@ import java.util.List;
 import java.util.UUID;
 
 public class ItemProgression extends Item {
+    private static TIntObjectMap<ItemMeta> map;
+
     public static ItemStack getStackFromMeta(ItemMeta meta) {
         return new ItemStack(Progression.item, 1, meta.ordinal());
+    }
+
+    public static ItemMeta getMetaFromStack(ItemStack stack) {
+        //If we haven't setup the data yet, let's do it now
+        if (map == null) {
+            map = new TIntObjectHashMap<ItemMeta>();
+            for (ItemMeta meta: ItemMeta.values()) {
+                map.put(meta.ordinal(), meta);
+            }
+        }
+
+        return map.get(Math.max(0, Math.min(map.size() - 1, stack.getItemDamage())));
     }
 
     public static enum ItemMeta {
@@ -41,6 +57,10 @@ public class ItemProgression extends Item {
         ifIsBiome, ifRandom, onChangeDimension, onLogin, onReceivedAchiement, onReceivedBoolean,
         onReceivedPoints, onSecond, onSentMessage, points, speed, showTab, showLayer, sun, moon, stepAssist,
         attackPlayer, onGUIChange;
+
+
+
+        private ItemMeta() {}
     }
 
     public static CreativeTabs tab;
@@ -90,7 +110,7 @@ public class ItemProgression extends Item {
         if (stack.getItemDamage() == ItemMeta.criteria.ordinal()) {
             ICriteria criteria = getCriteriaFromStack(stack, FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT);
             return criteria == null ? "BROKEN ITEM" : criteria.getLocalisedName();
-        } else return Progression.translate("item." + ItemMeta.values()[Math.min(ItemMeta.values().length - 1, stack.getItemDamage())].name());
+        } else return Progression.translate("item." + getMetaFromStack(stack).name());
     }
 
     @SideOnly(Side.CLIENT)

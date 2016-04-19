@@ -4,10 +4,12 @@ import joshie.progression.api.criteria.ITriggerProvider;
 import joshie.progression.gui.core.IBarProvider;
 import joshie.progression.handlers.APIHandler;
 
+import java.util.UUID;
+
 import static joshie.progression.gui.core.GuiList.*;
 
 public class GuiConditionEditor extends GuiBaseEditorRule<ITriggerProvider> implements IBarProvider {
-    private ITriggerProvider trigger;
+    private UUID uuid;
 
     public GuiConditionEditor() {
         features.add(BACKGROUND);
@@ -22,12 +24,12 @@ public class GuiConditionEditor extends GuiBaseEditorRule<ITriggerProvider> impl
 
     @Override
     public ITriggerProvider get() {
-        return this.trigger;
+        return APIHandler.getClientCache().getTriggerFromUUID(uuid);
     }
 
     @Override
     public void set(ITriggerProvider trigger) {
-        this.trigger = trigger;
+        this.uuid = trigger.getUniqueID();
     }
 
     @Override
@@ -37,15 +39,13 @@ public class GuiConditionEditor extends GuiBaseEditorRule<ITriggerProvider> impl
 
     @Override
     public void initData() {
-        trigger = APIHandler.getCache(true).getTriggerFromUUID(trigger.getUniqueID()); //Reload the trigger from the cache
-        if (trigger == null) {
+        if (get() == null) {
             CORE.setEditor(CRITERIA_EDITOR);
             return;
         }
 
         //Setup the features
         CONDITION_BG.setProvider(this);
-        CONDITIONS.setTrigger(trigger);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class GuiConditionEditor extends GuiBaseEditorRule<ITriggerProvider> impl
     public int getColorForBar(BarColorType type) {
         switch (type) {
             case BAR1_GRADIENT1:
-                return trigger.getColor();
+                return get().getColor();
             case BAR1_GRADIENT2:
                 return 0xFF000000;
             case BAR1_BORDER:

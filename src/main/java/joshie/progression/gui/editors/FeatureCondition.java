@@ -1,20 +1,19 @@
 package joshie.progression.gui.editors;
 
 import joshie.progression.api.criteria.IConditionProvider;
-import joshie.progression.api.criteria.ITriggerProvider;
 
-import static joshie.progression.gui.core.GuiList.NEW_CONDITION;
-import static joshie.progression.gui.core.GuiList.THEME;
+import java.util.List;
+
+import static joshie.progression.gui.core.GuiList.*;
 
 public class FeatureCondition extends FeatureDrawable<IConditionProvider> {
     public FeatureCondition() {
-        super("condition", 45, NEW_CONDITION, THEME.conditionGradient1, THEME.conditionGradient2, THEME.conditionFontColor, 0xFF000000);
+        super("condition", 45, NEW_CONDITION, THEME.conditionGradient1, THEME.conditionGradient2, THEME.conditionFontColor, 0xFFCCCCCC);
     }
 
-    public FeatureCondition setTrigger(ITriggerProvider trigger) {
-        color = trigger.getColor();
-        setDrawable(trigger.getConditions());
-        return this;
+    @Override
+    public List<IConditionProvider> getList() {
+        return CONDITION_EDITOR.get().getConditions();
     }
 
     @Override

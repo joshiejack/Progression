@@ -1,7 +1,5 @@
 package joshie.progression.handlers;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.HashMultimap;
 import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
@@ -27,7 +25,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 
 import java.util.Set;
-import java.util.concurrent.Callable;
 
 import static joshie.progression.gui.core.GuiList.CORE;
 import static joshie.progression.gui.core.GuiList.CRITERIA_EDITOR;
@@ -52,27 +49,19 @@ public class CraftingEvents {
         }
     }
 
-    public static Cache<ItemStack, HashMultimap<ActionType, ICriteria>> tooltipCache = CacheBuilder.newBuilder().maximumSize(128).build();
-
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onItemTooltipEvent(final ItemTooltipEvent event) {
         if (event.itemStack == null || event.itemStack.getItem() == null) return;
         try {
-            HashMultimap<ActionType, ICriteria> requirements = tooltipCache.get(event.itemStack, new Callable<HashMultimap<ActionType, ICriteria>>() {
-                @Override
-                public HashMultimap<ActionType, ICriteria> call() throws Exception {
-                    HashMultimap<ActionType, ICriteria> criteria = HashMultimap.create();
-                    for (ActionType type: ActionType.values()) {
-                        Set<ICriteria> required = CraftingRegistry.getRequirements(type, event.itemStack);
-                        if (required.size() == 0) continue;;
-                        Set<ICriteria> completed = ProgressionAPI.player.getCompletedCriteriaList(PlayerHelper.getClientUUID(), true);
-                        if (completed.contains(required)) continue; //Don't add this as a requirement if it's already completed
-                        criteria.get(type).addAll(required);
-                    }
-
-                    return criteria;
-                }
-            });
+            //No real way to cache correctly, without creating tons of objects
+            HashMultimap<ActionType, ICriteria> requirements = HashMultimap.create();
+            for (ActionType type: ActionType.values()) {
+                Set<ICriteria> required = CraftingRegistry.getRequirements(type, event.itemStack);
+                if (required.size() == 0) continue;;
+                Set<ICriteria> completed = ProgressionAPI.player.getCompletedCriteriaList(PlayerHelper.getClientUUID(), true);
+                if (completed.contains(required)) continue; //Don't add this as a requirement if it's already completed
+                requirements.get(type).addAll(required);
+            }
 
            //Option 1
             if (requirements.size() >= 1) {

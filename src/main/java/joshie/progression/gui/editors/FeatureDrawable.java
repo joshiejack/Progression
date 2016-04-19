@@ -1,10 +1,7 @@
 package joshie.progression.gui.editors;
 
 import joshie.progression.Progression;
-import joshie.progression.api.criteria.IField;
-import joshie.progression.api.criteria.IRewardProvider;
-import joshie.progression.api.criteria.IRuleProvider;
-import joshie.progression.api.criteria.ITriggerProvider;
+import joshie.progression.api.criteria.*;
 import joshie.progression.api.gui.ICustomDrawGuiDisplay;
 import joshie.progression.api.gui.ICustomDrawGuiEditor;
 import joshie.progression.api.gui.Position;
@@ -40,11 +37,9 @@ import static joshie.progression.api.special.DisplayMode.EDIT;
 import static joshie.progression.gui.core.GuiList.*;
 
 public abstract class FeatureDrawable<T extends IRuleProvider> extends FeatureAbstract {
-    protected int color;
-    private List<IRuleProvider> drawable;
-    private EnumMap<DisplayMode, HashMap<IRuleProvider, List<IField>>> displayMap;
+    private EnumMap<DisplayMode, HashMap<IRule, List<IField>>> displayMap;
     private IGuiFeature newDrawable;
-    private int gradient1, gradient2, fontColor;
+    private int gradient1, gradient2, fontColor, color;
     private int offsetY;
     private String text;
 
@@ -55,24 +50,21 @@ public abstract class FeatureDrawable<T extends IRuleProvider> extends FeatureAb
         this.gradient1 = gradient1;
         this.gradient2 = gradient2;
         this.fontColor = fontColor;
-        this.displayMap = new EnumMap<DisplayMode, HashMap<IRuleProvider, List<IField>>>(DisplayMode.class);
-        this.displayMap.put(DISPLAY, new HashMap<IRuleProvider, List<IField>>());
-        this.displayMap.put(EDIT, new HashMap<IRuleProvider, List<IField>>());
         this.color = color;
+        this.displayMap = new EnumMap<DisplayMode, HashMap<IRule, List<IField>>>(DisplayMode.class);
+        this.displayMap.put(DISPLAY, new HashMap<IRule, List<IField>>());
+        this.displayMap.put(EDIT, new HashMap<IRule, List<IField>>());
     }
 
-    protected FeatureDrawable setDrawable(List drawable) {
-        this.drawable = drawable;
-        return this;
-    }
+    protected abstract List<T> getList();
 
-    private HashMap<IRuleProvider, List<IField>> getFieldsMap() {
+    private HashMap<IRule, List<IField>> getFieldsMap() {
         return displayMap.get(MODE);
     }
 
     private List<IField> getFields(IRuleProvider provider) {
-        HashMap<IRuleProvider, List<IField>> fieldsMap = getFieldsMap();
-        if (fieldsMap.containsKey(provider)) return fieldsMap.get(provider);
+        HashMap<IRule, List<IField>> fieldsMap = getFieldsMap();
+        if (fieldsMap.containsKey(provider.getProvided())) return fieldsMap.get(provider.getProvided());
         else {
             List<IField> fields = new ArrayList();
             if (MODE == EDIT) {
@@ -80,13 +72,11 @@ public abstract class FeatureDrawable<T extends IRuleProvider> extends FeatureAb
                 addFieldsViaReflection(provider.getProvided(), fields);
             }
 
-            boolean hideitemfields = false;
             if (provider.getProvided() instanceof ISpecialFieldProvider) {
-                ISpecialFieldProvider special = (ISpecialFieldProvider) provider.getProvided();
-                special.addSpecialFields(fields, MODE);
+                ((ISpecialFieldProvider) provider.getProvided()).addSpecialFields(fields, MODE);
             }
 
-            fieldsMap.put(provider, fields);
+            fieldsMap.put(provider.getProvided(), fields);
             return fields;
         }
     }
@@ -166,9 +156,10 @@ public abstract class FeatureDrawable<T extends IRuleProvider> extends FeatureAb
     @Override
     public void drawFeature(int mouseX, int mouseY) {
         int offsetX = 0;
-        for (IRuleProvider drawing: drawable) {
+        for (IRuleProvider drawing: getList()) {
             int mouseOffsetX = mouseX - CORE.getOffsetX() - offsetX;
             int mouseOffsetY = mouseY - this.offsetY;
+
             if ((drawing.isVisible() && MODE == DISPLAY) || MODE == EDIT) {
                 drawingDraw(drawing, offset, offsetX, this.offsetY, mouseOffsetX, mouseOffsetY);
                 //Draw The Delete Button
@@ -254,7 +245,7 @@ public abstract class FeatureDrawable<T extends IRuleProvider> extends FeatureAb
         if (GuiList.ITEM_EDITOR.isVisible()) return false; //If the item selector is visible, don't process clicks
         if (FeatureNew.IS_OPEN) return false;
         int offsetX = 0;
-        for (IRuleProvider provider: drawable) {
+        for (IRuleProvider provider: getList()) {
             if (!provider.isVisible() && MODE == DISPLAY) continue;
             int mouseOffsetX = mouseX - CORE.getOffsetX() - offsetX;
             int mouseOffsetY = mouseY - this.offsetY;
@@ -264,8 +255,7 @@ public abstract class FeatureDrawable<T extends IRuleProvider> extends FeatureAb
             //Delete Button
             if(MODE == EDIT) {
                 if (mouseOffsetX >= provider.getWidth(MODE) - 13 && mouseOffsetX <= provider.getWidth(MODE) - 3 && mouseOffsetY >= 4 && mouseOffsetY <= 14) {
-                    CollectionHelper.removeAndUpdate(drawable, provider);
-                    return true;
+                    return CollectionHelper.removeAndUpdate(getList(), provider);
                 }
 
                 if (drawingMouseClicked(provider, mouseOffsetX, mouseOffsetY, button)) return true;

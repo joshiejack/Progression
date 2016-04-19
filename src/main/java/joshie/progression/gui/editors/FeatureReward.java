@@ -4,19 +4,16 @@ import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.IRewardProvider;
 import joshie.progression.api.criteria.ITriggerProvider;
 import joshie.progression.gui.core.GuiList;
-import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.CollectionHelper;
 import joshie.progression.network.PacketHandler;
 import joshie.progression.network.PacketSelectRewards;
 import joshie.progression.player.PlayerTracker;
 
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import static joshie.progression.gui.core.GuiList.NEW_REWARD;
-import static joshie.progression.gui.core.GuiList.THEME;
+import static joshie.progression.gui.core.GuiList.*;
 
 public class FeatureReward extends FeatureDrawable<IRewardProvider> {
     private Set<IRewardProvider> selected;
@@ -25,7 +22,7 @@ public class FeatureReward extends FeatureDrawable<IRewardProvider> {
         super("reward", 140, NEW_REWARD, THEME.rewardBoxGradient1, THEME.rewardBoxGradient2, THEME.rewardBoxFont, THEME.rewardBoxGradient2);
     }
 
-    public FeatureReward setCriteria(ICriteria criteria) {
+    public void reset(ICriteria criteria) {
         if (selected == null) {
             selected = new LinkedHashSet<IRewardProvider>();
         } else {
@@ -42,14 +39,11 @@ public class FeatureReward extends FeatureDrawable<IRewardProvider> {
                 }
             }
         }
+    }
 
-        List<IRewardProvider> list = new ArrayList<IRewardProvider>();
-        for (IRewardProvider reward: criteria.getRewards()) {
-            list.add(APIHandler.getCache(true).getRewardFromUUID(reward.getUniqueID()));
-        }
-
-        setDrawable(list);
-        return this;
+    @Override
+    public List<IRewardProvider> getList() {
+        return CRITERIA_EDITOR.get().getRewards();
     }
 
     public Set<IRewardProvider> getSelected() {
@@ -104,6 +98,7 @@ public class FeatureReward extends FeatureDrawable<IRewardProvider> {
     }
 
     public boolean select(IRewardProvider provider, boolean simulate) {
+        if (selected == null) return false; //You are not allowed to be visible if selections can't even happen
         //Click processed as this item must be claimed, now we check the side of selected, vs other things
         if (provider != null && !simulate) {
             if (selected.contains(provider)) {
