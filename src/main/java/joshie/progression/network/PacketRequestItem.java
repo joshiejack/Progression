@@ -14,7 +14,6 @@ import java.util.UUID;
 public class PacketRequestItem extends PenguinPacket {
     private UUID uuid;
     private ItemStack stack;
-    private int stackSize;
 
     public PacketRequestItem() {}
 
@@ -33,7 +32,7 @@ public class PacketRequestItem extends PenguinPacket {
         buf.writeBoolean(stack != null);
         if (stack != null) {
             ByteBufUtils.writeItemStack(buf, stack);
-            buf.writeInt(stackSize);
+            buf.writeInt(stack.stackSize);
         }
     }
 

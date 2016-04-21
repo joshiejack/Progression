@@ -2,6 +2,7 @@ package joshie.progression.plugins.enchiridion.actions;
 
 import joshie.enchiridion.api.book.IButtonAction;
 import joshie.progression.api.criteria.ICriteria;
+import joshie.progression.api.criteria.IRewardProvider;
 import joshie.progression.api.criteria.ITriggerProvider;
 import joshie.progression.player.PlayerTracker;
 
@@ -42,6 +43,13 @@ public class ActionClaimCriteria extends AbstractActionCriteria implements IButt
 
     @Override
     public boolean performAction() {
+        ICriteria criteria = getCriteria();
+        if (criteria.givesAllRewards()) {
+            for (IRewardProvider provider: criteria.getRewards()) {
+                if (provider.mustClaim() && !REWARDS.getSelected().contains(provider)) REWARDS.select(provider);
+            }
+        }
+
         REWARDS.sendToServer();
         return true;
     }

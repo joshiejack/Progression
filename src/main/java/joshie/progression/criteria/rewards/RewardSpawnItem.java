@@ -99,8 +99,6 @@ public class RewardSpawnItem extends RewardBaseItemFilter implements ICustomDesc
                             if (player.worldObj.isBlockLoaded(pos)) {
                                 if (isValidLocation(player.worldObj, pos)) {
                                     SpawnItemHelper.spawnItem(player.worldObj, pos.getX(), pos.getY(), pos.getZ(), stack);
-
-                                    //RETURN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                                     return;
                                 }
                             }
