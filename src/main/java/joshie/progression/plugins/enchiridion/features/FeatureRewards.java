@@ -9,7 +9,7 @@ import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.IRewardProvider;
 import joshie.progression.api.criteria.ITriggerProvider;
 import joshie.progression.api.special.ICustomTooltip;
-import joshie.progression.helpers.MCClientHelper;
+import joshie.progression.api.special.ICustomTreeIcon;
 import joshie.progression.helpers.SplitHelper;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.item.ItemStack;
@@ -97,8 +97,15 @@ public class FeatureRewards extends FeatureCriteria implements ISimpleEditorFiel
                 EnchiridionAPI.draw.drawRectangle(position.getLeft() + x, position.getTop() + 10 + offsetY, position.getLeft() + x + 16, position.getTop() + 10 + 16 + offsetY, color);
             }
 
-            EnchiridionAPI.draw.drawStack(stack, position.getLeft() + x, position.getTop() + 10 + offsetY, 1F);
+            if (reward.getProvided() instanceof ICustomTreeIcon) {
+                ((ICustomTreeIcon)reward.getProvided()).draw(position.getLeft() + x, position.getTop() + 10 + offsetY, 1F);
+            }else EnchiridionAPI.draw.drawStack(stack, position.getLeft() + x, position.getTop() + 10 + offsetY, 1F);
             x += 20;
+
+            if (x > 160) {
+                x = 0;
+                offsetY += 20;
+            }
         }
     }
 
@@ -148,8 +155,8 @@ public class FeatureRewards extends FeatureCriteria implements ISimpleEditorFiel
         for (IRewardProvider reward : list) {
             ItemStack stack = reward.getIcon();
             if (mouseX >= x && mouseX <= x + 16 && mouseY >= 10 + offsetY && mouseY <= 10 + offsetY + 16) {
-                tooltip.addAll(stack.getTooltip(MCClientHelper.getPlayer(), false));
-                tooltip.add("---");
+                //tooltip.addAll(stack.getTooltip(MCClientHelper.getPlayer(), false));
+                //tooltip.add("---");
                 if (reward.getProvided() instanceof ICustomTooltip) ((ICustomTooltip)reward.getProvided()).addTooltip(tooltip);
                 else{
                     for (String s : SplitHelper.splitTooltip(reward.getDescription(), 32)) {
@@ -159,6 +166,10 @@ public class FeatureRewards extends FeatureCriteria implements ISimpleEditorFiel
             }
 
             x += 20;
+            if (x > 160) {
+                x = 0;
+                offsetY += 20;
+            }
         }
     }
     

@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public class DefaultSettings {
+    //Special yo
     public Set<DataTab> tabs = new HashSet();
     
     public UUID defaultTabID = UUID.fromString("c051e0e2-f5ad-4b9d-b889-0ada75d4062b");

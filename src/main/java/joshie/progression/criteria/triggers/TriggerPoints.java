@@ -30,7 +30,7 @@ public class TriggerPoints extends TriggerBaseBoolean implements ICustomDescript
     public String getDescription() {
         String extra = consume ? "\n" + EnumChatFormatting.ITALIC + Progression.format("trigger.points.extra", variable) : "";
         String value = (amount == (long) amount) ? String.format("%d", (long) amount): String.format("%s", amount);
-        return Progression.format("trigger.points.description", value, variable, extra) + "\n\n" + Progression.format("completed", getPercentage());
+        return Progression.format("trigger.points.description", value, variable, extra);
     }
     
     @Override

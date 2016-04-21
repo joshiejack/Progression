@@ -127,7 +127,7 @@ public abstract class FeatureDrawable<T extends IRuleProvider> extends FeatureAb
                                 if (t.getFieldName().equals("mustClaim"))
                                     translated = Progression.translate("mustClaim");
                                 if (t.getFieldName().equals("inverted")) translated = Progression.translate("inverted");
-                                TOOLTIP.add(WordUtils.wrap(StringEscapeUtils.unescapeJava(translated), 42).replace("\r", "").split("\n"));
+                                TOOLTIP.add(WordUtils.wrap(StringEscapeUtils.unescapeJava(translated).replace("\r", ""), 42).split("\n"));
                             }
                         }
                     }
@@ -203,22 +203,22 @@ public abstract class FeatureDrawable<T extends IRuleProvider> extends FeatureAb
     private boolean drawingMouseClicked(IRuleProvider provider, int mouseX, int mouseY, int button) {
         ICustomDrawGuiEditor editor = provider instanceof ICustomDrawGuiEditor ? ((ICustomDrawGuiEditor) provider) : null;
         if (editor == null || (editor != null && !editor.hideDefaultEditor())) {
-            int yStart = 18;
             int index = 0;
             for (IField t : getFields(provider)) {
                 if (t.attemptClick(mouseX, mouseY)) {
                     return true;
                 }
 
-                int color = THEME.optionsFontColor;
-                int yPos = yStart + (index * 6);
-                if (mouseX >= 1 && mouseX <= provider.getWidth(MODE) - 1) {
-                    if (mouseY >= yPos && mouseY < yPos + 6) {
-                        t.click(button);
+                if (MODE == EDIT) {
+                    int yPos = 18 + (index * 6);
+                    if (mouseX >= 1 && mouseX <= provider.getWidth(MODE) - 1) {
+                        if (mouseY >= yPos && mouseY < yPos + 6) {
+                            t.click(button);
 
-                        //Update the item preview when selecting toggling something
-                        PREVIEW.updateSearch();
-                        return true;
+                            //Update the item preview when selecting toggling something
+                            PREVIEW.updateSearch();
+                            return true;
+                        }
                     }
                 }
 
@@ -226,13 +226,10 @@ public abstract class FeatureDrawable<T extends IRuleProvider> extends FeatureAb
             }
         }
 
-        if (1 == 1) return false;
-
+        if (MODE == DISPLAY) return false;
         //Update the item preview when selecting toggling something
         PREVIEW.updateSearch();
         if (editor != null && editor.mouseClicked(mouseX, mouseY)) return true;
-
-
         return false;
     }
 
@@ -257,10 +254,9 @@ public abstract class FeatureDrawable<T extends IRuleProvider> extends FeatureAb
                 if (mouseOffsetX >= provider.getWidth(MODE) - 13 && mouseOffsetX <= provider.getWidth(MODE) - 3 && mouseOffsetY >= 4 && mouseOffsetY <= 14) {
                     return CollectionHelper.removeAndUpdate(getList(), provider);
                 }
-
-                if (drawingMouseClicked(provider, mouseOffsetX, mouseOffsetY, button)) return true;
             }
 
+            if (drawingMouseClicked(provider, mouseOffsetX, mouseOffsetY, button)) return true;
             offsetX += provider.getWidth(MODE);
         }
 

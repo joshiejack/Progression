@@ -1,11 +1,13 @@
 package joshie.progression.criteria.rewards;
 
-import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.ITab;
 import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.event.TabVisibleEvent;
-import joshie.progression.api.special.*;
+import joshie.progression.api.special.IGetterCallback;
+import joshie.progression.api.special.IHasEventBus;
+import joshie.progression.api.special.IInit;
+import joshie.progression.api.special.IStoreNBTData;
 import joshie.progression.handlers.APIHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -42,8 +44,8 @@ public class RewardShowTab extends RewardBaseSingular implements IInit, IGetterC
     public String getDescription() {
         if (tab != null) {
             String end = hideByDefault ? "show" : "hide";
-            return Progression.format("reward.layer.show.description." + end, tab.getLocalisedName());
-        } else return "Invalid Book setup";
+            return format(end, tab.getLocalisedName());
+        } else return translate("invalid");
     }
 
     @Override

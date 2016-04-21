@@ -16,11 +16,9 @@ public class TextEditor {
     public boolean setEditable(ITextEditable editable) {
         this.isTextEditing = true;
         this.editable = editable;
-       // i//f (editable != null && editable.getTextField() != null) {
-            int maximumLength = editable.getTextField().length();
-            //if (last == null) lastPosition = maximumLength;
+        if (this.editable != editable) {
             this.position = editable.getTextField().length();
-       // }
+        }
 
         return true;
     }
@@ -96,8 +94,7 @@ public class TextEditor {
         int left = position - count;
         if (left < 0) {
             position = 0;
-        } else
-            position = left;
+        } else position = left;
     }
 
     private void cursorRight(int count) {

@@ -77,6 +77,7 @@ public class GuiCore extends GuiScreen {
             offsetX = offsetCache.get(getKey());
         } else offsetX = 0;
 
+        scrollingEnabled = true;
         screenTop = (height - ySize) / 2;
         if (openGui != null) {
             openGui.initData();
@@ -121,6 +122,7 @@ public class GuiCore extends GuiScreen {
             initGui();
         }
 
+        LAST.clear();
         TOOLTIP.clear();
         screenTop = (height - ySize) / 2;
         boolean overlayvisible = false;
@@ -143,6 +145,7 @@ public class GuiCore extends GuiScreen {
 
         //Draw the tooltip in the right place
         if (openGui.hasButtons()) super.drawScreen(cursorX, cursorY - screenTop, partialTicks);
+        LAST.drawFeature(cursorX, cursorY);
         TOOLTIP.drawFeature(cursorX, cursorY);
     }
 
@@ -190,6 +193,7 @@ public class GuiCore extends GuiScreen {
 
     @Override
     protected void keyTyped(char character, int key) throws IOException {
+        Keyboard.enableRepeatEvents(true); //Because something is breaking it
         if (markedForInit) return; //Dont process keys while active
         int jump = 1;
         if (Keyboard.isKeyDown(54) || Keyboard.isKeyDown(42)) {
@@ -212,7 +216,6 @@ public class GuiCore extends GuiScreen {
 
     @Override
     public void handleMouseInput() throws IOException {
-        if (markedForInit) return; //Dont process mouse while active
         mouseX = Mouse.getEventX() * width / mc.displayWidth;
         mouseY = (height - Mouse.getEventY() * height / mc.displayHeight - 1) - screenTop;
 

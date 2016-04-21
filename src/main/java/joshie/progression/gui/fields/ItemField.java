@@ -15,6 +15,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import static joshie.progression.api.special.DisplayMode.EDIT;
 import static joshie.progression.gui.core.GuiList.*;
 
 public class ItemField extends AbstractField implements IItemSelectable {
@@ -60,6 +61,7 @@ public class ItemField extends AbstractField implements IItemSelectable {
 
     @Override
     public boolean attemptClick(int mouseX, int mouseY) {
+        if (MODE != EDIT) return false;
         boolean clicked = mouseX >= mouseX1 && mouseX <= mouseX2 && mouseY >= mouseY1 && mouseY <= mouseY2;
         if (clicked) {
             ITEM_EDITOR.select(filter, this, Position.BOTTOM);

@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.lang.reflect.Field;
 import java.util.*;
 
 public class JSONLoader {
@@ -300,6 +301,15 @@ public class JSONLoader {
         Collection<ITab> allTabs = APIHandler.getCache(isClient).getTabs().values();
         HashSet<UUID> names = new HashSet();
         DefaultSettings forJSONTabs = new DefaultSettings();
+
+        //Copy over all the settings
+        try {
+            for (Field f : forJSONTabs.getClass().getFields()) {
+                if (f.getName().equals("tabs")) continue; //Ignore the default
+                f.set(forJSONTabs, f.get(Options.settings));
+            }
+        } catch (Exception e) {}
+
         for (ITab tab : allTabs) {
             ArrayList<DataCriteria> list = new ArrayList();
             if (!tabNames.add(tab.getUniqueID())) continue;

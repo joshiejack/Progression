@@ -81,6 +81,7 @@ public class GuiList {
     public static final FeatureBarsFull GROUP_BG = new FeatureBarsFull("group");
     public static final FeatureFooter FOOTER = new FeatureFooter();
     public static final FeatureTooltip TOOLTIP = new FeatureTooltip();
+    public static final FeatureLastDraw LAST = new FeatureLastDraw();
 
     //GUIs
     public static final GuiCore CORE = new GuiCore();

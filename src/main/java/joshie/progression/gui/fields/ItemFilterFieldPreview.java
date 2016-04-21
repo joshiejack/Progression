@@ -2,6 +2,7 @@ package joshie.progression.gui.fields;
 
 import joshie.progression.api.criteria.IField;
 import joshie.progression.api.special.IAdditionalTooltip;
+import joshie.progression.api.special.IClickable;
 import joshie.progression.api.special.IStackSizeable;
 import joshie.progression.gui.core.DrawHelper;
 import joshie.progression.helpers.ItemHelper;
@@ -13,6 +14,8 @@ import net.minecraft.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
+import static joshie.progression.api.special.DisplayMode.DISPLAY;
+import static joshie.progression.gui.core.GuiList.MODE;
 import static joshie.progression.gui.core.GuiList.TOOLTIP;
 
 public class ItemFilterFieldPreview extends ItemFilterField implements IField {
@@ -83,8 +86,13 @@ public class ItemFilterFieldPreview extends ItemFilterField implements IField {
     public boolean attemptClick(int mouseX, int mouseY) {
         boolean clicked = mouseX >= mouseX1 && mouseX <= mouseX2 && mouseY >= mouseY1 && mouseY <= mouseY2;
         if (clicked) {
-            super.click();
-            return true;
-        } else return false;
+            if (MODE == DISPLAY) {
+                if (object instanceof IClickable) {
+                    if(((IClickable)object).onClicked(stack)) return true;
+                }
+            } else return super.click();
+        }
+
+        return false;
     }
 }

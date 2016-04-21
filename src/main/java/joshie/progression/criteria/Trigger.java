@@ -91,7 +91,8 @@ public class Trigger implements ITriggerProvider {
 
     @Override
     public ItemStack getIcon() {
-        return trigger instanceof ICustomIcon ? ((ICustomIcon)trigger).getIcon() : stack;
+        ItemStack result = trigger instanceof ICustomIcon ? ((ICustomIcon)trigger).getIcon(): stack;
+        return result == null ? stack: result;
     }
 
     @Override

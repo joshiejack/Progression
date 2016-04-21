@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 
-@ProgressionRule(name="login", color=0xFF8000FF)
+@ProgressionRule(name="login", color=0xFF8000FF, meta="onLogin")
 public class TriggerLogin extends TriggerBaseCounter implements ICustomWidth {
     @Override
     public ITrigger copy() {
@@ -18,7 +18,7 @@ public class TriggerLogin extends TriggerBaseCounter implements ICustomWidth {
 
     @Override
     public int getWidth(DisplayMode mode) {
-        return mode == DisplayMode.EDIT ? 100 : 65;
+        return mode == DisplayMode.EDIT ? 75 : 65;
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)

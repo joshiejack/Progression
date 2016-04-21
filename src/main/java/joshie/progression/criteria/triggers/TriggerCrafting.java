@@ -2,19 +2,31 @@ package joshie.progression.criteria.triggers;
 
 import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.criteria.*;
+import joshie.progression.api.criteria.IField;
+import joshie.progression.api.criteria.IFilterProvider;
+import joshie.progression.api.criteria.ITrigger;
+import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.DisplayMode;
+import joshie.progression.api.special.IClickable;
 import joshie.progression.api.special.ISpecialFieldProvider;
+import mezz.jei.GuiEventHandler;
+import mezz.jei.JustEnoughItems;
+import mezz.jei.ProxyCommonClient;
+import mezz.jei.gui.Focus;
+import mezz.jei.gui.ItemListOverlay;
+import mezz.jei.gui.RecipesGui;
+import mezz.jei.input.InputHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.UUID;
 
 @ProgressionRule(name="crafting", color=0xFF663300)
-public class TriggerCrafting extends TriggerBaseItemFilter implements ISpecialFieldProvider {
+public class TriggerCrafting extends TriggerBaseItemFilter implements IClickable, ISpecialFieldProvider {
     public int timesCrafted = 1;
     protected transient int timesItemCrafted;
 
@@ -31,6 +43,17 @@ public class TriggerCrafting extends TriggerBaseItemFilter implements ISpecialFi
         int percentageCraftedTotal = (timesItemCrafted * 100) / timesCrafted;
         int percentageTotal = (percentageItemTotal + percentageCraftedTotal) / 2;
         return Progression.format("trigger.crafting.description", amount);
+    }
+
+    @Override
+    public boolean onClicked(ItemStack stack) {
+        try {
+            
+            return true;
+        } catch (Exception e) { e.printStackTrace(); }
+
+
+        return false;
     }
 
     @Override

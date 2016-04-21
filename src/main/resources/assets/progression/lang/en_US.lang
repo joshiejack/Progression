@@ -199,6 +199,7 @@ progression.reward.stepAssist=Step Assist
 progression.reward.stepAssist.description=Allows you to step an extra %s blocks
 progression.reward.stepAssist.steps=Number of additional blocks you want players to be able to walk up
 progression.reward.tab.show=Hide/Show Tab
+progression.reward.tab.show.invalid=Invalid Tab Setup
 progression.reward.tab.show.description.hide=Will hide the tab %s
 progression.reward.tab.show.description.show=Will show the tab %s
 progression.reward.tab.hideByDefault=Whether the layer you specify should be hidden by default
@@ -347,3 +348,10 @@ progression.tab.warning=Deleting a tab, deletes all criteria in it
 
 #Items
 progression.item.fallResistance=Fall Resistance
+progression.item.onReceivedAchievement=Complete the Achievement
+progression.item.onChangeDimension=Change Dimension
+progression.item.onGUIChange=Change GUI
+progression.item.onSentMessage=Send Chat Message
+progression.item.onSecond=Every Second
+progression.item.onReceivedPoints=On Receiving Points
+progression.item.onReceivedPoints=On Receiving True/False

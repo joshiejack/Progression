@@ -20,6 +20,6 @@ public class SplitHelper {
     }
 
     public static String[] splitTooltip(String text, int value) {
-        return  WordUtils.wrap(StringEscapeUtils.unescapeJava(text), value).replace("\r", "").split("\n");
+        return  WordUtils.wrap(StringEscapeUtils.unescapeJava(text).replace("\r", ""), value).split("\n");
     }
 }

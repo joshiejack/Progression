@@ -14,12 +14,12 @@ import joshie.progression.network.PacketRewardItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 
 import java.util.List;
 
 import static joshie.progression.api.special.DisplayMode.EDIT;
 import static joshie.progression.gui.core.GuiList.MODE;
+import static net.minecraft.util.EnumChatFormatting.BLUE;
 
 @ProgressionRule(name="item", color=0xFFE599FF)
 public class RewardItem extends RewardBaseItemFilter implements ICustomDisplayName, ICustomDescription, ICustomWidth, ICustomTooltip, ISpecialFieldProvider, IStackSizeable, IRequestItem {
@@ -42,7 +42,7 @@ public class RewardItem extends RewardBaseItemFilter implements ICustomDisplayNa
 
     @Override
     public void addTooltip(List list) {
-        list.add(EnumChatFormatting.BLUE + Progression.translate("item.free"));
+        list.add(BLUE + Progression.translate("item.free"));
         list.add(getIcon().getDisplayName() + " x" + stackSize);
     }
 

@@ -12,9 +12,10 @@ import net.minecraft.entity.boss.BossStatus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
-import static joshie.progression.gui.core.GuiList.CORE;
-import static joshie.progression.gui.core.GuiList.TOOLTIP;
+import static joshie.progression.api.special.DisplayMode.EDIT;
+import static joshie.progression.gui.core.GuiList.*;
 
 public class EntityFilterFieldPreview extends ItemFilterField implements IField {
     private final int x;
@@ -55,7 +56,7 @@ public class EntityFilterFieldPreview extends ItemFilterField implements IField 
     }
 
     @Override
-    public void draw(DrawHelper helper, int renderX, int renderY, int color, int yPos, int mouseX, int mouseY) {
+    public void draw(final DrawHelper helper, final int renderX, final int renderY, final int color, final int yPos, final int mouseX, final int mouseY) {
         try {
             boolean hovered = mouseX >= mouseX1 && mouseX <= mouseX2 && mouseY >= mouseY1 && mouseY <= mouseY2;
             EntityLivingBase entity = getEntity(hovered);
@@ -69,8 +70,15 @@ public class EntityFilterFieldPreview extends ItemFilterField implements IField 
                 TOOLTIP.add(tooltip);
             }
 
-            GuiInventory.drawEntityOnScreen(CORE.getOffsetX() + renderX + 24 + x, CORE.screenTop + renderY + y + EntityHelper.getOffsetForEntity(entity), EntityHelper.getSizeForEntity(entity), 25F, -5F, entity);
-            BossStatus.bossName = null; //Reset boss
+            final EntityLivingBase entityLivingBase = entity;
+            LAST.add(new Callable() {
+                @Override
+                public Object call() throws Exception {
+                    GuiInventory.drawEntityOnScreen(CORE.getOffsetX() + renderX + 24 + x, CORE.screenTop + renderY + y + EntityHelper.getOffsetForEntity(entityLivingBase), EntityHelper.getSizeForEntity(entityLivingBase), 25F, -5F, entityLivingBase);
+                    BossStatus.bossName = null; //Reset boss
+                    return null;
+                }
+            });
             //helper.drawStack(renderX, renderY, getEntity(hovered), x, y, scale);
         } catch (Exception e) {
             e.printStackTrace();
@@ -79,10 +87,10 @@ public class EntityFilterFieldPreview extends ItemFilterField implements IField 
 
     @Override
     public boolean attemptClick(int mouseX, int mouseY) {
+        if (MODE != EDIT) return false;
         boolean clicked = mouseX >= mouseX1 && mouseX <= mouseX2 && mouseY >= mouseY1 && mouseY <= mouseY2;
         if (clicked) {
-            super.click();
-            return true;
+            return super.click();
         } else return false;
     }
 }

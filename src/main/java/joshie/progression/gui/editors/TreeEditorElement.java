@@ -2,6 +2,7 @@ package joshie.progression.gui.editors;
 
 import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.IRewardProvider;
+import joshie.progression.api.special.ICustomTreeIcon;
 import joshie.progression.gui.core.GuiList;
 import joshie.progression.lib.ProgressionInfo;
 import joshie.progression.player.PlayerTracker;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import static joshie.progression.api.special.DisplayMode.DISPLAY;
 import static joshie.progression.api.special.DisplayMode.EDIT;
@@ -85,7 +87,7 @@ public class TreeEditorElement {
         else return PlayerTracker.getClientPlayer().getMappings().getCompletedCriteria().keySet().containsAll(criteria.getPreReqs());
     }
 
-    public static boolean isCriteriaCompleteable(ICriteria criteria) {
+    private static boolean isCriteriaCompleteable(ICriteria criteria) {
         HashMap<ICriteria, Integer> completedMap = PlayerTracker.getClientPlayer().getMappings().getCompletedCriteria();
         boolean completeable = true;
         //Check the conflicts of this criteria
@@ -200,11 +202,27 @@ public class TreeEditorElement {
             GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
             //Draw in the rewards
             int xOffset = 0;
-            for (IRewardProvider reward : criteria.getRewards()) {
-                ItemStack icon = reward.getIcon().copy();
-                if (icon == null || icon.getItem() == null) continue; //Protection against null icons
-                icon.stackSize = 1; //Force it to 1
-                CORE.drawStack(icon, x + 4 + left + (xOffset * 12), top + 12, 0.75F);
+            for (final IRewardProvider reward : criteria.getRewards()) {
+                final float scale = 0.75F;
+                final int xPos = x + 4  + left + (xOffset * 12);
+                final int yPos = top + 12;
+                if (reward.getProvided() instanceof ICustomTreeIcon) {
+                    LAST.add(new Callable() {
+                        @Override
+                        public Object call() throws Exception {
+                            ((ICustomTreeIcon)reward.getProvided()).draw(xPos, yPos, scale);
+
+                            return null;
+                        }
+                    });
+                } else {
+                    ItemStack icon = reward.getIcon();
+                    if (icon == null || icon.getItem() == null) continue; //Protection against null icons
+                    icon = icon.copy();
+                    icon.stackSize = 1; //Force it to 1
+                    CORE.drawStack(icon, xPos, yPos, scale);
+                }
+
                 xOffset++;
             }
 

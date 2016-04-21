@@ -2,16 +2,17 @@ package joshie.progression.criteria.triggers;
 
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.*;
-import joshie.progression.api.special.DisplayMode;
-import joshie.progression.api.special.ICustomWidth;
-import joshie.progression.api.special.IHasFilters;
-import joshie.progression.api.special.ISpecialFieldProvider;
+import joshie.progression.api.special.*;
 import joshie.progression.gui.fields.EntityFilterFieldPreview;
 import joshie.progression.gui.fields.ItemFilterField;
 import joshie.progression.gui.filters.FilterTypeEntity;
+import joshie.progression.helpers.EntityHelper;
+import joshie.progression.helpers.MCClientHelper;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -19,8 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ProgressionRule(name="kill", color=0xFF000000)
-public class TriggerKill extends TriggerBaseCounter implements ICustomWidth, IHasFilters, ISpecialFieldProvider {
+public class TriggerKill extends TriggerBaseCounter implements ICustomWidth, ICustomIcon, IHasFilters, ISpecialFieldProvider {
     public List<IFilterProvider> entities = new ArrayList();
+    protected transient EntityLivingBase entity;
+    protected transient int ticker;
 
     @Override
     public ITrigger copy() {
@@ -32,6 +35,11 @@ public class TriggerKill extends TriggerBaseCounter implements ICustomWidth, IHa
     @Override
     public int getWidth(DisplayMode mode) {
         return mode == DisplayMode.EDIT ? 100 : 85;
+    }
+
+    @Override
+    public ItemStack getIcon() {
+        return EntityHelper.getItemForEntity(getEntity());
     }
 
     @Override
@@ -67,5 +75,15 @@ public class TriggerKill extends TriggerBaseCounter implements ICustomWidth, IHa
         }
 
         return false;
+    }
+
+    private EntityLivingBase getEntity() {
+        if (ticker >= 200 || ticker == 0) {
+            entity = EntityHelper.getRandomEntityFromFilters(entities, MCClientHelper.getPlayer());
+            ticker = 1;
+        }
+
+        if (!GuiScreen.isShiftKeyDown()) ticker++;
+        return entity != null ? entity : MCClientHelper.getPlayer();
     }
 }

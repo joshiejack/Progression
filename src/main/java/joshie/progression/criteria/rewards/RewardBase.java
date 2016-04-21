@@ -1,5 +1,6 @@
 package joshie.progression.criteria.rewards;
 
+import joshie.progression.Progression;
 import joshie.progression.api.criteria.IReward;
 import joshie.progression.api.criteria.IRewardProvider;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -30,4 +31,16 @@ public abstract class RewardBase implements IReward {
     
     @Override
     public void reward(EntityPlayerMP player) {}
+
+    protected String translate(String text) {
+        return Progression.translate(provider.getUnlocalisedName() + ".description." + text);
+    }
+
+    protected String format(Object... data) {
+        return format(null, data);
+    }
+
+    protected String format(String text, Object... data) {
+        return text == null ? Progression.format(provider.getUnlocalisedName() + ".description", data): Progression.format(provider.getUnlocalisedName() + ".description." + text, data);
+    }
 }

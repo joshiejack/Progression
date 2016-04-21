@@ -6,7 +6,10 @@ import joshie.enchiridion.api.gui.ISimpleEditorFieldProvider;
 import joshie.progression.api.criteria.IConditionProvider;
 import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.ITriggerProvider;
+import joshie.progression.api.special.IAdditionalTooltip;
+import joshie.progression.api.special.IClickable;
 import joshie.progression.api.special.ICustomTooltip;
+import joshie.progression.api.special.ICustomTreeIcon;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.SplitHelper;
 import net.minecraft.item.ItemStack;
@@ -37,8 +40,10 @@ public class FeatureTasks extends FeatureCriteria implements ISimpleEditorFieldP
                 size += trigger.getConditions().size();
             }
 
-            position.setWidth((size * 17D) + ((size - 1) * 3D));
-            double height = 28D;
+            double xWidth = Math.max(size, 9D);
+            double yHeight = Math.ceil(size / 9D);
+            position.setWidth((xWidth * 17D) + ((xWidth - 1) * 3D));
+            double height = 28D + ((yHeight - 1D) * 20D);
             position.setHeight(height);
         } else {
             double width = position.getWidth();
@@ -47,22 +52,64 @@ public class FeatureTasks extends FeatureCriteria implements ISimpleEditorFieldP
     }
 
     @Override
+    public boolean performClick(int mouseX, int mouseY, int mouseButton) {
+        ICriteria criteria = getCriteria();
+        if (criteria == null) return false;
+
+        int x = 0;
+        int offsetMouseX = mouseX - position.getLeft();
+        int offsetMouseY = mouseY - position.getTop();
+        int offsetY = 10;
+        for (ITriggerProvider trigger : criteria.getTriggers()) {
+            if (trigger.getProvided() instanceof IClickable) {
+                if (offsetMouseY >= offsetY && offsetMouseY <= offsetY + 16) {
+                    if (offsetMouseX >= x && offsetMouseX <= x + 17) {
+                        return (((IClickable)trigger.getProvided()).onClicked(trigger.getIcon()));
+                    }
+                }
+            }
+
+            x += 20;
+            if (x > 160) {
+                x = 0;
+                offsetY += 20;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
     public void drawFeature(ICriteria criteria, int mouseX, int mouseY) {
         int x = 0;
         int offsetY = 10;
         for (ITriggerProvider trigger : criteria.getTriggers()) {
-            if (trigger.getIcon() == null) continue;
-            ItemStack stack = trigger.getIcon().copy();
             int color = trigger.getConditions().size() > 0 ? trigger.getColor() : 0xFFD0BD92;
-            if (background) EnchiridionAPI.draw.drawBorderedRectangle(position.getLeft() + x, position.getTop() + offsetY, position.getLeft() + x + 16, position.getTop() + 16 + offsetY, 0xFFD0BD92, color);
-            EnchiridionAPI.draw.drawStack(stack, position.getLeft() + x, position.getTop() + offsetY, 1F);
+            if (background)EnchiridionAPI.draw.drawBorderedRectangle(position.getLeft() + x, position.getTop() + offsetY, position.getLeft() + x + 16, position.getTop() + 16 + offsetY, 0xFFD0BD92, color);
+            if (trigger.getProvided() instanceof ICustomTreeIcon) {
+                ((ICustomTreeIcon)trigger.getProvided()).draw(position.getLeft() + x, position.getTop() + offsetY, 1F);
+            } else {
+                if (trigger.getIcon() == null) continue;
+                EnchiridionAPI.draw.drawStack(trigger.getIcon(), position.getLeft() + x, position.getTop() + offsetY, 1F);
+            }
+
             x += 20;
+            if (x > 160) {
+                x = 0;
+                offsetY += 20;
+            }
 
             for (IConditionProvider condition : trigger.getConditions()) {
-                stack = condition.getIcon().copy();
                 if (background) EnchiridionAPI.draw.drawBorderedRectangle(position.getLeft() + x, position.getTop() + offsetY, position.getLeft() + x + 16, position.getTop() + offsetY + 16, 0xFFD0BD92, condition.getColor());
-                EnchiridionAPI.draw.drawStack(stack, position.getLeft() + x, position.getTop() + offsetY, 1F);
+                if (condition.getProvided() instanceof ICustomTreeIcon) {
+                    ((ICustomTreeIcon)condition.getProvided()).draw(position.getLeft() + x, position.getTop() + offsetY, 1F);
+                } else EnchiridionAPI.draw.drawStack(condition.getIcon(), position.getLeft() + x, position.getTop() + offsetY, 1F);
                 x += 20;
+
+                if (x > 160) {
+                    x = 0;
+                    offsetY += 20;
+                }
             }
         }
 
@@ -78,24 +125,42 @@ public class FeatureTasks extends FeatureCriteria implements ISimpleEditorFieldP
         int offsetMouseY = mouseY - position.getTop();
         int offsetY = 10;
         for (ITriggerProvider trigger : criteria.getTriggers()) {
-            if(offsetMouseY >= 0 + offsetY && offsetMouseY <= 0 + offsetY + 16) {
+            if(offsetMouseY >= offsetY && offsetMouseY <= offsetY + 16) {
                 if (offsetMouseX >= x && offsetMouseX <= x + 17) {
                     ItemStack stack = trigger.getIcon();
-                    tooltip.addAll(stack.getTooltip(MCClientHelper.getPlayer(), false));
-                    tooltip.add("---");
-                    if (trigger.getProvided() instanceof ICustomTooltip) ((ICustomTooltip)trigger.getProvided()).addTooltip(tooltip);
-                    else{
-                        for (String s : SplitHelper.splitTooltip(trigger.getDescription(), 32)) {
-                            tooltip.add(s);
+                    if (stack != null) {
+                        tooltip.addAll(stack.getTooltip(MCClientHelper.getPlayer(), false));
+                        if (trigger.getProvided() instanceof IAdditionalTooltip) {
+                            ((IAdditionalTooltip)trigger.getProvided()).addHoverTooltip("filters", stack, tooltip);
+                        }
+
+                        tooltip.add("---");
+                        if (trigger.getProvided() instanceof ICustomTooltip)
+                            ((ICustomTooltip) trigger.getProvided()).addTooltip(tooltip);
+                        else {
+                            for (String s : SplitHelper.splitTooltip(trigger.getDescription(), 32)) {
+                                tooltip.add(s);
+                            }
                         }
                     }
                 }
+            }
 
-                x += 20;
-                for (IConditionProvider condition: trigger.getConditions()) {
+            x += 20;
+            if (x > 160) {
+                x = 0;
+                offsetY += 20;
+            }
+
+            for (IConditionProvider condition: trigger.getConditions()) {
+                if(offsetMouseY >= offsetY && offsetMouseY <= offsetY + 16) {
                     if (offsetMouseX >= x && offsetMouseX <= x + 17) {
                         ItemStack stack = condition.getIcon();
                         tooltip.addAll(stack.getTooltip(MCClientHelper.getPlayer(), false));
+                        if (condition.getProvided() instanceof IAdditionalTooltip) {
+                            ((IAdditionalTooltip)condition.getProvided()).addHoverTooltip("filters", stack, tooltip);
+                        }
+
                         tooltip.add("---");
                         if (condition.getProvided() instanceof ICustomTooltip) ((ICustomTooltip)condition.getProvided()).addTooltip(tooltip);
                         else{
@@ -106,6 +171,11 @@ public class FeatureTasks extends FeatureCriteria implements ISimpleEditorFieldP
                     }
 
                     x += 20;
+
+                    if (x > 160) {
+                        x = 0;
+                        offsetY += 20;
+                    }
                 }
             }
         }

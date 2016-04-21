@@ -1,30 +1,39 @@
 package joshie.progression.criteria.rewards;
 
-import joshie.progression.Progression;
-import joshie.progression.api.criteria.*;
+import joshie.progression.api.criteria.IField;
+import joshie.progression.api.criteria.IFilterProvider;
+import joshie.progression.api.criteria.IFilterType;
+import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.*;
 import joshie.progression.gui.fields.EntityFilterFieldPreview;
 import joshie.progression.gui.fields.ItemFilterField;
 import joshie.progression.gui.filters.FilterTypeEntity;
 import joshie.progression.gui.filters.FilterTypeLocation;
 import joshie.progression.helpers.EntityHelper;
+import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.StackHelper;
 import joshie.progression.lib.WorldLocation;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.text.WordUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import static net.minecraft.util.EnumChatFormatting.DARK_GREEN;
+
 @ProgressionRule(name="entity", color=0xFFE599FF)
-public class RewardSpawnEntity extends RewardBase implements IInit, ICustomDescription, ICustomWidth, IHasFilters, ISpecialFieldProvider {
+public class RewardSpawnEntity extends RewardBase implements IInit, ICustomDescription, ICustomTooltip, ICustomWidth, ICustomIcon, IHasFilters, ISpecialFieldProvider {
     public List<IFilterProvider> locations = new ArrayList();
     public List<IFilterProvider> entities = new ArrayList();
     public NBTTagCompound tagValue = new NBTTagCompound();
@@ -32,6 +41,8 @@ public class RewardSpawnEntity extends RewardBase implements IInit, ICustomDescr
     public String nbtData = "";
 
     protected transient IField field;
+    protected transient EntityLivingBase entity;
+    protected transient int ticker;
 
     public RewardSpawnEntity() {
         field = new ItemFilterField("locations", this);
@@ -44,12 +55,28 @@ public class RewardSpawnEntity extends RewardBase implements IInit, ICustomDescr
 
     @Override
     public String getDescription() {
-        return Progression.format("reward.entity.description", spawnNumber) + " \n" + field.getField();
+        return format(spawnNumber) + " \n" + field.getField();
+    }
+
+    @Override
+    public void addTooltip(List list) {
+        list.add(DARK_GREEN + format(spawnNumber));
+        list.addAll(Arrays.asList(WordUtils.wrap((String)field.getField(), 28).split("\r\n")));
+        ItemStack stack = getIcon();
+        if (stack != null) {
+            list.add("---");
+            list.add(entity.getName());
+        }
     }
 
     @Override
     public int getWidth(DisplayMode mode) {
         return mode == DisplayMode.DISPLAY ? 121: 100;
+    }
+
+    @Override
+    public ItemStack getIcon() {
+        return EntityHelper.getItemForEntity(getEntity());
     }
 
     @Override
@@ -118,5 +145,15 @@ public class RewardSpawnEntity extends RewardBase implements IInit, ICustomDescr
         if (head.blocksMovement()) return false;
         if (floor.isLiquid() || feet.isLiquid() || head.isLiquid()) return false;
         return floor.blocksMovement();
+    }
+
+    private EntityLivingBase getEntity() {
+        if (ticker >= 200 || ticker == 0) {
+            entity = EntityHelper.getRandomEntityFromFilters(entities, MCClientHelper.getPlayer());
+            ticker = 1;
+        }
+
+        if (!GuiScreen.isShiftKeyDown()) ticker++;
+        return entity != null ? entity : MCClientHelper.getPlayer();
     }
 }

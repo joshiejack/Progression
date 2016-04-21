@@ -5,6 +5,7 @@ import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.ITab;
 import joshie.progression.gui.editors.TreeEditorElement;
+import joshie.progression.gui.editors.TreeEditorElement.ColorMode;
 import joshie.progression.helpers.PlayerHelper;
 import net.minecraft.util.StatCollector;
 
@@ -52,7 +53,7 @@ public class FeatureTabInfo extends FeatureTabGeneric {
         int taskssone = 0;
         if (tab.getCriteria().size() > 0) {
             for (ICriteria criteria: tab.getCriteria()) {
-                if (TreeEditorElement.isCriteriaCompleteable(criteria) && !completed.contains(criteria)) taskssone++;
+                if (TreeEditorElement.getModeForCriteria(criteria, false) == ColorMode.AVAILABLE) taskssone++;
             }
         }
 

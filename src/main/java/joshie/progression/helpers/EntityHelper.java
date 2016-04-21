@@ -9,6 +9,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.passive.EntityRabbit;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -23,6 +25,7 @@ import java.util.concurrent.Callable;
 public class EntityHelper {
     @SideOnly(Side.CLIENT)
     private static final Cache<EntityLivingBase, Pair<Integer, Integer>> cacheScaleOffset = CacheBuilder.newBuilder().maximumSize(16).build();
+    private static final Cache<EntityLivingBase, ItemStack> eggCache = CacheBuilder.newBuilder().maximumSize(256).build();
     private static final HashMap<String, Pair<Integer, Integer>> scaleOffset = new HashMap<String, Pair<Integer, Integer>>();
     private static List<EntityLivingBase> clientList;
     private static List<EntityLivingBase> serverList;
@@ -125,5 +128,28 @@ public class EntityHelper {
 
         //In theory if set up correctly this should be no issue
         return null;
+    }
+
+    public static ItemStack getItemForEntity(final EntityLivingBase entity) {
+        try {
+            return eggCache.get(entity, new Callable<ItemStack>() {
+                @Override
+                public ItemStack call() throws Exception {
+                    int id = EntityList.getEntityID(entity);
+                    if (id != 0) {
+                        return new ItemStack(Items.spawn_egg, 1, id);
+                    }
+
+                    String name = EntityList.getEntityString(entity);
+                    ItemStack stack = new ItemStack(Items.spawn_egg);
+                    net.minecraft.nbt.NBTTagCompound nbt = new net.minecraft.nbt.NBTTagCompound();
+                    nbt.setString("entity_name", name);
+                    stack.setTagCompound(nbt);
+                    return stack;
+                }
+            });
+        } catch (Exception e) {}
+
+        return new ItemStack(Items.spawn_egg);
     }
 }

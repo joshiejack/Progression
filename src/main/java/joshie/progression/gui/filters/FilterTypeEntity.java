@@ -10,8 +10,10 @@ import net.minecraft.entity.boss.BossStatus;
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import static joshie.progression.gui.core.GuiList.CORE;
+import static joshie.progression.gui.core.GuiList.LAST;
 import static joshie.progression.gui.core.GuiList.TOOLTIP;
 
 public class FilterTypeEntity extends FilterTypeBase {
@@ -52,20 +54,28 @@ public class FilterTypeEntity extends FilterTypeBase {
     }
     
     @Override
-    public void draw(DrawHelper offset, Object object, int offsetX, int j, int yOffset, int k, int mouseX, int mouseY) {
+    public void draw(final DrawHelper offset, final Object object, final int offsetX, final int j, final int yOffset, final int k, final int mouseX, final int mouseY) {
         try {
-            EntityLivingBase entity = ((EntityLivingBase) object);
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1F); //Using state manager doesn't fix this
-            boolean hovered = (mouseX >= 10 + (j * 32) && mouseX <= 9 + ((j + 1) * 32) && mouseY >= 40 && mouseY <= 120);
-            if (hovered) {
-                TOOLTIP.add("Localised: " + entity.getName());
-                TOOLTIP.add("Name: " + EntityHelper.getNameForEntity(entity));
-            }
+            LAST.add(new Callable() {
+                @Override
+                public Object call() throws Exception {
+                    EntityLivingBase entity = ((EntityLivingBase) object);
+                    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1F); //Using state manager doesn't fix this
+                    boolean hovered = (mouseX >= 10 + (j * 32) && mouseX <= 9 + ((j + 1) * 32) && mouseY >= 40 && mouseY <= 120);
+                    if (hovered) {
+                        TOOLTIP.add("Localised: " + entity.getName());
+                        TOOLTIP.add("Name: " + EntityHelper.getNameForEntity(entity));
+                    }
 
-            int entitySize = (EntityHelper.getNameForEntity(entity).equals("Thaumcraft.Taintacle") ? 15 : EntityHelper.getSizeForEntity(entity));//;
-            int entityY = EntityHelper.getNameForEntity(entity).equals("Thaumcraft.Taintacle") ? -45: 0;
-            GuiInventory.drawEntityOnScreen(offsetX + 24 + (j * 32), CORE.screenTop + 105 + (k * 32) + yOffset + entityY, entitySize, 25F, -5F, entity);
-            BossStatus.bossName = null; //Reset boss
+                    int entitySize = EntityHelper.getSizeForEntity(entity);
+                    int entityY = EntityHelper.getOffsetForEntity(entity);
+                    GuiInventory.drawEntityOnScreen(offsetX + 24 + (j * 32), CORE.screenTop + 105 + (k * 32) + yOffset + entityY, entitySize, 25F, -5F, entity);
+                    BossStatus.bossName = null; //Reset boss
+
+                    return null;
+                }
+            });
+
         } catch (Exception e) {}
     }
 
