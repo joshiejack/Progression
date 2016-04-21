@@ -1,8 +1,9 @@
 package joshie.progression.gui.fields;
 
 import joshie.progression.api.criteria.IField;
+import joshie.progression.api.criteria.IRuleProvider;
+import joshie.progression.api.gui.IDrawHelper;
 import joshie.progression.api.special.IAdditionalTooltip;
-import joshie.progression.gui.core.DrawHelper;
 import joshie.progression.helpers.EntityHelper;
 import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.client.gui.GuiScreen;
@@ -56,7 +57,7 @@ public class EntityFilterFieldPreview extends ItemFilterField implements IField 
     }
 
     @Override
-    public void draw(final DrawHelper helper, final int renderX, final int renderY, final int color, final int yPos, final int mouseX, final int mouseY) {
+    public void draw(final IRuleProvider provider, final IDrawHelper helper, final int renderX, final int renderY, final int color, final int yPos, final int mouseX, final int mouseY) {
         try {
             boolean hovered = mouseX >= mouseX1 && mouseX <= mouseX2 && mouseY >= mouseY1 && mouseY <= mouseY2;
             EntityLivingBase entity = getEntity(hovered);

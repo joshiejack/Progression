@@ -1,10 +1,12 @@
 package joshie.progression.gui.core;
 
+import joshie.progression.api.gui.IDrawHelper;
+
 import static joshie.progression.gui.core.GuiList.CORE;
 
 public abstract class FeatureAbstract implements IGuiFeature {
-    protected DrawHelper offset;
-    protected DrawHelper draw;
+    protected IDrawHelper offset;
+    protected IDrawHelper draw;
 
     // Variables used when drawing shizz
     protected int screenWidth;

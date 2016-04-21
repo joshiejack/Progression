@@ -4,11 +4,11 @@ import joshie.progression.Progression;
 import joshie.progression.api.criteria.*;
 import joshie.progression.api.gui.ICustomDrawGuiDisplay;
 import joshie.progression.api.gui.ICustomDrawGuiEditor;
+import joshie.progression.api.gui.IDrawHelper;
 import joshie.progression.api.gui.Position;
 import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.IEnum;
 import joshie.progression.api.special.ISpecialFieldProvider;
-import joshie.progression.gui.core.DrawHelper;
 import joshie.progression.gui.core.FeatureAbstract;
 import joshie.progression.gui.core.GuiList;
 import joshie.progression.gui.core.IGuiFeature;
@@ -102,7 +102,7 @@ public abstract class FeatureDrawable<T extends IRuleProvider> extends FeatureAb
         }
     }
 
-    protected void drawingDraw(IRuleProvider drawing, DrawHelper helper, int renderX, int renderY, int mouseX, int mouseY) {
+    protected void drawingDraw(IRuleProvider drawing, IDrawHelper helper, int renderX, int renderY, int mouseX, int mouseY) {
         int width = drawing.getWidth(MODE) - 1;
         helper.drawGradient(renderX, renderY, 1, 2, width, 15, drawing.getColor(), gradient1, gradient2);
         helper.drawText(renderX, renderY, drawing.getLocalisedName(), 6, 6, fontColor);
@@ -114,11 +114,10 @@ public abstract class FeatureDrawable<T extends IRuleProvider> extends FeatureAb
             for (IField t : getFields(drawing)) {
                 int color = THEME.optionsFontColor;
                 int yPos = yStart + (index * 6);
-                if (MODE == EDIT) {
+                if (MODE == EDIT && !FeatureNew.IS_OPEN) {
                     if (mouseX >= 1 && mouseX <= drawing.getWidth(MODE) - 16) {
                         if (mouseY >= yPos && mouseY < yPos + 6) {
                             color = THEME.optionsFontColorHover;
-                            List<String> tooltip = new ArrayList();
                             String untranslated = drawing.getUnlocalisedName() + "." + t.getFieldName();
                             String translated = Progression.translate(untranslated);
                             if (!("progression." + untranslated).equals(translated) || t.getFieldName().equals("isVisible") || t.getFieldName().equals("mustClaim") || t.getFieldName().equals("inverted")) {
@@ -133,7 +132,7 @@ public abstract class FeatureDrawable<T extends IRuleProvider> extends FeatureAb
                     }
                 }
 
-                t.draw(helper, renderX, renderY, color, yPos, mouseX, mouseY);
+                t.draw(drawing, helper, renderX, renderY, color, yPos, mouseX, mouseY);
 
                 index++;
             }
@@ -166,6 +165,8 @@ public abstract class FeatureDrawable<T extends IRuleProvider> extends FeatureAb
                 if (MODE == EDIT) {
                     int xXcoord = 234;
                     if (mouseOffsetX >= drawing.getWidth(MODE) - 13 && mouseOffsetX <= drawing.getWidth(MODE) - 3 && mouseOffsetY >= 4 && mouseOffsetY <= 14) {
+                        TOOLTIP.add("Clicking will collapse this criteria");
+                        TOOLTIP.add("Hold shift to delete this criteria");
                         xXcoord += 11;
                     }
 
@@ -183,7 +184,7 @@ public abstract class FeatureDrawable<T extends IRuleProvider> extends FeatureAb
 
             int crossX = 201;
             int crossY = 64;
-            if (mouseOffsetX >= 15 && mouseOffsetX <= 70 && mouseOffsetY >= 10 && mouseOffsetY <= 65) {
+            if (mouseOffsetX >= 15 && mouseOffsetX <= 70 && mouseOffsetY >= 10 && mouseOffsetY <= 65 && !FeatureNew.IS_OPEN) {
                 TOOLTIP.add(text);
                 crossY = 119;
             }

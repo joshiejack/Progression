@@ -1,8 +1,8 @@
 package joshie.progression.gui.filters;
 
 import joshie.progression.api.criteria.IFilterType;
+import joshie.progression.api.gui.IDrawHelper;
 import joshie.progression.crafting.ActionType;
-import joshie.progression.gui.core.DrawHelper;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class FilterTypeAction extends FilterTypeItem {
     }
 
     @Override
-    public void draw(DrawHelper offset, Object object, int offsetX, int j, int yOffset, int k, int mouseX, int mouseY) {
+    public void draw(IDrawHelper offset, Object object, int offsetX, int j, int yOffset, int k, int mouseX, int mouseY) {
         ItemStack stack = (ItemStack) object;
         offset.drawStack(stack, -offsetX + 8 + (j * 16), yOffset + 45 + (k * 16), 1F);
         if (mouseX >= 8 + (j * 16) && mouseX < 8 + (j * 16) + 16) {

@@ -354,4 +354,5 @@ progression.item.onGUIChange=Change GUI
 progression.item.onSentMessage=Send Chat Message
 progression.item.onSecond=Every Second
 progression.item.onReceivedPoints=On Receiving Points
-progression.item.onReceivedPoints=On Receiving True/False
+progression.item.onReceivedBoolean=On Receiving True/False
+progression.item.onLogin=Login

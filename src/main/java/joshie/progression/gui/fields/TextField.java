@@ -1,11 +1,14 @@
 package joshie.progression.gui.fields;
 
-import joshie.progression.api.special.IGetterCallback;
-import joshie.progression.gui.core.DrawHelper;
+import joshie.progression.api.criteria.IRuleProvider;
+import joshie.progression.api.gui.IDrawHelper;
 import joshie.progression.api.gui.Position;
+import joshie.progression.api.special.IGetterCallback;
 import joshie.progression.gui.fields.FieldHelper.DoubleFieldHelper;
 import joshie.progression.gui.fields.FieldHelper.FloatFieldHelper;
 import joshie.progression.gui.fields.FieldHelper.IntegerFieldHelper;
+
+import static joshie.progression.api.special.DisplayMode.EDIT;
 
 public class TextField extends AbstractField {
     protected FieldHelper data;
@@ -39,16 +42,19 @@ public class TextField extends AbstractField {
     }
 
     @Override
-    public void draw(DrawHelper helper, int renderX, int renderY, int color, int yPos, int mouseX, int mouseY) {
+    public void draw(IRuleProvider provider, IDrawHelper helper, int renderX, int renderY, int color, int yPos, int mouseX, int mouseY) {
         String datatext = data.getText();
         if (object instanceof IGetterCallback) {
             datatext = ((IGetterCallback) object).getField(data.getFieldName());
         }
 
-        String suffix = datatext.length() > 10 ? "..." : "";
-        datatext = (datatext.substring(0, Math.min(datatext.length(), 10))) + suffix;
-
-        helper.drawSplitText(renderX, renderY, name + ": " + datatext, 4, yPos, 125, color, 0.75F);
+        String totalString = getFieldName() + ": " + datatext;
+        int totalLength = totalString.length();
+        int number = totalLength > 48 ? totalLength - 48 : 48 - totalLength;
+        int length = Math.max(0, number);
+        String suffix = datatext.length() > length ? "..." : "";
+        datatext = datatext.substring(0, Math.min(datatext.length(), length)) + suffix;
+        helper.drawSplitText(renderX, renderY, name + ": " + datatext, 4, yPos, provider.getWidth(EDIT) + 48, color, 0.75F);
     }
 
     public static FieldHelper getField(String name, Object object, Position type) {

@@ -14,6 +14,7 @@ import java.util.UUID;
 public class PacketRequestItem extends PenguinPacket {
     private UUID uuid;
     private ItemStack stack;
+    private int stackSize;
 
     public PacketRequestItem() {}
 
@@ -30,7 +31,10 @@ public class PacketRequestItem extends PenguinPacket {
     public void toBytes(ByteBuf buf) {
         ByteBufUtils.writeUTF8String(buf, uuid.toString());
         buf.writeBoolean(stack != null);
-        if (stack != null) ByteBufUtils.writeItemStack(buf, stack);
+        if (stack != null) {
+            ByteBufUtils.writeItemStack(buf, stack);
+            buf.writeInt(stackSize);
+        }
     }
 
     @Override
@@ -38,6 +42,7 @@ public class PacketRequestItem extends PenguinPacket {
         uuid = UUID.fromString(ByteBufUtils.readUTF8String(buf));
         if (buf.readBoolean()) {
             stack = ByteBufUtils.readItemStack(buf);
+            stack.stackSize = buf.readInt();
         }
     }
 

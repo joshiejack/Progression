@@ -1,8 +1,6 @@
 package joshie.progression.api.gui;
 
-import joshie.progression.gui.core.DrawHelper;
-
-/** Implement this on rewards, triggers, filters, conditions, 
+/** Implement this on rewards, triggers, filters, conditions,
  *  if you wish to draw something special on them, other than default fields. */
 public interface ICustomDrawGuiEditor {
     /** If this is true, only what you decide to draw will show up **/
@@ -12,5 +10,5 @@ public interface ICustomDrawGuiEditor {
     public boolean mouseClicked(int mouseX, int mouseY);
     
     /** Draw your custom editor **/
-    public void drawEditor(DrawHelper helper, int renderX, int renderY, int mouseX, int mouseY);
+    public void drawEditor(IDrawHelper helper, int renderX, int renderY, int mouseX, int mouseY);
 }

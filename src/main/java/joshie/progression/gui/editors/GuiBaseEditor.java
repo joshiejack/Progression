@@ -62,6 +62,6 @@ public abstract class GuiBaseEditor implements IEditorMode {
     //Convenience methods - Tooltip Advanced
     public void addTooltip(String tooltip, int length) {
         String[] strings = SplitHelper.splitTooltip(tooltip, length);
-        for (String s: strings) TOOLTIP.add("  " + s);
+        TOOLTIP.add(SplitHelper.splitTooltip(tooltip.replace("\r", ""), length));
     }
 }

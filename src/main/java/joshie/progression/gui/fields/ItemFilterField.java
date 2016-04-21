@@ -4,10 +4,11 @@ import joshie.progression.Progression;
 import joshie.progression.api.criteria.IFilter;
 import joshie.progression.api.criteria.IFilterProvider;
 import joshie.progression.api.criteria.IFilterType;
+import joshie.progression.api.criteria.IRuleProvider;
+import joshie.progression.api.gui.IDrawHelper;
 import joshie.progression.api.special.IHasFilters;
 import joshie.progression.api.special.IInit;
 import joshie.progression.api.special.ISetterCallback;
-import joshie.progression.gui.core.DrawHelper;
 import joshie.progression.gui.filters.FilterTypeItem;
 import joshie.progression.helpers.CollectionHelper;
 import net.minecraft.client.gui.GuiScreen;
@@ -76,7 +77,7 @@ public class ItemFilterField extends AbstractField {
     }
 
     @Override
-    public void draw(DrawHelper helper, int renderX, int renderY, int color, int yPos, int mouseX, int mouseY) {
+    public void draw(IRuleProvider provider, IDrawHelper helper, int renderX, int renderY, int color, int yPos, int mouseX, int mouseY) {
         if (MODE == EDIT) {
             helper.drawSplitText(renderX, renderY, Progression.translate("filter." + selector.getName()), 4, yPos, 105, color, 0.75F);
         }

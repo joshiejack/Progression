@@ -3,9 +3,10 @@ package joshie.progression.gui.fields;
 import joshie.progression.api.criteria.IFilter;
 import joshie.progression.api.criteria.IFilterProvider;
 import joshie.progression.api.criteria.IFilterType;
+import joshie.progression.api.criteria.IRuleProvider;
+import joshie.progression.api.gui.IDrawHelper;
 import joshie.progression.api.gui.Position;
 import joshie.progression.api.special.*;
-import joshie.progression.gui.core.DrawHelper;
 import joshie.progression.gui.editors.IItemSelectable;
 import joshie.progression.gui.filters.FilterTypeItem;
 import joshie.progression.helpers.MCClientHelper;
@@ -92,7 +93,7 @@ public class ItemField extends AbstractField implements IItemSelectable {
     }
 
     @Override
-    public void draw(DrawHelper helper, int renderX, int renderY, int color, int yPos, int mouseX, int mouseY) {
+    public void draw(IRuleProvider provider, IDrawHelper helper, int renderX, int renderY, int color, int yPos, int mouseX, int mouseY) {
         try {
             boolean hovered = mouseX >= mouseX1 && mouseX <= mouseX2 && mouseY >= mouseY1 && mouseY <= mouseY2;
             if (hovered) {

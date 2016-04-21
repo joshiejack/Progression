@@ -34,7 +34,9 @@ public class FeatureTooltip extends FeatureAbstract {
     }
 
     public void add(String[] split) {
-        for (String s: split) this.tooltip.add(s);
+        for (String s: split) {
+            this.tooltip.add(s.replace("\r", ""));
+        }
     }
     
     @Override

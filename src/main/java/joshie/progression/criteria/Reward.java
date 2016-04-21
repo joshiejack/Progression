@@ -8,6 +8,7 @@ import joshie.progression.api.criteria.IRewardProvider;
 import joshie.progression.api.special.*;
 import joshie.progression.helpers.JSONHelper;
 import joshie.progression.helpers.SplitHelper;
+import joshie.progression.json.Options;
 import net.minecraft.item.ItemStack;
 
 import java.util.List;
@@ -22,8 +23,8 @@ public class Reward implements IRewardProvider {
     private UUID uuid;
 
     private ItemStack stack;
-    public boolean isVisible = true;
-    public boolean mustClaim = false;
+    public boolean isVisible;
+    public boolean mustClaim;
 
     //Dummy constructor for storing the default values
     public Reward(IReward reward, String unlocalised, int color) {
@@ -40,6 +41,8 @@ public class Reward implements IRewardProvider {
         this.unlocalised = unlocalised;
         this.color = color;
         this.stack = stack;
+        this.isVisible = true;
+        this.mustClaim = Options.mustClaimDefault;
         this.reward.setProvider(this);
     }
 

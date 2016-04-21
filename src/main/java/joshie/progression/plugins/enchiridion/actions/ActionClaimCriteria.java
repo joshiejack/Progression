@@ -36,7 +36,7 @@ public class ActionClaimCriteria extends AbstractActionCriteria implements IButt
         }
 
         if (!criteria.canRepeatInfinite() && PlayerTracker.getClientPlayer().getMappings().getCriteriaCount(criteria) >= criteria.getRepeatAmount()) return false;
-
+        if (criteria.givesAllRewards()) return true;
         return REWARDS.select(criteria.getRewards().get(0), true);
     }
 

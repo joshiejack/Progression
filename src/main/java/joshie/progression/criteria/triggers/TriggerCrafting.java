@@ -48,7 +48,29 @@ public class TriggerCrafting extends TriggerBaseItemFilter implements IClickable
     @Override
     public boolean onClicked(ItemStack stack) {
         try {
-            
+            //Fuck your privateness
+            Field f = ProxyCommonClient.class.getDeclaredField("guiEventHandler");
+            f.setAccessible(true);
+            GuiEventHandler eventHandler = (GuiEventHandler) f.get((ProxyCommonClient)JustEnoughItems.getProxy());
+
+            //DIE WITH FIRE
+            f = GuiEventHandler.class.getDeclaredField("inputHandler");
+            f.setAccessible(true);
+            InputHandler inputHandler = (InputHandler) f.get(eventHandler);
+            if (inputHandler == null) { //If it's not created, create it
+                Field f2 = GuiEventHandler.class.getDeclaredField("itemListOverlay");
+                f2.setAccessible(true);
+                ItemListOverlay itemListOverlay = (ItemListOverlay) f2.get(eventHandler);
+                RecipesGui recipesGui = new RecipesGui();
+                inputHandler = new InputHandler(recipesGui, itemListOverlay);
+                f.set(eventHandler, inputHandler);
+            }
+
+            //We're almost there
+            f = InputHandler.class.getDeclaredField("recipesGui");
+            f.setAccessible(true);
+            RecipesGui recipesGui = (RecipesGui) f.get(inputHandler);
+            recipesGui.showRecipes(new Focus(stack));
             return true;
         } catch (Exception e) { e.printStackTrace(); }
 

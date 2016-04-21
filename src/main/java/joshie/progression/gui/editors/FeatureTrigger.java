@@ -3,6 +3,7 @@ package joshie.progression.gui.editors;
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.IConditionProvider;
 import joshie.progression.api.criteria.ITriggerProvider;
+import joshie.progression.gui.editors.insert.FeatureNew;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class FeatureTrigger extends FeatureDrawable<ITriggerProvider> {
         //We have drawn the deleted button now we check for conditions for triggers.
         if (MODE == EDIT) {
             int color = THEME.blackBarBorder;
-            if (mouseOffsetX >= 2 && mouseOffsetX <= drawing.getWidth(MODE) - 3 && mouseOffsetY >= 65 && mouseOffsetY <= 77) {
+            if (mouseOffsetX >= 2 && mouseOffsetX <= drawing.getWidth(MODE) - 3 && mouseOffsetY >= 65 && mouseOffsetY <= 77 && !FeatureNew.IS_OPEN) {
                 color = THEME.blackBarFontColor;
             }
 

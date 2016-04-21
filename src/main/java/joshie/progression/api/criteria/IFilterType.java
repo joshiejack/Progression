@@ -1,6 +1,6 @@
 package joshie.progression.api.criteria;
 
-import joshie.progression.gui.core.DrawHelper;
+import joshie.progression.api.gui.IDrawHelper;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public interface IFilterType {
     public boolean searchMatches(Object object, String lowerCase);
 
     /** Draw the filter objects **/
-    public void draw(DrawHelper helper, Object stack, int offsetX, int j, int yOffset, int k, int mouseX, int mouseY);
+    public void draw(IDrawHelper helper, Object stack, int offsetX, int j, int yOffset, int k, int mouseX, int mouseY);
 
     /** Mouse clicked on filter objects **/
     public boolean mouseClicked(int mouseX, int mouseY, int j, int k);

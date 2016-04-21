@@ -147,13 +147,13 @@ public class GuiCriteriaEditor extends GuiBaseEditorRule<ICriteria> implements I
     }
 
     private boolean clickTriggers(int mouseX, int mouseY, int button) {
-        return mouseX >= 140 && mouseX <= 240 && mouseY >= 26 && mouseY <= 36 ? tasks.click(button) : false;
+        return mouseX >= 100 && mouseX <= 175 && mouseY >= 26 && mouseY <= 36 ? tasks.click(button) : false;
     }
 
     private void drawTriggers(boolean overlay, int mouseX, int mouseY) {
-        drawText("             " + translate("required") + ": " + tasks.getField(), 100, 29, THEME.criteriaEditDisplayNameColor);
+        drawText(translate("required") + ": " + tasks.getField(), 100, 29, THEME.criteriaEditDisplayNameColor);
         if (!overlay) {
-            if (mouseX >= 140 && mouseX <= 240 && mouseY >= 26 && mouseY <= 36) {
+            if (mouseX >= 100 && mouseX <= 175 && mouseY >= 26 && mouseY <= 36) {
                 addCriteriaTooltip("tasks");
                 if (returnedBoolean(tasks)) addTooltip(ITALIC + "  " + translateCriteria("tasks.all"));
                 else addTooltip(ITALIC + "  " + translateCriteria("tasks.amount"));
@@ -162,15 +162,15 @@ public class GuiCriteriaEditor extends GuiBaseEditorRule<ICriteria> implements I
     }
 
     private boolean clickRewards(int mouseX, int mouseY, int button) {
-        return mouseX >= 140 && mouseX <= 240 && mouseY >= 123 && mouseY <= 133 ? rewards.click(button) : false;
+        return mouseX >= 100 && mouseX <= 175 && mouseY >= 123 && mouseY <= 133 ? rewards.click(button) : false;
     }
 
     private void drawRewards(ICriteria criteria, boolean overlay, int mouseX, int mouseY) {
         //Universal Mode
         if (MODE == EDIT) {
-            drawText(translate("given") + ": " + rewards.getField(), 140, 124, THEME.criteriaEditDisplayNameColor);
+            drawText(translate("given") + ": " + rewards.getField(), 100, 124, THEME.criteriaEditDisplayNameColor);
             if (!overlay) {
-                if (mouseX >= 140 && mouseX <= 240 && mouseY >= 123 && mouseY <= 133) {
+                if (mouseX >= 100 && mouseX <= 175 && mouseY >= 123 && mouseY <= 133) {
                     addCriteriaTooltip("rewards");
                     if (returnedBoolean(rewards)) addTooltip(ITALIC + "  " + translateCriteria("rewards.all"));
                     else addTooltip(ITALIC + "  " + translateCriteria("rewards.amount"));

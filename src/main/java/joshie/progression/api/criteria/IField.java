@@ -1,6 +1,6 @@
 package joshie.progression.api.criteria;
 
-import joshie.progression.gui.core.DrawHelper;
+import joshie.progression.api.gui.IDrawHelper;
 
 public interface IField<T> {
     /** Returns the name of the field **/
@@ -13,7 +13,7 @@ public interface IField<T> {
     public boolean click(int button);
 
     /** Draw this field **/
-    public void draw(DrawHelper helper, int renderX, int renderY, int color, int yPos, int mouseX, int mouseY);
+    public void draw(IRuleProvider provider, IDrawHelper helper, int renderX, int renderY, int color, int yPos, int mouseX, int mouseY);
 
     /** Return contents of the field **/
     public T getField();

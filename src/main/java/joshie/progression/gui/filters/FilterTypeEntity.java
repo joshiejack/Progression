@@ -1,7 +1,7 @@
 package joshie.progression.gui.filters;
 
 import joshie.progression.api.criteria.IFilterType;
-import joshie.progression.gui.core.DrawHelper;
+import joshie.progression.api.gui.IDrawHelper;
 import joshie.progression.helpers.EntityHelper;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.EntityList;
@@ -54,7 +54,7 @@ public class FilterTypeEntity extends FilterTypeBase {
     }
     
     @Override
-    public void draw(final DrawHelper offset, final Object object, final int offsetX, final int j, final int yOffset, final int k, final int mouseX, final int mouseY) {
+    public void draw(final IDrawHelper offset, final Object object, final int offsetX, final int j, final int yOffset, final int k, final int mouseX, final int mouseY) {
         try {
             LAST.add(new Callable() {
                 @Override

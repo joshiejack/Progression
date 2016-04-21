@@ -16,7 +16,6 @@ import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import static joshie.progression.gui.core.GuiList.REWARDS;
@@ -110,6 +109,20 @@ public class FeatureRewards extends FeatureCriteria implements ISimpleEditorFiel
     }
 
     private List<IRewardProvider> buildLists(final ICriteria criteria, final boolean value) {
+        List<IRewardProvider> list = new ArrayList<IRewardProvider>();
+        if (value && (criteria.givesAllRewards() || criteria.getRewards().size() < criteria.getAmountOfRewards())) {
+            list.addAll(criteria.getRewards());
+        }
+
+        if (!criteria.givesAllRewards()) {
+            for (IRewardProvider reward : criteria.getRewards()) {
+                if (!reward.mustClaim() && value) list.add(reward);
+                else if (!value && reward.mustClaim()) list.add(reward);
+            }
+        }
+
+        return list;
+        /*
         try {
             return cache.get(value, new Callable<List<IRewardProvider>>() {
                 @Override
@@ -129,7 +142,7 @@ public class FeatureRewards extends FeatureCriteria implements ISimpleEditorFiel
                     return list;
                 }
             });
-        } catch (Exception e) { return new ArrayList<IRewardProvider>(); }
+        } catch (Exception e) { return new ArrayList<IRewardProvider>(); } */
     }
 
     @Override
