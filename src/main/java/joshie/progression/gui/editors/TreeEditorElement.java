@@ -105,11 +105,13 @@ public class TreeEditorElement {
     }
 
     public static enum ColorMode {
-        DEFAULT(0), COMPLETED(25), AVAILABLE(50), ERROR(75), SELECTED(100), INVISIBLE(0);
+        DEFAULT(false, 0), COMPLETED(true, 25), AVAILABLE(true, 50), ERROR(false, 75), SELECTED(true, 100), INVISIBLE(false, 0);
 
         public final int y;
+        public final boolean openable;
 
-        private ColorMode(int y) {
+        private ColorMode(boolean openable, int y) {
+            this.openable = openable;
             this.y = y;
         }
     }

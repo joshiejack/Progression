@@ -113,8 +113,8 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
                 }
 
                 if (newTab != null) {
-                    if (!APIHandler.getCache(true).getTabs().containsKey(newTab.getUniqueID())) {
-                        for (ITab tab : APIHandler.getCache(true).getTabs().values()) {
+                    if (!APIHandler.getClientCache().getTabIDs().contains(newTab.getUniqueID())) {
+                        for (ITab tab : APIHandler.getClientCache().getTabSet()) {
                             newTab = tab;
                             break;
                         }
@@ -129,7 +129,7 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
                     APIHandler.removeCriteria(c.getUniqueID(), true);
                 }
 
-                APIHandler.getCache(true).getTabs().remove(tab.getUniqueID()); //Reopen after removing
+                APIHandler.getClientCache().removeTab(tab); //Reopen after removing
                 CORE.setEditor(TREE_EDITOR);
                 return;
             }

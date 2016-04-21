@@ -34,15 +34,14 @@ public class ActionTabList extends AbstractAction {
         return new ActionTabList();
     }
 
-    @Override
-    public boolean performAction() {
-        //Create page 3
-        IPage page = EnchiridionAPI.book.getPageIfNotExists(2);
+    public static void createPage(IPage page) {
         if (page != null) {
-            page.toggleScroll(); //Make page 3 scrollable
+            if (!page.isScrollingEnabled()) {
+                page.toggleScroll(); //Make page 3 scrollable
+            }
 
             int index = 0;
-            for (ITab tab: APIHandler.getCache(true).getSortedTabs()) {
+            for (ITab tab: APIHandler.getClientCache().getSortedTabs()) {
                 FeatureTab feature = new FeatureTab(tab);
                 page.addFeature(feature, 26, 20 + (20 * index), 150, 15, true, false);
 
@@ -60,6 +59,15 @@ public class ActionTabList extends AbstractAction {
             //Add the autoupdater
             page.addFeature(new FeatureTabListUpdater(), 20, 20, 1, 1, true, false);
         }
+    }
+
+    @Override
+    public boolean performAction() {
+        //Create page 3
+        IPage page = EnchiridionAPI.book.getPageIfNotExists(2);
+        if (page != null) {
+            createPage(page);
+        }
 
         //Create page 2
         page = EnchiridionAPI.book.getPageIfNotExists(1);
@@ -72,7 +80,7 @@ public class ActionTabList extends AbstractAction {
             }
 
             if (first != null) {
-                FeaturePreviewWindow window = new FeaturePreviewWindow(first.hashCode() + 1);
+                FeaturePreviewWindow window = new FeaturePreviewWindow(first.getUniqueID().hashCode() + 1);
                 page.addFeature(window, 226, 18, 193, 120, true, false);
 
                 //Display the Tab's Info
@@ -80,7 +88,7 @@ public class ActionTabList extends AbstractAction {
                 page.addFeature(info, 230, 140, 171, 44, true, false);
 
                 //Jump to Next Page
-                IButtonActionProvider jump = new FeatureButton(new ActionJumpTab(first.hashCode()));
+                IButtonActionProvider jump = new FeatureButton(new ActionJumpTab(first.getUniqueID().hashCode()));
                 jump.setResourceLocation(true, new ResourceLocation(BOOKPATH + "open_button_on.png")).setResourceLocation(false, new ResourceLocation(BOOKPATH + "open_button_off.png"));
                 jump.setTooltip("Open " + first.getLocalisedName());
                 jump.setText(true, "[color=gray]Open").setText(false, "Open");
@@ -101,6 +109,7 @@ public class ActionTabList extends AbstractAction {
             //Return to homepage right click anywhere
             IButtonActionProvider pageBack = EnchiridionAPI.editor.getJumpPageButton(0);
             pageBack.setResourceLocation(true, TRANSPARENT).setResourceLocation(false, TRANSPARENT);
+            pageBack.setProcessesClick(0, false);
             page.addFeature(pageBack, -10, -10, 450, 250, true, false);
         }
 

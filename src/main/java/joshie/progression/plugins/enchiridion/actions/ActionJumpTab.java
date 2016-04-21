@@ -10,6 +10,7 @@ public class ActionJumpTab extends ActionJumpPage {
 
     public ActionJumpTab(int page) {
         super(page);
+        tempPage = page;
     }
 
     @Override

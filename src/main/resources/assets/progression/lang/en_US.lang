@@ -356,3 +356,12 @@ progression.item.onSecond=Every Second
 progression.item.onReceivedPoints=On Receiving Points
 progression.item.onReceivedBoolean=On Receiving True/False
 progression.item.onLogin=Login
+
+#Enchiridion
+enchiridion.button.points=[Progression]Insert Points Display
+enchiridion.button.rewards=[Progression]Insert Rewards Display
+enchiridion.button.tasks=[Progression]Insert Tasks Display
+enchiridion.button.criteria=[Progression]Insert Criteria Display
+enchiridion.button.tab=[Progression]Insert Tab Display
+enchiridion.button.action.field.display=Display Name
+enchiridion.button.action.field.background=Show Background

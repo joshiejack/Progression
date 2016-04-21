@@ -6,19 +6,25 @@ import joshie.enchiridion.api.book.IButtonActionProvider;
 import joshie.enchiridion.api.book.IFeatureProvider;
 import joshie.enchiridion.api.book.IPage;
 import joshie.enchiridion.api.gui.ISimpleEditorFieldProvider;
+import joshie.enchiridion.gui.book.features.FeatureButton;
+import joshie.enchiridion.gui.book.features.FeaturePreviewWindow;
+import joshie.enchiridion.gui.book.features.FeatureText;
 import joshie.enchiridion.util.ELocation;
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.ITriggerProvider;
+import joshie.progression.gui.editors.TreeEditorElement.ColorMode;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.helpers.JSONHelper;
 import joshie.progression.lib.ProgressionInfo;
+import joshie.progression.plugins.enchiridion.actions.ActionClaimCriteria;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
 import java.util.UUID;
 
 import static joshie.progression.gui.editors.TreeEditorElement.getModeForCriteria;
+import static joshie.progression.plugins.enchiridion.EnchiridionSupport.TRANSPARENT;
 import static net.minecraft.util.EnumChatFormatting.GOLD;
 
 
@@ -88,8 +94,8 @@ public class FeatureCriteria extends FeatureProgression implements ISimpleEditor
     private static final ResourceLocation completed = new ResourceLocation(ProgressionInfo.BOOKPATH + "hexcompleted.png");
     private static final ResourceLocation error = new ResourceLocation(ProgressionInfo.BOOKPATH + "hexerror.png");
 
-    private ResourceLocation getResource() {
-        switch (getModeForCriteria(getCriteria(), false)) {
+    private ResourceLocation getResource(ColorMode mode) {
+        switch (mode) {
             case DEFAULT: return locked;
             case COMPLETED: return completed;
             case AVAILABLE: return unlocked;
@@ -98,9 +104,9 @@ public class FeatureCriteria extends FeatureProgression implements ISimpleEditor
     }
    
     public void drawFeature(ICriteria criteria, int mouseX, int mouseY) {
-        ResourceLocation location = getResource();
+        ColorMode mode = getModeForCriteria(getCriteria(), false);
+        ResourceLocation location = getResource(mode);
         if (location != null) {
-            //Large EnchiridionAPI.draw.drawImage(unlocked, position.getLeft() - 6, position.getTop() - 6 , position.getLeft() + 22, position.getTop() + 22);
             List<ICriteria> prereqs = criteria.getPreReqs();
             for (ICriteria c : prereqs) {
                 FeatureCriteria connected = getFeatureFromCriteria(c);
@@ -122,13 +128,52 @@ public class FeatureCriteria extends FeatureProgression implements ISimpleEditor
     @Override
     public boolean performClick(int mouseX, int mouseY, int mouseButton) {
         ICriteria criteria = getCriteria();
-        if (criteria != null) {
+        if (criteria != null && getModeForCriteria(criteria, false).openable) {
             int number = criteria.getUniqueID().hashCode();
             IPage page = EnchiridionAPI.book.getPageIfNotExists(number);
             if (page != null) {
-                IButtonActionProvider button = EnchiridionAPI.editor.getJumpPageButton(EnchiridionAPI.book.getPage().getPageNumber());
+                int previous = EnchiridionAPI.book.getPage().getPageNumber();
+                IButtonActionProvider button = EnchiridionAPI.editor.getJumpPageButton(previous);
                 button.setResourceLocation(true, new ELocation("arrow_left_on")).setResourceLocation(false, new ELocation("arrow_left_off"));
                 page.addFeature(button, 21, 200, 18, 10, true, false);
+
+                //Create the left side page
+                IPage pageLeft = EnchiridionAPI.book.getPageIfNotExists(page.getPageNumber() + 1);
+                pageLeft.addFeature(new FeatureText("Jump to the page after this one to edit the text."), 20, 20, 181, 81, false, false);
+                pageLeft.toggleScroll();
+                FeaturePreviewWindow previewLeft = new FeaturePreviewWindow(page.getPageNumber() + 1);
+                page.addFeature(previewLeft, 16, 16, 189, 117, true, false);
+
+                //Create the right side page
+                IPage pageRight = EnchiridionAPI.book.getPageIfNotExists(page.getPageNumber() + 2);
+                pageRight.addFeature(new FeatureText("Jump two pages after to edit this one."), 230, 20, 181, 81, false, false);
+                pageRight.toggleScroll();
+                FeaturePreviewWindow previewRight = new FeaturePreviewWindow(page.getPageNumber() + 2);
+                page.addFeature(previewRight, 225, 16, 192, 117, true, false);
+
+                //Add the Rewards
+                FeatureRewards reward = new FeatureRewards(criteria, true);
+                page.addFeature(reward, 22, 138, 17, 28, true, false);
+
+                //Add The Tasks
+                FeatureTasks tasks = new FeatureTasks(criteria, true);
+                page.addFeature(tasks, 230, 138, 17, 28, true, false);
+
+                //Add the Claim Button
+                IButtonActionProvider claimButton = new FeatureButton(new ActionClaimCriteria(criteria));
+                claimButton.setTooltip("Claim " + criteria.getLocalisedName());
+                claimButton.setText(true, "[color=gray]Claim").setText(false, "Claim");
+                claimButton.setTextOffsetX(true, 14).setTextOffsetY(true, 3);
+                claimButton.setTextOffsetX(false, 14).setTextOffsetY(false, 3);
+                claimButton.setResourceLocation(true, new ResourceLocation("progression:textures/books/open_button_on.png"));
+                claimButton.setResourceLocation(false, new ResourceLocation("progression:textures/books/open_button_off.png"));
+                page.addFeature(claimButton, 139, 175, 50, 14, true, false);
+
+                //Return to tabs page
+                IButtonActionProvider pageBack = EnchiridionAPI.editor.getJumpPageButton(previous);
+                pageBack.setResourceLocation(true, TRANSPARENT).setResourceLocation(false, TRANSPARENT);
+                pageBack.setProcessesClick(0, false);
+                page.addFeature(pageBack, -10, -10, 450, 250, true, false);
             }
 
             return EnchiridionAPI.book.jumpToPageIfExists(number);

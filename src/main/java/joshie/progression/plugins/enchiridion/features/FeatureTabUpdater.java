@@ -59,7 +59,7 @@ public class FeatureTabUpdater extends FeatureProgression implements ISimpleEdit
     @Override
     public void draw(int mouseX, int mouseY) {
         if (!EnchiridionAPI.book.isEditMode()) return; //Don't update outside of edit mode
-        ITab tab = APIHandler.getCache(true).getTabs().get(uuid);
+        ITab tab = APIHandler.getClientCache().getTab(uuid);
         if (tab != null) {
             //Update and add new criteria from the page
             for (ICriteria criteria: tab.getCriteria()) {

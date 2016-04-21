@@ -93,15 +93,15 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
 
     @Override
     public void initData() {
-        addButtons(CORE, APIHandler.getCache(true).getSortedTabs().size() > 17);
+        addButtons(CORE, APIHandler.getClientCache().getSortedTabs().size() > 17);
 
         if (currentTabID == null) {
             currentTabID = Options.settings.defaultTabID;
         }
 
-        currentTab = APIHandler.getCache(true).getTabs().get(currentTabID);
+        currentTab = APIHandler.getClientCache().getTab(currentTabID);
         if (currentTab == null) {
-            for (ITab tab : APIHandler.getCache(true).getTabs().values()) {
+            for (ITab tab : APIHandler.getClientCache().getTabSet()) {
                 currentTab = tab;
                 break;
             }
@@ -211,11 +211,11 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
 
         if (key == Keyboard.KEY_UP) {
             currentTab.setSortIndex(currentTab.getSortIndex() + 1);
-            APIHandler.getCache(true).clearSorted(); //Clear the sorted
+            APIHandler.getClientCache().clearSorted(); //Clear the sorted
             CORE.initGui();
         } else if (key == Keyboard.KEY_DOWN) {
             currentTab.setSortIndex(currentTab.getSortIndex() - 1);
-            APIHandler.getCache(true).clearSorted(); //Clear the sorted
+            APIHandler.getClientCache().clearSorted(); //Clear the sorted
             CORE.initGui();
         }
     }

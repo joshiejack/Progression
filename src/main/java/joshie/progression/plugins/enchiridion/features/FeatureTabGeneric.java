@@ -25,7 +25,7 @@ public abstract class FeatureTabGeneric extends FeatureProgression {
     }
 
     public ITab getTab() {
-        return APIHandler.getCache(true).getTabs().get(uuid);
+        return APIHandler.getClientCache().getTab(uuid);
     }
 
     @Override
@@ -36,7 +36,7 @@ public abstract class FeatureTabGeneric extends FeatureProgression {
             ITab tab = getTab();
             if (tab != null) display = tab.getLocalisedName();
         } else if (field.equals("display")) {
-            for (ITab t : APIHandler.getCache(true).getTabs().values()) {
+            for (ITab t : APIHandler.getClientCache().getTabSet()) {
                 if (t.getLocalisedName().equals(display)) {
                     uuid = t.getUniqueID();
                 }

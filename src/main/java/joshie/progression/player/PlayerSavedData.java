@@ -146,7 +146,7 @@ public class PlayerSavedData extends WorldSavedData {
             this.markDirty();
             //If this team never existed before
             //Loop through all the rewards loaded and init them with player data
-            for (ITab tab : APIHandler.getCache(false).getTabs().values()) {
+            for (ITab tab : APIHandler.getServerCache().getTabSet()) {
                 for (ICriteria criteria : tab.getCriteria()) {
                     for (IRewardProvider provider : criteria.getRewards()) {
                         if (provider.getProvided() instanceof IStoreNBTData) {

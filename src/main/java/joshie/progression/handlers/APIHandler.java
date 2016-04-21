@@ -159,9 +159,9 @@ public class APIHandler implements IProgressionAPI {
     }
 
     public static ITab newTab(UUID name, boolean isClient) {
-        ITab iTab = new Tab().setUniqueName(name);
-        getCache(isClient).getTabs().put(name, iTab);
-        return iTab;
+        ITab tab = new Tab().setUniqueName(name);
+        getCache(isClient).addTab(tab);
+        return tab;
     }
 
     public static IConditionProvider newCondition(ITriggerProvider trigger, UUID uuid, String type, JsonObject data, boolean isClient) {

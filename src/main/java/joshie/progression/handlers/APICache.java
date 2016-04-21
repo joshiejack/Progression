@@ -47,16 +47,33 @@ public class APICache {
         return criteriaCache.values();
     }
 
-    public HashMap<UUID,ITab> getTabs() {
-        return tabCache;
+    public ITab getTab(UUID uuid) {
+        return tabCache.get(uuid);
+    }
+
+    public Collection<ITab> getTabSet() {
+        return tabCache.values();
+    }
+
+    public Set<UUID> getTabIDs() {
+        return tabCache.keySet();
     }
 
     public void clearSorted() {
-        sortedCache.cleanUp();
+        sortedCache.invalidateAll();
+    }
+
+    public void addTab(ITab tab) {
+        tabCache.put(tab.getUniqueID(), tab);
+        clearSorted();
+    }
+
+    public void removeTab(ITab tab) {
+        tabCache.remove(tab.getUniqueID());
+        clearSorted();
     }
 
     public ArrayList<ITab> getSortedTabs() {
-
         try {
             return sortedCache.get(true, new Callable<ArrayList<ITab>>() {
                 @Override

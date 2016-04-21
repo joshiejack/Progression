@@ -23,6 +23,8 @@ import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
+import static joshie.progression.plugins.enchiridion.EnchiridionSupport.TRANSPARENT;
+
 
 public class FeatureTab extends FeatureTabGeneric {
     private static final Cache<UUID, Integer> numberCache = CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.MINUTES).build();
@@ -99,6 +101,12 @@ public class FeatureTab extends FeatureTabGeneric {
                             addCriteriaToPage(page, c);
                         }
 
+                        //Return to this tab page
+                        IButtonActionProvider pageBack = EnchiridionAPI.editor.getJumpPageButton(EnchiridionAPI.book.getPage().getPageNumber());
+                        pageBack.setResourceLocation(true, TRANSPARENT).setResourceLocation(false, TRANSPARENT);
+                        pageBack.setProcessesClick(0, false);
+                        page.addFeature(pageBack, -10, -10, 450, 250, true, false);
+
                         //Add the autoupdater
                         FeatureTabUpdater updater = new FeatureTabUpdater(tab.getUniqueID());
                         page.addFeature(updater, -250, -250, 1, 1, true, false);
@@ -149,14 +157,16 @@ public class FeatureTab extends FeatureTabGeneric {
         if (isSelected) color = 0xFF7C7C7C;
 
         ITab tab = getTab();
-        String completion = getCompletionAmount(tab) + "% Completed";
-        if (!GuiTreeEditor.isTabVisible(tab)) {
-            completion = "Invisible";
-            color = 0xFFCCCCCC;
-        }
+        if (tab != null) {
+            String completion = getCompletionAmount(tab) + "% Completed";
+            if (!GuiTreeEditor.isTabVisible(tab)) {
+                completion = "Invisible";
+                color = 0xFFCCCCCC;
+            }
 
-        EnchiridionAPI.draw.drawSplitScaledString(getTabNumber(tab) + ".", position.getLeft(), position.getTop(), 200, color, 1F);
-        EnchiridionAPI.draw.drawSplitScaledString(tab.getLocalisedName(), position.getLeft() + 12, position.getTop(), 200, color, 1F);
-        EnchiridionAPI.draw.drawSplitScaledString(completion, position.getLeft() + 9, position.getTop() + 10, 100, color, 0.75F);
+            EnchiridionAPI.draw.drawSplitScaledString(getTabNumber(tab) + ".", position.getLeft(), position.getTop(), 200, color, 1F);
+            EnchiridionAPI.draw.drawSplitScaledString(tab.getLocalisedName(), position.getLeft() + 12, position.getTop(), 200, color, 1F);
+            EnchiridionAPI.draw.drawSplitScaledString(completion, position.getLeft() + 9, position.getTop() + 10, 100, color, 0.75F);
+        }
     }
 }

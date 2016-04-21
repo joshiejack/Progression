@@ -227,7 +227,7 @@ public class JSONLoader {
         }
         
         //Now that everything has been loaded in, we should go and init all the data
-        for (ITab tab : APIHandler.getCache(isClientside).getTabs().values()) {
+        for (ITab tab : APIHandler.getCache(isClientside).getTabSet()) {
             for (ICriteria criteria: tab.getCriteria()) {
                 for (ITriggerProvider provider: criteria.getTriggers()) {
                     ITrigger trigger = provider.getProvided();
@@ -298,7 +298,7 @@ public class JSONLoader {
     public static void saveData(boolean isClient) {
         if (Options.debugMode) Progression.logger.log(Level.INFO, "Begin logging");
         HashSet<UUID> tabNames = new HashSet();
-        Collection<ITab> allTabs = APIHandler.getCache(isClient).getTabs().values();
+        Collection<ITab> allTabs = APIHandler.getCache(isClient).getTabSet();
         HashSet<UUID> names = new HashSet();
         DefaultSettings forJSONTabs = new DefaultSettings();
 
