@@ -23,6 +23,7 @@ import static joshie.progression.gui.core.GuiList.REWARDS;
 public class FeatureRewards extends FeatureCriteria implements ISimpleEditorFieldProvider {
     private transient Cache<Boolean, List<IRewardProvider>> cache = CacheBuilder.newBuilder().maximumSize(2).expireAfterWrite(1, TimeUnit.MINUTES).build();
     public boolean text = true;
+    public boolean showHidden = false;
 
     public FeatureRewards() {}
 
@@ -111,12 +112,16 @@ public class FeatureRewards extends FeatureCriteria implements ISimpleEditorFiel
     private List<IRewardProvider> buildLists(final ICriteria criteria, final boolean value) {
         List<IRewardProvider> list = new ArrayList<IRewardProvider>();
         if (value && (criteria.givesAllRewards() || criteria.getRewards().size() < criteria.getAmountOfRewards())) {
-            list.addAll(criteria.getRewards());
+            for (IRewardProvider reward: criteria.getRewards()) {
+                if (!reward.isVisible() && !showHidden) continue;
+                else list.add(reward);
+            }
         }
 
         if (!criteria.givesAllRewards()) {
             for (IRewardProvider reward : criteria.getRewards()) {
-                if (!reward.mustClaim() && value) list.add(reward);
+                if (!reward.isVisible() && !showHidden) continue;
+                else if (!reward.mustClaim() && value) list.add(reward);
                 else if (!value && reward.mustClaim()) list.add(reward);
             }
         }
@@ -147,6 +152,8 @@ public class FeatureRewards extends FeatureCriteria implements ISimpleEditorFiel
 
     @Override
     public void drawFeature(ICriteria criteria, int mouseX, int mouseY) {
+        update(position);
+
         List<IRewardProvider> always = buildLists(criteria, true);
         List<IRewardProvider> claim = buildLists(criteria, false);
         int yOffsetClaimable = 0;

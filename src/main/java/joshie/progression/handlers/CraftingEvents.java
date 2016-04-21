@@ -1,6 +1,7 @@
 package joshie.progression.handlers;
 
 import com.google.common.collect.HashMultimap;
+import joshie.enchiridion.gui.book.GuiBook;
 import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.ICriteria;
@@ -8,6 +9,7 @@ import joshie.progression.api.event.ActionEvent;
 import joshie.progression.crafting.ActionType;
 import joshie.progression.crafting.Crafter;
 import joshie.progression.crafting.CraftingRegistry;
+import joshie.progression.gui.core.GuiCore;
 import joshie.progression.helpers.CraftingHelper;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.PlayerHelper;
@@ -19,6 +21,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.GuiScreenEvent.DrawScreenEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -26,13 +29,26 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 
 import java.util.Set;
 
-import static joshie.progression.gui.core.GuiList.CORE;
-import static joshie.progression.gui.core.GuiList.CRITERIA_EDITOR;
+import static joshie.progression.gui.core.GuiList.*;
 
 public class CraftingEvents {
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
         RemappingHandler.onPlayerConnect((EntityPlayerMP) event.player);
+    }
+
+    @SubscribeEvent
+    public void onGuiPost(DrawScreenEvent.Pre event) {
+        if (event.gui instanceof GuiCore || event.gui instanceof GuiBook) {
+            LAST.clear();
+        }
+    }
+
+    @SubscribeEvent
+    public void onGuiPost(DrawScreenEvent.Post event) {
+        if (event.gui instanceof GuiCore || event.gui instanceof GuiBook) {
+            LAST.run();
+        }
     }
     
     @SubscribeEvent

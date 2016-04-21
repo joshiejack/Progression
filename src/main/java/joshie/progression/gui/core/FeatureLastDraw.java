@@ -31,18 +31,20 @@ public class FeatureLastDraw extends FeatureAbstract {
     public void add(Callable[] split) {
         for (Callable s: split) this.callables.add(s);
     }
-    
+
     @Override
-    public void drawFeature(int x, int y) {
+    public void drawFeature(int x, int y) {}
+
+    @Override
+    public boolean isOverlay() {
+        return true;
+    }
+
+    public void run() {
         for (Callable c: callables) {
             try {
                 c.call();
             } catch (Exception e) { e.printStackTrace(); }
         }
-    }
-
-    @Override
-    public boolean isOverlay() {
-        return true;
     }
 }

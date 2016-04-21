@@ -37,7 +37,7 @@ public class FeatureTabListUpdater extends FeatureProgression implements ISimple
     }
 
     private void rebuildTheList() {
-        position.getPage().getFeatures().clear();
+        position.getPage().clear();
         ActionTabList.createPage(position.getPage());
     }
 
@@ -50,10 +50,15 @@ public class FeatureTabListUpdater extends FeatureProgression implements ISimple
         for (IFeatureProvider provider: position.getPage().getFeatures()) {
             if (provider.getFeature() instanceof FeatureTab) {
                 FeatureTab feature = ((FeatureTab)provider.getFeature());
-                if (!tabExists(feature.getTab())) {
+                if (feature.getTab() != null) {
+                    if (!tabExists(feature.getTab())) {
+                        rebuild = true;
+                        break;
+                    } else inList.add(feature.getTab());
+                } else {
                     rebuild = true;
                     break;
-                } else inList.add(feature.getTab());
+                }
             }
         }
 

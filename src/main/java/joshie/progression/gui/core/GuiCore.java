@@ -122,7 +122,6 @@ public class GuiCore extends GuiScreen {
             initGui();
         }
 
-        LAST.clear();
         TOOLTIP.clear();
         screenTop = (height - ySize) / 2;
         boolean overlayvisible = false;
@@ -145,7 +144,6 @@ public class GuiCore extends GuiScreen {
 
         //Draw the tooltip in the right place
         if (openGui.hasButtons()) super.drawScreen(cursorX, cursorY - screenTop, partialTicks);
-        LAST.drawFeature(cursorX, cursorY);
         TOOLTIP.drawFeature(cursorX, cursorY);
     }
 

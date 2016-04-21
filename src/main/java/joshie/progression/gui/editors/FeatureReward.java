@@ -48,6 +48,10 @@ public class FeatureReward extends FeatureDrawable<IRewardProvider> {
     }
 
     public Set<IRewardProvider> getSelected() {
+        if (selected == null) {
+            selected = new LinkedHashSet<IRewardProvider>();
+        }
+
         return selected;
     }
 

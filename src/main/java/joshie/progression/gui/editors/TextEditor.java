@@ -14,11 +14,12 @@ public class TextEditor {
     private int tick;
 
     public boolean setEditable(ITextEditable editable) {
-        this.isTextEditing = true;
-        this.editable = editable;
         if (this.editable != editable) {
             this.position = editable.getTextField().length();
         }
+
+        this.isTextEditing = true;
+        this.editable = editable;
 
         return true;
     }
