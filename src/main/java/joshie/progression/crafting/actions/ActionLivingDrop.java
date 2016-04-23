@@ -1,7 +1,7 @@
 package joshie.progression.crafting.actions;
 
 import joshie.progression.crafting.ActionType;
-import joshie.progression.handlers.CraftingEvents;
+import joshie.progression.handlers.ProgressionEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,7 +23,7 @@ public class ActionLivingDrop extends ActionForgeEvent {
                 EntityItem item = it.next();
                 ItemStack stack = item.getEntityItem();
                 EntityPlayer player = (EntityPlayer) source;
-                if (CraftingEvents.isEventCancelled(player, ActionType.ENTITYDROPKILLEDWITH, player.getCurrentEquippedItem(), ActionType.ENTITYDROP, stack)) {
+                if (ProgressionEvents.isEventCancelled(player, ActionType.ENTITYDROPKILLEDWITH, player.getCurrentEquippedItem(), ActionType.ENTITYDROP, stack)) {
                     it.remove();
                 }
             }

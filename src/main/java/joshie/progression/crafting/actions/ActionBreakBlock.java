@@ -1,7 +1,7 @@
 package joshie.progression.crafting.actions;
 
 import joshie.progression.crafting.ActionType;
-import joshie.progression.handlers.CraftingEvents;
+import joshie.progression.handlers.ProgressionEvents;
 import joshie.progression.helpers.BlockActionHelper;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,7 +16,7 @@ public class ActionBreakBlock extends ActionForgeEvent {
     public void onBreakSpeed(BreakSpeed event) {
         Block block = event.state.getBlock();
         int meta = block.getMetaFromState(event.state);
-        if (CraftingEvents.isEventCancelled(event.entityPlayer, ActionType.BREAKBLOCKWITH, event.entityPlayer.getCurrentEquippedItem(), ActionType.BREAKBLOCK, BlockActionHelper.getStackFromBlockData(block, meta))) {
+        if (ProgressionEvents.isEventCancelled(event.entityPlayer, ActionType.BREAKBLOCKWITH, event.entityPlayer.getCurrentEquippedItem(), ActionType.BREAKBLOCK, BlockActionHelper.getStackFromBlockData(block, meta))) {
             event.newSpeed = 0F;
         }
     }
@@ -27,7 +27,7 @@ public class ActionBreakBlock extends ActionForgeEvent {
         if (player != null) {
             Block block = event.state.getBlock();
             int meta = block.getMetaFromState(event.state);
-            if (CraftingEvents.isEventCancelled(player, ActionType.BREAKBLOCKWITH, player.getCurrentEquippedItem(), ActionType.BREAKBLOCK, BlockActionHelper.getStackFromBlockData(block, meta))) {
+            if (ProgressionEvents.isEventCancelled(player, ActionType.BREAKBLOCKWITH, player.getCurrentEquippedItem(), ActionType.BREAKBLOCK, BlockActionHelper.getStackFromBlockData(block, meta))) {
                 event.setCanceled(true);
             }
         }

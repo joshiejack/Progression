@@ -26,17 +26,20 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Set;
 
 import static joshie.progression.gui.core.GuiList.*;
 
-public class CraftingEvents {
+public class ProgressionEvents {
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
         RemappingHandler.onPlayerConnect((EntityPlayerMP) event.player);
     }
 
+    @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onGuiPost(DrawScreenEvent.Pre event) {
         if (event.gui instanceof GuiCore || event.gui instanceof GuiBook) {
@@ -44,6 +47,7 @@ public class CraftingEvents {
         }
     }
 
+    @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onGuiPost(DrawScreenEvent.Post event) {
         if (event.gui instanceof GuiCore || event.gui instanceof GuiBook) {

@@ -1,7 +1,7 @@
 package joshie.progression.crafting.actions;
 
 import joshie.progression.crafting.ActionType;
-import joshie.progression.handlers.CraftingEvents;
+import joshie.progression.handlers.ProgressionEvents;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
@@ -19,7 +19,7 @@ public class ActionHarvestDrop extends ActionForgeEvent {
             Iterator<ItemStack> it = event.drops.iterator();
             while (it.hasNext()) {
                 ItemStack stack = it.next();
-                if (CraftingEvents.isEventCancelled(player, ActionType.HARVESTDROPWITH, player.getCurrentEquippedItem(), ActionType.HARVESTDROP, stack)) {
+                if (ProgressionEvents.isEventCancelled(player, ActionType.HARVESTDROPWITH, player.getCurrentEquippedItem(), ActionType.HARVESTDROP, stack)) {
                     it.remove();
                 }
             }

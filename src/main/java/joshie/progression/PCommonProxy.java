@@ -6,7 +6,7 @@ import joshie.progression.commands.*;
 import joshie.progression.gui.fields.FieldRegistry;
 import joshie.progression.gui.filters.FilterSelectorHelper;
 import joshie.progression.handlers.APIHandler;
-import joshie.progression.handlers.CraftingEvents;
+import joshie.progression.handlers.ProgressionEvents;
 import joshie.progression.handlers.RemappingHandler;
 import joshie.progression.handlers.RuleHandler;
 import joshie.progression.json.Options;
@@ -38,7 +38,7 @@ public class PCommonProxy implements IGuiHandler {
         //Register Handlers
         MinecraftForge.EVENT_BUS.register(CommandManager.INSTANCE);
         MinecraftForge.EVENT_BUS.register(new PlayerTracker());
-        MinecraftForge.EVENT_BUS.register(new CraftingEvents());
+        MinecraftForge.EVENT_BUS.register(new ProgressionEvents());
 
         //Register the items
         Progression.item = new ItemProgression().setUnlocalizedName("item");
