@@ -6,13 +6,18 @@ import joshie.enchiridion.api.EnchiridionAPI;
 import joshie.enchiridion.api.book.IFeatureProvider;
 import joshie.enchiridion.api.gui.ISimpleEditorFieldProvider;
 import joshie.progression.api.criteria.ICriteria;
+import joshie.progression.api.criteria.IReward;
 import joshie.progression.api.criteria.IRewardProvider;
 import joshie.progression.api.criteria.ITriggerProvider;
 import joshie.progression.api.special.ICustomTooltip;
 import joshie.progression.api.special.ICustomTreeIcon;
+import joshie.progression.api.special.IMiniIcon;
+import joshie.progression.api.special.IStackSizeable;
 import joshie.progression.helpers.SplitHelper;
 import joshie.progression.player.PlayerTracker;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
+import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,27 +89,42 @@ public class FeatureRewards extends FeatureCriteria implements ISimpleEditorFiel
         return false;
     }
 
-    private void drawList(List<IRewardProvider> provider, int offsetY) {
+    private void drawList(List<IRewardProvider> providers, int y) {
         int x = 0;
-        for (IRewardProvider reward : provider) {
-            ItemStack stack = reward.getIcon().copy();
+        for (IRewardProvider provider : providers) {
             if (background) {
                 int color = 0xFFD0BD92;
-                if (REWARDS.isSelected(reward)) {
+                if (REWARDS.isSelected(provider)) {
                     color = 0xFFCCCCCC;
                 }
 
-                EnchiridionAPI.draw.drawRectangle(position.getLeft() + x, position.getTop() + 10 + offsetY, position.getLeft() + x + 16, position.getTop() + 10 + 16 + offsetY, color);
+                EnchiridionAPI.draw.drawRectangle(position.getLeft() + x, position.getTop() + 10 + y, position.getLeft() + x + 16, position.getTop() + 10 + 16 + y, color);
             }
 
-            if (reward.getProvided() instanceof ICustomTreeIcon) {
-                ((ICustomTreeIcon)reward.getProvided()).draw(position.getLeft() + x, position.getTop() + 10 + offsetY, 1F);
-            }else EnchiridionAPI.draw.drawStack(stack, position.getLeft() + x, position.getTop() + 10 + offsetY, 1F);
+            IReward reward = provider.getProvided();
+            boolean mini = reward instanceof IMiniIcon;
+            int stackSize = reward instanceof IStackSizeable ? ((IStackSizeable)reward).getStackSize() : 1;
+            if (reward instanceof ICustomTreeIcon) {
+                ((ICustomTreeIcon)reward).draw(position.getLeft() + x, position.getTop() + 10 + y, 1F);
+            } else {
+                if (provider.getIcon() == null) continue;
+                ItemStack stack = provider.getIcon().copy();
+                if (!mini) stack.stackSize = stackSize;
+                EnchiridionAPI.draw.drawStack(stack, position.getLeft() + x, position.getTop() + 10 + y, 1F);
+            }
+
+            if (reward instanceof IMiniIcon) {
+                GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
+                ItemStack miniIcon = ((IMiniIcon)reward).getMiniIcon();
+                miniIcon.stackSize = stackSize;
+                EnchiridionAPI.draw.drawStack(miniIcon, position.getLeft() + x, position.getTop() + y, 1F);
+            }
+
             x += 20;
 
             if (x > 160) {
                 x = 0;
-                offsetY += 20;
+                y += 20;
             }
         }
     }

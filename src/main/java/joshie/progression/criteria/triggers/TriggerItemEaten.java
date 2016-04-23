@@ -1,8 +1,12 @@
 package joshie.progression.criteria.triggers;
 
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.api.criteria.*;
+import joshie.progression.api.criteria.IField;
+import joshie.progression.api.criteria.IFilterProvider;
+import joshie.progression.api.criteria.ITrigger;
+import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.DisplayMode;
+import joshie.progression.api.special.IMiniIcon;
 import joshie.progression.api.special.ISpecialFieldProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
@@ -10,11 +14,21 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.List;
 
+import static joshie.progression.ItemProgression.ItemMeta.eat;
+import static joshie.progression.ItemProgression.getStackFromMeta;
+
 @ProgressionRule(name="onEaten", color=0xFF00B285)
-public class TriggerItemEaten extends TriggerBaseItemFilter implements ISpecialFieldProvider {
+public class TriggerItemEaten extends TriggerBaseItemFilter implements IMiniIcon, ISpecialFieldProvider {
+    private static final ItemStack mini = getStackFromMeta(eat);
+
     @Override
     public ITrigger copy() {
         return copyCounter(copyFilter(new TriggerItemEaten()));
+    }
+
+    @Override
+    public ItemStack getMiniIcon() {
+        return mini;
     }
 
     @Override

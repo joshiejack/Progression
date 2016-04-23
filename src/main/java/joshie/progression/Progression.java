@@ -8,6 +8,7 @@ import joshie.progression.json.JSONLoader;
 import joshie.progression.json.Options;
 import joshie.progression.player.PlayerSavedData;
 import joshie.progression.plugins.enchiridion.EnchiridionSupport;
+import joshie.progression.plugins.thaumcraft.ThaumcraftSupport;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.item.Item;
@@ -72,6 +73,12 @@ public class Progression {
             try {
                 EnchiridionSupport.init();
             } catch (Exception e) { logger.log(Level.ERROR, "Failed to load the Enchiridion Support"); }
+        }
+
+        if (Loader.isModLoaded("Thaumcraft")) {
+            try {
+                ThaumcraftSupport.init();
+            } catch (Exception e) {}
         }
         
         proxy.registerRendering();

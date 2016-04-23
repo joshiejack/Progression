@@ -8,22 +8,23 @@ import joshie.progression.gui.fields.ItemFilterField;
 import joshie.progression.gui.filters.FilterTypeEntity;
 import joshie.progression.helpers.EntityHelper;
 import joshie.progression.helpers.MCClientHelper;
-import joshie.progression.lib.ProgressionInfo;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static joshie.progression.ItemProgression.ItemMeta.kill;
+import static joshie.progression.ItemProgression.getStackFromMeta;
+
 @ProgressionRule(name="kill", color=0xFF000000)
 public class TriggerKill extends TriggerBaseCounter implements ICustomWidth, ICustomIcon, IMiniIcon, IAdditionalTooltip, IHasFilters, ISpecialFieldProvider {
-    private static final ResourceLocation mini = new ResourceLocation(ProgressionInfo.BOOKPATH + "kill.png");
+    private static final ItemStack mini = getStackFromMeta(kill);
     public List<IFilterProvider> entities = new ArrayList();
     protected transient EntityLivingBase entity;
     protected transient int ticker;
@@ -46,7 +47,7 @@ public class TriggerKill extends TriggerBaseCounter implements ICustomWidth, ICu
     }
 
     @Override
-    public ResourceLocation getMiniIcon() {
+    public ItemStack getMiniIcon() {
         return mini;
     }
 

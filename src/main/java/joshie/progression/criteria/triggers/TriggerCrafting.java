@@ -8,6 +8,7 @@ import joshie.progression.api.criteria.ITrigger;
 import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.IClickable;
+import joshie.progression.api.special.IMiniIcon;
 import joshie.progression.api.special.ISpecialFieldProvider;
 import mezz.jei.GuiEventHandler;
 import mezz.jei.JustEnoughItems;
@@ -25,8 +26,13 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.UUID;
 
+import static joshie.progression.ItemProgression.ItemMeta.craft;
+import static joshie.progression.ItemProgression.getStackFromMeta;
+
 @ProgressionRule(name="crafting", color=0xFF663300)
-public class TriggerCrafting extends TriggerBaseItemFilter implements IClickable, ISpecialFieldProvider {
+public class TriggerCrafting extends TriggerBaseItemFilter implements IClickable, IMiniIcon, ISpecialFieldProvider {
+    private static final ItemStack mini = getStackFromMeta(craft);
+
     public int timesCrafted = 1;
     protected transient int timesItemCrafted;
 
@@ -35,6 +41,11 @@ public class TriggerCrafting extends TriggerBaseItemFilter implements IClickable
         TriggerCrafting trigger = new TriggerCrafting();
         trigger.timesCrafted = timesCrafted;
         return copyCounter(copyFilter(trigger));
+    }
+
+    @Override
+    public ItemStack getMiniIcon() {
+        return mini;
     }
 
     @Override
@@ -86,7 +97,10 @@ public class TriggerCrafting extends TriggerBaseItemFilter implements IClickable
 
     @SubscribeEvent
     public void onEvent(ItemCraftedEvent event) {
-        ProgressionAPI.registry.fireTrigger(event.player, getProvider().getUnlocalisedName(), event.crafting.copy());
+        ItemStack result = event.crafting.copy();
+        if (result.stackSize != 0) {
+            ProgressionAPI.registry.fireTrigger(event.player, getProvider().getUnlocalisedName(), event.crafting.copy());
+        }
     }
 
     @Override

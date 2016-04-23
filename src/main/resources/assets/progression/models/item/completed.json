@@ -1,0 +1,6 @@
+{
+  "parent": "progression:item/core",
+  "textures": {
+    "layer0": "progression:items/completed"
+  }
+}

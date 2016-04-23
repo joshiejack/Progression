@@ -1,21 +1,25 @@
 package joshie.progression.asm;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-import joshie.progression.lib.ProgressionInfo;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import static org.objectweb.asm.Opcodes.ALOAD;
+import static org.objectweb.asm.Opcodes.INVOKESTATIC;
 
 /** Moves the firing of the oncrafting event in slotcrafting
  *  to firing when the onCrafting is called, instead of onPickupFrom Slot. */
 public class ASMTransferCrafting extends AbstractASM {
+    public static HashMap<String, String> acceptedMap = new HashMap();
     public static List accepted = new ArrayList();
     static {
-        accepted.add("slimeknights.tconstruct.tools.inventory.ContainerCraftingStation");
+        accepted.add("slimeknights.mantle.inventory.ContainerMultiModule");
+        acceptedMap.put("slimeknights.mantle.inventory.ContainerMultiModule", "notifySlotAfterTransfer");
         accepted.add("thaumcraft.common.container.ContainerArcaneWorkbench");
         accepted.add("net.minecraft.inventory.ContainerPlayer$1");
         accepted.add("net.minecraft.inventory.ContainerPlayer");
@@ -31,7 +35,17 @@ public class ASMTransferCrafting extends AbstractASM {
     }
 
     @Override
-    public ClassVisitor newInstance(ClassWriter cw) {
+    public ClassVisitor newInstance(String name, ClassWriter cw) {
+        if (acceptedMap.containsKey(name)) {
+            final String value = acceptedMap.get(name);
+            return new ASMVisitor(cw) {
+                @Override
+                public boolean isNameValid(String name) {
+                    return name.equals(value);
+                }
+            };
+        }
+
         return new ASMVisitor(cw);
     }
 
@@ -40,31 +54,31 @@ public class ASMTransferCrafting extends AbstractASM {
             super(Opcodes.ASM4, writer);
         }
 
+        public boolean isNameValid(String name) {
+            return name.equals("transferStackInSlot") || name.equals("func_82846_b") || name.equals("b");
+        }
+
+        public void visitMethod(MethodVisitor mv) {
+            mv.visitVarInsn(ALOAD, 0);
+            mv.visitVarInsn(ALOAD, 4);
+            mv.visitVarInsn(ALOAD, 1);
+            mv.visitVarInsn(ALOAD, 3);
+            mv.visitMethodInsn(INVOKESTATIC, "joshie/progression/asm/helpers/TransferHelper", "onPickup", "(Ljava/lang/Object;Lnet/minecraft/inventory/Slot;Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/item/ItemStack;)V", false);
+        }
+
         @Override
         public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
             MethodVisitor visitor = super.visitMethod(access, name, desc, signature, exceptions);
-            if ((desc.equals("(Lnet/minecraft/entity/player/EntityPlayer;I)Lnet/minecraft/item/ItemStack;") && name.equals("transferStackInSlot")) || (desc.equals("(Lwn;I)Lzx;") && name.equals("b"))) {
+            if (isNameValid(name)) {
                 return new MethodVisitor(Opcodes.ASM4, visitor) {
                     boolean isDone = false;
 
                     @Override
                     public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
                         if ((name.equals("onSlotChange") || name.equals("func_75220_a") || name.equals("a")) && !isDone) {
-                            String copy = name.equals("onSlotChange") ? "copy" : "func_77946_l";
-                            isDone = true;
                             super.visitMethodInsn(opcode, owner, name, desc, itf);
-                            mv.visitFieldInsn(Opcodes.GETSTATIC, ProgressionInfo.ASMPATH + "api/ProgressionAPI", "registry", "L" + ProgressionInfo.ASMPATH + "api/IProgressionAPI;");
-                            mv.visitVarInsn(Opcodes.ALOAD, 1);
-                            mv.visitLdcInsn("crafting");
-                            mv.visitInsn(Opcodes.ICONST_1);
-                            mv.visitTypeInsn(Opcodes.ANEWARRAY, "java/lang/Object");
-                            mv.visitInsn(Opcodes.DUP);
-                            mv.visitInsn(Opcodes.ICONST_0);
-                            mv.visitVarInsn(Opcodes.ALOAD, 3);
-                            mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "net/minecraft/item/ItemStack", copy, "()Lnet/minecraft/item/ItemStack;", false);
-                            mv.visitInsn(Opcodes.AASTORE);
-                            mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, ProgressionInfo.ASMPATH + "api/IProgressionAPI", "fireTrigger", "(Lnet/minecraft/entity/player/EntityPlayer;Ljava/lang/String;[Ljava/lang/Object;)Lnet/minecraftforge/fml/common/eventhandler/Event$Result;", true);
-                            mv.visitInsn(Opcodes.POP);
+                            isDone = true;
+                            visitMethod(mv);
                         } else super.visitMethodInsn(opcode, owner, name, desc, itf);
                     }
                 };

@@ -56,7 +56,7 @@ public class ItemProgression extends Item {
         ifCriteriaCompleted, ifDayOrNight, ifHasAchievement, ifHasBoolean, ifHasPoints, ifIsAtCoordinates,
         ifIsBiome, ifRandom, onChangeDimension, onLogin, onReceivedAchiement, onReceivedBoolean,
         onReceivedPoints, onSecond, onSentMessage, points, speed, showTab, showLayer, sun, moon, stepAssist,
-        attackPlayer, onGUIChange;
+        attackPlayer, onGUIChange, eat, click, breaking, craft, kill, completed;
 
 
 

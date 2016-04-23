@@ -8,6 +8,10 @@ import net.minecraft.tileentity.TileEntityChest;
 public abstract class AbstractASM {
     public abstract boolean isClass(String name);
 
+    public ClassVisitor newInstance(String name, ClassWriter writer) {
+        return newInstance(writer);
+    }
+
     public ClassVisitor newInstance(ClassWriter writer) {
         return null;
     }

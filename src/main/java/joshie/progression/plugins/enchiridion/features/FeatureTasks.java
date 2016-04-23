@@ -3,20 +3,22 @@ package joshie.progression.plugins.enchiridion.features;
 import joshie.enchiridion.api.EnchiridionAPI;
 import joshie.enchiridion.api.book.IFeatureProvider;
 import joshie.enchiridion.api.gui.ISimpleEditorFieldProvider;
-import joshie.progression.api.criteria.IConditionProvider;
-import joshie.progression.api.criteria.ICriteria;
-import joshie.progression.api.criteria.ITrigger;
-import joshie.progression.api.criteria.ITriggerProvider;
+import joshie.progression.ItemProgression.ItemMeta;
+import joshie.progression.api.criteria.*;
 import joshie.progression.api.special.*;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.SplitHelper;
+import joshie.progression.player.PlayerTracker;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 
+import static joshie.progression.ItemProgression.getStackFromMeta;
+
 public class FeatureTasks extends FeatureCriteria implements ISimpleEditorFieldProvider {
+    private transient static final ItemStack COMPLETED = getStackFromMeta(ItemMeta.completed);
     public boolean text = true;
     public boolean showHidden = false;
 
@@ -97,53 +99,74 @@ public class FeatureTasks extends FeatureCriteria implements ISimpleEditorFieldP
         update(position);
 
         int x = 0;
-        int offsetY = 10;
-        for (ITriggerProvider provider : criteria.getTriggers()) {
-            if (provider.isVisible() || showHidden) {
-                ITrigger trigger = provider.getProvided();
-                int color = provider.getConditions().size() > 0 ? provider.getColor() : 0xFFD0BD92;
+        int y = 10;
+        for (ITriggerProvider triggerProvider : criteria.getTriggers()) {
+            if (triggerProvider.isVisible() || showHidden) {
+                ITrigger trigger = triggerProvider.getProvided();
+                int color = triggerProvider.getConditions().size() > 0 ? triggerProvider.getColor() : 0xFFD0BD92;
+                boolean mini = trigger instanceof IMiniIcon;
+                int stackSize = trigger instanceof IStackSizeable ? ((IStackSizeable)trigger).getStackSize() : 1;
                 if (background)
-                    EnchiridionAPI.draw.drawBorderedRectangle(position.getLeft() + x, position.getTop() + offsetY, position.getLeft() + x + 16, position.getTop() + 16 + offsetY, 0xFFD0BD92, color);
+                    EnchiridionAPI.draw.drawBorderedRectangle(position.getLeft() + x, position.getTop() + y, position.getLeft() + x + 16, position.getTop() + 16 + y, 0xFFD0BD92, color);
                 if (trigger instanceof ICustomTreeIcon) {
-                    ((ICustomTreeIcon) trigger).draw(position.getLeft() + x, position.getTop() + offsetY, 1F);
+                    ((ICustomTreeIcon) trigger).draw(position.getLeft() + x, position.getTop() + y, 1F);
                 } else {
-                    if (provider.getIcon() == null) continue;
-                    EnchiridionAPI.draw.drawStack(provider.getIcon(), position.getLeft() + x, position.getTop() + offsetY, 1F);
+                    if (triggerProvider.getIcon() == null) continue;
+                    ItemStack stack = triggerProvider.getIcon().copy();
+                    if (!mini) stack.stackSize = stackSize;
+                    EnchiridionAPI.draw.drawStack(stack, position.getLeft() + x, position.getTop() + y, 1F);
                 }
 
-                if (trigger instanceof IMiniIcon) {
+                if (mini) {
                     GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
-                    EnchiridionAPI.draw.drawImage(((IMiniIcon)trigger).getMiniIcon(), position.getLeft() + 8 + x, position.getTop() + 8 + offsetY, position.getLeft() + 16 + x, position.getTop() + 16 + offsetY);
+                    ItemStack miniIcon = ((IMiniIcon)trigger).getMiniIcon();
+                    miniIcon.stackSize = stackSize;
+                    EnchiridionAPI.draw.drawStack(miniIcon, position.getLeft() + x, position.getTop() + y, 1F);
+                }
+
+                if (trigger.isCompleted()) {
+                    EnchiridionAPI.draw.drawStack(COMPLETED, position.getLeft() + x, position.getTop() + y, 1F);
                 }
 
                 x += 20;
                 if (x > 160) {
                     x = 0;
-                    offsetY += 20;
+                    y += 20;
                 }
             }
 
-            for (IConditionProvider condition : provider.getConditions()) {
-                if (condition.isVisible() || showHidden) {
-                    if (background)
-                        EnchiridionAPI.draw.drawBorderedRectangle(position.getLeft() + x, position.getTop() + offsetY, position.getLeft() + x + 16, position.getTop() + offsetY + 16, 0xFFD0BD92, condition.getColor());
-                    if (condition.getProvided() instanceof ICustomTreeIcon) {
-                        ((ICustomTreeIcon) condition.getProvided()).draw(position.getLeft() + x, position.getTop() + offsetY, 1F);
+            for (IConditionProvider conditionProvider : triggerProvider.getConditions()) {
+                if (conditionProvider.isVisible() || showHidden) {
+                    ICondition condition = conditionProvider.getProvided();
+                    boolean mini = condition instanceof IMiniIcon;
+                    int stackSize = condition instanceof IStackSizeable ? ((IStackSizeable)condition).getStackSize() : 1;
+                    if (background) EnchiridionAPI.draw.drawBorderedRectangle(position.getLeft() + x, position.getTop() + y, position.getLeft() + x + 16, position.getTop() + y + 16, 0xFFD0BD92, conditionProvider.getColor());
+                    if (condition instanceof ICustomTreeIcon) {
+                        ((ICustomTreeIcon) condition).draw(position.getLeft() + x, position.getTop() + y, 1F);
                     } else {
-                        ItemStack icon = condition.getIcon().copy();
-                        if (condition.getProvided() instanceof IStackSizeable) {
-                            icon.stackSize = ((IStackSizeable) condition.getProvided()).getStackSize();
-                        }
+                        if (conditionProvider.getIcon() == null) continue;
+                        ItemStack stack = conditionProvider.getIcon().copy();
+                        if (!mini) stack.stackSize = stackSize;
 
-                        EnchiridionAPI.draw.drawStack(icon, position.getLeft() + x, position.getTop() + offsetY, 1F);
+                        EnchiridionAPI.draw.drawStack(stack, position.getLeft() + x, position.getTop() + y, 1F);
                     }
 
+                    if (condition instanceof IMiniIcon) {
+                        GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
+                        ItemStack miniIcon = ((IMiniIcon)condition).getMiniIcon();
+                        miniIcon.stackSize = stackSize;
+                        EnchiridionAPI.draw.drawStack(miniIcon, position.getLeft() + x, position.getTop() + y, 1F);
+                    }
+
+                    if (condition.isSatisfied(PlayerTracker.getClientPlayer().getTeam())) {
+                        EnchiridionAPI.draw.drawStack(COMPLETED, position.getLeft() + x, position.getTop() + y, 1F);
+                    }
 
                     x += 20;
 
                     if (x > 160) {
                         x = 0;
-                        offsetY += 20;
+                        y += 20;
                     }
                 }
             }

@@ -31,7 +31,7 @@ public class ProgressionTransformer implements IFMLLoadingPlugin, IClassTransfor
                 if (a.isVisitor()) {
                     ClassReader cr = new ClassReader(modified);
                     ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-                    ClassVisitor cv = a.newInstance(cw);
+                    ClassVisitor cv = a.newInstance(name, cw);
                     cr.accept(cv, ClassReader.EXPAND_FRAMES);
                     modified = cw.toByteArray();
                 }

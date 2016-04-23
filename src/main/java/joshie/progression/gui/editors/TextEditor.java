@@ -130,6 +130,9 @@ public class TextEditor {
     
     //If it's null
     public void setText(String string) {
-        if (editable != null) editable.setTextField("");
+        if (editable != null) {
+            editable.setTextField("");
+            position = editable.getTextField().length();
+        }
     }
 }
