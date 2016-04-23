@@ -31,11 +31,15 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 public class JSONLoader {
-    public static Gson gson;
+    private static Gson gson;
 
-    static {
-        GsonBuilder builder = new GsonBuilder().setPrettyPrinting();
-        gson = builder.create();
+    public static Gson getGson() {
+        if (gson == null) {
+            GsonBuilder builder = new GsonBuilder().setPrettyPrinting();
+            gson = builder.create();
+        }
+
+        return gson;
     }
 
     private static String[] splitStringEvery(String s, int interval) {
@@ -83,7 +87,7 @@ public class JSONLoader {
             File file = FileHelper.getCriteriaFile(hostname, false);
             if (!file.exists()) {
                 loader = new DefaultSettings().setDefaults();
-                String json = gson.toJson(loader);
+                String json = getGson().toJson(loader);
                 serverHashcode = json.hashCode();
                 serverTabJsonData = splitStringEvery(json, MAX_LENGTH);
                 if (Options.debugMode) Progression.logger.log(Level.INFO, "Writing to the file is being done at getServerTabData(");
@@ -95,7 +99,7 @@ public class JSONLoader {
                 String json = FileUtils.readFileToString(file);
                 serverHashcode = json.hashCode();
                 serverTabJsonData = splitStringEvery(json, MAX_LENGTH);
-                return gson.fromJson(json, DefaultSettings.class);
+                return getGson().fromJson(json, DefaultSettings.class);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -107,7 +111,7 @@ public class JSONLoader {
     //Client side only
     public static boolean setTabsAndCriteriaFromString(String json, boolean create) {
         try {
-            DefaultSettings tab = gson.fromJson(json, DefaultSettings.class);
+            DefaultSettings tab = getGson().fromJson(json, DefaultSettings.class);
             loadJSON(true, tab);
 
             if (create) {
@@ -287,7 +291,7 @@ public class JSONLoader {
             }
 
             Writer writer = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
-            writer.write(gson.toJson(toSave));
+            writer.write(getGson().toJson(toSave));
             writer.close();
         } catch (Exception e) {
             e.printStackTrace();

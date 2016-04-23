@@ -88,7 +88,7 @@ public class PacketSyncJSONToServer extends PacketSyncStringArray {
                 }
 
                 String json = builder.toString();
-                DefaultSettings settings = JSONLoader.gson.fromJson(json, DefaultSettings.class);
+                DefaultSettings settings = JSONLoader.getGson().fromJson(json, DefaultSettings.class);
                 JSONLoader.serverHashcode = (int) timestamp; //For resyncing purposes < and v
                 JSONLoader.serverTabJsonData = SplitHelper.splitStringEvery(json, JSONLoader.MAX_LENGTH);
                 //Now that we have saved the newer data, we should reload it all

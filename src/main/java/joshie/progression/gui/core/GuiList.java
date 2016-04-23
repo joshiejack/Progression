@@ -39,7 +39,7 @@ public class GuiList {
             try {
                 IResource iresource = manager.getResource(resource);
                 inputstream = iresource.getInputStream();
-                THEME = JSONLoader.gson.fromJson(IOUtils.toString(inputstream, "UTF-8"), Theme.class);
+                THEME = JSONLoader.getGson().fromJson(IOUtils.toString(inputstream, "UTF-8"), Theme.class);
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
