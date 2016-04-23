@@ -66,10 +66,10 @@ public class TreeEditorElement {
     }
 
     private void recalculate(int x) {
-        int textWidth = CORE.mc.fontRendererObj.getStringWidth(criteria.getLocalisedName());
+        int textWidth = CORE.mc.fontRendererObj.getStringWidth(criteria.getLocalisedName()) + 9;
         int iconWidth = 9 + (criteria.getRewards().size() * 12);
         if (textWidth >= iconWidth) {
-            width = textWidth + 9;
+            width = textWidth;
         } else width = iconWidth;
 
         left = criteria.getX() + x;

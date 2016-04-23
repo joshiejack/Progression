@@ -20,6 +20,7 @@ public class PlayerTeam implements ITextEditable, IPlayerTeam {
         SINGLE, TEAM;
     }
 
+    private Set<UUID> invited = new HashSet();
     private Set<UUID> members = new HashSet();
     private TeamType type;
     private UUID owner;
@@ -42,12 +43,24 @@ public class PlayerTeam implements ITextEditable, IPlayerTeam {
         } else this.name = "Single Player";
     }
 
+    public boolean isInvited(UUID uuid) {
+        return invited.contains(uuid);
+    }
+
+    public void addToInvited(UUID uuid) {
+        invited.add(uuid);
+    }
+
     public TeamType getType() {
         return type;
     }
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
@@ -113,7 +126,7 @@ public class PlayerTeam implements ITextEditable, IPlayerTeam {
     }
     
     public void toggleIsPublic() {
-        isPublic = !isPublic;
+        isTrueTeam = !isTrueTeam;
         syncChanges(Side.CLIENT);
     }
 

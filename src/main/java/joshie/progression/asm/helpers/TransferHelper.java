@@ -11,11 +11,16 @@ import java.util.List;
 
 public class TransferHelper {
     public static List<Transferable> list = new ArrayList<Transferable>();
+    static {
+        list.add(new Transferable());
+    }
+
     public static void onPickup(Object object, Slot slot, EntityPlayer player, ItemStack stack) {
         if (!player.worldObj.isRemote) {
             for (Transferable t: list) {
                 if (t.isAcceptable(object, slot, player, stack)) {
                     ProgressionAPI.registry.fireTrigger(player, "trigger.crafting", stack);
+                    break;
                 }
             }
         }

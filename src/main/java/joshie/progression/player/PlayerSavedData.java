@@ -92,7 +92,7 @@ public class PlayerSavedData extends WorldSavedData {
     }
 
     //Packet calls this
-    public void joinTeam(EntityPlayer player, TeamAction action, UUID owner) {
+    public void joinTeam(EntityPlayer player, TeamAction action, UUID owner, String name) {
         UUID uuid = PlayerHelper.getUUIDForPlayer(player);
         PlayerTeam original = teams.get(uuid);
         if (!original.removeMember(uuid) && !original.isSingle()) { //If the team no longer exists and isn't a single player team, let's delete the data for it
@@ -112,7 +112,21 @@ public class PlayerSavedData extends WorldSavedData {
             }
         } else if (action == NEW) { //If we are creating a new team
             newTeam = new PlayerTeam(TeamType.TEAM, uuid);
-        } else newTeam = teams.get(owner);
+            if (name != null) {
+                newTeam.setName(name);
+            }
+        } else {
+            if (name != null) {
+                for (PlayerTeam team: data.keySet()) {
+                    if (team.getName().equals(name)) {
+                        newTeam = team;
+                        break;
+                    }
+                }
+
+                if (newTeam == null || !newTeam.isInvited(uuid)) return; //We fail if we couldn't find
+            } else newTeam = teams.get(owner);
+        }
 
         //Now that we have our newteam selected, we need to add ourself as a member
         if (!newTeam.isSingle() && !newTeam.getOwner().equals(uuid)) {

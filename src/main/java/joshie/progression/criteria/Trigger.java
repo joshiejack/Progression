@@ -11,6 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static net.minecraft.util.EnumChatFormatting.BLUE;
+import static net.minecraft.util.EnumChatFormatting.GREEN;
+import static net.minecraft.util.EnumChatFormatting.RESET;
+
 public class Trigger implements ITriggerProvider {
     private final ITrigger trigger;
     private final String unlocalised;
@@ -101,13 +105,19 @@ public class Trigger implements ITriggerProvider {
     }
 
     private String getTriggerDescription() {
-        return trigger instanceof ICustomDescription ? ((ICustomDescription)trigger).getDescription() : Progression.format(getUnlocalisedName() + ".description");
+        String ret = (trigger instanceof ICustomDescription ? ((ICustomDescription)trigger).getDescription() : Progression.format(getUnlocalisedName() + ".description")) + "\n\n";
+        if (trigger instanceof ICountable) {
+            ICountable countable = ((ICountable)trigger);
+            ret = ret + BLUE + countable.getCounter() + "/" + countable.getRequirement() + RESET + "\n\n";
+        }
+
+        return ret;
     }
 
     @Override
     public String getDescription() {
         if(isCancelable && isCanceling) return Progression.format(getUnlocalisedName() + ".cancel");
-        else return getTriggerDescription() + "\n\n" + Progression.format("completed", trigger.getPercentage());
+        else return getTriggerDescription() + GREEN + Progression.format("completed", trigger.getPercentage());
     }
 
     @Override

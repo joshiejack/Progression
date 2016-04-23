@@ -278,8 +278,19 @@ progression.filter.location.playerAbove=Above Player
 progression.filter.location.playerAbove.description=Somewhere above/below the players current location
 progression.filter.location.randomaround=Around XYZ
 progression.filter.location.randomaround.description=Randomly around the coordinates %s %s %s
-progression.filter.dimensionspawn=Dimension Spawn
-progression.filter.dimensionspawn.description=The spawn of the dimension: %s
+progression.filter.location.dimensionspawn=Dimension Spawn
+progression.filter.location.dimensionspawn.description=The spawn of the dimension: %s
+progression.filter.location.randomx=Around X
+progression.filter.location.randomx.description=Randomly around the x coordinate %s
+progression.filter.location.randomy=Around Y
+progression.filter.location.randomy.description=Randomly around the y coordinate %s
+progression.filter.location.randomz=Around Z
+progression.filter.location.randomz.description=Randomly around the z coordinate %s
+#Entity Filters
+progression.filter.entity.displayName=Display Name
+progression.filter.entity.entityName=Entity Name
+progression.filter.entity.entitytype=Entity Type
+progression.filter.entity.witherskeleton=Wither Skeleton
 
 #Items
 progression.item.book=Progression Book

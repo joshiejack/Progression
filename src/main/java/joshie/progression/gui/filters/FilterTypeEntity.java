@@ -55,18 +55,18 @@ public class FilterTypeEntity extends FilterTypeBase {
     
     @Override
     public void draw(final IDrawHelper offset, final Object object, final int offsetX, final int j, final int yOffset, final int k, final int mouseX, final int mouseY) {
+        final EntityLivingBase entity = ((EntityLivingBase) object);
+        boolean hovered = (mouseX >= 10 + (j * 32) && mouseX <= 9 + ((j + 1) * 32) && mouseY >= 40 && mouseY <= 120);
+        if (hovered) {
+            TOOLTIP.add("Localised: " + entity.getName());
+            TOOLTIP.add("Name: " + EntityHelper.getNameForEntity(entity));
+        }
+
         try {
             LAST.add(new Callable() {
                 @Override
                 public Object call() throws Exception {
-                    EntityLivingBase entity = ((EntityLivingBase) object);
                     GL11.glColor4f(1.0F, 1.0F, 1.0F, 1F); //Using state manager doesn't fix this
-                    boolean hovered = (mouseX >= 10 + (j * 32) && mouseX <= 9 + ((j + 1) * 32) && mouseY >= 40 && mouseY <= 120);
-                    if (hovered) {
-                        TOOLTIP.add("Localised: " + entity.getName());
-                        TOOLTIP.add("Name: " + EntityHelper.getNameForEntity(entity));
-                    }
-
                     int entitySize = EntityHelper.getSizeForEntity(entity);
                     int entityY = EntityHelper.getOffsetForEntity(entity);
                     GuiInventory.drawEntityOnScreen(offsetX + 24 + (j * 32), CORE.screenTop + 105 + (k * 32) + yOffset + entityY, entitySize, 25F, -5F, entity);

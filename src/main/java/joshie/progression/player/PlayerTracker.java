@@ -38,8 +38,8 @@ public class PlayerTracker {
         return Progression.data.getServerPlayer(uuid);
     }
 
-    public static void joinTeam(EntityPlayer player, TeamAction action, UUID team) {
-        Progression.data.joinTeam(player, action, team);
+    public static void joinTeam(EntityPlayer player, TeamAction action, UUID team, String name) {
+        Progression.data.joinTeam(player, action, team, name);
     }
 
     public static PlayerDataCommon getPlayerData(UUID uuid, boolean isClient) {

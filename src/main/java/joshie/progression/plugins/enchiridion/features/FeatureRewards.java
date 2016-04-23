@@ -1,7 +1,5 @@
 package joshie.progression.plugins.enchiridion.features;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import joshie.enchiridion.api.EnchiridionAPI;
 import joshie.enchiridion.api.book.IFeatureProvider;
 import joshie.enchiridion.api.gui.ISimpleEditorFieldProvider;
@@ -21,12 +19,10 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static joshie.progression.gui.core.GuiList.REWARDS;
 
 public class FeatureRewards extends FeatureCriteria implements ISimpleEditorFieldProvider {
-    private transient Cache<Boolean, List<IRewardProvider>> cache = CacheBuilder.newBuilder().maximumSize(2).expireAfterWrite(1, TimeUnit.MINUTES).build();
     public boolean text = true;
     public boolean showHidden = false;
 
@@ -147,27 +143,6 @@ public class FeatureRewards extends FeatureCriteria implements ISimpleEditorFiel
         }
 
         return list;
-        /*
-        try {
-            return cache.get(value, new Callable<List<IRewardProvider>>() {
-                @Override
-                public List<IRewardProvider> call() throws Exception {
-                    List<IRewardProvider> list = new ArrayList<IRewardProvider>();
-                    if (value && (criteria.givesAllRewards() || criteria.getRewards().size() < criteria.getAmountOfRewards())) {
-                        list.addAll(criteria.getRewards());
-                    }
-
-                    if (!criteria.givesAllRewards()) {
-                        for (IRewardProvider reward : criteria.getRewards()) {
-                            if (!reward.mustClaim() && value) list.add(reward);
-                            else if (!value && reward.mustClaim()) list.add(reward);
-                        }
-                    }
-
-                    return list;
-                }
-            });
-        } catch (Exception e) { return new ArrayList<IRewardProvider>(); } */
     }
 
     @Override

@@ -3,6 +3,7 @@ package joshie.progression.gui.editors;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.mojang.authlib.GameProfile;
+import joshie.progression.gui.buttons.ButtonJoinTeam;
 import joshie.progression.gui.buttons.ButtonLeaveTeam;
 import joshie.progression.gui.buttons.ButtonNewTeam;
 import joshie.progression.gui.core.GuiList;
@@ -10,6 +11,8 @@ import joshie.progression.gui.core.IBarProvider;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.lib.ProgressionInfo;
+import joshie.progression.network.PacketHandler;
+import joshie.progression.network.PacketInvitePlayer;
 import joshie.progression.player.PlayerTeam;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.client.Minecraft;
@@ -32,6 +35,7 @@ import static net.minecraft.util.EnumChatFormatting.BOLD;
 import static net.minecraft.util.EnumChatFormatting.ITALIC;
 
 public class GuiGroupEditor extends GuiBaseEditor implements IBarProvider, ITextEditable {
+    private static Set<Invite> invites = new LinkedHashSet<Invite>();
     private static Cache<PlayerTeam, Set<AbstractClientPlayer>> playerList;
     private boolean isPopup;
     private String username;
@@ -39,6 +43,16 @@ public class GuiGroupEditor extends GuiBaseEditor implements IBarProvider, IText
     public GuiGroupEditor() {
         features.add(BACKGROUND);
         features.add(GROUP_BG);
+    }
+
+    public void addInvite(UUID owner, String name) {
+        invites.add(new Invite(owner, name));
+        CORE.initGui(); //Reload
+    }
+
+    public void removeInvite(Invite invite) {
+        invites.remove(invite);
+        CORE.initGui();
     }
 
     @Override
@@ -66,6 +80,12 @@ public class GuiGroupEditor extends GuiBaseEditor implements IBarProvider, IText
         List<GuiButton> buttons = CORE.getButtonNewList();
         buttons.add(new ButtonNewTeam("New Team", 5, CORE.screenTop + 25));
         buttons.add(new ButtonLeaveTeam("Leave Team", 75, CORE.screenTop + 25));
+        int x = 0;
+        for (Invite invite: invites) {
+            buttons.add(new ButtonJoinTeam(invite, 160 + x, CORE.screenTop + 25));
+            x += 30;
+        }
+
         GROUP_BG.setProvider(this);
     }
 
@@ -77,7 +97,11 @@ public class GuiGroupEditor extends GuiBaseEditor implements IBarProvider, IText
 
         if (!team.isSingle() && team.isOwner(MCClientHelper.getPlayer())) {
             int xPos = getPlayers(team).size() * 40;
-            if (mouseX >= 10 + xPos && mouseX <= 65 + xPos && mouseY >= 170 && mouseY <= 225) {
+            if (mouseY >= 100 && mouseY < 110 && !isPopup) {
+                team.toggleMultiple();
+            } else if (mouseY >= 110 && mouseY < 120 && !isPopup) {
+                team.toggleIsPublic();
+            } else if (mouseX >= 10 + xPos && mouseX <= 65 + xPos && mouseY >= 170 && mouseY <= 225) {
                 username = ""; //Reset the username everytime you click this
                 if (isPopup) {
                     //If we had the popup and clicked this button
@@ -247,6 +271,36 @@ public class GuiGroupEditor extends GuiBaseEditor implements IBarProvider, IText
 
     @Override
     public void setTextField(String text) {
-        username = text;
+        username = text.replace("\n", "");
+        if (text.contains("\n")) {
+            PlayerTeam team = PlayerTracker.getClientPlayer().getTeam();
+            PacketHandler.sendToServer(new PacketInvitePlayer(team.getOwner(), team.getName(), username));
+            isPopup = false;
+            username = "";
+        }
+    }
+
+    public static class Invite {
+        public UUID owner;
+        public String name;
+
+        public Invite(UUID owner, String name) {
+            this.owner = owner;
+            this.name = name;
+        }
+
+        @Override
+        public int hashCode() {
+            return owner.hashCode();
+        }
+
+        @Override
+        public boolean equals(Object object) {
+            if (object instanceof Invite) {
+                return ((Invite)object).owner.equals(owner);
+            }
+
+            return false;
+        }
     }
 }

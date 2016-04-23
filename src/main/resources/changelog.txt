@@ -14,6 +14,7 @@ Progression 0.5.0
     (ENCHIRIDION:BOOKS:FEATURES): Added Display Tabs Feature
     (ENCHIRIDION:BOOKS:ACTIONS):  Added Claim Specific Reward Action
     (ENCHIRIDION:BOOKS:ACTIONS):  Added Complete Criteria Action
+  Added ability to create and join teams
   Added a version of the Progression Book that will open the editor in survival
   Added a Player Specific command for resetting data
   Added Chat Trigger

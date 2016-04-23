@@ -12,6 +12,9 @@ import net.minecraft.item.ItemStack;
 
 import java.util.UUID;
 
+import static net.minecraft.util.EnumChatFormatting.GREEN;
+import static net.minecraft.util.EnumChatFormatting.RED;
+
 public class Condition implements IConditionProvider {
     private final ICondition condition;
     private final String unlocalised;
@@ -90,8 +93,10 @@ public class Condition implements IConditionProvider {
 
     @Override
     public String getDescription() {
-        if (inverted) return getConditionDescription() + "\n\n" + Progression.format("truth", !isSatisfied());
-        return getConditionDescription() + "\n\n" + Progression.format("truth", isSatisfied());
+        boolean value = inverted ? !isSatisfied() : isSatisfied();
+        if (value) {
+            return getConditionDescription() + "\n\n" + GREEN + Progression.format("truth", true);
+        } else return getConditionDescription() + "\n\n" + RED + Progression.format("truth", false);
     }
 
     @Override

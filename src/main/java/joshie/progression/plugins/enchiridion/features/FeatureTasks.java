@@ -158,7 +158,10 @@ public class FeatureTasks extends FeatureCriteria implements ISimpleEditorFieldP
                         EnchiridionAPI.draw.drawStack(miniIcon, position.getLeft() + x, position.getTop() + y, 1F);
                     }
 
-                    if (condition.isSatisfied(PlayerTracker.getClientPlayer().getTeam())) {
+                    boolean completed = triggerProvider.getProvided().isCompleted();
+                    if (!completed && conditionProvider.isInverted() && !condition.isSatisfied(PlayerTracker.getClientPlayer().getTeam())) completed = true;
+                    if (!completed && !conditionProvider.isInverted() && condition.isSatisfied(PlayerTracker.getClientPlayer().getTeam())) completed = true;
+                    if (completed) {
                         EnchiridionAPI.draw.drawStack(COMPLETED, position.getLeft() + x, position.getTop() + y, 1F);
                     }
 

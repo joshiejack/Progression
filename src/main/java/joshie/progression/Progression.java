@@ -53,8 +53,7 @@ public class Progression {
     public void preInit(FMLPreInitializationEvent event) {
         FileHelper.root = new File(event.getModConfigurationDirectory(), MODPATH);
         ModLogHelper.log("enchiridion", "The more that you read, the more things you will know. The more that you learn, the more places you'll go.");
-        //ModLogHelper.log("Mariculture", "Just Keep Swimming...");
-        
+
         //Init the action types
         try {
             Class.forName(JAVAPATH + "crafting.ActionType");
