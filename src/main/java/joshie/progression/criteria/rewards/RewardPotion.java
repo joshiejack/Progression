@@ -18,7 +18,7 @@ import java.util.Collection;
 import java.util.List;
 
 @ProgressionRule(name="potioneffect", color=0xFF2C7373)
-public class RewardPotion extends RewardBaseItemFilter implements ICustomDescription, ICustomWidth, ICustomTooltip, ICustomTreeIcon, ISpecialFieldProvider {
+public class RewardPotion extends RewardBaseItemFilter implements ICustomDescription, ICustomWidth, ICustomTooltip, ISpecialFieldProvider {
     public boolean randomVanilla = false;
     public int customid = -1;
     public int duration = 200;
@@ -49,11 +49,6 @@ public class RewardPotion extends RewardBaseItemFilter implements ICustomDescrip
     public void addSpecialFields(List<IField> fields, DisplayMode mode) {
         if (mode == DisplayMode.DISPLAY) fields.add(new ItemFilterFieldPreview("filters", this, 5, 25, 2.8F));
         else fields.add(new ItemFilterField("filters", this));
-    }
-
-    @Override
-    public void draw(int xPos, int yPos, float scale) {
-
     }
 
     @Override

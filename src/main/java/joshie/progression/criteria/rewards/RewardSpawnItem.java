@@ -11,6 +11,7 @@ import joshie.progression.gui.fields.ItemFilterField;
 import joshie.progression.gui.filters.FilterTypeItem;
 import joshie.progression.gui.filters.FilterTypeLocation;
 import joshie.progression.helpers.ItemHelper;
+import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.SpawnItemHelper;
 import joshie.progression.lib.WorldLocation;
 import net.minecraft.block.material.Material;
@@ -18,13 +19,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.text.WordUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import static net.minecraft.util.EnumChatFormatting.DARK_GREEN;
 
 @ProgressionRule(name="spawnItem", color=0xFFE599FF)
 public class RewardSpawnItem extends RewardBaseItemFilter implements ICustomDescription, ICustomWidth, ICustomTooltip, IHasFilters, ISpecialFieldProvider, IRequestItem {
@@ -49,13 +51,13 @@ public class RewardSpawnItem extends RewardBaseItemFilter implements ICustomDesc
 
     @Override
     public void addTooltip(List list) {
-        String[] tooltip = WordUtils.wrap(StringEscapeUtils.unescapeJava(Progression.format(getProvider().getUnlocalisedName() + ".tooltip", field.getField())), 42).replace("\r", "").split("\n");
-        for (String s: tooltip) {
-            list.add(s);
+        list.add(DARK_GREEN + format(stackSize));
+        list.addAll(Arrays.asList(WordUtils.wrap((String)field.getField(), 28).split("\r\n")));
+        ItemStack stack = getIcon();
+        if (stack != null) {
+            list.add("---");
+            list.addAll(stack.getTooltip(MCClientHelper.getPlayer(), false));
         }
-
-        list.add("");
-        list.add(EnumChatFormatting.GRAY + getIcon().getDisplayName() + " x" + stackSize);
     }
 
     @Override

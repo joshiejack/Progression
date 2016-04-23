@@ -6,6 +6,7 @@ import joshie.enchiridion.api.book.IButtonAction;
 import joshie.enchiridion.gui.book.buttons.actions.ActionJumpPage;
 
 public class ActionJumpTab extends ActionJumpPage {
+    public transient boolean init = false;
     public transient int tempPage;
 
     public ActionJumpTab(int page) {
@@ -19,11 +20,6 @@ public class ActionJumpTab extends ActionJumpPage {
         action.bookID = this.bookID;
         this.copyAbstract(action);
         return action;
-    }
-
-    @Override
-    public void initAction() {
-        tempPage = pageNumber;
     }
 
     @Override

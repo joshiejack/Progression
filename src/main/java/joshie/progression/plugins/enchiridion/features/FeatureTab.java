@@ -46,6 +46,28 @@ public class FeatureTab extends FeatureTabGeneric {
         return new FeatureTab(getTab());
     }
 
+    @Override
+    public void onFieldsSet(String field) {
+        super.onFieldsSet(field);
+        if (field.equals("")) { //If we're performing init
+            for (IFeatureProvider feature: EnchiridionAPI.book.getPage().getFeatures()) {
+                if (feature.getFeature() instanceof FeatureButton) {
+                    FeatureButton button = (FeatureButton)(feature.getFeature());
+                    if (button.getAction() instanceof ActionJumpTab) {
+                        ActionJumpTab jump = ((ActionJumpTab)button.getAction());
+                        if (!jump.init) {
+                            button.setTooltip("Open " + APICache.getClientCache().getSortedTabs().get(0).getLocalisedName());
+                            jump.tempPage = pageNumber;
+                            jump.init = true;
+                        }
+
+                        break; //Don't continue
+                    }
+                }
+            }
+        }
+    }
+
     public int getTabNumber(final ITab tab) {
         try {
             return numberCache.get(tab.getUniqueID(), new Callable<Integer>() {

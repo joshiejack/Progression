@@ -36,7 +36,6 @@ public class TriggerChangeDimension extends TriggerBaseCounter implements ICusto
         if (checkFrom && checkTo) builder.append("\n");
         if (checkFrom) builder.append(Progression.translate("trigger.changeDimension.leave")+ " " + DimensionHelper.getDimensionNameFromID(from));
         if (!checkTo && !checkFrom) builder.append(Progression.translate("trigger.changeDimension.change"));
-        builder.append("\n\n" + Progression.format("completed", getPercentage()));
         return  builder.toString();
     }
 
