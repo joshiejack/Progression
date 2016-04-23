@@ -1,7 +1,6 @@
 package joshie.progression.handlers;
 
 import com.google.common.collect.HashMultimap;
-import joshie.enchiridion.gui.book.GuiBook;
 import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.ICriteria;
@@ -34,6 +33,13 @@ import java.util.Set;
 import static joshie.progression.gui.core.GuiList.*;
 
 public class ProgressionEvents {
+    public static Checker checker = new Checker();
+    public static class Checker {
+        public boolean isRunnable(GuiScreen screen) {
+            return screen instanceof GuiCore;
+        }
+    }
+
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
         RemappingHandler.onPlayerConnect((EntityPlayerMP) event.player);
@@ -42,7 +48,7 @@ public class ProgressionEvents {
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onGuiPost(DrawScreenEvent.Pre event) {
-        if (event.gui instanceof GuiCore || event.gui instanceof GuiBook) {
+        if (checker.isRunnable(event.gui)) {
             LAST.clear();
         }
     }
@@ -50,7 +56,7 @@ public class ProgressionEvents {
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onGuiPost(DrawScreenEvent.Post event) {
-        if (event.gui instanceof GuiCore || event.gui instanceof GuiBook) {
+        if (checker.isRunnable(event.gui)) {
             LAST.run();
         }
     }
