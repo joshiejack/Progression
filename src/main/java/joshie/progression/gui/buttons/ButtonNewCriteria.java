@@ -2,7 +2,7 @@ package joshie.progression.gui.buttons;
 
 import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.ITab;
-import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.RuleHandler;
 import joshie.progression.lib.ProgressionInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -56,7 +56,7 @@ public class ButtonNewCriteria extends ButtonBase {
         CORE.clickedButton = true;
         
         if (GuiScreen.isShiftKeyDown()) {
-            APIHandler.newTab(UUID.randomUUID(), true).setDisplayName("New Tab").setStack(new ItemStack(Items.book)).setVisibility(true);
+            RuleHandler.newTab(UUID.randomUUID(), true).setDisplayName("New Tab").setStack(new ItemStack(Items.book)).setVisibility(true);
             CORE.initGui();
         } else {
             TREE_EDITOR.previous = null;
@@ -67,7 +67,7 @@ public class ButtonNewCriteria extends ButtonBase {
             int mouseX = CORE.mouseX;
             int mouseY = CORE.mouseY;
             int offsetX = CORE.getOffsetX();
-            ICriteria criteria = APIHandler.newCriteria(currentTab, UUID.randomUUID(), true);
+            ICriteria criteria = RuleHandler.newCriteria(currentTab, UUID.randomUUID(), true);
             criteria.setCoordinates(mouseX - 50 - offsetX, mouseY - 10);
             TREE_EDITOR.addCriteria(criteria, mouseX - 50, mouseY - 10, offsetX);
         }

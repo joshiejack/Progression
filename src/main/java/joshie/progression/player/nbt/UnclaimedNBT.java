@@ -2,7 +2,7 @@ package joshie.progression.player.nbt;
 
 import com.google.common.collect.Multimap;
 import joshie.progression.api.criteria.IRewardProvider;
-import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.APICache;
 import joshie.progression.helpers.NBTHelper.IMultimapHelper;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -36,7 +36,7 @@ public class UnclaimedNBT implements IMultimapHelper<UUID, IRewardProvider> {
     @Override
     public IRewardProvider readValue(NBTTagCompound tag) {
         UUID uuid = UUID.fromString(tag.getString("RewardUUID"));
-        return APIHandler.getCache(false).getRewardFromUUID(uuid);
+        return APICache.getCache(false).getRewardFromUUID(uuid);
     }
 
     @Override

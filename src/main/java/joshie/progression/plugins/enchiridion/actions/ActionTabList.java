@@ -10,7 +10,7 @@ import joshie.enchiridion.gui.book.features.FeaturePreviewWindow;
 import joshie.enchiridion.gui.book.features.FeatureText;
 import joshie.enchiridion.util.ELocation;
 import joshie.progression.api.criteria.ITab;
-import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.APICache;
 import joshie.progression.plugins.enchiridion.features.FeatureTab;
 import joshie.progression.plugins.enchiridion.features.FeatureTabInfo;
 import joshie.progression.plugins.enchiridion.features.FeatureTabListUpdater;
@@ -41,7 +41,7 @@ public class ActionTabList extends AbstractAction {
             }
 
             int index = 0;
-            for (ITab tab: APIHandler.getClientCache().getSortedTabs()) {
+            for (ITab tab: APICache.getClientCache().getSortedTabs()) {
                 FeatureTab feature = new FeatureTab(tab);
                 page.addFeature(feature, 26, 20 + (20 * index), 150, 15, true, false);
 
@@ -74,7 +74,7 @@ public class ActionTabList extends AbstractAction {
         if (page != null) {
             //Preview the Tab's Description
             ITab first = null;
-            for (ITab tab: APIHandler.getCache(true).getSortedTabs()) {
+            for (ITab tab: APICache.getCache(true).getSortedTabs()) {
                 first = tab;
                 break;
             }

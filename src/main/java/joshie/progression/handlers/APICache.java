@@ -2,18 +2,42 @@ package joshie.progression.handlers;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import joshie.progression.api.criteria.*;
+import joshie.progression.api.criteria.ICriteria;
+import joshie.progression.api.criteria.IRewardProvider;
+import joshie.progression.api.criteria.ITab;
+import joshie.progression.api.criteria.ITriggerProvider;
 
 import java.util.*;
 import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 public class APICache {
-    private final Cache<Boolean, ArrayList<ITab>> sortedCache = CacheBuilder.newBuilder().maximumSize(1).expireAfterWrite(1, TimeUnit.MINUTES).build();
+    private final Cache<Boolean, ArrayList<ITab>> sortedCache = CacheBuilder.newBuilder().maximumSize(1).build();
     private final HashMap<UUID, IRewardProvider> rewardCache = new HashMap();
     private final HashMap<UUID, ITriggerProvider> triggerCache = new HashMap();
     private final HashMap<UUID, ICriteria> criteriaCache = new HashMap();
     private final HashMap<UUID, ITab> tabCache = new HashMap();
+
+    //Instances
+    public static APICache serverCache;
+    public static APICache clientCache;
+
+    public static void resetAPIHandler(boolean isClient) {
+        if (isClient) {
+            clientCache = new APICache();
+        } else serverCache = new APICache();
+    }
+
+    public static APICache getClientCache() {
+        return clientCache;
+    }
+
+    public static APICache getServerCache() {
+        return serverCache;
+    }
+
+    public static APICache getCache(boolean isClient) {
+        return isClient ? getClientCache() : getServerCache();
+    }
 
     public IRewardProvider getRewardFromUUID(final UUID uuid) {
         return rewardCache.get(uuid);
@@ -27,12 +51,14 @@ public class APICache {
         rewardCache.put(reward.getUniqueID(), reward);
     }
 
-    public void addTrigger(ITriggerProvider trigger) {
+    public ITriggerProvider addTrigger(ITriggerProvider trigger) {
         triggerCache.put(trigger.getUniqueID(), trigger);
+        return trigger;
     }
 
-    public void addCriteria(ICriteria criteria) {
+    public ICriteria addCriteria(ICriteria criteria) {
         criteriaCache.put(criteria.getUniqueID(), criteria);
+        return criteria;
     }
 
     public void removeCriteria(ICriteria criteria) {
@@ -63,9 +89,10 @@ public class APICache {
         sortedCache.invalidateAll();
     }
 
-    public void addTab(ITab tab) {
+    public ITab addTab(ITab tab) {
         tabCache.put(tab.getUniqueID(), tab);
         clearSorted();
+        return tab;
     }
 
     public void removeTab(ITab tab) {

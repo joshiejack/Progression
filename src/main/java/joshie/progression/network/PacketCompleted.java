@@ -2,7 +2,7 @@ package joshie.progression.network;
 
 import io.netty.buffer.ByteBuf;
 import joshie.progression.api.criteria.ICriteria;
-import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.APICache;
 import joshie.progression.network.core.PenguinPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.achievement.GuiAchievement;
@@ -31,7 +31,7 @@ public class PacketCompleted extends PenguinPacket {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        criteria = APIHandler.getClientCache().getCriteria(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
+        criteria = APICache.getClientCache().getCriteria(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
     }
 
     @Override

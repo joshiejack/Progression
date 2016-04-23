@@ -6,7 +6,7 @@ import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.crafting.Crafter;
 import joshie.progression.crafting.CraftingRegistry;
 import joshie.progression.crafting.CraftingUnclaimed;
-import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.APICache;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.lib.GuiIDs;
@@ -101,7 +101,7 @@ public class ItemProgression extends Item {
         if (stack.getItemDamage() != ItemMeta.criteria.ordinal()) return null;
         String uuid = stack.getTagCompound().getString("Criteria");
         if (uuid.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
-            return APIHandler.getCache(isClient).getCriteria(UUID.fromString(uuid));
+            return APICache.getCache(isClient).getCriteria(UUID.fromString(uuid));
         } else return null;
     }
 
@@ -208,7 +208,7 @@ public class ItemProgression extends Item {
         list.add(new ItemStack(item, 1, ItemMeta.edit.ordinal()));
         list.add(new ItemStack(item, 1, ItemMeta.claim.ordinal()));
 
-        for (ICriteria c : APIHandler.getCache(true).getCriteriaSet()) {
+        for (ICriteria c : APICache.getCache(true).getCriteriaSet()) {
             ItemStack stack = new ItemStack(item);
             stack.setTagCompound(new NBTTagCompound());
             stack.getTagCompound().setString("Criteria", c.getUniqueID().toString());

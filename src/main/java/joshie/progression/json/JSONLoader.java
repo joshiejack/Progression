@@ -7,8 +7,9 @@ import joshie.progression.Progression;
 import joshie.progression.api.criteria.*;
 import joshie.progression.api.special.IHasFilters;
 import joshie.progression.api.special.IInit;
-import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.APICache;
 import joshie.progression.handlers.EventsManager;
+import joshie.progression.handlers.RuleHandler;
 import joshie.progression.helpers.FileHelper;
 import joshie.progression.helpers.JSONHelper;
 import joshie.progression.helpers.StackHelper;
@@ -141,27 +142,27 @@ public class JSONLoader {
                 stack = new ItemStack(Items.book);
             }
 
-            ITab iTab = APIHandler.newTab(data.uuid, isClientside);
+            ITab iTab = RuleHandler.newTab(data.uuid, isClientside);
             iTab.setDisplayName(data.displayName).setVisibility(data.isVisible).setStack(stack).setSortIndex(data.sortIndex);
 
             /** Step 1: we create add all instances of criteria to the registry **/
             for (DataCriteria criteria : data.criteria) {
-                APIHandler.newCriteria(iTab, criteria.uuid, isClientside);
+                RuleHandler.newCriteria(iTab, criteria.uuid, isClientside);
             }
 
             /** Step 2 : Register all the conditions and triggers for this criteria **/
             for (DataCriteria criteria : data.criteria) {
-                ICriteria theCriteria = APIHandler.getCache(isClientside).getCriteria(criteria.uuid);
+                ICriteria theCriteria = APICache.getCache(isClientside).getCriteria(criteria.uuid);
                 if (theCriteria == null) {
                     throw new CriteriaNotFoundException(criteria.uuid);
                 }
 
                 if (criteria.triggers != null) {
                     for (DataTrigger trigger: criteria.triggers) {
-                        ITriggerProvider iTrigger = APIHandler.newTrigger(theCriteria, trigger.uuid, trigger.type, trigger.data, isClientside);
+                        ITriggerProvider iTrigger = RuleHandler.newTrigger(theCriteria, trigger.uuid, trigger.type, trigger.data, isClientside);
                         if (trigger.conditions != null && iTrigger != null) {
                             for (DataGeneric generic : trigger.conditions) {
-                                APIHandler.newCondition(iTrigger, generic.uuid, generic.type, generic.data, isClientside);
+                                RuleHandler.newCondition(iTrigger, generic.uuid, generic.type, generic.data, isClientside);
                             }
                         }
                     }
@@ -170,14 +171,14 @@ public class JSONLoader {
                 //Add the Rewards
                 if (criteria.rewards != null) {
                     for (DataGeneric reward : criteria.rewards) {
-                        APIHandler.newReward(theCriteria, reward.uuid, reward.type, reward.data, isClientside);
+                        RuleHandler.newReward(theCriteria, reward.uuid, reward.type, reward.data, isClientside);
                     }
                 }
             }
 
             /** Step 3, nAdd the extra data **/
             for (DataCriteria criteria : data.criteria) {
-                ICriteria theCriteria = APIHandler.getCache(isClientside).getCriteria(criteria.uuid);
+                ICriteria theCriteria = APICache.getCache(isClientside).getCriteria(criteria.uuid);
                 if (theCriteria == null) {
                     Progression.logger.log(org.apache.logging.log4j.Level.WARN, "Criteria was not found, do not report this.");
                     throw new CriteriaNotFoundException(criteria.uuid);
@@ -187,14 +188,14 @@ public class JSONLoader {
                 if (criteria.prereqs != null) {
                     thePrereqs = new ICriteria[criteria.prereqs.length];
                     for (int i = 0; i < thePrereqs.length; i++)
-                        thePrereqs[i] = APIHandler.getCache(isClientside).getCriteria(criteria.prereqs[i]);
+                        thePrereqs[i] = APICache.getCache(isClientside).getCriteria(criteria.prereqs[i]);
                 }
 
                 ICriteria[] theConflicts = new ICriteria[0];
                 if (criteria.conflicts != null) {
                     theConflicts = new ICriteria[criteria.conflicts.length];
                     for (int i = 0; i < theConflicts.length; i++)
-                        theConflicts[i] = APIHandler.getCache(isClientside).getCriteria(criteria.conflicts[i]);
+                        theConflicts[i] = APICache.getCache(isClientside).getCriteria(criteria.conflicts[i]);
                 }
 
                 boolean allRequired = criteria.allTasks;
@@ -227,7 +228,7 @@ public class JSONLoader {
         }
         
         //Now that everything has been loaded in, we should go and init all the data
-        for (ITab tab : APIHandler.getCache(isClientside).getTabSet()) {
+        for (ITab tab : APICache.getCache(isClientside).getTabSet()) {
             for (ICriteria criteria: tab.getCriteria()) {
                 for (ITriggerProvider provider: criteria.getTriggers()) {
                     ITrigger trigger = provider.getProvided();
@@ -298,7 +299,7 @@ public class JSONLoader {
     public static void saveData(boolean isClient) {
         if (Options.debugMode) Progression.logger.log(Level.INFO, "Begin logging");
         HashSet<UUID> tabNames = new HashSet();
-        Collection<ITab> allTabs = APIHandler.getCache(isClient).getTabSet();
+        Collection<ITab> allTabs = APICache.getCache(isClient).getTabSet();
         HashSet<UUID> names = new HashSet();
         DefaultSettings forJSONTabs = new DefaultSettings();
 

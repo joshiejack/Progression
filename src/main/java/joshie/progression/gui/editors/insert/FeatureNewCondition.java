@@ -2,6 +2,7 @@ package joshie.progression.gui.editors.insert;
 
 import joshie.progression.api.criteria.IConditionProvider;
 import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.RuleHandler;
 
 import java.util.Collection;
 
@@ -25,6 +26,6 @@ public class FeatureNewCondition extends FeatureNew<IConditionProvider> {
 
     @Override
     public void clone(IConditionProvider provider) {
-        APIHandler.cloneCondition(CONDITION_EDITOR.get(), provider);
+        RuleHandler.cloneCondition(CONDITION_EDITOR.get(), provider);
     }
 }

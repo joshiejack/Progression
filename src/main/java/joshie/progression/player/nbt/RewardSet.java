@@ -1,7 +1,7 @@
 package joshie.progression.player.nbt;
 
 import joshie.progression.api.criteria.IRewardProvider;
-import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.APICache;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -21,6 +21,6 @@ public class RewardSet extends AbstractUniqueNBT {
     @Override
     public Object read(NBTTagList list, int i) {
         NBTTagCompound tag = list.getCompoundTagAt(i);
-        return APIHandler.getCache(false).getRewardFromUUID(UUID.fromString(tag.getString("Reward")));
+        return APICache.getCache(false).getRewardFromUUID(UUID.fromString(tag.getString("Reward")));
     }
 }

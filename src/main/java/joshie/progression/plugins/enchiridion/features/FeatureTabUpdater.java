@@ -6,7 +6,7 @@ import joshie.enchiridion.api.book.IFeatureProvider;
 import joshie.enchiridion.api.gui.ISimpleEditorFieldProvider;
 import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.ITab;
-import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.APICache;
 import joshie.progression.helpers.JSONHelper;
 
 import java.util.ArrayList;
@@ -59,7 +59,7 @@ public class FeatureTabUpdater extends FeatureProgression implements ISimpleEdit
     @Override
     public void draw(int mouseX, int mouseY) {
         if (!EnchiridionAPI.book.isEditMode()) return; //Don't update outside of edit mode
-        ITab tab = APIHandler.getClientCache().getTab(uuid);
+        ITab tab = APICache.getClientCache().getTab(uuid);
         if (tab != null) {
             //Update and add new criteria from the page
             for (ICriteria criteria: tab.getCriteria()) {

@@ -6,7 +6,7 @@ import com.google.common.collect.Multimap;
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.*;
 import joshie.progression.api.special.IStoreTriggerData;
-import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.APICache;
 import joshie.progression.handlers.RemappingHandler;
 import joshie.progression.helpers.CollectionHelper;
 import joshie.progression.helpers.NBTHelper;
@@ -66,7 +66,7 @@ public class CriteriaMappings {
             UUID uuid = UUID.fromString(tag.getString("UUID"));
             NBTTagCompound triggerNBT = tag.getCompoundTag("Data");
             if (triggerDataMap.get(uuid) == null) {
-                ITriggerProvider trigger = APIHandler.getCache(false).getTriggerFromUUID(uuid);
+                ITriggerProvider trigger = APICache.getCache(false).getTriggerFromUUID(uuid);
                 if (trigger != null) {
                     IStoreTriggerData triggerData = (IStoreTriggerData)trigger.copy().getProvided();
                     triggerData.readDataFromNBT(triggerNBT);
@@ -138,7 +138,7 @@ public class CriteriaMappings {
     public void setTriggerData(boolean overwrite, PacketSyncTriggerData.DataPair[] pairs) {
         if (overwrite) triggerDataMap = new HashMap();
         for (PacketSyncTriggerData.DataPair pair: pairs) {
-            ITriggerProvider trigger = APIHandler.getCache(true).getTriggerFromUUID(pair.uuid);
+            ITriggerProvider trigger = APICache.getCache(true).getTriggerFromUUID(pair.uuid);
             if (trigger != null) {
                 ((IStoreTriggerData)trigger.getProvided()).readDataFromNBT(pair.data); //Fuck with local cache
             }
@@ -516,7 +516,7 @@ public class CriteriaMappings {
         Set<ICriteria> availableCriteria = new HashSet(); //Recreate the available mappings
         activeTriggers = HashMultimap.create(); //Recreate the trigger mappings
 
-        Collection<ICriteria> allCriteria = APIHandler.getServerCache().getCriteriaSet();
+        Collection<ICriteria> allCriteria = APICache.getServerCache().getCriteriaSet();
         for (ICriteria criteria : allCriteria) {
             //If the criteria has been marked as impossible don't attach it to anything
             if (impossible.contains(criteria)) continue;

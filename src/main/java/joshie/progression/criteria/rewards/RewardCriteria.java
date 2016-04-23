@@ -7,7 +7,7 @@ import joshie.progression.api.special.ICustomDescription;
 import joshie.progression.api.special.ICustomTooltip;
 import joshie.progression.api.special.IGetterCallback;
 import joshie.progression.api.special.IInit;
-import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.APICache;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumChatFormatting;
@@ -24,7 +24,7 @@ public class RewardCriteria extends RewardBaseSingular implements IInit, ICustom
     @Override
     public void init(boolean isClient) {
         try {
-            for (ICriteria c : APIHandler.getCache(isClient).getCriteriaSet()) {
+            for (ICriteria c : APICache.getCache(isClient).getCriteriaSet()) {
                 if (c.getLocalisedName().equals(displayName)) {
                     criteria = c;
                     break;

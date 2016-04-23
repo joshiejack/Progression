@@ -2,11 +2,11 @@ package joshie.progression.helpers;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import joshie.progression.api.criteria.IFilterProvider;
-import joshie.progression.api.criteria.IRule;
+import joshie.progression.api.criteria.*;
 import joshie.progression.api.special.IEnum;
 import joshie.progression.api.special.ISpecialJSON;
 import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.RuleHandler;
 import joshie.progression.lib.ProgressionInfo;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -189,7 +189,7 @@ public class JSONHelper {
             JsonObject object = array.get(i).getAsJsonObject();
             String typeName = object.get("type").getAsString();
             JsonObject typeData = object.get("data").getAsJsonObject();
-            IFilterProvider filter = APIHandler.newFilter(master.getProvider(), typeName, typeData, isClientside);
+            IFilterProvider filter = RuleHandler.newFilter(master.getProvider(), typeName, typeData, isClientside);
             if (filter != null) {
                 filters.add(filter);
             }
@@ -323,7 +323,7 @@ public class JSONHelper {
     public static void writeVariables(JsonObject json, IRule object) {
         try {
             for (Field field : object.getClass().getFields()) {
-                Object defaultValue = field.get(APIHandler.getDefault(object).getProvided());
+                Object defaultValue = field.get(getDefault(object).getProvided());
                 if (object instanceof IEnum && ((IEnum)object).isEnum(field.getName())) writeEnum(json, field, object, (Enum) defaultValue);
                 if (field.getType() == boolean.class) writeBoolean(json, field, object, (Boolean) defaultValue);
                 if (field.getType() == String.class) writeString(json, field, object, (String) defaultValue);
@@ -359,5 +359,15 @@ public class JSONHelper {
         }
 
         if (!specialOnly) JSONHelper.writeVariables(data, provider);
+    }
+
+    private static IRuleProvider getDefault(IRule provider) {
+        if (provider instanceof ITrigger) return APIHandler.triggerTypes.get(provider.getProvider().getUnlocalisedName());
+        if (provider instanceof IReward) return APIHandler.rewardTypes.get(provider.getProvider().getUnlocalisedName());
+        if (provider instanceof ICondition) return APIHandler.conditionTypes.get(provider.getProvider().getUnlocalisedName());
+        if (provider instanceof IFilter) return APIHandler.filterTypes.get(provider.getProvider().getUnlocalisedName());
+
+        //WHAT
+        return null;
     }
 }

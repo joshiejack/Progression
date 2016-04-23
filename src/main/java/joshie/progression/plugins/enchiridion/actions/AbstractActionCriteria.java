@@ -3,7 +3,7 @@ package joshie.progression.plugins.enchiridion.actions;
 import com.google.gson.JsonObject;
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.ICriteria;
-import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.APICache;
 import joshie.progression.helpers.JSONHelper;
 
 import java.util.UUID;
@@ -19,7 +19,7 @@ public abstract class AbstractActionCriteria extends AbstractActionProgression {
     }
 
     public ICriteria getCriteria() {
-        return APIHandler.getClientCache().getCriteria(uuid);
+        return APICache.getClientCache().getCriteria(uuid);
     }
 
     @Override
@@ -28,7 +28,7 @@ public abstract class AbstractActionCriteria extends AbstractActionProgression {
             ICriteria criteria = getCriteria();
             if (criteria != null) display = criteria.getLocalisedName();
         } else if (field.equals("display")) {
-            for (ICriteria c : APIHandler.getClientCache().getCriteriaSet()) {
+            for (ICriteria c : APICache.getClientCache().getCriteriaSet()) {
                 if (c.getLocalisedName().equals(display)) {
                     uuid = c.getUniqueID();
                 }

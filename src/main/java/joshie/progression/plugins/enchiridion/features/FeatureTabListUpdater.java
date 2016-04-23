@@ -4,7 +4,7 @@ import joshie.enchiridion.api.EnchiridionAPI;
 import joshie.enchiridion.api.book.IFeatureProvider;
 import joshie.enchiridion.api.gui.ISimpleEditorFieldProvider;
 import joshie.progression.api.criteria.ITab;
-import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.APICache;
 import joshie.progression.plugins.enchiridion.actions.ActionTabList;
 
 import java.util.LinkedHashSet;
@@ -28,7 +28,7 @@ public class FeatureTabListUpdater extends FeatureProgression implements ISimple
     }
 
     private boolean tabExists(ITab tab) {
-        for (ITab itab: APIHandler.getClientCache().getSortedTabs()) {
+        for (ITab itab: APICache.getClientCache().getSortedTabs()) {
             if (itab == null) continue; //WHY WOULD YOU CACHE BROKE TABS
             if (itab.getUniqueID().equals(tab.getUniqueID())) return true;
         }
@@ -63,7 +63,7 @@ public class FeatureTabListUpdater extends FeatureProgression implements ISimple
         }
 
         if (!rebuild) {
-            for (ITab tab : APIHandler.getClientCache().getSortedTabs()) {
+            for (ITab tab : APICache.getClientCache().getSortedTabs()) {
                 if (!inList.contains(tab)) {
                     rebuild = true;
                     break;

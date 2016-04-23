@@ -3,7 +3,7 @@ package joshie.progression.network;
 import io.netty.buffer.ByteBuf;
 import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.IRewardProvider;
-import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.APICache;
 import joshie.progression.network.core.PenguinPacket;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -35,7 +35,7 @@ public class PacketClaimReward extends PenguinPacket {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        criteria = APIHandler.getServerCache().getCriteria(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
+        criteria = APICache.getServerCache().getCriteria(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
         rewardId = buf.readInt();
         randomReward = buf.readBoolean();
     }

@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import joshie.progression.api.ICustomDataBuilder;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.ICriteria;
-import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.APICache;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.network.core.PenguinPacket;
 import net.minecraft.block.Block;
@@ -134,7 +134,7 @@ public class PacketFireTrigger extends PenguinPacket {
                         data[i] = ByteBufUtils.readTag(buf);
                         break;
                     case CRITERIA:
-                        data[i] = APIHandler.getServerCache().getCriteria(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
+                        data[i] = APICache.getServerCache().getCriteria(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
                         break;
                     case BLOCK:
                         data[i] = Block.blockRegistry.getObject(new ResourceLocation(ByteBufUtils.readUTF8String(buf), ByteBufUtils.readUTF8String(buf)));

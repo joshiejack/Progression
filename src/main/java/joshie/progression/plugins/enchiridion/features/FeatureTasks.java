@@ -5,11 +5,14 @@ import joshie.enchiridion.api.book.IFeatureProvider;
 import joshie.enchiridion.api.gui.ISimpleEditorFieldProvider;
 import joshie.progression.api.criteria.IConditionProvider;
 import joshie.progression.api.criteria.ICriteria;
+import joshie.progression.api.criteria.ITrigger;
 import joshie.progression.api.criteria.ITriggerProvider;
 import joshie.progression.api.special.*;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.SplitHelper;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
+import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 
@@ -95,16 +98,22 @@ public class FeatureTasks extends FeatureCriteria implements ISimpleEditorFieldP
 
         int x = 0;
         int offsetY = 10;
-        for (ITriggerProvider trigger : criteria.getTriggers()) {
-            if (trigger.isVisible() || showHidden) {
-                int color = trigger.getConditions().size() > 0 ? trigger.getColor() : 0xFFD0BD92;
+        for (ITriggerProvider provider : criteria.getTriggers()) {
+            if (provider.isVisible() || showHidden) {
+                ITrigger trigger = provider.getProvided();
+                int color = provider.getConditions().size() > 0 ? provider.getColor() : 0xFFD0BD92;
                 if (background)
                     EnchiridionAPI.draw.drawBorderedRectangle(position.getLeft() + x, position.getTop() + offsetY, position.getLeft() + x + 16, position.getTop() + 16 + offsetY, 0xFFD0BD92, color);
-                if (trigger.getProvided() instanceof ICustomTreeIcon) {
-                    ((ICustomTreeIcon) trigger.getProvided()).draw(position.getLeft() + x, position.getTop() + offsetY, 1F);
+                if (trigger instanceof ICustomTreeIcon) {
+                    ((ICustomTreeIcon) trigger).draw(position.getLeft() + x, position.getTop() + offsetY, 1F);
                 } else {
-                    if (trigger.getIcon() == null) continue;
-                    EnchiridionAPI.draw.drawStack(trigger.getIcon(), position.getLeft() + x, position.getTop() + offsetY, 1F);
+                    if (provider.getIcon() == null) continue;
+                    EnchiridionAPI.draw.drawStack(provider.getIcon(), position.getLeft() + x, position.getTop() + offsetY, 1F);
+                }
+
+                if (trigger instanceof IMiniIcon) {
+                    GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
+                    EnchiridionAPI.draw.drawImage(((IMiniIcon)trigger).getMiniIcon(), position.getLeft() + 8 + x, position.getTop() + 8 + offsetY, position.getLeft() + 16 + x, position.getTop() + 16 + offsetY);
                 }
 
                 x += 20;
@@ -114,7 +123,7 @@ public class FeatureTasks extends FeatureCriteria implements ISimpleEditorFieldP
                 }
             }
 
-            for (IConditionProvider condition : trigger.getConditions()) {
+            for (IConditionProvider condition : provider.getConditions()) {
                 if (condition.isVisible() || showHidden) {
                     if (background)
                         EnchiridionAPI.draw.drawBorderedRectangle(position.getLeft() + x, position.getTop() + offsetY, position.getLeft() + x + 16, position.getTop() + offsetY + 16, 0xFFD0BD92, condition.getColor());

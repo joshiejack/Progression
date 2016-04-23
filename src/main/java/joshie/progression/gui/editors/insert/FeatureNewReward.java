@@ -2,6 +2,7 @@ package joshie.progression.gui.editors.insert;
 
 import joshie.progression.api.criteria.IRewardProvider;
 import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.RuleHandler;
 
 import java.util.Collection;
 
@@ -20,6 +21,6 @@ public class FeatureNewReward extends FeatureNew<IRewardProvider> {
 
     @Override
     public void clone(IRewardProvider reward) {
-        APIHandler.cloneReward(CRITERIA_EDITOR.get(), reward);
+        RuleHandler.cloneReward(CRITERIA_EDITOR.get(), reward);
     }
 }

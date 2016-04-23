@@ -3,7 +3,7 @@ package joshie.progression.plugins.enchiridion.actions;
 import joshie.enchiridion.api.book.IButtonAction;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.ICriteria;
-import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.APICache;
 
 public class ActionCompleteCriteria extends AbstractActionCriteria implements IButtonAction {
     public boolean mustBeCompleted = true;
@@ -24,7 +24,7 @@ public class ActionCompleteCriteria extends AbstractActionCriteria implements IB
 
     @Override
     public IButtonAction create() {
-        return new ActionCompleteCriteria(APIHandler.getCache(true).getRandomCriteria(), true);
+        return new ActionCompleteCriteria(APICache.getCache(true).getRandomCriteria(), true);
     }
 
     @Override

@@ -8,7 +8,7 @@ import joshie.progression.api.special.IGetterCallback;
 import joshie.progression.api.special.IHasEventBus;
 import joshie.progression.api.special.IInit;
 import joshie.progression.api.special.IStoreNBTData;
-import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.APICache;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
@@ -28,7 +28,7 @@ public class RewardShowTab extends RewardBaseSingular implements IInit, IGetterC
     @Override
     public void init(boolean isClient) {
         try {
-            for (ITab t : APIHandler.getCache(isClient).getTabSet()) {
+            for (ITab t : APICache.getCache(isClient).getTabSet()) {
                 String display = t.getLocalisedName();
                 if (t.getLocalisedName().equals(displayName)) {
                     tab = t;

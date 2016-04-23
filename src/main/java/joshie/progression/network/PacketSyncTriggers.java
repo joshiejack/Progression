@@ -2,7 +2,7 @@ package joshie.progression.network;
 
 import io.netty.buffer.ByteBuf;
 import joshie.progression.api.criteria.ITriggerProvider;
-import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.APICache;
 import joshie.progression.network.core.PenguinPacket;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
@@ -42,7 +42,7 @@ public class PacketSyncTriggers extends PenguinPacket {
         int size = buf.readInt();
         triggers = new HashSet();
         for (int i = 0; i < size; i++) {
-            ITriggerProvider trigger = APIHandler.getCache(true).getTriggerFromUUID(UUID.fromString(readGzipString(buf)));
+            ITriggerProvider trigger = APICache.getCache(true).getTriggerFromUUID(UUID.fromString(readGzipString(buf)));
             if (trigger != null) {
                 triggers.add(trigger);
             }

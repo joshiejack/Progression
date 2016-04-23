@@ -6,7 +6,7 @@ import joshie.progression.api.criteria.IRewardProvider;
 import joshie.progression.api.criteria.ITab;
 import joshie.progression.api.special.IStoreNBTData;
 import joshie.progression.criteria.filters.location.FilterPlayerLastBroken;
-import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.APICache;
 import joshie.progression.handlers.RemappingHandler;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.player.PlayerTeam.TeamType;
@@ -146,7 +146,7 @@ public class PlayerSavedData extends WorldSavedData {
             this.markDirty();
             //If this team never existed before
             //Loop through all the rewards loaded and init them with player data
-            for (ITab tab : APIHandler.getServerCache().getTabSet()) {
+            for (ITab tab : APICache.getServerCache().getTabSet()) {
                 for (ICriteria criteria : tab.getCriteria()) {
                     for (IRewardProvider provider : criteria.getRewards()) {
                         if (provider.getProvided() instanceof IStoreNBTData) {

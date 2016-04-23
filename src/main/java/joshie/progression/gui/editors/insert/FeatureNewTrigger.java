@@ -2,6 +2,7 @@ package joshie.progression.gui.editors.insert;
 
 import joshie.progression.api.criteria.ITriggerProvider;
 import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.RuleHandler;
 
 import java.util.Collection;
 
@@ -20,6 +21,6 @@ public class FeatureNewTrigger extends FeatureNew<ITriggerProvider> {
 
     @Override
     public void clone(ITriggerProvider trigger) {
-        APIHandler.cloneTrigger(CRITERIA_EDITOR.get(), trigger);
+        RuleHandler.cloneTrigger(CRITERIA_EDITOR.get(), trigger);
     }
 }

@@ -2,7 +2,7 @@ package joshie.progression.gui.editors;
 
 import joshie.progression.api.criteria.ITriggerProvider;
 import joshie.progression.gui.core.IBarProvider;
-import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.APICache;
 
 import java.util.UUID;
 
@@ -24,7 +24,7 @@ public class GuiConditionEditor extends GuiBaseEditorRule<ITriggerProvider> impl
 
     @Override
     public ITriggerProvider get() {
-        return APIHandler.getClientCache().getTriggerFromUUID(uuid);
+        return APICache.getClientCache().getTriggerFromUUID(uuid);
     }
 
     @Override

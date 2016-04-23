@@ -9,7 +9,7 @@ import joshie.progression.api.gui.Position;
 import joshie.progression.gui.core.IBarProvider;
 import joshie.progression.gui.fields.TextFieldHideable;
 import joshie.progression.gui.filters.FilterTypeItem;
-import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.APICache;
 import net.minecraft.item.ItemStack;
 
 import java.util.UUID;
@@ -46,7 +46,7 @@ public class GuiCriteriaEditor extends GuiBaseEditorRule<ICriteria> implements I
 
     @Override
     public ICriteria get() {
-        return APIHandler.getClientCache().getCriteria(uuid);
+        return APICache.getClientCache().getCriteria(uuid);
     }
 
     @Override

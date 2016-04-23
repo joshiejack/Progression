@@ -7,7 +7,8 @@ import joshie.progression.api.gui.Position;
 import joshie.progression.gui.editors.IItemSelectable;
 import joshie.progression.gui.editors.ITextEditable;
 import joshie.progression.gui.filters.FilterTypeItem;
-import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.APICache;
+import joshie.progression.handlers.RuleHandler;
 import joshie.progression.json.Options;
 import joshie.progression.lib.ProgressionInfo;
 import net.minecraft.client.Minecraft;
@@ -113,8 +114,8 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
                 }
 
                 if (newTab != null) {
-                    if (!APIHandler.getClientCache().getTabIDs().contains(newTab.getUniqueID())) {
-                        for (ITab tab : APIHandler.getClientCache().getTabSet()) {
+                    if (!APICache.getClientCache().getTabIDs().contains(newTab.getUniqueID())) {
+                        for (ITab tab : APICache.getClientCache().getTabSet()) {
                             newTab = tab;
                             break;
                         }
@@ -126,10 +127,10 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
                 TREE_EDITOR.lastClicked = null;
                 TREE_EDITOR.currentTab = newTab;
                 for (ICriteria c : tab.getCriteria()) {
-                    APIHandler.removeCriteria(c.getUniqueID(), true);
+                    RuleHandler.removeCriteria(c.getUniqueID(), true);
                 }
 
-                APIHandler.getClientCache().removeTab(tab); //Reopen after removing
+                APICache.getClientCache().removeTab(tab); //Reopen after removing
                 CORE.setEditor(TREE_EDITOR);
                 return;
             }

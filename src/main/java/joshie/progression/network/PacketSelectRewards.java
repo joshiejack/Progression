@@ -2,7 +2,7 @@ package joshie.progression.network;
 
 import io.netty.buffer.ByteBuf;
 import joshie.progression.api.criteria.IRewardProvider;
-import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.APICache;
 import joshie.progression.network.core.PenguinPacket;
 import joshie.progression.player.CriteriaMappings;
 import joshie.progression.player.PlayerTracker;
@@ -35,7 +35,7 @@ public class PacketSelectRewards extends PenguinPacket {
         rewards = new LinkedHashSet();
         int length = buf.readInt();
         for (int i = 0; i < length; i++) {
-            rewards.add(APIHandler.getCache(false).getRewardFromUUID(UUID.fromString(readGzipString(buf))));
+            rewards.add(APICache.getCache(false).getRewardFromUUID(UUID.fromString(readGzipString(buf))));
         }
     }
 

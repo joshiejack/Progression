@@ -3,7 +3,7 @@ package joshie.progression.plugins.enchiridion.actions;
 import com.google.gson.JsonObject;
 import joshie.enchiridion.api.book.IButtonAction;
 import joshie.progression.api.criteria.ICriteria;
-import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.APICache;
 import joshie.progression.helpers.JSONHelper;
 import joshie.progression.network.PacketClaimReward;
 import joshie.progression.network.PacketHandler;
@@ -29,7 +29,7 @@ public class ActionClaimReward extends AbstractActionCriteria implements IButton
 
     @Override
     public IButtonAction create() {
-        return new ActionClaimReward(APIHandler.getCache(true).getRandomCriteria(), false, 1);
+        return new ActionClaimReward(APICache.getCache(true).getRandomCriteria(), false, 1);
     }
 
     @Override

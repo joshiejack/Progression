@@ -7,7 +7,8 @@ import joshie.progression.gui.buttons.ButtonNewCriteria;
 import joshie.progression.gui.buttons.ButtonTab;
 import joshie.progression.gui.core.GuiCore;
 import joshie.progression.gui.core.GuiList;
-import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.APICache;
+import joshie.progression.handlers.RuleHandler;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.json.Options;
 import net.minecraft.client.gui.GuiButton;
@@ -63,7 +64,7 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
         }
 
         //Sort tabs alphabetically or by sort index
-        for (ITab tab : APIHandler.getCache(true).getSortedTabs()) {
+        for (ITab tab : APICache.getCache(true).getSortedTabs()) {
             if (isTabVisible(tab) || MODE == EDIT) {
                 if (!sideWays) {
                     if (position <= 8) {
@@ -93,21 +94,21 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
 
     @Override
     public void initData() {
-        addButtons(CORE, APIHandler.getClientCache().getSortedTabs().size() > 17);
+        addButtons(CORE, APICache.getClientCache().getSortedTabs().size() > 17);
 
         if (currentTabID == null) {
             currentTabID = Options.settings.defaultTabID;
         }
 
-        currentTab = APIHandler.getClientCache().getTab(currentTabID);
+        currentTab = APICache.getClientCache().getTab(currentTabID);
         if (currentTab == null) {
-            for (ITab tab : APIHandler.getClientCache().getTabSet()) {
+            for (ITab tab : APICache.getClientCache().getTabSet()) {
                 currentTab = tab;
                 break;
             }
 
             if (currentTab == null) {
-                currentTab = APIHandler.newTab(UUID.randomUUID(), true).setDisplayName("New Tab").setStack(new ItemStack(Items.book)).setVisibility(true);
+                currentTab = RuleHandler.newTab(UUID.randomUUID(), true).setDisplayName("New Tab").setStack(new ItemStack(Items.book)).setVisibility(true);
                 currentTabID = currentTab.getUniqueID();
                 CORE.initGui(); //Reset things
             }
@@ -206,16 +207,16 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
         }
 
         if (toRemove != null) {
-            APIHandler.removeCriteria(toRemove.getUniqueID(), false);
+            RuleHandler.removeCriteria(toRemove.getUniqueID(), false);
         }
 
         if (key == Keyboard.KEY_UP) {
             currentTab.setSortIndex(currentTab.getSortIndex() + 1);
-            APIHandler.getClientCache().clearSorted(); //Clear the sorted
+            APICache.getClientCache().clearSorted(); //Clear the sorted
             CORE.initGui();
         } else if (key == Keyboard.KEY_DOWN) {
             currentTab.setSortIndex(currentTab.getSortIndex() - 1);
-            APIHandler.getClientCache().clearSorted(); //Clear the sorted
+            APICache.getClientCache().clearSorted(); //Clear the sorted
             CORE.initGui();
         }
     }
@@ -266,7 +267,7 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
                 GuiList.TREE_EDITOR.isDragging = false;
                 ITab currentTab = GuiList.TREE_EDITOR.currentTab;
                 int offsetX = CORE.getOffsetX();
-                ICriteria criteria = APIHandler.newCriteria(currentTab, UUID.randomUUID(), true);
+                ICriteria criteria = RuleHandler.newCriteria(currentTab, UUID.randomUUID(), true);
                 criteria.setCoordinates(mouseX - 50 - offsetX, mouseY - 10);
                 GuiList.TREE_EDITOR.addCriteria(criteria, mouseX - 50, mouseY - 10, offsetX);
                 return true;

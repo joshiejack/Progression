@@ -8,7 +8,7 @@ import joshie.progression.gui.filters.FilterSelectorHelper;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.handlers.CraftingEvents;
 import joshie.progression.handlers.RemappingHandler;
-import joshie.progression.handlers.RuleLoader;
+import joshie.progression.handlers.RuleHandler;
 import joshie.progression.json.Options;
 import joshie.progression.network.*;
 import joshie.progression.player.PlayerHandler;
@@ -48,7 +48,7 @@ public class PCommonProxy implements IGuiHandler {
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Progression.item, 1, ItemProgression.ItemMeta.claim.ordinal()), new Object[] { "F", "P", 'F', Items.flint, 'P', "plankWood" }));
         }
 
-        RuleLoader.registerRules(asm);
+        RuleHandler.registerRules(asm);
 
         //Register Commands
         CommandManager.INSTANCE.registerCommand(new CommandHelp());

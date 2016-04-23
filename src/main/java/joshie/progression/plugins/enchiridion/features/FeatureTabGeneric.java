@@ -2,7 +2,7 @@ package joshie.progression.plugins.enchiridion.features;
 
 import com.google.gson.JsonObject;
 import joshie.progression.api.criteria.ITab;
-import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.APICache;
 import joshie.progression.helpers.JSONHelper;
 
 import java.util.UUID;
@@ -25,7 +25,7 @@ public abstract class FeatureTabGeneric extends FeatureProgression {
     }
 
     public ITab getTab() {
-        return APIHandler.getClientCache().getTab(uuid);
+        return APICache.getClientCache().getTab(uuid);
     }
 
     @Override
@@ -36,7 +36,7 @@ public abstract class FeatureTabGeneric extends FeatureProgression {
             ITab tab = getTab();
             if (tab != null) display = tab.getLocalisedName();
         } else if (field.equals("display")) {
-            for (ITab t : APIHandler.getClientCache().getTabSet()) {
+            for (ITab t : APICache.getClientCache().getTabSet()) {
                 if (t.getLocalisedName().equals(display)) {
                     uuid = t.getUniqueID();
                 }

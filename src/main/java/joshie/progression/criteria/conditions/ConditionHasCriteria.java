@@ -7,7 +7,7 @@ import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.ICustomDescription;
 import joshie.progression.api.special.IGetterCallback;
 import joshie.progression.api.special.IInit;
-import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.APICache;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.util.EnumChatFormatting;
 
@@ -22,7 +22,7 @@ public class ConditionHasCriteria extends ConditionBase implements IInit, ICusto
     @Override
     public void init(boolean isClient) {
         try {
-            for (ICriteria c : APIHandler.getCache(isClient).getCriteriaSet()) {
+            for (ICriteria c : APICache.getCache(isClient).getCriteriaSet()) {
                 String display = c.getLocalisedName();
                 if (c.getLocalisedName().equals(displayName)) {
                     criteria = c;

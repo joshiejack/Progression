@@ -2,6 +2,7 @@ package joshie.progression.gui.editors.insert;
 
 import joshie.progression.api.criteria.IFilterProvider;
 import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.RuleHandler;
 
 import java.util.Collection;
 
@@ -20,7 +21,7 @@ public class FeatureNewFilter extends FeatureNew<IFilterProvider> {
 
     @Override
     public void clone(IFilterProvider provider) {
-        APIHandler.cloneFilter(FILTER_EDITOR.get(), provider);
+        RuleHandler.cloneFilter(FILTER_EDITOR.get(), provider);
         //GuiFilterEditor.GROUP_EDITOR.initGui(); //Refresh the gui
     }
 

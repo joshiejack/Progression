@@ -13,7 +13,7 @@ import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.ITab;
 import joshie.progression.gui.editors.GuiTreeEditor;
-import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.APICache;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.plugins.enchiridion.actions.ActionJumpTab;
 
@@ -52,7 +52,7 @@ public class FeatureTab extends FeatureTabGeneric {
                 @Override
                 public Integer call() throws Exception {
                     int number = 1;
-                    for (ITab t : APIHandler.getCache(true).getSortedTabs()) {
+                    for (ITab t : APICache.getCache(true).getSortedTabs()) {
                         if (t.getUniqueID().equals(tab.getUniqueID())) return number;
 
                         number++;

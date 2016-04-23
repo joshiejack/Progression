@@ -1,6 +1,6 @@
 package joshie.progression;
 
-import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.APICache;
 import joshie.progression.helpers.ChatHelper;
 import joshie.progression.helpers.RenderItemHelper;
 import joshie.progression.lib.GuiIDs;
@@ -23,7 +23,7 @@ public class PClientProxy extends PCommonProxy {
     @Override
     public void initClient() {
         MinecraftForge.EVENT_BUS.register(new ItemProgressionRenderer());
-        APIHandler.resetAPIHandler(true); //Reset the cache once we've received the length
+        APICache.resetAPIHandler(true); //Reset the cache once we've received the length
     }
 
     private ModelResourceLocation getLocation(String name) {

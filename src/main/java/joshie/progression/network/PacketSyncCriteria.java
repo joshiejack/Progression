@@ -2,7 +2,7 @@ package joshie.progression.network;
 
 import io.netty.buffer.ByteBuf;
 import joshie.progression.api.criteria.ICriteria;
-import joshie.progression.handlers.APIHandler;
+import joshie.progression.handlers.APICache;
 import joshie.progression.network.core.PenguinPacket;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
@@ -41,7 +41,7 @@ public class PacketSyncCriteria extends PenguinPacket {
         int size = buf.readInt();
         criteria = new ICriteria[size];
         for (int i = 0; i < size; i++) {
-            criteria[i] = APIHandler.getClientCache().getCriteria(UUID.fromString(readGzipString(buf)));
+            criteria[i] = APICache.getClientCache().getCriteria(UUID.fromString(readGzipString(buf)));
         }
 
         integers = new Integer[size];
