@@ -12,6 +12,11 @@ public class FeatureFilter extends FeatureDrawable<IFilterProvider> {
     }
 
     @Override
+    public boolean isReady() {
+        return FILTER_EDITOR.get() != null;
+    }
+    
+    @Override
     public List<IFilterProvider> getList() {
         return FILTER_EDITOR.get().getFilters();
     }

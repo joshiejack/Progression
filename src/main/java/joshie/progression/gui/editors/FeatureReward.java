@@ -43,6 +43,11 @@ public class FeatureReward extends FeatureDrawable<IRewardProvider> {
     }
 
     @Override
+    public boolean isReady() {
+        return CRITERIA_EDITOR.get() != null;
+    }
+
+    @Override
     public List<IRewardProvider> getList() {
         return CRITERIA_EDITOR.get().getRewards();
     }

@@ -12,6 +12,11 @@ public class FeatureCondition extends FeatureDrawable<IConditionProvider> {
     }
 
     @Override
+    public boolean isReady() {
+        return CONDITION_EDITOR.get() != null;
+    }
+
+    @Override
     public List<IConditionProvider> getList() {
         return CONDITION_EDITOR.get().getConditions();
     }

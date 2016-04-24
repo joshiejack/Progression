@@ -13,6 +13,7 @@ import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.lib.PInfo;
 import joshie.progression.network.PacketHandler;
 import joshie.progression.network.PacketInvitePlayer;
+import joshie.progression.network.PacketSyncUsernameCache;
 import joshie.progression.player.PlayerTeam;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.client.Minecraft;
@@ -220,12 +221,16 @@ public class GuiGroupEditor extends GuiBaseEditor implements IBarProvider, IText
                 public Set<AbstractClientPlayer> call() throws Exception {
                     Set<AbstractClientPlayer> players = new LinkedHashSet();
                     Minecraft mc = Minecraft.getMinecraft();
-                    players.add(new EntityOtherPlayerMP(mc.theWorld, new GameProfile(team.getOwner(), UsernameCache.getLastKnownUsername(team.getOwner()))));
+                    String ownerName = PacketSyncUsernameCache.cache.get(team.getOwner());
+                    if (ownerName == null || ownerName.equals("")) ownerName = "Unknown";
+                    players.add(new EntityOtherPlayerMP(mc.theWorld, new GameProfile(team.getOwner(), ownerName)));
                     if (!team.isOwner(mc.thePlayer)) players.add(mc.thePlayer);
                     for (UUID uuid : team.getMembers()) {
                         if (uuid.equals(PlayerHelper.getUUIDForPlayer(mc.thePlayer))) continue;
                         else {
-                            players.add(new EntityOtherPlayerMP(mc.theWorld, new GameProfile(uuid, UsernameCache.getLastKnownUsername(uuid))));
+                            String name = PacketSyncUsernameCache.cache.get(uuid);
+                            if (name == null || name.equals("")) name = "Unknown";
+                            players.add(new EntityOtherPlayerMP(mc.theWorld, new GameProfile(uuid, name)));
                         }
                     }
 

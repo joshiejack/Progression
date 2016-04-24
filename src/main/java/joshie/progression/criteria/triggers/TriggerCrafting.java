@@ -19,6 +19,7 @@ import mezz.jei.gui.RecipesGui;
 import mezz.jei.input.InputHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 
@@ -29,6 +30,7 @@ import java.util.UUID;
 import static joshie.progression.ItemProgression.ItemMeta.craft;
 import static joshie.progression.ItemProgression.getStackFromMeta;
 
+@Optional.Interface(iface = "joshie.progression.api.special.IClickable", modid = "JEI")
 @ProgressionRule(name="crafting", color=0xFF663300)
 public class TriggerCrafting extends TriggerBaseItemFilter implements IClickable, IMiniIcon, ISpecialFieldProvider {
     private static final ItemStack mini = getStackFromMeta(craft);
@@ -50,19 +52,17 @@ public class TriggerCrafting extends TriggerBaseItemFilter implements IClickable
 
     @Override
     public String getDescription() {
-        int percentageItemTotal = (counter * 100) / amount;
-        int percentageCraftedTotal = (timesItemCrafted * 100) / timesCrafted;
-        int percentageTotal = (percentageItemTotal + percentageCraftedTotal) / 2;
         return Progression.format("trigger.crafting.description", amount);
     }
 
+    @Optional.Method(modid = "JEI")
     @Override
     public boolean onClicked(ItemStack stack) {
         try {
             //Fuck your privateness
             Field f = ProxyCommonClient.class.getDeclaredField("guiEventHandler");
             f.setAccessible(true);
-            GuiEventHandler eventHandler = (GuiEventHandler) f.get((ProxyCommonClient)JustEnoughItems.getProxy());
+            GuiEventHandler eventHandler = (GuiEventHandler) f.get(JustEnoughItems.getProxy());
 
             //DIE WITH FIRE
             f = GuiEventHandler.class.getDeclaredField("inputHandler");

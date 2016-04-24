@@ -17,6 +17,11 @@ public class FeatureTrigger extends FeatureDrawable<ITriggerProvider> {
     }
 
     @Override
+    public boolean isReady() {
+        return CRITERIA_EDITOR.get() != null;
+    }
+
+    @Override
     public List<ITriggerProvider> getList() {
         return CRITERIA_EDITOR.get().getTriggers();
     }

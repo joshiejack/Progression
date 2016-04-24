@@ -14,6 +14,8 @@ import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.helpers.SplitHelper;
 import joshie.progression.lib.GuiIDs;
+import joshie.progression.network.PacketHandler;
+import joshie.progression.network.PacketSyncUsernameCache;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -21,6 +23,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.GuiScreenEvent.DrawScreenEvent;
+import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -43,6 +46,8 @@ public class ProgressionEvents {
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
         RemappingHandler.onPlayerConnect((EntityPlayerMP) event.player);
+        //Send to everybody
+        PacketHandler.sendToEveryone(new PacketSyncUsernameCache(UsernameCache.getMap()));
     }
 
     @SideOnly(Side.CLIENT)

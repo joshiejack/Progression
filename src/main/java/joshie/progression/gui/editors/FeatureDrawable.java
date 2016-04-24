@@ -57,6 +57,7 @@ public abstract class FeatureDrawable<T extends IRuleProvider> extends FeatureAb
     }
 
     protected abstract List<T> getList();
+    public abstract boolean isReady();
 
     private HashMap<IRule, List<IField>> getFieldsMap() {
         return displayMap.get(MODE);
@@ -154,6 +155,7 @@ public abstract class FeatureDrawable<T extends IRuleProvider> extends FeatureAb
 
     @Override
     public void drawFeature(int mouseX, int mouseY) {
+        if (!isReady()) return;
         int offsetX = 0;
         for (IRuleProvider drawing: getList()) {
             int mouseOffsetX = mouseX - CORE.getOffsetX() - offsetX;
@@ -240,6 +242,7 @@ public abstract class FeatureDrawable<T extends IRuleProvider> extends FeatureAb
 
     @Override //Only called in Edit Mode
     public boolean mouseClicked(final int mouseX, final int mouseY, int button) {
+        if (!isReady()) return false;
         if (GuiList.ITEM_EDITOR.isVisible()) return false; //If the item selector is visible, don't process clicks
         if (FeatureNew.IS_OPEN) return false;
         int offsetX = 0;
