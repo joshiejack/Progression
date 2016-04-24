@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 public class EntityHelper {
-    @SideOnly(Side.CLIENT)
     private static final Cache<EntityLivingBase, Pair<Integer, Integer>> cacheScaleOffset = CacheBuilder.newBuilder().maximumSize(16).build();
     private static final Cache<EntityLivingBase, ItemStack> eggCache = CacheBuilder.newBuilder().maximumSize(256).build();
     private static final HashMap<String, Pair<Integer, Integer>> scaleOffset = new HashMap<String, Pair<Integer, Integer>>();
