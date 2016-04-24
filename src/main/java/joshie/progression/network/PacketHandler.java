@@ -1,7 +1,7 @@
 package joshie.progression.network;
 
 import joshie.progression.helpers.PlayerHelper;
-import joshie.progression.lib.ProgressionInfo;
+import joshie.progression.lib.PInfo;
 import joshie.progression.network.core.PenguinNetwork;
 import joshie.progression.player.PlayerTeam;
 import net.minecraft.command.ICommandSender;
@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import java.util.UUID;
 
 public class PacketHandler {
-    private static final PenguinNetwork INSTANCE = new PenguinNetwork(ProgressionInfo.MODID);
+    private static final PenguinNetwork INSTANCE = new PenguinNetwork(PInfo.MODID);
     public static void registerPacket(Class clazz) {
         registerPacket(clazz, Side.CLIENT);
         registerPacket(clazz, Side.SERVER);

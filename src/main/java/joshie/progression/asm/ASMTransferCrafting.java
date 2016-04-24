@@ -1,6 +1,6 @@
 package joshie.progression.asm;
 
-import joshie.progression.lib.ProgressionInfo;
+import joshie.progression.lib.PInfo;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
@@ -73,7 +73,7 @@ public class ASMTransferCrafting extends AbstractASM {
                             mv.visitVarInsn(ALOAD, 4);
                             mv.visitVarInsn(ALOAD, 1);
                             mv.visitVarInsn(ALOAD, 3);
-                            mv.visitMethodInsn(INVOKESTATIC, ProgressionInfo.ASMPATH + "asm/helpers/TransferHelper", "onPickup", "(Ljava/lang/Object;Lnet/minecraft/inventory/Slot;Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/item/ItemStack;)V", false);
+                            mv.visitMethodInsn(INVOKESTATIC, PInfo.ASMPATH + "asm/helpers/TransferHelper", "onPickup", "(Ljava/lang/Object;Lnet/minecraft/inventory/Slot;Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/item/ItemStack;)V", false);
                         } else super.visitMethodInsn(opcode, owner, name, desc, itf);
                     }
                 };

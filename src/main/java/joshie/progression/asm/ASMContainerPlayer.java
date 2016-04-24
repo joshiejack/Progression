@@ -1,6 +1,6 @@
 package joshie.progression.asm;
 
-import joshie.progression.lib.ProgressionInfo;
+import joshie.progression.lib.PInfo;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
@@ -43,7 +43,7 @@ public class ASMContainerPlayer extends AbstractASM {
                             mv.visitVarInsn(ALOAD, 0);
                             mv.visitFieldInsn(GETFIELD, "net/minecraft/inventory/ContainerPlayer", player, "Lnet/minecraft/entity/player/EntityPlayer;");
                             mv.visitFieldInsn(GETFIELD, "net/minecraft/entity/player/EntityPlayer", world, "Lnet/minecraft/world/World;");
-                            mv.visitMethodInsn(INVOKESTATIC, ProgressionInfo.ASMPATH + "asm/helpers/VanillaHelper", "onContainerChanged", "(Lnet/minecraft/inventory/InventoryCrafting;Lnet/minecraft/inventory/IInventory;Lnet/minecraft/world/World;)V", false);
+                            mv.visitMethodInsn(INVOKESTATIC, PInfo.ASMPATH + "asm/helpers/VanillaHelper", "onContainerChanged", "(Lnet/minecraft/inventory/InventoryCrafting;Lnet/minecraft/inventory/IInventory;Lnet/minecraft/world/World;)V", false);
                             mv.visitInsn(RETURN);
                         }
                     };

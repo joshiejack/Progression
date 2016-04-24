@@ -9,7 +9,7 @@ import joshie.progression.gui.editors.insert.FeatureNewTrigger;
 import joshie.progression.gui.filters.FeatureItemPreview;
 import joshie.progression.json.JSONLoader;
 import joshie.progression.json.Theme;
-import joshie.progression.lib.ProgressionInfo;
+import joshie.progression.lib.PInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
@@ -28,7 +28,7 @@ public class GuiList {
     public static DisplayMode MODE = DISPLAY;
 
     //Theme -> :O
-    protected static final ResourceLocation resource = new ResourceLocation(ProgressionInfo.MODPATH, "config.json");
+    protected static final ResourceLocation resource = new ResourceLocation(PInfo.MODPATH, "config.json");
     public static Theme THEME = null;
 
 

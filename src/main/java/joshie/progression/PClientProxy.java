@@ -4,7 +4,7 @@ import joshie.progression.handlers.APICache;
 import joshie.progression.helpers.ChatHelper;
 import joshie.progression.helpers.RenderItemHelper;
 import joshie.progression.lib.GuiIDs;
-import joshie.progression.lib.ProgressionInfo;
+import joshie.progression.lib.PInfo;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -16,7 +16,7 @@ import static joshie.progression.gui.core.GuiList.GROUP_EDITOR;
 import static net.minecraft.util.EnumChatFormatting.GOLD;
 
 public class PClientProxy extends PCommonProxy {
-    public static final ModelResourceLocation criteria = new ModelResourceLocation(new ResourceLocation(ProgressionInfo.MODPATH, "item"), "inventory");
+    public static final ModelResourceLocation criteria = new ModelResourceLocation(new ResourceLocation(PInfo.MODPATH, "item"), "inventory");
     public static boolean bookLocked = true; //You can't edit me
     public static boolean isSaver = false;
 
@@ -27,7 +27,7 @@ public class PClientProxy extends PCommonProxy {
     }
 
     private ModelResourceLocation getLocation(String name) {
-        return new ModelResourceLocation(new ResourceLocation(ProgressionInfo.MODPATH, name), "inventory");
+        return new ModelResourceLocation(new ResourceLocation(PInfo.MODPATH, name), "inventory");
     }
 
     @Override

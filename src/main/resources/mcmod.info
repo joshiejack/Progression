@@ -1,6 +1,6 @@
 [
 {
-  "modid": "Progression",
+  "modid": "progression",
   "name": "Progression",
   "description": "A mod that allows you to control the progression of individual players.",
   "version": "${version}",

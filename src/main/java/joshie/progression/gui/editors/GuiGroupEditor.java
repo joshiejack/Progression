@@ -10,7 +10,7 @@ import joshie.progression.gui.core.GuiList;
 import joshie.progression.gui.core.IBarProvider;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.PlayerHelper;
-import joshie.progression.lib.ProgressionInfo;
+import joshie.progression.lib.PInfo;
 import joshie.progression.network.PacketHandler;
 import joshie.progression.network.PacketInvitePlayer;
 import joshie.progression.player.PlayerTeam;
@@ -187,7 +187,7 @@ public class GuiGroupEditor extends GuiBaseEditor implements IBarProvider, IText
                 float green = (color >> 8 & 255) / 255.0F;
                 float blue = (color & 255) / 255.0F;
                 GlStateManager.color(red, green, blue, 1F);
-                CORE.drawTexture(ProgressionInfo.textures, xPos + 10, 170, 201, crossY, 55, 55);
+                CORE.drawTexture(PInfo.textures, xPos + 10, 170, 201, crossY, 55, 55);
             }
         } catch (Exception e) {}
     }

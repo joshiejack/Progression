@@ -3,7 +3,7 @@ package joshie.progression.gui.buttons;
 import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.ITab;
 import joshie.progression.handlers.RuleHandler;
-import joshie.progression.lib.ProgressionInfo;
+import joshie.progression.lib.PInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -31,11 +31,11 @@ public class ButtonNewCriteria extends ButtonBase {
 
         if (!isSideways) {
             int yTexture = k == 2 ? 25 : 0;
-            CORE.drawTexture(ProgressionInfo.textures, xPosition, yPosition, 231, yTexture, 25, 25);
+            CORE.drawTexture(PInfo.textures, xPosition, yPosition, 231, yTexture, 25, 25);
             CORE.drawText("New", xPosition + 2, yPosition + 9, THEME.newButtonFontColor);
         } else {
             int xTexture = k == 2 ? 206 : 231;;
-            CORE.drawTexture(ProgressionInfo.textures, xPosition + CORE.getOffsetX(), yPosition, xTexture, 206, 25, 22);
+            CORE.drawTexture(PInfo.textures, xPosition + CORE.getOffsetX(), yPosition, xTexture, 206, 25, 22);
             CORE.drawText("New", xPosition + 4 + CORE.getOffsetX(), yPosition + 8, THEME.newButtonFontColor);
         }
 

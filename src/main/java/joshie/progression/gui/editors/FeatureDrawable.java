@@ -17,7 +17,7 @@ import joshie.progression.gui.fields.BooleanField;
 import joshie.progression.gui.fields.EnumField;
 import joshie.progression.gui.fields.TextField;
 import joshie.progression.helpers.CollectionHelper;
-import joshie.progression.lib.ProgressionInfo;
+import joshie.progression.lib.PInfo;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.EnumChatFormatting;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -170,7 +170,7 @@ public abstract class FeatureDrawable<T extends IRuleProvider> extends FeatureAb
                         xXcoord += 11;
                     }
 
-                    offset.drawTexture(offsetX, offsetY, ProgressionInfo.textures, drawing.getWidth(MODE) - 13, 4, xXcoord, 52, 11, 11);
+                    offset.drawTexture(offsetX, offsetY, PInfo.textures, drawing.getWidth(MODE) - 13, 4, xXcoord, 52, 11, 11);
                 }
             }
 
@@ -196,7 +196,7 @@ public abstract class FeatureDrawable<T extends IRuleProvider> extends FeatureAb
             //GlStateManager.resetColor();
             //GlStateManager.color(red, green, blue, 1F);
             GL11.glColor4f(red, green, blue, 1F);
-            offset.drawTexture(offsetX, offsetY, ProgressionInfo.textures, 15, 10, crossX, crossY, 55, 55);
+            offset.drawTexture(offsetX, offsetY, PInfo.textures, 15, 10, crossX, crossY, 55, 55);
             GL11.glColor4f(1F, 1F, 1F, 1F);
         }
     }

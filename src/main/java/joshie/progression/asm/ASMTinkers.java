@@ -5,7 +5,7 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-import joshie.progression.lib.ProgressionInfo;
+import joshie.progression.lib.PInfo;
 
 public class ASMTinkers extends AbstractASM {
     @Override
@@ -37,7 +37,7 @@ public class ASMTinkers extends AbstractASM {
                             mv.visitFieldInsn(Opcodes.GETFIELD, "slimeknights/tconstruct/tools/inventory/ContainerCraftingStation", "craftResult", "Lnet/minecraft/inventory/IInventory;");
                             mv.visitVarInsn(Opcodes.ALOAD, 0);
                             mv.visitFieldInsn(Opcodes.GETFIELD, "slimeknights/tconstruct/tools/inventory/ContainerCraftingStation", "world", "Lnet/minecraft/world/World;");
-                            mv.visitMethodInsn(Opcodes.INVOKESTATIC, ProgressionInfo.ASMPATH + "asm/helpers/VanillaHelper", "onContainerChanged", "(Lnet/minecraft/inventory/InventoryCrafting;Lnet/minecraft/inventory/IInventory;Lnet/minecraft/world/World;)V", false);
+                            mv.visitMethodInsn(Opcodes.INVOKESTATIC, PInfo.ASMPATH + "asm/helpers/VanillaHelper", "onContainerChanged", "(Lnet/minecraft/inventory/InventoryCrafting;Lnet/minecraft/inventory/IInventory;Lnet/minecraft/world/World;)V", false);
                             mv.visitInsn(Opcodes.RETURN);
                         }
                     };

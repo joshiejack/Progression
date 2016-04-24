@@ -7,7 +7,7 @@ import joshie.progression.api.special.IEnum;
 import joshie.progression.api.special.ISpecialJSON;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.handlers.RuleHandler;
-import joshie.progression.lib.ProgressionInfo;
+import joshie.progression.lib.PInfo;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -271,7 +271,7 @@ public class JSONHelper {
                 if (field.getType() == Block.class) readBlock(json, field, provider, (Block) defaultValue);
                 if (field.getType() == Item.class) readItem(json, field, provider, (Item) defaultValue);
                 if (field.getType() == NBTTagCompound.class) readNBT(json, field, provider, (NBTTagCompound) defaultValue);
-                if (field.getGenericType().toString().equals("java.util.List<" + ProgressionInfo.FILTER + ">")) readItemFilters(json, field, provider, isClientside);
+                if (field.getGenericType().toString().equals("java.util.List<" + PInfo.FILTER + ">")) readItemFilters(json, field, provider, isClientside);
             }
         } catch (Exception e) {}
     }
@@ -334,7 +334,7 @@ public class JSONHelper {
                 if (field.getType() == Block.class) writeBlock(json, field, object, (Block) defaultValue);
                 if (field.getType() == Item.class) writeItem(json, field, object, (Item) defaultValue);
                 if (field.getType() == NBTTagCompound.class) writeNBT(json, field, object, (NBTTagCompound) defaultValue);
-                if (field.getGenericType().toString().equals("java.util.List<" + ProgressionInfo.FILTER + ">")) writeItemFilters(json, field, object);
+                if (field.getGenericType().toString().equals("java.util.List<" + PInfo.FILTER + ">")) writeItemFilters(json, field, object);
             }
         } catch (Exception e) { e.printStackTrace(); }
     }

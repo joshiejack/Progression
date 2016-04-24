@@ -4,7 +4,7 @@ import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.IRewardProvider;
 import joshie.progression.api.special.ICustomTreeIcon;
 import joshie.progression.gui.core.GuiList;
-import joshie.progression.lib.ProgressionInfo;
+import joshie.progression.lib.PInfo;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -190,13 +190,13 @@ public class TreeEditorElement {
 
             GlStateManager.enableBlend();
             GlStateManager.color(1F, 1F, 1F, 1F);
-            CORE.mc.getTextureManager().bindTexture(ProgressionInfo.textures);
-            CORE.drawTexture(ProgressionInfo.textures, x + left, top, textureX, textureY, 10, 25);
+            CORE.mc.getTextureManager().bindTexture(PInfo.textures);
+            CORE.drawTexture(PInfo.textures, x + left, top, textureX, textureY, 10, 25);
             for (int i = 0; i < width - 20; i++) {
-                CORE.drawTexture(ProgressionInfo.textures, x + left + 10 + i, top, textureX + 10, textureY, 1, 25);
+                CORE.drawTexture(PInfo.textures, x + left + 10 + i, top, textureX + 10, textureY, 1, 25);
             }
 
-            CORE.drawTexture(ProgressionInfo.textures, x + right - 10, top, textureX + 90, textureY, 10, 25);
+            CORE.drawTexture(PInfo.textures, x + right - 10, top, textureX + 90, textureY, 10, 25);
 
             //gui.drawTexturedModalRect(x + left, y + top, textureX, textureY, 100, 25);
             CORE.drawText(criteria.getLocalisedName(), x + left + 4, top + 3, THEME.criteriaDisplayNameColor);
