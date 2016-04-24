@@ -62,8 +62,7 @@ public class Progression {
 
         /** Create the config directory **/
         Options.init(FileHelper.getOptions());
-        MinecraftForge.EVENT_BUS.register(new Options());
-        
+
         proxy.preInit(event.getAsmData());
         proxy.initClient();
     }

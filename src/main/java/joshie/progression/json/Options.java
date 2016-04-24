@@ -2,6 +2,7 @@ package joshie.progression.json;
 
 import joshie.progression.Progression;
 import joshie.progression.lib.PInfo;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -26,6 +27,7 @@ public class Options {
             config = new Configuration(configFile);
             loadConfiguration();
         }
+        MinecraftForge.EVENT_BUS.register(new Options());
     }
 
     private static void loadConfiguration() {
