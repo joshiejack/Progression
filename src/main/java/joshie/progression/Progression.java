@@ -15,6 +15,7 @@ import net.minecraft.item.Item;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
@@ -34,9 +35,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 
-import static joshie.progression.lib.ProgressionInfo.*;
+import static joshie.progression.lib.PInfo.*;
 
-@Mod(modid = MODID, name = MODNAME, version = VERSION)
+@Mod(modid = MODID, name = MODNAME, version = VERSION, guiFactory = GUI_FACTORY_CLASS)
 public class Progression {
     public static final Logger logger = LogManager.getLogger(MODNAME);
 
@@ -60,8 +61,8 @@ public class Progression {
         } catch (ClassNotFoundException e) {}
 
         /** Create the config directory **/
-        Options.init(new Configuration(FileHelper.getOptions()));
-        
+        Options.init(FileHelper.getOptions());
+
         proxy.preInit(event.getAsmData());
         proxy.initClient();
     }

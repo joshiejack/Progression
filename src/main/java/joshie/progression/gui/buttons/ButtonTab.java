@@ -10,7 +10,7 @@ import joshie.progression.gui.filters.FilterTypeItem;
 import joshie.progression.handlers.APICache;
 import joshie.progression.handlers.RuleHandler;
 import joshie.progression.json.Options;
-import joshie.progression.lib.ProgressionInfo;
+import joshie.progression.lib.PInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -39,14 +39,14 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
     }
 
     public void drawTexture(Minecraft mc) {
-        mc.getTextureManager().bindTexture(ProgressionInfo.textures);
+        mc.getTextureManager().bindTexture(PInfo.textures);
 
         if (isSideways) {
             int yTexture = isBottom ? 234: 206;
             RenderHelper.disableStandardItemLighting();
             int xTexture = TREE_EDITOR.currentTab == tab ? 206 : 231;;
             if (xPosition == 0) xTexture = 206;
-            CORE.drawTexture(ProgressionInfo.textures, xPosition + CORE.getOffsetX(), yPosition, xTexture, yTexture, 25, 22);
+            CORE.drawTexture(PInfo.textures, xPosition + CORE.getOffsetX(), yPosition, xTexture, yTexture, 25, 22);
 
             int stackY = isBottom ? -3: 0;
             if (xPosition == 0) {
@@ -57,7 +57,7 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
             RenderHelper.disableStandardItemLighting();
             int xTexture = 206;
             if (xPosition == 0) xTexture = 231;
-            CORE.drawTexture(ProgressionInfo.textures, xPosition, yPosition, xTexture, yTexture, 25, 25);
+            CORE.drawTexture(PInfo.textures, xPosition, yPosition, xTexture, yTexture, 25, 25);
             if (xPosition == 0) {
                 CORE.drawStack(tab.getStack(), xPosition + 2, yPosition + 5, 1F);
             } else CORE.drawStack(tab.getStack(), xPosition + 7, yPosition + 6, 1F);

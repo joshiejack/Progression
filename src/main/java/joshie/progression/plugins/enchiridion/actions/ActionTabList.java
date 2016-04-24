@@ -16,7 +16,7 @@ import joshie.progression.plugins.enchiridion.features.FeatureTabInfo;
 import joshie.progression.plugins.enchiridion.features.FeatureTabListUpdater;
 import net.minecraft.util.ResourceLocation;
 
-import static joshie.progression.lib.ProgressionInfo.BOOKPATH;
+import static joshie.progression.lib.PInfo.BOOKPATH;
 import static joshie.progression.plugins.enchiridion.EnchiridionSupport.TRANSPARENT;
 
 public class ActionTabList extends AbstractAction {

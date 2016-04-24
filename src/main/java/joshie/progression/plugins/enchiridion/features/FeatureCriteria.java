@@ -16,7 +16,7 @@ import joshie.progression.api.criteria.ITriggerProvider;
 import joshie.progression.gui.editors.TreeEditorElement.ColorMode;
 import joshie.progression.handlers.APICache;
 import joshie.progression.helpers.JSONHelper;
-import joshie.progression.lib.ProgressionInfo;
+import joshie.progression.lib.PInfo;
 import joshie.progression.plugins.enchiridion.actions.ActionClaimCriteria;
 import net.minecraft.util.ResourceLocation;
 
@@ -89,10 +89,10 @@ public class FeatureCriteria extends FeatureProgression implements ISimpleEditor
         return null;
     }
 
-    private static final ResourceLocation unlocked = new ResourceLocation(ProgressionInfo.BOOKPATH + "hexunlocked.png");
-    private static final ResourceLocation locked = new ResourceLocation(ProgressionInfo.BOOKPATH + "hexlocked.png");
-    private static final ResourceLocation completed = new ResourceLocation(ProgressionInfo.BOOKPATH + "hexcompleted.png");
-    private static final ResourceLocation error = new ResourceLocation(ProgressionInfo.BOOKPATH + "hexerror.png");
+    private static final ResourceLocation unlocked = new ResourceLocation(PInfo.BOOKPATH + "hexunlocked.png");
+    private static final ResourceLocation locked = new ResourceLocation(PInfo.BOOKPATH + "hexlocked.png");
+    private static final ResourceLocation completed = new ResourceLocation(PInfo.BOOKPATH + "hexcompleted.png");
+    private static final ResourceLocation error = new ResourceLocation(PInfo.BOOKPATH + "hexerror.png");
 
     private ResourceLocation getResource(ColorMode mode) {
         switch (mode) {

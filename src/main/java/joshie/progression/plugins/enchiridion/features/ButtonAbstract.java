@@ -2,7 +2,7 @@ package joshie.progression.plugins.enchiridion.features;
 
 import joshie.enchiridion.Enchiridion;
 import joshie.enchiridion.api.gui.IToolbarButton;
-import joshie.progression.lib.ProgressionInfo;
+import joshie.progression.lib.PInfo;
 import net.minecraft.util.ResourceLocation;
 
 public abstract class ButtonAbstract implements IToolbarButton {
@@ -12,8 +12,8 @@ public abstract class ButtonAbstract implements IToolbarButton {
     protected String name;
 
     public ButtonAbstract(String name) {
-        dflt = new ResourceLocation(ProgressionInfo.BOOKPATH + name + "_dftl.png");
-        hover = new ResourceLocation(ProgressionInfo.BOOKPATH + name + "_hover.png");
+        dflt = new ResourceLocation(PInfo.BOOKPATH + name + "_dftl.png");
+        hover = new ResourceLocation(PInfo.BOOKPATH + name + "_hover.png");
         translate = "button." + name;
         this.name = name;
     }

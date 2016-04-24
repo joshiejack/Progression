@@ -35,7 +35,7 @@ minecraft {
     mappings = "stable_20"
     
     replace "@VERSION@", "${mod_version}"
-    replaceIn "ProgressionInfo.java"
+    replaceIn "PInfo.java"
 }
 
 dependencies {
