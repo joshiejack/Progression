@@ -14,6 +14,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.ArrayList;
@@ -76,7 +77,7 @@ public class TriggerKill extends TriggerBaseCounter implements ICustomWidth, ICu
         } else fields.add(new EntityFilterFieldPreview("entities", this, 45, 70, 2.8F));
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onEvent(LivingDeathEvent event) {
         Entity source = event.source.getSourceOfDamage();
         if (source instanceof EntityPlayer) {

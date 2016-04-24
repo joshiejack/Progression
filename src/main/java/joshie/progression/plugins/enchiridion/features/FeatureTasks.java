@@ -8,7 +8,6 @@ import joshie.progression.api.criteria.*;
 import joshie.progression.api.special.*;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.SplitHelper;
-import joshie.progression.player.PlayerTracker;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
@@ -159,8 +158,9 @@ public class FeatureTasks extends FeatureCriteria implements ISimpleEditorFieldP
                     }
 
                     boolean completed = triggerProvider.getProvided().isCompleted();
-                    if (!completed && conditionProvider.isInverted() && !condition.isSatisfied(PlayerTracker.getClientPlayer().getTeam())) completed = true;
-                    if (!completed && !conditionProvider.isInverted() && condition.isSatisfied(PlayerTracker.getClientPlayer().getTeam())) completed = true;
+                    if (!completed && conditionProvider.isInverted() && !conditionProvider.isSatisfied()) completed = true;
+                    else if (!completed && !conditionProvider.isInverted() && conditionProvider.isSatisfied())  completed = true;
+
                     if (completed) {
                         EnchiridionAPI.draw.drawStack(COMPLETED, position.getLeft() + x, position.getTop() + y, 1F);
                     }

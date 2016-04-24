@@ -2,10 +2,7 @@ package joshie.progression.handlers;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import joshie.progression.api.criteria.ICriteria;
-import joshie.progression.api.criteria.IRewardProvider;
-import joshie.progression.api.criteria.ITab;
-import joshie.progression.api.criteria.ITriggerProvider;
+import joshie.progression.api.criteria.*;
 
 import java.util.*;
 import java.util.concurrent.Callable;
@@ -14,6 +11,7 @@ public class APICache {
     private final Cache<Boolean, ArrayList<ITab>> sortedCache = CacheBuilder.newBuilder().maximumSize(1).build();
     private final HashMap<UUID, IRewardProvider> rewardCache = new HashMap();
     private final HashMap<UUID, ITriggerProvider> triggerCache = new HashMap();
+    private final HashMap<UUID, IConditionProvider> conditionCache = new HashMap();
     private final HashMap<UUID, ICriteria> criteriaCache = new HashMap();
     private final HashMap<UUID, ITab> tabCache = new HashMap();
 
@@ -47,6 +45,10 @@ public class APICache {
         return triggerCache.get(uuid);
     }
 
+    public IConditionProvider getConditionFromUUID(final UUID uuid) {
+        return conditionCache.get(uuid);
+    }
+
     public void addReward(IRewardProvider reward) {
         rewardCache.put(reward.getUniqueID(), reward);
     }
@@ -54,6 +56,11 @@ public class APICache {
     public ITriggerProvider addTrigger(ITriggerProvider trigger) {
         triggerCache.put(trigger.getUniqueID(), trigger);
         return trigger;
+    }
+
+    public IConditionProvider addCondition(IConditionProvider condition) {
+        conditionCache.put(condition.getUniqueID(), condition);
+        return condition;
     }
 
     public ICriteria addCriteria(ICriteria criteria) {

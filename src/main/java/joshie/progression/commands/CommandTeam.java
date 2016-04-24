@@ -44,7 +44,7 @@ public class CommandTeam extends AbstractCommand {
                     PlayerTeam team = PlayerTracker.getPlayerData(player).getTeam();
                     if (team.isOwner(player)) {
                         for (EntityPlayerMP playerz : PlayerHelper.getAllPlayers()) {
-                            if (player.getName().equals(name)) {
+                            if (playerz.getName().equalsIgnoreCase(name)) {
                                 PacketHandler.sendToClient(new PacketInvitePlayer(team.getOwner(), team.getName(), name), playerz);
                                 team.addToInvited(PlayerHelper.getUUIDForPlayer(playerz));
                                 break;

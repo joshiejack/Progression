@@ -297,10 +297,8 @@ public class CriteriaMappings {
         //Now that we have removed all the triggers, and marked this as completed and remapped data,
         // we should add the rewards to the unclaimed rewards list
         for (ICriteria criteria : toComplete) {
-            for (IRewardProvider provider: criteria.getRewards()) {
-                for (UUID uuid: master.team.getEveryone()) {
-                    unclaimedRewards.get(uuid).addAll(criteria.getRewards());
-                }
+            for (UUID uuid: master.team.getEveryone()) {
+                unclaimedRewards.get(uuid).addAll(criteria.getRewards());
             }
         }
 

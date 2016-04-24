@@ -26,7 +26,6 @@ public class PlayerTeam implements ITextEditable, IPlayerTeam {
     private UUID owner;
     private boolean isActive = true;
     private boolean multipleRewards = true;
-    private boolean isPublic = false;
     private boolean isTrueTeam = true;
     private String name;
 
@@ -70,7 +69,7 @@ public class PlayerTeam implements ITextEditable, IPlayerTeam {
 
     @Override
     public EntityPlayer getOwnerEntity() {
-        return (EntityPlayer) PlayerHelper.getPlayerFromUUID(getOwner());
+        return PlayerHelper.getPlayerFromUUID(getOwner());
     }
 
     //For quicker access
@@ -115,17 +114,13 @@ public class PlayerTeam implements ITextEditable, IPlayerTeam {
     public boolean giveMultipleRewards() {
         return multipleRewards;
     }
-    
-    public boolean isPublic() {
-        return isPublic;
-    }
-    
+
     public void toggleMultiple() {
         multipleRewards = !multipleRewards;
         syncChanges(Side.CLIENT);
     }
     
-    public void toggleIsPublic() {
+    public void toggleIsTrueTeam() {
         isTrueTeam = !isTrueTeam;
         syncChanges(Side.CLIENT);
     }
@@ -203,7 +198,6 @@ public class PlayerTeam implements ITextEditable, IPlayerTeam {
 
     public void readFromNBT(NBTTagCompound tag) {
         name = tag.getString("Name");
-        isPublic = tag.getBoolean("IsPublic");
         multipleRewards = tag.getBoolean("MultipleRewards");
         isTrueTeam = tag.getBoolean("CountWholeTeam");
         type = tag.getBoolean("IsSingleTeam") ? TeamType.SINGLE : TeamType.TEAM;
@@ -220,7 +214,6 @@ public class PlayerTeam implements ITextEditable, IPlayerTeam {
 
     public void writeToNBT(NBTTagCompound tag) {
         tag.setString("Name", name);
-        tag.setBoolean("IsPublic", isPublic);
         tag.setBoolean("MultipleRewards", multipleRewards);
         tag.setBoolean("CountWholeTeam", isTrueTeam);
         tag.setBoolean("IsSingleTeam", type == TeamType.SINGLE);

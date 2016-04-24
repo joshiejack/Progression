@@ -23,7 +23,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.common.UsernameCache;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -101,7 +100,7 @@ public class GuiGroupEditor extends GuiBaseEditor implements IBarProvider, IText
             if (mouseY >= 100 && mouseY < 110 && !isPopup) {
                 team.toggleMultiple();
             } else if (mouseY >= 110 && mouseY < 120 && !isPopup) {
-                team.toggleIsPublic();
+                team.toggleIsTrueTeam();
             } else if (mouseX >= 10 + xPos && mouseX <= 65 + xPos && mouseY >= 170 && mouseY <= 225) {
                 username = ""; //Reset the username everytime you click this
                 if (isPopup) {
@@ -128,7 +127,7 @@ public class GuiGroupEditor extends GuiBaseEditor implements IBarProvider, IText
         drawText(team.getType().name(), 105, 70, 0xFFFFFFFF);
 
         drawText("Team Owner:", 5, 80, 0xFFFFFFFF);
-        drawText(UsernameCache.getLastKnownUsername(team.getOwner()), 105, 80, 0xFFFFFFFF);
+        drawText(getUsernameFromID(team.getOwner()), 105, 80, 0xFFFFFFFF);
 
         drawText("Team Name:", 5, 90, 0xFFFFFFFF);
         drawText(GuiList.TEXT_EDITOR_SIMPLE.getText(team), 105, 90, 0xFFFFFFFF);
@@ -214,6 +213,12 @@ public class GuiGroupEditor extends GuiBaseEditor implements IBarProvider, IText
         drawRight(screenCentre, mouseX, mouseY);
     }
 
+    public static String getUsernameFromID(UUID uuid) {
+        String name = PacketSyncUsernameCache.cache.get(uuid);
+        if (name == null || name.equals("")) name = "Unknown";
+        return name;
+    }
+
     public Set<AbstractClientPlayer> getPlayers(final PlayerTeam team) {
         try {
             return playerList.get(team, new Callable<Set<AbstractClientPlayer>>() {
@@ -221,16 +226,12 @@ public class GuiGroupEditor extends GuiBaseEditor implements IBarProvider, IText
                 public Set<AbstractClientPlayer> call() throws Exception {
                     Set<AbstractClientPlayer> players = new LinkedHashSet();
                     Minecraft mc = Minecraft.getMinecraft();
-                    String ownerName = PacketSyncUsernameCache.cache.get(team.getOwner());
-                    if (ownerName == null || ownerName.equals("")) ownerName = "Unknown";
-                    players.add(new EntityOtherPlayerMP(mc.theWorld, new GameProfile(team.getOwner(), ownerName)));
+                    players.add(new EntityOtherPlayerMP(mc.theWorld, new GameProfile(team.getOwner(), getUsernameFromID(team.getOwner()))));
                     if (!team.isOwner(mc.thePlayer)) players.add(mc.thePlayer);
                     for (UUID uuid : team.getMembers()) {
                         if (uuid.equals(PlayerHelper.getUUIDForPlayer(mc.thePlayer))) continue;
                         else {
-                            String name = PacketSyncUsernameCache.cache.get(uuid);
-                            if (name == null || name.equals("")) name = "Unknown";
-                            players.add(new EntityOtherPlayerMP(mc.theWorld, new GameProfile(uuid, name)));
+                            players.add(new EntityOtherPlayerMP(mc.theWorld, new GameProfile(uuid, getUsernameFromID(uuid))));
                         }
                     }
 

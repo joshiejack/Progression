@@ -14,7 +14,7 @@ import net.minecraft.item.ItemStack;
 import java.util.List;
 
 @ProgressionRule(name="ininventory", color=0xFF660000)
-public class ConditionInInventory extends ConditionBaseItemFilter implements ICustomDescription, IEnum, ISpecialFieldProvider, IStackSizeable {
+public class ConditionInInventory extends ConditionBaseItemFilter implements ICustomDescription, IEnum, ISpecialFieldProvider, IStackSizeable, ISyncCondition {
     private static enum CheckSlots {
         HELD, ARMOR, HOTBAR, INVENTORY;
     }

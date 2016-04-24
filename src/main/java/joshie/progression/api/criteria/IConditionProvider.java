@@ -22,6 +22,12 @@ public interface IConditionProvider extends IRuleProvider<ICondition> {
     /** Set the icon **/
     public IConditionProvider setIcon(ItemStack stack);
 
+    /** Sets the satisfaction for conditions that were synced **/
+    public void setSatisfied(boolean isTrue);
+
+    /** Returns whether this is true or not **/
+    public boolean isSatisfied();
+
     /** Reads neccessary data about this provider from the json **/
     public void readFromJSON(JsonObject data);
 

@@ -120,7 +120,7 @@ public class RuleHandler {
             EventsManager.onAdded(newConditionType);
             trigger.getConditions().add(provider);
             if (newConditionType instanceof IInit) ((IInit) newConditionType).init(isClient);
-            return provider;
+            return APICache.getCache(isClient).addCondition(provider);
         } catch (Exception e) { return null; }
     }
 
@@ -174,11 +174,13 @@ public class RuleHandler {
     public static void cloneCondition(ITriggerProvider trigger, IConditionProvider dummy) {
         try {
             ICondition newConditionType = dummy.getProvided().getClass().newInstance();
-            trigger.getConditions().add(new Condition(trigger, UUID.randomUUID(), newConditionType, dummy.getIcon(), dummy.getUnlocalisedName()));
+            IConditionProvider clone = new Condition(trigger, UUID.randomUUID(), newConditionType, dummy.getIcon(), dummy.getUnlocalisedName());
+            trigger.getConditions().add(clone);
             EventsManager.onAdded(newConditionType);
             if (newConditionType instanceof IInit) ((IInit) newConditionType).init(true);
 
             //Reinit the currently open gui
+            APICache.getClientCache().addCondition(clone);
             CORE.openGui.initData();
         } catch (Exception e) { e.printStackTrace(); }
     }

@@ -19,11 +19,17 @@ import joshie.progression.plugins.enchiridion.features.*;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 
+import static joshie.progression.ItemProgression.ItemMeta.book;
+import static joshie.progression.ItemProgression.ItemMeta.edit;
+import static joshie.progression.ItemProgression.getStackFromMeta;
+
 public class EnchiridionSupport {
     private static final Class[] classes = new Class[] { FeaturePoints.class, FeatureRewards.class, FeatureTasks.class, FeatureCriteria.class , FeatureTab.class};
     public static final ResourceLocation TRANSPARENT = new ResourceLocation("progression:textures/books/transparent.png");
 
     public static void init() {
+        EnchiridionAPI.library.registerBookHandlerForStack("rightClick", getStackFromMeta(book), true, false);
+        EnchiridionAPI.library.registerBookHandlerForStack("rightClick", getStackFromMeta(edit), true, false);
         EnchiridionAPI.instance.registerButtonAction(new ActionClaimCriteria());
         EnchiridionAPI.instance.registerButtonAction(new ActionCompleteCriteria());
         EnchiridionAPI.instance.registerButtonAction(new ActionClaimReward());
