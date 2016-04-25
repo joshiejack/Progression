@@ -1,6 +1,6 @@
 package joshie.progression.api;
 
-import joshie.progression.api.criteria.*;
+import joshie.progression.api.criteria.IAction;
 import joshie.progression.api.special.IRequestItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

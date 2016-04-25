@@ -1,13 +1,17 @@
 package joshie.progression.gui.buttons;
 
+import joshie.progression.lib.PInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.ResourceLocation;
 
 import static joshie.progression.gui.core.GuiList.CORE;
 
 public abstract class ButtonBaseTeam extends GuiButton {
+    protected static final ResourceLocation buttonTextures = new ResourceLocation("textures/gui/widgets.png");
+
     public ButtonBaseTeam(String text, int x, int y) {
         super(0, x, y, text.length() * 7, 20, text);
     }
@@ -28,15 +32,15 @@ public abstract class ButtonBaseTeam extends GuiButton {
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
         mouseY = mouseY + CORE.screenTop;
         FontRenderer fontrenderer = mc.fontRendererObj;
-        mc.getTextureManager().bindTexture(buttonTextures);
+        mc.getTextureManager().bindTexture(PInfo.textures);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
         int i = this.getHoverState(this.hovered);
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
         GlStateManager.blendFunc(770, 771);
-        this.drawTexturedModalRect(this.xPosition, this.yPosition, 0, 46 + i * 20, this.width / 2, this.height);
-        this.drawTexturedModalRect(this.xPosition + this.width / 2, this.yPosition, 200 - this.width / 2, 46 + i * 20, this.width / 2, this.height);
+        this.drawTexturedModalRect(this.xPosition, this.yPosition, 0, 196 + i * 20, this.width / 2, this.height);
+        this.drawTexturedModalRect(this.xPosition + this.width / 2, this.yPosition, 200 - this.width / 2, 196 + i * 20, this.width / 2, this.height);
         this.mouseDragged(mc, mouseX, mouseY);
         int j = 14737632;
 

@@ -1,9 +1,9 @@
 package joshie.progression.player.nbt;
 
-import java.util.Map;
-
 import joshie.progression.helpers.NBTHelper.IMapHelper;
 import net.minecraft.nbt.NBTTagCompound;
+
+import java.util.Map;
 
 public class PointsNBT implements IMapHelper {
     public static final PointsNBT INSTANCE = new PointsNBT();

@@ -3,7 +3,6 @@ package joshie.progression.gui.fields;
 import joshie.progression.api.IFieldRegistry;
 import joshie.progression.api.criteria.IField;
 import joshie.progression.api.criteria.IRewardProvider;
-import joshie.progression.api.criteria.IUnique;
 import joshie.progression.api.gui.Position;
 
 public class FieldRegistry implements IFieldRegistry {

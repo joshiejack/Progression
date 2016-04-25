@@ -20,6 +20,7 @@ public class Options {
     public static boolean enableCriteriaBackups;
     public static int maximumCriteriaBackups;
     public static boolean mustClaimDefault;
+    public static boolean hardReset;
     public static DefaultSettings settings;
 
     public static void init(File configFile) {
@@ -42,6 +43,7 @@ public class Options {
             enableCriteriaBackups = config.get(SETTINGS, "Enable Criteria Backups", true, "Criteria will be backed up, whenever it's saved if this is true").getBoolean();
             maximumCriteriaBackups = config.get(SETTINGS, "Maximum Criteria Backups", 25, "This is the maximum number of backups to keep for criteria, maximum 100", 1, 100).getInt();
             mustClaimDefault = config.get(SETTINGS, "Default Setting for Claiming", false, "If this is true, new rewards will be set to mustClaim = true by default").getBoolean();
+            hardReset = config.get(SETTINGS, "Remove Players from Teams when Resetting Data", false, "When this is true, players will be removed from their teams when you execute the progression reset command").getBoolean();
         } catch (Exception e) {
             Progression.logger.log(Level.ERROR, "Progression failed to load it's config");
             e.printStackTrace();

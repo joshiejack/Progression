@@ -70,7 +70,7 @@ public class PCommonProxy implements IGuiHandler {
         PacketHandler.registerPacket(PacketClaimed.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketCompleted.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketOpenEditor.class, Side.CLIENT);
-        PacketHandler.registerPacket(PacketDebugGUI.class, Side.CLIENT);
+        PacketHandler.registerPacket(PacketDisplayChat.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketSyncUsernameCache.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketFireTrigger.class, Side.SERVER);
         PacketHandler.registerPacket(PacketSelectRewards.class, Side.SERVER);

@@ -11,12 +11,11 @@ import joshie.progression.plugins.enchiridion.EnchiridionSupport;
 import joshie.progression.plugins.thaumcraft.ThaumcraftSupport;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -27,7 +26,9 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -35,6 +36,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 
+import static joshie.progression.ItemProgression.ItemMeta.book;
+import static joshie.progression.ItemProgression.getStackFromMeta;
 import static joshie.progression.lib.PInfo.*;
 
 @Mod(modid = MODID, name = MODNAME, version = VERSION, guiFactory = GUI_FACTORY_CLASS)
@@ -80,6 +83,12 @@ public class Progression {
                 ThaumcraftSupport.init();
             } catch (Exception e) {}
         }
+
+        GameRegistry.addRecipe(new ShapedOreRecipe(getStackFromMeta(book), new Object[] {
+                "FS", "PP", 'P', "paper", 'S', "string", 'F', Items.flint
+        }) {
+
+        });
         
         proxy.registerRendering();
     }

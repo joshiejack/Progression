@@ -35,6 +35,12 @@ public class PlayerSavedData extends WorldSavedData {
         return data.values();
     }
 
+    public void clear() {
+        for (PlayerTeam team: data.keySet()) {
+            data.put(team, new PlayerDataServer(team));
+        }
+    }
+
     public boolean reset(String username) {
         //Search the active players first for a match
         UUID uuid = null;

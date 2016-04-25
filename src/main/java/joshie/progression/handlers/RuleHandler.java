@@ -30,14 +30,22 @@ public class RuleHandler {
         Class annotationClass = ProgressionRule.class;
         String annotationClassName = annotationClass.getCanonicalName();
         Set<ASMData> asmDatas = new HashSet<ASMData>(asmDataTable.getAll(annotationClassName));
+
+        topLoop:
         for (ASMDataTable.ASMData asmData : asmDatas) {
             try {
                 Class<?> asmClass = Class.forName(asmData.getClassName());
                 Class<? extends IRule> asmInstanceClass = asmClass.asSubclass(IRule.class);
                 IRule instance = asmInstanceClass.newInstance();
                 Map<String, Object> data = asmData.getAnnotationInfo();
-                String mod = (String) data.get("mod");
-                if (mod != null && !Loader.isModLoaded(mod)) continue;
+                String modData = (String) data.get("mod");
+                if (modData != null) {
+                    String[] mods = modData.replace(" ", "").split(",");
+                    for (String mod: mods) {
+                        if (mod != null && !Loader.isModLoaded(mod)) continue topLoop;
+                    }
+                }
+
 
                 String name = (String) data.get("name");
                 int color = 0xFFCCCCCC;

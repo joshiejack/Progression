@@ -5,6 +5,7 @@ import joshie.enchiridion.api.book.IBook;
 import joshie.enchiridion.api.event.FeatureVisibleEvent;
 import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
+import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.IGetterCallback;
 import joshie.progression.api.special.IHasEventBus;
 import joshie.progression.api.special.IInit;
@@ -17,6 +18,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+@ProgressionRule(name="layer.show", color=0xFF551A8B, meta="showLayer", mod="enchiridion")
 public class RewardShowLayer extends RewardBaseSingular implements IInit, IGetterCallback, IHasEventBus, IStoreNBTData {
     private transient IBook theBook;
     public boolean hideByDefault = true;

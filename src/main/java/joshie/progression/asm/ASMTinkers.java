@@ -1,11 +1,10 @@
 package joshie.progression.asm;
 
+import joshie.progression.lib.PInfo;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-
-import joshie.progression.lib.PInfo;
 
 public class ASMTinkers extends AbstractASM {
     @Override

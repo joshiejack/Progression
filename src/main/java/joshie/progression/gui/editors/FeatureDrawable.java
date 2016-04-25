@@ -155,7 +155,11 @@ public abstract class FeatureDrawable<T extends IRuleProvider> extends FeatureAb
 
     @Override
     public void drawFeature(int mouseX, int mouseY) {
-        if (!isReady()) return;
+        if (!isReady()) {
+            CORE.mc.thePlayer.closeScreen(); //Close this gui if stuff is in sync
+            return;
+        }
+
         int offsetX = 0;
         for (IRuleProvider drawing: getList()) {
             int mouseOffsetX = mouseX - CORE.getOffsetX() - offsetX;
@@ -167,8 +171,6 @@ public abstract class FeatureDrawable<T extends IRuleProvider> extends FeatureAb
                 if (MODE == EDIT) {
                     int xXcoord = 234;
                     if (mouseOffsetX >= drawing.getWidth(MODE) - 13 && mouseOffsetX <= drawing.getWidth(MODE) - 3 && mouseOffsetY >= 4 && mouseOffsetY <= 14) {
-                        TOOLTIP.add("Clicking will collapse this criteria");
-                        TOOLTIP.add("Hold shift to delete this criteria");
                         xXcoord += 11;
                     }
 

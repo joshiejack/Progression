@@ -16,7 +16,7 @@ public class MCClientHelper {
     }
 
     private static boolean isInEditMode() {
-        return FORCE_EDIT ? true: getPlayer().capabilities.isCreativeMode;
+        return FORCE_EDIT;
     }
 
     public static DisplayMode getMode() {

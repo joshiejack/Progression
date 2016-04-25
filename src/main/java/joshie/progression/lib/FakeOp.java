@@ -1,13 +1,12 @@
 package joshie.progression.lib;
 
-import java.util.UUID;
-
 import com.mojang.authlib.GameProfile;
-
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+
+import java.util.UUID;
 
 public class FakeOp extends FakePlayer {
     private static FakeOp fake = null;

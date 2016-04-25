@@ -1,14 +1,11 @@
 package joshie.progression.commands;
 
-import joshie.progression.helpers.PlayerHelper;
-import joshie.progression.network.PacketHandler;
 import joshie.progression.network.PacketInvitePlayer;
 import joshie.progression.player.PlayerSavedData.TeamAction;
 import joshie.progression.player.PlayerTeam;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 
 public class CommandTeam extends AbstractCommand {
     @Override
@@ -43,13 +40,7 @@ public class CommandTeam extends AbstractCommand {
                 } else if (action.equals("invite")) {
                     PlayerTeam team = PlayerTracker.getPlayerData(player).getTeam();
                     if (team.isOwner(player)) {
-                        for (EntityPlayerMP playerz : PlayerHelper.getAllPlayers()) {
-                            if (playerz.getName().equalsIgnoreCase(name)) {
-                                PacketHandler.sendToClient(new PacketInvitePlayer(team.getOwner(), team.getName(), name), playerz);
-                                team.addToInvited(PlayerHelper.getUUIDForPlayer(playerz));
-                                break;
-                            }
-                        }
+                        PacketInvitePlayer.sendInvite(player, name, team.getOwner(), team.getName());
                     }
                 }
             }

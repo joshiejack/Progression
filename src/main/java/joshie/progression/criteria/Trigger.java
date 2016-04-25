@@ -2,7 +2,10 @@ package joshie.progression.criteria;
 
 import com.google.gson.JsonObject;
 import joshie.progression.Progression;
-import joshie.progression.api.criteria.*;
+import joshie.progression.api.criteria.IConditionProvider;
+import joshie.progression.api.criteria.ICriteria;
+import joshie.progression.api.criteria.ITrigger;
+import joshie.progression.api.criteria.ITriggerProvider;
 import joshie.progression.api.special.*;
 import joshie.progression.helpers.JSONHelper;
 import net.minecraft.item.ItemStack;
@@ -11,9 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static net.minecraft.util.EnumChatFormatting.BLUE;
-import static net.minecraft.util.EnumChatFormatting.GREEN;
-import static net.minecraft.util.EnumChatFormatting.RESET;
+import static net.minecraft.util.EnumChatFormatting.*;
 
 public class Trigger implements ITriggerProvider {
     private final ITrigger trigger;

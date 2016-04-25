@@ -1,8 +1,5 @@
 package joshie.progression.helpers;
 
-import java.util.HashMap;
-import java.util.List;
-
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -12,6 +9,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
+
+import java.util.HashMap;
+import java.util.List;
 
 public class StackHelper {
     private static HashMap<Item, String> modiditemcache = new HashMap();

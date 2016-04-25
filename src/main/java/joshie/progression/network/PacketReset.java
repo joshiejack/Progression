@@ -55,7 +55,8 @@ public class PacketReset extends PenguinPacket {
         } else {
             if (Options.editor) {
                 if (!singlePlayer) {
-                    Progression.instance.createWorldData(); //Recreate the world data, Wiping out any saved information for players
+                    if (Options.hardReset) Progression.instance.createWorldData(); //Recreate the world data, Wiping out any saved information for players
+                    else Progression.data.clear();
                     RemappingHandler.reloadServerData(JSONLoader.getServerTabData(RemappingHandler.getHostName()), false);
                     for (EntityPlayerMP player : PlayerHelper.getAllPlayers()) {
                         //Reset all the data to default

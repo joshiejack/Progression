@@ -1,12 +1,12 @@
 package joshie.progression.helpers;
 
-import java.util.HashMap;
-
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+
+import java.util.HashMap;
 
 public class BlockActionHelper {
     private static HashMap<Block, Item> block_item_mappings = new HashMap();

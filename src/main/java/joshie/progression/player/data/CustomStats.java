@@ -1,11 +1,11 @@
 package joshie.progression.player.data;
 
-import java.util.HashMap;
-
 import joshie.progression.helpers.NBTHelper;
 import joshie.progression.network.core.PacketNBT.INBTWritable;
 import joshie.progression.player.nbt.CustomNBT;
 import net.minecraft.nbt.NBTTagCompound;
+
+import java.util.HashMap;
 
 public class CustomStats implements INBTWritable<CustomStats> {
     private HashMap<String, NBTTagCompound> customData = new HashMap();

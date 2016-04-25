@@ -1,8 +1,14 @@
 package joshie.progression.criteria.rewards;
 
 import joshie.progression.Progression;
-import joshie.progression.api.criteria.*;
-import joshie.progression.api.special.*;
+import joshie.progression.api.criteria.IField;
+import joshie.progression.api.criteria.IFilterProvider;
+import joshie.progression.api.criteria.IFilterType;
+import joshie.progression.api.criteria.ProgressionRule;
+import joshie.progression.api.special.DisplayMode;
+import joshie.progression.api.special.ICustomDescription;
+import joshie.progression.api.special.IHasFilters;
+import joshie.progression.api.special.ISpecialFieldProvider;
 import joshie.progression.gui.fields.ItemFilterField;
 import joshie.progression.gui.filters.FilterTypeLocation;
 import joshie.progression.lib.WorldLocation;

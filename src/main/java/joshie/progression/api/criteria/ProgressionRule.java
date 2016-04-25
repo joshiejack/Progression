@@ -14,7 +14,7 @@ public @interface ProgressionRule {
      *  it's pretty much for internal use only. */
     public String meta() default "";
 
-    /** This one should be used if a mod is required **/
+    /** This one should be used if a mod is required, comma seperated list **/
     public String mod() default "progression";
 
     /** This should only be used on triggers **/

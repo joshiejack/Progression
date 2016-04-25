@@ -2,7 +2,8 @@ package joshie.progression.criteria.rewards;
 
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.ProgressionRule;
-import joshie.progression.api.special.*;
+import joshie.progression.api.special.DisplayMode;
+import joshie.progression.api.special.ICustomTooltip;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;

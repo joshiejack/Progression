@@ -1,8 +1,4 @@
 package joshie.progression.commands;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -12,6 +8,11 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CommandManager extends CommandBase {
     public static final CommandManager INSTANCE = new CommandManager();

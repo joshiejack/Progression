@@ -12,9 +12,7 @@ import org.lwjgl.opengl.GL11;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import static joshie.progression.gui.core.GuiList.CORE;
-import static joshie.progression.gui.core.GuiList.LAST;
-import static joshie.progression.gui.core.GuiList.TOOLTIP;
+import static joshie.progression.gui.core.GuiList.*;
 
 public class FilterTypeEntity extends FilterTypeBase {
     public static final IFilterType INSTANCE = new FilterTypeEntity();

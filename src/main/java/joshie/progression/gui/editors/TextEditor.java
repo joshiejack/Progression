@@ -78,8 +78,17 @@ public class TextEditor {
         }
     }
 
+    private boolean fixPosition() {
+        if (editable == null) return false;
+        if (position > editable.getTextField().length()) {
+            position = editable.getTextField().length();
+        }
+
+        return true;
+    }
+
     private void updateColor() {
-        if (editable == null) return;
+        if (!fixPosition()) return;
         tick++;
         if (tick % 60 == 0) {
             if (white) {
@@ -91,7 +100,7 @@ public class TextEditor {
     }
 
     private void cursorLeft(int count) {
-        if (editable == null) return;
+        if (!fixPosition()) return;
         int left = position - count;
         if (left < 0) {
             position = 0;
@@ -99,7 +108,7 @@ public class TextEditor {
     }
 
     private void cursorRight(int count) {
-        if (editable == null) return;
+        if (!fixPosition()) return;
         String text = editable.getTextField();
         int right = position + count;
         if (right > text.length()) {
@@ -108,7 +117,7 @@ public class TextEditor {
     }
 
     private void add(String string) {
-        if (editable == null) return;
+        if (!fixPosition()) return;
         String text = editable.getTextField();
         StringBuilder builder = new StringBuilder(text);
         text = builder.insert(position, string).toString();
@@ -117,7 +126,7 @@ public class TextEditor {
     }
 
     private void delete(int count) {
-        if (editable == null) return;
+        if (!fixPosition()) return;
         String text = editable.getTextField();
         if ((count < 0 && position > 0) || (count >= 0 && position + count < text.length())) {
             StringBuilder builder = new StringBuilder(text);

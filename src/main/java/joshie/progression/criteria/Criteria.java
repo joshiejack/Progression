@@ -1,6 +1,11 @@
 package joshie.progression.criteria;
 
-import joshie.progression.api.criteria.*;
+import joshie.progression.ItemProgression.ItemMeta;
+import joshie.progression.Progression;
+import joshie.progression.api.criteria.ICriteria;
+import joshie.progression.api.criteria.IRewardProvider;
+import joshie.progression.api.criteria.ITab;
+import joshie.progression.api.criteria.ITriggerProvider;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
@@ -189,6 +194,7 @@ public class Criteria implements ICriteria {
 
     @Override
     public void setIcon(ItemStack icon) {
-        stack = icon;
+        if (icon.getItem() == Progression.item && icon.getItemDamage() == ItemMeta.criteria.ordinal()) return;
+        else stack = icon; //Do not permit criteria as an icon of itself, no recursion!!!!!!!!!!!!
     }
 }

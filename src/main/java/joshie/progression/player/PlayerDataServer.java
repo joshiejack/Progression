@@ -1,7 +1,5 @@
 package joshie.progression.player;
 
-import java.util.UUID;
-
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.network.PacketHandler;
 import joshie.progression.network.PacketSyncAbilities;
@@ -10,6 +8,8 @@ import joshie.progression.network.PacketSyncPoints;
 import joshie.progression.player.data.AbilityStats.SpeedType;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
+
+import java.util.UUID;
 
 public class PlayerDataServer extends PlayerDataCommon {
     private final UUID uuid;

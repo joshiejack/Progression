@@ -3,6 +3,7 @@ package joshie.progression;
 import joshie.progression.handlers.APICache;
 import joshie.progression.helpers.ChatHelper;
 import joshie.progression.helpers.RenderItemHelper;
+import joshie.progression.json.Options;
 import joshie.progression.lib.GuiIDs;
 import joshie.progression.lib.PInfo;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -43,7 +44,8 @@ public class PClientProxy extends PCommonProxy {
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         if (ID == GuiIDs.EDITOR) {
             if (bookLocked) {
-                ChatHelper.displayChat(GOLD + "Oi matey, be patient, Progression is currently syncing the latest changes.");
+                if (Options.editor) ChatHelper.displayChat(GOLD + "Oi matey, be patient, Progression is currently syncing the latest changes.");
+                else ChatHelper.displayChat(GOLD + "Sorry bud but editing is currently disabled, you're so out of luck.");
             } else return CORE.setEditor(CORE.lastGui);
         }  else if (ID == GuiIDs.GROUP) return CORE.setEditor(GROUP_EDITOR);
 

@@ -1,11 +1,13 @@
 package joshie.progression.commands;
 
+import joshie.progression.Progression;
 import joshie.progression.criteria.triggers.TriggerChangeGui;
 import joshie.progression.helpers.ChatHelper;
-import joshie.progression.network.PacketDebugGUI;
+import joshie.progression.network.PacketDisplayChat;
 import joshie.progression.network.PacketHandler;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.EnumChatFormatting;
+
+import static net.minecraft.util.EnumChatFormatting.BLUE;
 
 public class CommandGui extends AbstractCommand {
     @Override
@@ -21,8 +23,8 @@ public class CommandGui extends AbstractCommand {
     @Override
     public boolean processCommand(ICommandSender sender, String[] parameters) {
         if (sender.getEntityWorld().isRemote) {
-            ChatHelper.displayChat(EnumChatFormatting.BLUE + "Displaying class names for guis was set to " + TriggerChangeGui.toggleDebug());
-        } else PacketHandler.sendToClient(new PacketDebugGUI(), sender);
+            ChatHelper.displayChat(BLUE + Progression.translate("display.gui") + " " + TriggerChangeGui.toggleDebug());
+        } else PacketHandler.sendToClient(new PacketDisplayChat(BLUE + Progression.translate("display.gui") + " " + TriggerChangeGui.toggleDebug()), sender);
 
         return true;
     }

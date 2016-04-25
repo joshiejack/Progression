@@ -1,9 +1,5 @@
 package joshie.progression.commands;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
 import joshie.progression.lib.CommandLevel;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.CommandNotFoundException;
@@ -13,6 +9,10 @@ import net.minecraft.event.ClickEvent;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 public class CommandHelp extends AbstractCommand {
     @Override
