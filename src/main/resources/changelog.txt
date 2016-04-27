@@ -1,5 +1,6 @@
 Progression 0.5.0
   Updated to Minecraft 1.8.9 / Minecraft 1.9
+  Craft Locking currently supports Thaumcraft 5, Tinkers Construct 2 and Vanilla
   Internals were rewritten so any data written in 1.7.10 is pretty much guaranteed NOT to work
   Rewrote the guis, to have two modes edit and display modes
   Increased shift + right arrow to move 100 spaces, and scroll wheel to move 50, making scrolling quicker

@@ -1,6 +1,5 @@
 package joshie.progression.criteria.rewards;
 
-import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.DisplayMode;
@@ -17,7 +16,7 @@ public class RewardBoolean extends RewardBaseSingular implements ICustomTooltip 
 
     @Override
     public String getDescription() {
-        return Progression.format("reward.boolean.description", variable, value);
+        return display;
     }
 
     @Override

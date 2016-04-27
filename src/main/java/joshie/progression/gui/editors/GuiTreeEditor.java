@@ -7,6 +7,7 @@ import joshie.progression.gui.buttons.ButtonNewCriteria;
 import joshie.progression.gui.buttons.ButtonTab;
 import joshie.progression.gui.core.GuiCore;
 import joshie.progression.gui.core.GuiList;
+import joshie.progression.gui.editors.TreeEditorElement.ColorMode;
 import joshie.progression.handlers.APICache;
 import joshie.progression.handlers.RuleHandler;
 import joshie.progression.helpers.MCClientHelper;
@@ -140,7 +141,6 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
 
     public static boolean isTabVisible(ITab tab) { //Use the cached value, which we update everytime this gui is reopened
         if (tabCache.containsKey(tab)) return tabCache.get(tab);
-
         boolean result = tab.isVisible();
         TabVisibleEvent event = new TabVisibleEvent(MCClientHelper.getPlayer(), tab.getUniqueID());
         if (MinecraftForge.EVENT_BUS.post(event)) result = false;
@@ -157,6 +157,11 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
     public void drawGuiForeground(boolean overlayvisible, int mouseX, int mouseY) {
         if (MODE == DISPLAY && !isTabVisible(currentTab)) return;
         for (ICriteria criteria : currentTab.getCriteria()) {
+            if (MODE == DISPLAY) {
+                ColorMode mode = TreeEditorElement.getModeForCriteria(criteria, false);
+                if (mode == ColorMode.INVISIBLE) continue;
+            }
+
             if (getElement(criteria).isCriteriaVisible() || MODE == EDIT) {
                 TreeEditorElement editor = getElement(criteria);
                 List<ICriteria> prereqs = criteria.getPreReqs();
@@ -252,6 +257,11 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
 
         if (button == 0) {
             for (ICriteria criteria : currentTab.getCriteria()) {
+                if (MODE == DISPLAY) {
+                    ColorMode mode = TreeEditorElement.getModeForCriteria(criteria, false);
+                    if (mode == ColorMode.INVISIBLE) continue;
+                }
+
                 if (getElement(criteria).isCriteriaVisible() || MODE == EDIT) {
                     if (getElement(criteria).click(mouseX, mouseY, isDoubleClick)) {
                         lastClicked = criteria;

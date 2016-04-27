@@ -37,7 +37,21 @@ public class PlayerSavedData extends WorldSavedData {
 
     public void clear() {
         for (PlayerTeam team: data.keySet()) {
-            data.put(team, new PlayerDataServer(team));
+            PlayerDataServer data = new PlayerDataServer(team);
+            this.data.put(team, data);
+            this.markDirty();
+            //If this team never existed before
+            //Loop through all the rewards loaded and init them with player data
+            for (ITab tab : APICache.getServerCache().getTabSet()) {
+                for (ICriteria criteria : tab.getCriteria()) {
+                    for (IRewardProvider provider : criteria.getRewards()) {
+                        if (provider.getProvided() instanceof IStoreNBTData) {
+                            IStoreNBTData storage = (IStoreNBTData) provider.getProvided();
+                            data.getCustomStats().setCustomData(storage.getNBTKey(), storage.getDefaultTags(new NBTTagCompound()));
+                        }
+                    }
+                }
+            }
         }
     }
 
