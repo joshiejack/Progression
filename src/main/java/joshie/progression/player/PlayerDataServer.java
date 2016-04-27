@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.UUID;
+import java.util.concurrent.Callable;
 
 public class PlayerDataServer extends PlayerDataCommon {
     private final UUID uuid;
@@ -70,17 +71,27 @@ public class PlayerDataServer extends PlayerDataCommon {
         saveAndSyncAbiliities();
     }
 
-    public void addDouble(String name, double amount) {
-        double newStat = points.getDouble(name) + amount;
+    public void addDouble(final String name, final double amount) {
+        final double newStat = points.getDouble(name) + amount;
         points.setDouble(name, newStat);
         saveAndSyncPoints();
-        ProgressionAPI.registry.fireTrigger(uuid, "points", name, newStat);
+        getMappings().todo.add(new Callable() {
+            @Override
+            public Object call() throws Exception {
+                return ProgressionAPI.registry.fireTrigger(uuid, "trigger.points", name, newStat);
+            }
+        });
     }
 
-    public void setBoolean(String name, boolean value) {
+    public void setBoolean(final String name, final boolean value) {
         points.setBoolean(name, value);
         saveAndSyncPoints();
-        ProgressionAPI.registry.fireTrigger(uuid, "boolean", name, points.getBoolean(name));
+        getMappings().todo.add(new Callable() {
+            @Override
+            public Object call() throws Exception {
+                return ProgressionAPI.registry.fireTrigger(uuid, "trigger.boolean", name, points.getBoolean(name));
+            }
+        });
     }
 
     public void readFromNBT(NBTTagCompound tag) {
