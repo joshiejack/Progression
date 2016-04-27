@@ -16,13 +16,13 @@ import java.util.Map;
 
 public class CommandHelp extends AbstractCommand {
     @Override
-    public String getCommandName() {
-        return "help";
+    public CommandLevel getPermissionLevel() {
+        return CommandLevel.ANYONE;
     }
 
     @Override
-    public CommandLevel getPermissionLevel() {
-        return CommandLevel.ANYONE;
+    public String getCommandName() {
+        return "help";
     }
 
     @Override

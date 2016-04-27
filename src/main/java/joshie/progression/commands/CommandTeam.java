@@ -1,5 +1,6 @@
 package joshie.progression.commands;
 
+import joshie.progression.lib.CommandLevel;
 import joshie.progression.network.PacketInvitePlayer;
 import joshie.progression.player.PlayerSavedData.TeamAction;
 import joshie.progression.player.PlayerTeam;
@@ -8,6 +9,11 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class CommandTeam extends AbstractCommand {
+    @Override
+    public CommandLevel getPermissionLevel() {
+        return CommandLevel.ANYONE;
+    }
+
     @Override
     public String getCommandName() {
         return "team";
