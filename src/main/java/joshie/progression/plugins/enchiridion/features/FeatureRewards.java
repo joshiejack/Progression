@@ -63,7 +63,7 @@ public class FeatureRewards extends FeatureCriteria implements ISimpleEditorFiel
         for (ITriggerProvider trigger: criteria.getTriggers()) {
             if (!trigger.getProvided().isCompleted()) return false;
         }
-        
+
         List<IRewardProvider> always = buildLists(criteria, true);
         List<IRewardProvider> claim = buildLists(criteria, false);
         int offsetMouseX = gg - position.getLeft();

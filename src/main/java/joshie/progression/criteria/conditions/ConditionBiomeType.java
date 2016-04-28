@@ -9,6 +9,7 @@ import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.ICustomDescription;
 import joshie.progression.api.special.ISetterCallback;
 import joshie.progression.api.special.ISpecialJSON;
+import joshie.progression.helpers.JSONHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.common.BiomeDictionary;
@@ -72,6 +73,7 @@ public class ConditionBiomeType extends ConditionBase implements ICustomDescript
         }
 
         theBiomeTypes = types;
+        biomeTypes = JSONHelper.getString(data, "string", "forest");
     }
 
     @Override
@@ -82,5 +84,6 @@ public class ConditionBiomeType extends ConditionBase implements ICustomDescript
         }
 
         data.add("types", array);
+        JSONHelper.setString(data, "string", biomeTypes, "forest");
     }
 }
