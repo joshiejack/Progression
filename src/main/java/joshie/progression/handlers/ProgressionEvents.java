@@ -9,10 +9,7 @@ import joshie.progression.crafting.ActionType;
 import joshie.progression.crafting.Crafter;
 import joshie.progression.crafting.CraftingRegistry;
 import joshie.progression.gui.core.GuiCore;
-import joshie.progression.helpers.CraftingHelper;
-import joshie.progression.helpers.MCClientHelper;
-import joshie.progression.helpers.PlayerHelper;
-import joshie.progression.helpers.SplitHelper;
+import joshie.progression.helpers.*;
 import joshie.progression.lib.GuiIDs;
 import joshie.progression.network.PacketHandler;
 import joshie.progression.network.PacketSyncUsernameCache;
@@ -46,6 +43,8 @@ public class ProgressionEvents {
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
         RemappingHandler.onPlayerConnect((EntityPlayerMP) event.player);
+        //Send to this person
+        DimensionHelper.sendPacket((EntityPlayerMP) event.player);
         //Send to everybody
         PacketHandler.sendToEveryone(new PacketSyncUsernameCache(UsernameCache.getMap()));
     }

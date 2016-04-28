@@ -1,22 +1,38 @@
 package joshie.progression.helpers;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
+import joshie.progression.network.PacketHandler;
+import joshie.progression.network.PacketSyncDimensions;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.DimensionManager;
 
-import java.util.concurrent.Callable;
+import java.util.HashMap;
 
 public class DimensionHelper {
-    private static final Cache<Integer, String> dimensionNames = CacheBuilder.newBuilder().maximumSize(128).build();
+    public static HashMap<Integer, String> dimensionNames;
+
+    public static void sendPacket(EntityPlayerMP player) {
+        if (dimensionNames == null) {
+            dimensionNames = new HashMap<Integer, String>();
+            for (int i = -128; i < 128; i++) {
+                try {
+                    String name = DimensionManager.getWorld(i).provider.getDimensionName();
+                    if (name != null) {
+                        dimensionNames.put(i, name);
+                    }
+                } catch (Exception e) {}
+            }
+        }
+
+        PacketHandler.sendToClient(new PacketSyncDimensions(dimensionNames), player);
+    }
 
     public static String getDimensionNameFromID(final int id) {
-        try {
-            return dimensionNames.get(id, new Callable<String>() {
-                @Override
-                public String call() throws Exception {
-                    return DimensionManager.getWorld(id).provider.getDimensionName();
-                }
-            });
-        } catch (Exception e) { return "Invalid World"; }
+        return dimensionNames.get(id);
+    }
+
+    public static void setData(int[] ids, String[] dimensions) {
+        for (int i = 0; i < ids.length; i++) {
+            dimensionNames.put(ids[i], dimensions[i]);
+        }
     }
 }
