@@ -25,7 +25,7 @@ public class FilterEntityDisplayName extends FilterBaseEntity implements IInit {
 
     @Override
     protected boolean matches(EntityLivingBase entity) {       
-        String name = entity.getDisplayName().toString();
+        String name = entity.getName();
         if (matchBoth && name.toLowerCase().contains(checkName.toLowerCase())) return true;
         else if (matchFront && !matchBack && name.toLowerCase().endsWith(checkName.toLowerCase())) return true;
         else if (!matchFront && matchBack && name.toLowerCase().startsWith(checkName.toLowerCase())) return true;
