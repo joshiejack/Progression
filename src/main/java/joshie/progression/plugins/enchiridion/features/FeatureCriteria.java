@@ -23,6 +23,8 @@ import net.minecraft.util.ResourceLocation;
 import java.util.List;
 import java.util.UUID;
 
+import static joshie.progression.api.special.DisplayMode.EDIT;
+import static joshie.progression.gui.core.GuiList.MODE;
 import static joshie.progression.gui.editors.TreeEditorElement.getModeForCriteria;
 import static joshie.progression.plugins.enchiridion.EnchiridionSupport.TRANSPARENT;
 import static net.minecraft.util.EnumChatFormatting.GOLD;
@@ -92,7 +94,9 @@ public class FeatureCriteria extends FeatureProgression implements ISimpleEditor
     private static final ResourceLocation unlocked = new ResourceLocation(PInfo.BOOKPATH + "hexunlocked.png");
     private static final ResourceLocation locked = new ResourceLocation(PInfo.BOOKPATH + "hexlocked.png");
     private static final ResourceLocation completed = new ResourceLocation(PInfo.BOOKPATH + "hexcompleted.png");
-    private static final ResourceLocation error = new ResourceLocation(PInfo.BOOKPATH + "hexerror.png");
+    private static final ResourceLocation unlockedT = new ResourceLocation(PInfo.BOOKPATH + "hexunlockedT.png");
+    private static final ResourceLocation lockedT = new ResourceLocation(PInfo.BOOKPATH + "hexlockedT.png");
+    private static final ResourceLocation completedT = new ResourceLocation(PInfo.BOOKPATH + "hexcompletedT.png");
 
     private ResourceLocation getResource(ColorMode mode) {
         switch (mode) {
@@ -102,11 +106,26 @@ public class FeatureCriteria extends FeatureProgression implements ISimpleEditor
             default: return null;
         }
     }
+
+    private ResourceLocation getTransparent(ColorMode mode) {
+        switch (mode) {
+            case DEFAULT: return lockedT;
+            case COMPLETED: return completedT;
+            case AVAILABLE: return unlockedT;
+            default: return null;
+        }
+    }
    
     public void drawFeature(ICriteria criteria, int mouseX, int mouseY) {
         ColorMode mode = getModeForCriteria(getCriteria(), false);
         ResourceLocation location = getResource(mode);
         if (location != null) {
+            if (!criteria.isVisible()) { //Make the texture transparent if this is edit MODE
+                if (MODE == EDIT) {
+                    location = getTransparent(mode);
+                }
+            }
+
             List<ICriteria> prereqs = criteria.getPreReqs();
             for (ICriteria c : prereqs) {
                 FeatureCriteria connected = getFeatureFromCriteria(c);
@@ -128,7 +147,7 @@ public class FeatureCriteria extends FeatureProgression implements ISimpleEditor
     @Override
     public boolean performClick(int mouseX, int mouseY, int mouseButton) {
         ICriteria criteria = getCriteria();
-        if (criteria != null && getModeForCriteria(criteria, false).openable) {
+        if (criteria != null && (MODE == EDIT || getModeForCriteria(criteria, false).openable)) {
             int number = criteria.getUniqueID().hashCode();
             IPage page = EnchiridionAPI.book.getPageIfNotExists(number);
             if (page != null) {
@@ -198,7 +217,7 @@ public class FeatureCriteria extends FeatureProgression implements ISimpleEditor
     @Override
     public void addTooltip(List<String> tooltip, int mouseX, int mouseY) {
         ICriteria criteria = getCriteria();
-        if (criteria != null) {
+        if (criteria != null && getModeForCriteria(criteria, false).openable) {
             addFeatureTooltip(criteria, tooltip, mouseX, mouseY);
         }
     }

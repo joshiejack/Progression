@@ -15,6 +15,7 @@ import org.lwjgl.opengl.GL11;
 import java.util.List;
 
 import static joshie.progression.ItemProgression.getStackFromMeta;
+import static joshie.progression.Progression.translate;
 
 public class FeatureTasks extends FeatureCriteria implements ISimpleEditorFieldProvider {
     private transient static final ItemStack COMPLETED = getStackFromMeta(ItemMeta.completed);
@@ -176,7 +177,7 @@ public class FeatureTasks extends FeatureCriteria implements ISimpleEditorFieldP
         }
 
         if (criteria.getTriggers().size() != 0) {
-            if (text) EnchiridionAPI.draw.drawSplitScaledString("Tasks", position.getLeft() - 2, position.getTop(), 200, 0x555555, 1F);
+            if (text) EnchiridionAPI.draw.drawSplitScaledString(translate("tasks"), position.getLeft() - 2, position.getTop(), 200, 0x555555, 1F);
         }
     }
 

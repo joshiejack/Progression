@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 
 import java.util.UUID;
 
+import static joshie.progression.Progression.format;
 import static joshie.progression.Progression.translate;
 import static joshie.progression.api.special.DisplayMode.DISPLAY;
 import static joshie.progression.api.special.DisplayMode.EDIT;
@@ -151,13 +152,18 @@ public class GuiCriteriaEditor extends GuiBaseEditorRule<ICriteria> implements I
     }
 
     private void drawTriggers(boolean overlay, int mouseX, int mouseY) {
-        drawText(translate("required") + ": " + tasks.getField(), 100, 29, THEME.criteriaEditDisplayNameColor);
-        if (!overlay) {
-            if (mouseX >= 100 && mouseX <= 175 && mouseY >= 26 && mouseY <= 36) {
-                addCriteriaTooltip("tasks");
-                if (returnedBoolean(tasks)) addTooltip(ITALIC + "  " + translateCriteria("tasks.all"));
-                else addTooltip(ITALIC + "  " + translateCriteria("tasks.amount"));
+        if (MODE == EDIT) {
+            drawText(translate("required") + ": " + tasks.getField(), 100, 29, THEME.criteriaEditDisplayNameColor);
+            if (!overlay) {
+                if (mouseX >= 100 && mouseX <= 175 && mouseY >= 26 && mouseY <= 36) {
+                    addCriteriaTooltip("tasks");
+                    if (returnedBoolean(tasks)) addTooltip(ITALIC + "  " + translateCriteria("tasks.all"));
+                    else addTooltip(ITALIC + "  " + translateCriteria("tasks.amount"));
+                }
             }
+        } else {
+            if (returnedBoolean(tasks)) drawText(translate("required.all.display"), 100, 29, THEME.criteriaEditDisplayNameColor);
+            else drawText(format("required.amount.display", tasks.getField()), 100, 29, THEME.criteriaEditDisplayNameColor);
         }
     }
 

@@ -300,7 +300,10 @@ progression.item.claim=Progression Tile Claimer
 #Random Stuff
 achievement.criteria=Criteria Complete
 progression.name.display=Name
+progression.tasks=Tasks
 progression.required=Required
+progression.required.display.all=You need to complete all tasks!
+progression.required.display.amount=You only need to complete %s tasks!
 progression.given=Given
 progression.remove=Remove
 progression.add=Add
