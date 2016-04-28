@@ -57,7 +57,6 @@ public class PacketSyncUnclaimed extends PenguinPacket {
         int position = 0;
         for (UUID uuid: map.keySet()) {
             this.data[position] = new UnclaimedPair(uuid, map.get(uuid));
-            System.out.println(this.data[position]);
             position++;
         }
     }

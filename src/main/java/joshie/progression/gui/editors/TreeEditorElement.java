@@ -71,6 +71,7 @@ public class TreeEditorElement {
         if (textWidth >= iconWidth) {
             width = textWidth;
         } else width = iconWidth;
+        width = Math.max(width, 20);
 
         left = criteria.getX() + x;
         right = (int) (criteria.getX() + width) + x;

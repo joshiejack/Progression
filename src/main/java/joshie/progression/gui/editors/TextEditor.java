@@ -41,7 +41,7 @@ public class TextEditor {
     public void keyTyped(char character, int key) {
         if (isTextEditing && editable != null) {
             ///Reset is just in case
-            setEditable(editable);
+            //setEditable(editable);
             if (key == 203) {
                 cursorLeft(1);
             } else if (key == 205) {
@@ -100,11 +100,11 @@ public class TextEditor {
     }
 
     private void cursorLeft(int count) {
-        if (!fixPosition()) return;
         int left = position - count;
         if (left < 0) {
             position = 0;
         } else position = left;
+        if (!fixPosition()) return;
     }
 
     private void cursorRight(int count) {
@@ -126,11 +126,15 @@ public class TextEditor {
     }
 
     private void delete(int count) {
-        if (!fixPosition()) return;
         String text = editable.getTextField();
         if ((count < 0 && position > 0) || (count >= 0 && position + count < text.length())) {
             StringBuilder builder = new StringBuilder(text);
-            text = builder.deleteCharAt(position + count).toString();
+            int delete = position + count;
+            if (delete > editable.getTextField().length()) {
+                delete = editable.getTextField().length();
+            }
+
+            text = builder.deleteCharAt(delete).toString();
             editable.setTextField(text);
             if (count < 0) cursorLeft(-count);
             else if (count >= 0) cursorRight(count);
