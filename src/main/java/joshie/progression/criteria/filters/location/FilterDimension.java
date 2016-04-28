@@ -6,6 +6,7 @@ import joshie.progression.api.special.ICustomDescription;
 import joshie.progression.helpers.DimensionHelper;
 import joshie.progression.lib.WorldLocation;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 
@@ -22,7 +23,10 @@ public class FilterDimension extends FilterLocationBase implements ICustomDescri
     public WorldLocation getRandom(EntityPlayer player) {
         WorldServer world = DimensionManager.getWorld(dimensionID);
         if (world == null) return null;
-        else return new WorldLocation(dimensionID, world.getSpawnCoordinate());
+        BlockPos pos = world.getSpawnCoordinate();
+        if (pos == null) pos = world.getSpawnPoint();
+        if (pos == null) return null;
+        return new WorldLocation(dimensionID, pos);
     }
 
     @Override
