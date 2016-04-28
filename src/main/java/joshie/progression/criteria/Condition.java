@@ -9,7 +9,6 @@ import joshie.progression.api.special.*;
 import joshie.progression.helpers.JSONHelper;
 import joshie.progression.network.PacketHandler;
 import joshie.progression.network.PacketIsSatisfied;
-import joshie.progression.player.PlayerTracker;
 import net.minecraft.item.ItemStack;
 
 import java.util.UUID;
@@ -85,11 +84,8 @@ public class Condition implements IConditionProvider {
 
     @Override
     public boolean isSatisfied() {
-        if (checkTick == 0 || checkTick >= 200) {
-            if (condition instanceof ISyncCondition) {
-                PacketHandler.sendToServer(new PacketIsSatisfied(uuid));
-            } else isTrue = condition.isSatisfied(PlayerTracker.getClientPlayer().getTeam());
-            checkTick = 1;
+        if (checkTick %200 == 0) {
+            PacketHandler.sendToServer(new PacketIsSatisfied(uuid));
         }
 
         checkTick++;
