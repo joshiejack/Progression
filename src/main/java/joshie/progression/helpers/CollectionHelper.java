@@ -8,15 +8,19 @@ import java.util.Iterator;
 import java.util.List;
 
 public class CollectionHelper {
-    public static void remove(Collection collection, Object object) {
+    public static boolean remove(Collection collection, Object object) {
+        boolean removed = false;
         Iterator it = collection.iterator();
         while (it.hasNext()) {
             Object o = it.next();
             if (o.equals(object)) {
+                removed = true;
                 it.remove();
                 break;
             }
         }
+
+        return removed;
     }
 
     public static boolean removeAndUpdate(List drawable, IRuleProvider drawing) {

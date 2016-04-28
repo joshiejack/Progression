@@ -11,6 +11,7 @@ import joshie.progression.api.special.ICustomTooltip;
 import joshie.progression.api.special.ICustomTreeIcon;
 import joshie.progression.api.special.IMiniIcon;
 import joshie.progression.api.special.IStackSizeable;
+import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.helpers.SplitHelper;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.client.renderer.GlStateManager;
@@ -62,10 +63,7 @@ public class FeatureRewards extends FeatureCriteria implements ISimpleEditorFiel
         for (ITriggerProvider trigger: criteria.getTriggers()) {
             if (!trigger.getProvided().isCompleted()) return false;
         }
-
-        if (!criteria.canRepeatInfinite() && PlayerTracker.getClientPlayer().getMappings().getCriteriaCount(criteria) >= criteria.getRepeatAmount()) return false;
-        //Now we've passed all the checks, let's start selecting shit
-
+        
         List<IRewardProvider> always = buildLists(criteria, true);
         List<IRewardProvider> claim = buildLists(criteria, false);
         int offsetMouseX = gg - position.getLeft();
@@ -73,6 +71,7 @@ public class FeatureRewards extends FeatureCriteria implements ISimpleEditorFiel
         int offsetY = always.size() != 0 ? 30: 0;
         int x = 0;
         for (IRewardProvider reward : claim) {
+            if (!PlayerTracker.getClientPlayer().getMappings().getUnclaimedRewards(PlayerHelper.getClientUUID()).contains(reward)) continue;
             if (offsetMouseX >= x && offsetMouseX <= x + 16 && offsetMouseY >= 10 + offsetY && offsetMouseY <= 10 + offsetY + 16) {
                 //Clicked
                 REWARDS.select(reward);

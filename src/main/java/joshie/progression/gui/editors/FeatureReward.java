@@ -5,6 +5,7 @@ import joshie.progression.api.criteria.IRewardProvider;
 import joshie.progression.api.criteria.ITriggerProvider;
 import joshie.progression.gui.core.GuiList;
 import joshie.progression.helpers.CollectionHelper;
+import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.network.PacketHandler;
 import joshie.progression.network.PacketSelectRewards;
 import joshie.progression.player.PlayerTracker;
@@ -85,9 +86,7 @@ public class FeatureReward extends FeatureDrawable<IRewardProvider> {
             if (!trigger.getProvided().isCompleted()) return false;
         }
 
-        ICriteria criteria = provider.getCriteria();
-        if (!criteria.canRepeatInfinite() && PlayerTracker.getClientPlayer().getMappings().getCriteriaCount(criteria) >= criteria.getRepeatAmount()) return false;
-
+        if (!PlayerTracker.getClientPlayer().getMappings().getUnclaimedRewards(PlayerHelper.getClientUUID()).contains(provider)) return false;
         if (mouseOffsetX > 0 && mouseOffsetX < provider.getWidth(MODE) && provider.mustClaim()) {
             if (select(provider)) sendToServer();
             return true;
