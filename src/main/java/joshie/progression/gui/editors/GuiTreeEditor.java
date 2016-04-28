@@ -36,6 +36,7 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
     public ICriteria previous = null;
     public UUID currentTabID;
     public ITab currentTab;
+    public int ticksExisted;
 
     public GuiTreeEditor() {
         features.add(BACKGROUND);
@@ -93,31 +94,37 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
         }
     }
 
-    @Override
-    public void initData() {
-        addButtons(CORE, APICache.getClientCache().getSortedTabs().size() > 17);
-
+    public void onClientSetup() {
+        //Attempt to grab from the config
         if (currentTabID == null) {
             currentTabID = Options.settings.defaultTabID;
         }
 
-        currentTab = APICache.getClientCache().getTab(currentTabID);
-        if (currentTab == null) {
-            for (ITab tab : APICache.getClientCache().getTabSet()) {
-                currentTab = tab;
+        //If the config fails, grab the first instance
+        if (currentTabID == null) {
+            for (ITab tab : APICache.getClientCache().getSortedTabs()) {
+                currentTabID = tab.getUniqueID();
                 break;
-            }
-
-            if (currentTab == null) {
-                currentTab = RuleHandler.newTab(UUID.randomUUID(), true).setDisplayName("New Tab").setStack(new ItemStack(Items.book)).setVisibility(true);
-                currentTabID = currentTab.getUniqueID();
-                CORE.initGui(); //Reset things
             }
         }
 
-        tabCache.clear();
-        currentTabID = currentTab.getUniqueID();
-        rebuildCriteria();
+        currentTab = APICache.getClientCache().getTab(currentTabID); //Attempt to grab the tab
+        if (currentTab == null) { //If the tab was null, create a new blank one
+            currentTab = RuleHandler.newTab(UUID.randomUUID(), true).setDisplayName("New Tab").setStack(new ItemStack(Items.book)).setVisibility(true);
+            currentTabID = currentTab.getUniqueID();
+        }
+    }
+
+    @Override
+    public void initData() {
+        addButtons(CORE, APICache.getClientCache().getSortedTabs().size() > 17);
+        currentTab = APICache.getClientCache().getTab(currentTabID);
+        if (currentTab == null) {
+            MCClientHelper.getPlayer().closeScreen();
+        } else {
+            tabCache.clear();
+            rebuildCriteria();
+        }
     }
 
     public void rebuildCriteria() {

@@ -130,7 +130,8 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
                     RuleHandler.removeCriteria(c.getUniqueID(), true);
                 }
 
-                APICache.getClientCache().removeTab(tab); //Reopen after removing
+                APICache.getClientCache().removeTab(tab); //Reopen after removing#
+                TREE_EDITOR.onClientSetup();
                 CORE.setEditor(TREE_EDITOR);
                 return;
             }

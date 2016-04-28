@@ -1,9 +1,12 @@
 package joshie.progression.gui.editors;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.IRewardProvider;
 import joshie.progression.api.special.ICustomTreeIcon;
 import joshie.progression.gui.core.GuiList;
+import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.lib.PInfo;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.client.gui.GuiScreen;
@@ -26,6 +29,7 @@ import static joshie.progression.gui.core.GuiList.*;
 import static joshie.progression.gui.editors.TreeEditorElement.ColorMode.*;
 
 public class TreeEditorElement {
+    private static final Cache<ICriteria, Counter> ticker = CacheBuilder.newBuilder().maximumSize(1024).build();
     private final ICriteria criteria;
     private boolean isSelected;
     private boolean isHeld;
@@ -106,7 +110,7 @@ public class TreeEditorElement {
     }
 
     public static enum ColorMode {
-        DEFAULT(false, 0), COMPLETED(true, 25), AVAILABLE(true, 50), ERROR(false, 75), SELECTED(true, 100), INVISIBLE(false, 0);
+        DEFAULT(false, 0), COMPLETED(true, 25), AVAILABLE(true, 50), ERROR(false, 75), SELECTED(true, 100), UNUSED(true, 126), READY(true, 150), INVISIBLE(false, 0);
 
         public final int y;
         public final boolean openable;
@@ -115,6 +119,31 @@ public class TreeEditorElement {
             this.openable = openable;
             this.y = y;
         }
+    }
+
+    private static class Counter {
+        int count;
+    }
+
+    private static Counter getCounter(ICriteria criteria) {
+        try {
+            return ticker.get(criteria, new Callable<Counter>() {
+                @Override
+                public Counter call() throws Exception {
+                    return new Counter();
+                }
+            });
+        } catch (Exception e) { return new Counter();}
+    }
+
+    private static boolean rewardsAvailable(ICriteria criteria) {
+        for (IRewardProvider provider: criteria.getRewards()) {
+            if (PlayerTracker.getClientPlayer().getMappings().getUnclaimedRewards(PlayerHelper.getClientUUID()).contains(provider)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static ColorMode getModeForCriteria(ICriteria criteria, boolean isSelected) {
@@ -142,8 +171,19 @@ public class TreeEditorElement {
         }
 
         boolean available = allRequires && !anyConflicts;
-        if (isCompleted) mode = COMPLETED;
-        else if (available) mode = AVAILABLE;
+        if (isCompleted) {
+            mode = COMPLETED;
+        }  else if (available) mode = AVAILABLE;
+
+        if (rewardsAvailable(criteria)) {
+            Counter counter = getCounter(criteria);
+            if (counter.count < 250) {
+                mode = READY;
+            } else mode = UNUSED;
+
+            if (counter.count < 500) counter.count++;
+            else counter.count = 0;
+        }
 
         if (!criteria.isVisible()) {
             if (MODE == DISPLAY) {

@@ -30,6 +30,8 @@ import java.io.Writer;
 import java.lang.reflect.Field;
 import java.util.*;
 
+import static joshie.progression.gui.core.GuiList.TREE_EDITOR;
+
 public class JSONLoader {
     private static Gson gson;
 
@@ -122,6 +124,8 @@ public class JSONLoader {
                 writer.write(json);
                 writer.close();
             }
+
+            TREE_EDITOR.onClientSetup();
 
             return true;
         } catch (Exception e) {

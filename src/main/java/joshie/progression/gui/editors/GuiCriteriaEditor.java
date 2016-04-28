@@ -7,6 +7,7 @@ import joshie.progression.api.criteria.IRewardProvider;
 import joshie.progression.api.criteria.ITriggerProvider;
 import joshie.progression.api.gui.Position;
 import joshie.progression.gui.core.IBarProvider;
+import joshie.progression.gui.editors.TreeEditorElement.ColorMode;
 import joshie.progression.gui.fields.TextFieldHideable;
 import joshie.progression.gui.filters.FilterTypeItem;
 import joshie.progression.handlers.APICache;
@@ -162,8 +163,8 @@ public class GuiCriteriaEditor extends GuiBaseEditorRule<ICriteria> implements I
                 }
             }
         } else {
-            if (returnedBoolean(tasks)) drawText(translate("required.all.display"), 100, 29, THEME.criteriaEditDisplayNameColor);
-            else drawText(format("required.amount.display", tasks.getField()), 100, 29, THEME.criteriaEditDisplayNameColor);
+            if (returnedBoolean(tasks)) drawText(translate("required.all.display"), 140, 29, THEME.criteriaEditDisplayNameColor);
+            else drawText(format("required.amount.display", tasks.getField()), 140, 29, THEME.criteriaEditDisplayNameColor);
         }
     }
 
@@ -182,7 +183,7 @@ public class GuiCriteriaEditor extends GuiBaseEditorRule<ICriteria> implements I
                     else addTooltip(ITALIC + "  " + translateCriteria("rewards.amount"));
                 }
             }
-        } else  {
+        } else if (TreeEditorElement.getModeForCriteria(criteria, false) != ColorMode.COMPLETED)  {
             for (ITriggerProvider provider: get().getTriggers()) {
                 if (!provider.getProvided().isCompleted()) return; //Don't continue processing if we can't claim any rewards
             }
