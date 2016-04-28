@@ -326,6 +326,8 @@ progression.completed=%s%% completed
 progression.ability=Ability Gain!
 progression.block.place=Place a Block!
 progression.group=Team Editor
+progression.criteria.save=Save Template
+progression.criteria.save.tooltip=Clicking this will save this criteria to the criteria templates folder, allowing you to share criteria with others.
 
 #Criteria Editor
 progression.criteria.popup=Popup Displayed
@@ -358,6 +360,7 @@ progression.tab.shift=Shift + Click to rename
 progression.tab.ctrl=Ctrl + Click to select item icon
 progression.tab.alt=Alt + Click to make this tab the default
 progression.tab.i=I + Click to hide/unhide
+progression.tab.s=S + Click to save as template
 progression.tab.arrow=Arrow keys to move up/down
 progression.tab.delete=Delete + Click to delete
 progression.tab.warning=Deleting a tab, deletes all criteria in it

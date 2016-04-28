@@ -11,6 +11,10 @@ import joshie.progression.gui.editors.TreeEditorElement.ColorMode;
 import joshie.progression.gui.fields.TextFieldHideable;
 import joshie.progression.gui.filters.FilterTypeItem;
 import joshie.progression.handlers.APICache;
+import joshie.progression.handlers.TemplateHandler;
+import joshie.progression.helpers.AchievementHelper;
+import joshie.progression.helpers.FileHelper;
+import joshie.progression.json.JSONLoader;
 import net.minecraft.item.ItemStack;
 
 import java.util.UUID;
@@ -98,6 +102,13 @@ public class GuiCriteriaEditor extends GuiBaseEditorRule<ICriteria> implements I
 
     private boolean clickHeader(int mouseLeft, int mouseRight, int mouseY, int button) {
         if (mouseY >= 8 && mouseY <= 18) {
+            if (mouseRight >= 175 && mouseRight <= 240) {
+                if(TemplateHandler.registerCriteria(JSONLoader.getDataCriteriaFromCriteria(get()))) {
+                    JSONLoader.saveJSON(FileHelper.getTemplatesFolder("criteria", get().getUniqueID()), JSONLoader.getDataCriteriaFromCriteria(get()), true, false);
+                    AchievementHelper.display(get().getIcon(), "Saved " + get().getLocalisedName());
+                }
+            }
+
             if (mouseRight >= 100 && mouseRight <= 170) {
                 return popup.click(button);
             } else if (mouseRight >= 10 && mouseRight <= 90) {
@@ -128,6 +139,7 @@ public class GuiCriteriaEditor extends GuiBaseEditorRule<ICriteria> implements I
         drawStack(criteria.getIcon(), 1, 4, 1F);
 
         if (MODE == EDIT) drawText(translate("popup") + ": " + popup, CORE.screenWidth - 170, 9, THEME.criteriaEditDisplayNameColor);
+        if (MODE == EDIT) drawText(translate("criteria.save"), CORE.screenWidth - 270, 9, THEME.criteriaEditDisplayNameColor);
         drawText(translate("repeat") + ": " + (returnedBoolean(repeat) ? repeat : repeat + "x"), CORE.screenWidth - 90, 9, THEME.criteriaEditDisplayNameColor);
         if (!overlay && mouseY >= 4 && mouseY <= 20) {
             if (mouseY >= 8 && mouseY <= 18) {
@@ -137,6 +149,8 @@ public class GuiCriteriaEditor extends GuiBaseEditorRule<ICriteria> implements I
                     else addTooltip(ITALIC + "  " + translateCriteria("repeat.numbers"));
                 } else if (mouseX >= 100 && mouseX <= 170) {
                     addCriteriaTooltip("popup"); //Tooltip for popup
+                } else if (mouseX >= 200 && mouseX <= 270) {
+                    addCriteriaTooltip("save");
                 }
             }
 

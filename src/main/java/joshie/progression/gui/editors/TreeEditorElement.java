@@ -110,7 +110,7 @@ public class TreeEditorElement {
     }
 
     public static enum ColorMode {
-        DEFAULT(false, 0), COMPLETED(true, 25), AVAILABLE(true, 50), ERROR(false, 75), SELECTED(true, 100), UNUSED(true, 126), READY(true, 150), INVISIBLE(false, 0);
+        DEFAULT(false, 0), COMPLETED(true, 25), AVAILABLE(true, 50), ERROR(false, 75), SELECTED(true, 100), UNUSED(true, 125), READY(true, 150), INVISIBLE(false, 0);
 
         public final int y;
         public final boolean openable;

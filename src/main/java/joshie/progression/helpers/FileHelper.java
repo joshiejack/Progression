@@ -3,9 +3,19 @@ package joshie.progression.helpers;
 import joshie.progression.json.Options;
 
 import java.io.File;
+import java.util.UUID;
 
 public class FileHelper {
     public static File root;
+
+    public static File getTemplatesFolder(String dir, UUID uuid) {
+        File file = new File(getRoot(), "templates");
+        if (!file.exists()) file.mkdir();
+        file = new File(file, dir);
+        if (!file.exists()) file.mkdir();
+        if (uuid == null) return file;
+        return new File(file, uuid.toString() + ".json");
+    }
 
     public static File getCriteriaFile(String serverName, boolean isClient) {
         if (!isClient || (isClient && Options.overwriteCriteriaJSONForClients) || serverName.equals("ssp")) return new File(getRoot(), "criteria.json");

@@ -66,6 +66,8 @@ public class GuiList {
     public static final FeatureReward REWARDS = new FeatureReward();
     public static final FeatureFilter FILTERS = new FeatureFilter();
     public static final FeatureItemSelectorTree TREE_ELEMENT = new FeatureItemSelectorTree();
+    public static final FeatureTemplateSelectorTab TEMPLATE_SELECTOR_TAB = new FeatureTemplateSelectorTab();
+    public static final FeatureTemplateSelectorCriteria TEMPLATE_SELECTOR_CRITERIA = new FeatureTemplateSelectorCriteria();
 
     //Features -> Editors
     public static final TextEditor TEXT_EDITOR_SIMPLE = new TextEditor();

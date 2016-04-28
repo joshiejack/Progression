@@ -43,7 +43,9 @@ public class ButtonNewCriteria extends ButtonBase {
             ArrayList<String> name = new ArrayList();
             name.add(EnumChatFormatting.WHITE + "New");
             name.add(EnumChatFormatting.GRAY + "Click for a New Criteria");
-            name.add(EnumChatFormatting.GRAY + "Shift Click for a New Tab");
+            name.add(EnumChatFormatting.GRAY + "Shift click for a New Tab");
+            name.add(EnumChatFormatting.GRAY + "Ctrl click to load Criteria Template");
+            name.add(EnumChatFormatting.GRAY + "Ctrl + Shift to load Tab Template");
             name.add(EnumChatFormatting.GRAY + "");
             name.add(EnumChatFormatting.GRAY + "You can also double click empty");
             name.add(EnumChatFormatting.GRAY + "space to insert a new criteria");
@@ -54,8 +56,12 @@ public class ButtonNewCriteria extends ButtonBase {
     @Override
     public void onClicked() {
         CORE.clickedButton = true;
-        
-        if (GuiScreen.isShiftKeyDown()) {
+
+        if(GuiScreen.isCtrlKeyDown() && GuiScreen.isShiftKeyDown()) {
+            TEMPLATE_SELECTOR_TAB.setVisible();
+        } else if (GuiScreen.isCtrlKeyDown()) {
+            TEMPLATE_SELECTOR_CRITERIA.setVisible();
+        } else if (GuiScreen.isShiftKeyDown()) {
             RuleHandler.newTab(UUID.randomUUID(), true).setDisplayName("New Tab").setStack(new ItemStack(Items.book)).setVisibility(true);
             CORE.initGui();
         } else {

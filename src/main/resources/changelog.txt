@@ -16,6 +16,7 @@ Progression 0.5.0
     (ENCHIRIDION:BOOKS:ACTIONS):  Added Claim Specific Reward Action
     (ENCHIRIDION:BOOKS:ACTIONS):  Added Complete Criteria Action
   Added ability to create and join teams
+  Added Saving and Loading of Individual Tabs and Criteria
   Added a version of the Progression Book that will open the editor in survival
     Because of this, creative mode now acts like you were in survival
   Added a Player Specific command for resetting data

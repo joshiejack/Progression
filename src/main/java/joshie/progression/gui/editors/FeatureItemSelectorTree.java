@@ -1,6 +1,7 @@
 package joshie.progression.gui.editors;
 
 import joshie.progression.gui.core.FeatureAbstract;
+import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.RenderItemHelper;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
@@ -60,8 +61,6 @@ public class FeatureItemSelectorTree extends FeatureAbstract implements ITextEdi
 
             int offsetX = CORE.getOffsetX();
             ScaledResolution res = CORE.res;
-            int fullWidth = res.getScaledWidth() - 10;
-
             CORE.drawGradientRectWithBorder(30, 20, res.getScaledWidth() - 30, 40, THEME.blackBarGradient1, THEME.blackBarGradient2, THEME.blackBarBorder);
             CORE.drawRectWithBorder(30, 40, res.getScaledWidth() - 30, 210, THEME.blackBarUnderLine, THEME.blackBarUnderLineBorder);
 
@@ -80,7 +79,13 @@ public class FeatureItemSelectorTree extends FeatureAbstract implements ITextEdi
             int k = 0;
             for (int i = ITEM_EDITOR.index; i < ITEM_EDITOR.index + (width * 10) + 10; i++) {
                 if (i >= 0 && i < ITEM_EDITOR.sorted.size()) {
-                    RenderItemHelper.drawStack((ItemStack) ITEM_EDITOR.sorted.get(i), 32 + (j * 16), CORE.screenTop + 45 + (k * 16), 1F);
+                    ItemStack stack = (ItemStack) ITEM_EDITOR.sorted.get(i);
+                    RenderItemHelper.drawStack(stack, 32 + (j * 16), CORE.screenTop + 45 + (k * 16), 1F);
+                    if (mouseX >= 32 + (j * 16) && mouseX <= 32 + (j * 16) + 16) {
+                        if (mouseY >= 45 + (k * 16) && mouseY <= 45 + (k * 16) + 16) {
+                            TOOLTIP.add(stack.getTooltip(MCClientHelper.getPlayer(), false));
+                        }
+                    }
 
                     j++;
 

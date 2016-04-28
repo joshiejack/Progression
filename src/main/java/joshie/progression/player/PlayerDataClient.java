@@ -1,19 +1,13 @@
 package joshie.progression.player;
 
-import joshie.progression.criteria.Criteria;
+import joshie.progression.helpers.AchievementHelper;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.PlayerHelper;
-import joshie.progression.network.PacketCompleted.DummyAchievement;
 import joshie.progression.player.data.AbilityStats;
 import joshie.progression.player.data.CustomStats;
 import joshie.progression.player.data.Points;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.achievement.GuiAchievement;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.UUID;
 
@@ -44,22 +38,8 @@ public class PlayerDataClient extends PlayerDataCommon {
 
     @Override
     public void setTeam(PlayerTeam team) {
-        if (this.team != null && this.team.getOwner() != team.getOwner()) {
-            GuiAchievement gui = Minecraft.getMinecraft().guiAchievement;
-            gui.displayUnformattedAchievement(new DummyAchievement(new Criteria(null, null) {
-                @Override
-                public ItemStack getIcon() {
-                    return new ItemStack(Items.diamond_pickaxe);
-                }
-            }) {
-                @Override
-                @SideOnly(Side.CLIENT)
-                public String getDescription() {
-                    return "Joined " + PlayerTracker.getClientPlayer().getTeam().getName();
-                }
-            });
-            ReflectionHelper.setPrivateValue(GuiAchievement.class, gui, Minecraft.getSystemTime(), "notificationTime", "field_146263_l");
-            ReflectionHelper.setPrivateValue(GuiAchievement.class, gui, false, "permanentNotification", "field_146262_n");
+        if (this.team != null && this.team.getOwner() != team.getOwner() && this.team != team) {
+            AchievementHelper.display(new ItemStack(Items.banner), "Joined " + PlayerTracker.getClientPlayer().getTeam().getName());
         }
 
         super.setTeam(team);

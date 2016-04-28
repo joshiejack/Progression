@@ -41,6 +41,8 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
     public GuiTreeEditor() {
         features.add(BACKGROUND);
         features.add(TREE_ELEMENT);
+        features.add(TEMPLATE_SELECTOR_TAB);
+        features.add(TEMPLATE_SELECTOR_CRITERIA);
     }
 
     @Override

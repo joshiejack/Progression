@@ -9,6 +9,10 @@ import joshie.progression.gui.editors.ITextEditable;
 import joshie.progression.gui.filters.FilterTypeItem;
 import joshie.progression.handlers.APICache;
 import joshie.progression.handlers.RuleHandler;
+import joshie.progression.handlers.TemplateHandler;
+import joshie.progression.helpers.AchievementHelper;
+import joshie.progression.helpers.FileHelper;
+import joshie.progression.json.JSONLoader;
 import joshie.progression.json.Options;
 import joshie.progression.lib.PInfo;
 import net.minecraft.client.Minecraft;
@@ -50,8 +54,8 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
 
             int stackY = isBottom ? -3: 0;
             if (xPosition == 0) {
-                CORE.drawStack(tab.getStack(), xPosition + CORE.getOffsetX(), yPosition + 5 + stackY, 1F);
-            } else CORE.drawStack(tab.getStack(), xPosition + 4 + CORE.getOffsetX(), yPosition + 5 + stackY, 1F);
+                CORE.drawStack(tab.getIcon(), xPosition + CORE.getOffsetX(), yPosition + 5 + stackY, 1F);
+            } else CORE.drawStack(tab.getIcon(), xPosition + 4 + CORE.getOffsetX(), yPosition + 5 + stackY, 1F);
         } else {
             int yTexture = TREE_EDITOR.currentTab == tab ? 25 : 0;
             RenderHelper.disableStandardItemLighting();
@@ -59,8 +63,8 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
             if (xPosition == 0) xTexture = 231;
             CORE.drawTexture(PInfo.textures, xPosition, yPosition, xTexture, yTexture, 25, 25);
             if (xPosition == 0) {
-                CORE.drawStack(tab.getStack(), xPosition + 2, yPosition + 5, 1F);
-            } else CORE.drawStack(tab.getStack(), xPosition + 7, yPosition + 6, 1F);
+                CORE.drawStack(tab.getIcon(), xPosition + 2, yPosition + 5, 1F);
+            } else CORE.drawStack(tab.getIcon(), xPosition + 7, yPosition + 6, 1F);
         }
     }
 
@@ -89,6 +93,7 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
                 name.add(EnumChatFormatting.GRAY + Progression.translate("tab.ctrl"));
                 name.add(EnumChatFormatting.GRAY + Progression.translate("tab.alt"));
                 name.add(EnumChatFormatting.GRAY + Progression.translate("tab.i"));
+                name.add(EnumChatFormatting.GRAY + Progression.translate("tab.s"));
                 name.add(EnumChatFormatting.GRAY + Progression.translate("tab.arrow"));
                 name.add(EnumChatFormatting.GRAY + Progression.translate("tab.delete"));
                 name.add(EnumChatFormatting.RED + "  " + Progression.translate("tab.warning"));
@@ -145,6 +150,11 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
                 boolean current = tab.isVisible();
                 tab.setVisibility(!current);
                 donestuff = true;
+            } else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
+                if(TemplateHandler.registerTab(JSONLoader.getDataTabFromTab(tab))) {
+                    JSONLoader.saveJSON(FileHelper.getTemplatesFolder("tab", tab.getUniqueID()), JSONLoader.getDataTabFromTab(tab), true, false);
+                    AchievementHelper.display(tab.getIcon(), "Saved " + tab.getLocalisedName());
+                }
             } else if (GuiScreen.isAltKeyDown()) {
                 Options.settings.defaultTabID = tab.getUniqueID();
             }

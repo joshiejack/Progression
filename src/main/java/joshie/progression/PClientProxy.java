@@ -1,6 +1,7 @@
 package joshie.progression;
 
 import joshie.progression.handlers.APICache;
+import joshie.progression.handlers.TemplateHandler;
 import joshie.progression.helpers.ChatHelper;
 import joshie.progression.helpers.RenderItemHelper;
 import joshie.progression.json.Options;
@@ -39,6 +40,9 @@ public class PClientProxy extends PCommonProxy {
             if (meta == ItemProgression.ItemMeta.criteria) continue;
             RenderItemHelper.register(Progression.item, meta.ordinal(), getLocation(meta.name()));
         }
+
+        //Load Templates
+        TemplateHandler.init();
     }
 
     @Override

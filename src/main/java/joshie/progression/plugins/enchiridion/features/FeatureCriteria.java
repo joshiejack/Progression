@@ -98,10 +98,16 @@ public class FeatureCriteria extends FeatureProgression implements ISimpleEditor
     private static final ResourceLocation lockedT = new ResourceLocation(PInfo.BOOKPATH + "hexlockedT.png");
     private static final ResourceLocation completedT = new ResourceLocation(PInfo.BOOKPATH + "hexcompletedT.png");
 
+    //Flashy
+    private static final ResourceLocation flash = new ResourceLocation(PInfo.BOOKPATH + "flash.png");
+    private static final ResourceLocation flashT = new ResourceLocation(PInfo.BOOKPATH + "flashT.png");
+
     private ResourceLocation getResource(ColorMode mode) {
         switch (mode) {
             case DEFAULT: return locked;
-            case COMPLETED: return completed;
+            case COMPLETED:
+            case READY: return completed;
+            case UNUSED: return flash;
             case AVAILABLE: return unlocked;
             default: return null;
         }
@@ -110,7 +116,9 @@ public class FeatureCriteria extends FeatureProgression implements ISimpleEditor
     private ResourceLocation getTransparent(ColorMode mode) {
         switch (mode) {
             case DEFAULT: return lockedT;
-            case COMPLETED: return completedT;
+            case COMPLETED:
+            case READY:   return completedT;
+            case UNUSED:  return flashT;
             case AVAILABLE: return unlockedT;
             default: return null;
         }

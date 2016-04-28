@@ -10,7 +10,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -65,11 +64,21 @@ public class Criteria implements ICriteria {
     }
 
     private void addRequirements(ICriteria... prereqs) {
-        this.prereqs.addAll(Arrays.asList((ICriteria[]) prereqs));
+        for (ICriteria criteria: prereqs) {
+            if (criteria == null) continue;
+            else {
+                this.prereqs.add(criteria);
+            }
+        }
     }
 
     private void addConflicts(ICriteria... conflicts) {
-        this.conflicts.addAll(Arrays.asList((ICriteria[]) conflicts));
+        for (ICriteria criteria: conflicts) {
+            if (criteria == null) continue;
+            else {
+                this.conflicts.add(criteria);
+            }
+        }
     }
 
     public void addTooltip(List<String> toolTip) {

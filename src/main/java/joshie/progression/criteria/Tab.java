@@ -62,7 +62,7 @@ public class Tab implements ITab {
         return isVisible;
     }
     
-    public ItemStack getStack() {
+    public ItemStack getIcon() {
         return stack;
     }
     

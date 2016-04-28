@@ -16,7 +16,7 @@ public interface ITab {
     public String getLocalisedName();
     
     /** Returns the display stack for this tab **/
-    public ItemStack getStack();
+    public ItemStack getIcon();
     
     /** Returns the sort index for this tab **/
     public int getSortIndex();
