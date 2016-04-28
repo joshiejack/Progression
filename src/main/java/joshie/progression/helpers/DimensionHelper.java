@@ -30,9 +30,7 @@ public class DimensionHelper {
         return dimensionNames.get(id);
     }
 
-    public static void setData(int[] ids, String[] dimensions) {
-        for (int i = 0; i < ids.length; i++) {
-            dimensionNames.put(ids[i], dimensions[i]);
-        }
+    public static void setData(HashMap<Integer, String> dimensionNames) {
+        DimensionHelper.dimensionNames = dimensionNames;
     }
 }
