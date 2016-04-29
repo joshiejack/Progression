@@ -89,14 +89,16 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
             name.add(TEXT_EDITOR_SIMPLE.getText(this) + hidden);
             if (MODE == EDIT) {
                 name.add(EnumChatFormatting.GRAY + "(" + Progression.translate("tab.sort") + ") " + tab.getSortIndex());
-                name.add(EnumChatFormatting.GRAY + Progression.translate("tab.shift"));
-                name.add(EnumChatFormatting.GRAY + Progression.translate("tab.ctrl"));
-                name.add(EnumChatFormatting.GRAY + Progression.translate("tab.alt"));
-                name.add(EnumChatFormatting.GRAY + Progression.translate("tab.i"));
-                name.add(EnumChatFormatting.GRAY + Progression.translate("tab.s"));
-                name.add(EnumChatFormatting.GRAY + Progression.translate("tab.arrow"));
-                name.add(EnumChatFormatting.GRAY + Progression.translate("tab.delete"));
-                name.add(EnumChatFormatting.RED + "  " + Progression.translate("tab.warning"));
+                if (!Options.hideTooltips) {
+                    name.add(EnumChatFormatting.GRAY + Progression.translate("tab.shift"));
+                    name.add(EnumChatFormatting.GRAY + Progression.translate("tab.ctrl"));
+                    name.add(EnumChatFormatting.GRAY + Progression.translate("tab.alt"));
+                    name.add(EnumChatFormatting.GRAY + Progression.translate("tab.i"));
+                    name.add(EnumChatFormatting.GRAY + Progression.translate("tab.s"));
+                    name.add(EnumChatFormatting.GRAY + Progression.translate("tab.arrow"));
+                    name.add(EnumChatFormatting.GRAY + Progression.translate("tab.delete"));
+                    name.add(EnumChatFormatting.RED + "  " + Progression.translate("tab.warning"));
+                }
             }
 
             TOOLTIP.clear();

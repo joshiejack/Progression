@@ -7,6 +7,7 @@ import joshie.progression.api.criteria.IRewardProvider;
 import joshie.progression.api.special.ICustomTreeIcon;
 import joshie.progression.gui.core.GuiList;
 import joshie.progression.helpers.PlayerHelper;
+import joshie.progression.json.Options;
 import joshie.progression.lib.PInfo;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.client.gui.GuiScreen;
@@ -294,7 +295,7 @@ public class TreeEditorElement {
             if (!hoveredReward) { //If we weren't hovering over the reward, display the requirements
                 if (isOver(mouseX, mouseY)) {
                     List list = new ArrayList();
-                    if (MODE == EDIT) {
+                    if (MODE == EDIT && !Options.hideTooltips) {
                         list.add("Double Click to edit "/* + (Hold shift for display MODE) */);
                         list.add("Shift + Click to make something a requirement");
                         list.add("Ctrl + Click to make something conflict");

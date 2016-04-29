@@ -3,6 +3,7 @@ package joshie.progression.gui.buttons;
 import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.ITab;
 import joshie.progression.handlers.RuleHandler;
+import joshie.progression.json.Options;
 import joshie.progression.lib.PInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -39,7 +40,7 @@ public class ButtonNewCriteria extends ButtonBase {
             CORE.drawText("New", xPosition + 4 + CORE.getOffsetX(), yPosition + 8, THEME.newButtonFontColor);
         }
 
-        if (k == 2) {
+        if (k == 2 && !Options.hideTooltips) {
             ArrayList<String> name = new ArrayList();
             name.add(EnumChatFormatting.WHITE + "New");
             name.add(EnumChatFormatting.GRAY + "Click for a New Criteria");

@@ -15,6 +15,7 @@ import joshie.progression.handlers.TemplateHandler;
 import joshie.progression.helpers.AchievementHelper;
 import joshie.progression.helpers.FileHelper;
 import joshie.progression.json.JSONLoader;
+import joshie.progression.json.Options;
 import net.minecraft.item.ItemStack;
 
 import java.util.UUID;
@@ -96,8 +97,10 @@ public class GuiCriteriaEditor extends GuiBaseEditorRule<ICriteria> implements I
     }
 
     private void addCriteriaTooltip(String s) {
-        addTooltip(BOLD + translateCriteria(s));
-        addTooltip(translateCriteria(s + ".tooltip"), 30);
+        if (!Options.hideTooltips) {
+            addTooltip(BOLD + translateCriteria(s));
+            addTooltip(translateCriteria(s + ".tooltip"), 30);
+        }
     }
 
     private boolean clickHeader(int mouseLeft, int mouseRight, int mouseY, int button) {
