@@ -131,7 +131,7 @@ public class FeatureReward extends FeatureDrawable<IRewardProvider> {
             current++;
         }
 
-        if (current >= maximum) { //TODO: Automatic claiming, replace wth a button
+        if (current >= maximum) {
             return true;
         }
 

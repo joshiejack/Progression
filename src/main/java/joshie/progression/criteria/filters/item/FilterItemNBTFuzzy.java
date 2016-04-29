@@ -14,7 +14,7 @@ public class FilterItemNBTFuzzy extends FilterBaseItem implements IInit, ISetter
     public NBTType type = NBTType.STRING;
 
     @Override
-    public boolean matches(ItemStack check) { //TODO: Add Partial matching
+    public boolean matches(ItemStack check) {
         if (!check.hasTagCompound()) return  false;
         NBTTagCompound tag = check.getTagCompound();
         switch (type) {

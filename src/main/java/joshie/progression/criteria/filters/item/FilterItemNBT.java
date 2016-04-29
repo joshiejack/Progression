@@ -17,7 +17,7 @@ public class FilterItemNBT extends FilterBaseItem implements IInit {
     }
 
     @Override
-    public boolean matches(ItemStack check) { //TODO: Add Partial matching
+    public boolean matches(ItemStack check) {
         return check.hasTagCompound() && check.getTagCompound().equals(tagValue);
     }
 }
