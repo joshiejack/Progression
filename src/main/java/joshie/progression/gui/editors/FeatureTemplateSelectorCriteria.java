@@ -23,7 +23,6 @@ public class FeatureTemplateSelectorCriteria extends FeatureTemplateAbstract {
                         JSONLoader.createCriteriaInternals(criteria, true);
                         JSONLoader.initialiseCriteria(criteria, true);
                         JSONLoader.initEverything(true);
-                        TREE_EDITOR.onClientSetup();
                         CORE.setEditor(TREE_EDITOR);
                     }
                 }

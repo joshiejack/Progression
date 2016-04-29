@@ -143,8 +143,14 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
 
     public void addCriteria(ICriteria criteria, int x, int y, int offsetX) {
         elements.put(criteria, new TreeEditorElement(criteria));
-        getElement(criteria).draw(x, y, offsetX);
-        getElement(criteria).click(x, y, false);
+        TreeEditorElement element = getElement(criteria);
+        if (element == null) {
+            element = new TreeEditorElement(criteria);
+            elements.put(criteria, element);
+        }
+
+        element.draw(x, y, offsetX);
+        element.click(x, y, false);
         lastClicked = criteria;
     }
 
@@ -166,33 +172,35 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
     public void drawGuiForeground(boolean overlayvisible, int mouseX, int mouseY) {
         if (MODE == DISPLAY && !isTabVisible(currentTab)) return;
         for (ICriteria criteria : currentTab.getCriteria()) {
-            if (MODE == DISPLAY) {
-                ColorMode mode = TreeEditorElement.getModeForCriteria(criteria, false);
-                if (mode == ColorMode.INVISIBLE) continue;
-            }
+            TreeEditorElement element = getElement(criteria);
+            if (element != null) {
+                if (MODE == DISPLAY) {
+                    ColorMode mode = TreeEditorElement.getModeForCriteria(criteria, false);
+                    if (mode == ColorMode.INVISIBLE) continue;
+                }
 
-            if (getElement(criteria).isCriteriaVisible() || MODE == EDIT) {
-                TreeEditorElement editor = getElement(criteria);
-                List<ICriteria> prereqs = criteria.getPreReqs();
-                for (ICriteria c : prereqs) {
-                    int y1 = getElement(c).getY();
-                    int y2 = editor.getY();
-                    int x1 = getElement(c).getX();
-                    int x2 = editor.getX();
+                if (element.isCriteriaVisible() || MODE == EDIT) {
+                    List<ICriteria> prereqs = criteria.getPreReqs();
+                    for (ICriteria c : prereqs) {
+                        int y1 = getElement(c).getY();
+                        int y2 = element.getY();
+                        int x1 = getElement(c).getX();
+                        int x2 = element.getX();
 
-                    int width = 0;
-                    int textWidth = CORE.mc.fontRendererObj.getStringWidth(c.getLocalisedName());
-                    int iconWidth = 9 + (c.getRewards().size() * 12);
-                    if (textWidth >= iconWidth) {
-                        width = textWidth + 9;
-                    } else width = iconWidth;
+                        int width;
+                        int textWidth = CORE.mc.fontRendererObj.getStringWidth(c.getLocalisedName());
+                        int iconWidth = 9 + (c.getRewards().size() * 12);
+                        if (textWidth >= iconWidth) {
+                            width = textWidth + 9;
+                        } else width = iconWidth;
 
-                    width -= 3;
+                        width -= 3;
 
-                    if (c.getTab() == criteria.getTab()) {
-                        drawLine(CORE.getOffsetX() + width + x1, 12 + y1 - 1, CORE.getOffsetX() + 5 + x2, 12 + y2 - 1, 1, GuiList.THEME.connectLineColor1);
-                        drawLine(CORE.getOffsetX() + width + x1, 12 + y1 + 1, CORE.getOffsetX() + 5 + x2, 12 + y2 + 1, 1, GuiList.THEME.connectLineColor2); //#636C69
-                        drawLine(CORE.getOffsetX() + width + x1, 12 + y1, CORE.getOffsetX() + 5 + x2, 12 + y2, 1, GuiList.THEME.connectLineColor3);
+                        if (c.getTab() == criteria.getTab()) {
+                            drawLine(CORE.getOffsetX() + width + x1, 12 + y1 - 1, CORE.getOffsetX() + 5 + x2, 12 + y2 - 1, 1, GuiList.THEME.connectLineColor1);
+                            drawLine(CORE.getOffsetX() + width + x1, 12 + y1 + 1, CORE.getOffsetX() + 5 + x2, 12 + y2 + 1, 1, GuiList.THEME.connectLineColor2); //#636C69
+                            drawLine(CORE.getOffsetX() + width + x1, 12 + y1, CORE.getOffsetX() + 5 + x2, 12 + y2, 1, GuiList.THEME.connectLineColor3);
+                        }
                     }
                 }
             }
@@ -200,8 +208,11 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
 
         GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
         for (ICriteria criteria : currentTab.getCriteria()) {
-            if (getElement(criteria).isCriteriaVisible() || MODE == EDIT) {
-                getElement(criteria).draw(0, CORE.screenTop, CORE.getOffsetX());
+            TreeEditorElement element = getElement(criteria);
+            if (element != null) {
+                if (element.isCriteriaVisible() || MODE == EDIT) {
+                    element.draw(0, CORE.screenTop, CORE.getOffsetX());
+                }
             }
         }
     }
@@ -212,10 +223,13 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
     public void keyTyped(char character, int key) {
         ICriteria toRemove = null;
         for (ICriteria criteria : currentTab.getCriteria()) {
-            if (getElement(criteria).isCriteriaVisible() || MODE == EDIT) {
-                if (getElement(criteria).keyTyped(character, key)) {
-                    toRemove = criteria;
-                    break;
+            TreeEditorElement element = getElement(criteria);
+            if (element != null) {
+                if (element.isCriteriaVisible() || MODE == EDIT) {
+                    if (element.keyTyped(character, key)) {
+                        toRemove = criteria;
+                        break;
+                    }
                 }
             }
         }
@@ -238,7 +252,10 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
     @Override
     public void guiMouseReleased(int mouseX, int mouseY, int button) {
         for (ICriteria criteria : currentTab.getCriteria()) {
-            getElement(criteria).release(mouseX, mouseY);
+            TreeEditorElement element = getElement(criteria);
+            if (element != null) {
+                element.release(mouseX, mouseY);
+            }
         }
 
         isDragging = false;
@@ -266,15 +283,18 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
 
         if (button == 0) {
             for (ICriteria criteria : currentTab.getCriteria()) {
-                if (MODE == DISPLAY) {
-                    ColorMode mode = TreeEditorElement.getModeForCriteria(criteria, false);
-                    if (mode == ColorMode.INVISIBLE) continue;
-                }
+                TreeEditorElement element = getElement(criteria);
+                if (element != null) {
+                    if (MODE == DISPLAY) {
+                        ColorMode mode = TreeEditorElement.getModeForCriteria(criteria, false);
+                        if (mode == ColorMode.INVISIBLE) continue;
+                    }
 
-                if (getElement(criteria).isCriteriaVisible() || MODE == EDIT) {
-                    if (getElement(criteria).click(mouseX, mouseY, isDoubleClick)) {
-                        lastClicked = criteria;
-                        return true;
+                    if (element.isCriteriaVisible() || MODE == EDIT) {
+                        if (element.click(mouseX, mouseY, isDoubleClick)) {
+                            lastClicked = criteria;
+                            return true;
+                        }
                     }
                 }
             }
@@ -317,10 +337,13 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
 
         if (lastClicked != null) {
             for (ICriteria criteria : currentTab.getCriteria()) {
-                getElement(criteria).follow(mouseX, mouseY);
-                int wheel = Mouse.getDWheel();
-                if (wheel != 0) {
-                    getElement(criteria).scroll(wheel < 0);
+                TreeEditorElement element = getElement(criteria);
+                if (element != null) {
+                    element.follow(mouseX, mouseY);
+                    int wheel = Mouse.getDWheel();
+                    if (wheel != 0) {
+                        getElement(criteria).scroll(wheel < 0);
+                    }
                 }
             }
         }
