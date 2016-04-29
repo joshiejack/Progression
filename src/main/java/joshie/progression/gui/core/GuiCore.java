@@ -96,6 +96,8 @@ public class GuiCore extends GuiScreen {
         NEW_REWARD.setVisibility(false);
         NEW_FILTER.setVisibility(false);
         NEW_CONDITION.setVisibility(false);
+        TEMPLATE_SELECTOR_CRITERIA.setVisibility(false);
+        TEMPLATE_SELECTOR_TAB.setVisibility(false);
     }
 
     public List<GuiButton> getButtonNewList() {
