@@ -364,6 +364,14 @@ progression.tab.s=S + Click to save as template
 progression.tab.arrow=Arrow keys to move up/down
 progression.tab.delete=Delete + Click to delete
 progression.tab.warning=Deleting a tab, deletes all criteria in it
+progression.tab.new.new=New
+progression.tab.new.new.tab=New Tab
+progression.tab.new.criteria=Click for a New Criteria
+progression.tab.new.tab=Ctrl click for a New Tab
+progression.tab.new.shift=Shift click to load Criteria Template
+progression.tab.new.alt=Alt click to load Tab Template
+progression.tab.new.empty=You can also double click empty
+progression.tab.new.space=space to insert a new criteria
 
 #Items
 progression.item.fallResistance=Fall Resistance

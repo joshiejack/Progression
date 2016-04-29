@@ -1,6 +1,5 @@
 package joshie.progression.gui.buttons;
 
-import joshie.progression.Progression;
 import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.ITab;
 import joshie.progression.api.gui.Position;
@@ -20,13 +19,15 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
 
+import static joshie.progression.Progression.translate;
 import static joshie.progression.api.special.DisplayMode.EDIT;
 import static joshie.progression.gui.core.GuiList.*;
+import static net.minecraft.util.EnumChatFormatting.GRAY;
+import static net.minecraft.util.EnumChatFormatting.RED;
 
 public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelectable {
     private ITab tab;
@@ -85,19 +86,19 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
 
         if (k == 2 || displayTooltip) {
             ArrayList<String> name = new ArrayList();
-            String hidden = tab.isVisible() ? "" : "(" + Progression.translate("tab.hidden") + ")";
+            String hidden = tab.isVisible() ? "" : "(" + translate("tab.hidden") + ")";
             name.add(TEXT_EDITOR_SIMPLE.getText(this) + hidden);
             if (MODE == EDIT) {
-                name.add(EnumChatFormatting.GRAY + "(" + Progression.translate("tab.sort") + ") " + tab.getSortIndex());
+                name.add(GRAY + "(" + translate("tab.sort") + ") " + tab.getSortIndex());
                 if (!Options.hideTooltips) {
-                    name.add(EnumChatFormatting.GRAY + Progression.translate("tab.shift"));
-                    name.add(EnumChatFormatting.GRAY + Progression.translate("tab.ctrl"));
-                    name.add(EnumChatFormatting.GRAY + Progression.translate("tab.alt"));
-                    name.add(EnumChatFormatting.GRAY + Progression.translate("tab.i"));
-                    name.add(EnumChatFormatting.GRAY + Progression.translate("tab.s"));
-                    name.add(EnumChatFormatting.GRAY + Progression.translate("tab.arrow"));
-                    name.add(EnumChatFormatting.GRAY + Progression.translate("tab.delete"));
-                    name.add(EnumChatFormatting.RED + "  " + Progression.translate("tab.warning"));
+                    name.add(GRAY + translate("tab.shift"));
+                    name.add(GRAY + translate("tab.ctrl"));
+                    name.add(GRAY + translate("tab.alt"));
+                    name.add(GRAY + translate("tab.i"));
+                    name.add(GRAY + translate("tab.s"));
+                    name.add(GRAY + translate("tab.arrow"));
+                    name.add(GRAY + translate("tab.delete"));
+                    name.add(RED + "  " + translate("tab.warning"));
                 }
             }
 

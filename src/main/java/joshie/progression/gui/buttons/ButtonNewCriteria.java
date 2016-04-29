@@ -10,12 +10,14 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 
 import java.util.ArrayList;
 import java.util.UUID;
 
+import static joshie.progression.Progression.translate;
 import static joshie.progression.gui.core.GuiList.*;
+import static net.minecraft.util.EnumChatFormatting.GRAY;
+import static net.minecraft.util.EnumChatFormatting.WHITE;
 
 public class ButtonNewCriteria extends ButtonBase {
     public ButtonNewCriteria(int x, int y) {
@@ -42,14 +44,14 @@ public class ButtonNewCriteria extends ButtonBase {
 
         if (k == 2 && !Options.hideTooltips) {
             ArrayList<String> name = new ArrayList();
-            name.add(EnumChatFormatting.WHITE + "New");
-            name.add(EnumChatFormatting.GRAY + "Click for a New Criteria");
-            name.add(EnumChatFormatting.GRAY + "Shift click for a New Tab");
-            name.add(EnumChatFormatting.GRAY + "Ctrl click to load Criteria Template");
-            name.add(EnumChatFormatting.GRAY + "Ctrl + Shift to load Tab Template");
-            name.add(EnumChatFormatting.GRAY + "");
-            name.add(EnumChatFormatting.GRAY + "You can also double click empty");
-            name.add(EnumChatFormatting.GRAY + "space to insert a new criteria");
+            name.add(WHITE + translate("tab.new.new"));
+            name.add(GRAY + translate("tab.new.criteria"));
+            name.add(GRAY + translate("tab.new.tab"));
+            name.add(GRAY + translate("tab.new.shift"));
+            name.add(GRAY + translate("tab.new.alt"));
+            name.add(GRAY + "");
+            name.add(GRAY + translate("tab.new.empty"));
+            name.add(GRAY + translate("tab.new.space"));
             TOOLTIP.add(name);
         }
     }
@@ -58,12 +60,12 @@ public class ButtonNewCriteria extends ButtonBase {
     public void onClicked() {
         CORE.clickedButton = true;
 
-        if(GuiScreen.isCtrlKeyDown() && GuiScreen.isShiftKeyDown()) {
+        if(GuiScreen.isAltKeyDown()) {
             TEMPLATE_SELECTOR_TAB.setVisible();
-        } else if (GuiScreen.isCtrlKeyDown()) {
-            TEMPLATE_SELECTOR_CRITERIA.setVisible();
         } else if (GuiScreen.isShiftKeyDown()) {
-            RuleHandler.newTab(UUID.randomUUID(), true).setDisplayName("New Tab").setStack(new ItemStack(Items.book)).setVisibility(true);
+            TEMPLATE_SELECTOR_CRITERIA.setVisible();
+        } else if (GuiScreen.isCtrlKeyDown()) {
+            RuleHandler.newTab(UUID.randomUUID(), true).setDisplayName(translate("tab.new.new.tab")).setStack(new ItemStack(Items.book)).setVisibility(true);
             CORE.initGui();
         } else {
             TREE_EDITOR.previous = null;
