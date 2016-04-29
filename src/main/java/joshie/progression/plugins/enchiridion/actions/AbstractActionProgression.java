@@ -4,6 +4,8 @@ import com.google.gson.JsonObject;
 import joshie.enchiridion.gui.book.buttons.actions.AbstractAction;
 import joshie.progression.Progression;
 import joshie.progression.helpers.JSONHelper;
+import joshie.progression.lib.PInfo;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.UUID;
 
@@ -14,6 +16,7 @@ public abstract class AbstractActionProgression extends AbstractAction {
     public AbstractActionProgression() {}
     public AbstractActionProgression(String name) {
         super(name);
+        this.resource = new ResourceLocation(PInfo.BOOKPATH + name + ".png");
     }
 
     public AbstractActionProgression copyAbstract(AbstractActionProgression action) {

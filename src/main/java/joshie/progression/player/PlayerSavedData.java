@@ -107,7 +107,7 @@ public class PlayerSavedData extends WorldSavedData {
         return false;
     }
 
-    public static enum  TeamAction {
+    public enum  TeamAction {
         LEAVE, NEW, JOIN;
     }
 

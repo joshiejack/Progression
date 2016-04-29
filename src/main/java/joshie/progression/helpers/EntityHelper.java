@@ -2,6 +2,7 @@ package joshie.progression.helpers;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import joshie.progression.api.criteria.IFilter;
 import joshie.progression.api.criteria.IFilterProvider;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -73,6 +74,16 @@ public class EntityHelper {
         if (clientList == null) clientList = init(MCClientHelper.getMinecraft().theWorld);
 
         return clientList;
+    }
+
+    public static IFilter getFilter(List<IFilterProvider> filters, EntityPlayer player) {
+        if (player == null) return null;
+        int size = filters.size();
+        if (size == 0) return null;
+        if (size == 1) return filters.get(0).getProvided();
+        else {
+            return filters.get(player.worldObj.rand.nextInt(size)).getProvided();
+        }
     }
 
     public static EntityLivingBase getRandomEntityFromFilters(List<IFilterProvider> locality, EntityPlayer player) {

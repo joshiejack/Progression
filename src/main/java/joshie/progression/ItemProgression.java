@@ -51,16 +51,12 @@ public class ItemProgression extends Item {
         return map.get(Math.max(0, Math.min(map.size() - 1, stack.getItemDamage())));
     }
 
-    public static enum ItemMeta {
+    public enum ItemMeta {
         criteria, claim, book, edit, booleanValue, clearInventory, clearOrReceiveOrBlockCriteria, fallResistance,
         ifCriteriaCompleted, ifDayOrNight, ifHasAchievement, ifHasBoolean, ifHasPoints, ifIsAtCoordinates,
         ifIsBiome, ifRandom, onChangeDimension, onLogin, onReceivedAchiement, onReceivedBoolean,
         onReceivedPoints, onSecond, onSentMessage, points, speed, showTab, showLayer, sun, moon, stepAssist,
         attackPlayer, onGUIChange, eat, click, breaking, craft, kill, completed, openBook;
-
-
-
-        private ItemMeta() {}
     }
 
     public static CreativeTabs tab;

@@ -80,8 +80,8 @@ public class RewardPlaceBlock extends RewardBaseItemFilter implements ICustomDes
     }
 
     @Override
-    public ItemStack getRequestedStack() {
-        return ItemHelper.getRandomBlock(filters);
+    public ItemStack getRequestedStack(EntityPlayer player) {
+        return ItemHelper.getRandomItemOfSize(filters, player, 1);
     }
 
     @Override

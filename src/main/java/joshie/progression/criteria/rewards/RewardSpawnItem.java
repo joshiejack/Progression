@@ -85,8 +85,8 @@ public class RewardSpawnItem extends RewardBaseItemFilter implements ICustomDesc
     }
 
     @Override
-    public ItemStack getRequestedStack() {
-        return ItemHelper.getRandomItemOfSize(filters, stackSize);
+    public ItemStack getRequestedStack(EntityPlayer player) {
+        return ItemHelper.getRandomItemOfSize(filters, player, stackSize);
     }
 
     @Override
@@ -100,6 +100,7 @@ public class RewardSpawnItem extends RewardBaseItemFilter implements ICustomDesc
                             BlockPos pos = new BlockPos(location.pos);
                             if (player.worldObj.isBlockLoaded(pos)) {
                                 if (isValidLocation(player.worldObj, pos)) {
+                                    pos = pos.up();
                                     SpawnItemHelper.spawnItem(player.worldObj, pos.getX(), pos.getY(), pos.getZ(), stack);
                                     return;
                                 }

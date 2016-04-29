@@ -1,7 +1,6 @@
 package joshie.progression.criteria.filters.potion;
 
 import joshie.progression.api.criteria.ProgressionRule;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
 
 import java.util.Arrays;
@@ -17,7 +16,7 @@ public class FilterPotionEffectID extends FilterPotionBase {
     }
 
     @Override
-    public Collection<PotionEffect> getRandom(EntityPlayer player) {
+    public Collection<PotionEffect> getRandomEffects() {
         return Arrays.asList(new PotionEffect(effectID, 200, 0));
     }
 }

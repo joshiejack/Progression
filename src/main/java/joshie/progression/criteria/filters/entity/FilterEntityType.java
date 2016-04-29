@@ -47,7 +47,7 @@ public class FilterEntityType extends FilterBaseEntity implements IEnum {
         return name.equals("type");
     }
 
-    public static enum EntityType {
+    public enum EntityType {
         ANIMAL, MONSTER, WATER, TAMEABLE, BOSS, PLAYER, NPC, GOLEM;
     }
 }

@@ -26,6 +26,7 @@ Progression 0.5.0
   Added Has True/False Condition
   Added Has Points Condition
   Added Has Achievement Condition
+  Added Player Is Sneaking Condition
   Added Spawn Entity Reward
   Added Teleport Player Reward
   Added Place Block Reward

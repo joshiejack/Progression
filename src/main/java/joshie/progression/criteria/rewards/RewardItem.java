@@ -58,8 +58,8 @@ public class RewardItem extends RewardBaseItemFilter implements ICustomDisplayNa
     }
 
     @Override
-    public ItemStack getRequestedStack() {
-        return ItemHelper.getRandomItemOfSize(filters, stackSize);
+    public ItemStack getRequestedStack(EntityPlayer player) {
+        return ItemHelper.getRandomItemOfSize(filters, player, stackSize);
     }
 
     @Override

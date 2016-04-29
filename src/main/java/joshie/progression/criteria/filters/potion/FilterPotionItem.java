@@ -6,7 +6,6 @@ import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.IInit;
 import joshie.progression.api.special.ISpecialFieldProvider;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
@@ -36,7 +35,7 @@ public class FilterPotionItem extends FilterPotionBase implements IInit, ISpecia
     }
 
     @Override
-    public Collection<PotionEffect> getRandom(EntityPlayer player) {
+    public Collection<PotionEffect> getRandomEffects() {
         return getEffects(stack.getItemDamage());
     }
 }

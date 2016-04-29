@@ -1,23 +1,45 @@
 package joshie.progression.criteria.filters.potion;
 
 import joshie.progression.api.ProgressionAPI;
+import joshie.progression.api.criteria.IFilter;
 import joshie.progression.api.criteria.IFilterProvider;
 import joshie.progression.api.criteria.IFilterType;
-import joshie.progression.criteria.filters.FilterBase;
+import joshie.progression.helpers.ItemHelper;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 
 import java.util.*;
 
-public abstract class FilterPotionBase extends FilterBase {
+public abstract class FilterPotionBase implements IFilter<ItemStack> {
     protected static final Random rand = new Random();
     protected static final List<PotionEffect> EMPTY = new ArrayList();
+
+    private IFilterProvider provider;
+
+    @Override
+    public IFilterProvider getProvider() {
+        return provider;
+    }
+
+    @Override
+    public void setProvider(IFilterProvider provider) {
+        this.provider = provider;
+    }
 
     @Override
     public IFilterType getType() {
         return ProgressionAPI.filters.getPotionFilter();
     }
+
+    @Override
+    public ItemStack getRandom(EntityPlayer player) {
+        return ItemHelper.getRandomItem(this.getProvider());
+    }
+
+    @Override
+    public void apply(ItemStack stack) {}
 
     protected Set<Integer> getIds(Collection<PotionEffect> list) {
         Set<Integer> ids = new HashSet();
@@ -54,12 +76,14 @@ public abstract class FilterPotionBase extends FilterBase {
         return false;
     }
 
+    public abstract Collection<PotionEffect> getRandomEffects();
+
     public static Collection<PotionEffect> getRandomEffects(List<IFilterProvider> filters) {
         int size = filters.size();
         if (size == 0) return null;
-        if (size == 1) return (Collection<PotionEffect>) filters.get(0).getProvided().getRandom(null);
+        if (size == 1) return ((FilterPotionBase)filters.get(0).getProvided()).getRandomEffects();
         else {
-            return (Collection<PotionEffect>) filters.get(rand.nextInt(size));
+            return ((FilterPotionBase)filters.get(rand.nextInt(size)).getProvided()).getRandomEffects();
         }
     }
 }

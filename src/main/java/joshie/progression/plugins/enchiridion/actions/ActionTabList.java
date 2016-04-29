@@ -4,7 +4,6 @@ import joshie.enchiridion.api.EnchiridionAPI;
 import joshie.enchiridion.api.book.IButtonAction;
 import joshie.enchiridion.api.book.IButtonActionProvider;
 import joshie.enchiridion.api.book.IPage;
-import joshie.enchiridion.gui.book.buttons.actions.AbstractAction;
 import joshie.enchiridion.gui.book.features.FeatureButton;
 import joshie.enchiridion.gui.book.features.FeaturePreviewWindow;
 import joshie.enchiridion.gui.book.features.FeatureText;
@@ -19,7 +18,7 @@ import net.minecraft.util.ResourceLocation;
 import static joshie.progression.lib.PInfo.BOOKPATH;
 import static joshie.progression.plugins.enchiridion.EnchiridionSupport.TRANSPARENT;
 
-public class ActionTabList extends AbstractAction {
+public class ActionTabList extends AbstractActionProgression {
     public ActionTabList() {
         super("tab.list");
     }

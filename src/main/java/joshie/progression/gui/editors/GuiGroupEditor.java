@@ -76,7 +76,7 @@ public class GuiGroupEditor extends GuiBaseEditor implements IBarProvider, IText
 
     @Override
     public void initData() {
-        CORE.scrollingEnabled = false;
+        CORE.scrollingEnabled = true;
         List<GuiButton> buttons = CORE.getButtonNewList();
         buttons.add(new ButtonNewTeam("New Team", 5, CORE.screenTop + 25));
         buttons.add(new ButtonLeaveTeam("Leave Team", 75, CORE.screenTop + 25));
@@ -101,7 +101,7 @@ public class GuiGroupEditor extends GuiBaseEditor implements IBarProvider, IText
                 team.toggleMultiple();
             } else if (mouseY >= 110 && mouseY < 120 && !isPopup) {
                 team.toggleIsTrueTeam();
-            } else if (mouseX >= 10 + xPos && mouseX <= 65 + xPos && mouseY >= 170 && mouseY <= 225) {
+            } else if (mouseX >= 10 + xPos + CORE.getOffsetX() && mouseX <= 65 + xPos + CORE.getOffsetX() && mouseY >= 170 && mouseY <= 225) {
                 username = ""; //Reset the username everytime you click this
                 if (isPopup) {
                     //If we had the popup and clicked this button
@@ -165,8 +165,8 @@ public class GuiGroupEditor extends GuiBaseEditor implements IBarProvider, IText
         try {
             int xPos = 0;
             for (EntityPlayer player : getPlayers(team)) {
-                GuiInventory.drawEntityOnScreen(20 + xPos, 230 + CORE.screenTop, 35, 5, 10, player);
-                if (mouseX >= xPos && mouseX <= xPos + 39 && mouseY >= 164 && mouseY <= 231) {
+                GuiInventory.drawEntityOnScreen(20 + xPos + CORE.getOffsetX(), 230 + CORE.screenTop, 35, 5, 10, player);
+                if (mouseX >= xPos + CORE.getOffsetX() && mouseX <= xPos + 39 + CORE.getOffsetX() && mouseY >= 164 && mouseY <= 231) {
                     addTooltip(player.getDisplayNameString());
                 }
 
@@ -175,7 +175,7 @@ public class GuiGroupEditor extends GuiBaseEditor implements IBarProvider, IText
 
             if (!team.isSingle() && team.isOwner(MCClientHelper.getPlayer())) {
                 int crossY = 64;
-                if (mouseX >= 10 + xPos && mouseX <= 65 + xPos && mouseY >= 170 && mouseY <= 225) {
+                if (mouseX >= 10 + CORE.getOffsetX() + xPos && mouseX <= 65 + CORE.getOffsetX() + xPos && mouseY >= 170 && mouseY <= 225) {
                     addTooltip(BOLD + "Add New Member");
                     addTooltip("Click this to open a window to invite a new member, once the window is open and you have typed who you want to invite, press enter to send the invite", 40);
                     crossY = 119;
@@ -187,7 +187,7 @@ public class GuiGroupEditor extends GuiBaseEditor implements IBarProvider, IText
                 float green = (color >> 8 & 255) / 255.0F;
                 float blue = (color & 255) / 255.0F;
                 GlStateManager.color(red, green, blue, 1F);
-                CORE.drawTexture(PInfo.textures, xPos + 10, 170, 201, crossY, 55, 55);
+                CORE.drawTexture(PInfo.textures, xPos + 10 + CORE.getOffsetX(), 170, 201, crossY, 55, 55);
             }
         } catch (Exception e) {}
     }

@@ -2,8 +2,8 @@ package joshie.progression.helpers;
 
 import joshie.progression.api.criteria.IFilterProvider;
 import joshie.progression.api.criteria.IFilterType;
-import joshie.progression.gui.filters.FilterTypeBlock;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -57,10 +57,14 @@ public class ItemHelper {
     }
 
     public static ItemStack getRandomItem(IFilterProvider filter) {
+        return getRandomItem(filter, filter.getProvided().getType());
+    }
+
+    private static ItemStack getRandomItem(IFilterProvider filter, IFilterType selector) {
         if (shuffledItemsCache == null) shuffledItemsCache = new ArrayList(getCreativeItems());
         Collections.shuffle(shuffledItemsCache);
         for (ItemStack stack : shuffledItemsCache) {
-            if (filter.getProvided().getType() != null && !filter.getProvided().getType().isAcceptable(stack)) continue;
+            if (selector != null && !selector.isAcceptable(stack)) continue;
             if (filter.getProvided().matches(stack)) return stack;
         }
 
@@ -68,35 +72,20 @@ public class ItemHelper {
         return null;
     }
 
-    public static ItemStack getRandomItem(List<IFilterProvider> filters) {
-        return getRandomItem(filters, null);
+    public static ItemStack getRandomItemFromFilters(List<IFilterProvider> filters, EntityPlayer player) {
+        int size = filters.size();
+        if (size == 0) return null;
+        if (size == 1) return (ItemStack) filters.get(0).getProvided().getRandom(player);
+        else {
+            return (ItemStack) filters.get(player.worldObj.rand.nextInt(size)).getProvided().getRandom(player);
+        }
     }
 
-    public static ItemStack getRandomItemOfSize(List<IFilterProvider> filters, int stackSize) {
-        ItemStack item = getRandomItem(filters, null);
+    public static ItemStack getRandomItemOfSize(List<IFilterProvider> filters, EntityPlayer player, int stackSize) {
+        ItemStack item = getRandomItemFromFilters(filters, player).copy();
         if (item == null) return null;
         else item = item.copy();
         item.stackSize = stackSize;
         return item;
-    }
-
-    public static ItemStack getRandomBlock(List<IFilterProvider> filters) {
-        return getRandomItem(filters, FilterTypeBlock.INSTANCE);
-    }
-
-    public static ItemStack getRandomItem(List<IFilterProvider> filters, IFilterType selector) {
-        ArrayList<IFilterProvider> shuffledFilters = new ArrayList(filters);
-        if (shuffledItemsCache == null) shuffledItemsCache = new ArrayList(getCreativeItems());
-        Collections.shuffle(shuffledItemsCache);
-        Collections.shuffle(shuffledFilters);
-        for (ItemStack stack : shuffledItemsCache) {
-            if (selector != null && !selector.isAcceptable(stack)) continue;
-            for (IFilterProvider filter : shuffledFilters) {
-                if (filter.getProvided().matches(stack)) return stack;
-            }
-        }
-
-        //In theory if set up correctly this should be no issue
-        return null;
     }
 }

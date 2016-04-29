@@ -30,6 +30,11 @@ public class FilterItemOre extends FilterBaseItem implements IInit {
     }
 
     @Override
+    public boolean matches(Object object) {
+        return object instanceof ItemStack ? matches((ItemStack)object) : false;
+    }
+
+    @Override
     public boolean matches(ItemStack check) {
         //Build the key
         String key = Item.itemRegistry.getNameForObject(check.getItem()) + " " + check.getItemDamage();

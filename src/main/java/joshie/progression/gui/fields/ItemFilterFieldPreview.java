@@ -45,7 +45,7 @@ public class ItemFilterFieldPreview extends ItemFilterField implements IField {
 
     public ItemStack getStack(boolean hovered) {
         if (ticker >= 200 || ticker == 0) {
-            stack = ItemHelper.getRandomItem(getFilters());
+            stack = ItemHelper.getRandomItemFromFilters(getFilters(), MCClientHelper.getPlayer());
             if (stack != null) {
                 stack = stack.copy();
                 if (object instanceof IStackSizeable) {

@@ -5,12 +5,9 @@ import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.DisplayMode;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
 
 @ProgressionRule(name="points", color=0xFF002DB2, meta="points")
 public class RewardPoints extends RewardBaseSingular {
-    public ItemStack icon = new ItemStack(Items.gold_ingot);
     public String variable = "gold";
     public int amount = 1;
 

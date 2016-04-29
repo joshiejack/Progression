@@ -7,6 +7,7 @@ import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.IInit;
 import joshie.progression.api.special.ISpecialFieldProvider;
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
@@ -18,6 +19,11 @@ public class FilterBlockStack extends FilterBaseBlock implements ISpecialFieldPr
     public boolean matchState = true;
     private Block filterBlock = Blocks.anvil;
     private int filterMeta = 0;
+
+    @Override
+    public ItemStack getRandom(EntityPlayer player) {
+        return stack.copy();
+    }
 
     @Override
     public void init(boolean isClient) {

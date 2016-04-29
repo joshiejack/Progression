@@ -6,6 +6,7 @@ import joshie.progression.api.criteria.IFilterType;
 import joshie.progression.api.special.ICustomIcon;
 import joshie.progression.api.special.IHasFilters;
 import joshie.progression.helpers.ItemHelper;
+import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -36,7 +37,7 @@ public abstract class RewardBaseItemFilter extends RewardBase implements IHasFil
     @Override
     public ItemStack getIcon() {
         if (ticker == 0 || ticker >= 200) {
-            preview = ItemHelper.getRandomItem(filters);
+            preview = ItemHelper.getRandomItemFromFilters(filters, MCClientHelper.getPlayer());
             ticker = 1;
         }
 

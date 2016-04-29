@@ -1,9 +1,6 @@
 package joshie.progression.criteria.rewards;
 
-import joshie.progression.api.criteria.IField;
-import joshie.progression.api.criteria.IFilterProvider;
-import joshie.progression.api.criteria.IFilterType;
-import joshie.progression.api.criteria.ProgressionRule;
+import joshie.progression.api.criteria.*;
 import joshie.progression.api.special.*;
 import joshie.progression.gui.fields.EntityFilterFieldPreview;
 import joshie.progression.gui.fields.ItemFilterField;
@@ -114,10 +111,12 @@ public class RewardSpawnEntity extends RewardBase implements IInit, ICustomDescr
                         BlockPos pos = new BlockPos(location.pos);
                         if (player.worldObj.isBlockLoaded(pos)) {
                             if (isValidLocation(player.worldObj, pos)) {
+                                pos = pos.up();
+
                                 notspawned = false;
                                 //Now that we have a random location, let's grab a random Entity
-                                EntityLivingBase entity = EntityHelper.getRandomEntityFromFilters(entities, player);
-                                EntityLivingBase clone = (EntityLivingBase) EntityList.createEntityByName(EntityHelper.getNameForEntity(entity), player.worldObj);
+                                IFilter filter = EntityHelper.getFilter(entities, player);
+                                EntityLivingBase clone = (EntityLivingBase) EntityList.createEntityByName(EntityHelper.getNameForEntity(((EntityLivingBase) filter.getRandom(player))), player.worldObj);
                                 if (clone instanceof EntityLiving) {
                                     ((EntityLiving) clone).onInitialSpawn(player.worldObj.getDifficultyForLocation(new BlockPos(clone)), (IEntityLivingData) null);
                                 }
@@ -125,6 +124,8 @@ public class RewardSpawnEntity extends RewardBase implements IInit, ICustomDescr
                                 if (tagValue != null) {
                                     clone.readEntityFromNBT(tagValue);
                                 }
+
+                                filter.apply(entity);
 
                                 clone.setLocationAndAngles(pos.getX(), pos.getY(), pos.getZ(), player.worldObj.rand.nextFloat() * 360.0F, 0.0F);
                                 player.worldObj.spawnEntityInWorld(clone);
@@ -142,9 +143,9 @@ public class RewardSpawnEntity extends RewardBase implements IInit, ICustomDescr
 
     //Helper Methods
     private boolean isValidLocation(World world, BlockPos pos) {
-        Material floor = world.getBlockState(pos.down()).getBlock().getMaterial();
-        Material feet = world.getBlockState(pos).getBlock().getMaterial();
-        Material head = world.getBlockState(pos.up()).getBlock().getMaterial();
+        Material floor = world.getBlockState(pos).getBlock().getMaterial();
+        Material feet = world.getBlockState(pos.up()).getBlock().getMaterial();
+        Material head = world.getBlockState(pos.up(2)).getBlock().getMaterial();
         if (feet.blocksMovement()) return false;
         if (head.blocksMovement()) return false;
         if (floor.isLiquid() || feet.isLiquid() || head.isLiquid()) return false;

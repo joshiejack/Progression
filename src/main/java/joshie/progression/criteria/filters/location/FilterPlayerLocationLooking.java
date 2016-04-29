@@ -5,12 +5,11 @@ import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.ICustomDescription;
 import joshie.progression.lib.WorldLocation;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-
-import java.util.ArrayList;
 
 @ProgressionRule(name="playerLook", color=0xFFBBBBBB)
 public class FilterPlayerLocationLooking extends FilterLocationBase implements ICustomDescription {
@@ -38,8 +37,8 @@ public class FilterPlayerLocationLooking extends FilterLocationBase implements I
         float f7 = f2 * f4;
         double d3 = 5.0D;
         if (reachDistance) {
-            if (player instanceof net.minecraft.entity.player.EntityPlayerMP) {
-                d3 = ((net.minecraft.entity.player.EntityPlayerMP) player).theItemInWorldManager.getBlockReachDistance();
+            if (player instanceof EntityPlayerMP) {
+                d3 = ((EntityPlayerMP) player).theItemInWorldManager.getBlockReachDistance();
             }
         } else d3 = maximumDistance;
 
@@ -49,7 +48,6 @@ public class FilterPlayerLocationLooking extends FilterLocationBase implements I
 
     @Override
     public WorldLocation getRandom(EntityPlayer player) {
-        ArrayList<WorldLocation> locations = new ArrayList();
         MovingObjectPosition position = getMovingObjectPositionFromPlayer(player.worldObj, player);
         return position == null? null: new WorldLocation(player.dimension, position.getBlockPos());
     }

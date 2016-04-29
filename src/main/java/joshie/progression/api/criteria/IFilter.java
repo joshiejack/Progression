@@ -12,6 +12,9 @@ public interface IFilter<O> extends IRule<IFilterProvider> {
     /** Returns a list of all things that match this filter
      *  May pass in something, or it can be null **/
     public O getRandom(EntityPlayer player);
+
+    /** Called after generated to apply any special effects **/
+    public void apply(O object);
     
     /** Returns the type of filter this is **/
     public IFilterType getType();

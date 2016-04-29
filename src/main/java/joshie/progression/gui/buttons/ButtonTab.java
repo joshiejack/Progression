@@ -155,7 +155,7 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
                 donestuff = true;
             } else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
                 if(TemplateHandler.registerTab(JSONLoader.getDataTabFromTab(tab))) {
-                    JSONLoader.saveJSON(FileHelper.getTemplatesFolder("tab", tab.getUniqueID()), JSONLoader.getDataTabFromTab(tab), true, false);
+                    JSONLoader.saveJSON(FileHelper.getTemplatesFolder("tab", tab.getLocalisedName() + "_" + tab.getUniqueID()), JSONLoader.getDataTabFromTab(tab), true, false);
                     AchievementHelper.display(tab.getIcon(), "Saved " + tab.getLocalisedName());
                 }
             } else if (GuiScreen.isAltKeyDown()) {
