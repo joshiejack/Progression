@@ -13,8 +13,6 @@ import joshie.progression.lib.GuiIDs;
 import joshie.progression.network.PacketClaimed;
 import joshie.progression.network.PacketHandler;
 import joshie.progression.player.PlayerTracker;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -37,7 +35,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.List;
 import java.util.UUID;
 
-public class ItemProgression extends Item implements IItemColor {
+public class ItemProgression extends Item {
     private static TIntObjectMap<ItemMeta> map;
 
     public static ItemStack getStackFromMeta(ItemMeta meta) {
@@ -112,17 +110,6 @@ public class ItemProgression extends Item implements IItemColor {
             ICriteria criteria = getCriteriaFromStack(stack, FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT);
             return criteria == null ? "BROKEN ITEM" : criteria.getLocalisedName();
         } else return Progression.translate("item." + getMetaFromStack(stack).name());
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    public int getColorFromItemstack(ItemStack stack, int tintIndex) {
-        ICriteria criteria = getCriteriaFromStack(stack, true);
-        if (criteria != null) {
-            return Minecraft.getMinecraft().getItemColors().getColorFromItemstack(criteria.getIcon(), tintIndex);
-        }
-
-        return 16777215;
     }
 
     @Override

@@ -6,6 +6,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.block.model.*;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Items;
@@ -16,6 +17,8 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.List;
+
+import static joshie.progression.ItemProgression.getCriteriaFromStack;
 
 public class ItemProgressionRenderer implements IBakedModel  {
     @SubscribeEvent
@@ -58,8 +61,8 @@ public class ItemProgressionRenderer implements IBakedModel  {
         return ProgressionOverride.INSTANCE;
     }
 
-    private static class ProgressionOverride extends ItemOverrideList {
-        private static ProgressionOverride INSTANCE = new ProgressionOverride();
+    protected static class ProgressionOverride extends ItemOverrideList implements IItemColor {
+        public static ProgressionOverride INSTANCE = new ProgressionOverride();
         private ItemStack broken = new ItemStack(Items.BOOK);
         private ItemModelMesher mesher;
 
@@ -68,9 +71,19 @@ public class ItemProgressionRenderer implements IBakedModel  {
         }
 
         @Override
+        public int getColorFromItemstack(ItemStack stack, int tintIndex) {
+            ICriteria criteria = getCriteriaFromStack(stack, true);
+            if (criteria != null) {
+                return Minecraft.getMinecraft().getItemColors().getColorFromItemstack(criteria.getIcon(), tintIndex);
+            }
+
+            return 16777215;
+        }
+
+        @Override
         public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity) {
             if (mesher == null) mesher  = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
-            ICriteria criteria = ItemProgression.getCriteriaFromStack(stack, true);
+            ICriteria criteria = getCriteriaFromStack(stack, true);
             if (criteria != null && criteria.getIcon().getItem() != stack.getItem() && criteria.getIcon().getItem() != Progression.item) {
                 return mesher.getItemModel(criteria.getIcon());
             }

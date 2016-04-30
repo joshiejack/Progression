@@ -1,5 +1,6 @@
 package joshie.progression;
 
+import joshie.progression.ItemProgressionRenderer.ProgressionOverride;
 import joshie.progression.handlers.APICache;
 import joshie.progression.handlers.TemplateHandler;
 import joshie.progression.helpers.ChatHelper;
@@ -37,7 +38,7 @@ public class PClientProxy extends PCommonProxy {
     @Override
     public void registerRendering() {
         RenderItemHelper.register(Progression.item, 0, criteria);
-        Minecraft.getMinecraft().getItemColors().registerItemColorHandler(Progression.item, Progression.item);
+        Minecraft.getMinecraft().getItemColors().registerItemColorHandler(ProgressionOverride.INSTANCE, Progression.item);
         for (ItemProgression.ItemMeta meta: ItemProgression.ItemMeta.values()) {
             if (meta == ItemProgression.ItemMeta.criteria) continue;
             RenderItemHelper.register(Progression.item, meta.ordinal(), getLocation(meta.name()));
