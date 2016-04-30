@@ -68,7 +68,6 @@ public class FilterTypeEntity extends FilterTypeBase {
                     int entityY = EntityHelper.getOffsetForEntity(entity);
                     GuiInventory.drawEntityOnScreen(offsetX + 24 + (j * 32), CORE.screenTop + 105 + (k * 32) + yOffset + entityY, entitySize, 25F, -5F, entity);
                     //BossStatus.bossName = null; //Reset boss
-                    //TODO: Check if the boss name is fucked over or not AKA displays when viewing entities in my gui
 
                     return null;
                 }

@@ -75,8 +75,6 @@ public class EntityFilterFieldPreview extends ItemFilterField implements IField 
                 @Override
                 public Object call() throws Exception {
                     GuiInventory.drawEntityOnScreen(CORE.getOffsetX() + renderX + 24 + x, CORE.screenTop + renderY + y + EntityHelper.getOffsetForEntity(entityLivingBase), EntityHelper.getSizeForEntity(entityLivingBase), 25F, -5F, entityLivingBase);
-                    //BossStatus.bossName = null; //Reset boss
-                    //TODO: Check if the boss name is fucked over or not AKA displays when viewing entities in my gui
                     return null;
                 }
             });

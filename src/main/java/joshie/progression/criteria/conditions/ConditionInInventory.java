@@ -16,7 +16,16 @@ import java.util.List;
 @ProgressionRule(name="ininventory", color=0xFF660000)
 public class ConditionInInventory extends ConditionBaseItemFilter implements ICustomDescription, IEnum, ISpecialFieldProvider, IStackSizeable {
     private static enum CheckSlots {
-        HELD, ARMOR, HOTBAR, INVENTORY;
+        HELD(true, false), ARMOR, HOTBAR, INVENTORY, OFFHAND(false, true), ANYHAND(true, true);
+
+        public boolean main;
+        public boolean off;
+
+        private CheckSlots() {}
+        private CheckSlots(boolean main, boolean off) {
+            this.main = main;
+            this.off = off;
+        }
     }
 
     public int stackSize = 1;
@@ -59,24 +68,29 @@ public class ConditionInInventory extends ConditionBaseItemFilter implements ICu
         int counter = 0;
         for (EntityPlayer player: team.getTeamEntities()) {
             if (!team.isTrueTeam()) counter = 0; //Reset the counter
-            if (slotType == CheckSlots.HELD) {
-                if (matches(player.getHeldItemMainhand())) {
-                    counter += player.getHeldItemMainhand().stackSize;
-                    if (counter >= stackSize) return true;
-                }
-            } else if (slotType == CheckSlots.ARMOR) {
+            if (slotType == CheckSlots.ARMOR) {
                 for (ItemStack armor : player.inventory.armorInventory) {
                     if (armor != null && matches(armor)) {
                         counter += armor.stackSize;
                         if (counter >= stackSize) return true;
                     }
-                } //TODO: Add Off Hand check to hotbar check
-            } else if (slotType == CheckSlots.HOTBAR) {
+                }
+            } else if (slotType == CheckSlots.INVENTORY) {
                 counter += getAmount(player, 9);
                 if (counter >= stackSize) return true;
             } else if (slotType == CheckSlots.INVENTORY) {
                 counter += getAmount(player, 36);
                 if (counter >= stackSize) return true;
+            } else {
+                if (slotType.main && matches(player.getHeldItemMainhand())) {
+                    counter += player.getHeldItemMainhand().stackSize;
+                    if (counter >= stackSize) return true;
+                }
+
+                if (slotType.off && matches(player.getHeldItemOffhand())) {
+                    counter += player.getHeldItemOffhand().stackSize;
+                    if (counter >= stackSize) return true;
+                }
             }
         }
 
