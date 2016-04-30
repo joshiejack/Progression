@@ -1,9 +1,6 @@
 package joshie.progression.criteria.rewards;
 
-import joshie.progression.api.criteria.IField;
-import joshie.progression.api.criteria.IFilterProvider;
-import joshie.progression.api.criteria.IFilterType;
-import joshie.progression.api.criteria.ProgressionRule;
+import joshie.progression.api.criteria.*;
 import joshie.progression.api.special.*;
 import joshie.progression.gui.fields.EntityFilterFieldPreview;
 import joshie.progression.gui.fields.ItemFilterField;
@@ -14,6 +11,7 @@ import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.StackHelper;
 import joshie.progression.lib.WorldLocation;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -22,7 +20,7 @@ import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.text.WordUtils;
 
@@ -30,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static net.minecraft.util.EnumChatFormatting.DARK_GREEN;
+import static net.minecraft.util.text.TextFormatting.DARK_GREEN;
 
 @ProgressionRule(name="entity", color=0xFFE599FF)
 public class RewardSpawnEntity extends RewardBase implements IInit, ICustomDescription, ICustomTooltip, ICustomWidth, ICustomIcon, IHasFilters, ISpecialFieldProvider {
@@ -114,10 +112,12 @@ public class RewardSpawnEntity extends RewardBase implements IInit, ICustomDescr
                         BlockPos pos = new BlockPos(location.pos);
                         if (player.worldObj.isBlockLoaded(pos)) {
                             if (isValidLocation(player.worldObj, pos)) {
+                                pos = pos.up();
+
                                 notspawned = false;
                                 //Now that we have a random location, let's grab a random Entity
-                                EntityLivingBase entity = EntityHelper.getRandomEntityFromFilters(entities, player);
-                                EntityLivingBase clone = (EntityLivingBase) EntityList.createEntityByName(EntityHelper.getNameForEntity(entity), player.worldObj);
+                                IFilter filter = EntityHelper.getFilter(entities, player);
+                                EntityLivingBase clone = (EntityLivingBase) EntityList.createEntityByName(EntityHelper.getNameForEntity(((EntityLivingBase) filter.getRandom(player))), player.worldObj);
                                 if (clone instanceof EntityLiving) {
                                     ((EntityLiving) clone).onInitialSpawn(player.worldObj.getDifficultyForLocation(new BlockPos(clone)), (IEntityLivingData) null);
                                 }
@@ -125,6 +125,8 @@ public class RewardSpawnEntity extends RewardBase implements IInit, ICustomDescr
                                 if (tagValue != null) {
                                     clone.readEntityFromNBT(tagValue);
                                 }
+
+                                filter.apply(entity);
 
                                 clone.setLocationAndAngles(pos.getX(), pos.getY(), pos.getZ(), player.worldObj.rand.nextFloat() * 360.0F, 0.0F);
                                 player.worldObj.spawnEntityInWorld(clone);
@@ -142,9 +144,12 @@ public class RewardSpawnEntity extends RewardBase implements IInit, ICustomDescr
 
     //Helper Methods
     private boolean isValidLocation(World world, BlockPos pos) {
-        Material floor = world.getBlockState(pos.down()).getBlock().getMaterial();
-        Material feet = world.getBlockState(pos).getBlock().getMaterial();
-        Material head = world.getBlockState(pos.up()).getBlock().getMaterial();
+        IBlockState floorState = world.getBlockState(pos);
+        IBlockState feetState = world.getBlockState(pos.up());
+        IBlockState headState = world.getBlockState(pos.up(2));
+        Material floor = floorState.getBlock().getMaterial(floorState);
+        Material feet = feetState.getBlock().getMaterial(feetState);
+        Material head = headState.getBlock().getMaterial(headState);
         if (feet.blocksMovement()) return false;
         if (head.blocksMovement()) return false;
         if (floor.isLiquid() || feet.isLiquid() || head.isLiquid()) return false;

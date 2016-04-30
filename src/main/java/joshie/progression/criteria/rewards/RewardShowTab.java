@@ -11,7 +11,7 @@ import joshie.progression.api.special.IStoreNBTData;
 import joshie.progression.handlers.APICache;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -50,7 +50,7 @@ public class RewardShowTab extends RewardBaseSingular implements IInit, IGetterC
 
     @Override
     public String getField(String fieldName) {
-        return tab != null ? EnumChatFormatting.GREEN + displayName : EnumChatFormatting.RED + displayName;
+        return tab != null ? TextFormatting.GREEN + displayName : TextFormatting.RED + displayName;
     }
 
     @Override
@@ -60,7 +60,7 @@ public class RewardShowTab extends RewardBaseSingular implements IInit, IGetterC
 
     @SubscribeEvent
     public void onFeatureRender(TabVisibleEvent event) {
-        NBTTagCompound tag = ProgressionAPI.player.getCustomData(event.entityPlayer, "progression.tab.hidden");
+        NBTTagCompound tag = ProgressionAPI.player.getCustomData(event.getEntityPlayer(), "progression.tab.hidden");
         if (tag != null) {
             if (tag.hasKey(event.unique.toString())) {
                 event.setCanceled(true);

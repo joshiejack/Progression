@@ -7,7 +7,7 @@ import joshie.progression.player.PlayerTracker;
 import joshie.progression.player.data.AbilityStats.SpeedType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -34,13 +34,13 @@ public class RewardSpeed extends RewardBaseAbility {
 
     @Override
     public void addAbilityTooltip(List list) {
-        list.add(EnumChatFormatting.GRAY + getProvider().getLocalisedName() + ": " + speed + " " + getType());
+        list.add(TextFormatting.GRAY + getProvider().getLocalisedName() + ": " + speed + " " + getType());
     }
 
     @SubscribeEvent
     public void onLivingUpdate(LivingUpdateEvent event) {
-        if (event.entityLiving instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer) event.entity;
+        if (event.getEntityLiving() instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) event.getEntityLiving();
             if (player.worldObj.isRemote) {
                 SpeedType type = player.isInWater() ? WATER : !player.onGround ? AIR : LAND;
                 float speed = PlayerTracker.getClientPlayer().getAbilities().getSpeed(type);

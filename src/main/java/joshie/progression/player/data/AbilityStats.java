@@ -6,7 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import static joshie.progression.player.data.AbilityStats.SpeedType.*;
 
 public class AbilityStats implements INBTWritable<AbilityStats> {
-    public static enum SpeedType {
+    public enum SpeedType {
         LAND, AIR, WATER;
     }
 

@@ -6,7 +6,6 @@ import joshie.progression.helpers.EntityHelper;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.boss.BossStatus;
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;
@@ -68,7 +67,8 @@ public class FilterTypeEntity extends FilterTypeBase {
                     int entitySize = EntityHelper.getSizeForEntity(entity);
                     int entityY = EntityHelper.getOffsetForEntity(entity);
                     GuiInventory.drawEntityOnScreen(offsetX + 24 + (j * 32), CORE.screenTop + 105 + (k * 32) + yOffset + entityY, entitySize, 25F, -5F, entity);
-                    BossStatus.bossName = null; //Reset boss
+                    //BossStatus.bossName = null; //Reset boss
+                    //TODO: Check if the boss name is fucked over or not AKA displays when viewing entities in my gui
 
                     return null;
                 }

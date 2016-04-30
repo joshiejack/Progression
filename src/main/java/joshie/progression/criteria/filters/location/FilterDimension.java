@@ -6,7 +6,7 @@ import joshie.progression.api.special.ICustomDescription;
 import joshie.progression.helpers.DimensionHelper;
 import joshie.progression.lib.WorldLocation;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 

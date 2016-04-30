@@ -9,7 +9,6 @@ import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.boss.BossStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +75,8 @@ public class EntityFilterFieldPreview extends ItemFilterField implements IField 
                 @Override
                 public Object call() throws Exception {
                     GuiInventory.drawEntityOnScreen(CORE.getOffsetX() + renderX + 24 + x, CORE.screenTop + renderY + y + EntityHelper.getOffsetForEntity(entityLivingBase), EntityHelper.getSizeForEntity(entityLivingBase), 25F, -5F, entityLivingBase);
-                    BossStatus.bossName = null; //Reset boss
+                    //BossStatus.bossName = null; //Reset boss
+                    //TODO: Check if the boss name is fucked over or not AKA displays when viewing entities in my gui
                     return null;
                 }
             });

@@ -14,10 +14,10 @@ public class ActionBreakBlock extends ActionForgeEvent {
 
     @SubscribeEvent
     public void onBreakSpeed(BreakSpeed event) {
-        Block block = event.state.getBlock();
-        int meta = block.getMetaFromState(event.state);
-        if (ProgressionEvents.isEventCancelled(event.entityPlayer, ActionType.BREAKBLOCKWITH, event.entityPlayer.getCurrentEquippedItem(), ActionType.BREAKBLOCK, BlockActionHelper.getStackFromBlockData(block, meta))) {
-            event.newSpeed = 0F;
+        Block block = event.getState().getBlock();
+        int meta = block.getMetaFromState(event.getState());
+        if (ProgressionEvents.isEventCancelled(event.getEntityPlayer(), ActionType.BREAKBLOCKWITH, event.getEntityLiving().getHeldItemMainhand(), ActionType.BREAKBLOCK, BlockActionHelper.getStackFromBlockData(block, meta))) {
+            event.setNewSpeed(0F);
         }
     }
 
@@ -25,9 +25,9 @@ public class ActionBreakBlock extends ActionForgeEvent {
     public void onBreakBlock(BreakEvent event) {
         EntityPlayer player = event.getPlayer();
         if (player != null) {
-            Block block = event.state.getBlock();
-            int meta = block.getMetaFromState(event.state);
-            if (ProgressionEvents.isEventCancelled(player, ActionType.BREAKBLOCKWITH, player.getCurrentEquippedItem(), ActionType.BREAKBLOCK, BlockActionHelper.getStackFromBlockData(block, meta))) {
+            Block block = event.getState().getBlock();
+            int meta = block.getMetaFromState(event.getState());
+            if (ProgressionEvents.isEventCancelled(player, ActionType.BREAKBLOCKWITH, player.getHeldItemMainhand(), ActionType.BREAKBLOCK, BlockActionHelper.getStackFromBlockData(block, meta))) {
                 event.setCanceled(true);
             }
         }

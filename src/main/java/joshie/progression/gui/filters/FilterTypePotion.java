@@ -2,8 +2,8 @@ package joshie.progression.gui.filters;
 
 import joshie.progression.api.criteria.IFilterType;
 import joshie.progression.helpers.ItemHelper;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionUtils;
 
 import java.util.List;
 
@@ -22,6 +22,6 @@ public class FilterTypePotion extends FilterTypeItem {
 
     @Override
     public boolean isAcceptedItem(ItemStack stack) {
-        return stack.getItem() == Items.potionitem && stack.getItemDamage() != 0;
+        return PotionUtils.getEffectsFromStack(stack).size() > 0;
     }
 }

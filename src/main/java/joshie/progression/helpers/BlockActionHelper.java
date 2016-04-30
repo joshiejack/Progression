@@ -11,19 +11,19 @@ import java.util.HashMap;
 public class BlockActionHelper {
     private static HashMap<Block, Item> block_item_mappings = new HashMap();
     static {
-        block_item_mappings.put(Blocks.cauldron, Items.cauldron);
-        block_item_mappings.put(Blocks.reeds, Items.sugar);
-        block_item_mappings.put(Blocks.wheat, Items.wheat_seeds);
-        block_item_mappings.put(Blocks.standing_sign, Items.sign);
-        block_item_mappings.put(Blocks.cake, Items.cake);
-        block_item_mappings.put(Blocks.flower_pot, Items.flower_pot);
-        block_item_mappings.put(Blocks.oak_door, Items.oak_door);
-        block_item_mappings.put(Blocks.spruce_door, Items.spruce_door);
-        block_item_mappings.put(Blocks.birch_door, Items.birch_door);
-        block_item_mappings.put(Blocks.jungle_door, Items.jungle_door);
-        block_item_mappings.put(Blocks.dark_oak_door, Items.dark_oak_door);
-        block_item_mappings.put(Blocks.acacia_door, Items.acacia_door);
-        block_item_mappings.put(Blocks.iron_door, Items.iron_door);
+        block_item_mappings.put(Blocks.CAULDRON, Items.CAULDRON);
+        block_item_mappings.put(Blocks.REEDS, Items.SUGAR);
+        block_item_mappings.put(Blocks.WHEAT, Items.WHEAT);
+        block_item_mappings.put(Blocks.STANDING_SIGN, Items.SIGN);
+        block_item_mappings.put(Blocks.CAKE, Items.CAKE);
+        block_item_mappings.put(Blocks.FLOWER_POT, Items.FLOWER_POT);
+        block_item_mappings.put(Blocks.OAK_DOOR, Items.OAK_DOOR);
+        block_item_mappings.put(Blocks.SPRUCE_DOOR, Items.SPRUCE_DOOR);
+        block_item_mappings.put(Blocks.BIRCH_DOOR, Items.BIRCH_DOOR);
+        block_item_mappings.put(Blocks.JUNGLE_DOOR, Items.JUNGLE_DOOR);
+        block_item_mappings.put(Blocks.DARK_OAK_DOOR, Items.DARK_OAK_DOOR);
+        block_item_mappings.put(Blocks.ACACIA_DOOR, Items.ACACIA_DOOR);
+        block_item_mappings.put(Blocks.IRON_DOOR, Items.IRON_DOOR);
     }
 
     public static ItemStack getStackFromBlockData(Block block, int meta) {

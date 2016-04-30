@@ -104,7 +104,7 @@ public class RuleHandler {
             if (uuid == null) uuid = UUID.randomUUID();
             ITrigger newTriggerType = dummy.getProvided().getClass().newInstance(); //Create a new instance of the trigger
             JSONHelper.readJSON(data, newTriggerType, isClient);
-            ItemStack icon = dummy.getProvided() instanceof ICustomIcon ? new ItemStack(Items.rabbit_foot) : dummy.getIcon();
+            ItemStack icon = dummy.getProvided() instanceof ICustomIcon ? new ItemStack(Items.RABBIT_FOOT) : dummy.getIcon();
             ITriggerProvider provider = new Trigger(criteria, uuid, newTriggerType, icon, dummy.getUnlocalisedName(), dummy.getColor(), dummy.isCancelable());
             provider.readFromJSON(data);
             criteria.getTriggers().add(provider);
@@ -122,7 +122,7 @@ public class RuleHandler {
             if (uuid == null) uuid = UUID.randomUUID();
             ICondition newConditionType = dummy.getProvided().getClass().newInstance(); //Create a new instance of the trigger
             JSONHelper.readJSON(data, newConditionType, isClient);
-            ItemStack icon = dummy.getProvided() instanceof ICustomIcon ? new ItemStack(Items.written_book) : dummy.getIcon();
+            ItemStack icon = dummy.getProvided() instanceof ICustomIcon ? new ItemStack(Items.WRITTEN_BOOK) : dummy.getIcon();
             IConditionProvider provider = new Condition(trigger, uuid, newConditionType, icon, dummy.getUnlocalisedName());
             provider.readFromJSON(data);
             EventsManager.onAdded(newConditionType);
@@ -139,7 +139,7 @@ public class RuleHandler {
             if (uuid == null) uuid = UUID.randomUUID();
             IReward newRewardType = dummy.getProvided().getClass().newInstance(); //Create a new instance of the reward
             JSONHelper.readJSON(data, newRewardType, isClient);
-            ItemStack icon = dummy.getProvided() instanceof ICustomIcon ? new ItemStack(Items.gold_ingot) : dummy.getIcon();
+            ItemStack icon = dummy.getProvided() instanceof ICustomIcon ? new ItemStack(Items.GOLD_INGOT) : dummy.getIcon();
             IRewardProvider provider = new Reward(criteria, uuid, newRewardType, icon, dummy.getUnlocalisedName(), dummy.getColor());
             provider.readFromJSON(data);
             criteria.getRewards().add(provider);

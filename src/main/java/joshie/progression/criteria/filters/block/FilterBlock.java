@@ -15,7 +15,7 @@ import java.util.List;
 
 @ProgressionRule(name="blockOnly", color=0xFFCCCCCC)
 public class FilterBlock extends FilterBaseBlock implements IItemGetterCallback, ISetterCallback, ISpecialFieldProvider {
-    public Block filterBlock = Blocks.sandstone;
+    public Block filterBlock = Blocks.SANDSTONE;
 
     @Override
     public void addSpecialFields(List<IField> fields, DisplayMode mode) {

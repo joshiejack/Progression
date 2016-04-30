@@ -141,7 +141,7 @@ public class JSONLoader {
         }
 
         if (stack == null) {
-            stack = new ItemStack(Items.book);
+            stack = new ItemStack(Items.BOOK);
         }
 
         ITab iTab = RuleHandler.newTab(data.uuid, isClientside);
@@ -230,7 +230,7 @@ public class JSONLoader {
         }
 
         if (icon == null) {
-            icon = new ItemStack(Blocks.stone);
+            icon = new ItemStack(Blocks.STONE);
         }
 
         String display = criteria.displayName;

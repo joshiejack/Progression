@@ -45,16 +45,16 @@ public class TriggerChangeGui extends TriggerBaseBoolean implements ICustomDescr
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onEvent(GuiOpenEvent event) {
-        if (lastGui != event.gui) {
-            lastGui = event.gui;
-            if (event.gui == null) return; //NO NULLS!
-            ProgressionAPI.registry.fireTriggerClientside(getProvider().getUnlocalisedName(), event.gui.getClass().getCanonicalName().toString());
+        if (lastGui != event.getGui()) {
+            lastGui = event.getGui();
+            if (event.getGui() == null) return; //NO NULLS!
+            ProgressionAPI.registry.fireTriggerClientside(getProvider().getUnlocalisedName(), event.getGui().getClass().getCanonicalName().toString());
         }
 
         //If debuger is enabled, display the class name for the gui
         if (DEBUG) {
-            if (event.gui == null) return; //NO NULLS!
-            ChatHelper.displayChatAndLog(event.gui.getClass().getCanonicalName().toString());
+            if (event.getGui() == null) return; //NO NULLS!
+            ChatHelper.displayChatAndLog(event.getGui().getClass().getCanonicalName().toString());
         }
     }
 

@@ -87,7 +87,7 @@ public class PlayerHelper {
     }
 
     public static List<EntityPlayerMP> getAllPlayers() {
-        return (List<EntityPlayerMP>) FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList;
+        return FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerList();
     }
 
     @SideOnly(Side.CLIENT)

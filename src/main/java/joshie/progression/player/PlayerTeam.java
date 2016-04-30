@@ -16,7 +16,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.*;
 
 public class PlayerTeam implements ITextEditable, IPlayerTeam {
-    public static enum TeamType {
+    public enum TeamType {
         SINGLE, TEAM;
     }
 

@@ -32,7 +32,7 @@ public class FilterItemOre extends FilterBaseItem implements IInit {
     @Override
     public boolean matches(ItemStack check) {
         //Build the key
-        String key = Item.itemRegistry.getNameForObject(check.getItem()) + " " + check.getItemDamage();
+        String key = Item.REGISTRY.getNameForObject(check.getItem()) + " " + check.getItemDamage();
 
         Set<String> names = null;
         //Attempt to get the ore names from the cache

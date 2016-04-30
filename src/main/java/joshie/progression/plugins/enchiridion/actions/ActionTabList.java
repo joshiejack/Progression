@@ -19,7 +19,7 @@ import net.minecraft.util.ResourceLocation;
 import static joshie.progression.lib.PInfo.BOOKPATH;
 import static joshie.progression.plugins.enchiridion.EnchiridionSupport.TRANSPARENT;
 
-public class ActionTabList extends AbstractAction {
+public class ActionTabList extends AbstractActionProgression  {
     public ActionTabList() {
         super("tab.list");
     }

@@ -5,6 +5,7 @@ import joshie.progression.api.criteria.IField;
 import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.ISpecialFieldProvider;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
@@ -12,7 +13,7 @@ import java.util.List;
 
 @ProgressionRule(name="itemStack", color=0xFF663300)
 public class FilterItemStack extends FilterBaseItem implements ISpecialFieldProvider {
-    public ItemStack stack = new ItemStack(Items.carrot);
+    public ItemStack stack = new ItemStack(Items.CARROT);
     public boolean matchDamage = true;
     public boolean matchNBT = false;
 
@@ -20,6 +21,11 @@ public class FilterItemStack extends FilterBaseItem implements ISpecialFieldProv
     public void addSpecialFields(List<IField> fields, DisplayMode mode) {
         if (mode == DisplayMode.EDIT)
         fields.add(ProgressionAPI.fields.getItem(this, "stack", 30, 35, 1.4F));
+    }
+
+    @Override
+    public ItemStack getRandom(EntityPlayer player) {
+        return stack.copy();
     }
 
     @Override

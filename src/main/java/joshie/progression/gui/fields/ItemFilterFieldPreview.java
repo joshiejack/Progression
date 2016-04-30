@@ -41,11 +41,11 @@ public class ItemFilterFieldPreview extends ItemFilterField implements IField {
         this.mouseY2 = (int) (y + 15 * scale);
     }
 
-    private static final ItemStack BROKEN = new ItemStack(Items.baked_potato);
+    private static final ItemStack BROKEN = new ItemStack(Items.BAKED_POTATO);
 
     public ItemStack getStack(boolean hovered) {
         if (ticker >= 200 || ticker == 0) {
-            stack = ItemHelper.getRandomItem(getFilters());
+            stack = ItemHelper.getRandomItemFromFilters(getFilters(), MCClientHelper.getPlayer());
             if (stack != null) {
                 stack = stack.copy();
                 if (object instanceof IStackSizeable) {

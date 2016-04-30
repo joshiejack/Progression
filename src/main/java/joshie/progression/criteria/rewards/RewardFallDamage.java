@@ -7,7 +7,7 @@ import joshie.progression.api.special.ICustomTooltip;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -29,19 +29,19 @@ public class RewardFallDamage extends RewardBaseAbility implements ICustomToolti
 
     @Override
     public void addAbilityTooltip(List list) {
-        list.add(EnumChatFormatting.GRAY + getProvider().getLocalisedName() + " " + absorption);
+        list.add(TextFormatting.GRAY + getProvider().getLocalisedName() + " " + absorption);
     }
 
     @SubscribeEvent
     public void onLivingUpdate(LivingFallEvent event) {
-        if (event.entityLiving instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer) event.entity;
-            int damage = (int) (event.distance - 3);
+        if (event.getEntityLiving() instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) event.getEntityLiving();
+            int damage = (int) (event.getDistance() - 3);
             int maxAbsorbed = PlayerTracker.getPlayerData(player).getAbilities().getFallDamagePrevention();
             if (damage < maxAbsorbed) {
                 event.setCanceled(true);
             } else {
-                event.distance = event.distance - maxAbsorbed;
+                event.setDistance(event.getDistance() - maxAbsorbed);
             }
         }
     }

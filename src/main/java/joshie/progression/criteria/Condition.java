@@ -13,8 +13,8 @@ import net.minecraft.item.ItemStack;
 
 import java.util.UUID;
 
-import static net.minecraft.util.EnumChatFormatting.GREEN;
-import static net.minecraft.util.EnumChatFormatting.RED;
+import static net.minecraft.util.text.TextFormatting.GREEN;
+import static net.minecraft.util.text.TextFormatting.RED;
 
 public class Condition implements IConditionProvider {
     private final ICondition condition;

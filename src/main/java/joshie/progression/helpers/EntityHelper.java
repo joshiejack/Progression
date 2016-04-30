@@ -2,6 +2,7 @@ package joshie.progression.helpers;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import joshie.progression.api.criteria.IFilter;
 import joshie.progression.api.criteria.IFilterProvider;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -75,6 +76,16 @@ public class EntityHelper {
         return clientList;
     }
 
+    public static IFilter getFilter(List<IFilterProvider> filters, EntityPlayer player) {
+        if (player == null) return null;
+        int size = filters.size();
+        if (size == 0) return null;
+        if (size == 1) return filters.get(0).getProvided();
+        else {
+            return filters.get(player.worldObj.rand.nextInt(size)).getProvided();
+        }
+    }
+
     public static EntityLivingBase getRandomEntityFromFilters(List<IFilterProvider> locality, EntityPlayer player) {
         if (player == null) return null;
         int size = locality.size();
@@ -91,7 +102,7 @@ public class EntityHelper {
 
     private static List<EntityLivingBase> init(World world) {
         List<EntityLivingBase> list = new ArrayList<EntityLivingBase>();
-        for (String name : EntityList.stringToClassMapping.keySet()) {
+        for (String name : EntityList.NAME_TO_CLASS.keySet()) {
             if (name.equals("Mob") || name.equals("Monster")) continue;
             Entity entity = EntityList.createEntityByName(name, world);
             if (entity instanceof EntityLivingBase) {
@@ -136,11 +147,11 @@ public class EntityHelper {
                 public ItemStack call() throws Exception {
                     int id = EntityList.getEntityID(entity);
                     if (id != 0) {
-                        return new ItemStack(Items.spawn_egg, 1, id);
+                        return new ItemStack(Items.SPAWN_EGG, 1, id);
                     }
 
                     String name = EntityList.getEntityString(entity);
-                    ItemStack stack = new ItemStack(Items.spawn_egg);
+                    ItemStack stack = new ItemStack(Items.SPAWN_EGG);
                     net.minecraft.nbt.NBTTagCompound nbt = new net.minecraft.nbt.NBTTagCompound();
                     nbt.setString("entity_name", name);
                     stack.setTagCompound(nbt);
@@ -149,6 +160,6 @@ public class EntityHelper {
             });
         } catch (Exception e) {}
 
-        return new ItemStack(Items.spawn_egg);
+        return new ItemStack(Items.SPAWN_EGG);
     }
 }

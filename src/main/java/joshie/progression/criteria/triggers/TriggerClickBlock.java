@@ -31,12 +31,12 @@ public class TriggerClickBlock extends TriggerBaseBlock implements IMiniIcon {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onEvent(PlayerInteractEvent event) {
-        if (event.pos != null) {
-            IBlockState state = event.world.getBlockState(event.pos);
+        if (event.getPos() != null) {
+            IBlockState state = event.getWorld().getBlockState(event.getPos());
             Block block = state.getBlock();
             int meta = block.getMetaFromState(state);
     
-            if (ProgressionAPI.registry.fireTrigger(event.entityPlayer, getProvider().getUnlocalisedName(), block, meta) == Result.DENY) {
+            if (ProgressionAPI.registry.fireTrigger(event.getEntityPlayer(), getProvider().getUnlocalisedName(), block, meta) == Result.DENY) {
                 event.setCanceled(true);
             }
         }

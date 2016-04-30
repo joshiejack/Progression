@@ -13,6 +13,8 @@ import joshie.progression.lib.GuiIDs;
 import joshie.progression.network.PacketClaimed;
 import joshie.progression.network.PacketHandler;
 import joshie.progression.player.PlayerTracker;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -20,9 +22,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
@@ -32,7 +37,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.List;
 import java.util.UUID;
 
-public class ItemProgression extends Item {
+public class ItemProgression extends Item implements IItemColor {
     private static TIntObjectMap<ItemMeta> map;
 
     public static ItemStack getStackFromMeta(ItemMeta meta) {
@@ -51,16 +56,12 @@ public class ItemProgression extends Item {
         return map.get(Math.max(0, Math.min(map.size() - 1, stack.getItemDamage())));
     }
 
-    public static enum ItemMeta {
+    public enum ItemMeta {
         criteria, claim, book, edit, booleanValue, clearInventory, clearOrReceiveOrBlockCriteria, fallResistance,
         ifCriteriaCompleted, ifDayOrNight, ifHasAchievement, ifHasBoolean, ifHasPoints, ifIsAtCoordinates,
         ifIsBiome, ifRandom, onChangeDimension, onLogin, onReceivedAchiement, onReceivedBoolean,
         onReceivedPoints, onSecond, onSentMessage, points, speed, showTab, showLayer, sun, moon, stepAssist,
         attackPlayer, onGUIChange, eat, click, breaking, craft, kill, completed, openBook;
-
-
-
-        private ItemMeta() {}
     }
 
     public static CreativeTabs tab;
@@ -114,17 +115,18 @@ public class ItemProgression extends Item {
     }
 
     @SideOnly(Side.CLIENT)
-    public int getColorFromItemStack(ItemStack stack, int renderPass) {
+    @Override
+    public int getColorFromItemstack(ItemStack stack, int tintIndex) {
         ICriteria criteria = getCriteriaFromStack(stack, true);
         if (criteria != null) {
-            return criteria.getIcon().getItem().getColorFromItemStack(criteria.getIcon(), renderPass);
+            return Minecraft.getMinecraft().getItemColors().getColorFromItemstack(criteria.getIcon(), tintIndex);
         }
-        
+
         return 16777215;
     }
 
     @Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         if (stack.getItemDamage() == ItemMeta.book.ordinal() || stack.getItemDamage() == ItemMeta.edit.ordinal()) {
             int guiid = player.isSneaking() ? GuiIDs.GROUP : GuiIDs.EDITOR;
             if (world.isRemote) {
@@ -133,9 +135,10 @@ public class ItemProgression extends Item {
             }
 
             player.openGui(Progression.instance, guiid, null, 0, 0, 0);
+            return EnumActionResult.SUCCESS;
         }
 
-        if (world.isRemote || player == null || stack == null) return true;
+        if (world.isRemote || player == null || stack == null) return EnumActionResult.PASS;
         if (stack.getItemDamage() == ItemMeta.claim.ordinal()) {
             TileEntity tile = world.getTileEntity(pos);
             if (tile != null) {
@@ -143,6 +146,7 @@ public class ItemProgression extends Item {
                 if (crafter == CraftingUnclaimed.INSTANCE) {
                     PlayerTracker.setTileOwner(tile, PlayerHelper.getUUIDForPlayer(player));
                     PacketHandler.sendToClient(new PacketClaimed(pos.getX(), pos.getY(), pos.getZ()), (EntityPlayerMP) player);
+                    return EnumActionResult.SUCCESS;
                 }
             }
         } else {
@@ -151,15 +155,16 @@ public class ItemProgression extends Item {
                 Result completed = PlayerTracker.getServerPlayer(PlayerHelper.getUUIDForPlayer(player)).getMappings().fireAllTriggers("forced-complete", criteria);
                 if (!player.capabilities.isCreativeMode && completed == Result.ALLOW) {
                     stack.stackSize--;
+                    return EnumActionResult.SUCCESS;
                 }
             }
         }
 
-        return true;
+        return EnumActionResult.PASS;
     }
 
     @Override
-    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
         if (stack.getItemDamage() == ItemMeta.book.ordinal() || stack.getItemDamage() == ItemMeta.edit.ordinal()) {
             int guiid = player.isSneaking() ? GuiIDs.GROUP : GuiIDs.EDITOR;
             if (world.isRemote) {
@@ -168,17 +173,19 @@ public class ItemProgression extends Item {
             }
 
             player.openGui(Progression.instance, guiid, null, 0, 0, 0);
+            return new ActionResult(EnumActionResult.SUCCESS, stack);
         } else if (!world.isRemote) {
             ICriteria criteria = getCriteriaFromStack(stack, world.isRemote);
             if (criteria != null) {
                 Result completed = PlayerTracker.getServerPlayer(PlayerHelper.getUUIDForPlayer(player)).getMappings().fireAllTriggers("forced-complete", criteria);
                 if (!player.capabilities.isCreativeMode && completed == Result.ALLOW) {
                     stack.stackSize--;
+                    return new ActionResult(EnumActionResult.SUCCESS, stack);
                 }
             }
         }
 
-        return stack;
+        return new ActionResult(EnumActionResult.PASS, stack);
     }
 
     @Override
@@ -188,7 +195,7 @@ public class ItemProgression extends Item {
             list.add("Right click me on tiles");
             list.add("to claim them as yours");
         } else if (stack.getItemDamage() == ItemMeta.book.ordinal() || stack.getItemDamage() == ItemMeta.edit.ordinal()) {
-            list.add(EnumChatFormatting.ITALIC + "Hold Shift to Edit Team");
+            list.add(TextFormatting.ITALIC + "Hold Shift to Edit Team");
             if (player.capabilities.isCreativeMode || stack.getItemDamage() == ItemMeta.edit.ordinal()) {
                 list.add("");
                 list.add("Right click me to open");

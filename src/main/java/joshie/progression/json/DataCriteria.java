@@ -33,7 +33,7 @@ public class DataCriteria {
             theStack = StackHelper.getStackFromString(displayStack);
         }
 
-        if (theStack == null) theStack = new ItemStack(Items.book);
+        if (theStack == null) theStack = new ItemStack(Items.BOOK);
 
         //Validation yo
         return theStack;

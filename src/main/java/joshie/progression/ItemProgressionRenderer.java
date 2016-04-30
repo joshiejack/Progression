@@ -1,49 +1,30 @@
 package joshie.progression;
 
+import com.google.common.collect.ImmutableList;
 import joshie.progression.api.criteria.ICriteria;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemModelMesher;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.IBakedModel;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.client.model.ISmartItemModel;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.List;
 
-public class ItemProgressionRenderer implements ISmartItemModel {
-    private ItemStack broken = new ItemStack(Items.book);
-    private ItemModelMesher mesher;
-
+public class ItemProgressionRenderer implements IBakedModel  {
     @SubscribeEvent
     public void onCookery(ModelBakeEvent event) {
-        event.modelRegistry.putObject(PClientProxy.criteria, this);
-    }
-
-    @Override
-    public IBakedModel handleItemState(ItemStack stack) {
-        if (mesher == null) mesher  = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
-        ICriteria criteria = ItemProgression.getCriteriaFromStack(stack, true);
-        if (criteria != null && criteria.getIcon().getItem() != stack.getItem() && criteria.getIcon().getItem() != Progression.item) {
-            return mesher.getItemModel(criteria.getIcon());
-        }
-
-        return mesher.getItemModel(broken);
+        event.getModelRegistry().putObject(PClientProxy.criteria, this);
     }
 
     /** Redundant crap below :/ **/
-    @Override
-    public List<BakedQuad> getFaceQuads(EnumFacing facing) {
-        return null;
-    }
-
-    @Override
-    public List<BakedQuad> getGeneralQuads() {
+    public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
         return null;
     }
 
@@ -70,5 +51,31 @@ public class ItemProgressionRenderer implements ISmartItemModel {
     @Override
     public ItemCameraTransforms getItemCameraTransforms() {
         return null;
+    }
+
+    @Override
+    public ItemOverrideList getOverrides() {
+        return ProgressionOverride.INSTANCE;
+    }
+
+    private static class ProgressionOverride extends ItemOverrideList {
+        private static ProgressionOverride INSTANCE = new ProgressionOverride();
+        private ItemStack broken = new ItemStack(Items.BOOK);
+        private ItemModelMesher mesher;
+
+        public ProgressionOverride() {
+            super(ImmutableList.<ItemOverride>of());
+        }
+
+        @Override
+        public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity) {
+            if (mesher == null) mesher  = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
+            ICriteria criteria = ItemProgression.getCriteriaFromStack(stack, true);
+            if (criteria != null && criteria.getIcon().getItem() != stack.getItem() && criteria.getIcon().getItem() != Progression.item) {
+                return mesher.getItemModel(criteria.getIcon());
+            }
+
+            return mesher.getItemModel(broken);
+        }
     }
 }

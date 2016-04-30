@@ -15,7 +15,7 @@ import java.util.List;
 
 @ProgressionRule(name="itemOnly", color=0xFFCCCCCC)
 public class FilterItem extends FilterBaseItem implements IItemGetterCallback, ISetterCallback, ISpecialFieldProvider {
-    public Item item = Items.beef;
+    public Item item = Items.BEEF;
 
     @Override
     public void addSpecialFields(List<IField> fields, DisplayMode mode) {

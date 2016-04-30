@@ -15,10 +15,11 @@ import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.SpawnItemHelper;
 import joshie.progression.lib.WorldLocation;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.text.WordUtils;
 
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static net.minecraft.util.EnumChatFormatting.DARK_GREEN;
+import static net.minecraft.util.text.TextFormatting.DARK_GREEN;
 
 @ProgressionRule(name="spawnItem", color=0xFFE599FF)
 public class RewardSpawnItem extends RewardBaseItemFilter implements ICustomDescription, ICustomWidth, ICustomTooltip, IHasFilters, ISpecialFieldProvider, IRequestItem {
@@ -85,8 +86,8 @@ public class RewardSpawnItem extends RewardBaseItemFilter implements ICustomDesc
     }
 
     @Override
-    public ItemStack getRequestedStack() {
-        return ItemHelper.getRandomItemOfSize(filters, stackSize);
+    public ItemStack getRequestedStack(EntityPlayer player) {
+        return ItemHelper.getRandomItemOfSize(filters, player, 1);
     }
 
     @Override
@@ -118,9 +119,12 @@ public class RewardSpawnItem extends RewardBaseItemFilter implements ICustomDesc
 
     //Helper Methods
     private boolean isValidLocation(World world, BlockPos pos) {
-        Material floor = world.getBlockState(pos).getBlock().getMaterial();
-        Material feet = world.getBlockState(pos.up()).getBlock().getMaterial();
-        Material head = world.getBlockState(pos.up(2)).getBlock().getMaterial();
+        IBlockState floorState = world.getBlockState(pos);
+        IBlockState feetState = world.getBlockState(pos.up());
+        IBlockState headState = world.getBlockState(pos.up(2));
+        Material floor = floorState.getBlock().getMaterial(floorState);
+        Material feet = feetState.getBlock().getMaterial(feetState);
+        Material head = headState.getBlock().getMaterial(headState);
         if (feet.blocksMovement()) return false;
         if (head.blocksMovement()) return false;
         if (floor.isLiquid() || feet.isLiquid() || head.isLiquid()) return false;

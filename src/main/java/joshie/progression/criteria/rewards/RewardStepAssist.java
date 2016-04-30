@@ -7,7 +7,7 @@ import joshie.progression.api.special.ICustomTooltip;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -29,13 +29,13 @@ public class RewardStepAssist extends RewardBaseAbility implements ICustomToolti
 
     @Override
     public void addAbilityTooltip(List list) {
-        list.add(EnumChatFormatting.GRAY + getProvider().getLocalisedName() + ": " + steps);
+        list.add(TextFormatting.GRAY + getProvider().getLocalisedName() + ": " + steps);
     }
 
     @SubscribeEvent
     public void onLivingUpdate(LivingUpdateEvent event) {
-        if (event.entityLiving instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer) event.entity;
+        if (event.getEntityLiving() instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) event.getEntityLiving();
             float step = PlayerTracker.getPlayerData(player).getAbilities().getStepAssist();
             float steps = 0.5F * (step + 1);
             if (steps > player.stepHeight) {

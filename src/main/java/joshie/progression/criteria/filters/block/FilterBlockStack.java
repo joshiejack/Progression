@@ -7,6 +7,7 @@ import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.IInit;
 import joshie.progression.api.special.ISpecialFieldProvider;
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
@@ -14,9 +15,9 @@ import java.util.List;
 
 @ProgressionRule(name="blockStack", color=0xFF663300)
 public class FilterBlockStack extends FilterBaseBlock implements ISpecialFieldProvider, IInit {
-    public ItemStack stack = new ItemStack(Blocks.anvil);
+    public ItemStack stack = new ItemStack(Blocks.ANVIL);
     public boolean matchState = true;
-    private Block filterBlock = Blocks.anvil;
+    private Block filterBlock = Blocks.ANVIL;
     private int filterMeta = 0;
 
     @Override
@@ -25,6 +26,11 @@ public class FilterBlockStack extends FilterBaseBlock implements ISpecialFieldPr
             filterBlock = getBlock(stack);
             filterMeta = filterBlock.getMetaFromState(filterBlock.getStateFromMeta((stack).getItemDamage()));
         } catch (Exception e) {}
+    }
+
+    @Override
+    public ItemStack getRandom(EntityPlayer player) {
+        return stack.copy();
     }
 
     @Override

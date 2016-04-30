@@ -16,8 +16,8 @@ import java.util.UUID;
 
 import static joshie.progression.Progression.translate;
 import static joshie.progression.gui.core.GuiList.*;
-import static net.minecraft.util.EnumChatFormatting.GRAY;
-import static net.minecraft.util.EnumChatFormatting.WHITE;
+import static net.minecraft.util.text.TextFormatting.GRAY;
+import static net.minecraft.util.text.TextFormatting.WHITE;
 
 public class ButtonNewCriteria extends ButtonBase {
     public ButtonNewCriteria(int x, int y) {
@@ -65,7 +65,7 @@ public class ButtonNewCriteria extends ButtonBase {
         } else if (GuiScreen.isShiftKeyDown()) {
             TEMPLATE_SELECTOR_CRITERIA.setVisible();
         } else if (GuiScreen.isCtrlKeyDown()) {
-            RuleHandler.newTab(UUID.randomUUID(), true).setDisplayName(translate("tab.new.new.tab")).setStack(new ItemStack(Items.book)).setVisibility(true);
+            RuleHandler.newTab(UUID.randomUUID(), true).setDisplayName(translate("tab.new.new.tab")).setStack(new ItemStack(Items.BOOK)).setVisibility(true);
             CORE.initGui();
         } else {
             TREE_EDITOR.previous = null;

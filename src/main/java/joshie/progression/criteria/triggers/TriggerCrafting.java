@@ -10,20 +10,13 @@ import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.IClickable;
 import joshie.progression.api.special.IMiniIcon;
 import joshie.progression.api.special.ISpecialFieldProvider;
-import mezz.jei.GuiEventHandler;
-import mezz.jei.JustEnoughItems;
-import mezz.jei.ProxyCommonClient;
-import mezz.jei.gui.Focus;
-import mezz.jei.gui.ItemListOverlay;
-import mezz.jei.gui.RecipesGui;
-import mezz.jei.input.InputHandler;
+import joshie.progression.plugins.jei.ProgressionJEI;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.UUID;
 
@@ -59,33 +52,9 @@ public class TriggerCrafting extends TriggerBaseItemFilter implements IClickable
     @Override
     public boolean onClicked(ItemStack stack) {
         try {
-            //Fuck your privateness
-            Field f = ProxyCommonClient.class.getDeclaredField("guiEventHandler");
-            f.setAccessible(true);
-            GuiEventHandler eventHandler = (GuiEventHandler) f.get(JustEnoughItems.getProxy());
-
-            //DIE WITH FIRE
-            f = GuiEventHandler.class.getDeclaredField("inputHandler");
-            f.setAccessible(true);
-            InputHandler inputHandler = (InputHandler) f.get(eventHandler);
-            if (inputHandler == null) { //If it's not created, create it
-                Field f2 = GuiEventHandler.class.getDeclaredField("itemListOverlay");
-                f2.setAccessible(true);
-                ItemListOverlay itemListOverlay = (ItemListOverlay) f2.get(eventHandler);
-                RecipesGui recipesGui = new RecipesGui();
-                inputHandler = new InputHandler(recipesGui, itemListOverlay);
-                f.set(eventHandler, inputHandler);
-            }
-
-            //We're almost there
-            f = InputHandler.class.getDeclaredField("recipesGui");
-            f.setAccessible(true);
-            RecipesGui recipesGui = (RecipesGui) f.get(inputHandler);
-            recipesGui.showRecipes(new Focus(stack));
+            ProgressionJEI.runtime.showRecipes(stack);
             return true;
         } catch (Exception e) { e.printStackTrace(); }
-
-
         return false;
     }
 

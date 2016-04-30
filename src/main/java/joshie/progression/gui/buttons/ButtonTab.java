@@ -26,8 +26,8 @@ import java.util.ArrayList;
 import static joshie.progression.Progression.translate;
 import static joshie.progression.api.special.DisplayMode.EDIT;
 import static joshie.progression.gui.core.GuiList.*;
-import static net.minecraft.util.EnumChatFormatting.GRAY;
-import static net.minecraft.util.EnumChatFormatting.RED;
+import static net.minecraft.util.text.TextFormatting.GRAY;
+import static net.minecraft.util.text.TextFormatting.RED;
 
 public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelectable {
     private ITab tab;
@@ -155,7 +155,7 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
                 donestuff = true;
             } else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
                 if(TemplateHandler.registerTab(JSONLoader.getDataTabFromTab(tab))) {
-                    JSONLoader.saveJSON(FileHelper.getTemplatesFolder("tab", tab.getUniqueID()), JSONLoader.getDataTabFromTab(tab), true, false);
+                    JSONLoader.saveJSON(FileHelper.getTemplatesFolder("tab", tab.getLocalisedName() + "_" + tab.getUniqueID()), JSONLoader.getDataTabFromTab(tab), true, false);
                     AchievementHelper.display(tab.getIcon(), "Saved " + tab.getLocalisedName());
                 }
             } else if (GuiScreen.isAltKeyDown()) {

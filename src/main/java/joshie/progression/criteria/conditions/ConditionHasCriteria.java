@@ -9,7 +9,7 @@ import joshie.progression.api.special.IGetterCallback;
 import joshie.progression.api.special.IInit;
 import joshie.progression.handlers.APICache;
 import joshie.progression.player.PlayerTracker;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.UUID;
 
@@ -43,7 +43,7 @@ public class ConditionHasCriteria extends ConditionBase implements IInit, ICusto
 
     @Override
     public String getField(String fieldName) {
-        return criteria != null ? EnumChatFormatting.GREEN + displayName : EnumChatFormatting.RED + displayName;
+        return criteria != null ? TextFormatting.GREEN + displayName : TextFormatting.RED + displayName;
     }
 
 

@@ -12,8 +12,8 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Achievement;
 import net.minecraft.stats.AchievementList;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.translation.I18n;
 import org.apache.commons.lang3.text.WordUtils;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public class ConditionAchievement extends ConditionBase implements IInit, ICusto
 
     @Override
     public void init(boolean isClient) {
-        for (Achievement a: AchievementList.achievementList) {
+        for (Achievement a: AchievementList.ACHIEVEMENTS) {
             if (a.statId.equals("achievement." + id)) {
                 achievement = a;
                 break;
@@ -45,14 +45,14 @@ public class ConditionAchievement extends ConditionBase implements IInit, ICusto
 
     @Override
     public ItemStack getItem(String fieldName) {
-        return achievement != null ? achievement.theItemStack : new ItemStack(Items.golden_hoe);
+        return achievement != null ? achievement.theItemStack : new ItemStack(Items.GOLDEN_HOE);
     }
 
     @Override
     public void addHoverTooltip(String field, ItemStack stack, List<String> tooltip) {
         tooltip.clear();
         if (achievement != null) {
-            tooltip.add(EnumChatFormatting.DARK_AQUA + StatCollector.translateToLocal(achievement.statId));
+            tooltip.add(TextFormatting.DARK_AQUA + I18n.translateToLocal(achievement.statId));
             String[] split = WordUtils.wrap(achievement.getDescription() + ".", 27).split("\n");
             for (String s: split) {
                 tooltip.add(s.trim());

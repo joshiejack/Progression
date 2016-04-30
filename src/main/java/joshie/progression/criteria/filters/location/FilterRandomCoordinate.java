@@ -5,7 +5,7 @@ import joshie.progression.api.special.ICustomDescription;
 import joshie.progression.api.special.IEnum;
 import joshie.progression.lib.WorldLocation;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 
 import static joshie.progression.criteria.filters.location.FilterLocationBase.LocationOperator.*;
 

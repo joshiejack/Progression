@@ -39,7 +39,7 @@ public class PlayerDataClient extends PlayerDataCommon {
     @Override
     public void setTeam(PlayerTeam team) {
         if (this.team != null && this.team.getOwner() != team.getOwner() && this.team != team) {
-            AchievementHelper.display(new ItemStack(Items.banner), "Joined " + PlayerTracker.getClientPlayer().getTeam().getName());
+            AchievementHelper.display(new ItemStack(Items.BANNER), "Joined " + PlayerTracker.getClientPlayer().getTeam().getName());
         }
 
         super.setTeam(team);

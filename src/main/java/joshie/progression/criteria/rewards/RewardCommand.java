@@ -6,8 +6,8 @@ import joshie.progression.api.special.ICustomDescription;
 import joshie.progression.api.special.ICustomTooltip;
 import joshie.progression.lib.FakeOp;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import java.util.List;
 
@@ -23,12 +23,12 @@ public class RewardCommand extends RewardBase implements ICustomDescription, ICu
     @Override
     public void addTooltip(List list) {
         list.add(Progression.translate(getProvider().getUnlocalisedName() + ".execute"));
-        list.add(EnumChatFormatting.GRAY + command);
+        list.add(TextFormatting.GRAY + command);
     }
 
     @Override
     public void reward(EntityPlayerMP player) {
         String newCommand = command.replace("@u", player.getDisplayNameString());
-        MinecraftServer.getServer().getCommandManager().executeCommand(FakeOp.getInstance(), newCommand);
+        FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager().executeCommand(FakeOp.getInstance(), newCommand);
     }
 }

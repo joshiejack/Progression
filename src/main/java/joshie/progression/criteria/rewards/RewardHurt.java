@@ -5,7 +5,7 @@ import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
 
@@ -29,8 +29,8 @@ public class RewardHurt extends RewardBase implements IInit, ICustomDescription,
     @Override
     public String getDescription() {
         if (source != null) {
-            String s = EnumChatFormatting.GREEN + WordUtils.capitalizeFully(StringUtils.join(StringUtils.splitByCharacterTypeCamelCase(source.damageType), ' '));
-            return Progression.format(getProvider().getUnlocalisedName() + ".description", EnumChatFormatting.RED + "" + damage + EnumChatFormatting.WHITE, s);
+            String s = TextFormatting.GREEN + WordUtils.capitalizeFully(StringUtils.join(StringUtils.splitByCharacterTypeCamelCase(source.damageType), ' '));
+            return Progression.format(getProvider().getUnlocalisedName() + ".description", TextFormatting.RED + "" + damage + TextFormatting.WHITE, s);
         } else return "Incorrectly setup damage source";
     }
 
@@ -41,7 +41,7 @@ public class RewardHurt extends RewardBase implements IInit, ICustomDescription,
     
     @Override
     public String getField(String fieldName) {
-        return fieldName.equals("damageSource") ? (source != null ? EnumChatFormatting.GREEN + damageSource : EnumChatFormatting.RED + damageSource) : "" + damage;
+        return fieldName.equals("damageSource") ? (source != null ? TextFormatting.GREEN + damageSource : TextFormatting.RED + damageSource) : "" + damage;
     }
         
     @Override

@@ -8,13 +8,13 @@ import java.util.UUID;
 public class FileHelper {
     public static File root;
 
-    public static File getTemplatesFolder(String dir, UUID uuid) {
+    public static File getTemplatesFolder(String dir, String saveName) {
         File file = new File(getRoot(), "templates");
         if (!file.exists()) file.mkdir();
         file = new File(file, dir);
         if (!file.exists()) file.mkdir();
-        if (uuid == null) return file;
-        return new File(file, uuid.toString() + ".json");
+        if (saveName == null) return file;
+        return new File(file, saveName + ".json");
     }
 
     public static File getCriteriaFile(String serverName, boolean isClient) {

@@ -13,21 +13,17 @@ import joshie.progression.gui.fields.ItemFilterField;
 import joshie.progression.gui.filters.FilterTypeLocation;
 import joshie.progression.lib.WorldLocation;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.play.server.S07PacketRespawn;
-import net.minecraft.network.play.server.S1DPacketEntityEffect;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.server.management.ServerConfigurationManager;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.MathHelper;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @ProgressionRule(name="teleport", color=0xFFDDDDDD, icon="minecraft:ender_pearl")
@@ -68,62 +64,28 @@ public class RewardTeleport extends RewardBase implements ICustomDescription, IH
                 World world = DimensionManager.getWorld(location.dimension);
                 int dimension = location.dimension;
                 if (world == null) continue; //NO!!!!
-                if (player.dimension != dimension) {
-                    int oldDim = player.dimension;
-                    ServerConfigurationManager manager = player.mcServer.getConfigurationManager();
-                    WorldServer worldserver = manager.getServerInstance().worldServerForDimension(player.dimension);
-                    player.dimension = dimension;
-                    WorldServer worldserver1 = manager.getServerInstance().worldServerForDimension(player.dimension);
-                    player.playerNetServerHandler.sendPacket(new S07PacketRespawn(player.dimension, player.worldObj.getDifficulty(), player.worldObj.getWorldInfo().getTerrainType(), player.theItemInWorldManager.getGameType()));
-                    worldserver.removePlayerEntityDangerously(player);
-                    if (player.riddenByEntity != null) {
-                        player.riddenByEntity.mountEntity(null);
-                    }
-
-                    if (player.ridingEntity != null) {
-                        player.mountEntity(null);
-                    }
-
-                    player.isDead = false;
-                    WorldProvider pOld = worldserver.provider;
-                    WorldProvider pNew = worldserver1.provider;
-                    double moveFactor = pOld.getMovementFactor() / pNew.getMovementFactor();
-                    double x = player.posX * moveFactor;
-                    double z = player.posZ * moveFactor;
-
-                    worldserver.theProfiler.startSection("placing");
-                    x = MathHelper.clamp_double(x, -29999872, 29999872);
-                    z = MathHelper.clamp_double(z, -29999872, 29999872);
-
-                    if (player.isEntityAlive()) {
-                        player.setLocationAndAngles(x, player.posY, z, player.rotationYaw, player.rotationPitch);
-                        worldserver1.spawnEntityInWorld(player);
-                        worldserver1.updateEntityWithOptionalForce(player, false);
-                    }
-
-                    worldserver.theProfiler.endSection();
-
-                    player.setWorld(worldserver1);
-                    manager.preparePlayer(player, worldserver);
-                    player.playerNetServerHandler.setPlayerLocation(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
-                    player.theItemInWorldManager.setWorld(worldserver1);
-                    manager.updateTimeAndWeatherForPlayer(player, worldserver1);
-                    manager.syncPlayerInventory(player);
-
-                    Iterator<PotionEffect> iterator = player.getActivePotionEffects().iterator();
-                    while (iterator.hasNext()) {
-                        PotionEffect potioneffect = iterator.next();
-                        player.playerNetServerHandler.sendPacket(new S1DPacketEntityEffect(player.getEntityId(), potioneffect));
-                    }
-
-                    FMLCommonHandler.instance().firePlayerChangedDimensionEvent(player, oldDim, dimension);
-                }
-
-                BlockPos pos = new BlockPos(location.pos);
-                if (world.isBlockLoaded(pos)) {
-                    if (isValidLocation(world, pos)) {
-                        notteleported = false;
+                if (player.dimension != dimension) { //From RFTools
+                    int oldDimension = player.worldObj.provider.getDimension();
+                    MinecraftServer server = player.worldObj.getMinecraftServer();
+                    WorldServer worldServer = server.worldServerForDimension(dimension);
+                    player.addExperienceLevel(0); //Fix levels
+                    BlockPos pos = new BlockPos(location.pos);
+                    worldServer.getMinecraftServer().getPlayerList().transferPlayerToDimension(player, dimension, new DimensionTeleportation(worldServer, new BlockPos(location.pos)));
+                    player.setPositionAndUpdate(pos.getX() + 0.5D, pos.getY() + 1, pos.getZ() + 0.5D);
+                    if (oldDimension == 1) {
                         player.setPositionAndUpdate(pos.getX() + 0.5D, pos.getY() + 1, pos.getZ() + 0.5D);
+                        worldServer.spawnEntityInWorld(player);
+                        worldServer.updateEntityWithOptionalForce(player, false);
+                    }
+
+                    notteleported = false;
+                } else {
+                    BlockPos pos = new BlockPos(location.pos);
+                    if (world.isBlockLoaded(pos)) {
+                        if (isValidLocation(world, pos)) {
+                            notteleported = false;
+                            player.setPositionAndUpdate(pos.getX() + 0.5D, pos.getY() + 1, pos.getZ() + 0.5D);
+                        }
                     }
                 }
             }
@@ -132,12 +94,35 @@ public class RewardTeleport extends RewardBase implements ICustomDescription, IH
 
     //Helper Methods
     private boolean isValidLocation(World world, BlockPos pos) {
-        Material posfloor = world.getBlockState(pos).getBlock().getMaterial();
-        Material posfeet = world.getBlockState(pos.up()).getBlock().getMaterial();
-        Material poshead = world.getBlockState(pos.up(2)).getBlock().getMaterial();
-        if (posfeet.blocksMovement()) return false;
-        if (poshead.blocksMovement()) return false;
-        if (posfloor.isLiquid() || posfeet.isLiquid() || poshead.isLiquid()) return false;
-        return posfloor.blocksMovement();
+        IBlockState floorState = world.getBlockState(pos);
+        IBlockState feetState = world.getBlockState(pos.up());
+        IBlockState headState = world.getBlockState(pos.up(2));
+        Material floor = floorState.getBlock().getMaterial(floorState);
+        Material feet = feetState.getBlock().getMaterial(feetState);
+        Material head = headState.getBlock().getMaterial(headState);
+        if (feet.blocksMovement()) return false;
+        if (head.blocksMovement()) return false;
+        if (floor.isLiquid() || feet.isLiquid() || head.isLiquid()) return false;
+        return floor.blocksMovement();
+    }
+
+    public static class DimensionTeleportation extends Teleporter {
+        private final WorldServer world;
+        private final BlockPos pos;
+
+        public DimensionTeleportation(WorldServer world, BlockPos pos) {
+            super(world);
+            this.world = world;
+            this.pos = pos;
+        }
+
+        @Override
+        public void placeInPortal(Entity entity, float rotationYaw) {
+            world.getBlockState(pos);
+            entity.setPositionAndUpdate(pos.getX() + 0.5D, pos.getY() + 1, pos.getZ() + 0.5D);
+            entity.motionX = 0.0f;
+            entity.motionY = 0.0f;
+            entity.motionZ = 0.0f;
+        }
     }
 }

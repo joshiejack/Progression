@@ -19,7 +19,7 @@ import java.util.List;
 
 import static joshie.progression.api.special.DisplayMode.EDIT;
 import static joshie.progression.gui.core.GuiList.MODE;
-import static net.minecraft.util.EnumChatFormatting.BLUE;
+import static net.minecraft.util.text.TextFormatting.BLUE;
 
 @ProgressionRule(name="item", color=0xFFE599FF)
 public class RewardItem extends RewardBaseItemFilter implements ICustomDisplayName, ICustomDescription, ICustomWidth, ICustomTooltip, ISpecialFieldProvider, IStackSizeable, IRequestItem {
@@ -58,8 +58,8 @@ public class RewardItem extends RewardBaseItemFilter implements ICustomDisplayNa
     }
 
     @Override
-    public ItemStack getRequestedStack() {
-        return ItemHelper.getRandomItemOfSize(filters, stackSize);
+    public ItemStack getRequestedStack(EntityPlayer player) {
+        return ItemHelper.getRandomItemOfSize(filters, player, stackSize);
     }
 
     @Override

@@ -6,7 +6,7 @@ import joshie.progression.api.criteria.ITrigger;
 import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.ICustomDescription;
 import joshie.progression.player.PlayerTracker;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.eventhandler.EventBus;
 
 import java.util.UUID;
@@ -28,7 +28,7 @@ public class TriggerPoints extends TriggerBaseBoolean implements ICustomDescript
 
     @Override
     public String getDescription() {
-        String extra = consume ? "\n" + EnumChatFormatting.ITALIC + Progression.format("trigger.points.extra", variable) : "";
+        String extra = consume ? "\n" + TextFormatting.ITALIC + Progression.format("trigger.points.extra", variable) : "";
         String value = (amount == (long) amount) ? String.format("%d", (long) amount): String.format("%s", amount);
         return Progression.format("trigger.points.description", value, variable, extra);
     }

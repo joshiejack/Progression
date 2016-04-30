@@ -15,7 +15,7 @@ import java.util.UUID;
 import static joshie.progression.network.PacketSyncJSONToClient.Section.*;
 
 public class PacketSyncJSONToClient extends PenguinPacket {
-    public static enum Section {
+    public enum Section {
         RESYNC, SEND_HASH, FAILED_HASH, SEND_LENGTH, RECEIVED_LENGTH, SEND_STRING, COMPLETE;
     }
 

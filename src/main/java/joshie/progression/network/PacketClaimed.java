@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.network.core.PenguinPacket;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.text.TextComponentString;
 
 public class PacketClaimed extends PenguinPacket {
     private int x, y, z;
@@ -33,7 +33,7 @@ public class PacketClaimed extends PenguinPacket {
     @Override
     public void handlePacket(EntityPlayer player) {
         if (player.worldObj.isRemote) {
-            MCClientHelper.getPlayer().addChatComponentMessage(new ChatComponentText("You have claimed the Tile Entity at " + x + " " + y + " " + z));
+            MCClientHelper.getPlayer().addChatComponentMessage(new TextComponentString("You have claimed the Tile Entity at " + x + " " + y + " " + z));
         }
     }
 }

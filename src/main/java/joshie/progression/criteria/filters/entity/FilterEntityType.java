@@ -5,7 +5,6 @@ import joshie.progression.api.special.IEnum;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.INpc;
-import net.minecraft.entity.boss.IBossDisplayData;
 import net.minecraft.entity.monster.EntityGolem;
 import net.minecraft.entity.monster.EntityGuardian;
 import net.minecraft.entity.monster.IMob;
@@ -20,10 +19,10 @@ public class FilterEntityType extends FilterBaseEntity implements IEnum {
     @Override
     protected boolean matches(EntityLivingBase entity) {
         switch (type) {
+            case BOSS:      return !entity.isNonBoss();
             case ANIMAL:    return entity instanceof EntityAnimal;
             case MONSTER:   return entity instanceof IMob;
             case TAMEABLE:  return entity instanceof IEntityOwnable;
-            case BOSS:      return entity instanceof IBossDisplayData;
             case PLAYER:    return entity instanceof EntityPlayer;
             case WATER:     return entity instanceof EntityWaterMob || entity instanceof EntityGuardian;
             case NPC:       return entity instanceof INpc;
@@ -47,7 +46,7 @@ public class FilterEntityType extends FilterBaseEntity implements IEnum {
         return name.equals("type");
     }
 
-    public static enum EntityType {
+    public enum EntityType {
         ANIMAL, MONSTER, WATER, TAMEABLE, BOSS, PLAYER, NPC, GOLEM;
     }
 }

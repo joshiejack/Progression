@@ -11,7 +11,7 @@ import joshie.progression.network.core.PenguinPacket;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 public class PacketReset extends PenguinPacket {
@@ -50,8 +50,8 @@ public class PacketReset extends PenguinPacket {
 
     public static void handle(EntityPlayer sender, boolean singlePlayer, String username) {
         if (sender.worldObj.isRemote) {
-            if (!singlePlayer) MCClientHelper.getPlayer().addChatComponentMessage(new ChatComponentText("All player data for Progression was reset."));
-            else MCClientHelper.getPlayer().addChatComponentMessage(new ChatComponentText("All player data for " + username + " was reset."));
+            if (!singlePlayer) MCClientHelper.getPlayer().addChatComponentMessage(new TextComponentString("All player data for Progression was reset."));
+            else MCClientHelper.getPlayer().addChatComponentMessage(new TextComponentString("All player data for " + username + " was reset."));
         } else {
             if (Options.editor) {
                 if (!singlePlayer) {

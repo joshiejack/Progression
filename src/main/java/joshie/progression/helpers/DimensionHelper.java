@@ -1,36 +1,14 @@
 package joshie.progression.helpers;
 
-import joshie.progression.network.PacketHandler;
-import joshie.progression.network.PacketSyncDimensions;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.common.DimensionManager;
-
-import java.util.HashMap;
+import net.minecraft.world.DimensionType;
 
 public class DimensionHelper {
-    public static HashMap<Integer, String> dimensionNames;
-
-    public static void sendPacket(EntityPlayerMP player) {
-        if (dimensionNames == null) {
-            dimensionNames = new HashMap<Integer, String>();
-            for (int i = -128; i < 128; i++) {
-                try {
-                    String name = DimensionManager.getWorld(i).provider.getDimensionName();
-                    if (name != null) {
-                        dimensionNames.put(i, name);
-                    }
-                } catch (Exception e) {}
-            }
-        }
-
-        PacketHandler.sendToClient(new PacketSyncDimensions(dimensionNames), player);
-    }
-
     public static String getDimensionNameFromID(final int id) {
-        return dimensionNames.get(id);
-    }
+        try {
+             DimensionType type = DimensionType.getById(id);
+            if (type != null) return type.getName();
+        } catch (Exception e) {}
 
-    public static void setData(HashMap<Integer, String> dimensionNames) {
-        DimensionHelper.dimensionNames = dimensionNames;
+        return "Invalid Dimension";
     }
 }

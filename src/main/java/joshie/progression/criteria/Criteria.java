@@ -31,7 +31,7 @@ public class Criteria implements ICriteria {
     public String displayName = "New Criteria";
     public boolean isVisible = true;
     public boolean achievement = true;
-    public ItemStack stack = new ItemStack(Blocks.stone);
+    public ItemStack stack = new ItemStack(Blocks.STONE);
     public int x, y;
 
     public Criteria(ITab tab, UUID uuid) {

@@ -3,9 +3,10 @@ package joshie.progression.commands;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -44,10 +45,10 @@ public class CommandManager extends CommandBase {
 
     @SubscribeEvent
     public void onCommandSend(CommandEvent event) throws CommandException {
-        if (event.command == this && event.parameters.length > 0) {
-            String commandName = event.parameters[0];
+        if (event.getCommand() == this && event.getParameters().length > 0) {
+            String commandName = event.getParameters()[0];
             AbstractCommand command = commands.get(commandName);
-            if (command == null || !event.sender.canCommandSenderUseCommand(command.getPermissionLevel().ordinal(), commandName)) {
+            if (command == null || !event.getSender().canCommandSenderUseCommand(command.getPermissionLevel().ordinal(), commandName)) {
                 event.setCanceled(true);
             } else {
                 processCommand(event, command);
@@ -57,16 +58,16 @@ public class CommandManager extends CommandBase {
 
     //Attempt to process the command, throw wrong usage otherwise
     private void processCommand(CommandEvent event, AbstractCommand command) throws CommandException {
-        String[] args = new String[event.parameters.length - 1];
-        System.arraycopy(event.parameters, 1, args, 0, args.length);
-        if (!command.processCommand(event.sender, args)) {
-            throwError(event.sender, command);
+        String[] args = new String[event.getParameters().length - 1];
+        System.arraycopy(event.getParameters(), 1, args, 0, args.length);
+        if (!command.processCommand(event.getSender(), args)) {
+            throwError(event.getSender(), command);
         }
     }
     
     static void throwError(ICommandSender sender, AbstractCommand command) {
-        ChatComponentTranslation chatcomponenttranslation1 = new ChatComponentTranslation(getUsage(command), new Object[0]);
-        chatcomponenttranslation1.getChatStyle().setColor(EnumChatFormatting.RED);
+        TextComponentTranslation chatcomponenttranslation1 = new TextComponentTranslation(getUsage(command), new Object[0]);
+        chatcomponenttranslation1.getStyle().setColor(TextFormatting.RED);
         sender.addChatMessage(chatcomponenttranslation1);
     }
     
@@ -75,7 +76,7 @@ public class CommandManager extends CommandBase {
     }
 
     @Override
-    public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
         return new ArrayList();
     }
 
@@ -85,14 +86,14 @@ public class CommandManager extends CommandBase {
     }
 
     @Override
-    public void processCommand(ICommandSender sender, String[] values) {
-        if(values.length == 0) {
+    public void execute(MinecraftServer server, ICommandSender sender, String[] parameters) {
+        if(parameters.length == 0) {
             throwError(sender, new CommandHelp());
         }
     } //Do sweet nothing
 
     @Override
-    public boolean canCommandSenderUseCommand(ICommandSender sender) {
+    public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
         return true;
     }
 }

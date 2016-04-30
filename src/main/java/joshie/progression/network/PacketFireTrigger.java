@@ -75,12 +75,12 @@ public class PacketFireTrigger extends PenguinPacket {
                         ByteBufUtils.writeUTF8String(buf, ((ICriteria) object).getUniqueID().toString());
                         break;
                     case BLOCK:
-                        ResourceLocation blockLocation = Block.blockRegistry.getNameForObject((Block) object);
+                        ResourceLocation blockLocation = Block.REGISTRY.getNameForObject((Block) object);
                         ByteBufUtils.writeUTF8String(buf, blockLocation.getResourceDomain());
                         ByteBufUtils.writeUTF8String(buf, blockLocation.getResourcePath());
                         break;
                     case ITEM:
-                        ResourceLocation itemLocation = Item.itemRegistry.getNameForObject((Item) object);
+                        ResourceLocation itemLocation = Item.REGISTRY.getNameForObject((Item) object);
                         ByteBufUtils.writeUTF8String(buf, itemLocation.getResourceDomain());
                         ByteBufUtils.writeUTF8String(buf, itemLocation.getResourcePath());
                         break;
@@ -137,10 +137,10 @@ public class PacketFireTrigger extends PenguinPacket {
                         data[i] = APICache.getServerCache().getCriteria(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
                         break;
                     case BLOCK:
-                        data[i] = Block.blockRegistry.getObject(new ResourceLocation(ByteBufUtils.readUTF8String(buf), ByteBufUtils.readUTF8String(buf)));
+                        data[i] = Block.REGISTRY.getObject(new ResourceLocation(ByteBufUtils.readUTF8String(buf), ByteBufUtils.readUTF8String(buf)));
                         break;
                     case ITEM:
-                        data[i] = Item.itemRegistry.getObject(new ResourceLocation(ByteBufUtils.readUTF8String(buf), ByteBufUtils.readUTF8String(buf)));
+                        data[i] = Item.REGISTRY.getObject(new ResourceLocation(ByteBufUtils.readUTF8String(buf), ByteBufUtils.readUTF8String(buf)));
                         break;
                     case ENTITY:
                         data[i] = MCClientHelper.getMinecraft().theWorld.getEntityByID(buf.readInt());

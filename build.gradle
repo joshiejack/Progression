@@ -32,14 +32,14 @@ archivesBaseName = "Progression"
 minecraft {
     version = "${minecraft_version}-${forge_version}"
     runDir = "run"
-    mappings = "stable_20"
+    mappings = "${mappings_version}"
     
     replace "@VERSION@", "${mod_version}"
     replaceIn "PInfo.java"
 }
 
 dependencies {
-  deobfCompile "mezz.jei:jei_1.8.9:2.28.7.174"
+  deobfCompile "mezz.jei:jei_${minecraft_version}:${jei_version}"
   deobfCompile "slimeknights.mantle:Mantle:${minecraft_version}-${mantle_version}"
 }
 

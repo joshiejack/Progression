@@ -19,7 +19,7 @@ public class DefaultSettings {
     public boolean craftAnythingCreative = false;
 
     public DefaultSettings setDefaults() {
-        tabs.add(new DataTab(UUID.fromString("c051e0e2-f5ad-4b9d-b889-0ada75d4062b"), "Default", 0, new ArrayList(), true, new ItemStack(Items.book)));
+        tabs.add(new DataTab(UUID.fromString("c051e0e2-f5ad-4b9d-b889-0ada75d4062b"), "Default", 0, new ArrayList(), true, new ItemStack(Items.BOOK)));
         return this;
     }
 }

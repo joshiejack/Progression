@@ -14,7 +14,7 @@ import joshie.progression.gui.filters.FilterTypeItem;
 import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -44,7 +44,7 @@ public class RewardCraftability extends RewardBaseItemFilter implements ICustomD
     @Override
     public void addTooltip(List list) {
         ItemStack stack = preview == null ? BROKEN : preview;
-        list.add(EnumChatFormatting.BLUE + "Action Unlocked!");
+        list.add(TextFormatting.BLUE + "Action Unlocked!");
         if (actionfilters.size() >= 1) { //Always add the first 5 actions
             for (int i = 0; i < Math.min(5, actionfilters.size()); i++) {
                 list.add("• " + ActionType.getCraftingActionFromIcon((ItemStack) actionfilters.get(i).getProvided().getRandom(MCClientHelper.getPlayer())).getDisplayName());
@@ -56,13 +56,13 @@ public class RewardCraftability extends RewardBaseItemFilter implements ICustomD
                     for (int i = 5; i < actionfilters.size(); i++) {
                         list.add("• " + ActionType.getCraftingActionFromIcon((ItemStack) actionfilters.get(i).getProvided().getRandom(MCClientHelper.getPlayer())).getDisplayName());
                     }
-                } else list.add(EnumChatFormatting.AQUA + "" + EnumChatFormatting.ITALIC + " Hold Shift for list of additional Actions");
+                } else list.add(TextFormatting.AQUA + "" + TextFormatting.ITALIC + " Hold Shift for list of additional Actions");
             }
-        } else list.add(EnumChatFormatting.AQUA + "" + EnumChatFormatting.ITALIC + " This reward is broken");
+        } else list.add(TextFormatting.AQUA + "" + TextFormatting.ITALIC + " This reward is broken");
 
         list.add("------");
-        list.add(EnumChatFormatting.GOLD + "Item");
-        list.add(EnumChatFormatting.GRAY + " " +  stack.getDisplayName());
+        list.add(TextFormatting.GOLD + "Item");
+        list.add(TextFormatting.GRAY + " " +  stack.getDisplayName());
     }
 
     @Override

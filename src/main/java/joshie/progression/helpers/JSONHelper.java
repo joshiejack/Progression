@@ -81,10 +81,10 @@ public class JSONHelper {
 
     public static Item getItem(JsonObject data, String string, Item default_) {
         if (data.get(string + ":path") != null) {
-            ResourceLocation deflt = Item.itemRegistry.getNameForObject(default_);
+            ResourceLocation deflt = Item.REGISTRY.getNameForObject(default_);
             String domain = getString(data, string + ":domain", deflt.getResourceDomain());
             String path = getString(data, string + ":path", deflt.getResourcePath());
-            Item item = Item.itemRegistry.getObject(new ResourceLocation(domain, path));
+            Item item = Item.REGISTRY.getObject(new ResourceLocation(domain, path));
             return item == null ? default_ : item;
         }
 
@@ -93,10 +93,10 @@ public class JSONHelper {
 
     public static Block getBlock(JsonObject data, String string, Block default_) {
         if (data.get(string + ":path") != null) {
-            ResourceLocation deflt = Block.blockRegistry.getNameForObject(default_);
+            ResourceLocation deflt = Block.REGISTRY.getNameForObject(default_);
             String domain = getString(data, string + ":domain", deflt.getResourceDomain());
             String path = getString(data, string + ":path", deflt.getResourcePath());
-            Block block = Block.blockRegistry.getObject(new ResourceLocation(domain, path));
+            Block block = Block.REGISTRY.getObject(new ResourceLocation(domain, path));
             return block == null ? default_ : block;
         }
 
@@ -158,8 +158,8 @@ public class JSONHelper {
 
     public static void setItem(JsonObject data, String string, Item item, Item dflt) {
         if (item != null && item != dflt) {
-            ResourceLocation location = Item.itemRegistry.getNameForObject(item);
-            ResourceLocation deflt = Item.itemRegistry.getNameForObject(dflt);
+            ResourceLocation location = Item.REGISTRY.getNameForObject(item);
+            ResourceLocation deflt = Item.REGISTRY.getNameForObject(dflt);
             setString(data, string + ":domain", location.getResourceDomain(), deflt.getResourceDomain());
             setString(data, string + ":path", location.getResourcePath(), deflt.getResourcePath());
         }
@@ -167,8 +167,8 @@ public class JSONHelper {
 
     public static void setBlock(JsonObject data, String string, Block block, Block dflt) {
         if (block != null && block != dflt) {
-            ResourceLocation location = Block.blockRegistry.getNameForObject(block);
-            ResourceLocation deflt = Block.blockRegistry.getNameForObject(dflt);
+            ResourceLocation location = Block.REGISTRY.getNameForObject(block);
+            ResourceLocation deflt = Block.REGISTRY.getNameForObject(dflt);
 
             setString(data, string + ":domain", location.getResourceDomain(), deflt.getResourceDomain());
             setString(data, string + ":path", location.getResourcePath(), deflt.getResourcePath());

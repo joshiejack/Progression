@@ -25,8 +25,8 @@ import static joshie.progression.Progression.translate;
 import static joshie.progression.api.special.DisplayMode.DISPLAY;
 import static joshie.progression.api.special.DisplayMode.EDIT;
 import static joshie.progression.gui.core.GuiList.*;
-import static net.minecraft.util.EnumChatFormatting.BOLD;
-import static net.minecraft.util.EnumChatFormatting.ITALIC;
+import static net.minecraft.util.text.TextFormatting.BOLD;
+import static net.minecraft.util.text.TextFormatting.ITALIC;
 
 public class GuiCriteriaEditor extends GuiBaseEditorRule<ICriteria> implements IBarProvider, IItemSelectable, IEditorMode {
     //The uuid of the criteria
@@ -107,7 +107,7 @@ public class GuiCriteriaEditor extends GuiBaseEditorRule<ICriteria> implements I
         if (mouseY >= 8 && mouseY <= 18) {
             if (mouseRight >= 175 && mouseRight <= 240) {
                 if(TemplateHandler.registerCriteria(JSONLoader.getDataCriteriaFromCriteria(get()))) {
-                    JSONLoader.saveJSON(FileHelper.getTemplatesFolder("criteria", get().getUniqueID()), JSONLoader.getDataCriteriaFromCriteria(get()), true, false);
+                    JSONLoader.saveJSON(FileHelper.getTemplatesFolder("criteria", get().getLocalisedName() + "_" + get().getUniqueID()), JSONLoader.getDataCriteriaFromCriteria(get()), true, false);
                     AchievementHelper.display(get().getIcon(), "Saved " + get().getLocalisedName());
                 }
             }
@@ -150,9 +150,9 @@ public class GuiCriteriaEditor extends GuiBaseEditorRule<ICriteria> implements I
                     addCriteriaTooltip("repeat"); //Tooltip for repeatability
                     if (returnedBoolean(repeat)) addTooltip(ITALIC + "  " + translateCriteria("repeat.infinite"));
                     else addTooltip(ITALIC + "  " + translateCriteria("repeat.numbers"));
-                } else if (mouseX >= 100 && mouseX <= 170) {
+                } else if (MODE == EDIT && mouseX >= 100 && mouseX <= 170) {
                     addCriteriaTooltip("popup"); //Tooltip for popup
-                } else if (mouseX >= 200 && mouseX <= 270) {
+                } else if (MODE == EDIT && mouseX >= 200 && mouseX <= 270) {
                     addCriteriaTooltip("save");
                 }
             }
@@ -169,6 +169,14 @@ public class GuiCriteriaEditor extends GuiBaseEditorRule<ICriteria> implements I
         return mouseX >= 100 && mouseX <= 175 && mouseY >= 26 && mouseY <= 36 ? tasks.click(button) : false;
     }
 
+    public boolean isCompleted() {
+        for (ITriggerProvider trigger: get().getTriggers()) {
+            if (!trigger.getProvided().isCompleted()) return false;
+        }
+
+        return true;
+    }
+
     private void drawTriggers(boolean overlay, int mouseX, int mouseY) {
         if (MODE == EDIT) {
             drawText(translate("required") + ": " + tasks.getField(), 100, 29, THEME.criteriaEditDisplayNameColor);
@@ -180,7 +188,8 @@ public class GuiCriteriaEditor extends GuiBaseEditorRule<ICriteria> implements I
                 }
             }
         } else {
-            if (returnedBoolean(tasks)) drawText(translate("required.all.display"), 140, 29, THEME.criteriaEditDisplayNameColor);
+            if(isCompleted())  drawText(translate("criteria.tasks.completed"), 140, 29, THEME.criteriaEditDisplayNameColor);
+            else if (returnedBoolean(tasks)) drawText(translate("required.all.display"), 140, 29, THEME.criteriaEditDisplayNameColor);
             else drawText(format("required.amount.display", tasks.getField()), 140, 29, THEME.criteriaEditDisplayNameColor);
         }
     }

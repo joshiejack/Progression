@@ -12,7 +12,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import java.util.UUID;
 
 import static joshie.progression.gui.core.GuiList.GROUP_EDITOR;
-import static net.minecraft.util.EnumChatFormatting.*;
+import static net.minecraft.util.text.TextFormatting.*;
 
 public class PacketInvitePlayer extends PenguinPacket {
     private UUID teamOwner;

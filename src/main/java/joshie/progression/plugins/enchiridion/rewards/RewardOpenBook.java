@@ -9,7 +9,7 @@ import joshie.progression.api.special.IGetterCallback;
 import joshie.progression.api.special.IInit;
 import joshie.progression.criteria.rewards.RewardBase;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 
 @ProgressionRule(name="open.book", color=0xFFA52A2A, meta="openBook", mod="enchiridion")
 public class RewardOpenBook extends RewardBase implements IInit, ICustomDescription, IGetterCallback {
@@ -32,7 +32,7 @@ public class RewardOpenBook extends RewardBase implements IInit, ICustomDescript
     @Override
     public String getField(String fieldName) {
         if (fieldName.equals("page")) return "" + page;
-        else return theBook != null ? EnumChatFormatting.GREEN + bookid : EnumChatFormatting.RED + bookid;
+        else return theBook != null ? TextFormatting.GREEN + bookid : TextFormatting.RED + bookid;
     }
 
     @Override

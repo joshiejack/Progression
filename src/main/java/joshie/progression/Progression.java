@@ -12,9 +12,7 @@ import joshie.progression.plugins.thaumcraft.ThaumcraftSupport;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
@@ -51,7 +49,7 @@ public class Progression {
     public static Progression instance;
 
     public static PlayerSavedData data = new PlayerSavedData(MODNAME);
-    public static Item item;
+    public static ItemProgression item;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -85,7 +83,7 @@ public class Progression {
         }
 
         GameRegistry.addRecipe(new ShapedOreRecipe(getStackFromMeta(book), new Object[] {
-                "FS", "PP", 'P', "paper", 'S', "string", 'F', Items.flint
+                "FS", "PP", 'P', "paper", 'S', "string", 'F', Items.FLINT
         }) {
 
         });
@@ -109,7 +107,7 @@ public class Progression {
         //Remap all relevant data
         RemappingHandler.reloadServerData(JSONLoader.getServerTabData(RemappingHandler.getHostName()), false);
         
-        World world = MinecraftServer.getServer().worldServers[0];
+        World world = FMLCommonHandler.instance().getMinecraftServerInstance().worldServers[0];
         data = (PlayerSavedData) world.loadItemData(PlayerSavedData.class, MODNAME);
         if (data == null) {
             createWorldData();
@@ -122,16 +120,16 @@ public class Progression {
     }
 
     public void createWorldData() {
-        World world = MinecraftServer.getServer().worldServers[0];
+        World world = FMLCommonHandler.instance().getMinecraftServerInstance().worldServers[0];
         data = new PlayerSavedData(MODNAME);
         world.setItemData(MODNAME, data);
     }
 
     public static String translate(String string) {
-        return StatCollector.translateToLocal("progression." + string);
+        return I18n.translateToLocal("progression." + string);
     }
 
     public static String format(String string, Object... object) {
-        return StringEscapeUtils.unescapeJava(StatCollector.translateToLocalFormatted("progression." + string, object));
+        return StringEscapeUtils.unescapeJava(I18n.translateToLocalFormatted("progression." + string, object));
     }
 }

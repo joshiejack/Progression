@@ -16,14 +16,14 @@ public class ActionLivingDrop extends ActionForgeEvent {
 
     @SubscribeEvent
     public void onLivingDrop(LivingDropsEvent event) {
-        Entity source = event.source.getSourceOfDamage();
+        Entity source = event.getSource().getSourceOfDamage();
         if (source instanceof EntityPlayer) {
-            Iterator<EntityItem> it = event.drops.iterator();
+            Iterator<EntityItem> it = event.getDrops().iterator();
             while (it.hasNext()) {
                 EntityItem item = it.next();
                 ItemStack stack = item.getEntityItem();
                 EntityPlayer player = (EntityPlayer) source;
-                if (ProgressionEvents.isEventCancelled(player, ActionType.ENTITYDROPKILLEDWITH, player.getCurrentEquippedItem(), ActionType.ENTITYDROP, stack)) {
+                if (ProgressionEvents.isEventCancelled(player, ActionType.ENTITYDROPKILLEDWITH, player.getHeldItemMainhand(), ActionType.ENTITYDROP, stack)) {
                     it.remove();
                 }
             }

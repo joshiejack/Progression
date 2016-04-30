@@ -11,7 +11,7 @@ import joshie.progression.gui.core.GuiList;
 import joshie.progression.gui.fields.ItemFilterFieldPreview;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
 
@@ -48,7 +48,7 @@ public class RewardClear extends RewardBaseItemFilter implements ICustomDisplayN
 
     @Override
     public void addTooltip(List list) {
-        list.add(EnumChatFormatting.RED + "Remove Item");
+        list.add(TextFormatting.RED + "Remove Item");
         ItemStack stack = preview == null ? BROKEN : preview;
         list.add(stack.getDisplayName() + " x" + stack.stackSize);
     }

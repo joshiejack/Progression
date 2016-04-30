@@ -11,7 +11,7 @@ import joshie.progression.api.special.ISetterCallback;
 import joshie.progression.api.special.ISpecialJSON;
 import joshie.progression.helpers.JSONHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 

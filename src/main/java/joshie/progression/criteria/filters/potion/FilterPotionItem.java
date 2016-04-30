@@ -6,9 +6,9 @@ import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.IInit;
 import joshie.progression.api.special.ISpecialFieldProvider;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 
 import java.util.Collection;
@@ -17,8 +17,8 @@ import java.util.Set;
 
 @ProgressionRule(name="potionitem", color=0xFFFF73FF)
 public class FilterPotionItem extends FilterPotionBase implements IInit, ISpecialFieldProvider {
-    public ItemStack stack = new ItemStack(Items.potionitem, 1, 16385); //Splash Potion of Regen, 33 seconds
-    private Set<Integer> ids;
+    public ItemStack stack = new ItemStack(Items.POTIONITEM, 1, 16385); //Splash Potion of Regen, 33 seconds
+    private Set<Potion> ids;
 
     @Override
     public void addSpecialFields(List<IField> fields, DisplayMode mode) {
@@ -27,16 +27,16 @@ public class FilterPotionItem extends FilterPotionBase implements IInit, ISpecia
 
     @Override
     public void init(boolean isClient) {
-        ids = getIds(getEffects(stack.getItemDamage()));
+        ids = getIds(getEffects(stack.getTagCompound()));
     }
 
     @Override
     public boolean matches(PotionEffect effect) {
-        return ids == null? false: (ids.contains(effect.getPotionID()));
+        return ids == null? false: (ids.contains(effect.getPotion()));
     }
 
     @Override
-    public Collection<PotionEffect> getRandom(EntityPlayer player) {
-        return getEffects(stack.getItemDamage());
+    public Collection<PotionEffect> getRandomEffects() {
+        return getEffects(stack.getTagCompound());
     }
 }

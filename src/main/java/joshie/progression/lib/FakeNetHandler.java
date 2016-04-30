@@ -7,7 +7,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.*;
 import net.minecraft.network.play.client.*;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -41,7 +41,7 @@ public class FakeNetHandler extends NetHandlerPlayServer {
             return null;
         }
 
-        public void closeChannel(IChatComponent paramIChatComponent) {}
+        public void closeChannel(ITextComponent paramIChatComponent) {}
 
         public boolean isLocalChannel() {
             return false;
@@ -67,7 +67,7 @@ public class FakeNetHandler extends NetHandlerPlayServer {
             return null;
         }
 
-        public IChatComponent getExitMessage() {
+        public ITextComponent getExitMessage() {
             return null;
         }
 
@@ -86,53 +86,53 @@ public class FakeNetHandler extends NetHandlerPlayServer {
 
     public void kickPlayerFromServer(String paramString) {}
 
-    public void processInput(C0CPacketInput paramC0CPacketInput) {}
+    public void processInput(CPacketInput paramC0CPacketInput) {}
 
-    public void processPlayer(C03PacketPlayer paramC03PacketPlayer) {}
+    public void processPlayer(CPacketPlayer paramC03PacketPlayer) {}
 
     public void setPlayerLocation(double paramDouble1, double paramDouble2, double paramDouble3, float paramFloat1, float paramFloat2) {}
 
-    public void processPlayerDigging(C07PacketPlayerDigging paramC07PacketPlayerDigging) {}
+    public void processPlayerDigging(CPacketPlayerDigging paramC07PacketPlayerDigging) {}
 
-    public void processPlayerBlockPlacement(C08PacketPlayerBlockPlacement paramC08PacketPlayerBlockPlacement) {}
+    public void processPlayerBlockPlacement(CPacketPlayerBlockPlacement paramC08PacketPlayerBlockPlacement) {}
 
-    public void onDisconnect(IChatComponent paramIChatComponent) {}
+    public void onDisconnect(ITextComponent paramIChatComponent) {}
 
     public void sendPacket(Packet paramPacket) {}
 
-    public void processHeldItemChange(C09PacketHeldItemChange paramC09PacketHeldItemChange) {}
+    public void processHeldItemChange(CPacketHeldItemChange paramC09PacketHeldItemChange) {}
 
-    public void processChatMessage(C01PacketChatMessage paramC01PacketChatMessage) {}
+    public void processChatMessage(CPacketChatMessage paramC01PacketChatMessage) {}
 
-    public void handleAnimation(C0APacketAnimation paramC0APacketAnimation) {}
+    public void handleAnimation(CPacketAnimation paramC0APacketAnimation) {}
 
-    public void processEntityAction(C0BPacketEntityAction paramC0BPacketEntityAction) {}
+    public void processEntityAction(CPacketEntityAction paramC0BPacketEntityAction) {}
 
-    public void processUseEntity(C02PacketUseEntity paramC02PacketUseEntity) {}
+    public void processUseEntity(CPacketUseEntity paramC02PacketUseEntity) {}
 
-    public void processClientStatus(C16PacketClientStatus paramC16PacketClientStatus) {}
+    public void processClientStatus(CPacketClientStatus paramC16PacketClientStatus) {}
 
-    public void processCloseWindow(C0DPacketCloseWindow paramC0DPacketCloseWindow) {}
+    public void processCloseWindow(CPacketCloseWindow paramC0DPacketCloseWindow) {}
 
-    public void processClickWindow(C0EPacketClickWindow paramC0EPacketClickWindow) {}
+    public void processClickWindow(CPacketClickWindow paramC0EPacketClickWindow) {}
 
-    public void processEnchantItem(C11PacketEnchantItem paramC11PacketEnchantItem) {}
+    public void processEnchantItem(CPacketEnchantItem paramC11PacketEnchantItem) {}
 
-    public void processCreativeInventoryAction(C10PacketCreativeInventoryAction paramC10PacketCreativeInventoryAction) {}
+    public void processCreativeInventoryAction(CPacketCreativeInventoryAction paramC10PacketCreativeInventoryAction) {}
 
-    public void processConfirmTransaction(C0FPacketConfirmTransaction paramC0FPacketConfirmTransaction) {}
+    public void processConfirmTransaction(CPacketConfirmTransaction paramC0FPacketConfirmTransaction) {}
 
-    public void processUpdateSign(C12PacketUpdateSign paramC12PacketUpdateSign) {}
+    public void processUpdateSign(CPacketUpdateSign paramC12PacketUpdateSign) {}
 
-    public void processKeepAlive(C00PacketKeepAlive paramC00PacketKeepAlive) {}
+    public void processKeepAlive(CPacketKeepAlive paramC00PacketKeepAlive) {}
 
-    public void processPlayerAbilities(C13PacketPlayerAbilities paramC13PacketPlayerAbilities) {}
+    public void processPlayerAbilities(CPacketPlayerAbilities paramC13PacketPlayerAbilities) {}
 
-    public void processTabComplete(C14PacketTabComplete paramC14PacketTabComplete) {}
+    public void processTabComplete(CPacketTabComplete paramC14PacketTabComplete) {}
 
-    public void processClientSettings(C15PacketClientSettings paramC15PacketClientSettings) {}
+    public void processClientSettings(CPacketClientSettings paramC15PacketClientSettings) {}
 
-    public void processVanilla250Packet(C17PacketCustomPayload paramC17PacketCustomPayload) {}
+    public void processVanilla250Packet(CPacketCustomPayload paramC17PacketCustomPayload) {}
 
     public void onConnectionStateTransition(EnumConnectionState paramEnumConnectionState1, EnumConnectionState paramEnumConnectionState2) {}
 }

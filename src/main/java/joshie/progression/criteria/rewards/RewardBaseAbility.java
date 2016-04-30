@@ -3,7 +3,7 @@ package joshie.progression.criteria.rewards;
 import joshie.progression.Progression;
 import joshie.progression.api.special.ICustomTooltip;
 import joshie.progression.api.special.IHasEventBus;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.EventBus;
 
@@ -17,7 +17,7 @@ public abstract class RewardBaseAbility extends RewardBaseSingular implements IC
 
     @Override
     public void addTooltip(List list) {
-        list.add(EnumChatFormatting.GOLD + Progression.translate("ability"));
+        list.add(TextFormatting.GOLD + Progression.translate("ability"));
         addAbilityTooltip(list);
     }
 

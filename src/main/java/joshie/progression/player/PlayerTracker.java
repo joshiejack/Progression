@@ -52,9 +52,9 @@ public class PlayerTracker {
     
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onBlockPlaced(PlaceEvent event) {
-        TileEntity tile = event.world.getTileEntity(event.pos);
-        if (event.player != null && tile != null) {
-            setTileOwner(tile, PlayerHelper.getUUIDForPlayer(event.player));
+        TileEntity tile = event.getWorld().getTileEntity(event.getPos());
+        if (event.getPlayer() != null && tile != null) {
+            setTileOwner(tile, PlayerHelper.getUUIDForPlayer(event.getPlayer()));
         }
     }
 

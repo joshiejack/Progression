@@ -7,7 +7,8 @@ import joshie.progression.helpers.RenderItemHelper;
 import joshie.progression.json.Options;
 import joshie.progression.lib.GuiIDs;
 import joshie.progression.lib.PInfo;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -16,7 +17,7 @@ import net.minecraftforge.common.MinecraftForge;
 import static joshie.progression.Progression.translate;
 import static joshie.progression.gui.core.GuiList.CORE;
 import static joshie.progression.gui.core.GuiList.GROUP_EDITOR;
-import static net.minecraft.util.EnumChatFormatting.GOLD;
+import static net.minecraft.util.text.TextFormatting.GOLD;
 
 public class PClientProxy extends PCommonProxy {
     public static final ModelResourceLocation criteria = new ModelResourceLocation(new ResourceLocation(PInfo.MODPATH, "item"), "inventory");
@@ -36,6 +37,7 @@ public class PClientProxy extends PCommonProxy {
     @Override
     public void registerRendering() {
         RenderItemHelper.register(Progression.item, 0, criteria);
+        Minecraft.getMinecraft().getItemColors().registerItemColorHandler(Progression.item, Progression.item);
         for (ItemProgression.ItemMeta meta: ItemProgression.ItemMeta.values()) {
             if (meta == ItemProgression.ItemMeta.criteria) continue;
             RenderItemHelper.register(Progression.item, meta.ordinal(), getLocation(meta.name()));

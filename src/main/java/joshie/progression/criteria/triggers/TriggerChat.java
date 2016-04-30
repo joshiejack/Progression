@@ -51,7 +51,7 @@ public class TriggerChat extends TriggerBaseBoolean implements IInit, ICustomDes
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onCommandSend(ServerChatEvent event) {
-        if (ProgressionAPI.registry.fireTrigger((EntityPlayer) event.player.getCommandSenderEntity(), getProvider().getUnlocalisedName(), event.message) == Result.DENY) {
+        if (ProgressionAPI.registry.fireTrigger((EntityPlayer) event.getPlayer().getCommandSenderEntity(), getProvider().getUnlocalisedName(), event.getMessage()) == Result.DENY) {
             event.setCanceled(true);
         }
     }

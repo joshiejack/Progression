@@ -9,7 +9,7 @@ import net.minecraft.client.gui.GuiScreen;
 import static joshie.progression.gui.core.GuiList.GROUP_EDITOR;
 import static joshie.progression.gui.core.GuiList.TOOLTIP;
 import static joshie.progression.player.PlayerSavedData.TeamAction.JOIN;
-import static net.minecraft.util.EnumChatFormatting.BOLD;
+import static net.minecraft.util.text.TextFormatting.BOLD;
 
 public class ButtonJoinTeam extends ButtonBaseTeam {
     private Invite invite;

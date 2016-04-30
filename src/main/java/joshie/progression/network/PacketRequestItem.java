@@ -50,7 +50,7 @@ public class PacketRequestItem extends PenguinPacket {
         IRewardProvider provider = APICache.getCache(player.worldObj.isRemote).getRewardFromUUID(uuid);
         if (provider.getProvided() instanceof IRequestItem) {
             IRequestItem request = ((IRequestItem)provider.getProvided());
-            if (player.worldObj.isRemote) PacketHandler.sendToServer(new PacketRequestItem(uuid, request.getRequestedStack()));
+            if (player.worldObj.isRemote) PacketHandler.sendToServer(new PacketRequestItem(uuid, request.getRequestedStack(player)));
             else request.reward(player, stack);
         }
     }

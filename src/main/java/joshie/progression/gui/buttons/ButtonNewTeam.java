@@ -6,7 +6,7 @@ import joshie.progression.network.PacketHandler;
 
 import static joshie.progression.gui.core.GuiList.TOOLTIP;
 import static joshie.progression.player.PlayerSavedData.TeamAction.NEW;
-import static net.minecraft.util.EnumChatFormatting.BOLD;
+import static net.minecraft.util.text.TextFormatting.BOLD;
 
 public class ButtonNewTeam extends ButtonBaseTeam {
     public ButtonNewTeam(String text, int x, int y) {

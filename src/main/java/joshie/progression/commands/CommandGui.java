@@ -7,7 +7,7 @@ import joshie.progression.network.PacketDisplayChat;
 import joshie.progression.network.PacketHandler;
 import net.minecraft.command.ICommandSender;
 
-import static net.minecraft.util.EnumChatFormatting.BLUE;
+import static net.minecraft.util.text.TextFormatting.BLUE;
 
 public class CommandGui extends AbstractCommand {
     @Override

@@ -14,12 +14,12 @@ public class ActionHarvestDrop extends ActionForgeEvent {
 
     @SubscribeEvent
     public void onHarvestDrop(HarvestDropsEvent event) {
-        EntityPlayer player = event.harvester;
+        EntityPlayer player = event.getHarvester();
         if (player != null) {
-            Iterator<ItemStack> it = event.drops.iterator();
+            Iterator<ItemStack> it = event.getDrops().iterator();
             while (it.hasNext()) {
                 ItemStack stack = it.next();
-                if (ProgressionEvents.isEventCancelled(player, ActionType.HARVESTDROPWITH, player.getCurrentEquippedItem(), ActionType.HARVESTDROP, stack)) {
+                if (ProgressionEvents.isEventCancelled(player, ActionType.HARVESTDROPWITH, player.getHeldItemMainhand(), ActionType.HARVESTDROP, stack)) {
                     it.remove();
                 }
             }

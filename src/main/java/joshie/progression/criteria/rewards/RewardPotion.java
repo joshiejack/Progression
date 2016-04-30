@@ -20,13 +20,12 @@ import java.util.List;
 @ProgressionRule(name="potioneffect", color=0xFF2C7373)
 public class RewardPotion extends RewardBaseItemFilter implements ICustomDescription, ICustomWidth, ICustomTooltip, ISpecialFieldProvider {
     public boolean randomVanilla = false;
-    public int customid = -1;
     public int duration = 200;
     public int amplifier = 0;
     public boolean particles = false;
 
     public RewardPotion() {
-        BROKEN = new ItemStack(Items.potionitem, 1, 0);
+        BROKEN = new ItemStack(Items.POTIONITEM, 1, 0);
     }
 
     @Override
@@ -42,7 +41,7 @@ public class RewardPotion extends RewardBaseItemFilter implements ICustomDescrip
     @Override
     public void addTooltip(List list) {
         ItemStack stack = preview == null ? BROKEN : preview;
-        Items.potionitem.addInformation(stack, MCClientHelper.getPlayer(), list, false);
+        Items.POTIONITEM.addInformation(stack, MCClientHelper.getPlayer(), list, false);
     }
 
     @Override
@@ -64,8 +63,7 @@ public class RewardPotion extends RewardBaseItemFilter implements ICustomDescrip
                 for (PotionEffect effect : effects) {
                     if (randomVanilla) player.addPotionEffect(new PotionEffect(effect));
                     else {
-                        int id = customid >= 0 ? customid : effect.getPotionID();
-                        player.addPotionEffect(new PotionEffect(id, duration, amplifier, false, particles));
+                        player.addPotionEffect(new PotionEffect(effect.getPotion(), duration, amplifier, false, particles));
                     }
                 }
             }

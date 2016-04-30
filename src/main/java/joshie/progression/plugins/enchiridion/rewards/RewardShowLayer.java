@@ -13,7 +13,7 @@ import joshie.progression.api.special.IStoreNBTData;
 import joshie.progression.criteria.rewards.RewardBaseSingular;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -48,7 +48,7 @@ public class RewardShowLayer extends RewardBaseSingular implements IInit, IGette
     public String getField(String fieldName) {
         if (fieldName.equals("layer")) return "" + layer;
         else if (fieldName.equals("page")) return "" + page;
-        else return theBook != null ? EnumChatFormatting.GREEN + bookid : EnumChatFormatting.RED + bookid;
+        else return theBook != null ? TextFormatting.GREEN + bookid : TextFormatting.RED + bookid;
     }
 
     @Override
@@ -70,7 +70,7 @@ public class RewardShowLayer extends RewardBaseSingular implements IInit, IGette
     @SubscribeEvent
     public void onFeatureRender(FeatureVisibleEvent event) {
         if (event.isVisible) {
-            NBTTagCompound tag = ProgressionAPI.player.getCustomData(event.entityPlayer, "enchiridion.hidden");
+            NBTTagCompound tag = ProgressionAPI.player.getCustomData(event.getEntityPlayer(), "enchiridion.hidden");
             if (tag != null) {
                 if (tag.hasKey(event.bookid)) {
                     NBTTagCompound bookData = tag.getCompoundTag(event.bookid);

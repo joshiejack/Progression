@@ -9,7 +9,7 @@ import joshie.progression.json.Options;
 import joshie.progression.network.core.PenguinPacket;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 
 public class PacketReload extends PenguinPacket {
     @Override
@@ -20,7 +20,7 @@ public class PacketReload extends PenguinPacket {
 
     public static void handle(DefaultSettings settings, boolean isClient) {
         if (isClient) {
-            ChatHelper.displayChat("Progression data was reloaded", "   Use " + EnumChatFormatting.BLUE + "/progression reset" + EnumChatFormatting.RESET + " if you wish to reset player data");
+            ChatHelper.displayChat("Progression data was reloaded", "   Use " + TextFormatting.BLUE + "/progression reset" + TextFormatting.RESET + " if you wish to reset player data");
         } else {
             if (Options.editor) {
                 //Perform a reset of all the data serverside

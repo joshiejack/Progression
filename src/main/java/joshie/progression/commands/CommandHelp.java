@@ -5,10 +5,10 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.CommandNotFoundException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.NumberInvalidException;
-import net.minecraft.event.ClickEvent;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.Collections;
 import java.util.List;
@@ -52,14 +52,14 @@ public class CommandHelp extends AbstractCommand {
         }
 
         int j = Math.min((k + 1) * b0, list.size());
-        ChatComponentTranslation chatcomponenttranslation1 = new ChatComponentTranslation("crafting.commands.help.header", new Object[] { Integer.valueOf(k + 1), Integer.valueOf(i + 1) });
-        chatcomponenttranslation1.getChatStyle().setColor(EnumChatFormatting.DARK_GREEN);
+        TextComponentTranslation chatcomponenttranslation1 = new TextComponentTranslation("crafting.commands.help.header", new Object[] { Integer.valueOf(k + 1), Integer.valueOf(i + 1) });
+        chatcomponenttranslation1.getStyle().setColor(TextFormatting.DARK_GREEN);
         sender.addChatMessage(chatcomponenttranslation1);
 
         for (int l = k * b0; l < j; ++l) {
             AbstractCommand icommand1 = (AbstractCommand) list.get(l);
-            ChatComponentTranslation chatcomponenttranslation = new ChatComponentTranslation(CommandManager.getUsage(icommand1), new Object[0]);
-            chatcomponenttranslation.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/" + icommand1.getCommandName() + " "));
+            TextComponentTranslation chatcomponenttranslation = new TextComponentTranslation(CommandManager.getUsage(icommand1), new Object[0]);
+            chatcomponenttranslation.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/" + icommand1.getCommandName() + " "));
             sender.addChatMessage(chatcomponenttranslation);
         }
 

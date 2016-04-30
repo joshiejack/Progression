@@ -6,7 +6,7 @@ import joshie.progression.network.PacketHandler;
 
 import static joshie.progression.gui.core.GuiList.TOOLTIP;
 import static joshie.progression.player.PlayerSavedData.TeamAction.LEAVE;
-import static net.minecraft.util.EnumChatFormatting.BOLD;
+import static net.minecraft.util.text.TextFormatting.BOLD;
 
 public class ButtonLeaveTeam extends ButtonBaseTeam {
     public ButtonLeaveTeam(String text, int x, int y) {

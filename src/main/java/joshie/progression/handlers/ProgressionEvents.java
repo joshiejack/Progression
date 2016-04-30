@@ -17,7 +17,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.GuiScreenEvent.DrawScreenEvent;
 import net.minecraftforge.common.UsernameCache;
@@ -43,8 +43,6 @@ public class ProgressionEvents {
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
         RemappingHandler.onPlayerConnect((EntityPlayerMP) event.player);
-        //Send to this person
-        DimensionHelper.sendPacket((EntityPlayerMP) event.player);
         //Send to everybody
         PacketHandler.sendToEveryone(new PacketSyncUsernameCache(UsernameCache.getMap()));
     }
@@ -52,7 +50,7 @@ public class ProgressionEvents {
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onGuiPost(DrawScreenEvent.Pre event) {
-        if (checker.isRunnable(event.gui)) {
+        if (checker.isRunnable(event.getGui())) {
             LAST.clear();
         }
     }
@@ -60,7 +58,7 @@ public class ProgressionEvents {
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onGuiPost(DrawScreenEvent.Post event) {
-        if (checker.isRunnable(event.gui)) {
+        if (checker.isRunnable(event.getGui())) {
             LAST.run();
         }
     }
@@ -81,12 +79,12 @@ public class ProgressionEvents {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onItemTooltipEvent(final ItemTooltipEvent event) {
-        if (event.itemStack == null || event.itemStack.getItem() == null) return;
+        if (event.getItemStack() == null || event.getItemStack().getItem() == null) return;
         try {
             //No real way to cache correctly, without creating tons of objects
             HashMultimap<ActionType, ICriteria> requirements = HashMultimap.create();
             for (ActionType type: ActionType.values()) {
-                Set<ICriteria> required = CraftingRegistry.getRequirements(type, event.itemStack);
+                Set<ICriteria> required = CraftingRegistry.getRequirements(type, event.getItemStack());
                 if (required.size() == 0) continue;;
                 Set<ICriteria> completed = ProgressionAPI.player.getCompletedCriteriaList(PlayerHelper.getClientUUID(), true);
                 if (completed.contains(required)) continue; //Don't add this as a requirement if it's already completed
@@ -95,11 +93,11 @@ public class ProgressionEvents {
 
            //Option 1
             if (requirements.size() >= 1) {
-                event.toolTip.add(EnumChatFormatting.AQUA + "Actions Currently Locked");
+                event.getToolTip().add(TextFormatting.AQUA + "Actions Currently Locked");
                 if (GuiScreen.isShiftKeyDown()) {
                     for (ActionType type : requirements.keySet()) {
-                        event.toolTip.add(EnumChatFormatting.WHITE + "• " + type.getDisplayName());
-                        event.toolTip.add(EnumChatFormatting.GOLD + "  " + EnumChatFormatting.ITALIC + "Criteria Required");
+                        event.getToolTip().add(TextFormatting.WHITE + "• " + type.getDisplayName());
+                        event.getToolTip().add(TextFormatting.GOLD + "  " + TextFormatting.ITALIC + "Criteria Required");
                         StringBuilder builder = new StringBuilder();
                         boolean first = true;
                         for (ICriteria criteria : requirements.get(type)) {
@@ -111,18 +109,18 @@ public class ProgressionEvents {
 
                         String[] split = SplitHelper.splitStringEvery(builder.toString(), 45);
                         for (String s : split) {
-                            event.toolTip.add(s);
+                            event.getToolTip().add(s);
                         }
                     }
                 } else {
-                    event.toolTip.add("Hold" + EnumChatFormatting.BLUE + " " + EnumChatFormatting.ITALIC + "Shift" + EnumChatFormatting.RESET + " to see details");
-                    event.toolTip.add("Hold" + EnumChatFormatting.GOLD + " " + EnumChatFormatting.ITALIC + "Ctrl" + EnumChatFormatting.RESET + " to open criteria");
+                    event.getToolTip().add("Hold" + TextFormatting.BLUE + " " + TextFormatting.ITALIC + "Shift" + TextFormatting.RESET + " to see details");
+                    event.getToolTip().add("Hold" + TextFormatting.GOLD + " " + TextFormatting.ITALIC + "Ctrl" + TextFormatting.RESET + " to open criteria");
                     if (GuiScreen.isCtrlKeyDown()) {
                         for (ICriteria c: requirements.values()) {
                             MCClientHelper.FORCE_EDIT = false;
                             CORE.setEditor(CRITERIA_EDITOR);
                             CRITERIA_EDITOR.set(c);
-                            event.entityPlayer.openGui(Progression.instance, GuiIDs.EDITOR, event.entityPlayer.worldObj, 0, 0, 0);
+                            event.getEntityPlayer().openGui(Progression.instance, GuiIDs.EDITOR, event.getEntityPlayer().worldObj, 0, 0, 0);
                             break;
                         }
                     }

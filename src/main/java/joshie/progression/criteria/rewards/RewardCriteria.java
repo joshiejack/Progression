@@ -3,23 +3,26 @@ package joshie.progression.criteria.rewards;
 import joshie.progression.Progression;
 import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.ProgressionRule;
-import joshie.progression.api.special.ICustomDescription;
-import joshie.progression.api.special.ICustomTooltip;
-import joshie.progression.api.special.IGetterCallback;
-import joshie.progression.api.special.IInit;
+import joshie.progression.api.special.*;
 import joshie.progression.handlers.APICache;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StringUtils;
 
 import java.util.List;
 
+import static joshie.progression.api.special.DisplayMode.EDIT;
+import static net.minecraft.util.text.TextFormatting.GREEN;
+import static net.minecraft.util.text.TextFormatting.RED;
+
 @ProgressionRule(name="criteria", color=0xFF99B3FF, meta="clearOrReceiveOrBlockCriteria")
-public class RewardCriteria extends RewardBaseSingular implements IInit, ICustomDescription, ICustomTooltip, IGetterCallback {
+public class RewardCriteria extends RewardBaseSingular implements IInit, ICustomDescription, ICustomTooltip, ICustomWidth, IGetterCallback {
     private ICriteria criteria = null;
     public boolean remove = true;
     public boolean possibility = false;
     public String displayName = "";
+    public String description = "";
+    public int displayWidth = 100;
 
     @Override
     public void init(boolean isClient) {
@@ -34,7 +37,16 @@ public class RewardCriteria extends RewardBaseSingular implements IInit, ICustom
     }
 
     @Override
+    public int getWidth(DisplayMode mode) {
+        return mode == EDIT ? 100 : displayWidth;
+    }
+
+    @Override
     public String getDescription() {
+        if (!StringUtils.isNullOrEmpty(description)) {
+            return description;
+        }
+
         if (criteria != null) {
             StringBuilder builder = new StringBuilder();
             if (remove) builder.append(Progression.format(getProvider().getUnlocalisedName() + ".remove.description", criteria.getLocalisedName()));
@@ -61,7 +73,9 @@ public class RewardCriteria extends RewardBaseSingular implements IInit, ICustom
 
     @Override
     public String getField(String fieldName) {
-        return criteria != null ? EnumChatFormatting.GREEN + displayName : EnumChatFormatting.RED + displayName;
+        if (fieldName.equals("displayName")) return criteria != null ? GREEN + displayName : RED + displayName;
+        if (fieldName.equals("displayWidth")) return displayWidth + "";
+        else return description;
     }
 
     @Override

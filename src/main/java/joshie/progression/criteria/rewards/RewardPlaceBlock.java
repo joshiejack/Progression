@@ -18,7 +18,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 
@@ -46,7 +46,7 @@ public class RewardPlaceBlock extends RewardBaseItemFilter implements ICustomDes
 
     @Override
     public void addTooltip(List list) {
-        list.add(EnumChatFormatting.BLUE + Progression.translate("block.place"));
+        list.add(TextFormatting.BLUE + Progression.translate("block.place"));
         list.add(getIcon().getDisplayName());
     }
 
@@ -80,8 +80,8 @@ public class RewardPlaceBlock extends RewardBaseItemFilter implements ICustomDes
     }
 
     @Override
-    public ItemStack getRequestedStack() {
-        return ItemHelper.getRandomBlock(filters);
+    public ItemStack getRequestedStack(EntityPlayer player) {
+        return ItemHelper.getRandomItemOfSize(filters, player, 1);
     }
 
     @Override

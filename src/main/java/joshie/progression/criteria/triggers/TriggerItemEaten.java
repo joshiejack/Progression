@@ -8,8 +8,9 @@ import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.IMiniIcon;
 import joshie.progression.api.special.ISpecialFieldProvider;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.List;
@@ -38,8 +39,10 @@ public class TriggerItemEaten extends TriggerBaseItemFilter implements IMiniIcon
     }
 
     @SubscribeEvent
-    public void onEvent(PlayerUseItemEvent.Finish event) {
-        ProgressionAPI.registry.fireTrigger(event.entityPlayer, getProvider().getUnlocalisedName(), event.item);
+    public void onEvent(LivingEntityUseItemEvent.Finish event) {
+        if (event.getEntityLiving() instanceof EntityPlayer) {
+            ProgressionAPI.registry.fireTrigger(((EntityPlayer)event.getEntityLiving()), getProvider().getUnlocalisedName(), event.getItem());
+        }
     }
 
     @Override

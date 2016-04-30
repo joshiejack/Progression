@@ -41,11 +41,11 @@ public class PCommonProxy implements IGuiHandler {
         MinecraftForge.EVENT_BUS.register(new ProgressionEvents());
 
         //Register the items
-        Progression.item = new ItemProgression().setUnlocalizedName("item");
-        GameRegistry.registerItem(Progression.item, "item");
+        Progression.item = (ItemProgression) new ItemProgression().setUnlocalizedName("item").setRegistryName("item");
+        GameRegistry.register(Progression.item);
 
         if (Options.tileClaimerRecipe) {
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Progression.item, 1, ItemProgression.ItemMeta.claim.ordinal()), new Object[] { "F", "P", 'F', Items.flint, 'P', "plankWood" }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Progression.item, 1, ItemProgression.ItemMeta.claim.ordinal()), new Object[] { "F", "P", 'F', Items.FLINT, 'P', "plankWood" }));
         }
 
         RuleHandler.registerRules(asm);
@@ -73,7 +73,6 @@ public class PCommonProxy implements IGuiHandler {
         PacketHandler.registerPacket(PacketOpenEditor.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketDisplayChat.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketSyncUsernameCache.class, Side.CLIENT);
-        PacketHandler.registerPacket(PacketSyncDimensions.class, Side.CLIENT);
         PacketHandler.registerPacket(PacketFireTrigger.class, Side.SERVER);
         PacketHandler.registerPacket(PacketSelectRewards.class, Side.SERVER);
         PacketHandler.registerPacket(PacketChangeTeam.class, Side.SERVER);

@@ -1,19 +1,8 @@
 package joshie.progression.asm.helpers;
 
-import joshie.progression.crafting.ActionType;
-import joshie.progression.helpers.CraftingHelper;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
-import thaumcraft.api.wands.IWand;
-import thaumcraft.common.container.ContainerDummy;
-import thaumcraft.common.lib.crafting.ThaumcraftCraftingManager;
-import thaumcraft.common.tiles.crafting.TileArcaneWorkbench;
-
 public class ThaumcraftHelper {
     /** Code adapted from thaumcraft to fit my purposes **/
+    /*
     public static void onContainerChanged(Container container, TileArcaneWorkbench tile, InventoryPlayer ip) {
         InventoryCrafting ic = new InventoryCrafting(new ContainerDummy(), 3, 3);
         for (int a = 0; a < 9; a++) { //Validate all the items can be used in crafting
@@ -38,5 +27,5 @@ public class ThaumcraftHelper {
         tile.markDirty();
         tile.getWorld().markBlockForUpdate(tile.getPos());
         container.detectAndSendChanges();
-    }
+    } */
 }

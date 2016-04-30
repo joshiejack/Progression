@@ -30,8 +30,8 @@ public class TriggerBreakBlock extends TriggerBaseBlock implements IMiniIcon {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onEvent(BreakEvent event) {
-        Block block = event.state.getBlock();
-        int meta = block.getMetaFromState(event.state);
+        Block block = event.getState().getBlock();
+        int meta = block.getMetaFromState(event.getState());
         if (ProgressionAPI.registry.fireTrigger(event.getPlayer(), getProvider().getUnlocalisedName(), block, meta) == Result.DENY) {
             event.setCanceled(true);
         }

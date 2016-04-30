@@ -58,7 +58,7 @@ public class Options {
 
     @SubscribeEvent
     public void onConfigurationChangedEvent(ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (event.modID.equalsIgnoreCase(PInfo.MODID)) {
+        if (event.getModID().equalsIgnoreCase(PInfo.MODID)) {
             loadConfiguration();
         }
     }

@@ -60,8 +60,8 @@ public class ConditionInInventory extends ConditionBaseItemFilter implements ICu
         for (EntityPlayer player: team.getTeamEntities()) {
             if (!team.isTrueTeam()) counter = 0; //Reset the counter
             if (slotType == CheckSlots.HELD) {
-                if (matches(player.getCurrentEquippedItem())) {
-                    counter += player.getCurrentEquippedItem().stackSize;
+                if (matches(player.getHeldItemMainhand())) {
+                    counter += player.getHeldItemMainhand().stackSize;
                     if (counter >= stackSize) return true;
                 }
             } else if (slotType == CheckSlots.ARMOR) {
@@ -70,7 +70,7 @@ public class ConditionInInventory extends ConditionBaseItemFilter implements ICu
                         counter += armor.stackSize;
                         if (counter >= stackSize) return true;
                     }
-                }
+                } //TODO: Add Off Hand check to hotbar check
             } else if (slotType == CheckSlots.HOTBAR) {
                 counter += getAmount(player, 9);
                 if (counter >= stackSize) return true;

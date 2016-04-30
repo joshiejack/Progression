@@ -27,7 +27,7 @@ import static joshie.progression.api.special.DisplayMode.EDIT;
 import static joshie.progression.gui.core.GuiList.MODE;
 import static joshie.progression.gui.editors.TreeEditorElement.getModeForCriteria;
 import static joshie.progression.plugins.enchiridion.EnchiridionSupport.TRANSPARENT;
-import static net.minecraft.util.EnumChatFormatting.GOLD;
+import static net.minecraft.util.text.TextFormatting.GOLD;
 
 
 public class FeatureCriteria extends FeatureProgression implements ISimpleEditorFieldProvider {

@@ -3,9 +3,9 @@ package joshie.progression.helpers;
 import joshie.progression.Progression;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiNewChat;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.translation.I18n;
 import org.apache.logging.log4j.Level;
 
 public class ChatHelper {
@@ -13,7 +13,7 @@ public class ChatHelper {
     private static final int DELETION_ID = 2525277;
     private static int lastAdded;
 
-    private static void displayChatMessages(IChatComponent[] messages) {
+    private static void displayChatMessages(ITextComponent[] messages) {
         GuiNewChat chat = Minecraft.getMinecraft().ingameGUI.getChatGUI();
         for (int i = DELETION_ID + messages.length - 1; i <= lastAdded; i++) {
             chat.deleteChatLine(i);
@@ -26,9 +26,9 @@ public class ChatHelper {
         lastAdded = DELETION_ID + messages.length - 1;
     }
 
-    private static IChatComponent[] wrap(String... unlocalised) {
+    private static ITextComponent[] wrap(String... unlocalised) {
         String[] localised = localise(unlocalised);
-        IChatComponent[] ret = new IChatComponent[localised.length];
+        ITextComponent[] ret = new ITextComponent[localised.length];
         for (int i = 0; i < ret.length; i++) {
             ret[i] = wrap(localised[i]);
         }
@@ -39,15 +39,15 @@ public class ChatHelper {
     private static String[] localise(String... strings) {
         String[] newstrings = new String[strings.length];
         for (int i = 0; i < newstrings.length; i++) {
-            if (strings[i].startsWith("progression.")) newstrings[i] = StatCollector.translateToLocal(strings[i]);
+            if (strings[i].startsWith("progression.")) newstrings[i] = I18n.translateToLocal(strings[i]);
             else newstrings[i] = strings[i];
         }
 
         return newstrings;
     }
 
-    private static IChatComponent wrap(String s) {
-        return new ChatComponentTranslation(s);
+    private static ITextComponent wrap(String s) {
+        return new TextComponentTranslation(s);
     }
 
     public static void displayChat(String... strings) {

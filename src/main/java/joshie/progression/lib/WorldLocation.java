@@ -2,7 +2,7 @@ package joshie.progression.lib;
 
 import joshie.progression.api.criteria.IFilterProvider;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.List;
 

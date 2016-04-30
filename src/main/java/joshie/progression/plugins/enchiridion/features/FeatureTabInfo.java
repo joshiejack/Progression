@@ -7,7 +7,7 @@ import joshie.progression.api.criteria.ITab;
 import joshie.progression.gui.editors.TreeEditorElement;
 import joshie.progression.gui.editors.TreeEditorElement.ColorMode;
 import joshie.progression.helpers.PlayerHelper;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.translation.I18n;
 
 import java.util.Set;
 
@@ -32,7 +32,7 @@ public class FeatureTabInfo extends FeatureTabGeneric {
     }
 
     public String getTotalCriteria(ITab tab) {
-        return StatCollector.translateToLocalFormatted(totalText, tab.getCriteria().size());
+        return I18n.translateToLocalFormatted(totalText, tab.getCriteria().size());
     }
 
     public String getCompletedCriteria(ITab tab) {
@@ -45,7 +45,7 @@ public class FeatureTabInfo extends FeatureTabGeneric {
             }
         }
 
-        return StatCollector.translateToLocalFormatted(completedText, tasksdone);
+        return I18n.translateToLocalFormatted(completedText, tasksdone);
     }
 
     public String getCriteriaAvailable(ITab tab) {
@@ -57,7 +57,7 @@ public class FeatureTabInfo extends FeatureTabGeneric {
             }
         }
 
-        return StatCollector.translateToLocalFormatted(readyText, taskssone);
+        return I18n.translateToLocalFormatted(readyText, taskssone);
     }
 
     @Override

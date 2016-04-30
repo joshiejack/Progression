@@ -31,7 +31,7 @@ public class DataTab {
             theStack = StackHelper.getStackFromString(stack);
         }
 
-        if (theStack == null) theStack = new ItemStack(Items.book);
+        if (theStack == null) theStack = new ItemStack(Items.BOOK);
 
         //Validation yo
         return theStack;

@@ -19,7 +19,7 @@ import joshie.progression.gui.fields.TextField;
 import joshie.progression.helpers.CollectionHelper;
 import joshie.progression.lib.PInfo;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.text.WordUtils;
 import org.lwjgl.opengl.GL11;
@@ -44,7 +44,7 @@ public abstract class FeatureDrawable<T extends IRuleProvider> extends FeatureAb
     private String text;
 
     public FeatureDrawable(String text, int offsetY, IGuiFeature newDrawable, int gradient1, int gradient2, int fontColor, int color) {
-        this.text = EnumChatFormatting.BOLD + Progression.translate("new." + text);
+        this.text = TextFormatting.BOLD + Progression.translate("new." + text);
         this.offsetY = offsetY;
         this.newDrawable = newDrawable;
         this.gradient1 = gradient1;

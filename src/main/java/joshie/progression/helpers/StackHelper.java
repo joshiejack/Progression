@@ -6,8 +6,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.HashMap;
@@ -20,7 +20,7 @@ public class StackHelper {
     public static String getModFromItem(Item item) {
         if (modiditemcache.containsKey(item)) return modiditemcache.get(item);
         else {
-            String modid = Item.itemRegistry.getNameForObject(item).getResourceDomain();
+            String modid = Item.REGISTRY.getNameForObject(item).getResourceDomain();
             modiditemcache.put(item, modid);
             return modid;
         }
@@ -29,7 +29,7 @@ public class StackHelper {
     public static String getModFromBlock(Block item) {
         if (modidblockcache.containsKey(item)) return modidblockcache.get(item);
         else {
-            String modid = Block.blockRegistry.getNameForObject(item).getResourceDomain();
+            String modid = Block.REGISTRY.getNameForObject(item).getResourceDomain();
             modidblockcache.put(item, modid);
             return modid;
         }
@@ -55,7 +55,7 @@ public class StackHelper {
     }
 
     public static String getStringFromStack(ItemStack stack) {
-        String str = Item.itemRegistry.getNameForObject(stack.getItem()).toString().replace(" ", "%20");
+        String str = Item.REGISTRY.getNameForObject(stack.getItem()).toString().replace(" ", "%20");
         if (stack.getHasSubtypes() || stack.isItemStackDamageable()) {
             str = str + " " + stack.getItemDamage();
         }
@@ -119,7 +119,7 @@ public class StackHelper {
 
     public static Item getItemByText(String str) {
         str = str.replace("%20", " ");
-        Item item = (Item) Item.itemRegistry.getObject(new ResourceLocation(str));
+        Item item = (Item) Item.REGISTRY.getObject(new ResourceLocation(str));
         if (item == null) {
             try {
                 Item item1 = Item.getItemById(Integer.parseInt(str));
@@ -132,16 +132,16 @@ public class StackHelper {
         return item;
     }
 
-    private static IChatComponent formatNBT(String[] str, int start) {
-        ChatComponentText chatcomponenttext = new ChatComponentText("");
+    private static ITextComponent formatNBT(String[] str, int start) {
+        TextComponentString chatcomponenttext = new TextComponentString("");
 
         for (int j = start; j < str.length; ++j) {
             if (j > start) {
                 chatcomponenttext.appendText(" ");
             }
 
-            Object object = new ChatComponentText(str[j]);
-            chatcomponenttext.appendSibling((IChatComponent) object);
+            Object object = new TextComponentString(str[j]);
+            chatcomponenttext.appendSibling((ITextComponent) object);
         }
 
         return chatcomponenttext;

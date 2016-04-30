@@ -14,7 +14,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
@@ -110,7 +110,7 @@ public class TreeEditorElement {
         return true;
     }
 
-    public static enum ColorMode {
+    public enum ColorMode {
         DEFAULT(false, 0), COMPLETED(true, 25), AVAILABLE(true, 50), ERROR(false, 75), SELECTED(true, 100), UNUSED(true, 125), READY(true, 150), INVISIBLE(false, 0);
 
         public final int y;
@@ -304,7 +304,7 @@ public class TreeEditorElement {
 
                     for (ICriteria c : criteria.getPreReqs()) {
                         if (c.getTab() != criteria.getTab()) {
-                            list.add(EnumChatFormatting.RED + "Requires: " + c.getLocalisedName() + " from the \"" + c.getTab().getLocalisedName() + "\" tab");
+                            list.add(TextFormatting.RED + "Requires: " + c.getLocalisedName() + " from the \"" + c.getTab().getLocalisedName() + "\" tab");
                         }
                     }
 

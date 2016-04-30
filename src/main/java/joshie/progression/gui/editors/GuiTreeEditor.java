@@ -112,7 +112,7 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
 
         currentTab = APICache.getClientCache().getTab(currentTabID); //Attempt to grab the tab
         if (currentTab == null) { //If the tab was null, create a new blank one
-            currentTab = RuleHandler.newTab(UUID.randomUUID(), true).setDisplayName("New Tab").setStack(new ItemStack(Items.book)).setVisibility(true);
+            currentTab = RuleHandler.newTab(UUID.randomUUID(), true).setDisplayName("New Tab").setStack(new ItemStack(Items.BOOK)).setVisibility(true);
             currentTabID = currentTab.getUniqueID();
         }
     }

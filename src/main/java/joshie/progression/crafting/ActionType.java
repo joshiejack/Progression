@@ -9,25 +9,25 @@ import joshie.progression.crafting.actions.ActionLivingDrop;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.translation.I18n;
 
 import java.util.Collection;
 import java.util.HashMap;
 
 public class ActionType implements IAction {
-    public static final ActionType CRAFTING = new ActionType("CRAFTING").setItemStack(new ItemStack(Blocks.crafting_table));
-    public static final ActionType CRAFTINGUSE = new ActionType("CRAFTINGUSE").setItemStack(new ItemStack(Blocks.planks));
-    public static final ActionType FURNACE = new ActionType("FURNACE").setItemStack(new ItemStack(Items.coal, 1, 1));
-    public static final ActionType FURNACEUSE = new ActionType("FURNACEUSE").setItemStack(new ItemStack(Blocks.log));
-    public static final ActionType GENERAL = new ActionType("GENERAL").setItemStack(new ItemStack(Blocks.brick_block)).setEventHandler(ActionGeneral.INSTANCE);
-    public static final ActionType BREAKBLOCK = new ActionType("BREAKBLOCK").setItemStack(new ItemStack(Blocks.iron_ore)).setEventHandler(ActionBreakBlock.INSTANCE);
-    public static final ActionType BREAKBLOCKWITH = new ActionType("BREAKBLOCKWITH").setItemStack(new ItemStack(Items.iron_pickaxe)).setEventHandler(ActionBreakBlock.INSTANCE);
-    public static final ActionType HARVESTDROP = new ActionType("HARVESTDROP").setItemStack(new ItemStack(Items.redstone)).setEventHandler(ActionHarvestDrop.INSTANCE);
-    public static final ActionType HARVESTDROPWITH = new ActionType("HARVESTDROPWITH").setItemStack(new ItemStack(Items.iron_axe)).setEventHandler(ActionHarvestDrop.INSTANCE);
-    public static final ActionType ENTITYDROP = new ActionType("ENTITYDROP").setItemStack(new ItemStack(Items.rotten_flesh)).setEventHandler(ActionLivingDrop.INSTANCE);
-    public static final ActionType ENTITYDROPKILLEDWITH = new ActionType("ENTITYDROPKILLEDWITH").setItemStack(new ItemStack(Items.iron_sword)).setEventHandler(ActionLivingDrop.INSTANCE);
-    public static final ActionType ARCANE = new ActionType("ARCANE").setItemStack(new ItemStack(Items.writable_book));
-    public static final ActionType ARCANEUSE = new ActionType("ARCANEUSE").setItemStack(new ItemStack(Items.written_book));
+    public static final ActionType CRAFTING = new ActionType("CRAFTING").setItemStack(new ItemStack(Blocks.CRAFTING_TABLE));
+    public static final ActionType CRAFTINGUSE = new ActionType("CRAFTINGUSE").setItemStack(new ItemStack(Blocks.PLANKS));
+    public static final ActionType FURNACE = new ActionType("FURNACE").setItemStack(new ItemStack(Items.COAL, 1, 1));
+    public static final ActionType FURNACEUSE = new ActionType("FURNACEUSE").setItemStack(new ItemStack(Blocks.LOG));
+    public static final ActionType GENERAL = new ActionType("GENERAL").setItemStack(new ItemStack(Blocks.BRICK_BLOCK)).setEventHandler(ActionGeneral.INSTANCE);
+    public static final ActionType BREAKBLOCK = new ActionType("BREAKBLOCK").setItemStack(new ItemStack(Blocks.IRON_ORE)).setEventHandler(ActionBreakBlock.INSTANCE);
+    public static final ActionType BREAKBLOCKWITH = new ActionType("BREAKBLOCKWITH").setItemStack(new ItemStack(Items.IRON_PICKAXE)).setEventHandler(ActionBreakBlock.INSTANCE);
+    public static final ActionType HARVESTDROP = new ActionType("HARVESTDROP").setItemStack(new ItemStack(Items.REDSTONE)).setEventHandler(ActionHarvestDrop.INSTANCE);
+    public static final ActionType HARVESTDROPWITH = new ActionType("HARVESTDROPWITH").setItemStack(new ItemStack(Items.IRON_AXE)).setEventHandler(ActionHarvestDrop.INSTANCE);
+    public static final ActionType ENTITYDROP = new ActionType("ENTITYDROP").setItemStack(new ItemStack(Items.ROTTEN_FLESH)).setEventHandler(ActionLivingDrop.INSTANCE);
+    public static final ActionType ENTITYDROPKILLEDWITH = new ActionType("ENTITYDROPKILLEDWITH").setItemStack(new ItemStack(Items.IRON_SWORD)).setEventHandler(ActionLivingDrop.INSTANCE);
+    public static final ActionType ARCANE = new ActionType("ARCANE").setItemStack(new ItemStack(Items.WRITABLE_BOOK));
+    public static final ActionType ARCANEUSE = new ActionType("ARCANEUSE").setItemStack(new ItemStack(Items.WRITTEN_BOOK));
     private static HashMap<String, ActionType> registry;
     private static HashMap<ItemStack, ActionType> itemRegistry;
 
@@ -56,7 +56,7 @@ public class ActionType implements IAction {
     }
 
     public String getDisplayName() {
-        return StatCollector.translateToLocal("progression.action." + name.toLowerCase());
+        return I18n.translateToLocal("progression.action." + name.toLowerCase());
     }
 
     public String getUnlocalisedName() {
