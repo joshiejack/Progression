@@ -28,8 +28,8 @@ public class EnchiridionSupport {
     public static final ResourceLocation TRANSPARENT = new ResourceLocation("progression:textures/books/transparent.png");
 
     public static void init() {
-        EnchiridionAPI.library.registerBookHandlerForStack("rightClick", getStackFromMeta(book), true, false);
-        EnchiridionAPI.library.registerBookHandlerForStack("rightClick", getStackFromMeta(edit), true, false);
+        EnchiridionAPI.library.registerBookHandlerForStack("rightclick", getStackFromMeta(book), true, false);
+        EnchiridionAPI.library.registerBookHandlerForStack("rightclick", getStackFromMeta(edit), true, false);
         EnchiridionAPI.instance.registerButtonAction(new ActionClaimCriteria());
         EnchiridionAPI.instance.registerButtonAction(new ActionCompleteCriteria());
         EnchiridionAPI.instance.registerButtonAction(new ActionClaimReward());
