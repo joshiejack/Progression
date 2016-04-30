@@ -11,7 +11,6 @@ import joshie.progression.plugins.enchiridion.EnchiridionSupport;
 import joshie.progression.plugins.thaumcraft.ThaumcraftSupport;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
-import net.minecraft.init.Items;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -37,6 +36,7 @@ import java.io.File;
 import static joshie.progression.ItemProgression.ItemMeta.book;
 import static joshie.progression.ItemProgression.getStackFromMeta;
 import static joshie.progression.lib.PInfo.*;
+import static net.minecraft.init.Items.FLINT;
 
 @Mod(modid = MODID, name = MODNAME, version = VERSION, guiFactory = GUI_FACTORY_CLASS)
 public class Progression {
@@ -82,12 +82,7 @@ public class Progression {
             } catch (Exception e) {}
         }
 
-        GameRegistry.addRecipe(new ShapedOreRecipe(getStackFromMeta(book), new Object[] {
-                "FS", "PP", 'P', "paper", 'S', "string", 'F', Items.FLINT
-        }) {
-
-        });
-        
+        GameRegistry.addRecipe(new ShapedOreRecipe(getStackFromMeta(book), "FS", "PP", 'P', "paper", 'S', "string", 'F', FLINT));
         proxy.registerRendering();
     }
 
