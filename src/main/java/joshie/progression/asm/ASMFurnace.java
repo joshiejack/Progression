@@ -35,7 +35,7 @@ public class ASMFurnace extends AbstractASM {
 
                     @Override
                     public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
-                        if (name.equals("getSmeltingResult") || (name.equals("a") && desc.equals("(Lzx;)Lzx;"))) {
+                        if (name.equals("getSmeltingResult") || (name.equals("a") && desc.equals("(Ladq;)Ladq;"))) {
                             String stacks = name.equals("getSmeltingResult") ? "furnaceItemStacks" : "field_145957_n";
                             mv.visitMethodInsn(opcode, owner, name, desc, itf);
                             mv.visitVarInsn(Opcodes.ASTORE, 1);
