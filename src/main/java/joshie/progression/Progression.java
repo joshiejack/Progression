@@ -84,12 +84,7 @@ public class Progression {
             } catch (Exception e) {}
         }
 
-        GameRegistry.addRecipe(new ShapedOreRecipe(getStackFromMeta(book), new Object[] {
-                "FS", "PP", 'P', "paper", 'S', "string", 'F', Items.flint
-        }) {
-
-        });
-        
+        GameRegistry.addRecipe(new ShapedOreRecipe(getStackFromMeta(book), "FS", "PP", 'P', "paper", 'S', "string", 'F', Items.flint));
         proxy.registerRendering();
     }
 
