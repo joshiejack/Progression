@@ -264,6 +264,7 @@ progression.filter.item.metadata=Metadata
 progression.filter.item.oreDictionary=Ore Dictionary
 progression.filter.item.tagsingle=Specific NBT
 progression.filter.potioneffect.potioneffect=Potion Effect
+progression.filter.potioneffect.potionitem=Potion Item
 progression.filter.block.blockOnly=Block Only
 progression.filter.block.blockStack=Block Stacks
 progression.filter.block.blockState=Block State
