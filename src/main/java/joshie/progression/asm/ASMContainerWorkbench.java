@@ -9,7 +9,7 @@ import org.objectweb.asm.Opcodes;
 public class ASMContainerWorkbench extends AbstractASM {
     @Override
     public boolean isClass(String name) {
-        return name.equals("net.minecraft.inventory.ContainerWorkbench") || name.equals("xq");
+        return name.equals("net.minecraft.inventory.ContainerWorkbench") || name.equals("abd");
     }
 
     @Override

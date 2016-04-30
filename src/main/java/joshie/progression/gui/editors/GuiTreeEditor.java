@@ -102,8 +102,10 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
             currentTabID = Options.settings.defaultTabID;
         }
 
+        currentTab = APICache.getClientCache().getTab(currentTabID); //Attempt to grab the tab
         //If the config fails, grab the first instance
-        if (currentTabID == null) {
+        if (currentTab == null) {
+            APICache.getClientCache().clearSorted();
             for (ITab tab : APICache.getClientCache().getSortedTabs()) {
                 currentTabID = tab.getUniqueID();
                 break;

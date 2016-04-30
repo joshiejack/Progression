@@ -1,6 +1,7 @@
 package joshie.progression.gui.fields;
 
 import joshie.progression.api.criteria.IField;
+import joshie.progression.api.criteria.IFilter;
 import joshie.progression.api.criteria.IRuleProvider;
 import joshie.progression.api.gui.IDrawHelper;
 import joshie.progression.api.special.IAdditionalTooltip;
@@ -8,7 +9,12 @@ import joshie.progression.helpers.EntityHelper;
 import joshie.progression.helpers.MCClientHelper;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IEntityLivingData;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +51,14 @@ public class EntityFilterFieldPreview extends ItemFilterField implements IField 
 
     public EntityLivingBase getEntity(boolean hovered) {
         if (ticker >= 200 || ticker == 0) {
-            entity = EntityHelper.getRandomEntityFromFilters(getFilters(), MCClientHelper.getPlayer());
+            EntityPlayer player = MCClientHelper.getPlayer();
+            IFilter filter = EntityHelper.getFilter(getFilters(), player);
+            entity = (EntityLivingBase) EntityList.createEntityByName(EntityHelper.getNameForEntity(((EntityLivingBase) filter.getRandom(player))), player.worldObj);
+            if (entity instanceof EntityLiving) {
+                ((EntityLiving) entity).onInitialSpawn(player.worldObj.getDifficultyForLocation(new BlockPos(entity)), (IEntityLivingData) null);
+            }
+
+            filter.apply(entity);
             ticker = 1;
         }
 

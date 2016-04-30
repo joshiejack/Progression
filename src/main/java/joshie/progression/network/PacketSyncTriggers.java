@@ -42,9 +42,12 @@ public class PacketSyncTriggers extends PenguinPacket {
         int size = buf.readInt();
         triggers = new HashSet();
         for (int i = 0; i < size; i++) {
-            ITriggerProvider trigger = APICache.getCache(true).getTriggerFromUUID(UUID.fromString(readGzipString(buf)));
-            if (trigger != null) {
-                triggers.add(trigger);
+            String uuid = readGzipString(buf);
+            if (uuid.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
+                ITriggerProvider trigger = APICache.getClientCache().getTriggerFromUUID(UUID.fromString(uuid));
+                if (trigger != null) {
+                    triggers.add(trigger);
+                }
             }
         }
     }

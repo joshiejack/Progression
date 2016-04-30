@@ -412,3 +412,5 @@ enchiridion.button.action.field.variable=Variable
 enchiridion.button.action.field.size=Size
 enchiridion.button.action.field.text=Display Text
 enchiridion.button.action.field.showHidden=Show Hidden
+enchiridion.button.action.field.randomReward=Give Random Reward
+enchiridion.button.action.field.rewardPosition=Reward Number

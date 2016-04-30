@@ -182,7 +182,7 @@ public class PacketFireTrigger extends PenguinPacket {
         if (builder != null) {
             data = builder.getObjects(player, type, data);
         }
-                
+
         ProgressionAPI.registry.fireTrigger(player, type, data);
     }
 }

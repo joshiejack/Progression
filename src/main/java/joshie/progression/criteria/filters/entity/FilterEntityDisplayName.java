@@ -2,7 +2,9 @@ package joshie.progression.criteria.filters.entity;
 
 import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.IInit;
+import joshie.progression.helpers.EntityHelper;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 
 @ProgressionRule(name="displayName", color=0xFFB25900)
 public class FilterEntityDisplayName extends FilterBaseEntity implements IInit {
@@ -24,7 +26,17 @@ public class FilterEntityDisplayName extends FilterBaseEntity implements IInit {
     }
 
     @Override
-    protected boolean matches(EntityLivingBase entity) {       
+    public EntityLivingBase getRandom(EntityPlayer player) {
+        return EntityHelper.getRandomEntity(player.worldObj, null);
+    }
+
+    @Override
+    public void apply(EntityLivingBase entity) {
+        entity.setCustomNameTag(checkName);
+    }
+
+    @Override
+    protected boolean matches(EntityLivingBase entity) {
         String name = entity.getName();
         if (matchBoth && name.toLowerCase().contains(checkName.toLowerCase())) return true;
         else if (matchFront && !matchBack && name.toLowerCase().endsWith(checkName.toLowerCase())) return true;

@@ -6,7 +6,7 @@ import org.objectweb.asm.*;
 public class ASMFurnace extends AbstractASM {
     @Override
     public boolean isClass(String name) {
-        return name.equals("net.minecraft.tileentity.TileEntityFurnace") || name.equals("alh");
+        return name.equals("net.minecraft.tileentity.TileEntityFurnace") || name.equals("aqg");
     }
 
     @Override

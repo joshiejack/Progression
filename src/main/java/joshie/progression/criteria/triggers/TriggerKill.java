@@ -54,10 +54,7 @@ public class TriggerKill extends TriggerBaseCounter implements ICustomWidth, ICu
 
     @Override
     public void addHoverTooltip(String field, Object object, List tooltip) {
-        tooltip.clear();
-        if (entity != null) {
-            tooltip.add(entity.getName());
-        }
+
     }
 
     @Override

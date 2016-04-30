@@ -12,14 +12,18 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityWaterMob;
 import net.minecraft.entity.player.EntityPlayer;
 
+import static joshie.progression.criteria.filters.entity.FilterEntityType.EntityType.BOSS;
+
 @ProgressionRule(name="entitytype", color=0xFFB25900)
 public class FilterEntityType extends FilterBaseEntity implements IEnum {
     public EntityType type = EntityType.ANIMAL;
 
     @Override
     protected boolean matches(EntityLivingBase entity) {
+        if (type == BOSS) return !entity.isNonBoss();
+        else if (!entity.isNonBoss()) return false;
+
         switch (type) {
-            case BOSS:      return !entity.isNonBoss();
             case ANIMAL:    return entity instanceof EntityAnimal;
             case MONSTER:   return entity instanceof IMob;
             case TAMEABLE:  return entity instanceof IEntityOwnable;

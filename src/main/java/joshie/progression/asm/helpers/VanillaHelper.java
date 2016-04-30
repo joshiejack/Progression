@@ -26,7 +26,7 @@ public class VanillaHelper {
     static {
         try {
             fContainer = ReflectionHelper.findField(InventoryCrafting.class, "eventHandler", "field_70465_c", "c");
-            fCrafters = ReflectionHelper.findField(Container.class, "crafters", "field_75149_d", "e");
+            fCrafters = ReflectionHelper.findField(Container.class, "listeners", "field_75149_d", "e");
         } catch (Exception e) {}
     }
 

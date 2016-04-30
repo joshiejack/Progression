@@ -11,7 +11,7 @@ import static org.objectweb.asm.Opcodes.*;
 public class ASMContainerPlayer extends AbstractASM {
     @Override
     public boolean isClass(String name) {
-        return name.equals("net.minecraft.inventory.ContainerPlayer") || name.equals("xy");
+        return name.equals("net.minecraft.inventory.ContainerPlayer") || name.equals("abl");
     }
 
     @Override
