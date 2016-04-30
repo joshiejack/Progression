@@ -6,25 +6,22 @@ import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.handlers.APICache;
 
 public class ActionCompleteCriteria extends AbstractActionCriteria implements IButtonAction {
-    public boolean mustBeCompleted = true;
-
     public ActionCompleteCriteria() {
         super(null, "criteria.complete");
     }
 
-    public ActionCompleteCriteria(ICriteria criteria, boolean mustBeCompleted) {
+    public ActionCompleteCriteria(ICriteria criteria) {
         super(criteria, "criteria.complete");
-        this.mustBeCompleted = mustBeCompleted;
     }
 
     @Override
     public IButtonAction copy() {
-        return copyAbstract(new ActionCompleteCriteria(getCriteria(), mustBeCompleted));
+        return copyAbstract(new ActionCompleteCriteria(getCriteria()));
     }
 
     @Override
     public IButtonAction create() {
-        return new ActionCompleteCriteria(APICache.getCache(true).getRandomCriteria(), true);
+        return new ActionCompleteCriteria(APICache.getClientCache().getRandomCriteria());
     }
 
     @Override

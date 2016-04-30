@@ -133,6 +133,7 @@ public class EntityHelper {
         if (serverList == null) serverList = init(world);
         Collections.shuffle(serverList);
         for (EntityLivingBase entity : serverList) {
+            if (filter == null) return entity; //If we passed a null filter, return anything
             if (filter.getProvided().matches(entity)) return entity;
         }
 

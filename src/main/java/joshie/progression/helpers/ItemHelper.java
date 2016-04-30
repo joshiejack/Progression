@@ -50,7 +50,7 @@ public class ItemHelper {
         for (ItemStack stack : MCClientHelper.getPlayer().inventory.mainInventory) {
             if (stack != null) {
                 if (!itemsWithInventory.contains(stack)) {
-                    itemsWithInventory.add(stack);
+                    itemsWithInventory.add(stack.copy());
                 }
             }
         }

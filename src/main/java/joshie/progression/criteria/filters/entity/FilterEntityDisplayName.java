@@ -2,7 +2,9 @@ package joshie.progression.criteria.filters.entity;
 
 import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.IInit;
+import joshie.progression.helpers.EntityHelper;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 
 @ProgressionRule(name="displayName", color=0xFFB25900)
 public class FilterEntityDisplayName extends FilterBaseEntity implements IInit {
@@ -21,6 +23,16 @@ public class FilterEntityDisplayName extends FilterBaseEntity implements IInit {
         else matchBack = false;
         matchBoth = matchFront && matchBack;
         checkName = entityName.replaceAll("\\*", "");
+    }
+
+    @Override
+    public EntityLivingBase getRandom(EntityPlayer player) {
+        return EntityHelper.getRandomEntity(player.worldObj, null);
+    }
+
+    @Override
+    public void apply(EntityLivingBase entity) {
+        entity.setCustomNameTag(checkName);
     }
 
     @Override
