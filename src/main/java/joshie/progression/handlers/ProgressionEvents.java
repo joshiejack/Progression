@@ -78,7 +78,7 @@ public class ProgressionEvents {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onItemTooltipEvent(final ItemTooltipEvent event) {
-        if (event.getItemStack() == null || event.getItemStack().getItem() == null || event.getEntityPlayer() == null) return;
+        if (event.getItemStack() == null || event.getItemStack().getItem() == null || event.getEntityPlayer() == null || CraftingRegistry.get(event.getEntityPlayer().worldObj.isRemote) == null) return;
         try {
             //No real way to cache correctly, without creating tons of objects
             HashMultimap<ActionType, ICriteria> requirements = HashMultimap.create();
