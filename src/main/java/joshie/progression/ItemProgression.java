@@ -193,20 +193,17 @@ public class ItemProgression extends Item {
 
     @SideOnly(Side.CLIENT)
     public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
-        /*for (ItemMeta meta: ItemMeta.values()) {
-            if (meta == ItemMeta.criteria) continue;
-            else list.add(new ItemStack(item, 1, meta.ordinal()));
-        } */
-
         list.add(new ItemStack(item, 1, ItemMeta.book.ordinal()));
         list.add(new ItemStack(item, 1, ItemMeta.edit.ordinal()));
         list.add(new ItemStack(item, 1, ItemMeta.claim.ordinal()));
 
-        for (ICriteria c : APICache.getCache(true).getCriteriaSet()) {
-            ItemStack stack = new ItemStack(item);
-            stack.setTagCompound(new NBTTagCompound());
-            stack.getTagCompound().setString("Criteria", c.getUniqueID().toString());
-            list.add(stack);
+        if (APICache.getClientCache() != null) {
+            for (ICriteria c : APICache.getClientCache().getCriteriaSet()) {
+                ItemStack stack = new ItemStack(item);
+                stack.setTagCompound(new NBTTagCompound());
+                stack.getTagCompound().setString("Criteria", c.getUniqueID().toString());
+                list.add(stack);
+            }
         }
     }
 }
