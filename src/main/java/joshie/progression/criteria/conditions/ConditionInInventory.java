@@ -75,7 +75,7 @@ public class ConditionInInventory extends ConditionBaseItemFilter implements ICu
                         if (counter >= stackSize) return true;
                     }
                 }
-            } else if (slotType == CheckSlots.INVENTORY) {
+            } else if (slotType == CheckSlots.HOTBAR) {
                 counter += getAmount(player, 9);
                 if (counter >= stackSize) return true;
             } else if (slotType == CheckSlots.INVENTORY) {

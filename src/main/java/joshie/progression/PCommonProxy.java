@@ -1,13 +1,11 @@
 package joshie.progression;
 
-import joshie.progression.ItemProgression.ItemMeta;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.commands.*;
 import joshie.progression.gui.fields.FieldRegistry;
 import joshie.progression.gui.filters.FilterSelectorHelper;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.handlers.ProgressionEvents;
-import joshie.progression.handlers.RemappingHandler;
 import joshie.progression.handlers.RuleHandler;
 import joshie.progression.json.Options;
 import joshie.progression.network.*;
@@ -26,10 +24,14 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
+import static joshie.progression.ItemProgression.ItemMeta.book;
+import static joshie.progression.ItemProgression.getStackFromMeta;
+import static net.minecraft.init.Items.FLINT;
+
 public class PCommonProxy implements IGuiHandler {
     public void preInit(ASMDataTable asm) {
       //Create the API
-        RemappingHandler.resetRegistries();
+
         ProgressionAPI.registry = new APIHandler();
         ProgressionAPI.player = new PlayerHandler();
         ProgressionAPI.filters = new FilterSelectorHelper();
@@ -44,6 +46,7 @@ public class PCommonProxy implements IGuiHandler {
         Progression.item = (ItemProgression) new ItemProgression().setUnlocalizedName("item").setRegistryName("item");
         GameRegistry.register(Progression.item);
 
+        GameRegistry.addRecipe(new ShapedOreRecipe(getStackFromMeta(book), "FS", "PP", 'P', Items.PAPER, 'S', Items.STRING, 'F', FLINT));
         if (Options.tileClaimerRecipe) {
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Progression.item, 1, ItemProgression.ItemMeta.claim.ordinal()), new Object[] { "F", "P", 'F', Items.FLINT, 'P', "plankWood" }));
         }
@@ -102,11 +105,9 @@ public class PCommonProxy implements IGuiHandler {
         ProgressionAPI.registry.registerDamageSource(DamageSource.outOfWorld);
         ProgressionAPI.registry.registerDamageSource(DamageSource.starve);
         ProgressionAPI.registry.registerDamageSource(DamageSource.wither);
+        ProgressionAPI.registry.registerDamageSource(DamageSource.flyIntoWall);
+        ProgressionAPI.registry.registerDamageSource(DamageSource.dragonBreath);
         NetworkRegistry.INSTANCE.registerGuiHandler(Progression.instance, Progression.proxy);
-    }
-
-    private ItemStack getIcon(ItemMeta meta) {
-        return ItemProgression.getStackFromMeta(meta);
     }
 
     public void initClient() {}
