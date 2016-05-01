@@ -70,7 +70,7 @@ public class PacketInvitePlayer extends PenguinPacket {
             sendInvite(sender, username, teamOwner, teamName);
         } else {
             GROUP_EDITOR.addInvite(teamOwner, teamName);
-            ChatHelper.displayChat(BLUE + "You were invited to join the team: " + WHITE +  teamName + "\n" + RED + "If you wish to join this team, use the progression book or type" + WHITE + "\n/progression team join " + teamName);
+            ChatHelper.displayChat(BLUE + "You were invited to join the team: " + WHITE +  teamName + "\n" + RED + "If you wish to join this team, use the progression book or type" + GREEN + "\n/progression team join " + teamName);
         }
     }
 }

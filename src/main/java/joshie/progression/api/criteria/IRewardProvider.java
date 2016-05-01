@@ -24,6 +24,9 @@ public interface IRewardProvider extends IRuleProvider<IReward> {
     /** Set the icon **/
     public IRewardProvider setIcon(ItemStack stack);
 
+    /** Returns true if only one of these rewards can be claimed per team **/
+    public boolean isOnePerTeam();
+
     /** Returns whether this reward must be claimed **/
     public boolean mustClaim();
 

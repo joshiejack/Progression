@@ -33,10 +33,11 @@ public class RemappingHandler {
         PacketHandler.sendToClient(new PacketSyncJSONToClient(Section.SEND_HASH, JSONLoader.serverHashcode, getHostName()), player);
     }
 
+    /** Called, When a server starts, or when reload or reset is called **/
     public static void reloadServerData(DefaultSettings settings, boolean isClient) {
         //Reset the data
-        resetRegistries();
-
+        //Create a a new unlocker
+        criteriaToUnlocks = HashMultimap.create(); //Reset all data
         //All data has officially been wiped SERVERSIDE
         //Reload in all the data from json
         /** Grab yourself some gson, load it in from the file serverside **/
@@ -54,12 +55,10 @@ public class RemappingHandler {
         }
     }
 
-    public static void resetRegistries() {
+    public static void resetRegistries(boolean isClientside) {
         //Resets all of the registries to default empty data
-        //Create a a new unlocker
-        criteriaToUnlocks = HashMultimap.create(); //Reset all data
-        APICache.resetAPIHandler(false); //Reset tabs and criteria maps
-        EventsManager.create();
-        CraftingRegistry.create();
+        APICache.resetAPIHandler(isClientside); //Reset tabs and criteria maps
+        EventsManager.resetEvents(isClientside);
+        CraftingRegistry.resetRegistry(isClientside);
     }
 }

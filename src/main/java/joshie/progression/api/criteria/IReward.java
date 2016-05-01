@@ -7,7 +7,7 @@ public interface IReward extends IRule<IRewardProvider> {
     public void reward(EntityPlayerMP player);
 
     /** Called when the reward is added **/
-    public void onAdded();
+    public void onAdded(boolean isClient);
 
     /** Called when the reward is removed**/
     public void onRemoved();

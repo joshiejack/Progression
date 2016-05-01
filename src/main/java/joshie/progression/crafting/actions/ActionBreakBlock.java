@@ -14,10 +14,13 @@ public class ActionBreakBlock extends ActionForgeEvent {
 
     @SubscribeEvent
     public void onBreakSpeed(BreakSpeed event) {
-        Block block = event.getState().getBlock();
-        int meta = block.getMetaFromState(event.getState());
-        if (ProgressionEvents.isEventCancelled(event.getEntityPlayer(), ActionType.BREAKBLOCKWITH, event.getEntityLiving().getHeldItemMainhand(), ActionType.BREAKBLOCK, BlockActionHelper.getStackFromBlockData(block, meta))) {
-            event.setNewSpeed(0F);
+        EntityPlayer player = event.getEntityPlayer();
+        if (player != null) {
+            Block block = event.getState().getBlock();
+            int meta = block.getMetaFromState(event.getState());
+            if (ProgressionEvents.isEventCancelled(event.getEntityPlayer(), ActionType.BREAKBLOCKWITH, event.getEntityPlayer().getHeldItemMainhand(), ActionType.BREAKBLOCK, BlockActionHelper.getStackFromBlockData(block, meta))) {
+                event.setNewSpeed(0F);
+            }
         }
     }
 

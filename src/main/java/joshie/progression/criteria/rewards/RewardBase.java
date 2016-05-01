@@ -19,7 +19,7 @@ public abstract class RewardBase implements IReward {
     }
 
     @Override
-    public void onAdded() {}
+    public void onAdded(boolean isClient) {}
 
     @Override
     public void onRemoved() {}

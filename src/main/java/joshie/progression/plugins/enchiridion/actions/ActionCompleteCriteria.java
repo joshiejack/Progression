@@ -27,8 +27,7 @@ public class ActionCompleteCriteria extends AbstractActionCriteria implements IB
     @Override
     public boolean performAction() {
         if (getCriteria() != null) {
-            ProgressionAPI.registry.fireTriggerClientside("forced-complete", getCriteria());
-
+            ProgressionAPI.registry.forceComplete(getCriteria());
             return true;
         }
 

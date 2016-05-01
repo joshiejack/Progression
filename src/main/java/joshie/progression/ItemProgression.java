@@ -129,7 +129,7 @@ public class ItemProgression extends Item {
         if (stack.getItemDamage() == ItemMeta.claim.ordinal()) {
             TileEntity tile = world.getTileEntity(pos);
             if (tile != null) {
-                Crafter crafter = CraftingRegistry.getCrafterFromTile(tile);
+                Crafter crafter = CraftingRegistry.get(world.isRemote).getCrafterFromTile(tile);
                 if (crafter == CraftingUnclaimed.INSTANCE) {
                     PlayerTracker.setTileOwner(tile, PlayerHelper.getUUIDForPlayer(player));
                     PacketHandler.sendToClient(new PacketClaimed(pos.getX(), pos.getY(), pos.getZ()), (EntityPlayerMP) player);
@@ -139,7 +139,7 @@ public class ItemProgression extends Item {
         } else {
             ICriteria criteria = getCriteriaFromStack(stack, world.isRemote);
             if (criteria != null) {
-                Result completed = PlayerTracker.getServerPlayer(PlayerHelper.getUUIDForPlayer(player)).getMappings().fireAllTriggers("forced-complete", criteria);
+                Result completed = PlayerTracker.getServerPlayer(PlayerHelper.getUUIDForPlayer(player)).getMappings().forceComplete(criteria);
                 if (!player.capabilities.isCreativeMode && completed == Result.ALLOW) {
                     stack.stackSize--;
                     return EnumActionResult.SUCCESS;
@@ -164,7 +164,7 @@ public class ItemProgression extends Item {
         } else if (!world.isRemote) {
             ICriteria criteria = getCriteriaFromStack(stack, world.isRemote);
             if (criteria != null) {
-                Result completed = PlayerTracker.getServerPlayer(PlayerHelper.getUUIDForPlayer(player)).getMappings().fireAllTriggers("forced-complete", criteria);
+                Result completed = PlayerTracker.getServerPlayer(PlayerHelper.getUUIDForPlayer(player)).getMappings().forceComplete(criteria);
                 if (!player.capabilities.isCreativeMode && completed == Result.ALLOW) {
                     stack.stackSize--;
                     return new ActionResult(EnumActionResult.SUCCESS, stack);

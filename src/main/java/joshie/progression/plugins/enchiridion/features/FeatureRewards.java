@@ -20,6 +20,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static joshie.progression.gui.core.GuiList.REWARDS;
 
@@ -71,7 +72,8 @@ public class FeatureRewards extends FeatureCriteria implements ISimpleEditorFiel
         int offsetY = always.size() != 0 ? 30: 0;
         int x = 0;
         for (IRewardProvider reward : claim) {
-            if (!PlayerTracker.getClientPlayer().getMappings().getUnclaimedRewards(PlayerHelper.getClientUUID()).contains(reward)) continue;
+            UUID uuid = reward.isOnePerTeam() ? PlayerTracker.getClientPlayer().getTeam().getOwner() : PlayerHelper.getClientUUID();
+            if (!PlayerTracker.getClientPlayer().getMappings().getUnclaimedRewards(uuid).contains(reward)) continue;
             if (offsetMouseX >= x && offsetMouseX <= x + 16 && offsetMouseY >= 10 + offsetY && offsetMouseY <= 10 + offsetY + 16) {
                 //Clicked
                 REWARDS.select(reward);

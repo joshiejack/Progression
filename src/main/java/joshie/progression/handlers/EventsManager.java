@@ -12,28 +12,56 @@ import java.util.Collection;
 import java.util.HashSet;
 
 public class EventsManager {
-    private static HashSet<IRule> active;
+    private HashSet<IRule> active;
 
-    public static void create() {
-        if (active != null) {
-            for (IRule type: active) {
-                try {
-                    if (type instanceof IHasEventBus) {
-                        EventBus bus = ((IHasEventBus) type).getEventBus();
-                        if (bus != null) {
-                            if (Options.debugMode) Progression.logger.log(Level.INFO, "Unregistered the object " + type + " from the event bus");
-                            bus.unregister(type);
+    //Instances
+    public static EventsManager server;
+    public static EventsManager client;
+
+    public static void resetEvents(boolean isClient) {
+        if (isClient) {
+            client = new EventsManager().create(client);
+        } else server = new EventsManager().create(server);
+    }
+
+    public static EventsManager getClientCache() {
+        return client;
+    }
+
+    public static EventsManager getServerCache() {
+        return server;
+    }
+
+    public static EventsManager get(boolean isClient) {
+        return isClient ? getClientCache() : getServerCache();
+    }
+
+    public EventsManager create(EventsManager manager) {
+        if (manager != null && manager.active != null) {
+            HashSet<IRule> active = manager.active;
+            if (active != null) {
+                for (IRule type : active) {
+                    try {
+                        if (type instanceof IHasEventBus) {
+                            EventBus bus = ((IHasEventBus) type).getEventBus();
+                            if (bus != null) {
+                                if (Options.debugMode)
+                                    Progression.logger.log(Level.INFO, "Unregistered the object " + type + " from the event bus");
+                                bus.unregister(type);
+                            }
                         }
+                    } catch (Exception e) {
                     }
-                } catch (Exception e) {}
+                }
             }
         }
 
-        active = new HashSet();
+        this.active = new HashSet();
+        return this;
     }
 
 
-    public static void onAdded(IRule eventType) {
+    public void onAdded(IRule eventType) {
         active.add(getGenericFromType(eventType));
         HashSet activeTypes = new HashSet();
         for (IRule existing: active) {
@@ -55,11 +83,11 @@ public class EventsManager {
         }
 
         if (eventType instanceof IReward) {
-            ((IReward)eventType).onAdded();
+            ((IReward)eventType).onAdded(this == client);
         }
     }
 
-    public static void onRemoved(IRule eventType) {
+    public void onRemoved(IRule eventType) {
         active.remove(getGenericFromType(eventType));
         HashSet activeTypes = new HashSet();
         for (IRule existing: active) {

@@ -1,7 +1,6 @@
 package joshie.progression.network;
 
 import io.netty.buffer.ByteBuf;
-import joshie.progression.handlers.APICache;
 import joshie.progression.handlers.RemappingHandler;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.json.JSONLoader;
@@ -39,8 +38,6 @@ public class PacketSyncJSONToClient extends PenguinPacket {
         this.integer = position;
         this.string = data;
     }
-
-
 
     @Override
     public void toBytes(ByteBuf buf) {
@@ -81,7 +78,6 @@ public class PacketSyncJSONToClient extends PenguinPacket {
             PacketHandler.sendToClient(new PacketSyncJSONToClient(Section.SEND_LENGTH, JSONLoader.serverTabJsonData.length), thePlayer);
         } else if (section == SEND_LENGTH) { //Clientside set the data for receival of this packet
             JSONLoader.clientTabJsonData = new String[integer];
-            APICache.resetAPIHandler(true); //Reset the cache once we've received the length
             PacketHandler.sendToServer(new PacketSyncJSONToClient(RECEIVED_LENGTH));
         } else if (section == RECEIVED_LENGTH) {
             for (int i = 0; i < JSONLoader.serverTabJsonData.length; i++) {

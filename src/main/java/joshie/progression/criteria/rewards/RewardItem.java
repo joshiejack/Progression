@@ -48,7 +48,7 @@ public class RewardItem extends RewardBaseItemFilter implements ICustomDisplayNa
 
     @Override
     public void addSpecialFields(List<IField> fields, DisplayMode mode) {
-        if (mode == EDIT) fields.add(new ItemFilterFieldPreview("filters", this, 25, 30, 2.8F));
+        if (mode == EDIT) fields.add(new ItemFilterFieldPreview("filters", this, 50, 40, 2F));
         else fields.add(new ItemFilterFieldPreview("filters", this, 5, 25, 2.8F));
     }
 

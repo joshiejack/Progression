@@ -108,7 +108,7 @@ public class RuleHandler {
             ITriggerProvider provider = new Trigger(criteria, uuid, newTriggerType, icon, dummy.getUnlocalisedName(), dummy.getColor(), dummy.isCancelable());
             provider.readFromJSON(data);
             criteria.getTriggers().add(provider);
-            EventsManager.onAdded(newTriggerType);
+            EventsManager.get(isClient).onAdded(newTriggerType);
             if (newTriggerType instanceof IInit) ((IInit) newTriggerType).init(isClient);
             //Register with the cache
             return APICache.getCache(isClient).addTrigger(provider);
@@ -125,7 +125,7 @@ public class RuleHandler {
             ItemStack icon = dummy.getProvided() instanceof ICustomIcon ? new ItemStack(Items.WRITTEN_BOOK) : dummy.getIcon();
             IConditionProvider provider = new Condition(trigger, uuid, newConditionType, icon, dummy.getUnlocalisedName());
             provider.readFromJSON(data);
-            EventsManager.onAdded(newConditionType);
+            EventsManager.get(isClient).onAdded(newConditionType);
             trigger.getConditions().add(provider);
             if (newConditionType instanceof IInit) ((IInit) newConditionType).init(isClient);
             return APICache.getCache(isClient).addCondition(provider);
@@ -143,7 +143,7 @@ public class RuleHandler {
             IRewardProvider provider = new Reward(criteria, uuid, newRewardType, icon, dummy.getUnlocalisedName(), dummy.getColor());
             provider.readFromJSON(data);
             criteria.getRewards().add(provider);
-            EventsManager.onAdded(newRewardType);
+            EventsManager.get(isClient).onAdded(newRewardType);
             if (newRewardType instanceof IInit) ((IInit) newRewardType).init(isClient);
             //Register with the cache
             APICache.getCache(isClient).addReward(provider);
@@ -157,7 +157,7 @@ public class RuleHandler {
             IFilter newFilterType = dummy.getProvided().getClass().newInstance(); //Create a new instance of the reward
             JSONHelper.readJSON(data, newFilterType, isClient);
             IFilterProvider provider = new Filter(master, UUID.randomUUID(), newFilterType, dummy.getUnlocalisedName(), dummy.getColor());
-            EventsManager.onAdded(newFilterType);
+            EventsManager.get(isClient).onAdded(newFilterType);
             if (newFilterType instanceof IInit) ((IInit) newFilterType).init(isClient);
             return provider;
         } catch (Exception e) { e.printStackTrace();  return  null; }
@@ -169,7 +169,7 @@ public class RuleHandler {
             ITrigger newTriggerType = dummy.getProvided().getClass().newInstance();
             ITriggerProvider clone = new Trigger(criteria, UUID.randomUUID(), newTriggerType, dummy.getIcon(), dummy.getUnlocalisedName(), dummy.getColor(), dummy.isCancelable());
             criteria.getTriggers().add(clone);
-            EventsManager.onAdded(newTriggerType);
+            EventsManager.getClientCache().onAdded(newTriggerType);
             if (newTriggerType instanceof IInit) ((IInit) newTriggerType).init(true);
 
             //Reinit the currently open gui
@@ -184,7 +184,7 @@ public class RuleHandler {
             ICondition newConditionType = dummy.getProvided().getClass().newInstance();
             IConditionProvider clone = new Condition(trigger, UUID.randomUUID(), newConditionType, dummy.getIcon(), dummy.getUnlocalisedName());
             trigger.getConditions().add(clone);
-            EventsManager.onAdded(newConditionType);
+            EventsManager.getClientCache().onAdded(newConditionType);
             if (newConditionType instanceof IInit) ((IInit) newConditionType).init(true);
 
             //Reinit the currently open gui
@@ -199,7 +199,7 @@ public class RuleHandler {
             IReward newRewardType = dummy.getProvided().getClass().newInstance();
             IRewardProvider clone = new Reward(criteria, UUID.randomUUID(), newRewardType, dummy.getIcon(), dummy.getUnlocalisedName(), dummy.getColor());
             criteria.getRewards().add(clone);
-            EventsManager.onAdded(newRewardType);
+            EventsManager.getClientCache().onAdded(newRewardType);
             if (newRewardType instanceof IInit) ((IInit) newRewardType).init(true);
 
             //Reinit the currently open gui
@@ -213,7 +213,7 @@ public class RuleHandler {
         try {
             IFilter newFilter = dummy.getProvided().getClass().newInstance();
             field.add(new Filter(dummy.getMaster(), UUID.randomUUID(), newFilter, dummy.getUnlocalisedName(), dummy.getColor()));
-            EventsManager.onAdded(newFilter);
+            EventsManager.getClientCache().onAdded(newFilter);
             if (newFilter instanceof IInit) ((IInit) newFilter).init(true);
 
             //Reinit the currently open gui
@@ -259,10 +259,10 @@ public class RuleHandler {
         //Remove all rewards associated with this criteria
         for (IRewardProvider provider : c.getRewards()) {
             IReward reward = provider.getProvided();
-            EventsManager.onRemoved(reward);
+            EventsManager.getClientCache().onRemoved(reward);
             if (reward instanceof IHasFilters) {
                 for (IFilterProvider filter: ((IHasFilters)reward).getAllFilters()) {
-                    EventsManager.onRemoved(filter.getProvided());
+                    EventsManager.getClientCache().onRemoved(filter.getProvided());
                 }
             }
         }
@@ -270,20 +270,20 @@ public class RuleHandler {
         //Remove all triggers associated with this criteria
         for (ITriggerProvider provider : c.getTriggers()) {
             ITrigger trigger = provider.getProvided();
-            EventsManager.onRemoved(trigger);
+            EventsManager.getClientCache().onRemoved(trigger);
             for (IConditionProvider conditionProvider: provider.getConditions()) {
                 ICondition condition = conditionProvider.getProvided();
-                EventsManager.onRemoved(condition);
+                EventsManager.getClientCache().onRemoved(condition);
                 if (condition instanceof IHasFilters) {
                     for (IFilterProvider filter: ((IHasFilters)condition).getAllFilters()) {
-                        EventsManager.onRemoved(filter.getProvided());
+                        EventsManager.getClientCache().onRemoved(filter.getProvided());
                     }
                 }
             }
 
             if (trigger instanceof IHasFilters) {
                 for (IFilterProvider filter: ((IHasFilters)trigger).getAllFilters()) {
-                    EventsManager.onRemoved(filter.getProvided());
+                    EventsManager.getClientCache().onRemoved(filter.getProvided());
                 }
             }
         }

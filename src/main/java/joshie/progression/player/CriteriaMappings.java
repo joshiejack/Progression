@@ -197,20 +197,34 @@ public class CriteriaMappings {
         data.markDirty();
         PacketHandler.sendToTeam(new PacketSyncImpossible(impossible.toArray(new ICriteria[impossible.size()])), master.team);
     }
+
+    public Result forceRemoval(ICriteria criteria) {
+        if (criteria == null || !completedCritera.keySet().contains(criteria)) return Result.DEFAULT;
+        else removeCriteria(criteria);
+        remap(); //Remap everything
+        data.markDirty();
+        return Result.ALLOW;
+    }
+
+    public Result forceComplete(ICriteria criteria) {
+        HashSet<ICriteria> toComplete = new HashSet<ICriteria>();
+        boolean repeat = criteria.canRepeatInfinite();
+        if (!repeat) {
+            int max = criteria.getRepeatAmount();
+            int last = getCriteriaCount(criteria);
+            repeat = last < max;
+        }
+
+        if (repeat) { //If we're allowed to fire again, do so
+            toComplete.add(criteria);
+        }
+
+        return claimRewardsAndCompleteCriteria(toComplete, true);
+    }
     
     /** Called to fire a trigger type, Triggers are only ever called on criteria that is activated **/
     public Result fireAllTriggers(String type, Object... triggerData) {
         if (activeTriggers == null) return Result.DEFAULT; //If the remapping hasn't occured yet, say goodbye!
-        //If the trigger is a forced removal, then force remve it
-        if (type.equals("forced-remove")) {
-            ICriteria criteria = (ICriteria) triggerData[0];
-            if (criteria == null || !completedCritera.keySet().contains(criteria)) return Result.DEFAULT;
-            else removeCriteria(criteria);
-            remap(); //Remap everything
-            data.markDirty();
-            return Result.ALLOW;
-        }
-
         boolean completedAnyCriteria = false;
         Collection<ITriggerProvider> triggers = activeTriggers.get(type);
         HashSet<ITriggerProvider> cantContinue = new HashSet();
@@ -291,29 +305,25 @@ public class CriteriaMappings {
 
         //Remove completed triggers from the active map
         triggers.removeAll(toRemove);
+        return claimRewardsAndCompleteCriteria(toComplete, completedAnyCriteria);
+    }
 
-        //Add the bypassing of requirements completion
-        if (type.equals("forced-complete")) {
-            ICriteria criteria = (ICriteria) triggerData[0];
-            boolean repeat = criteria.canRepeatInfinite();
-            if (!repeat) {
-                int max = criteria.getRepeatAmount();
-                int last = getCriteriaCount(criteria);
-                repeat = last < max;
-            }
-
-            if (repeat) { //If we're allowed to fire again, do so
-                completedAnyCriteria = true;
-                toComplete.add(criteria);
-            }
-        }
-
+    private Result claimRewardsAndCompleteCriteria(HashSet<ICriteria> toComplete, boolean completedAnyCriteria) {
         //Now that we have removed all the triggers, and marked this as completed and remapped data,
         // we should add the rewards to the unclaimed rewards list
         for (ICriteria criteria : toComplete) {
-            for (UUID uuid: master.team.getEveryone()) {
-                unclaimedRewards.get(uuid).addAll(criteria.getRewards());
-                PacketHandler.sendToTeam(new PacketSyncUnclaimed(uuid, criteria.getRewards()), master.getTeam());
+            for (IRewardProvider reward: criteria.getRewards()) {
+                if (reward.isOnePerTeam()) {
+                    unclaimedRewards.get(master.team.getOwner()).addAll(criteria.getRewards());
+                } else {
+                    for (UUID uuid: master.team.getEveryone()) {
+                        unclaimedRewards.get(uuid).addAll(criteria.getRewards());
+                    }
+                }
+
+                for (UUID uuid: master.team.getEveryone()) {
+                    PacketHandler.sendToTeam(new PacketSyncUnclaimed(uuid, criteria.getRewards()), master.getTeam());
+                }
             }
         }
 
@@ -387,6 +397,8 @@ public class CriteriaMappings {
 
     public boolean claimReward(EntityPlayerMP player, IRewardProvider reward) {
         UUID uuid = PlayerHelper.getUUIDForPlayer(player);
+        if (reward.isOnePerTeam()) uuid = master.team.getOwner();
+
         ICriteria criteria = reward.getCriteria();
         int rewardsGiven = getRewardsGiven(uuid, criteria);
         if (rewardsGiven < criteria.getAmountOfRewards() || criteria.givesAllRewards()) {

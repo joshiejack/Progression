@@ -12,15 +12,38 @@ import net.minecraft.tileentity.TileEntity;
 import java.util.*;
 
 public class CraftingRegistry {
-    private static volatile HashMap<ActionType, HashMap<IFilterProvider, ICriteria>> filterToCriteriaMapCrafting;
+    private HashMap<ActionType, HashMap<IFilterProvider, ICriteria>> filterToCriteriaMapCrafting;
+    private HashMap<ActionType, HashMap<Item, Set<IFilterProvider>>> itemToFilterCache;
 
-    public static void create() {
-        filterToCriteriaMapCrafting = new HashMap();
-        itemToFilterCache = new HashMap();
-        actionCache = new HashMap();
+    //Instances
+    public static CraftingRegistry client;
+    public static CraftingRegistry server;
+
+    public static void resetRegistry(boolean isClient) {
+        if (isClient) {
+            client = new CraftingRegistry().create();
+        } else server = new CraftingRegistry().create();
     }
 
-    private static HashMap<IFilterProvider, ICriteria> getFilterToCriteriaForType(ActionType type) {
+    public static CraftingRegistry getClientCache() {
+        return client;
+    }
+
+    public static CraftingRegistry getServerCache() {
+        return server;
+    }
+
+    public static CraftingRegistry get(boolean isClient) {
+        return isClient ? getClientCache() : getServerCache();
+    }
+
+    public CraftingRegistry create() {
+        filterToCriteriaMapCrafting = new HashMap();
+        itemToFilterCache = new HashMap();
+        return this;
+    }
+
+    private HashMap<IFilterProvider, ICriteria> getFilterToCriteriaForType(ActionType type) {
         HashMap<IFilterProvider, ICriteria> filterToCriteria = filterToCriteriaMapCrafting.get(type);
         if (filterToCriteria == null) {
             filterToCriteria = new HashMap();
@@ -30,7 +53,7 @@ public class CraftingRegistry {
         return filterToCriteria;
     }
 
-    public static void addRequirement(ActionType type, ICriteria requirement, List<IFilterProvider> filters) {
+    public void addRequirement(ActionType type, ICriteria requirement, List<IFilterProvider> filters) {
         HashMap<IFilterProvider, ICriteria> filterToCriteria = getFilterToCriteriaForType(type);
 
         //Add a link for filter to criteria
@@ -39,9 +62,9 @@ public class CraftingRegistry {
         }
     }
 
-    private static HashMap<ActionType, HashMap<Item, Set<IFilterProvider>>> itemToFilterCache = new HashMap();
 
-    public static Set<IFilterProvider> getFiltersForStack(ActionType type, ItemStack stack) {
+
+    public Set<IFilterProvider> getFiltersForStack(ActionType type, ItemStack stack) {
         HashMap<Item, Set<IFilterProvider>> typeCache = itemToFilterCache.get(type);
         if (typeCache == null) { //Create the type cache if it doesn't exist
             typeCache = new HashMap();
@@ -63,15 +86,13 @@ public class CraftingRegistry {
         return result != null ? result : new HashSet();
     }
 
-    public static ICriteria getCriteriaForFilter(ActionType type, IFilterProvider filter) {
+    public ICriteria getCriteriaForFilter(ActionType type, IFilterProvider filter) {
         return getFilterToCriteriaForType(type).get(filter);
     }
 
-    private static HashMap<ActionType, HashMap<ItemStack, Set<ICriteria>>> actionCache = new HashMap();
-
-    public static Set<ICriteria> getRequirements(ActionType type, ItemStack stack) {
+    public Set<ICriteria> getRequirements(ActionType type, ItemStack stack) {
         Set<ICriteria> matched = new HashSet();
-        Set<IFilterProvider> filters = CraftingRegistry.getFiltersForStack(type, stack);
+        Set<IFilterProvider> filters = getFiltersForStack(type, stack);
         for (IFilterProvider filter : filters) {
             if (filter.getProvided().matches(stack)) {
                 matched.add(getCriteriaForFilter(type, filter));
@@ -79,37 +100,17 @@ public class CraftingRegistry {
         }
 
         return matched;
-
-        /*
-
-        HashMap<ItemStack, Set<ICriteria>> cache = actionCache.get(type);
-        if (cache == null) {
-            cache = new HashMap();
-            actionCache.put(type, cache);
-        }
-
-        if (cache.containsKey(stack)) return cache.get(stack);
-        Set<IFilterProvider> filters = CraftingRegistry.getFiltersForStack(type, stack);
-        Set<ICriteria> matched = new HashSet();
-        for (IFilterProvider filter : filters) {
-            if (filter.getProvided().matches(stack)) {
-                matched.add(getCriteriaForFilter(type, filter)); //Add all matches so we can check all criteria
-            }
-        }
-
-        cache.put(stack, matched);
-        return matched; */
     }
 
-    public static Crafter getCrafterFromPlayer(EntityPlayer player) {
+    public Crafter getCrafterFromPlayer(EntityPlayer player) {
         return getCrafterFromUUID(PlayerHelper.getUUIDForPlayer(player));
     }
 
-    public static Crafter getCrafterFromTile(TileEntity tile) {
+    public Crafter getCrafterFromTile(TileEntity tile) {
         return getCrafterFromUUID(PlayerTracker.getTileOwner(tile));
     }
 
-    private static Crafter getCrafterFromUUID(UUID uuid) {
+    private Crafter getCrafterFromUUID(UUID uuid) {
         return PlayerHelper.getCrafterForUUID(uuid);
     }
 }

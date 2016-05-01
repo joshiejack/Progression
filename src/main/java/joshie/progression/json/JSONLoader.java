@@ -9,6 +9,7 @@ import joshie.progression.api.special.IHasFilters;
 import joshie.progression.api.special.IInit;
 import joshie.progression.handlers.APICache;
 import joshie.progression.handlers.EventsManager;
+import joshie.progression.handlers.RemappingHandler;
 import joshie.progression.handlers.RuleHandler;
 import joshie.progression.helpers.FileHelper;
 import joshie.progression.helpers.JSONHelper;
@@ -254,7 +255,7 @@ public class JSONLoader {
                         }
                     }
 
-                    EventsManager.onAdded(trigger);
+                    EventsManager.get(isClientside).onAdded(trigger);
 
                     for (IConditionProvider conditionProvider: provider.getConditions()) {
                         ICondition condition = conditionProvider.getProvided();
@@ -275,13 +276,14 @@ public class JSONLoader {
                         }
                     }
 
-                    EventsManager.onAdded(provider.getProvided());
+                    EventsManager.get(isClientside).onAdded(provider.getProvided());
                 }
             }
         }
     }
 
     public static void loadJSON(boolean isClientside, DefaultSettings settings) {
+        RemappingHandler.resetRegistries(isClientside); //Wipe existing data first
         if (Options.debugMode) {
             Progression.logger.log(Level.INFO, "Reloaded JSON at " + System.currentTimeMillis() + " " + isClientside);
         }

@@ -87,7 +87,7 @@ public class RewardCraftability extends RewardBaseItemFilter implements ICustomD
     }
 
     @Override
-    public void onAdded() {
+    public void onAdded(boolean isClient) {
         for (ActionType type : getTypesFromFilter()) {
             IHasEventBus bus = type.getCustomBus();
             if (bus != null) {
@@ -96,7 +96,7 @@ public class RewardCraftability extends RewardBaseItemFilter implements ICustomD
                 }
             }
 
-            CraftingRegistry.addRequirement(type, getProvider().getCriteria(), filters);
+            CraftingRegistry.get(isClient).addRequirement(type, getProvider().getCriteria(), filters);
         }
     }
 

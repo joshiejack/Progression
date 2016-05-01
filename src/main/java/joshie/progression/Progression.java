@@ -22,10 +22,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.oredict.ShapedOreRecipe;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -33,10 +30,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 
-import static joshie.progression.ItemProgression.ItemMeta.book;
-import static joshie.progression.ItemProgression.getStackFromMeta;
 import static joshie.progression.lib.PInfo.*;
-import static net.minecraft.init.Items.FLINT;
 
 @Mod(modid = MODID, name = MODNAME, version = VERSION, guiFactory = GUI_FACTORY_CLASS)
 public class Progression {
@@ -82,7 +76,6 @@ public class Progression {
             } catch (Exception e) {}
         }
 
-        GameRegistry.addRecipe(new ShapedOreRecipe(getStackFromMeta(book), "FS", "PP", 'P', "paper", 'S', "string", 'F', FLINT));
         proxy.registerRendering();
     }
 
@@ -99,7 +92,7 @@ public class Progression {
         }
 
         
-        //Remap all relevant data
+        //Remap all relevant data, Loads in the server data
         RemappingHandler.reloadServerData(JSONLoader.getServerTabData(RemappingHandler.getHostName()), false);
         
         World world = FMLCommonHandler.instance().getMinecraftServerInstance().worldServers[0];
@@ -107,11 +100,6 @@ public class Progression {
         if (data == null) {
             createWorldData();
         }
-    }
-    
-    @EventHandler
-    public void onServerStarting(FMLServerStoppedEvent event) {
-        RemappingHandler.resetRegistries();
     }
 
     public void createWorldData() {

@@ -25,6 +25,7 @@ public class Reward implements IRewardProvider {
     private ItemStack stack;
     public boolean isVisible;
     public boolean mustClaim;
+    public boolean onePerTeam;
 
     //Dummy constructor for storing the default values
     public Reward(IReward reward, String unlocalised, int color) {
@@ -44,6 +45,7 @@ public class Reward implements IRewardProvider {
         this.isVisible = true;
         this.mustClaim = Options.mustClaimDefault;
         this.reward.setProvider(this);
+        this.onePerTeam = onePerTeam;
     }
 
     @Override
@@ -122,15 +124,22 @@ public class Reward implements IRewardProvider {
     }
 
     @Override
+    public boolean isOnePerTeam() {
+        return onePerTeam;
+    }
+
+    @Override
     public void readFromJSON(JsonObject data) {
         isVisible = JSONHelper.getBoolean(data, "isVisible", true);
         mustClaim = JSONHelper.getBoolean(data, "mustClaim", false);
+        onePerTeam = JSONHelper.getBoolean(data, "onePerTeam", false);
     }
 
     @Override
     public void writeToJSON(JsonObject data) {
         JSONHelper.setBoolean(data, "isVisible", isVisible, true);
         JSONHelper.setBoolean(data, "mustClaim", mustClaim, false);
+        JSONHelper.setBoolean(data, "onePerTeam", onePerTeam, false);
     }
 
     @Override
