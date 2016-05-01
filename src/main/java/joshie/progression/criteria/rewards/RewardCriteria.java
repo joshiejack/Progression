@@ -81,8 +81,8 @@ public class RewardCriteria extends RewardBaseSingular implements IInit, ICustom
     public void reward(EntityPlayerMP player) {
         if (criteria == null) return; //Do not give the reward
         if (remove) {
-            PlayerTracker.getServerPlayer(player).getMappings().fireAllTriggers("forced-remove", criteria);
-        } else PlayerTracker.getServerPlayer(player).getMappings().fireAllTriggers("forced-complete", criteria, criteria.getRewards());
+            PlayerTracker.getServerPlayer(player).getMappings().forceRemoval(criteria);
+        } else PlayerTracker.getServerPlayer(player).getMappings().forceComplete(criteria);
 
         if (possibility) {
             PlayerTracker.getServerPlayer(player).getMappings().switchPossibility(criteria);

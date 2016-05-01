@@ -5,6 +5,7 @@ import joshie.progression.crafting.ActionType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
@@ -22,12 +23,14 @@ public class ActionEvent extends Event {
     public final TileEntity tile;
     public final ItemStack stack;
     public final ActionType type;
+    public final World world;
 
     public ActionEvent(ActionType type, EntityPlayer player, ItemStack stack) {
         this.type = type;
         this.player = player;
         this.tile = null;
         this.stack = stack;
+        this.world = player.worldObj;
     }
     
     public ActionEvent(ActionType type, TileEntity tile, ItemStack stack) {
@@ -35,5 +38,6 @@ public class ActionEvent extends Event {
         this.player = null;
         this.tile = tile;
         this.stack = stack;
+        this.world = tile.getWorld();
     }
 }

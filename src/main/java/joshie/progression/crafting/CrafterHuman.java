@@ -24,8 +24,7 @@ public class CrafterHuman extends Crafter {
 
     @Override
     public boolean canUseItemWithAction(World world, ActionType type, ItemStack stack) {
-        Set<IFilterProvider> filters = CraftingRegistry.getFiltersForStack(type, stack);
-        List<IFilterProvider> matched = new ArrayList();
+        Set<IFilterProvider> filters = CraftingRegistry.get(world.isRemote).getFiltersForStack(type, stack);        List<IFilterProvider> matched = new ArrayList();
         for (IFilterProvider filter : filters) {
             if (filter.getProvided().matches(stack)) {
                 matched.add(filter); //Add all matches so we can check all criteria
@@ -35,8 +34,7 @@ public class CrafterHuman extends Crafter {
         if (matched.size() == 0) return !Options.settings.disableUsageUntilRewardAdded;
         Set<ICriteria> completed = ProgressionAPI.player.getCompletedCriteriaList(uuid, world.isRemote);
         for (IFilterProvider filter : matched) {
-            ICriteria criteria = CraftingRegistry.getCriteriaForFilter(type, filter);
-            if (criteria != null && completed.contains(criteria)) return true;
+            ICriteria criteria = CraftingRegistry.get(world.isRemote).getCriteriaForFilter(type, filter);            if (criteria != null && completed.contains(criteria)) return true;
         }
         
         return false;

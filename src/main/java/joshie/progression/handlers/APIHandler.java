@@ -51,6 +51,11 @@ public class APIHandler implements IProgressionAPI {
     }
 
     @Override
+    public void forceComplete(ICriteria criteria) {
+        fireTriggerClientside("complete", criteria);
+    }
+
+    @Override
     public void registerCustomDataBuilder(String trigger, ICustomDataBuilder builder) {
         PacketFireTrigger.handlers.put(trigger, builder);
     }

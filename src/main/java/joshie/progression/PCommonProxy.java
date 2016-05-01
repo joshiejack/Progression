@@ -7,7 +7,6 @@ import joshie.progression.gui.fields.FieldRegistry;
 import joshie.progression.gui.filters.FilterSelectorHelper;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.handlers.ProgressionEvents;
-import joshie.progression.handlers.RemappingHandler;
 import joshie.progression.handlers.RuleHandler;
 import joshie.progression.json.Options;
 import joshie.progression.network.*;
@@ -29,7 +28,6 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 public class PCommonProxy implements IGuiHandler {
     public void preInit(ASMDataTable asm) {
       //Create the API
-        RemappingHandler.resetRegistries();
         ProgressionAPI.registry = new APIHandler();
         ProgressionAPI.player = new PlayerHandler();
         ProgressionAPI.filters = new FilterSelectorHelper();

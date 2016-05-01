@@ -81,7 +81,6 @@ public class PacketSyncJSONToClient extends PenguinPacket {
             PacketHandler.sendToClient(new PacketSyncJSONToClient(Section.SEND_LENGTH, JSONLoader.serverTabJsonData.length), thePlayer);
         } else if (section == SEND_LENGTH) { //Clientside set the data for receival of this packet
             JSONLoader.clientTabJsonData = new String[integer];
-            APICache.resetAPIHandler(true); //Reset the cache once we've received the length
             PacketHandler.sendToServer(new PacketSyncJSONToClient(RECEIVED_LENGTH));
         } else if (section == RECEIVED_LENGTH) {
             for (int i = 0; i < JSONLoader.serverTabJsonData.length; i++) {

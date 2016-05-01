@@ -24,7 +24,7 @@ public class CollectionHelper {
     }
 
     public static boolean removeAndUpdate(List drawable, IRuleProvider drawing) {
-        EventsManager.onRemoved(drawing.getProvided());
+        EventsManager.getClientCache().onRemoved(drawing.getProvided());
         CollectionHelper.remove(drawable, drawing);
         return true;
     }

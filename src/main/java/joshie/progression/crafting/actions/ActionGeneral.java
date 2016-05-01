@@ -31,7 +31,7 @@ public class ActionGeneral extends ActionForgeEvent {
     public boolean checkAndCancelEvent(net.minecraftforge.event.entity.player.PlayerEvent event) {
         if (event.entityPlayer.getCurrentEquippedItem() == null) return true;
         EntityPlayer player = event.entityPlayer;
-        Crafter crafter = CraftingRegistry.getCrafterFromPlayer(player);
+        Crafter crafter = CraftingRegistry.get(player.worldObj.isRemote).getCrafterFromPlayer(player);
         if (!crafter.canUseItemWithAction(event.entityPlayer.worldObj, ActionType.GENERAL, player.getCurrentEquippedItem())) {
             event.setCanceled(true);
             return false;

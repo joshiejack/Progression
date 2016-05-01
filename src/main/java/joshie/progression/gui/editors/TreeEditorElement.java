@@ -18,10 +18,7 @@ import net.minecraft.util.EnumChatFormatting;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.Callable;
 
 import static joshie.progression.api.special.DisplayMode.DISPLAY;
@@ -139,7 +136,8 @@ public class TreeEditorElement {
 
     private static boolean rewardsAvailable(ICriteria criteria) {
         for (IRewardProvider provider: criteria.getRewards()) {
-            if (PlayerTracker.getClientPlayer().getMappings().getUnclaimedRewards(PlayerHelper.getClientUUID()).contains(provider)) {
+            UUID uuid = provider.isOnePerTeam() ? PlayerTracker.getClientPlayer().getTeam().getOwner() : PlayerHelper.getClientUUID();
+            if (PlayerTracker.getClientPlayer().getMappings().getUnclaimedRewards(uuid).contains(provider)) {
                 return true;
             }
         }

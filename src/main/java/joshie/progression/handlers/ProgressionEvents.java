@@ -68,11 +68,10 @@ public class ProgressionEvents {
     @SubscribeEvent
     public void onAttemptToObtainItem(ActionEvent event) {
         if (event.stack == null) return;
-        Crafter crafter = event.player != null ? CraftingRegistry.getCrafterFromPlayer(event.player) : CraftingRegistry.getCrafterFromTile(event.tile);
-        if (crafter.canDoAnything()) return;
-
-        World world = event.player != null ? event.player.worldObj : event.tile != null ? event.tile.getWorld() : null;
-        if (world != null) {
+        if (event.world != null) {
+            World world = event.world;
+            Crafter crafter = event.player != null ? CraftingRegistry.get(world.isRemote).getCrafterFromPlayer(event.player) : CraftingRegistry.get(world.isRemote).getCrafterFromTile(event.tile);            if (crafter.canDoAnything()) return;
+            if (crafter.canDoAnything()) return;
             if (!crafter.canUseItemWithAction(world, event.type, event.stack)) {
                 event.setCanceled(true);
             }
@@ -86,7 +85,7 @@ public class ProgressionEvents {
             //No real way to cache correctly, without creating tons of objects
             HashMultimap<ActionType, ICriteria> requirements = HashMultimap.create();
             for (ActionType type: ActionType.values()) {
-                Set<ICriteria> required = CraftingRegistry.getRequirements(type, event.itemStack);
+                Set<ICriteria> required = CraftingRegistry.get(event.entityPlayer.worldObj.isRemote).getRequirements(type, event.itemStack);
                 if (required.size() == 0) continue;;
                 Set<ICriteria> completed = ProgressionAPI.player.getCompletedCriteriaList(PlayerHelper.getClientUUID(), true);
                 if (completed.contains(required)) continue; //Don't add this as a requirement if it's already completed

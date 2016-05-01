@@ -13,6 +13,7 @@ import joshie.progression.player.PlayerTracker;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import static joshie.progression.api.special.DisplayMode.EDIT;
 import static joshie.progression.gui.core.GuiList.*;
@@ -86,7 +87,8 @@ public class FeatureReward extends FeatureDrawable<IRewardProvider> {
             if (!trigger.getProvided().isCompleted()) return false;
         }
 
-        if (!PlayerTracker.getClientPlayer().getMappings().getUnclaimedRewards(PlayerHelper.getClientUUID()).contains(provider)) return false;
+        UUID uuid = provider.isOnePerTeam() ? PlayerTracker.getClientPlayer().getTeam().getOwner() : PlayerHelper.getClientUUID();
+        if (!PlayerTracker.getClientPlayer().getMappings().getUnclaimedRewards(uuid).contains(provider)) return false;
         if (mouseOffsetX > 0 && mouseOffsetX < provider.getWidth(MODE) && provider.mustClaim()) {
             if (select(provider)) sendToServer();
             return true;

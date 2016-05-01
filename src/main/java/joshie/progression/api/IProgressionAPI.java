@@ -1,6 +1,7 @@
 package joshie.progression.api;
 
 import joshie.progression.api.criteria.IAction;
+import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.special.IRequestItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -52,4 +53,7 @@ public interface IProgressionAPI {
      *  @param     the stack attempting to be used
      *  @param     the player or tile tile entity  */
     public boolean canUseToPerformAction(String actionType, ItemStack stack, Object tileOrPlayer);
+
+    /** Completes a criteria, forcefully, Call client side only **/
+    public void forceComplete(ICriteria criteria);
 }

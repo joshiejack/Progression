@@ -7,6 +7,7 @@ import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.handlers.APICache;
 import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.network.core.PenguinPacket;
+import joshie.progression.player.PlayerTracker;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -182,7 +183,8 @@ public class PacketFireTrigger extends PenguinPacket {
         if (builder != null) {
             data = builder.getObjects(player, type, data);
         }
-                
-        ProgressionAPI.registry.fireTrigger(player, type, data);
+
+        if (type.equals("complete")) PlayerTracker.getServerPlayer(player).getMappings().forceComplete((ICriteria)data[0]);
+        else ProgressionAPI.registry.fireTrigger(player, type, data);
     }
 }
