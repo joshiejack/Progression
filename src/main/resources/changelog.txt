@@ -1,3 +1,8 @@
+Progression 0.5.1
+  Fixed Tinkers Construct Worktable not being able to be opened at all
+  Added options to disable asm, in case a specific mod is erroring
+  Fix Potential packet error when loading a world
+
 Progression 0.5.0
   Updated to Minecraft 1.8.9 / Minecraft 1.9
   Craft Locking currently supports Thaumcraft 5, Tinkers Construct 2 and Vanilla

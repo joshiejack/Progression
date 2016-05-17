@@ -1,26 +1,26 @@
 package joshie.progression.asm;
 
+import joshie.progression.asm.AbstractASM.ASMType;
+import joshie.progression.asm.helpers.ASMHelper;
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.ClassWriter;
+import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@MCVersion("1.9")
 public class ProgressionTransformer implements IFMLLoadingPlugin, IClassTransformer {
     public static boolean isObfuscated = false;
     public static List<AbstractASM> asm = new ArrayList();
-
     static {
-        asm.add(new ASMFurnace());
-        asm.add(new ASMTransferCrafting());
-        asm.add(new ASMContainerPlayer());
-        asm.add(new ASMContainerWorkbench());
-        //asm.add(new ASMThaumcraft());
-        asm.add(new ASMTinkers());
+        ASMConfig c = ASMHelper.getASMConfig();
+        if (c.furnace) asm.add(new ASMFurnace());
+        if (c.transfer) asm.add(new ASMTransferCrafting());
+        if (c.player) asm.add(new ASMContainerPlayer());
+        if (c.workbench) asm.add(new ASMContainerWorkbench());
+        if (c.tinkers) asm.add(new ASMTinkers());
     }
 
     @Override
@@ -28,15 +28,9 @@ public class ProgressionTransformer implements IFMLLoadingPlugin, IClassTransfor
         byte[] modified = data;
         for (AbstractASM a : asm) {
             if (a.isClass(name)) {
-                if (a.isVisitor()) {
-                    ClassReader cr = new ClassReader(modified);
-                    ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-                    ClassVisitor cv = a.newInstance(name, cw);
-                    cr.accept(cv, ClassReader.EXPAND_FRAMES);
-                    modified = cw.toByteArray();
-                }
-
-                modified = a.transform(modified);
+                if (a.isValidASMType(ASMType.VISITOR)) modified = ASMHelper.visit(name, a, data);
+                if (a.isValidASMType(ASMType.OVERRIDE)) modified = ASMHelper.override(a, data);
+                if (a.isValidASMType(ASMType.TRANSFORM)) modified = a.transform(data);
             }
         }
 

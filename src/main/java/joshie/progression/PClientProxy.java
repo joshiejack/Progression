@@ -1,6 +1,7 @@
 package joshie.progression;
 
 import joshie.progression.ItemProgressionRenderer.ProgressionOverride;
+import joshie.progression.handlers.RemappingHandler;
 import joshie.progression.handlers.TemplateHandler;
 import joshie.progression.helpers.ChatHelper;
 import joshie.progression.helpers.RenderItemHelper;
@@ -27,7 +28,7 @@ public class PClientProxy extends PCommonProxy {
     @Override
     public void initClient() {
         MinecraftForge.EVENT_BUS.register(new ItemProgressionRenderer());
-       //RemappingHandler.resetRegistries(true); //Create the registries on the client //TODO IS THIS NEEDED
+       RemappingHandler.resetRegistries(true); //Create the registries on the client //
     }
 
     private ModelResourceLocation getLocation(String name) {
