@@ -8,7 +8,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
     }
 }
 
@@ -40,7 +40,7 @@ minecraft {
 
 dependencies {
   deobfCompile "mezz.jei:jei_${minecraft_version}:${jei_version}"
-  deobfCompile "slimeknights.mantle:Mantle:${minecraft_version}-${mantle_version}"
+  deobfCompile "slimeknights.mantle:Mantle:1.9-${mantle_version}"
 }
 
 processResources

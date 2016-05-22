@@ -94,7 +94,7 @@ public class FakeNetHandler extends NetHandlerPlayServer {
 
     public void processPlayerDigging(CPacketPlayerDigging paramC07PacketPlayerDigging) {}
 
-    public void processPlayerBlockPlacement(CPacketPlayerBlockPlacement paramC08PacketPlayerBlockPlacement) {}
+    public void processPlayerBlockPlacement(CPacketPlayerTryUseItem p_processPlayerBlockPlacement_1_) {}
 
     public void onDisconnect(ITextComponent paramIChatComponent) {}
 

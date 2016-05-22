@@ -130,7 +130,7 @@ public class RewardSpawnEntity extends RewardBase implements IInit, ICustomDescr
 
                                 clone.setLocationAndAngles(pos.getX(), pos.getY(), pos.getZ(), player.worldObj.rand.nextFloat() * 360.0F, 0.0F);
                                 player.worldObj.spawnEntityInWorld(clone);
-                                player.worldObj.playAuxSFX(2004, pos, 0);
+                                player.worldObj.playEvent(2004, pos, 0);
                                 if (clone instanceof EntityLiving) {
                                     ((EntityLiving) clone).spawnExplosionParticle();
                                 }

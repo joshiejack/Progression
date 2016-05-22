@@ -21,7 +21,7 @@ public class FakeOp extends FakePlayer {
 
     public FakeOp(WorldServer world, GameProfile name) {
         super(world, name);
-        playerNetServerHandler = new FakeNetHandler(FMLCommonHandler.instance().getMinecraftServerInstance(), this);
+        connection = new FakeNetHandler(FMLCommonHandler.instance().getMinecraftServerInstance(), this);
         addedToChunk = false;
     }
 

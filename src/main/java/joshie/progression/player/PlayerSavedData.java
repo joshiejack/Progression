@@ -224,7 +224,7 @@ public class PlayerSavedData extends WorldSavedData {
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbt) {
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         FilterPlayerLastBroken.writeToNBT(nbt);
 
         NBTTagList map = new NBTTagList();
@@ -236,5 +236,6 @@ public class PlayerSavedData extends WorldSavedData {
         }
 
         nbt.setTag("TeamData", map);
+        return nbt;
     }
 }
