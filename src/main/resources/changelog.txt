@@ -1,3 +1,6 @@
+Progression 0.5.2
+  Add Achievements Command
+
 Progression 0.5.1
   Fixed Tinkers Construct Worktable not being able to be opened at all
   Added options to disable asm, in case a specific mod is erroring
