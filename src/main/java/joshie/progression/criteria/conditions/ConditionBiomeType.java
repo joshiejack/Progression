@@ -29,7 +29,7 @@ public class ConditionBiomeType extends ConditionBase implements ICustomDescript
     @Override
     public boolean isSatisfied(IPlayerTeam team) {
         for (EntityPlayer player: team.getTeamEntities()) { //If any team member has the achievement
-            Type types[] = BiomeDictionary.getTypesForBiome(player.worldObj.getBiomeGenForCoords(new BlockPos(player)));
+            Type types[] = BiomeDictionary.getTypesForBiome(player.worldObj.getBiome(new BlockPos(player)));
             for (Type type : theBiomeTypes) {
                 for (Type compare : types) {
                     if (compare == type) return true;

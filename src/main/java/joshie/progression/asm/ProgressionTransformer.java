@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@MCVersion("1.9")
+@MCVersion("1.9.4")
 public class ProgressionTransformer implements IFMLLoadingPlugin, IClassTransformer {
     public static boolean isObfuscated = false;
     public static List<AbstractASM> asm = new ArrayList();
