@@ -1,3 +1,6 @@
+Progression 0.5.2
+  Add Achievements Command
+
 Progression 0.5.0
   Updated to Minecraft 1.8.9 / Minecraft 1.9
   Craft Locking currently supports Thaumcraft 5, Tinkers Construct 2 and Vanilla

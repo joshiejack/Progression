@@ -55,6 +55,7 @@ public class PCommonProxy implements IGuiHandler {
         CommandManager.INSTANCE.registerCommand(new CommandReload());
         CommandManager.INSTANCE.registerCommand(new CommandReset());
         CommandManager.INSTANCE.registerCommand(new CommandTeam());
+        CommandManager.INSTANCE.registerCommand(new CommandAchievement());
 
         //Register Packets
         PacketHandler.registerPacket(PacketSyncTriggers.class, Side.CLIENT);

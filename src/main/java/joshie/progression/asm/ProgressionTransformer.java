@@ -1,5 +1,6 @@
 package joshie.progression.asm;
 
+import joshie.progression.asm.helpers.ASMHelper;
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import org.objectweb.asm.ClassReader;
@@ -15,12 +16,13 @@ public class ProgressionTransformer implements IFMLLoadingPlugin, IClassTransfor
     public static List<AbstractASM> asm = new ArrayList();
 
     static {
-        asm.add(new ASMFurnace());
-        asm.add(new ASMTransferCrafting());
-        asm.add(new ASMContainerPlayer());
-        asm.add(new ASMContainerWorkbench());
-        asm.add(new ASMThaumcraft());
-        asm.add(new ASMTinkers());
+        ASMConfig c = ASMHelper.getASMConfig();
+        if (c.furnace) asm.add(new ASMFurnace());
+        if (c.transfer) asm.add(new ASMTransferCrafting());
+        if (c.player) asm.add(new ASMContainerPlayer());
+        if (c.workbench) asm.add(new ASMContainerWorkbench());
+        if (c.tinkers) asm.add(new ASMTinkers());
+        if (c.thaumcraft) asm.add(new ASMTinkers());
     }
 
     @Override
