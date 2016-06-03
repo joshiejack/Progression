@@ -1,5 +1,6 @@
 package joshie.progression.criteria.filters.entity;
 
+import com.google.common.collect.Lists;
 import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.IEnum;
 import net.minecraft.entity.EntityLivingBase;
@@ -12,11 +13,20 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityWaterMob;
 import net.minecraft.entity.player.EntityPlayer;
 
+import java.util.List;
+
 import static joshie.progression.criteria.filters.entity.FilterEntityType.EntityType.BOSS;
+import static joshie.progression.criteria.filters.entity.FilterEntityType.EntityType.PLAYER;
 
 @ProgressionRule(name="entitytype", color=0xFFB25900)
 public class FilterEntityType extends FilterBaseEntity implements IEnum {
     public EntityType type = EntityType.ANIMAL;
+
+    @Override
+    public List<EntityLivingBase> getRandom(EntityPlayer player) {
+        if (type == PLAYER) return Lists.newArrayList(player);
+        else return super.getRandom(player);
+    }
 
     @Override
     protected boolean matches(EntityLivingBase entity) {

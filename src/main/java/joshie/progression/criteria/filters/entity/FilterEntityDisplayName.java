@@ -1,10 +1,13 @@
 package joshie.progression.criteria.filters.entity;
 
+import com.google.common.collect.Lists;
 import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.IInit;
 import joshie.progression.helpers.EntityHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+
+import java.util.List;
 
 @ProgressionRule(name="displayName", color=0xFFB25900)
 public class FilterEntityDisplayName extends FilterBaseEntity implements IInit {
@@ -26,8 +29,8 @@ public class FilterEntityDisplayName extends FilterBaseEntity implements IInit {
     }
 
     @Override
-    public EntityLivingBase getRandom(EntityPlayer player) {
-        return EntityHelper.getRandomEntity(player.worldObj, null);
+    public List<EntityLivingBase> getRandom(EntityPlayer player) {
+        return Lists.newArrayList(EntityHelper.getRandomEntity(player.worldObj, null));
     }
 
     @Override

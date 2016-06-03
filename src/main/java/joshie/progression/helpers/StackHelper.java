@@ -6,16 +6,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.WeakHashMap;
 
 public class StackHelper {
-    private static HashMap<Item, String> modiditemcache = new HashMap();
-    private static HashMap<Block, String> modidblockcache = new HashMap();
+    private static WeakHashMap<Item, String> modiditemcache = new WeakHashMap();
+    private static WeakHashMap<Block, String> modidblockcache = new WeakHashMap();
 
     public static String getModFromItem(Item item) {
         if (modiditemcache.containsKey(item)) return modiditemcache.get(item);

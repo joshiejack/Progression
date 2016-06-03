@@ -1,20 +1,22 @@
 package joshie.progression.criteria.rewards;
 
+import com.google.common.collect.Lists;
 import joshie.progression.Progression;
-import joshie.progression.api.criteria.IField;
-import joshie.progression.api.criteria.IFilterProvider;
-import joshie.progression.api.criteria.IFilterType;
-import joshie.progression.api.criteria.ProgressionRule;
+import joshie.progression.api.criteria.*;
 import joshie.progression.api.special.DisplayMode;
 import joshie.progression.api.special.ICustomDescription;
 import joshie.progression.api.special.IHasFilters;
 import joshie.progression.api.special.ISpecialFieldProvider;
 import joshie.progression.gui.fields.ItemFilterField;
+import joshie.progression.gui.filters.FilterTypeEntity;
 import joshie.progression.gui.filters.FilterTypeLocation;
+import joshie.progression.helpers.EntityHelper;
 import joshie.progression.lib.WorldLocation;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
@@ -29,6 +31,7 @@ import java.util.List;
 @ProgressionRule(name="teleport", color=0xFFDDDDDD, icon="minecraft:ender_pearl")
 public class RewardTeleport extends RewardBase implements ICustomDescription, IHasFilters, ISpecialFieldProvider {
     public List<IFilterProvider> locations = new ArrayList();
+    public List<IFilterProvider> targets = new ArrayList();
     protected transient IField field;
 
     public RewardTeleport() {
@@ -42,49 +45,63 @@ public class RewardTeleport extends RewardBase implements ICustomDescription, IH
 
     @Override
     public List<IFilterProvider> getAllFilters() {
-        return locations;
+        List<IFilterProvider> list = Lists.newArrayList();
+        list.addAll(locations);
+        list.addAll(targets);
+        return list;
     }
 
     @Override
     public IFilterType getFilterForField(String fieldName) {
+        if (fieldName.equals("targets")) return FilterTypeEntity.INSTANCE;
         return FilterTypeLocation.INSTANCE;
     }
 
     @Override
     public void addSpecialFields(List<IField> fields, DisplayMode mode) {
         fields.add(new ItemFilterField("locations", this));
+        fields.add(new ItemFilterField("targets", this));
     }
 
     @Override
-    public void reward(EntityPlayerMP player) {
+    public void reward(EntityPlayerMP thePlayer) {
         boolean notteleported = true;
         for (int i = 0; i < 10 && notteleported; i++) {
-            WorldLocation location = WorldLocation.getRandomLocationFromFilters(locations, player);
+            WorldLocation location = WorldLocation.getRandomLocationFromFilters(locations, thePlayer);
             if (location != null) {
-                World world = DimensionManager.getWorld(location.dimension);
-                int dimension = location.dimension;
-                if (world == null) continue; //NO!!!!
-                if (player.dimension != dimension) { //From RFTools
-                    int oldDimension = player.worldObj.provider.getDimension();
-                    MinecraftServer server = player.worldObj.getMinecraftServer();
-                    WorldServer worldServer = server.worldServerForDimension(dimension);
-                    player.addExperienceLevel(0); //Fix levels
-                    BlockPos pos = new BlockPos(location.pos);
-                    worldServer.getMinecraftServer().getPlayerList().transferPlayerToDimension(player, dimension, new DimensionTeleportation(worldServer, new BlockPos(location.pos)));
-                    player.setPositionAndUpdate(pos.getX() + 0.5D, pos.getY() + 1, pos.getZ() + 0.5D);
-                    if (oldDimension == 1) {
-                        player.setPositionAndUpdate(pos.getX() + 0.5D, pos.getY() + 1, pos.getZ() + 0.5D);
-                        worldServer.spawnEntityInWorld(player);
-                        worldServer.updateEntityWithOptionalForce(player, false);
-                    }
+                IFilter filter = EntityHelper.getFilter(targets, thePlayer);
+                if (filter != null) {
+                    List<EntityLivingBase> entities = (List<EntityLivingBase>) filter.getRandom(thePlayer);
+                    for (EntityLivingBase entity : entities) {
+                        World world = DimensionManager.getWorld(location.dimension);
+                        int dimension = location.dimension;
+                        if (world == null) continue; //NO!!!!
+                        if (entity.dimension != dimension) { //From RFTools
+                            MinecraftServer server = entity.worldObj.getMinecraftServer();
+                            WorldServer worldServer = server.worldServerForDimension(dimension);
+                            int oldDimension = entity.worldObj.provider.getDimension();
+                            BlockPos pos = new BlockPos(location.pos);
+                            if (entity instanceof EntityPlayer) {
+                                ((EntityPlayerMP)entity).addExperienceLevel(0); //Fix levels
+                                worldServer.getMinecraftServer().getPlayerList().transferPlayerToDimension(((EntityPlayerMP)entity), dimension, new DimensionTeleportation(worldServer, new BlockPos(location.pos)));
+                            } else entity.changeDimension(dimension);
 
-                    notteleported = false;
-                } else {
-                    BlockPos pos = new BlockPos(location.pos);
-                    if (world.isBlockLoaded(pos)) {
-                        if (isValidLocation(world, pos)) {
+                            entity.setPositionAndUpdate(pos.getX() + 0.5D, pos.getY() + 1, pos.getZ() + 0.5D);
+                            if (oldDimension == 1) {
+                                entity.setPositionAndUpdate(pos.getX() + 0.5D, pos.getY() + 1, pos.getZ() + 0.5D);
+                                world.spawnEntityInWorld(entity);
+                                world.updateEntityWithOptionalForce(entity, false);
+                            }
+
                             notteleported = false;
-                            player.setPositionAndUpdate(pos.getX() + 0.5D, pos.getY() + 1, pos.getZ() + 0.5D);
+                        } else {
+                            BlockPos pos = new BlockPos(location.pos);
+                            if (world.isBlockLoaded(pos)) {
+                                if (isValidLocation(world, pos)) {
+                                    notteleported = false;
+                                    entity.setPositionAndUpdate(pos.getX() + 0.5D, pos.getY() + 1, pos.getZ() + 0.5D);
+                                }
+                            }
                         }
                     }
                 }

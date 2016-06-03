@@ -7,10 +7,10 @@ import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @ProgressionRule(name="sleep", color=0xFF831113, icon="minecraft:bed")
-public class TriggerSleep extends TriggerBaseAlwaysTrue {
+public class TriggerSleep extends TriggerBaseCounter {
     @Override
     public ITrigger copy() {
-        return new TriggerSleep();
+        return copyCounter(new TriggerSleep());
     }
 
     @SubscribeEvent

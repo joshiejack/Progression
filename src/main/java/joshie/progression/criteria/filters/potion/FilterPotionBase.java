@@ -14,7 +14,7 @@ import net.minecraft.potion.PotionUtils;
 
 import java.util.*;
 
-public abstract class FilterPotionBase implements IFilter<ItemStack> {
+public abstract class FilterPotionBase implements IFilter<ItemStack, ItemStack> {
     protected static final Random rand = new Random();
     protected static final List<PotionEffect> EMPTY = new ArrayList();
 

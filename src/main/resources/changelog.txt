@@ -3,8 +3,16 @@ Progression 0.6.0
   Add Attack Entity Trigger
   Add XP Condition
   Add XP Reward
+  Add Set on Fire Reward
+  Add Last Killed Entity Filter
+  Add Last Hit Entity Filter
+  Add Everyone Online Entity Filter
+  Add Tool Class Item FIlter
+  Add Target Filters for Hurt, Potion Effect and Teleport
+  Add Option for Randomising Number of Entities Spawned or Number of Items Given
   Add Entity Name Dump /progression entities
   Add Potion Name Dump /progression potions
+  Fix Spawn Item Stack Size
 
 Progression 0.5.2
   Add Achievements Command

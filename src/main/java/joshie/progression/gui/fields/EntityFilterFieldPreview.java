@@ -53,13 +53,16 @@ public class EntityFilterFieldPreview extends ItemFilterField implements IField 
         if (ticker >= 200 || ticker == 0) {
             EntityPlayer player = MCClientHelper.getPlayer();
             IFilter filter = EntityHelper.getFilter(getFilters(), player);
-            entity = (EntityLivingBase) EntityList.createEntityByName(EntityHelper.getNameForEntity(((EntityLivingBase) filter.getRandom(player))), player.worldObj);
-            if (entity instanceof EntityLiving) {
-                ((EntityLiving) entity).onInitialSpawn(player.worldObj.getDifficultyForLocation(new BlockPos(entity)), (IEntityLivingData) null);
-            }
+            List<EntityLivingBase> entities = (List<EntityLivingBase>) filter.getRandom(player);
+            if (entities.size() > 0) {
+                entity = (EntityLivingBase) EntityList.createEntityByName(EntityHelper.getNameForEntity(entities.get(player.worldObj.rand.nextInt(entities.size()))), player.worldObj);
+                if (entity instanceof EntityLiving) {
+                    ((EntityLiving) entity).onInitialSpawn(player.worldObj.getDifficultyForLocation(new BlockPos(entity)), (IEntityLivingData) null);
+                }
 
-            filter.apply(entity);
-            ticker = 1;
+                filter.apply(entity);
+                ticker = 1;
+            }
         }
 
         if (!hovered) ticker++;
