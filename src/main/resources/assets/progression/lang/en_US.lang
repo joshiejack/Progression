@@ -101,6 +101,7 @@ progression.condition.ifHasXP.amount=The number you are validating against
 progression.condition.ifHasXP.amount.greaterThan=Whether the player should have more XP than listed (conflicts with lesserThan)
 progression.condition.ifHasXP.amount.isEqualTo=Whether the player should have exactly the amount of XP listed
 progression.condition.ifHasXP.amount.lesserThan=Whether the player should have less than the XP listed (conflicts with greaterThan)
+progression.condition.ifHasXP.checkLevel=If this is true, this will check the level instead of the total xp points
 progression.condition.location=Location
 progression.condition.location.locations=Open this to define a location that the player should be in
 progression.condition.location.description=You must be located:

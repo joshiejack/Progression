@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 
 @ProgressionRule(name="ifHasXP", color=0xFF589653, icon="minecraft:experience_bottle")
 public class ConditionXP extends ConditionBase implements ICustomDescription {
+    public boolean checkLevel;
     public int amount = 1;
     public boolean greaterThan = true;
     public boolean isEqualTo = true;
@@ -29,7 +30,8 @@ public class ConditionXP extends ConditionBase implements ICustomDescription {
         int counter = 0;
         for (EntityPlayer player: team.getTeamEntities()) {
             if (!team.isTrueTeam()) counter = 0; //Reset the counter
-            counter += player.experienceTotal;
+            if (!checkLevel) counter += player.experienceTotal;
+            else counter += player.experienceLevel;
             if (isValidValue(counter)) return true;
         }
 
