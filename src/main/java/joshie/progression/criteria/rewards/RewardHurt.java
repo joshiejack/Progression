@@ -67,11 +67,12 @@ public class RewardHurt extends RewardBase implements IInit, ICustomDescription,
     }
 
     @Override
-    public void reward(EntityPlayerMP player) {
+    public void reward(EntityPlayerMP thePlayer) {
         if (source == null) return;
-        IFilter filter = EntityHelper.getFilter(targets, player);
+        IFilter filter = EntityHelper.getFilter(targets, thePlayer);
         if (filter != null) {
-            List<EntityLivingBase> entities = (List<EntityLivingBase>) filter.getRandom(player);
+            List<EntityLivingBase> entities = (List<EntityLivingBase>) filter.getRandom(thePlayer);
+            if (entities.size() == 0) entities.add(thePlayer);
             for (EntityLivingBase entity : entities) {
                 entity.attackEntityFrom(source, damage);
             }

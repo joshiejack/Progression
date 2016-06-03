@@ -72,6 +72,7 @@ public class RewardTeleport extends RewardBase implements ICustomDescription, IH
                 IFilter filter = EntityHelper.getFilter(targets, thePlayer);
                 if (filter != null) {
                     List<EntityLivingBase> entities = (List<EntityLivingBase>) filter.getRandom(thePlayer);
+                    if (entities.size() == 0) entities.add(thePlayer);
                     for (EntityLivingBase entity : entities) {
                         World world = DimensionManager.getWorld(location.dimension);
                         int dimension = location.dimension;

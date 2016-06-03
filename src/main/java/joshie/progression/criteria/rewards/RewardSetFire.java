@@ -34,10 +34,11 @@ public class RewardSetFire extends RewardBase implements IHasFilters, ISpecialFi
     }
 
     @Override
-    public void reward(EntityPlayerMP player) {
-        IFilter filter = EntityHelper.getFilter(targets, player);
+    public void reward(EntityPlayerMP thePlayer) {
+        IFilter filter = EntityHelper.getFilter(targets, thePlayer);
         if (filter != null) {
-            List<EntityLivingBase> entities = (List<EntityLivingBase>) filter.getRandom(player);
+            List<EntityLivingBase> entities = (List<EntityLivingBase>) filter.getRandom(thePlayer);
+            if (entities.size() == 0) entities.add(thePlayer);
             for (EntityLivingBase entity : entities) {
                 entity.setFire(duration);
             }

@@ -79,6 +79,7 @@ public class RewardPotion extends RewardBaseItemFilter implements ICustomDescrip
                 IFilter filter = EntityHelper.getFilter(targets, thePlayer);
                 if (filter != null) {
                     List<EntityLivingBase> entities = (List<EntityLivingBase>) filter.getRandom(thePlayer);
+                    if (entities.size() == 0) entities.add(thePlayer);
                     for (EntityLivingBase entity : entities) {
                         for (PotionEffect effect : effects) {
                             if (randomVanilla) entity.addPotionEffect(new PotionEffect(effect));
