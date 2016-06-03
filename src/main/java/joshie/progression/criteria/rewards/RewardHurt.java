@@ -24,6 +24,7 @@ public class RewardHurt extends RewardBase implements IInit, ICustomDescription,
     private DamageSource source;
     public String damageSource = "magic";
     public float damage = 1F;
+    public boolean defaultToPlayer = true;
 
     @Override
     public void init(boolean isClient) {
@@ -72,7 +73,7 @@ public class RewardHurt extends RewardBase implements IInit, ICustomDescription,
         IFilter filter = EntityHelper.getFilter(targets, thePlayer);
         if (filter != null) {
             List<EntityLivingBase> entities = (List<EntityLivingBase>) filter.getRandom(thePlayer);
-            if (entities.size() == 0) entities.add(thePlayer);
+            if (entities.size() == 0 && defaultToPlayer) entities.add(thePlayer);
             for (EntityLivingBase entity : entities) {
                 entity.attackEntityFrom(source, damage);
             }

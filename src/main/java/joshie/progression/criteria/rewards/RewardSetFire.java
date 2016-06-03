@@ -16,6 +16,7 @@ import java.util.List;
 @ProgressionRule(name="setFire", color=0xFFFF4200, meta="setFire")
 public class RewardSetFire extends RewardBase implements IHasFilters, ISpecialFieldProvider {
     public List<IFilterProvider> targets = new ArrayList();
+    public boolean defaultToPlayer = true;
     public int duration;
 
     @Override
@@ -39,6 +40,7 @@ public class RewardSetFire extends RewardBase implements IHasFilters, ISpecialFi
         if (filter != null) {
             List<EntityLivingBase> entities = (List<EntityLivingBase>) filter.getRandom(thePlayer);
             if (entities.size() == 0) entities.add(thePlayer);
+            if (entities.size() == 0 && defaultToPlayer) entities.add(thePlayer);
             for (EntityLivingBase entity : entities) {
                 entity.setFire(duration);
             }

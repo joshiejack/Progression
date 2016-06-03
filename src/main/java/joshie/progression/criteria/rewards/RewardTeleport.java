@@ -32,6 +32,7 @@ import java.util.List;
 public class RewardTeleport extends RewardBase implements ICustomDescription, IHasFilters, ISpecialFieldProvider {
     public List<IFilterProvider> locations = new ArrayList();
     public List<IFilterProvider> targets = new ArrayList();
+    public boolean defaultToPlayer = true;
     protected transient IField field;
 
     public RewardTeleport() {
@@ -72,7 +73,7 @@ public class RewardTeleport extends RewardBase implements ICustomDescription, IH
                 IFilter filter = EntityHelper.getFilter(targets, thePlayer);
                 if (filter != null) {
                     List<EntityLivingBase> entities = (List<EntityLivingBase>) filter.getRandom(thePlayer);
-                    if (entities.size() == 0) entities.add(thePlayer);
+                    if (entities.size() == 0 && defaultToPlayer) entities.add(thePlayer);
                     for (EntityLivingBase entity : entities) {
                         World world = DimensionManager.getWorld(location.dimension);
                         int dimension = location.dimension;

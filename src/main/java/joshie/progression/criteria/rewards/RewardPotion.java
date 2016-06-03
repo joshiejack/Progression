@@ -23,6 +23,7 @@ import java.util.List;
 @ProgressionRule(name="potioneffect", color=0xFF2C7373)
 public class RewardPotion extends RewardBaseItemFilter implements ICustomDescription, ICustomWidth, ICustomTooltip, ISpecialFieldProvider {
     public List<IFilterProvider> targets = new ArrayList();
+    public boolean defaultToPlayer = true;
     public boolean randomVanilla = false;
     public int duration = 200;
     public int amplifier = 0;
@@ -79,7 +80,7 @@ public class RewardPotion extends RewardBaseItemFilter implements ICustomDescrip
                 IFilter filter = EntityHelper.getFilter(targets, thePlayer);
                 if (filter != null) {
                     List<EntityLivingBase> entities = (List<EntityLivingBase>) filter.getRandom(thePlayer);
-                    if (entities.size() == 0) entities.add(thePlayer);
+                    if (entities.size() == 0 && defaultToPlayer) entities.add(thePlayer);
                     for (EntityLivingBase entity : entities) {
                         for (PotionEffect effect : effects) {
                             if (randomVanilla) entity.addPotionEffect(new PotionEffect(effect));
