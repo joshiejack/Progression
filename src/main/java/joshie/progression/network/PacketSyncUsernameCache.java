@@ -3,11 +3,13 @@ package joshie.progression.network;
 import io.netty.buffer.ByteBuf;
 import joshie.progression.network.core.PenguinPacket;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+@Packet(isSided = true, side = Side.CLIENT)
 public class PacketSyncUsernameCache extends PenguinPacket {
     public static HashMap<UUID, String> cache = new HashMap<UUID, String>();
     private Map<UUID, String> map;

@@ -1,14 +1,14 @@
 package joshie.progression;
 
 import joshie.progression.api.ProgressionAPI;
-import joshie.progression.commands.*;
+import joshie.progression.commands.CommandManager;
 import joshie.progression.gui.fields.FieldRegistry;
 import joshie.progression.gui.filters.FilterSelectorHelper;
 import joshie.progression.handlers.APIHandler;
 import joshie.progression.handlers.ProgressionEvents;
 import joshie.progression.handlers.RuleHandler;
 import joshie.progression.json.Options;
-import joshie.progression.network.*;
+import joshie.progression.network.PacketHandler;
 import joshie.progression.player.PlayerHandler;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,7 +21,6 @@ import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import static joshie.progression.ItemProgression.ItemMeta.book;
@@ -53,34 +52,7 @@ public class PCommonProxy implements IGuiHandler {
 
         RuleHandler.registerRules(asm);
         CommandManager.registerCommands(asm);
-
-        //Register Packets
-        PacketHandler.registerPacket(PacketSyncTriggers.class, Side.CLIENT);
-        PacketHandler.registerPacket(PacketSyncCriteria.class, Side.CLIENT);
-        PacketHandler.registerPacket(PacketSyncImpossible.class, Side.CLIENT);
-        PacketHandler.registerPacket(PacketSyncAbilities.class, Side.CLIENT);
-        PacketHandler.registerPacket(PacketSyncPoints.class, Side.CLIENT);
-        PacketHandler.registerPacket(PacketSyncCustomData.class, Side.CLIENT);
-        PacketHandler.registerPacket(PacketSyncTriggerData.class, Side.CLIENT);
-        PacketHandler.registerPacket(PacketSyncUnclaimed.class, Side.CLIENT);
-        PacketHandler.registerPacket(PacketRewardItem.class, Side.CLIENT);
-        PacketHandler.registerPacket(PacketClaimed.class, Side.CLIENT);
-        PacketHandler.registerPacket(PacketCompleted.class, Side.CLIENT);
-        PacketHandler.registerPacket(PacketOpenEditor.class, Side.CLIENT);
-        PacketHandler.registerPacket(PacketDisplayChat.class, Side.CLIENT);
-        PacketHandler.registerPacket(PacketSyncUsernameCache.class, Side.CLIENT);
-        PacketHandler.registerPacket(PacketFireTrigger.class, Side.SERVER);
-        PacketHandler.registerPacket(PacketSelectRewards.class, Side.SERVER);
-        PacketHandler.registerPacket(PacketChangeTeam.class, Side.SERVER);
-        PacketHandler.registerPacket(PacketIsSatisfied.class);
-        PacketHandler.registerPacket(PacketInvitePlayer.class);
-        PacketHandler.registerPacket(PacketLockUnlockSaving.class);
-        PacketHandler.registerPacket(PacketRequestItem.class);
-        PacketHandler.registerPacket(PacketSyncTeam.class);
-        PacketHandler.registerPacket(PacketReload.class);
-        PacketHandler.registerPacket(PacketReset.class);
-        PacketHandler.registerPacket(PacketSyncJSONToClient.class);
-        PacketHandler.registerPacket(PacketSyncJSONToServer.class);
+        PacketHandler.registerPackets(asm);
 
         //Register DamageSources
         ProgressionAPI.registry.registerDamageSource(DamageSource.anvil);

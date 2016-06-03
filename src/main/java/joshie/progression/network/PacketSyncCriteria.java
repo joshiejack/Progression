@@ -6,9 +6,11 @@ import joshie.progression.handlers.APICache;
 import joshie.progression.network.core.PenguinPacket;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.UUID;
 
+@Packet(isSided = true, side = Side.CLIENT)
 public class PacketSyncCriteria extends PenguinPacket {
     private ICriteria[] criteria;
     private Integer[] integers;

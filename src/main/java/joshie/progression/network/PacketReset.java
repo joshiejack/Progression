@@ -14,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
+@Packet
 public class PacketReset extends PenguinPacket {
     private boolean singlePlayer;
     private String username;

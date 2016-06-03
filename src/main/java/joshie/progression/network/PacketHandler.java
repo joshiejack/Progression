@@ -1,15 +1,26 @@
 package joshie.progression.network;
 
+import joshie.progression.Progression;
 import joshie.progression.helpers.PlayerHelper;
+import joshie.progression.json.Options;
 import joshie.progression.lib.PInfo;
 import joshie.progression.network.core.PenguinNetwork;
 import joshie.progression.player.PlayerTeam;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.discovery.ASMDataTable;
+import net.minecraftforge.fml.common.discovery.ASMDataTable.ASMData;
+import net.minecraftforge.fml.common.discovery.asm.ModAnnotation;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
+import org.apache.logging.log4j.Level;
 
+import javax.annotation.Nonnull;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 public class PacketHandler {
@@ -17,10 +28,18 @@ public class PacketHandler {
     public static void registerPacket(Class clazz) {
         registerPacket(clazz, Side.CLIENT);
         registerPacket(clazz, Side.SERVER);
+
+        if (Options.debugMode) {
+            Progression.logger.log(Level.INFO, "Registered the packet on both sides: " + clazz);
+        }
     }
 
     public static void registerPacket(Class clazz, Side side) {
         INSTANCE.registerPacket(clazz, side);
+
+        if (Options.debugMode) {
+            Progression.logger.log(Level.INFO, "Registered the packet on " + side + " side: " + clazz);
+        }
     }
 
     public static void sendToClient(IMessage message, EntityPlayer player) {
@@ -61,6 +80,24 @@ public class PacketHandler {
             if (member != null) {
                 sendToClient(packet, member);
             }
+        }
+    }
+
+    public static void registerPackets(@Nonnull ASMDataTable asmDataTable) {
+        String annotationClassName = Packet.class.getCanonicalName();
+        Set<ASMData> asmDatas = new HashSet<ASMData>(asmDataTable.getAll(annotationClassName));
+
+        topLoop:
+        for (ASMDataTable.ASMData asmData : asmDatas) {
+            try {
+                Class<?> asmClass = Class.forName(asmData.getClassName());
+                Map<String, Object> data = asmData.getAnnotationInfo();
+                boolean isSided = data.get("isSided") != null ? (Boolean) data.get("isSided") : false;
+                if (isSided) {
+                    Side side  = Side.valueOf(ReflectionHelper.getPrivateValue(ModAnnotation.EnumHolder.class, (ModAnnotation.EnumHolder) data.get("side"), "value"));
+                    registerPacket(asmClass, side);
+                } else registerPacket(asmClass);
+            } catch (Exception e) { e.printStackTrace(); }
         }
     }
 }

@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.UUID;
 
+@Packet
 public class PacketIsSatisfied extends PenguinPacket {
     private UUID uuid;
     private boolean isTrue;

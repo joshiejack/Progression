@@ -11,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.TextFormatting;
 
+@Packet
 public class PacketReload extends PenguinPacket {
     @Override
     public void handlePacket(EntityPlayer player) {

@@ -7,10 +7,12 @@ import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.HashMap;
 import java.util.UUID;
 
+@Packet(isSided = true, side = Side.CLIENT)
 public class PacketSyncTriggerData extends PenguinPacket {
     public static class DataPair {
         public UUID uuid;

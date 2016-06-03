@@ -6,9 +6,11 @@ import joshie.progression.player.PlayerSavedData.TeamAction;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.UUID;
 
+@Packet(isSided = true, side = Side.SERVER)
 public class PacketChangeTeam extends PenguinPacket {
     private TeamAction action;
     private String name;

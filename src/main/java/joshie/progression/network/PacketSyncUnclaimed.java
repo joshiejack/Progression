@@ -6,12 +6,14 @@ import joshie.progression.api.criteria.IRewardProvider;
 import joshie.progression.network.core.PenguinPacket;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
+@Packet(isSided = true, side = Side.CLIENT)
 public class PacketSyncUnclaimed extends PenguinPacket {
     public static class UnclaimedPair {
         public UUID uuid;
