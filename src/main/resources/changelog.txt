@@ -1,6 +1,8 @@
 Progression 0.6.0
   Add Player Wake Up Trigger
   Add Attack Entity Trigger
+  Add XP Condition
+  Add XP Reward
 
 Progression 0.5.2
   Add Achievements Command
