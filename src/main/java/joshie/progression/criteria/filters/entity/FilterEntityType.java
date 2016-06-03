@@ -1,8 +1,8 @@
 package joshie.progression.criteria.filters.entity;
 
-import com.google.common.collect.Lists;
 import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.IEnum;
+import joshie.progression.helpers.ListHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.INpc;
@@ -24,7 +24,7 @@ public class FilterEntityType extends FilterBaseEntity implements IEnum {
 
     @Override
     public List<EntityLivingBase> getRandom(EntityPlayer player) {
-        if (type == PLAYER) return Lists.newArrayList(player);
+        if (type == PLAYER) return ListHelper.newArrayList(player);
         else return super.getRandom(player);
     }
 

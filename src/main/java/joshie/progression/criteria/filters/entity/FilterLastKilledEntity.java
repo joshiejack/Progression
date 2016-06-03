@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.IHasEventBus;
 import joshie.progression.helpers.EntityHelper;
+import joshie.progression.helpers.ListHelper;
 import joshie.progression.helpers.PlayerHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -44,7 +45,7 @@ public class FilterLastKilledEntity extends FilterBaseEntity implements IHasEven
             EntityLivingBase existing = cache.get(PlayerHelper.getUUIDForPlayer(player));
             NBTTagCompound tag = new NBTTagCompound();
             existing.writeToNBT(tag);
-            return Lists.newArrayList(EntityHelper.clone(player.worldObj, existing, tag, this));
+            return ListHelper.newArrayList(EntityHelper.clone(player.worldObj, existing, tag, this));
         }
 
         return Lists.newArrayList();

@@ -1,7 +1,7 @@
 package joshie.progression.criteria.filters.entity;
 
-import com.google.common.collect.Lists;
 import joshie.progression.api.criteria.ProgressionRule;
+import joshie.progression.helpers.ListHelper;
 import joshie.progression.helpers.PlayerHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,7 +12,7 @@ import java.util.List;
 public class FilterOnlinePlayers extends FilterBaseEntity {
     @Override
     public List<EntityLivingBase> getRandom(EntityPlayer player) {
-        return Lists.newArrayList(PlayerHelper.getAllPlayers());
+        return ListHelper.newArrayList(PlayerHelper.getAllPlayers());
     }
 
     @Override

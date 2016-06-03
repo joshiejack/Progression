@@ -1,7 +1,7 @@
 package joshie.progression.criteria.filters.entity;
 
-import com.google.common.collect.Lists;
 import joshie.progression.api.criteria.ProgressionRule;
+import joshie.progression.helpers.ListHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,7 +14,7 @@ public class FilterSkeletonType extends FilterBaseEntity {
 
     @Override
     public List<EntityLivingBase> getRandom(EntityPlayer player) {
-        return Lists.newArrayList(new EntitySkeleton(player.worldObj));
+        return ListHelper.newArrayList(new EntitySkeleton(player.worldObj));
     }
 
     @Override

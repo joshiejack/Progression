@@ -3,6 +3,7 @@ package joshie.progression.criteria.filters.entity;
 import com.google.common.collect.Lists;
 import joshie.progression.api.criteria.ProgressionRule;
 import joshie.progression.api.special.IHasEventBus;
+import joshie.progression.helpers.ListHelper;
 import joshie.progression.helpers.PlayerHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -38,7 +39,7 @@ public class FilterLastHitEntity extends FilterBaseEntity implements IHasEventBu
     public List<EntityLivingBase> getRandom(EntityPlayer player) {
         if (cache.get(PlayerHelper.getUUIDForPlayer(player)) != null) {
             EntityLivingBase existing = cache.get(PlayerHelper.getUUIDForPlayer(player));
-            return Lists.newArrayList(existing);
+            return ListHelper.newArrayList(existing);
         }
 
         return Lists.newArrayList();

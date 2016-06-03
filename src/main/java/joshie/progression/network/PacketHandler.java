@@ -94,7 +94,8 @@ public class PacketHandler {
                 Map<String, Object> data = asmData.getAnnotationInfo();
                 boolean isSided = data.get("isSided") != null ? (Boolean) data.get("isSided") : false;
                 if (isSided) {
-                    Side side  = Side.valueOf(ReflectionHelper.getPrivateValue(ModAnnotation.EnumHolder.class, (ModAnnotation.EnumHolder) data.get("side"), "value"));
+                    String s = ReflectionHelper.getPrivateValue(ModAnnotation.EnumHolder.class, (ModAnnotation.EnumHolder) data.get("side"), "value");
+                    Side side = s.equals("CLIENT") ? Side.CLIENT : Side.SERVER;
                     registerPacket(asmClass, side);
                 } else registerPacket(asmClass);
             } catch (Exception e) { e.printStackTrace(); }
