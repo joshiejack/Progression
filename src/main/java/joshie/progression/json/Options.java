@@ -13,7 +13,7 @@ import java.io.File;
 public class Options {
     public static Configuration config;
     public static final String SETTINGS = "Settings";
-    public static transient boolean debugMode = true;
+    public static transient boolean debugMode;
     public static boolean editor = true;
     public static boolean tileClaimerRecipe;
     public static boolean overwriteCriteriaJSONForClients;
