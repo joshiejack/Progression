@@ -1,28 +1,28 @@
 package joshie.progression.commands;
 
 import net.minecraft.command.ICommandSender;
-import net.minecraft.stats.Achievement;
-import net.minecraft.stats.AchievementList;
+import net.minecraft.potion.Potion;
 
 import java.io.PrintWriter;
+import java.util.Iterator;
 
 @Command
-public class CommandAchievement extends AbstractCommand {
+public class CommandPotions extends AbstractCommand {
     @Override
     public String getCommandName() {
-        return "achievements";
+        return "potions";
     }
 
     @Override
     public boolean processCommand(ICommandSender sender, String[] parameters) {
         try {
             StringBuilder builder = new StringBuilder();
-            for (Achievement a: AchievementList.ACHIEVEMENTS) {
-                if (a == null) continue;
-                builder.append(a.statId + "\n");
+            Iterator<Potion> it = Potion.REGISTRY.iterator();
+            while (it.hasNext()) {
+                builder.append(it.next().getRegistryName() + "\n");
             }
 
-            PrintWriter writer = new PrintWriter("achievements.log", "UTF-8");
+            PrintWriter writer = new PrintWriter("potions.log", "UTF-8");
             writer.write(builder.toString());
             writer.close();
         } catch (Exception e) {

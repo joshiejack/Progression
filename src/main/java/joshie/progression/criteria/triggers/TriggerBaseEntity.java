@@ -16,11 +16,11 @@ import net.minecraft.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-import static joshie.progression.ItemProgression.ItemMeta.attackEntity;
+import static joshie.progression.ItemProgression.ItemMeta.kill;
 import static joshie.progression.ItemProgression.getStackFromMeta;
 
 public abstract class TriggerBaseEntity extends TriggerBaseCounter implements ICustomWidth, ICustomIcon, IMiniIcon, IHasFilters, ISpecialFieldProvider {
-    private static final ItemStack mini = getStackFromMeta(attackEntity);
+    private static final ItemStack mini = getStackFromMeta(kill);
     public List<IFilterProvider> entities = new ArrayList();
     protected transient EntityLivingBase entity;
     protected transient int ticker;

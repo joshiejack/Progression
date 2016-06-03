@@ -52,15 +52,7 @@ public class PCommonProxy implements IGuiHandler {
         }
 
         RuleHandler.registerRules(asm);
-
-        //Register Commands
-        CommandManager.INSTANCE.registerCommand(new CommandHelp());
-        CommandManager.INSTANCE.registerCommand(new CommandEdit());
-        CommandManager.INSTANCE.registerCommand(new CommandGui());
-        CommandManager.INSTANCE.registerCommand(new CommandReload());
-        CommandManager.INSTANCE.registerCommand(new CommandReset());
-        CommandManager.INSTANCE.registerCommand(new CommandTeam());
-        CommandManager.INSTANCE.registerCommand(new CommandAchievement());
+        CommandManager.registerCommands(asm);
 
         //Register Packets
         PacketHandler.registerPacket(PacketSyncTriggers.class, Side.CLIENT);

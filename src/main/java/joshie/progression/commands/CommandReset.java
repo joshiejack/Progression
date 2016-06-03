@@ -5,6 +5,7 @@ import joshie.progression.network.PacketReset;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 
+@Command
 public class CommandReset extends AbstractCommand {
     @Override
     public String getCommandName() {

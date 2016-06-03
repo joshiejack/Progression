@@ -9,6 +9,7 @@ import net.minecraft.command.ICommandSender;
 
 import static net.minecraft.util.text.TextFormatting.BLUE;
 
+@Command
 public class CommandGui extends AbstractCommand {
     @Override
     public String getCommandName() {

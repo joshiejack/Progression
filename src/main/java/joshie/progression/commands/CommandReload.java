@@ -6,6 +6,7 @@ import joshie.progression.network.PacketHandler;
 import joshie.progression.network.PacketReload;
 import net.minecraft.command.ICommandSender;
 
+@Command
 public class CommandReload extends AbstractCommand {
     @Override
     public String getCommandName() {

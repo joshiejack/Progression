@@ -5,15 +5,16 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.CommandNotFoundException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.NumberInvalidException;
-import net.minecraft.util.text.event.ClickEvent;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+@Command
 public class CommandHelp extends AbstractCommand {
     @Override
     public CommandLevel getPermissionLevel() {

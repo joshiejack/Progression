@@ -1,5 +1,7 @@
 package joshie.progression.commands;
 
+import joshie.progression.Progression;
+import joshie.progression.json.Options;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -8,12 +10,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.CommandEvent;
+import net.minecraftforge.fml.common.discovery.ASMDataTable;
+import net.minecraftforge.fml.common.discovery.ASMDataTable.ASMData;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.apache.logging.log4j.Level;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.annotation.Nonnull;
+import java.util.*;
 
 public class CommandManager extends CommandBase {
     public static final CommandManager INSTANCE = new CommandManager();
@@ -21,6 +24,9 @@ public class CommandManager extends CommandBase {
 
     public void registerCommand(AbstractCommand command) {
         commands.put(command.getCommandName(), command);
+        if (Options.debugMode) {
+            Progression.logger.log(Level.INFO, "Registered the command: " + command.getCommandName());
+        }
     }
 
     public Map getCommands() {
@@ -95,5 +101,19 @@ public class CommandManager extends CommandBase {
     @Override
     public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
         return true;
+    }
+
+    public static void registerCommands(@Nonnull ASMDataTable asmDataTable) {
+        String annotationClassName = Command.class.getCanonicalName();
+        Set<ASMData> asmDatas = new HashSet<ASMData>(asmDataTable.getAll(annotationClassName));
+
+        for (ASMDataTable.ASMData asmData : asmDatas) {
+            try {
+                Class<?> asmClass = Class.forName(asmData.getClassName());
+                Class<? extends AbstractCommand> asmInstanceClass = asmClass.asSubclass(AbstractCommand.class);
+                AbstractCommand instance = asmInstanceClass.newInstance();
+                CommandManager.INSTANCE.registerCommand(instance);
+            } catch (Exception e) { e.printStackTrace(); }
+        }
     }
 }

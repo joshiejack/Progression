@@ -1,5 +1,12 @@
 package joshie.progression.api.criteria;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
 public @interface ProgressionRule {
     /** The name to addCriteria this rule as, must be unique **/
     public String name();
