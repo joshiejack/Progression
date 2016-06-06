@@ -151,6 +151,9 @@ progression.condition.potioneffect=Has Potion Effect
 progression.condition.potioneffect.filters=Click to open the potion effect selector
 progression.condition.potioneffect.description=This is what will be displayed to the user in display mode, make sure to describe what potion effects they need
 progression.condition.potioneffect.lessThanFalse=If the potion effects duration is less than this number, this condition will return false instead of true. Make this 0 or less if you want this to always return true where applicable.
+progression.condition.timeofday=Time of Day
+progression.condition.timeofday.description=The time needs to be between %s and %s
+progression.condition.timeofday.description.inverted=The time cannot be between %s and %s
 
 #Rewards
 progression.reward=Results

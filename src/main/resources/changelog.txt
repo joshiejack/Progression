@@ -1,4 +1,5 @@
 Progression 0.6.1
+  Add Time Condition
   Fix Removing of Criteria not Removing Completed Triggers
 
 Progression 0.6.0
