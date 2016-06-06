@@ -425,6 +425,7 @@ public class CriteriaMappings {
 
     public void removeCriteria(ICriteria criteria) {
         completedCritera.remove(criteria);
+        completedTriggers.removeAll(criteria.getTriggers());
         PacketHandler.sendToTeam(new PacketSyncCriteria(false, new Integer[] { 0 }, new ICriteria[] { criteria }), master.team);
     }
 

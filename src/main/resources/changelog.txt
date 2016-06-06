@@ -1,3 +1,6 @@
+Progression 0.6.1
+  Fix Removing of Criteria not Removing Completed Triggers
+
 Progression 0.6.0
   Be careful with updating, you might need to redo any damage, potion effect or teleport events because of changes
   Add Player Wake Up Trigger
