@@ -47,44 +47,8 @@ public class PCommonProxy implements IGuiHandler {
         }
 
         RuleHandler.registerRules(asm);
-
-        //Register Commands
-        CommandManager.INSTANCE.registerCommand(new CommandHelp());
-        CommandManager.INSTANCE.registerCommand(new CommandEdit());
-        CommandManager.INSTANCE.registerCommand(new CommandGui());
-        CommandManager.INSTANCE.registerCommand(new CommandReload());
-        CommandManager.INSTANCE.registerCommand(new CommandReset());
-        CommandManager.INSTANCE.registerCommand(new CommandTeam());
-        CommandManager.INSTANCE.registerCommand(new CommandAchievement());
-
-        //Register Packets
-        PacketHandler.registerPacket(PacketSyncTriggers.class, Side.CLIENT);
-        PacketHandler.registerPacket(PacketSyncCriteria.class, Side.CLIENT);
-        PacketHandler.registerPacket(PacketSyncImpossible.class, Side.CLIENT);
-        PacketHandler.registerPacket(PacketSyncAbilities.class, Side.CLIENT);
-        PacketHandler.registerPacket(PacketSyncPoints.class, Side.CLIENT);
-        PacketHandler.registerPacket(PacketSyncCustomData.class, Side.CLIENT);
-        PacketHandler.registerPacket(PacketSyncTriggerData.class, Side.CLIENT);
-        PacketHandler.registerPacket(PacketSyncUnclaimed.class, Side.CLIENT);
-        PacketHandler.registerPacket(PacketRewardItem.class, Side.CLIENT);
-        PacketHandler.registerPacket(PacketClaimed.class, Side.CLIENT);
-        PacketHandler.registerPacket(PacketCompleted.class, Side.CLIENT);
-        PacketHandler.registerPacket(PacketOpenEditor.class, Side.CLIENT);
-        PacketHandler.registerPacket(PacketDisplayChat.class, Side.CLIENT);
-        PacketHandler.registerPacket(PacketSyncUsernameCache.class, Side.CLIENT);
-        PacketHandler.registerPacket(PacketSyncDimensions.class, Side.CLIENT);
-        PacketHandler.registerPacket(PacketFireTrigger.class, Side.SERVER);
-        PacketHandler.registerPacket(PacketSelectRewards.class, Side.SERVER);
-        PacketHandler.registerPacket(PacketChangeTeam.class, Side.SERVER);
-        PacketHandler.registerPacket(PacketIsSatisfied.class);
-        PacketHandler.registerPacket(PacketInvitePlayer.class);
-        PacketHandler.registerPacket(PacketLockUnlockSaving.class);
-        PacketHandler.registerPacket(PacketRequestItem.class);
-        PacketHandler.registerPacket(PacketSyncTeam.class);
-        PacketHandler.registerPacket(PacketReload.class);
-        PacketHandler.registerPacket(PacketReset.class);
-        PacketHandler.registerPacket(PacketSyncJSONToClient.class);
-        PacketHandler.registerPacket(PacketSyncJSONToServer.class);
+        CommandManager.registerCommands(asm);
+        PacketHandler.registerPackets(asm);
 
         //Register DamageSources
         ProgressionAPI.registry.registerDamageSource(DamageSource.anvil);

@@ -10,12 +10,12 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.WeakHashMap;
 
 public class StackHelper {
-    private static HashMap<Item, String> modiditemcache = new HashMap();
-    private static HashMap<Block, String> modidblockcache = new HashMap();
+    private static WeakHashMap<Item, String> modiditemcache = new WeakHashMap();
+    private static WeakHashMap<Block, String> modidblockcache = new WeakHashMap();
 
     public static String getModFromItem(Item item) {
         if (modiditemcache.containsKey(item)) return modiditemcache.get(item);

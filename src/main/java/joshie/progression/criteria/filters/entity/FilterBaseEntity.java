@@ -1,5 +1,6 @@
 package joshie.progression.criteria.filters.entity;
 
+import com.google.common.collect.Lists;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IFilter;
 import joshie.progression.api.criteria.IFilterProvider;
@@ -8,7 +9,9 @@ import joshie.progression.helpers.EntityHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
-public abstract class FilterBaseEntity implements IFilter<EntityLivingBase> {
+import java.util.List;
+
+public abstract class FilterBaseEntity implements IFilter<List<EntityLivingBase>, EntityLivingBase> {
     private IFilterProvider provider;
 
     @Override
@@ -22,8 +25,8 @@ public abstract class FilterBaseEntity implements IFilter<EntityLivingBase> {
     }
 
     @Override
-    public EntityLivingBase getRandom(EntityPlayer player) {
-        return EntityHelper.getRandomEntity(player.worldObj, this.getProvider());
+    public List<EntityLivingBase> getRandom(EntityPlayer player) {
+        return Lists.newArrayList(EntityHelper.getRandomEntity(player.worldObj, this.getProvider()));
     }
 
     @Override

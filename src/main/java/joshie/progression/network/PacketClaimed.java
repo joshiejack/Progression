@@ -5,7 +5,9 @@ import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.network.core.PenguinPacket;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
+import net.minecraftforge.fml.relauncher.Side;
 
+@Packet(isSided = true, side = Side.CLIENT)
 public class PacketClaimed extends PenguinPacket {
     private int x, y, z;
     

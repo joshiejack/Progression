@@ -8,6 +8,7 @@ import joshie.progression.player.PlayerTracker;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 
+@Command
 public class CommandTeam extends AbstractCommand {
     @Override
     public CommandLevel getPermissionLevel() {

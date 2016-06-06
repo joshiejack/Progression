@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
+@Packet
 public class PacketSyncTeam extends PenguinPacket {
     private NBTTagCompound tag;
 

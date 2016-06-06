@@ -5,7 +5,6 @@ import joshie.progression.api.criteria.ICriteria;
 import joshie.progression.api.criteria.IRewardProvider;
 import joshie.progression.api.criteria.ITab;
 import joshie.progression.api.special.IStoreNBTData;
-import joshie.progression.criteria.filters.location.FilterPlayerLastBroken;
 import joshie.progression.handlers.APICache;
 import joshie.progression.handlers.RemappingHandler;
 import joshie.progression.helpers.PlayerHelper;
@@ -197,8 +196,6 @@ public class PlayerSavedData extends WorldSavedData {
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
-        FilterPlayerLastBroken.readFromNBT(nbt);
-
         /** Load in the data about teams **/
         NBTTagList map = nbt.getTagList("TeamData", 10);
         for (int i = 0; i < map.tagCount(); i++) {
@@ -225,8 +222,6 @@ public class PlayerSavedData extends WorldSavedData {
 
     @Override
     public void writeToNBT(NBTTagCompound nbt) {
-        FilterPlayerLastBroken.writeToNBT(nbt);
-
         NBTTagList map = new NBTTagList();
         for (PlayerTeam team : data.keySet()) {
             NBTTagCompound tag = new NBTTagCompound();

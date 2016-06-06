@@ -7,12 +7,12 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.CommandEvent;
+import net.minecraftforge.fml.common.discovery.ASMDataTable;
+import net.minecraftforge.fml.common.discovery.ASMDataTable.ASMData;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.annotation.Nonnull;
+import java.util.*;
 
 public class CommandManager extends CommandBase {
     public static final CommandManager INSTANCE = new CommandManager();
@@ -94,5 +94,19 @@ public class CommandManager extends CommandBase {
     @Override
     public boolean canCommandSenderUseCommand(ICommandSender sender) {
         return true;
+    }
+
+    public static void registerCommands(@Nonnull ASMDataTable asmDataTable) {
+        String annotationClassName = Command.class.getCanonicalName();
+        Set<ASMData> asmDatas = new HashSet<ASMData>(asmDataTable.getAll(annotationClassName));
+
+        for (ASMDataTable.ASMData asmData : asmDatas) {
+            try {
+                Class<?> asmClass = Class.forName(asmData.getClassName());
+                Class<? extends AbstractCommand> asmInstanceClass = asmClass.asSubclass(AbstractCommand.class);
+                AbstractCommand instance = asmInstanceClass.newInstance();
+                CommandManager.INSTANCE.registerCommand(instance);
+            } catch (Exception e) { e.printStackTrace(); }
+        }
     }
 }

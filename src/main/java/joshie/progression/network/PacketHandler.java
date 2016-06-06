@@ -7,9 +7,17 @@ import joshie.progression.player.PlayerTeam;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.discovery.ASMDataTable;
+import net.minecraftforge.fml.common.discovery.ASMDataTable.ASMData;
+import net.minecraftforge.fml.common.discovery.asm.ModAnnotation;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 
+import javax.annotation.Nonnull;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 public class PacketHandler {
@@ -61,6 +69,25 @@ public class PacketHandler {
             if (member != null) {
                 sendToClient(packet, member);
             }
+        }
+    }
+
+    public static void registerPackets(@Nonnull ASMDataTable asmDataTable) {
+        String annotationClassName = Packet.class.getCanonicalName();
+        Set<ASMData> asmDatas = new HashSet<ASMData>(asmDataTable.getAll(annotationClassName));
+
+        topLoop:
+        for (ASMDataTable.ASMData asmData : asmDatas) {
+            try {
+                Class<?> asmClass = Class.forName(asmData.getClassName());
+                Map<String, Object> data = asmData.getAnnotationInfo();
+                boolean isSided = data.get("isSided") != null ? (Boolean) data.get("isSided") : false;
+                if (isSided) {
+                    String s = ReflectionHelper.getPrivateValue(ModAnnotation.EnumHolder.class, (ModAnnotation.EnumHolder) data.get("side"), "value");
+                    Side side = s.equals("CLIENT") ? Side.CLIENT : Side.SERVER;
+                    registerPacket(asmClass, side);
+                } else registerPacket(asmClass);
+            } catch (Exception e) { e.printStackTrace(); }
         }
     }
 }

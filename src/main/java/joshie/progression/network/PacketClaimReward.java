@@ -8,11 +8,13 @@ import joshie.progression.network.core.PenguinPacket;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+@Packet(isSided = true, side = Side.SERVER)
 public class PacketClaimReward extends PenguinPacket {
     private ICriteria criteria;
     private int rewardId;

@@ -7,6 +7,7 @@ import joshie.progression.network.PacketHandler;
 import joshie.progression.network.PacketOpenEditor;
 import net.minecraft.command.ICommandSender;
 
+@Command
 public class CommandEdit extends AbstractCommand {
     @Override
     public String getCommandName() {

@@ -6,6 +6,7 @@ import net.minecraft.stats.AchievementList;
 
 import java.io.PrintWriter;
 
+@Command
 public class CommandAchievement extends AbstractCommand {
     @Override
     public String getCommandName() {

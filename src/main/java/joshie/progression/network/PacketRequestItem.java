@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import java.util.UUID;
 
+@Packet
 public class PacketRequestItem extends PenguinPacket {
     private UUID uuid;
     private ItemStack stack;

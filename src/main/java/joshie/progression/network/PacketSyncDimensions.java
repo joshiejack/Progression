@@ -4,9 +4,11 @@ import io.netty.buffer.ByteBuf;
 import joshie.progression.helpers.DimensionHelper;
 import joshie.progression.network.core.PenguinPacket;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.HashMap;
 
+@Packet(isSided = true, side = Side.CLIENT)
 public class PacketSyncDimensions extends PenguinPacket {
     private HashMap<Integer, String> map;
 

@@ -4,7 +4,9 @@ import io.netty.buffer.ByteBuf;
 import joshie.progression.helpers.ChatHelper;
 import joshie.progression.network.core.PenguinPacket;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.relauncher.Side;
 
+@Packet(isSided = true, side = Side.CLIENT)
 public class PacketDisplayChat extends PenguinPacket {
     private String text;
 

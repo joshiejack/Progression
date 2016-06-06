@@ -10,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import static joshie.progression.gui.core.GuiList.CORE;
 import static joshie.progression.network.core.PacketPart.SEND_SIZE;
 
+@Packet
 public class PacketLockUnlockSaving extends PenguinPacket {
     private boolean lock;
 

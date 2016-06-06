@@ -9,7 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
-public abstract class FilterBaseBlock implements IFilter<ItemStack> {
+public abstract class FilterBaseBlock implements IFilter<ItemStack, ItemStack> {
     private IFilterProvider provider;
 
     @Override

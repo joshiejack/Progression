@@ -8,7 +8,7 @@ import joshie.progression.helpers.ItemHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
-public abstract class FilterBaseItem implements IFilter<ItemStack> {
+public abstract class FilterBaseItem implements IFilter<ItemStack, ItemStack> {
     private IFilterProvider provider;
 
     @Override

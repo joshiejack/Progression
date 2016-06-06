@@ -14,6 +14,7 @@ import java.util.HashMap;
 import static joshie.progression.network.core.PacketPart.REQUEST_DATA;
 import static joshie.progression.network.core.PacketPart.SEND_DATA;
 
+@Packet
 public class PacketSyncJSONToServer extends PacketSyncStringArray {
     private static HashMap<Long, String[]> serverList = new HashMap();
     private long timestamp;

@@ -1,7 +1,6 @@
 package joshie.progression.network;
 
 import io.netty.buffer.ByteBuf;
-import joshie.progression.handlers.APICache;
 import joshie.progression.handlers.RemappingHandler;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.json.JSONLoader;
@@ -14,6 +13,7 @@ import java.util.UUID;
 
 import static joshie.progression.network.PacketSyncJSONToClient.Section.*;
 
+@Packet
 public class PacketSyncJSONToClient extends PenguinPacket {
     public enum Section {
         RESYNC, SEND_HASH, FAILED_HASH, SEND_LENGTH, RECEIVED_LENGTH, SEND_STRING, COMPLETE;

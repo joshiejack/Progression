@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 
 import java.util.List;
 
-public abstract class FilterBaseAction implements IFilter<ItemStack>, IAdditionalTooltip<ItemStack> {
+public abstract class FilterBaseAction implements IFilter<ItemStack, ItemStack>, IAdditionalTooltip<ItemStack> {
     private IFilterProvider provider;
 
     @Override

@@ -1,23 +1,26 @@
 package joshie.progression.criteria.filters.entity;
 
 import joshie.progression.api.criteria.ProgressionRule;
+import joshie.progression.helpers.ListHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.player.EntityPlayer;
+
+import java.util.List;
 
 @ProgressionRule(name="witherskeleton", color=0xFFB25900)
 public class FilterSkeletonType extends FilterBaseEntity {
     public boolean wither = true;
 
     @Override
-    public EntityLivingBase getRandom(EntityPlayer player) {
-        return new EntitySkeleton(player.worldObj);
+    public List<EntityLivingBase> getRandom(EntityPlayer player) {
+        return ListHelper.newArrayList(new EntitySkeleton(player.worldObj));
     }
 
     @Override
     public void apply(EntityLivingBase entity) {
         if (entity instanceof EntitySkeleton) {
-            EntitySkeleton skeleton = ((EntitySkeleton)entity);
+            EntitySkeleton skeleton = ((EntitySkeleton) entity);
             if (wither) skeleton.setSkeletonType(1);
             else skeleton.setSkeletonType(0);
         }

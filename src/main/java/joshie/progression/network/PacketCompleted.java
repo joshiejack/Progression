@@ -15,6 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.UUID;
 
+@Packet(isSided = true, side = Side.CLIENT)
 public class PacketCompleted extends PenguinPacket {
     private ICriteria criteria;
 

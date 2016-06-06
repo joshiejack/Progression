@@ -6,21 +6,21 @@ import joshie.progression.api.criteria.IFilter;
 import joshie.progression.api.criteria.IFilterProvider;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.passive.EntityRabbit;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.Callable;
 
 public class EntityHelper {
@@ -90,9 +90,17 @@ public class EntityHelper {
         if (player == null) return null;
         int size = locality.size();
         if (size == 0) return null;
-        if (size == 1) return (EntityLivingBase) locality.get(0).getProvided().getRandom(player);
+        if (size == 1) {
+            List<EntityLivingBase> list = ((List<EntityLivingBase>) locality.get(0).getProvided().getRandom(player));
+            if (list.size() == 1) return list.get(0);
+            else if (list.size() > 1) return list.get(player.worldObj.rand.nextInt(list.size()));
+            else return null;
+        }
         else {
-            return (EntityLivingBase) locality.get(player.worldObj.rand.nextInt(size)).getProvided().getRandom(player);
+            List<EntityLivingBase> list = ((List<EntityLivingBase>) locality.get(player.worldObj.rand.nextInt(size)).getProvided().getRandom(player));
+            if (list.size() == 1) return list.get(0);
+            else if (list.size() > 1) return list.get(player.worldObj.rand.nextInt(list.size()));
+            else return null;
         }
     }
 
@@ -162,5 +170,31 @@ public class EntityHelper {
         } catch (Exception e) {}
 
         return new ItemStack(Items.spawn_egg);
+    }
+
+    private static WeakHashMap<EntityLivingBase, String> modentityidcache = new WeakHashMap();
+
+    public static String getModFromEntity(EntityLivingBase entity) {
+        if (modentityidcache.containsKey(entity)) return modentityidcache.get(entity);
+        else {
+            String name = (EntityList.getEntityString(entity));
+            String modid = name.substring(0, name.indexOf(".")).replace(".", "");
+            modentityidcache.put(entity, modid);
+            return modid;
+        }
+    }
+
+    public static EntityLivingBase clone(World world, EntityLivingBase entity, NBTTagCompound tagValue, IFilter filter) {
+        EntityLivingBase clone = (EntityLivingBase) EntityList.createEntityByName(EntityHelper.getNameForEntity(entity), world);
+        if (clone instanceof EntityLiving) {
+            ((EntityLiving) clone).onInitialSpawn(world.getDifficultyForLocation(new BlockPos(clone)), null);
+        }
+
+        if (tagValue != null) {
+            clone.readEntityFromNBT(tagValue);
+        }
+
+        filter.apply(entity);
+        return clone;
     }
 }

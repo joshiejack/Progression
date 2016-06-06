@@ -7,7 +7,9 @@ import joshie.progression.network.core.PenguinPacket;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.relauncher.Side;
 
+@Packet(isSided = true, side = Side.CLIENT)
 public class PacketRewardItem extends PenguinPacket {
     private ItemStack stack;
 

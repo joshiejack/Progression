@@ -14,6 +14,7 @@ import java.util.UUID;
 import static joshie.progression.gui.core.GuiList.GROUP_EDITOR;
 import static net.minecraft.util.EnumChatFormatting.*;
 
+@Packet
 public class PacketInvitePlayer extends PenguinPacket {
     private UUID teamOwner;
     private String teamName;

@@ -289,8 +289,10 @@ public class JSONLoader {
         }
 
         Options.settings = settings;
-        for (DataTab data : settings.tabs) {
-            createTabFromData(data, isClientside);
+        if (settings != null) {
+            for (DataTab data : settings.tabs) {
+                createTabFromData(data, isClientside);
+            }
         }
 
         initEverything(isClientside);

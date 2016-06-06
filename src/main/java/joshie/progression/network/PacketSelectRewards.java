@@ -8,11 +8,13 @@ import joshie.progression.player.CriteriaMappings;
 import joshie.progression.player.PlayerTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 
+@Packet(isSided = true, side = Side.SERVER)
 public class PacketSelectRewards extends PenguinPacket {
     private Set<IRewardProvider> rewards;
 

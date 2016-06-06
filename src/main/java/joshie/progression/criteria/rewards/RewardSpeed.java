@@ -71,10 +71,10 @@ public class RewardSpeed extends RewardBaseAbility {
     }
 
     private String getType() {
-        if (land && water && air) return Progression.format("reward.speed.format3", translate("water.description", "land.description", "air.description"));
-        else if (land && water) return Progression.format("reward.speed.format2", translate("water.description", "land.description"));
-        else if (water && air) return Progression.format("reward.speed.format2", translate("water.description", "air.description"));
-        else if (land && air) return Progression.format("reward.speed.format2", translate("land.description", "air.description"));
+        if (land && water && air) return Progression.format("reward.speed.format3", (Object[])translate("water.description", "land.description", "air.description"));
+        else if (land && water) return Progression.format("reward.speed.format2", (Object[])translate("water.description", "land.description"));
+        else if (water && air) return Progression.format("reward.speed.format2", (Object[])translate("water.description", "air.description"));
+        else if (land && air) return Progression.format("reward.speed.format2", (Object[])translate("land.description", "air.description"));
         else if (land) return Progression.translate("reward.speed.land.description");
         else if (water) return Progression.translate("reward.speed.water.description");
         else if (air) return Progression.translate("reward.speed.air.description");

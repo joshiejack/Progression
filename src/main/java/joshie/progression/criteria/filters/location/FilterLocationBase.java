@@ -6,7 +6,7 @@ import joshie.progression.api.criteria.IFilterProvider;
 import joshie.progression.api.criteria.IFilterType;
 import joshie.progression.lib.WorldLocation;
 
-public abstract class FilterLocationBase implements IFilter<WorldLocation> {
+public abstract class FilterLocationBase implements IFilter<WorldLocation, WorldLocation> {
     private IFilterProvider provider;
 
     @Override

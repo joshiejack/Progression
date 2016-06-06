@@ -16,10 +16,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.HashMap;
 import java.util.UUID;
 
+@Packet(isSided = true, side = Side.SERVER)
 public class PacketFireTrigger extends PenguinPacket {
     private String type;
     private Object[] data;

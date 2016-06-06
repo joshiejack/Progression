@@ -1,5 +1,6 @@
 package joshie.progression.criteria.rewards;
 
+import com.google.gson.JsonObject;
 import joshie.progression.Progression;
 import joshie.progression.api.ProgressionAPI;
 import joshie.progression.api.criteria.IField;
@@ -14,16 +15,19 @@ import joshie.progression.network.PacketRewardItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 
 import java.util.List;
+import java.util.Random;
 
 import static joshie.progression.api.special.DisplayMode.EDIT;
 import static joshie.progression.gui.core.GuiList.MODE;
-import static net.minecraft.util.EnumChatFormatting.BLUE;
 
 @ProgressionRule(name="item", color=0xFFE599FF)
-public class RewardItem extends RewardBaseItemFilter implements ICustomDisplayName, ICustomDescription, ICustomWidth, ICustomTooltip, ISpecialFieldProvider, IStackSizeable, IRequestItem {
-    public int stackSize = 1;
+public class RewardItem extends RewardBaseItemFilter implements ICustomDisplayName, ICustomDescription, ICustomWidth, ICustomTooltip, ISpecialFieldProvider, IStackSizeable, IRequestItem, ISpecialJSON {
+    private static final Random rand = new Random();
+    public int stackSizeMin = 1;
+    public int stackSizeMax = 1;
 
     @Override
     public String getDisplayName() {
@@ -42,8 +46,8 @@ public class RewardItem extends RewardBaseItemFilter implements ICustomDisplayNa
 
     @Override
     public void addTooltip(List list) {
-        list.add(BLUE + Progression.translate("item.free"));
-        list.add(getIcon().getDisplayName() + " x" + stackSize);
+        list.add(EnumChatFormatting.BLUE + Progression.translate("item.free"));
+        list.add(getIcon().getDisplayName() + " x" + stackSizeMin + " to " + stackSizeMax);
     }
 
     @Override
@@ -54,12 +58,25 @@ public class RewardItem extends RewardBaseItemFilter implements ICustomDisplayNa
 
     @Override
     public int getStackSize() {
-        return stackSize;
+        int random = Math.max(0, (stackSizeMax - stackSizeMin));
+        int additional = 0;
+        if (random != 0) {
+            additional = rand.nextInt(random + 1);
+        }
+
+        return stackSizeMin + additional;
     }
 
     @Override
     public ItemStack getRequestedStack(EntityPlayer player) {
-        return ItemHelper.getRandomItemOfSize(filters, player, stackSize);
+        int random = Math.max(0, (stackSizeMax - stackSizeMin));
+        int additional = 0;
+        if (random != 0) {
+            additional = player.worldObj.rand.nextInt(random + 1);
+        }
+
+        int amount = stackSizeMin + additional;
+        return ItemHelper.getRandomItemOfSize(filters, player, amount);
     }
 
     @Override
@@ -79,4 +96,20 @@ public class RewardItem extends RewardBaseItemFilter implements ICustomDisplayNa
     public void reward(EntityPlayerMP player) {
         ProgressionAPI.registry.requestItem(this, player);
     }
+
+    @Override
+    public boolean onlySpecial() {
+        return false;
+    }
+
+    @Override
+    public void readFromJSON(JsonObject data) {
+        if (data.get("stackSize") != null) {
+            stackSizeMin = data.get("stackSize").getAsInt();
+            stackSizeMax = data.get("stackSize").getAsInt();
+        }
+    }
+
+    @Override
+    public void writeToJSON(JsonObject object) {}
 }

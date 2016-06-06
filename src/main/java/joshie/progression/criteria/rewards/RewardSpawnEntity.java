@@ -1,5 +1,6 @@
 package joshie.progression.criteria.rewards;
 
+import com.google.gson.JsonObject;
 import joshie.progression.api.criteria.*;
 import joshie.progression.api.special.*;
 import joshie.progression.gui.fields.EntityFilterFieldPreview;
@@ -11,15 +12,15 @@ import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.StackHelper;
 import joshie.progression.lib.WorldLocation;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.text.WordUtils;
 
@@ -27,14 +28,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static net.minecraft.util.EnumChatFormatting.DARK_GREEN;
 
 @ProgressionRule(name="entity", color=0xFFE599FF)
-public class RewardSpawnEntity extends RewardBase implements IInit, ICustomDescription, ICustomTooltip, ICustomWidth, ICustomIcon, IHasFilters, ISpecialFieldProvider {
+public class RewardSpawnEntity extends RewardBase implements IInit, ICustomDescription, ICustomTooltip, ICustomWidth, ICustomIcon, IHasFilters, ISpecialFieldProvider, ISpecialJSON {
     public List<IFilterProvider> locations = new ArrayList();
     public List<IFilterProvider> entities = new ArrayList();
     public NBTTagCompound tagValue = new NBTTagCompound();
-    public int spawnNumber = 1;
+    public int spawnNumberMin = 1;
+    public int spawnNumberMax = 1;
     public String nbtData = "";
 
     protected transient IField field;
@@ -52,12 +53,12 @@ public class RewardSpawnEntity extends RewardBase implements IInit, ICustomDescr
 
     @Override
     public String getDescription() {
-        return format(spawnNumber) + " \n" + field.getField();
+        return format(spawnNumberMin, spawnNumberMax) + " \n" + field.getField();
     }
 
     @Override
     public void addTooltip(List list) {
-        list.add(DARK_GREEN + format(spawnNumber));
+        list.add(EnumChatFormatting.DARK_GREEN + format(spawnNumberMin, spawnNumberMax));
         list.addAll(Arrays.asList(WordUtils.wrap((String)field.getField(), 28).split("\r\n")));
         ItemStack stack = getIcon();
         if (stack != null) {
@@ -103,6 +104,13 @@ public class RewardSpawnEntity extends RewardBase implements IInit, ICustomDescr
     @Override
     public void reward(EntityPlayerMP player) {
         if (player != null) {
+            int random = Math.max(0, (spawnNumberMax - spawnNumberMin));
+            int additional = 0;
+            if (random != 0) {
+                additional = player.worldObj.rand.nextInt(random + 1);
+            }
+
+            int spawnNumber = spawnNumberMin + additional;
             for (int i = 0; i < spawnNumber; i++) {
                 boolean notspawned = true;
                 for (int j = 0; j < 10 && notspawned; j++) {
@@ -116,22 +124,17 @@ public class RewardSpawnEntity extends RewardBase implements IInit, ICustomDescr
                                 notspawned = false;
                                 //Now that we have a random location, let's grab a random Entity
                                 IFilter filter = EntityHelper.getFilter(entities, player);
-                                EntityLivingBase clone = (EntityLivingBase) EntityList.createEntityByName(EntityHelper.getNameForEntity(((EntityLivingBase) filter.getRandom(player))), player.worldObj);
-                                if (clone instanceof EntityLiving) {
-                                    ((EntityLiving) clone).onInitialSpawn(player.worldObj.getDifficultyForLocation(new BlockPos(clone)), (IEntityLivingData) null);
-                                }
-
-                                if (tagValue != null) {
-                                    clone.readEntityFromNBT(tagValue);
-                                }
-
-                                filter.apply(entity);
-
-                                clone.setLocationAndAngles(pos.getX(), pos.getY(), pos.getZ(), player.worldObj.rand.nextFloat() * 360.0F, 0.0F);
-                                player.worldObj.spawnEntityInWorld(clone);
-                                player.worldObj.playAuxSFX(2004, pos, 0);
-                                if (clone instanceof EntityLiving) {
-                                    ((EntityLiving) clone).spawnExplosionParticle();
+                                if (filter != null) {
+                                    List<EntityLivingBase> entities = (List<EntityLivingBase>) filter.getRandom(player);
+                                    for (EntityLivingBase entity : entities) {
+                                        EntityLivingBase clone = EntityHelper.clone(player.worldObj, entity, tagValue, filter);
+                                        clone.setLocationAndAngles(pos.getX(), pos.getY(), pos.getZ(), player.worldObj.rand.nextFloat() * 360.0F, 0.0F);
+                                        player.worldObj.spawnEntityInWorld(clone);
+                                        player.worldObj.playAuxSFX(2004, pos, 0);
+                                        if (clone instanceof EntityLiving) {
+                                            ((EntityLiving) clone).spawnExplosionParticle();
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -140,6 +143,22 @@ public class RewardSpawnEntity extends RewardBase implements IInit, ICustomDescr
             }
         }
     }
+
+    @Override
+    public boolean onlySpecial() {
+        return false;
+    }
+
+    @Override
+    public void readFromJSON(JsonObject data) {
+        if (data.get("spawnNumber") != null) {
+            spawnNumberMin = data.get("spawnNumber").getAsInt();
+            spawnNumberMax = data.get("spawnNumber").getAsInt();
+        }
+    }
+
+    @Override
+    public void writeToJSON(JsonObject object) {}
 
     //Helper Methods
     private boolean isValidLocation(World world, BlockPos pos) {

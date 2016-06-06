@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+@Command
 public class CommandHelp extends AbstractCommand {
     @Override
     public CommandLevel getPermissionLevel() {
