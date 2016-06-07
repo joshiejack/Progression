@@ -13,7 +13,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import java.util.ArrayList;
 import java.util.List;
 
-@ProgressionRule(name="setFire", color=0xFFFF4200, meta="setFire")
+@ProgressionRule(name="setFire", color=0xFFFF4200, icon="minecraft:flint_and_steel")
 public class RewardSetFire extends RewardBase implements IHasFilters, ISpecialFieldProvider {
     public List<IFilterProvider> targets = new ArrayList();
     public boolean defaultToPlayer = true;
