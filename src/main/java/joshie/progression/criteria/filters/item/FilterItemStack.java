@@ -32,7 +32,11 @@ public class FilterItemStack extends FilterBaseItem implements ISpecialFieldProv
     public boolean matches(ItemStack check) {
         if (stack.getItem() != check.getItem()) return false;
         if (matchDamage && (stack.getItemDamage() != check.getItemDamage())) return false;
-        if (matchNBT && (!stack.getTagCompound().equals(check.getTagCompound()))) return false;
+        if (matchNBT) {
+            if (!stack.hasTagCompound() && check.hasTagCompound()) return false;
+            if (stack.hasTagCompound() && !stack.getTagCompound().equals(check.getTagCompound())) return false;
+        }
+
         return true;
     }
 }

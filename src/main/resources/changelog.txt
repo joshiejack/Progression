@@ -1,3 +1,6 @@
+Progression 0.6.2
+  Fix potential crash when using matchNBT on an itemstack filter
+
 Progression 0.6.1
   Add Time Condition
   Fix Removing of Criteria not Removing Completed Triggers
