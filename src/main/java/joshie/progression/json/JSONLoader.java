@@ -69,7 +69,6 @@ public class JSONLoader {
     public final static int MAX_LENGTH = 10000;
 
     public static String getClientTabJsonData() {
-        DefaultSettings loader = null;
         try {
             File file = FileHelper.getCriteriaFile(serverName, true);
             if (!file.exists()) {
