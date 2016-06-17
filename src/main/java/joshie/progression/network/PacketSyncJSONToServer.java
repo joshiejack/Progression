@@ -63,7 +63,7 @@ public class PacketSyncJSONToServer extends PacketSyncStringArray {
         //Grab the data and send it
         if (Options.editor) {
             String json = JSONLoader.getClientTabJsonData();
-            String[] client = SplitHelper.splitStringEvery(json, 5000);
+            String[] client = SplitHelper.splitStringEvery(json, JSONLoader.MAX_LENGTH);
             for (int i = 0; i < client.length; i++) {
                 PacketHandler.sendToServer(new PacketSyncJSONToServer(SEND_DATA, client[i], i, timestamp));
             }

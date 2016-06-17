@@ -1,5 +1,6 @@
 package joshie.progression.network;
 
+import com.google.common.collect.Lists;
 import joshie.progression.Progression;
 import joshie.progression.helpers.PlayerHelper;
 import joshie.progression.json.Options;
@@ -15,13 +16,11 @@ import net.minecraftforge.fml.common.discovery.asm.ModAnnotation;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.Level;
 
 import javax.annotation.Nonnull;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class PacketHandler {
     private static final PenguinNetwork INSTANCE = new PenguinNetwork(PInfo.MODID);
@@ -87,6 +86,9 @@ public class PacketHandler {
         String annotationClassName = Packet.class.getCanonicalName();
         Set<ASMData> asmDatas = new HashSet<ASMData>(asmDataTable.getAll(annotationClassName));
 
+        HashMap<String, Pair<Side, Class>> sidedPackets = new HashMap();
+        HashMap<String, Class> unsidedPackets = new HashMap();
+
         topLoop:
         for (ASMDataTable.ASMData asmData : asmDatas) {
             try {
@@ -96,8 +98,43 @@ public class PacketHandler {
                 if (isSided) {
                     String s = ReflectionHelper.getPrivateValue(ModAnnotation.EnumHolder.class, (ModAnnotation.EnumHolder) data.get("side"), "value");
                     Side side = s.equals("CLIENT") ? Side.CLIENT : Side.SERVER;
-                    registerPacket(asmClass, side);
-                } else registerPacket(asmClass);
+                    sidedPackets.put(asmClass.getSimpleName(), Pair.of(side, (Class)asmClass));
+                } else unsidedPackets.put(asmClass.getSimpleName(), asmClass);
+            } catch (Exception e) { e.printStackTrace(); }
+        }
+
+
+        //Sort the packet alphabetically so they get registered the same on server and client side
+        Comparator<String> alphabetical = new Comparator<String>() {
+            public int compare(String str1, String str2) {
+                int res = String.CASE_INSENSITIVE_ORDER.compare(str1, str2);
+                if (res == 0) {
+                    res = str1.compareTo(str2);
+                }
+
+                return res;
+            }
+        };
+
+
+        //Sort the sided and unsided packets
+        List<String> namesSided = Lists.newArrayList(sidedPackets.keySet());
+        Collections.sort(namesSided, alphabetical);
+        List<String> namesUnsided = Lists.newArrayList(unsidedPackets.keySet());
+        Collections.sort(namesUnsided, alphabetical);
+
+        //Register sided packets
+        for (String sided: namesSided) {
+            Pair<Side, Class> result = sidedPackets.get(sided);
+            try {
+                registerPacket(result.getRight(), result.getLeft());
+            } catch (Exception e) { e.printStackTrace(); }
+        }
+
+        //Register unsided packets
+        for (String unsided: namesUnsided) {
+            try {
+                registerPacket(unsidedPackets.get(unsided));
             } catch (Exception e) { e.printStackTrace(); }
         }
     }

@@ -1,3 +1,6 @@
+Progression 0.6.3
+  Fix packet id mismatch on server and client
+
 Progression 0.6.2
   Fix potential crash when using matchNBT on an itemstack filter
 
