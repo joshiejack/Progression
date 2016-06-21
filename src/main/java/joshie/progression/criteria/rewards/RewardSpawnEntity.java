@@ -60,8 +60,7 @@ public class RewardSpawnEntity extends RewardBase implements IInit, ICustomDescr
     public void addTooltip(List list) {
         list.add(DARK_GREEN + format(spawnNumberMin, spawnNumberMax));
         list.addAll(Arrays.asList(WordUtils.wrap((String)field.getField(), 28).split("\r\n")));
-        ItemStack stack = getIcon();
-        if (stack != null && entity != null) {
+        if (entity != null) {
             list.add("---");
             list.add(entity.getName());
         }
