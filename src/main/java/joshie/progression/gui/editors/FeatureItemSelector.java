@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.Callable;
 
 import static joshie.progression.gui.core.GuiList.*;
@@ -68,15 +69,17 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
         return true;
     }
 
-    private void attemptToAdd(Object stack) {
+    private void attemptToAdd(ArrayList sorted, Object stack) {
         if (passesFilters(stack)) {
             if (!sorted.contains(stack)) {
                 sorted.add(stack);
             }
         }
     }
-    
+
     private static Cache<Object, ArrayList<Object>> cacheList = CacheBuilder.newBuilder().maximumSize(64).build();
+    private static Cache<String, ArrayList<Object>> cacheSearch = CacheBuilder.newBuilder().maximumSize(256).build();
+    private static HashMap<IFilterType, ArrayList<Object>> emptyList = new HashMap();
 
     public ArrayList<Object> getAllItems() {
         try {
@@ -91,22 +94,40 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
         }
     }
 
+    private void buildEmptyList() {
+        if (emptyList.get(filter) == null) {
+            ArrayList emptyList = new ArrayList();
+            for (Object stack : getAllItems()) {
+                attemptToAdd(emptyList, stack);
+            }
+
+            FeatureItemSelector.emptyList.put(filter, emptyList);
+        }
+    }
+
     public void updateSearch() {
-        if (search == null || search.equals("")) {
-            sorted = new ArrayList();
-            for (Object stack : getAllItems()) {
-                attemptToAdd(stack);
-            }
-        } else {
-            index = 0;
-            sorted = new ArrayList();
-            for (Object stack : getAllItems()) {
-                if (stack != null) {
-                    if (filter.searchMatches(stack, search.toLowerCase())) {
-                        attemptToAdd(stack);
+        buildEmptyList();
+        if (search == null) sorted = emptyList.get(filter);
+        else {
+            index = 0; //reset the index
+
+            try {
+                sorted = cacheSearch.get(search, new Callable<ArrayList<Object>>() {
+                    @Override
+                    public ArrayList<Object> call() throws Exception {
+                        ArrayList list = new ArrayList();
+                        for (Object stack : getAllItems()) {
+                            if (stack != null) {
+                                if (filter.searchMatches(stack, search.toLowerCase())) {
+                                    attemptToAdd(list, stack);
+                                }
+                            }
+                        }
+
+                        return list;
                     }
-                }
-            }
+                });
+            } catch (Exception e) {}
         }
     }
 

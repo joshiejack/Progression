@@ -12,7 +12,6 @@ import joshie.progression.helpers.MCClientHelper;
 import joshie.progression.helpers.StackHelper;
 import joshie.progression.lib.WorldLocation;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -60,8 +59,7 @@ public class RewardSpawnEntity extends RewardBase implements IInit, ICustomDescr
     public void addTooltip(List list) {
         list.add(EnumChatFormatting.DARK_GREEN + format(spawnNumberMin, spawnNumberMax));
         list.addAll(Arrays.asList(WordUtils.wrap((String)field.getField(), 28).split("\r\n")));
-        ItemStack stack = getIcon();
-        if (stack != null) {
+        if (entity != null) {
             list.add("---");
             list.add(entity.getName());
         }
