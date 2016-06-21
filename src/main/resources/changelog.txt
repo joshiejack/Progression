@@ -1,3 +1,9 @@
+Progression 0.6.4
+  Fix Potential Crash when viewing entity tooltips
+  Fix Potential Crash when an entity doesn't exist
+  Fix "Please wait message" lasting forever
+  Improve speed when searching for things repeatedly
+
 Progression 0.6.3
   Fix packet id mismatch on server and client
 

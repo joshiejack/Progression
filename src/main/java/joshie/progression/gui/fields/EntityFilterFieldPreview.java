@@ -50,23 +50,25 @@ public class EntityFilterFieldPreview extends ItemFilterField implements IField 
     }
 
     public EntityLivingBase getEntity(boolean hovered) {
-        if (ticker >= 200 || ticker == 0) {
-            EntityPlayer player = MCClientHelper.getPlayer();
-            IFilter filter = EntityHelper.getFilter(getFilters(), player);
-            List<EntityLivingBase> entities = (List<EntityLivingBase>) filter.getRandom(player);
-            if (entities.size() > 0) {
-                entity = (EntityLivingBase) EntityList.createEntityByName(EntityHelper.getNameForEntity(entities.get(player.worldObj.rand.nextInt(entities.size()))), player.worldObj);
-                if (entity instanceof EntityLiving) {
-                    ((EntityLiving) entity).onInitialSpawn(player.worldObj.getDifficultyForLocation(new BlockPos(entity)), (IEntityLivingData) null);
+        try {
+            if (ticker >= 200 || ticker == 0) {
+                EntityPlayer player = MCClientHelper.getPlayer();
+                IFilter filter = EntityHelper.getFilter(getFilters(), player);
+                List<EntityLivingBase> entities = (List<EntityLivingBase>) filter.getRandom(player);
+                if (entities.size() > 0) {
+                    entity = (EntityLivingBase) EntityList.createEntityByName(EntityHelper.getNameForEntity(entities.get(player.worldObj.rand.nextInt(entities.size()))), player.worldObj);
+                    if (entity instanceof EntityLiving) {
+                        ((EntityLiving) entity).onInitialSpawn(player.worldObj.getDifficultyForLocation(new BlockPos(entity)), (IEntityLivingData) null);
+                    }
+
+                    filter.apply(entity);
+                    ticker = 1;
                 }
-
-                filter.apply(entity);
-                ticker = 1;
             }
-        }
 
-        if (!hovered) ticker++;
-        else if (!GuiScreen.isShiftKeyDown()) ticker += 2;
+            if (!hovered) ticker++;
+            else if (!GuiScreen.isShiftKeyDown()) ticker += 2;
+        } catch (Exception e) {}
 
         return entity != null ? entity : MCClientHelper.getPlayer();
     }

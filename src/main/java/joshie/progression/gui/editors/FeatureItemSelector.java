@@ -68,7 +68,7 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
         return true;
     }
 
-    private void attemptToAdd(Object stack) {
+    private void attemptToAdd(ArrayList sorted, Object stack) {
         if (passesFilters(stack)) {
             if (!sorted.contains(stack)) {
                 sorted.add(stack);
@@ -77,6 +77,8 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
     }
     
     private static Cache<Object, ArrayList<Object>> cacheList = CacheBuilder.newBuilder().maximumSize(64).build();
+    private static Cache<String, ArrayList<Object>> cacheSearch = CacheBuilder.newBuilder().maximumSize(256).build();
+    private static ArrayList<Object> emptyList;
 
     public ArrayList<Object> getAllItems() {
         try {
@@ -91,22 +93,40 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
         }
     }
 
+    private void buildEmptyList() {
+        if (emptyList == null) {
+            emptyList = new ArrayList();
+            for (Object stack : getAllItems()) {
+                attemptToAdd(emptyList, stack);
+            }
+
+            cacheSearch.put("", emptyList);
+        }
+    }
+
     public void updateSearch() {
-        if (search == null || search.equals("")) {
-            sorted = new ArrayList();
-            for (Object stack : getAllItems()) {
-                attemptToAdd(stack);
-            }
-        } else {
-            index = 0;
-            sorted = new ArrayList();
-            for (Object stack : getAllItems()) {
-                if (stack != null) {
-                    if (filter.searchMatches(stack, search.toLowerCase())) {
-                        attemptToAdd(stack);
+        buildEmptyList();
+        if (search == null) sorted = emptyList;
+        else {
+            index = 0; //reset the index
+
+            try {
+                sorted = cacheSearch.get(search, new Callable<ArrayList<Object>>() {
+                    @Override
+                    public ArrayList<Object> call() throws Exception {
+                        ArrayList list = new ArrayList();
+                        for (Object stack : getAllItems()) {
+                            if (stack != null) {
+                                if (filter.searchMatches(stack, search.toLowerCase())) {
+                                    attemptToAdd(list, stack);
+                                }
+                            }
+                        }
+
+                        return list;
                     }
-                }
-            }
+                });
+            } catch (Exception e) {}
         }
     }
 
