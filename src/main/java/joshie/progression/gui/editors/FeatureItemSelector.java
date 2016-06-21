@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.Callable;
 
 import static joshie.progression.gui.core.GuiList.*;
@@ -78,7 +79,7 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
     
     private static Cache<Object, ArrayList<Object>> cacheList = CacheBuilder.newBuilder().maximumSize(64).build();
     private static Cache<String, ArrayList<Object>> cacheSearch = CacheBuilder.newBuilder().maximumSize(256).build();
-    private static ArrayList<Object> emptyList;
+    private static HashMap<IFilterType, ArrayList<Object>> emptyList = new HashMap();
 
     public ArrayList<Object> getAllItems() {
         try {
@@ -94,19 +95,19 @@ public class FeatureItemSelector extends FeatureAbstract implements ITextEditabl
     }
 
     private void buildEmptyList() {
-        if (emptyList == null) {
-            emptyList = new ArrayList();
+        if (emptyList.get(filter) == null) {
+            ArrayList emptyList = new ArrayList();
             for (Object stack : getAllItems()) {
                 attemptToAdd(emptyList, stack);
             }
 
-            cacheSearch.put("", emptyList);
+            FeatureItemSelector.emptyList.put(filter, emptyList);
         }
     }
 
     public void updateSearch() {
         buildEmptyList();
-        if (search == null) sorted = emptyList;
+        if (search == null) sorted = emptyList.get(filter);
         else {
             index = 0; //reset the index
 
