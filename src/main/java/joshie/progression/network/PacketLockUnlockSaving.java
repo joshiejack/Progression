@@ -38,7 +38,7 @@ public class PacketLockUnlockSaving extends PenguinPacket {
                 //Now save everything :)
                 JSONLoader.saveData(true); //Save the data clientside
                 String json = JSONLoader.getClientTabJsonData();
-                int length = SplitHelper.splitStringEvery(json, 5000).length;
+                int length = SplitHelper.splitStringEvery(json, JSONLoader.MAX_LENGTH).length;
                 //Send the packet to the server about the new json
                 PacketHandler.sendToServer(new PacketSyncJSONToServer(SEND_SIZE, "", length, System.currentTimeMillis()));
                 CORE.clearEditors();
