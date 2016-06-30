@@ -33,12 +33,11 @@ public class PlayerTeam implements ITextEditable, IPlayerTeam {
 
     public PlayerTeam() {}
 
-    public PlayerTeam(TeamType type, UUID owner) {
+    public PlayerTeam(TeamType type, String name, UUID owner) {
         this.owner = owner;
         this.type = type;
-        EntityPlayer player = PlayerHelper.getPlayerFromUUID(owner);
-        if (player != null) {
-            this.name = player.getGameProfile().getName();
+        if (this.name != null) {
+            this.name = name;
         } else this.name = "Single Player";
     }
 
@@ -67,18 +66,13 @@ public class PlayerTeam implements ITextEditable, IPlayerTeam {
         return owner;
     }
 
-    @Override
-    public EntityPlayer getOwnerEntity() {
-        return PlayerHelper.getPlayerFromUUID(getOwner());
-    }
-
     //For quicker access
     public void rebuildTeamCache() {
         teamCache = new HashMap();
-        EntityPlayer owner = PlayerHelper.getPlayerFromUUID(getOwner());
+        EntityPlayer owner = PlayerHelper.getPlayerFromUUID(false, getOwner());
         if (owner != null) teamCache.put(getOwner(), owner);
         for (UUID uuid: getMembers()) {
-            EntityPlayer member = (EntityPlayer) PlayerHelper.getPlayerFromUUID(uuid);
+            EntityPlayer member = PlayerHelper.getPlayerFromUUID(false, uuid);
             if (member != null) teamCache.put(uuid, member);
         }
     }

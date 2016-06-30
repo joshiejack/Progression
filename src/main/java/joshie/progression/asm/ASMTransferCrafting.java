@@ -21,7 +21,6 @@ public class ASMTransferCrafting extends AbstractASM {
     static {
         accepted.add("slimeknights.mantle.inventory.ContainerMultiModule");
         acceptedMap.put("slimeknights.mantle.inventory.ContainerMultiModule", "notifySlotAfterTransfer");
-        //accepted.add("thaumcraft.common.container.ContainerArcaneWorkbench");
         accepted.add("net.minecraft.inventory.ContainerPlayer");
         accepted.add("abd");
         accepted.add("net.minecraft.inventory.ContainerWorkbench");
