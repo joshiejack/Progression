@@ -6,9 +6,6 @@ import java.util.Collection;
 import java.util.UUID;
 
 public interface IPlayerTeam {
-    /** Will return the owner as an entity player, this can be null **/
-    public EntityPlayer getOwnerEntity();
-
     /** Returns a set of players, including the owner, only includes online members **/
     public Collection<EntityPlayer> getTeamEntities();
 

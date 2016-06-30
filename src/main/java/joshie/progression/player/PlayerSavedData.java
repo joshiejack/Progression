@@ -130,10 +130,7 @@ public class PlayerSavedData extends WorldSavedData {
                 }
             }
         } else if (action == NEW) { //If we are creating a new team
-            newTeam = new PlayerTeam(TeamType.TEAM, uuid);
-            if (name != null) {
-                newTeam.setName(name);
-            }
+            newTeam = new PlayerTeam(TeamType.TEAM, name, uuid);
         } else {
             if (name != null) {
                 for (PlayerTeam team: data.keySet()) {
@@ -168,7 +165,13 @@ public class PlayerSavedData extends WorldSavedData {
     public PlayerDataServer getServerPlayer(UUID uuid) {
         PlayerTeam team = teams.get(uuid);
         if (team == null) {
-            team = new PlayerTeam(TeamType.SINGLE, uuid);
+            String name = null;
+            EntityPlayer player = PlayerHelper.getPlayerFromUUID(false, uuid);
+            if (player != null) {
+                name = player.getGameProfile().getName();
+            }
+
+            team = new PlayerTeam(TeamType.SINGLE, name, uuid);
             teams.put(uuid, team);
         }
 

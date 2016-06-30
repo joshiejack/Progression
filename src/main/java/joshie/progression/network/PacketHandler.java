@@ -49,7 +49,7 @@ public class PacketHandler {
     }
 
     public static void sendToClient(IMessage packet, UUID uuid) {
-        EntityPlayerMP player = (EntityPlayerMP) PlayerHelper.getPlayerFromUUID(uuid);
+        EntityPlayerMP player = (EntityPlayerMP) PlayerHelper.getPlayerFromUUID(false, uuid);
         if (player != null) {
             sendToClient(packet, player);
         }
@@ -57,14 +57,14 @@ public class PacketHandler {
 
     public static void sendToTeam(IMessage packet, PlayerTeam team) {
         /** Send the stuff to the captain first **/
-        EntityPlayerMP owner = (EntityPlayerMP) PlayerHelper.getPlayerFromUUID(team.getOwner());
+        EntityPlayerMP owner = (EntityPlayerMP) PlayerHelper.getPlayerFromUUID(false, team.getOwner());
         if (owner != null) {
             sendToClient(packet, owner);
         }
         
         /** Then send it to all team members **/
         for (UUID uuid: team.getMembers()) {
-            EntityPlayerMP member = (EntityPlayerMP) PlayerHelper.getPlayerFromUUID(uuid);
+            EntityPlayerMP member = (EntityPlayerMP) PlayerHelper.getPlayerFromUUID(false, uuid);
             if (member != null) {
                 sendToClient(packet, member);
             }

@@ -111,6 +111,6 @@ public class CraftingRegistry {
     }
 
     private Crafter getCrafterFromUUID(UUID uuid) {
-        return PlayerHelper.getCrafterForUUID(uuid);
+        return PlayerHelper.getCrafterForUUID(this != server, uuid);
     }
 }
