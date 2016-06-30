@@ -20,7 +20,7 @@ public class ASMTinkers extends AbstractASM {
 
     @Override
     public String[] getMethodNameAndDescription() {
-        return new String[] { "onCraftMatrixChanged", "(Lnet/minecraft/inventory/IInventory;)V", "func_75130_a", "(Lnet/minecraft/inventory/IInventory;)V",  "a", "(Lqg;)V" };
+        return new String[] { "onCraftMatrixChanged", "(Lnet/minecraft/inventory/IInventory;)V", "func_75130_a", "(Lnet/minecraft/inventory/IInventory;)V",  "a", "(Lql;)V" };
     }
 
     @Override

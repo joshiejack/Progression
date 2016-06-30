@@ -24,14 +24,14 @@ import java.util.concurrent.Callable;
 public class PlayerHelper {
     private static Cache<UUID, Crafter> crafters = CacheBuilder.newBuilder().maximumSize(64).build();
 
-    public static Crafter getCrafterForUUID(final UUID uuid) {
-        Crafter crafter = getCrafterFromUUID(uuid);
+    public static Crafter getCrafterForUUID(final boolean isClient, final UUID uuid) {
+        Crafter crafter = getCrafterFromUUID(isClient, uuid);
         return crafter == null ? CraftingUnclaimed.INSTANCE : crafter;
     }
 
-    public static Crafter getCrafterFromUUID(final UUID uuid) {
+    public static Crafter getCrafterFromUUID(final boolean isClient, final UUID uuid) {
         //If we are creative always jump to the creative profile, never cache it
-        EntityPlayer player = PlayerHelper.getPlayerFromUUID(uuid);
+        EntityPlayer player = PlayerHelper.getPlayerFromUUID(isClient, uuid);
         if (Options.settings.craftAnythingCreative && player != null && player.capabilities.isCreativeMode) {
             return CrafterCreative.INSTANCE;
         }
@@ -75,8 +75,8 @@ public class PlayerHelper {
         return list;
     }
 
-    public static EntityPlayer getPlayerFromUUID(UUID uuid) {
-        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) return MCClientHelper.getPlayer();
+    public static EntityPlayer getPlayerFromUUID(boolean isClient, UUID uuid) {
+        if (isClient) return MCClientHelper.getPlayer();
         for (EntityPlayerMP player : getAllPlayers()) {
             if (getUUIDForPlayer(player).equals(uuid)) {
                 return player;

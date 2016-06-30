@@ -40,7 +40,7 @@ minecraft {
 
 dependencies {
   deobfCompile "mezz.jei:jei_${minecraft_version}:${jei_version}"
-  deobfCompile "slimeknights.mantle:Mantle:${minecraft_version}-${mantle_version}"
+  deobfCompile "slimeknights.mantle:Mantle:1.10-${mantle_version}"
 }
 
 processResources

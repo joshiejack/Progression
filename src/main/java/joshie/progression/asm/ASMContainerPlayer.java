@@ -11,7 +11,7 @@ import static org.objectweb.asm.Opcodes.*;
 public class ASMContainerPlayer extends AbstractASM {
     @Override
     public boolean isClass(String name) {
-        return name.equals("net.minecraft.inventory.ContainerPlayer") || name.equals("abl");
+        return name.equals("net.minecraft.inventory.ContainerPlayer") || name.equals("abd");
     }
 
     @Override
@@ -27,7 +27,7 @@ public class ASMContainerPlayer extends AbstractASM {
         @Override
         public MethodVisitor visitMethod(int access, final String name, String desc, String signature, String[] exceptions) {
             MethodVisitor visitor = super.visitMethod(access, name, desc, signature, exceptions);
-            if (desc.equals("(Lnet/minecraft/inventory/IInventory;)V") || desc.equals("(Lqg;)V")) {
+            if (desc.equals("(Lnet/minecraft/inventory/IInventory;)V") || desc.equals("(Lql;)V")) {
                 if (name.equals("onCraftMatrixChanged") || name.equals("a") || name.equals("func_75130_a")) {
                     return new MethodVisitor(Opcodes.ASM4, visitor) {
                         @Override

@@ -6,7 +6,7 @@ import org.objectweb.asm.*;
 public class ASMFurnace extends AbstractASM {
     @Override
     public boolean isClass(String name) {
-        return name.equals("net.minecraft.tileentity.TileEntityFurnace") || name.equals("aqg");
+        return name.equals("net.minecraft.tileentity.TileEntityFurnace") || name.equals("aqv");
     }
 
     @Override
@@ -35,7 +35,7 @@ public class ASMFurnace extends AbstractASM {
 
                     @Override
                     public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
-                        if (name.equals("getSmeltingResult") || (name.equals("a") && desc.equals("(Ladq;)Ladq;"))) {
+                        if (name.equals("getSmeltingResult") || (name.equals("a") && desc.equals("(Ladz;)Ladz;"))) {
                             String stacks = name.equals("getSmeltingResult") ? "furnaceItemStacks" : "field_145957_n";
                             mv.visitMethodInsn(opcode, owner, name, desc, itf);
                             mv.visitVarInsn(Opcodes.ASTORE, 1);

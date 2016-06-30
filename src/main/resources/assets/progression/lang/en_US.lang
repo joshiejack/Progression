@@ -332,11 +332,12 @@ progression.filter.location.randomz.description=Randomly around the z coordinate
 progression.filter.entity.displayName=Display Name
 progression.filter.entity.entityName=Entity Name
 progression.filter.entity.entitytype=Entity Type
-progression.filter.entity.witherskeleton=Wither Skeleton
+progression.filter.entity.witherskeleton=Skeleton Type
 progression.filter.entity.entityMod=Entity Mod
 progression.filter.entity.lastHit=Last Hit
 progression.filter.entity.lastKilled=Last Killed
 progression.filter.entity.online=Everyone Online
+progression.filter.entity.zombietype=Zombie Type
 
 
 #Items

@@ -1,3 +1,10 @@
+Progression 0.6.6
+    Update to 1.10.2
+    Add Zombie Type Filter
+
+Progression 0.6.5
+    Fix Potential Crash when killing entities
+
 Progression 0.6.4
   Fix Potential Crash when viewing entity tooltips
   Fix Potential Crash when an entity doesn't exist

@@ -19,21 +19,14 @@ import java.util.Arrays;
 import java.util.List;
 
 public class VanillaHelper {
-    public static Field fContainer;
-    public static Field fCrafters;
+    public static final Field fContainer = ReflectionHelper.findField(InventoryCrafting.class, "eventHandler", "field_70465_c", "d");
+    public static final Field fCrafters = ReflectionHelper.findField(Container.class, "listeners", "field_75149_d", "e");
 
     //Initialise all the fields
-    static {
-        try {
-            fContainer = ReflectionHelper.findField(InventoryCrafting.class, "eventHandler", "field_70465_c", "c");
-            fCrafters = ReflectionHelper.findField(Container.class, "listeners", "field_75149_d", "e");
-        } catch (Exception e) {}
-    }
-
     public static List<Object> getPlayers(InventoryCrafting crafting, boolean isClient) {
         if (isClient && MCClientHelper.getPlayer() != null) return Arrays.asList(new Object[] { MCClientHelper.getPlayer() });
         try {
-            Container container = (Container) fContainer.get(crafting);
+            Container container = (Container) VanillaHelper.fContainer.get(crafting);
             List list = (List) fCrafters.get(container);
             List<Object> uuids = new ArrayList();
             uuids.addAll(list);

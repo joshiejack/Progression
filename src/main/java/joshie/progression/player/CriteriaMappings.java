@@ -335,7 +335,7 @@ public class CriteriaMappings {
             Collections.shuffle(list);
             for (IRewardProvider reward: list) {
                 if (!reward.mustClaim()) {
-                    EntityPlayerMP aPlayer = (EntityPlayerMP) PlayerHelper.getPlayerFromUUID(uuid);
+                    EntityPlayerMP aPlayer = (EntityPlayerMP) PlayerHelper.getPlayerFromUUID(false, uuid);
                     if (aPlayer != null) {
                         if(claimReward(aPlayer, reward)) {
                             completed.add(reward.getCriteria());

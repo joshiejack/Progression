@@ -9,6 +9,9 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntitySkeleton;
+import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.entity.monster.SkeletonType;
+import net.minecraft.entity.monster.ZombieType;
 import net.minecraft.entity.passive.EntityRabbit;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -114,12 +117,23 @@ public class EntityHelper {
             if (name.equals("Mob") || name.equals("Monster")) continue;
             Entity entity = EntityList.createEntityByName(name, world);
             if (entity instanceof EntityLivingBase) {
-                list.add((EntityLivingBase) entity);
                 //Special case addition of entities
                 //Wither Skeleton, Add to list
                 if (entity.getClass() == EntitySkeleton.class) {
-                    entity = EntityList.createEntityByName(name, world);
-                    ((EntitySkeleton) entity).setSkeletonType(1);
+                    for (SkeletonType type: SkeletonType.values()) {
+                        entity = EntityList.createEntityByName(name, world);
+                        ((EntitySkeleton)entity).func_189768_a(type);
+                    }
+
+                    list.add((EntityLivingBase) entity);
+                } else if (entity.getClass() == EntityZombie.class) {
+                    for (ZombieType type: ZombieType.values()) {
+                        entity = EntityList.createEntityByName(name, world);
+                        ((EntityZombie)entity).func_189778_a(type);
+                    }
+
+                    list.add((EntityLivingBase) entity);
+                }  else{
                     list.add((EntityLivingBase) entity);
                 }
 
