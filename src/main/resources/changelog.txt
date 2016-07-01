@@ -1,3 +1,6 @@
+Progression 0.6.5
+    Fix potential crash when grabbing players from their uuid on servers
+
 Progression 0.6.4
   Fix Potential Crash when viewing entity tooltips
   Fix Potential Crash when an entity doesn't exist
