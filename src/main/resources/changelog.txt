@@ -1,3 +1,6 @@
+Progression 0.6.5
+    Fix potential crash when grabbing players from their uuid on servers
+
 Progression 0.6.4a
     Actually apply to "Fix "Please wait message" lasting forever" patch to 1.8...
 
