@@ -1,3 +1,6 @@
+Progression 0.6.5a
+    Fix broken Thaumcraft integration
+
 Progression 0.6.5
     Fix potential crash when grabbing players from their uuid on servers
 

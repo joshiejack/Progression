@@ -22,7 +22,7 @@ public class ProgressionTransformer implements IFMLLoadingPlugin, IClassTransfor
         if (c.player) asm.add(new ASMContainerPlayer());
         if (c.workbench) asm.add(new ASMContainerWorkbench());
         if (c.tinkers) asm.add(new ASMTinkers());
-        if (c.thaumcraft) asm.add(new ASMTinkers());
+        if (c.thaumcraft) asm.add(new ASMThaumcraft());
     }
 
     @Override
