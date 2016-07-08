@@ -1,3 +1,6 @@
+Porgression 0.6.7
+    Fix crash when editing modid for entities
+
 Progression 0.6.5a
     Fix broken Thaumcraft integration
 

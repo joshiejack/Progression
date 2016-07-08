@@ -178,7 +178,11 @@ public class EntityHelper {
         if (modentityidcache.containsKey(entity)) return modentityidcache.get(entity);
         else {
             String name = (EntityList.getEntityString(entity));
-            String modid = name.substring(0, name.indexOf(".")).replace(".", "");
+            String modid = "minecraft";
+            if (name.contains(".")) {
+                modid = name.substring(0, name.indexOf(".")).replace(".", "");
+            }
+
             modentityidcache.put(entity, modid);
             return modid;
         }
