@@ -13,6 +13,11 @@ public class TriggerSleep extends TriggerBaseCounter  {
         return copyCounter(new TriggerSleep());
     }
 
+    @Override
+    protected boolean canIncrease() {
+        return true;
+    }
+
     @SubscribeEvent
     public void onPlayerWakeup(PlayerWakeUpEvent event) {
         ProgressionAPI.registry.fireTrigger(event.entityPlayer, getProvider().getUnlocalisedName());
