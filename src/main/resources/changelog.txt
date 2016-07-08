@@ -1,3 +1,6 @@
+Progression 0.6.7
+    Fix crash when editing modid for entities
+
 Progression 0.6.6
   Update to 1.10.2
   Add Zombie Type Filter
