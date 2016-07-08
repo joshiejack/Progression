@@ -1,3 +1,6 @@
+Progression 0.6.7
+    Fix crash when editing modid for entities
+
 Progression 0.6.5
     Fix potential crash when grabbing players from their uuid on servers
 
