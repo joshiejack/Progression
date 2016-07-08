@@ -14,7 +14,6 @@ public class PInfo {
     public static final String GUI_FACTORY_CLASS = "joshie.progression.gui.config.GuiFactory";
     public static final String BOOKPATH = "progression:textures/books/";
     public static final String FILTER = "joshie.progression.api.criteria.IFilterProvider";
-    public static final String VERSIONPATH = "joshie.progression.version.Version";
     
     @SideOnly(Side.CLIENT)
     public static final ResourceLocation textures = new ResourceLocation(MODPATH, "textures/gui/textures.png");
