@@ -11,11 +11,11 @@ public class CraftingUnclaimed extends Crafter {
 
     @Override
     public boolean canUseItemWithAction(World world, ActionType type, ItemStack stack) {
-        return Options.settings.unclaimedTileCanDoAnything;
+        return Options.getSettings().unclaimedTileCanDoAnything;
     }
 
     @Override
     public boolean canDoAnything() {
-        return Options.settings.unclaimedTileCanDoAnything;
+        return Options.getSettings().unclaimedTileCanDoAnything;
     }
 }

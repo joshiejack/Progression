@@ -31,7 +31,7 @@ public class CrafterHuman extends Crafter {
             }
         }
 
-        if (matched.size() == 0) return !Options.settings.disableUsageUntilRewardAdded;
+        if (matched.size() == 0) return !Options.getSettings().disableUsageUntilRewardAdded;
         Set<ICriteria> completed = ProgressionAPI.player.getCompletedCriteriaList(uuid, world.isRemote);
         for (IFilterProvider filter : matched) {
             ICriteria criteria = CraftingRegistry.get(world.isRemote).getCriteriaForFilter(type, filter);            if (criteria != null && completed.contains(criteria)) return true;

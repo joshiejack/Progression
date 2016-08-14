@@ -287,7 +287,7 @@ public class JSONLoader {
             Progression.logger.log(Level.INFO, "Reloaded JSON at " + System.currentTimeMillis() + " " + isClientside);
         }
 
-        Options.settings = settings;
+        Options.setSettings(settings);
         if (settings != null) {
             for (DataTab data : settings.tabs) {
                 createTabFromData(data, isClientside);
@@ -423,7 +423,7 @@ public class JSONLoader {
         try {
             for (Field f : forJSONTabs.getClass().getFields()) {
                 if (f.getName().equals("tabs")) continue; //Ignore the default
-                f.set(forJSONTabs, f.get(Options.settings));
+                f.set(forJSONTabs, f.get(Options.getSettings()));
             }
         } catch (Exception e) {}
 

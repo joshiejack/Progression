@@ -32,7 +32,7 @@ public class PlayerHelper {
     public static Crafter getCrafterFromUUID(final boolean isClient, final UUID uuid) {
         //If we are creative always jump to the creative profile, never cache it
         EntityPlayer player = PlayerHelper.getPlayerFromUUID(isClient, uuid);
-        if (Options.settings.craftAnythingCreative && player != null && player.capabilities.isCreativeMode) {
+        if (Options.getSettings().craftAnythingCreative && player != null && player.capabilities.isCreativeMode) {
             return CrafterCreative.INSTANCE;
         }
 
