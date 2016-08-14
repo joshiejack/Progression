@@ -99,7 +99,7 @@ public class GuiTreeEditor extends GuiBaseEditor implements IEditorMode {
     public void onClientSetup() {
         //Attempt to grab from the config
         if (currentTabID == null) {
-            currentTabID = Options.settings.defaultTabID;
+            currentTabID = Options.getSettings().defaultTabID;
         }
 
         currentTab = APICache.getClientCache().getTab(currentTabID); //Attempt to grab the tab
