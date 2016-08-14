@@ -22,7 +22,21 @@ public class Options {
     public static boolean mustClaimDefault;
     public static boolean hardReset;
     public static boolean hideTooltips;
-    public static DefaultSettings settings;
+    private static DefaultSettings settings;
+
+    public static void setSettings(DefaultSettings settings) {
+        if (settings != null) {
+            Options.settings = settings;
+        }
+    }
+
+    public static DefaultSettings getSettings() {
+        if (settings != null) return settings;
+        else {
+            settings = new DefaultSettings(); //Create
+            return settings;
+        }
+    }
 
     public static void init(File configFile) {
         if (config == null) {

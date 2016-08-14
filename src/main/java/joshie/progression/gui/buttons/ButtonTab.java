@@ -159,7 +159,7 @@ public class ButtonTab extends ButtonBase implements ITextEditable, IItemSelecta
                     AchievementHelper.display(tab.getIcon(), "Saved " + tab.getLocalisedName());
                 }
             } else if (GuiScreen.isAltKeyDown()) {
-                Options.settings.defaultTabID = tab.getUniqueID();
+                Options.getSettings().defaultTabID = tab.getUniqueID();
             }
         }
 
