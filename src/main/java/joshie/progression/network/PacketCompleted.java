@@ -40,8 +40,8 @@ public class PacketCompleted extends PenguinPacket {
         if (criteria != null) {
             GuiAchievement gui = Minecraft.getMinecraft().guiAchievement;
             gui.displayUnformattedAchievement(new DummyAchievement(criteria));
-            ReflectionHelper.setPrivateValue(GuiAchievement.class, gui, Minecraft.getSystemTime(), "notificationTime", "field_146263_l");
-            ReflectionHelper.setPrivateValue(GuiAchievement.class, gui, false, "permanentNotification", "field_146262_n");
+            ReflectionHelper.setPrivateValue(GuiAchievement.class, gui, Minecraft.getSystemTime(), "notificationTime", "field_146263_l", "l");
+            ReflectionHelper.setPrivateValue(GuiAchievement.class, gui, false, "permanentNotification", "field_146262_n", "n");
         }
     }
 
