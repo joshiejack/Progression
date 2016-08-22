@@ -1,4 +1,7 @@
-Porgression 0.6.7
+Progression 0.6.9
+  Allow indirect damage to trigger entity kills
+
+Progression 0.6.7
     Fix crash when editing modid for entities
 
 Progression 0.6.5a
