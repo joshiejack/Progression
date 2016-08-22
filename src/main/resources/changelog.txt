@@ -1,3 +1,6 @@
+Progression 0.6.9
+  Allow indirect damage to trigger entity kills
+
 Progression 0.6.8
   Fix a potential crash when trying to load specific configs
   Fix notifications being stuck on 1.10.2

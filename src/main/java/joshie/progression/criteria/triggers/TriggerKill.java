@@ -19,6 +19,10 @@ public class TriggerKill extends TriggerBaseEntity {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onEvent(LivingDeathEvent event) {
         Entity source = event.getSource().getSourceOfDamage();
+        if (!(source instanceof EntityPlayer)) {
+            source = event.getSource().getEntity();
+        }
+
         if (source instanceof EntityPlayer) {
             ProgressionAPI.registry.fireTrigger((EntityPlayer) source, getProvider().getUnlocalisedName(), event.getEntityLiving());
         }
