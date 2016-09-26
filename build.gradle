@@ -13,6 +13,7 @@ buildscript {
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'maven-publish'
 
 repositories {
   maven {
@@ -63,5 +64,22 @@ jar {
     manifest {
         attributes 'FMLCorePlugin': 'joshie.progression.asm.ProgressionTransformer'
         attributes 'FMLCorePluginContainsFMLMod': 'true'
+    }
+}
+
+publishing {
+    tasks.publish.dependsOn 'build'
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId 'Progression'
+            artifact jar
+        }
+    }
+    repositories {
+        if (project.hasProperty('maven_repo')) {
+            maven { url maven_repo }
+        } else {
+            mavenLocal()
+        }
     }
 }
